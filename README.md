@@ -40,29 +40,28 @@ Works with &nbsp; ![Claude Code](https://img.shields.io/badge/Claude_Code-black?
 
 ## Overview
 
-```
-+-----------------------------------------------------------------------------+
-|  TAIWAN INVOICE SKILLS                                                      |
-+-----------------------------------------------------------------------------+
-|                                                                             |
-|  PROVIDERS:                                                                 |
-|     ECPay (綠界)       AES-128-CBC encryption    Full test environment      |
-|     SmilePay (速買配)   URL parameter signing     Simple integration         |
-|     Amego (光貿)       MD5 signature (MIG 4.0)   Clean API design           |
-|                                                                             |
-|  INVOICE TYPES:                                                             |
-|     B2C (二聯式)  Tax-inclusive pricing, TaxAmount = 0                      |
-|     B2B (三聯式)  Pre-tax + tax split, 5% tax rate                          |
-|                                                                             |
-|  FEATURES:                                                                  |
-|     Issue | Void | Allowance | Query | Print                                |
-|                                                                             |
-|  PLATFORMS (14 supported):                                                  |
-|     Claude Code, Cursor, Windsurf, Copilot, Antigravity, Kiro, Codex,      |
-|     Qoder, RooCode, Gemini CLI, Trae, OpenCode, Continue, CodeBuddy        |
-|                                                                             |
-+-----------------------------------------------------------------------------+
-```
+### Providers
+
+| Provider | Authentication | Notes |
+|----------|----------------|-------|
+| ECPay | AES-128-CBC | Full test environment |
+| SmilePay | URL signing | Simple integration |
+| Amego | MD5 (MIG 4.0) | Clean API design |
+
+### Invoice Types
+
+| Type | Calculation | TaxAmount |
+|------|-------------|-----------|
+| B2C | Tax-inclusive | 0 |
+| B2B | Pre-tax + 5% | Calculated |
+
+### Features
+
+Issue, Void, Allowance, Query, Print
+
+### Platforms (14)
+
+Claude Code, Cursor, Windsurf, Copilot, Antigravity, Kiro, Codex, Qoder, RooCode, Gemini CLI, Trae, OpenCode, Continue, CodeBuddy
 
 ---
 
@@ -168,59 +167,45 @@ Manually invoke the skill using `/taiwan-invoice`:
 
 ## How It Works
 
-```
-┌─────────────────────────────────────────────────────────────────┐
-│  1. USER REQUEST                                                │
-│     「幫我用綠界測試環境開立一張 1050 元的 B2C 發票」                │
-└─────────────────────────────────────────────────────────────────┘
-                              │
-                              ▼
-┌─────────────────────────────────────────────────────────────────┐
-│  2. SKILL ACTIVATION                                            │
-│     • Detect e-invoice keywords → Load taiwan-invoice skill     │
-│     • Read relevant API reference (ECPAY_API_REFERENCE.md)      │
-└─────────────────────────────────────────────────────────────────┘
-                              │
-                              ▼
-┌─────────────────────────────────────────────────────────────────┐
-│  3. INTELLIGENT CODE GENERATION                                 │
-│     • Determine invoice type (B2C → tax-inclusive, TaxAmount=0) │
-│     • Select encryption method (ECPay → AES-128-CBC)            │
-│     • Apply test environment URL and credentials                │
-│     • Generate complete TypeScript service code                 │
-└─────────────────────────────────────────────────────────────────┘
-                              │
-                              ▼
-┌─────────────────────────────────────────────────────────────────┐
-│  4. OUTPUT                                                      │
-│     Complete InvoiceService implementation with:                │
-│     Encryption + API calls + Error handling + Amount calc       │
-└─────────────────────────────────────────────────────────────────┘
-```
+**1. User Request**
+> "Help me issue a B2C invoice for 1050 TWD using ECPay test environment"
+
+**2. Skill Activation**
+- Detect e-invoice keywords → Load taiwan-invoice skill
+- Read relevant API reference (ECPAY_API_REFERENCE.md)
+
+**3. Intelligent Code Generation**
+- Determine invoice type (B2C → tax-inclusive, TaxAmount=0)
+- Select encryption method (ECPay → AES-128-CBC)
+- Apply test environment URL and credentials
+- Generate complete TypeScript service code
+
+**4. Output**
+- Complete InvoiceService implementation
+- Encryption + API calls + Error handling + Amount calculation
 
 ---
 
 ## Amount Calculation Logic
 
-```
-B2C (二聯式) Tax-inclusive:
-┌──────────────────────────────────────────┐
-│  Total = 1050                            │
-│  SalesAmount = 1050  (use as-is)         │
-│  TaxAmount   = 0     (always 0)          │
-│  TotalAmount = 1050                      │
-└──────────────────────────────────────────┘
+### B2C (Tax-inclusive)
 
-B2B (三聯式) Pre-tax + Tax split:
-┌──────────────────────────────────────────┐
-│  Total = 1050                            │
-│  TaxAmount   = round(1050 - 1050/1.05)   │
-│             = round(1050 - 1000) = 50    │
-│  SalesAmount = 1050 - 50 = 1000          │
-│  TotalAmount = 1050                      │
-│                                          │
-│  Verify: 1000 + 50 = 1050                │
-└──────────────────────────────────────────┘
+```
+Total = 1050
+SalesAmount = 1050  (use as-is)
+TaxAmount   = 0     (always 0)
+TotalAmount = 1050
+```
+
+### B2B (Pre-tax + Tax split)
+
+```
+Total = 1050
+TaxAmount   = round(1050 - 1050/1.05) = 50
+SalesAmount = 1050 - 50 = 1000
+TotalAmount = 1050
+
+Verify: 1000 + 50 = 1050
 ```
 
 ---
