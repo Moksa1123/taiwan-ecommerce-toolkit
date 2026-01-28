@@ -10,6 +10,7 @@
 ![Python](https://img.shields.io/badge/python-3.x-yellow?style=flat-square&logo=python&logoColor=white)
 ![License](https://img.shields.io/badge/license-MIT-brightgreen?style=flat-square)
 
+[![npm](https://img.shields.io/npm/v/taiwan-invoice-skill?style=flat-square&logo=npm)](https://www.npmjs.com/package/taiwan-invoice-skill)
 [![GitHub](https://img.shields.io/badge/GitHub-Repository-black?style=flat-square&logo=github)](https://github.com/Moksa1123/taiwan-invoice)
 [![PayPal](https://img.shields.io/badge/PayPal-Support_Development-blue?style=flat-square&logo=paypal)](https://paypal.me/cccsubcom)
 
@@ -68,7 +69,28 @@ Works with &nbsp; ![Claude Code](https://img.shields.io/badge/Claude_Code-black?
 
 ## Installation
 
-### Using Install Script (Recommended)
+### Using CLI (Recommended)
+
+```bash
+# Install CLI globally
+npm install -g taiwan-invoice-skill
+
+# Install for your AI assistant
+taiwan-invoice init --ai claude        # Claude Code
+taiwan-invoice init --ai cursor        # Cursor
+taiwan-invoice init --ai antigravity   # Google Antigravity
+taiwan-invoice init --ai all           # All platforms
+```
+
+**CLI Options:**
+
+```bash
+taiwan-invoice init --ai claude --global   # Install to global directory
+taiwan-invoice --version                   # Show version
+taiwan-invoice --help                      # Show help
+```
+
+### Using Install Script
 
 **macOS / Linux:**
 
@@ -86,11 +108,9 @@ cd taiwan-invoice
 install.bat
 ```
 
-The install script provides an interactive menu to select your target platform(s).
-
 ### Manual Installation
 
-Copy `taiwan-invoice/` to the appropriate location for your AI assistant:
+Copy `taiwan-invoice/` to the appropriate location:
 
 ```bash
 # Claude Code

@@ -1,0 +1,38 @@
+{
+  "name": "taiwan-invoice-skill",
+  "version": "2.0.0",
+  "description": "Taiwan E-Invoice AI Skill for Claude Code, Cursor, and Google Antigravity",
+  "keywords": [
+    "taiwan",
+    "invoice",
+    "e-invoice",
+    "ecpay",
+    "smilepay",
+    "amego",
+    "claude",
+    "cursor",
+    "antigravity",
+    "ai-skill",
+    "agent-skills"
+  ],
+  "author": "Moksa1123",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Moksa1123/taiwan-invoice.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Moksa1123/taiwan-invoice/issues"
+  },
+  "homepage": "https://github.com/Moksa1123/taiwan-invoice#readme",
+  "bin": {
+    "taiwan-invoice": "./bin/index.js"
+  },
+  "files": [
+    "bin/",
+    "assets/"
+  ],
+  "engines": {
+    "node": ">=14.0.0"
+  }
+}
