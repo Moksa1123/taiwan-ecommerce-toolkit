@@ -1,0 +1,28 @@
+# Claude Code local settings
+.claude/settings.local.json
+.claude/plans/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.Python
+*.so
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Generated service files
+*-invoice-service.ts
