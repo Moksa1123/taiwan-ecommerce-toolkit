@@ -921,8 +921,8 @@ var require_command = __commonJS({
   "node_modules/commander/lib/command.js"(exports2) {
     var EventEmitter = require("events").EventEmitter;
     var childProcess = require("child_process");
-    var path = require("path");
-    var fs = require("fs");
+    var path3 = require("path");
+    var fs3 = require("fs");
     var process2 = require("process");
     var { Argument: Argument2, humanReadableArgName } = require_argument();
     var { CommanderError: CommanderError2 } = require_error();
@@ -1745,10 +1745,10 @@ Expecting one of '${allowedValues.join("', '")}'`);
         let launchWithNode = false;
         const sourceExt = [".js", ".ts", ".tsx", ".mjs", ".cjs"];
         function findFile(baseDir, baseName) {
-          const localBin = path.resolve(baseDir, baseName);
-          if (fs.existsSync(localBin)) return localBin;
-          if (sourceExt.includes(path.extname(baseName))) return void 0;
-          const foundExt = sourceExt.find((ext) => fs.existsSync(`${localBin}${ext}`));
+          const localBin = path3.resolve(baseDir, baseName);
+          if (fs3.existsSync(localBin)) return localBin;
+          if (sourceExt.includes(path3.extname(baseName))) return void 0;
+          const foundExt = sourceExt.find((ext) => fs3.existsSync(`${localBin}${ext}`));
           if (foundExt) return `${localBin}${foundExt}`;
           return void 0;
         }
@@ -1759,23 +1759,23 @@ Expecting one of '${allowedValues.join("', '")}'`);
         if (this._scriptPath) {
           let resolvedScriptPath;
           try {
-            resolvedScriptPath = fs.realpathSync(this._scriptPath);
+            resolvedScriptPath = fs3.realpathSync(this._scriptPath);
           } catch (err) {
             resolvedScriptPath = this._scriptPath;
           }
-          executableDir = path.resolve(path.dirname(resolvedScriptPath), executableDir);
+          executableDir = path3.resolve(path3.dirname(resolvedScriptPath), executableDir);
         }
         if (executableDir) {
           let localFile = findFile(executableDir, executableFile);
           if (!localFile && !subcommand._executableFile && this._scriptPath) {
-            const legacyName = path.basename(this._scriptPath, path.extname(this._scriptPath));
+            const legacyName = path3.basename(this._scriptPath, path3.extname(this._scriptPath));
             if (legacyName !== this._name) {
               localFile = findFile(executableDir, `${legacyName}-${subcommand._name}`);
             }
           }
           executableFile = localFile || executableFile;
         }
-        launchWithNode = sourceExt.includes(path.extname(executableFile));
+        launchWithNode = sourceExt.includes(path3.extname(executableFile));
         let proc;
         if (process2.platform !== "win32") {
           if (launchWithNode) {
@@ -2558,7 +2558,7 @@ Expecting one of '${allowedValues.join("', '")}'`);
        * @return {Command}
        */
       nameFromFilename(filename) {
-        this._name = path.basename(filename, path.extname(filename));
+        this._name = path3.basename(filename, path3.extname(filename));
         return this;
       }
       /**
@@ -2572,9 +2572,9 @@ Expecting one of '${allowedValues.join("', '")}'`);
        * @param {string} [path]
        * @return {string|null|Command}
        */
-      executableDir(path2) {
-        if (path2 === void 0) return this._executableDir;
-        this._executableDir = path2;
+      executableDir(path4) {
+        if (path4 === void 0) return this._executableDir;
+        this._executableDir = path4;
         return this;
       }
       /**
@@ -3634,15 +3634,15 @@ var require_route = __commonJS({
       };
     }
     function wrapConversion(toModel, graph) {
-      const path = [graph[toModel].parent, toModel];
+      const path3 = [graph[toModel].parent, toModel];
       let fn = conversions[graph[toModel].parent][toModel];
       let cur = graph[toModel].parent;
       while (graph[cur].parent) {
-        path.unshift(graph[cur].parent);
+        path3.unshift(graph[cur].parent);
         fn = link(conversions[graph[cur].parent][cur], fn);
         cur = graph[cur].parent;
       }
-      fn.conversion = path;
+      fn.conversion = path3;
       return fn;
     }
     module2.exports = function(fromModel) {
@@ -3741,10 +3741,10 @@ var require_ansi_styles = __commonJS({
     };
     var ansi2ansi = (n) => n;
     var rgb2rgb = (r, g, b) => [r, g, b];
-    var setLazyProperty = (object, property, get) => {
+    var setLazyProperty = (object, property, get2) => {
       Object.defineProperty(object, property, {
         get: () => {
-          const value = get();
+          const value = get2();
           Object.defineProperty(object, property, {
             value,
             enumerable: true,
@@ -3882,7 +3882,7 @@ var require_has_flag = __commonJS({
 var require_supports_color = __commonJS({
   "node_modules/supports-color/index.js"(exports2, module2) {
     "use strict";
-    var os = require("os");
+    var os2 = require("os");
     var tty = require("tty");
     var hasFlag = require_has_flag();
     var { env } = process;
@@ -3930,7 +3930,7 @@ var require_supports_color = __commonJS({
         return min;
       }
       if (process.platform === "win32") {
-        const osRelease = os.release().split(".");
+        const osRelease = os2.release().split(".");
         if (Number(osRelease[0]) >= 10 && Number(osRelease[2]) >= 10586) {
           return Number(osRelease[2]) >= 14931 ? 3 : 2;
         }
@@ -6800,7 +6800,7 @@ var require_buffer_list = __commonJS({
         }
       }, {
         key: "join",
-        value: function join3(s) {
+        value: function join5(s) {
           if (this.length === 0) return "";
           var p = this.head;
           var ret = "" + p.data;
@@ -7377,7 +7377,7 @@ var require_stream_writable = __commonJS({
       // because otherwise some prototype manipulation in
       // userland will fail
       enumerable: false,
-      get: function get() {
+      get: function get2() {
         return this._writableState && this._writableState.getBuffer();
       }
     });
@@ -7392,7 +7392,7 @@ var require_stream_writable = __commonJS({
       // because otherwise some prototype manipulation in
       // userland will fail
       enumerable: false,
-      get: function get() {
+      get: function get2() {
         return this._writableState.highWaterMark;
       }
     });
@@ -7562,7 +7562,7 @@ var require_stream_writable = __commonJS({
       // because otherwise some prototype manipulation in
       // userland will fail
       enumerable: false,
-      get: function get() {
+      get: function get2() {
         return this._writableState.length;
       }
     });
@@ -7635,7 +7635,7 @@ var require_stream_writable = __commonJS({
       // because otherwise some prototype manipulation in
       // userland will fail
       enumerable: false,
-      get: function get() {
+      get: function get2() {
         if (this._writableState === void 0) {
           return false;
         }
@@ -7698,7 +7698,7 @@ var require_stream_duplex = __commonJS({
       // because otherwise some prototype manipulation in
       // userland will fail
       enumerable: false,
-      get: function get() {
+      get: function get2() {
         return this._writableState.highWaterMark;
       }
     });
@@ -7707,7 +7707,7 @@ var require_stream_duplex = __commonJS({
       // because otherwise some prototype manipulation in
       // userland will fail
       enumerable: false,
-      get: function get() {
+      get: function get2() {
         return this._writableState && this._writableState.getBuffer();
       }
     });
@@ -7716,7 +7716,7 @@ var require_stream_duplex = __commonJS({
       // because otherwise some prototype manipulation in
       // userland will fail
       enumerable: false,
-      get: function get() {
+      get: function get2() {
         return this._writableState.length;
       }
     });
@@ -7732,7 +7732,7 @@ var require_stream_duplex = __commonJS({
       // because otherwise some prototype manipulation in
       // userland will fail
       enumerable: false,
-      get: function get() {
+      get: function get2() {
         if (this._readableState === void 0 || this._writableState === void 0) {
           return false;
         }
@@ -8540,7 +8540,7 @@ var require_stream_readable = __commonJS({
       // because otherwise some prototype manipulation in
       // userland will fail
       enumerable: false,
-      get: function get() {
+      get: function get2() {
         if (this._readableState === void 0) {
           return false;
         }
@@ -8823,7 +8823,7 @@ var require_stream_readable = __commonJS({
         if (readable === src) {
           if (unpipeInfo && unpipeInfo.hasUnpiped === false) {
             unpipeInfo.hasUnpiped = true;
-            cleanup();
+            cleanup2();
           }
         }
       }
@@ -8834,7 +8834,7 @@ var require_stream_readable = __commonJS({
       var ondrain = pipeOnDrain(src);
       dest.on("drain", ondrain);
       var cleanedUp = false;
-      function cleanup() {
+      function cleanup2() {
         debug("cleanup");
         dest.removeListener("close", onclose);
         dest.removeListener("finish", onfinish);
@@ -9081,7 +9081,7 @@ var require_stream_readable = __commonJS({
       // because otherwise some prototype manipulation in
       // userland will fail
       enumerable: false,
-      get: function get() {
+      get: function get2() {
         return this._readableState.highWaterMark;
       }
     });
@@ -9090,7 +9090,7 @@ var require_stream_readable = __commonJS({
       // because otherwise some prototype manipulation in
       // userland will fail
       enumerable: false,
-      get: function get() {
+      get: function get2() {
         return this._readableState && this._readableState.buffer;
       }
     });
@@ -9099,7 +9099,7 @@ var require_stream_readable = __commonJS({
       // because otherwise some prototype manipulation in
       // userland will fail
       enumerable: false,
-      get: function get() {
+      get: function get2() {
         return this._readableState.flowing;
       },
       set: function set(state) {
@@ -9114,7 +9114,7 @@ var require_stream_readable = __commonJS({
       // because otherwise some prototype manipulation in
       // userland will fail
       enumerable: false,
-      get: function get() {
+      get: function get2() {
         return this._readableState.length;
       }
     });
@@ -9440,7 +9440,7 @@ var require_BufferList = __commonJS({
       }
       return offset;
     };
-    BufferList.prototype.get = function get(index) {
+    BufferList.prototype.get = function get2(index) {
       if (index > this.length || index < 0) {
         return void 0;
       }
@@ -14965,6 +14965,8 @@ var {
 var import_chalk2 = __toESM(require_source());
 var import_ora = __toESM(require_ora());
 var import_prompts = __toESM(require_prompts3());
+var path2 = __toESM(require("path"));
+var os = __toESM(require("os"));
 
 // src/types/index.ts
 var AI_TYPES = [
@@ -14984,6 +14986,22 @@ var AI_TYPES = [
   "codebuddy",
   "all"
 ];
+var AI_FOLDERS = {
+  claude: [".claude"],
+  cursor: [".cursor"],
+  windsurf: [".windsurf"],
+  antigravity: [".agent"],
+  copilot: [".github"],
+  kiro: [".kiro"],
+  codex: [".codex"],
+  qoder: [".qoder"],
+  roocode: [".roo"],
+  gemini: [".gemini"],
+  trae: [".trae"],
+  opencode: [".opencode"],
+  continue: [".continue"],
+  codebuddy: [".codebuddy"]
+};
 
 // src/utils/template.ts
 var import_promises = require("node:fs/promises");
@@ -14995,7 +15013,7 @@ var AI_TO_PLATFORM = {
   claude: "claude",
   cursor: "cursor",
   windsurf: "windsurf",
-  antigravity: "antigravity",
+  antigravity: "agent",
   copilot: "copilot",
   kiro: "kiro",
   codex: "codex",
@@ -15007,9 +15025,9 @@ var AI_TO_PLATFORM = {
   continue: "continue",
   codebuddy: "codebuddy"
 };
-async function exists(path) {
+async function exists(path3) {
   try {
-    await (0, import_promises.access)(path);
+    await (0, import_promises.access)(path3);
     return true;
   } catch {
     return false;
@@ -15045,6 +15063,13 @@ async function renderSkillFile(config) {
   let content = await loadTemplate("base/skill-content.md");
   const frontmatter = renderFrontmatter(config.frontmatter);
   content = content.replace(/\{\{TITLE\}\}/g, config.title).replace(/\{\{DESCRIPTION\}\}/g, config.description);
+  if (config.sections.quickReference) {
+    try {
+      const quickRef = await loadTemplate("base/quick-reference.md");
+      content = quickRef + "\n" + content;
+    } catch {
+    }
+  }
   return frontmatter + content;
 }
 async function copyTaiwanInvoiceAssets(targetSkillDir, sections) {
@@ -15194,7 +15219,186 @@ ${msg}
   dim: (msg) => console.log(import_chalk.default.dim(msg))
 };
 
+// src/utils/github.ts
+var https = __toESM(require("https"));
+var fs = __toESM(require("fs"));
+var REPO_OWNER = "Moksa1123";
+var REPO_NAME = "taiwan-invoice";
+async function fetchReleases() {
+  return new Promise((resolve, reject) => {
+    const options = {
+      hostname: "api.github.com",
+      path: `/repos/${REPO_OWNER}/${REPO_NAME}/releases`,
+      headers: {
+        "User-Agent": "taiwan-invoice-skill-cli",
+        "Accept": "application/vnd.github.v3+json"
+      }
+    };
+    https.get(options, (res) => {
+      let data = "";
+      res.on("data", (chunk) => data += chunk);
+      res.on("end", () => {
+        if (res.statusCode === 200) {
+          try {
+            resolve(JSON.parse(data));
+          } catch (e) {
+            reject(new Error("Failed to parse GitHub response"));
+          }
+        } else if (res.statusCode === 404) {
+          resolve([]);
+        } else {
+          reject(new Error(`GitHub API error: ${res.statusCode}`));
+        }
+      });
+    }).on("error", reject);
+  });
+}
+async function getLatestRelease() {
+  const releases = await fetchReleases();
+  return releases.length > 0 ? releases[0] : null;
+}
+async function downloadRelease(url, dest) {
+  return new Promise((resolve, reject) => {
+    const file = fs.createWriteStream(dest);
+    const request = (downloadUrl) => {
+      https.get(downloadUrl, {
+        headers: {
+          "User-Agent": "taiwan-invoice-skill-cli",
+          "Accept": "application/octet-stream"
+        }
+      }, (res) => {
+        if (res.statusCode === 302 || res.statusCode === 301) {
+          const redirectUrl = res.headers.location;
+          if (redirectUrl) {
+            request(redirectUrl);
+            return;
+          }
+        }
+        if (res.statusCode !== 200) {
+          file.close();
+          fs.unlinkSync(dest);
+          reject(new Error(`Download failed: ${res.statusCode}`));
+          return;
+        }
+        res.pipe(file);
+        file.on("finish", () => {
+          file.close();
+          resolve();
+        });
+      }).on("error", (err) => {
+        file.close();
+        fs.unlinkSync(dest);
+        reject(err);
+      });
+    };
+    request(url);
+  });
+}
+function getSourceZipUrl(release) {
+  return `https://github.com/${REPO_OWNER}/${REPO_NAME}/archive/refs/tags/${release.tag_name}.zip`;
+}
+
+// src/utils/extract.ts
+var fs2 = __toESM(require("fs"));
+var path = __toESM(require("path"));
+var import_child_process = require("child_process");
+async function extractZip(zipPath, destDir) {
+  if (!fs2.existsSync(destDir)) {
+    fs2.mkdirSync(destDir, { recursive: true });
+  }
+  const isWindows = process.platform === "win32";
+  if (isWindows) {
+    const psCommand = `Expand-Archive -Path "${zipPath}" -DestinationPath "${destDir}" -Force`;
+    (0, import_child_process.execSync)(`powershell -Command "${psCommand}"`, { stdio: "pipe" });
+  } else {
+    (0, import_child_process.execSync)(`unzip -o "${zipPath}" -d "${destDir}"`, { stdio: "pipe" });
+  }
+}
+async function copyFolders(sourceDir, targetDir, aiType) {
+  const copiedFolders = [];
+  const foldersToCheck = AI_FOLDERS[aiType];
+  for (const folder of foldersToCheck) {
+    const sourcePath = path.join(sourceDir, folder);
+    const targetPath = path.join(targetDir, folder);
+    if (fs2.existsSync(sourcePath)) {
+      copyDirRecursive(sourcePath, targetPath);
+      copiedFolders.push(folder);
+    }
+  }
+  return copiedFolders;
+}
+function copyDirRecursive(src, dest) {
+  if (!fs2.existsSync(dest)) {
+    fs2.mkdirSync(dest, { recursive: true });
+  }
+  const entries = fs2.readdirSync(src, { withFileTypes: true });
+  for (const entry of entries) {
+    const srcPath = path.join(src, entry.name);
+    const destPath = path.join(dest, entry.name);
+    if (entry.isDirectory()) {
+      copyDirRecursive(srcPath, destPath);
+    } else {
+      fs2.copyFileSync(srcPath, destPath);
+    }
+  }
+}
+function findExtractedFolder(destDir) {
+  const entries = fs2.readdirSync(destDir, { withFileTypes: true });
+  const dirs = entries.filter((e) => e.isDirectory());
+  const releaseDir = dirs.find(
+    (d) => d.name.includes("taiwan-invoice") || d.name.startsWith("taiwan-invoice")
+  );
+  return releaseDir ? path.join(destDir, releaseDir.name) : null;
+}
+async function installFromZip(zipPath, targetDir, aiType) {
+  const tempDir = path.join(path.dirname(zipPath), "taiwan-invoice-extracted");
+  if (fs2.existsSync(tempDir)) {
+    fs2.rmSync(tempDir, { recursive: true, force: true });
+  }
+  await extractZip(zipPath, tempDir);
+  const extractedDir = findExtractedFolder(tempDir) || tempDir;
+  const copiedFolders = await copyFolders(extractedDir, targetDir, aiType);
+  return { copiedFolders, tempDir };
+}
+function cleanup(tempDir, zipPath) {
+  if (tempDir && fs2.existsSync(tempDir)) {
+    fs2.rmSync(tempDir, { recursive: true, force: true });
+  }
+  if (zipPath && fs2.existsSync(zipPath)) {
+    fs2.unlinkSync(zipPath);
+  }
+}
+
 // src/commands/init.ts
+async function tryGitHubDownload(aiType, targetDir) {
+  const spinner = (0, import_ora.default)("Checking for latest release on GitHub...").start();
+  try {
+    const release = await getLatestRelease();
+    if (!release) {
+      spinner.info("No releases found, using bundled assets");
+      return { success: false, folders: [] };
+    }
+    spinner.text = `Found release: ${release.tag_name}`;
+    const zipUrl = getSourceZipUrl(release);
+    const tempDir = os.tmpdir();
+    const zipPath = path2.join(tempDir, `taiwan-invoice-${release.tag_name}.zip`);
+    spinner.text = "Downloading release...";
+    await downloadRelease(zipUrl, zipPath);
+    spinner.text = "Extracting and installing...";
+    const { copiedFolders, tempDir: extractedDir } = await installFromZip(zipPath, targetDir, aiType);
+    cleanup(extractedDir, zipPath);
+    if (copiedFolders.length > 0) {
+      spinner.succeed(`Installed from GitHub release ${release.tag_name}`);
+      return { success: true, folders: copiedFolders };
+    } else {
+      spinner.info("No matching folders in release, using bundled assets");
+      return { success: false, folders: [] };
+    }
+  } catch (error) {
+    spinner.info("GitHub download failed, using bundled assets");
+    return { success: false, folders: [] };
+  }
+}
 async function initCommand(options) {
   logger.title("Taiwan Invoice Skill Installer");
   let aiType = options.ai;
@@ -15220,16 +15424,26 @@ async function initCommand(options) {
     aiType = response.aiType;
   }
   logger.info(`Installing for: ${import_chalk2.default.cyan(getAITypeDescription(aiType))}`);
-  const spinner = (0, import_ora.default)("Generating skill files from templates...").start();
   const cwd = process.cwd();
   let copiedFolders = [];
+  let usedGitHub = false;
   try {
-    if (aiType === "all") {
-      copiedFolders = await generateAllPlatformFiles(cwd);
-    } else {
-      copiedFolders = await generatePlatformFiles(cwd, aiType);
+    if (!options.offline && aiType !== "all") {
+      const result = await tryGitHubDownload(aiType, cwd);
+      if (result.success) {
+        copiedFolders = result.folders;
+        usedGitHub = true;
+      }
     }
-    spinner.succeed("Generated from templates!");
+    if (!usedGitHub) {
+      const spinner = (0, import_ora.default)("Generating skill files from bundled templates...").start();
+      if (aiType === "all") {
+        copiedFolders = await generateAllPlatformFiles(cwd);
+      } else {
+        copiedFolders = await generatePlatformFiles(cwd, aiType);
+      }
+      spinner.succeed("Generated from bundled templates!");
+    }
     console.log();
     logger.info("Installed folders:");
     copiedFolders.forEach((folder) => {
@@ -15243,7 +15457,7 @@ async function initCommand(options) {
     console.log(import_chalk2.default.dim('  2. Try: "Help me integrate ECPay invoice API"'));
     console.log();
   } catch (error) {
-    spinner.fail("Installation failed");
+    logger.error("Installation failed");
     if (error instanceof Error) {
       logger.error(error.message);
     }
@@ -15318,21 +15532,11 @@ async function infoCommand() {
 var import_chalk5 = __toESM(require_source());
 var import_ora2 = __toESM(require_ora());
 var VERSION2 = "2.0.0";
-var REPO_API = "https://api.github.com/repos/Moksa1123/taiwan-invoice/releases";
 async function versionsCommand() {
   logger.title("Taiwan Invoice Skill - Available Versions");
   const spinner = (0, import_ora2.default)("Fetching releases from GitHub...").start();
   try {
-    const response = await fetch(REPO_API, {
-      headers: {
-        "Accept": "application/vnd.github.v3+json",
-        "User-Agent": "taiwan-invoice-skill-cli"
-      }
-    });
-    if (!response.ok) {
-      throw new Error(`GitHub API error: ${response.status}`);
-    }
-    const releases = await response.json();
+    const releases = await fetchReleases();
     spinner.succeed("Fetched releases from GitHub");
     console.log();
     console.log(import_chalk5.default.cyan("Available Versions:"));
@@ -15413,7 +15617,8 @@ program2.command("init").description("Install Taiwan Invoice skill to current pr
   await initCommand({
     ai: options.ai,
     force: options.force,
-    global: options.global
+    global: options.global,
+    offline: options.offline
   });
 });
 program2.command("list").description("List supported AI platforms").action(listCommand);

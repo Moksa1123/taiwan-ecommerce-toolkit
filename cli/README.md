@@ -1,64 +1,131 @@
 # taiwan-invoice-skill
 
-CLI to install Taiwan E-Invoice skill for AI coding assistants.
+<p align="center">
+  <strong>台灣電子發票 AI 開發技能包</strong><br>
+  <sub>支援 ECPay 綠界 · SmilePay 速買配 · Amego 光貿</sub>
+</p>
 
-## Installation
+<p align="center">
+  <a href="https://www.npmjs.com/package/taiwan-invoice-skill"><img src="https://img.shields.io/npm/v/taiwan-invoice-skill?style=flat-square&logo=npm" alt="npm version"></a>
+  <a href="https://www.npmjs.com/package/taiwan-invoice-skill"><img src="https://img.shields.io/npm/dm/taiwan-invoice-skill?style=flat-square&label=downloads" alt="npm downloads"></a>
+  <img src="https://img.shields.io/badge/node-%3E%3D18-339933?style=flat-square&logo=node.js&logoColor=white" alt="Node.js">
+  <img src="https://img.shields.io/badge/platforms-14-blue?style=flat-square" alt="14 Platforms">
+  <a href="https://github.com/Moksa1123/taiwan-invoice/blob/main/LICENSE"><img src="https://img.shields.io/github/license/Moksa1123/taiwan-invoice?style=flat-square" alt="License"></a>
+</p>
+
+<p align="center">
+  <a href="https://paypal.me/cccsubcom"><img src="https://img.shields.io/badge/PayPal-支持開發-00457C?style=for-the-badge&logo=paypal&logoColor=white" alt="PayPal"></a>
+</p>
+
+---
+
+## 安裝
 
 ```bash
 npm install -g taiwan-invoice-skill
 ```
 
-## Usage
+---
+
+## 使用方式
 
 ```bash
-# Install for specific AI assistant
+# 進入專案目錄
+cd /path/to/your/project
+
+# 選擇你的 AI 助手
 taiwan-invoice init --ai claude        # Claude Code
 taiwan-invoice init --ai cursor        # Cursor
 taiwan-invoice init --ai windsurf      # Windsurf
-taiwan-invoice init --ai antigravity   # Antigravity
 taiwan-invoice init --ai copilot       # GitHub Copilot
-taiwan-invoice init --ai kiro          # Kiro
-taiwan-invoice init --ai codex         # Codex CLI
-taiwan-invoice init --ai roocode       # Roo Code
-taiwan-invoice init --ai qoder         # Qoder
-taiwan-invoice init --ai gemini        # Gemini CLI
-taiwan-invoice init --ai trae          # Trae
-taiwan-invoice init --ai opencode      # OpenCode
-taiwan-invoice init --ai continue      # Continue
-taiwan-invoice init --ai codebuddy     # CodeBuddy
-taiwan-invoice init --ai all           # All assistants
-
-# Options
-taiwan-invoice init --offline          # Skip GitHub download, use bundled assets only
-taiwan-invoice init --force            # Overwrite existing files
-taiwan-invoice init --global           # Install to global directory
-
-# Other commands
-taiwan-invoice list                    # List supported platforms
-taiwan-invoice info                    # Show skill information
-taiwan-invoice versions                # List available versions
-taiwan-invoice update                  # Check for updates
+taiwan-invoice init --ai antigravity   # Antigravity
+taiwan-invoice init --ai all           # 全部安裝
 ```
 
-## How It Works
-
-By default, `taiwan-invoice init` tries to download the latest release from GitHub to ensure you get the most up-to-date version. If the download fails (network error, rate limit), it automatically falls back to the bundled assets included in the CLI package.
-
-Use `--offline` to skip the GitHub download and use bundled assets directly.
-
-## Development
+<details>
+<summary>完整平台列表</summary>
 
 ```bash
-# Install dependencies
-npm install
-
-# Build
-npm run build
-
-# Run locally
-node dist/index.js --help
+taiwan-invoice init --ai kiro          # Kiro (AWS)
+taiwan-invoice init --ai codex         # Codex CLI (OpenAI)
+taiwan-invoice init --ai qoder         # Qoder
+taiwan-invoice init --ai roocode       # Roo Code
+taiwan-invoice init --ai gemini        # Gemini CLI
+taiwan-invoice init --ai trae          # Trae (ByteDance)
+taiwan-invoice init --ai opencode      # OpenCode
+taiwan-invoice init --ai continue      # Continue
+taiwan-invoice init --ai codebuddy     # CodeBuddy (Tencent)
 ```
 
-## License
+</details>
 
-MIT
+---
+
+## 其他指令
+
+```bash
+taiwan-invoice list         # 列出支援平台
+taiwan-invoice info         # 顯示技能資訊
+taiwan-invoice versions     # 列出可用版本
+taiwan-invoice update       # 檢查更新
+```
+
+### 選項
+
+```bash
+taiwan-invoice init --offline   # 跳過 GitHub 下載，使用內建資源
+taiwan-invoice init --force     # 覆蓋現有檔案
+taiwan-invoice init --global    # 安裝到全域目錄
+```
+
+---
+
+## 運作原理
+
+`taiwan-invoice init` 預設會從 GitHub 下載最新版本。如果下載失敗（網路錯誤、速率限制），會自動使用 CLI 內建的資源。
+
+使用 `--offline` 可跳過 GitHub 下載，直接使用內建資源。
+
+---
+
+## 支援平台
+
+| 平台 | 說明 | 啟動方式 |
+|------|------|----------|
+| **Claude Code** | Anthropic 官方 CLI | 自動 |
+| **Cursor** | AI 程式編輯器 | `/taiwan-invoice` |
+| **Windsurf** | Codeium 編輯器 | 自動 |
+| **Copilot** | GitHub Copilot | `/taiwan-invoice` |
+| **Antigravity** | Google AI 助手 | 自動 |
+| **Kiro** | AWS AI 助手 | `/taiwan-invoice` |
+| **Codex** | OpenAI CLI | 自動 |
+| **Qoder** | Qodo AI 助手 | 自動 |
+| **RooCode** | VSCode 擴充 | `/taiwan-invoice` |
+| **Gemini CLI** | Google Gemini | 自動 |
+| **Trae** | ByteDance AI | 自動 |
+| **OpenCode** | 開源 AI 助手 | 自動 |
+| **Continue** | 開源 AI 助手 | 自動 |
+| **CodeBuddy** | Tencent AI | 自動 |
+
+---
+
+## 加值中心
+
+| 加值中心 | 驗證方式 | 特點 |
+|----------|----------|------|
+| **ECPay 綠界** | AES-128-CBC 加密 | 市佔率高，文件完整 |
+| **SmilePay 速買配** | URL 參數簽章 | 雙協定支援，整合簡單 |
+| **Amego 光貿** | MD5 簽章 (MIG 4.0) | API 設計乾淨 |
+
+---
+
+## 授權
+
+[MIT License](https://github.com/Moksa1123/taiwan-invoice/blob/main/LICENSE)
+
+---
+
+<p align="center">
+  <sub>Made by <strong>Moksa</strong></sub><br>
+  <sub>service@moksaweb.com</sub>
+</p>

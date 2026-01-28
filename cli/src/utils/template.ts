@@ -13,7 +13,7 @@ const AI_TO_PLATFORM: Record<string, string> = {
   claude: 'claude',
   cursor: 'cursor',
   windsurf: 'windsurf',
-  antigravity: 'antigravity',
+  antigravity: 'agent',
   copilot: 'copilot',
   kiro: 'kiro',
   codex: 'codex',
@@ -74,6 +74,17 @@ export async function renderSkillFile(config: PlatformConfig): Promise<string> {
   content = content
     .replace(/\{\{TITLE\}\}/g, config.title)
     .replace(/\{\{DESCRIPTION\}\}/g, config.description);
+
+  // Include quick reference section for Claude (or other platforms that support it)
+  if (config.sections.quickReference) {
+    try {
+      const quickRef = await loadTemplate('base/quick-reference.md');
+      // Insert quick reference before the main content
+      content = quickRef + '\n' + content;
+    } catch {
+      // Skip if quick-reference.md doesn't exist
+    }
+  }
 
   return frontmatter + content;
 }

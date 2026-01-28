@@ -7,12 +7,15 @@
     "skillPath": "skills/taiwan-invoice",
     "filename": "SKILL.md"
   },
+  "scriptPath": "skills/taiwan-invoice/scripts",
   "frontmatter": null,
   "sections": {
     "examples": true,
     "references": true,
-    "scripts": true
+    "scripts": true,
+    "quickReference": false
   },
   "title": "Taiwan E-Invoice Skill",
-  "description": "Comprehensive guide for Taiwan E-Invoice API integration. Supports ECPay, SmilePay, and Amego providers with B2C/B2B invoice operations."
+  "description": "Comprehensive guide for Taiwan E-Invoice API integration. Supports ECPay, SmilePay, and Amego providers with B2C/B2B invoice operations.",
+  "skillOrWorkflow": "Skill"
 }

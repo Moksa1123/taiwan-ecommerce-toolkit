@@ -1,16 +1,9 @@
 import chalk from 'chalk';
 import ora from 'ora';
 import { logger } from '../utils/logger.js';
+import { fetchReleases } from '../utils/github.js';
 
 const VERSION = '2.0.0';
-const REPO_API = 'https://api.github.com/repos/Moksa1123/taiwan-invoice/releases';
-
-interface Release {
-  tag_name: string;
-  name: string;
-  published_at: string;
-  html_url: string;
-}
 
 export async function versionsCommand(): Promise<void> {
   logger.title('Taiwan Invoice Skill - Available Versions');
@@ -18,18 +11,7 @@ export async function versionsCommand(): Promise<void> {
   const spinner = ora('Fetching releases from GitHub...').start();
 
   try {
-    const response = await fetch(REPO_API, {
-      headers: {
-        'Accept': 'application/vnd.github.v3+json',
-        'User-Agent': 'taiwan-invoice-skill-cli',
-      },
-    });
-
-    if (!response.ok) {
-      throw new Error(`GitHub API error: ${response.status}`);
-    }
-
-    const releases: Release[] = await response.json();
+    const releases = await fetchReleases();
     spinner.succeed('Fetched releases from GitHub');
 
     console.log();

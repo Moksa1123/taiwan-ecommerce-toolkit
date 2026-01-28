@@ -17,6 +17,22 @@ export type AIType =
 
 export type InstallType = 'full' | 'reference';
 
+// GitHub Release API types
+export interface Asset {
+  name: string;
+  browser_download_url: string;
+  size: number;
+  download_count: number;
+}
+
+export interface Release {
+  tag_name: string;
+  name: string;
+  published_at: string;
+  html_url: string;
+  assets: Asset[];
+}
+
 export interface PlatformConfig {
   platform: string;
   displayName: string;
@@ -26,14 +42,17 @@ export interface PlatformConfig {
     skillPath: string;
     filename: string;
   };
+  scriptPath?: string;
   frontmatter: Record<string, string> | null;
   sections: {
     examples: boolean;
     references: boolean;
     scripts: boolean;
+    quickReference?: boolean;
   };
   title: string;
   description: string;
+  skillOrWorkflow?: string;
 }
 
 export const AI_TYPES: AIType[] = [

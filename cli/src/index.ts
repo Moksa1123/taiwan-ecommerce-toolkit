@@ -33,6 +33,7 @@ program
       ai: options.ai as AIType | undefined,
       force: options.force,
       global: options.global,
+      offline: options.offline,
     });
   });
 
