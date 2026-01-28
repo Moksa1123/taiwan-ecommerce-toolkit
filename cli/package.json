@@ -1,7 +1,18 @@
 {
   "name": "taiwan-invoice-skill",
   "version": "2.0.0",
-  "description": "Taiwan E-Invoice AI Skill installer for Claude Code, Cursor, and Google Antigravity",
+  "description": "CLI to install Taiwan E-Invoice skill for AI coding assistants",
+  "bin": {
+    "taiwan-invoice": "./dist/index.js"
+  },
+  "files": [
+    "dist",
+    "assets"
+  ],
+  "scripts": {
+    "build": "node scripts/build.js",
+    "prepublishOnly": "npm run build"
+  },
   "keywords": [
     "taiwan",
     "invoice",
@@ -28,24 +39,19 @@
     "url": "https://github.com/Moksa1123/taiwan-invoice/issues"
   },
   "homepage": "https://github.com/Moksa1123/taiwan-invoice#readme",
-  "bin": {
-    "taiwan-invoice": "./dist/index.js"
-  },
-  "main": "./dist/index.js",
-  "files": [
-    "dist/",
-    "assets/"
-  ],
-  "scripts": {
-    "build": "node scripts/build.js",
-    "prepublishOnly": "npm run build"
-  },
   "dependencies": {
     "chalk": "^4.1.2",
     "commander": "^11.1.0",
-    "ora": "^5.4.1"
+    "ora": "^5.4.1",
+    "prompts": "^2.4.2"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.1",
+    "@types/prompts": "^2.4.9",
+    "esbuild": "^0.24.0",
+    "typescript": "^5.7.2"
   },
   "engines": {
-    "node": ">=14.0.0"
+    "node": ">=18.0.0"
   }
 }

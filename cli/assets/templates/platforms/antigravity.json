@@ -1,0 +1,21 @@
+{
+  "platform": "antigravity",
+  "displayName": "Google Antigravity",
+  "installType": "full",
+  "folderStructure": {
+    "root": ".agent",
+    "skillPath": "skills/taiwan-invoice",
+    "filename": "SKILL.md"
+  },
+  "frontmatter": {
+    "name": "taiwan-invoice",
+    "description": "Taiwan E-Invoice API integration specialist for ECPay, SmilePay, and Amego. Provides B2C/B2B invoice issuance, void, allowance, query, and print functionality."
+  },
+  "sections": {
+    "examples": true,
+    "references": true,
+    "scripts": true
+  },
+  "title": "Taiwan E-Invoice Skill",
+  "description": "Comprehensive guide for Taiwan E-Invoice API integration. Supports ECPay, SmilePay, and Amego providers with B2C/B2B invoice operations."
+}

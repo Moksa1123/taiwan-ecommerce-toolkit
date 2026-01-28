@@ -1,45 +1,46 @@
-#!/usr/bin/env node
+import { build } from 'esbuild';
+import { writeFileSync, readFileSync, mkdirSync, existsSync } from 'fs';
+import { join, dirname } from 'path';
+import { fileURLToPath } from 'url';
 
-/**
- * Build script for taiwan-invoice-skill CLI
- * Ensures dist/ and assets/ are ready for publishing
- */
+const __dirname = dirname(fileURLToPath(import.meta.url));
+const distDir = join(__dirname, '..', 'dist');
 
-const fs = require('fs');
-const path = require('path');
+async function main() {
+  console.log('Building taiwan-invoice-skill CLI...');
 
-const ROOT = path.join(__dirname, '..');
-const DIST = path.join(ROOT, 'dist');
-const ASSETS = path.join(ROOT, 'assets');
+  // Ensure dist directory exists
+  if (!existsSync(distDir)) {
+    mkdirSync(distDir, { recursive: true });
+  }
 
-console.log('Building taiwan-invoice-skill...');
+  // Build with esbuild - CommonJS format for better compatibility
+  await build({
+    entryPoints: [join(__dirname, '..', 'src', 'index.ts')],
+    bundle: true,
+    platform: 'node',
+    format: 'cjs',
+    outfile: join(distDir, 'index.js'),
+    external: [],
+    target: 'node18',
+  });
 
-// Ensure dist exists
-if (!fs.existsSync(DIST)) {
-  console.error('Error: dist/ directory not found');
-  process.exit(1);
+  // Read the generated file and prepend shebang
+  const outputPath = join(distDir, 'index.js');
+  let content = readFileSync(outputPath, 'utf-8');
+
+  // Remove any existing shebangs (in case source had one)
+  content = content.replace(/^#!.*\n/gm, '');
+
+  // Add proper shebang at the beginning
+  const withShebang = '#!/usr/bin/env node\n' + content;
+  writeFileSync(outputPath, withShebang);
+
+  console.log('Build complete!');
+  console.log('  dist/index.js');
 }
 
-// Ensure assets exist
-if (!fs.existsSync(ASSETS)) {
-  console.error('Error: assets/ directory not found');
+main().catch(err => {
+  console.error('Build failed:', err);
   process.exit(1);
-}
-
-// Verify main entry point
-const entryPoint = path.join(DIST, 'index.js');
-if (!fs.existsSync(entryPoint)) {
-  console.error('Error: dist/index.js not found');
-  process.exit(1);
-}
-
-// Verify skill assets
-const skillAssets = path.join(ASSETS, 'taiwan-invoice', 'SKILL.md');
-if (!fs.existsSync(skillAssets)) {
-  console.error('Error: assets/taiwan-invoice/SKILL.md not found');
-  process.exit(1);
-}
-
-console.log('Build complete!');
-console.log('  - dist/index.js');
-console.log('  - assets/taiwan-invoice/');
+});

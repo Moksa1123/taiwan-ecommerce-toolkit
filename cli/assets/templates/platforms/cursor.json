@@ -1,0 +1,21 @@
+{
+  "platform": "cursor",
+  "displayName": "Cursor",
+  "installType": "full",
+  "folderStructure": {
+    "root": ".cursor",
+    "skillPath": "skills/taiwan-invoice",
+    "filename": "SKILL.md"
+  },
+  "frontmatter": {
+    "name": "taiwan-invoice",
+    "description": "Taiwan E-Invoice API integration specialist for ECPay, SmilePay, and Amego. Provides B2C/B2B invoice issuance, void, allowance, query, and print functionality. Includes encryption implementations (AES-128-CBC, MD5), tax calculations, and complete API specifications."
+  },
+  "sections": {
+    "examples": true,
+    "references": true,
+    "scripts": true
+  },
+  "title": "Taiwan E-Invoice Skill",
+  "description": "Comprehensive guide for Taiwan E-Invoice API integration. Supports ECPay, SmilePay, and Amego providers with B2C/B2B invoice operations."
+}
