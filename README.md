@@ -41,27 +41,27 @@ Works with &nbsp; ![Claude Code](https://img.shields.io/badge/Claude_Code-black?
 ## Overview
 
 ```
-+-----------------------------------------------------------------------------------+
-|  TAIWAN INVOICE SKILLS                                                            |
-+-----------------------------------------------------------------------------------+
-|                                                                                   |
-|  PROVIDERS:                                                                       |
-|     ECPay (綠界)      AES-128-CBC encryption       Full test environment          |
-|     SmilePay (速買配)  URL parameter signing        Simple integration             |
-|     Amego (光貿)      MD5 signature (MIG 4.0)      Clean API design               |
-|                                                                                   |
-|  INVOICE TYPES:                                                                   |
-|     B2C (二聯式)  Tax-inclusive pricing, TaxAmount = 0                            |
-|     B2B (三聯式)  Pre-tax + tax split, 5% tax rate                                |
-|                                                                                   |
-|  FEATURES:                                                                        |
-|     Issue | Void | Allowance | Query | Print                                      |
-|                                                                                   |
-|  PLATFORMS (14 supported):                                                        |
-|     Claude Code, Cursor, Windsurf, Copilot, Antigravity, Kiro, Codex,            |
-|     Qoder, RooCode, Gemini CLI, Trae, OpenCode, Continue, CodeBuddy              |
-|                                                                                   |
-+-----------------------------------------------------------------------------------+
++-----------------------------------------------------------------------------+
+|  TAIWAN INVOICE SKILLS                                                      |
++-----------------------------------------------------------------------------+
+|                                                                             |
+|  PROVIDERS:                                                                 |
+|     ECPay (綠界)       AES-128-CBC encryption    Full test environment      |
+|     SmilePay (速買配)   URL parameter signing     Simple integration         |
+|     Amego (光貿)       MD5 signature (MIG 4.0)   Clean API design           |
+|                                                                             |
+|  INVOICE TYPES:                                                             |
+|     B2C (二聯式)  Tax-inclusive pricing, TaxAmount = 0                      |
+|     B2B (三聯式)  Pre-tax + tax split, 5% tax rate                          |
+|                                                                             |
+|  FEATURES:                                                                  |
+|     Issue | Void | Allowance | Query | Print                                |
+|                                                                             |
+|  PLATFORMS (14 supported):                                                  |
+|     Claude Code, Cursor, Windsurf, Copilot, Antigravity, Kiro, Codex,      |
+|     Qoder, RooCode, Gemini CLI, Trae, OpenCode, Continue, CodeBuddy        |
+|                                                                             |
++-----------------------------------------------------------------------------+
 ```
 
 ---
@@ -98,24 +98,6 @@ taiwan-invoice versions                    # List available versions
 taiwan-invoice update                      # Check for updates
 taiwan-invoice --version                   # Show CLI version
 taiwan-invoice --help                      # Show help
-```
-
-### Using Install Script
-
-**macOS / Linux:**
-
-```bash
-git clone https://github.com/Moksa1123/taiwan-invoice.git
-cd taiwan-invoice
-bash install.sh
-```
-
-**Windows:**
-
-```cmd
-git clone https://github.com/Moksa1123/taiwan-invoice.git
-cd taiwan-invoice
-install.bat
 ```
 
 ### Manual Installation
@@ -237,7 +219,7 @@ B2B (三聯式) Pre-tax + Tax split:
 │  SalesAmount = 1050 - 50 = 1000          │
 │  TotalAmount = 1050                      │
 │                                          │
-│  Verify: 1000 + 50 = 1050 ✓              │
+│  Verify: 1000 + 50 = 1050                │
 └──────────────────────────────────────────┘
 ```
 
@@ -291,26 +273,25 @@ winget install Python.Python.3.12
 
 ```
 taiwan-invoice/
-├── taiwan-invoice/                        # Source of Truth
-│   ├── SKILL.md                           # Skill definition (shared across platforms)
-│   ├── EXAMPLES.md                        # Code examples (9 examples)
-│   ├── references/                        # API documentation
-│   │   ├── ECPAY_API_REFERENCE.md         # ECPay full API spec
-│   │   ├── SMILEPAY_API_REFERENCE.md      # SmilePay full API spec
-│   │   └── AMEGO_API_REFERENCE.md         # Amego full API spec
-│   └── scripts/                           # Helper scripts
-│       ├── generate-invoice-service.py    # Service module generator
-│       └── test-invoice-amounts.py        # Amount calculation tester
-│
-├── .claude/skills/taiwan-invoice/         # Claude Code (pre-installed)
-├── .cursor/skills/taiwan-invoice/         # Cursor (pre-installed)
-├── .agent/skills/taiwan-invoice/          # Antigravity (pre-installed)
-│
-├── install.sh                             # macOS/Linux installer
-├── install.bat                            # Windows installer
+├── README.md                              # This file
 ├── LICENSE                                # MIT License
 ├── CONTRIBUTING.md                        # Contribution guide
-└── CHANGELOG.md                           # Version history
+│
+├── cli/                                   # CLI installer (npm package)
+│   ├── src/                               # TypeScript source
+│   ├── assets/                            # Bundled skill content
+│   └── package.json
+│
+└── taiwan-invoice/                        # Source of Truth
+    ├── SKILL.md                           # Skill definition
+    ├── EXAMPLES.md                        # Code examples (9 examples)
+    ├── references/                        # API documentation
+    │   ├── ECPAY_API_REFERENCE.md         # ECPay full API spec
+    │   ├── SMILEPAY_API_REFERENCE.md      # SmilePay full API spec
+    │   └── AMEGO_API_REFERENCE.md         # Amego full API spec
+    └── scripts/                           # Helper scripts
+        ├── generate-invoice-service.py    # Service module generator
+        └── test-invoice-amounts.py        # Amount calculation tester
 ```
 
 ---
@@ -318,9 +299,9 @@ taiwan-invoice/
 ## FAQ
 
 <details>
-<summary><b>Do all three platforms use the same SKILL.md?</b></summary>
+<summary><b>Do all platforms use the same SKILL.md?</b></summary>
 
-Yes. Claude Code, Cursor, and Google Antigravity all follow the [Agent Skills Open Standard](https://agentskills.io), so they share the same SKILL.md file. No need to maintain separate versions.
+Yes. All 14 supported platforms follow the [Agent Skills Open Standard](https://agentskills.io), so they share the same SKILL.md file. No need to maintain separate versions.
 </details>
 
 <details>
@@ -374,7 +355,7 @@ git commit -m "Add: description of your change"
 git push -u origin feature/your-feature-name
 ```
 
-After modifying `taiwan-invoice/`, sync to platform directories (`.claude/skills/`, `.cursor/skills/`, `.agent/skills/`).
+The CLI automatically bundles content from `taiwan-invoice/` during the build process.
 
 ---
 
