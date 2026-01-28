@@ -119,6 +119,23 @@ taiwan-invoice init --global    # 安裝到全域目錄
 
 ---
 
+## 智能工具
+
+安裝後包含以下 Python 工具（純 Python，無需外部依賴）：
+
+```bash
+# BM25 搜索引擎 - 搜索錯誤碼、欄位映射、稅務規則
+python scripts/search.py "10000016" --domain error
+
+# 加值中心推薦系統 - 根據需求推薦服務商
+python scripts/recommend.py "電商 高交易量 穩定"
+
+# 代碼生成器 - 生成 TypeScript/Python 服務模組
+python scripts/generate-invoice-service.py ECPay --output ts
+```
+
+---
+
 ## 授權
 
 [MIT License](https://github.com/Moksa1123/taiwan-invoice/blob/main/LICENSE)

@@ -32,9 +32,11 @@
 | 項目 | 說明 |
 |------|------|
 | **3 大電子發票加值中心** | ECPay 綠界、SmilePay 速買配、Amego 光貿 |
+| **BM25 智能搜索引擎** | 搜索 API、錯誤碼、欄位映射、稅務規則 |
+| **加值中心推薦系統** | 根據需求自動推薦最適合的服務商 |
+| **6 個 CSV 數據檔** | 數據驅動架構，易於維護更新 |
 | **完整 API 文件** | 欄位定義、錯誤碼、測試帳號 |
 | **9 組程式範例** | 涵蓋常見情境與錯誤處理 |
-| **2 個輔助腳本** | 服務產生器、金額計算驗證 |
 | **14 個 AI 平台** | Claude Code、Cursor、Windsurf、Copilot 等 |
 
 ---
@@ -155,17 +157,43 @@ TotalAmount = 1050
 
 ---
 
-## 輔助腳本
+## 智能工具
+
+### 搜索引擎
 
 ```bash
-# 產生服務模組
-python taiwan-invoice/scripts/generate-invoice-service.py ECPay
+# 搜索錯誤碼
+python taiwan-invoice/scripts/search.py "10000016" --domain error
 
-# 測試金額計算
-python taiwan-invoice/scripts/test-invoice-amounts.py
+# 搜索欄位映射
+python taiwan-invoice/scripts/search.py "MerchantID" --domain field
+
+# 搜索稅務規則
+python taiwan-invoice/scripts/search.py "B2B 稅額" --domain tax
 ```
 
-> 需要 Python 3.x
+### 推薦系統
+
+```bash
+# 根據需求推薦加值中心
+python taiwan-invoice/scripts/recommend.py "電商 高交易量 穩定"
+# → 推薦 ECPay (市佔率高，穩定性佳)
+
+python taiwan-invoice/scripts/recommend.py "簡單 快速"
+# → 推薦 SmilePay (整合最簡單)
+```
+
+### 代碼生成器
+
+```bash
+# 產生 TypeScript 服務模組
+python taiwan-invoice/scripts/generate-invoice-service.py ECPay --output ts
+
+# 產生 Python 服務模組
+python taiwan-invoice/scripts/generate-invoice-service.py SmilePay --output py
+```
+
+> 純 Python 實現，無需外部依賴
 
 ---
 
@@ -195,7 +223,17 @@ taiwan-invoice/
     ├── SKILL.md                   # 主文件
     ├── EXAMPLES.md                # 程式範例
     ├── references/                # API 文件
-    └── scripts/                   # 輔助腳本
+    ├── data/                      # CSV 數據檔
+    │   ├── providers.csv          # 加值中心比較
+    │   ├── operations.csv         # API 操作端點
+    │   ├── error-codes.csv        # 錯誤碼對照
+    │   ├── field-mappings.csv     # 欄位映射
+    │   ├── tax-rules.csv          # 稅務規則
+    │   └── troubleshooting.csv    # 疑難排解
+    └── scripts/                   # 智能工具
+        ├── search.py              # BM25 搜索引擎
+        ├── recommend.py           # 推薦系統
+        └── generate-invoice-service.py
 ```
 
 ---
