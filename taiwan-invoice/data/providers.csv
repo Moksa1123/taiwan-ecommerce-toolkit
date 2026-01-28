@@ -1,0 +1,4 @@
+provider,display_name,auth_method,encryption,test_url,prod_url,test_merchant_id,test_hash_key,test_hash_iv,content_type,features,market_share,api_style
+ECPay,綠界科技,AES-128-CBC,URL Encode + AES 加密,https://einvoice-stage.ecpay.com.tw,https://einvoice.ecpay.com.tw,2000132,ejCk326UnaZWKisg,q9jcZX8Ib9LM8wYk,application/json,完整文檔 | SDK 支援 | 高穩定性,高,RESTful JSON
+SmilePay,速買配,URL Parameter,Verify_key 驗證,https://ssl.smse.com.tw/api_test,https://ssl.smse.com.tw/api,SEI1000034,9D73935693EE0237FABA6AB744E48661,,application/x-www-form-urlencoded,雙協定(GET/POST) | 簡單整合 | XML回應,中,Query String
+Amego,光貿科技,MD5 Signature,JSON + MD5 簽章,https://invoice-api.amego.tw,https://invoice-api.amego.tw,12345678,sHeq7t8G1wiQvhAuIM27,,application/x-www-form-urlencoded,MIG 4.0 | 統編查詢 | PDF下載 | 測試正式共用URL,中,RESTful JSON

@@ -1,0 +1,9 @@
+invoice_type,tax_type,tax_rate,sales_amount_formula,tax_amount_formula,total_amount_formula,item_price_type,validation_rule,example_total,example_sales,example_tax,notes
+B2C,應稅,0.05,含稅總額,0,SalesAmount,含稅,"SalesAmount = TotalAmount, TaxAmount = 0",1050,1050,0,二聯式發票 稅額系統自動計算
+B2B,應稅,0.05,"round(TotalAmount / 1.05)","round(TotalAmount - TotalAmount/1.05)",SalesAmount + TaxAmount,未稅,"SalesAmount + TaxAmount = TotalAmount",1050,1000,50,三聯式發票 需自行計算稅額
+B2C,零稅率,0,含稅總額,0,SalesAmount,含稅,"TaxAmount = 0, 需填 ClearanceMark 和 ZeroTaxRateReason",1000,1000,0,外銷等零稅率情況
+B2B,零稅率,0,未稅總額,0,SalesAmount,未稅,"TaxAmount = 0",1000,1000,0,
+B2C,免稅,0,含稅總額,0,SalesAmount,含稅,"TaxAmount = 0",1000,1000,0,土地/農產品等免稅項目
+B2B,免稅,0,未稅總額,0,SalesAmount,未稅,"TaxAmount = 0",1000,1000,0,
+B2C,混合,0.05,應稅+免稅銷售額,僅應稅部分稅額,SalesAmount + FreeTaxSalesAmount + TaxAmount,含稅,需分別填 SalesAmount 和 FreeTaxSalesAmount,1050,950,50,混合應稅與免稅商品
+B2B,特種稅率,0.25,未稅總額,"SalesAmount * TaxRate",SalesAmount + TaxAmount,未稅,"InvType=08, TaxType=4",1250,1000,250,特種飲食業 25% 稅率

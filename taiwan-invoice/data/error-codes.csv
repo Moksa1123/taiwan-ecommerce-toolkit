@@ -1,0 +1,41 @@
+provider,code,message_zh,message_en,category,solution
+ECPay,10000001,參數錯誤,Parameter error,通用,檢查必填欄位是否完整
+ECPay,10000002,發票號碼重複,Duplicate invoice number,開立,使用不同的 RelateNumber
+ECPay,10000003,特店編號錯誤,Invalid merchant ID,認證,確認 MerchantID 正確
+ECPay,10000004,加密驗證失敗,Encryption verification failed,認證,檢查 HashKey/HashIV 和加密流程
+ECPay,10000005,時間戳記逾時,Timestamp expired,認證,確保時間戳在 10 分鐘內
+ECPay,10000006,RelateNumber 重複,Duplicate RelateNumber,開立,使用唯一的訂單編號
+ECPay,10000007,發票不存在,Invoice not found,查詢,確認發票號碼正確
+ECPay,10000008,發票已作廢,Invoice already voided,作廢,發票已被作廢無法重複操作
+ECPay,10000009,發票已折讓,Invoice has allowance,作廢,需先作廢折讓才能作廢發票
+ECPay,10000010,折讓金額超過發票金額,Allowance exceeds invoice amount,折讓,調整折讓金額
+ECPay,10000011,買方統編格式錯誤,Invalid buyer identifier,開立,統編需為 8 碼數字
+ECPay,10000016,金額計算錯誤,Amount calculation error,開立,檢查 SalesAmount + TaxAmount = TotalAmount
+ECPay,10000018,載具與捐贈不可同時存在,Carrier and donation conflict,開立,二擇一
+ECPay,10000019,打統編不可使用載具,B2B cannot use carrier,開立,移除載具設定
+ECPay,10000020,打統編不可捐贈,B2B cannot donate,開立,設定 Donation=0
+ECPay,6000015,買方識別碼資料不存在,Buyer identifier not found,開立,測試環境 B2B 需預先註冊統編
+SmilePay,0,開立成功,Success,成功,
+SmilePay,-1001,商家帳號缺少參數,Missing merchant parameters,認證,檢查 Grvc 和 Verify_key
+SmilePay,-10011,查無商家帳號,Merchant not found,認證,確認帳號正確
+SmilePay,-10012,尚未開放B2B功能,B2B not enabled,權限,聯繫速買配開通
+SmilePay,-10013,尚未開放B2C功能,B2C not enabled,權限,確認使用測試環境 URL
+SmilePay,-10033,B2C開立需再48hr內,B2C must issue within 48hr,開立,調整 InvoiceDate
+SmilePay,-10034,B2B開立需再168hr內,B2B must issue within 168hr,開立,調整 InvoiceDate
+SmilePay,-10066,商品總金額驗算錯誤,Amount calculation error,開立,確認 AllAmount = Sum(Amount)
+SmilePay,-10071,無可用字軌,No available track,開立,聯繫速買配配置字軌
+SmilePay,-10072,自訂發票編號重複,Duplicate data_id,開立,使用唯一的 data_id
+SmilePay,-10084,自訂號碼格式錯誤,Invalid orderid format,開立,orderid 限 30 字元
+SmilePay,-2008,發票目前狀態不允許執行該動作,Invalid invoice status,作廢,檢查發票狀態
+Amego,0,成功,Success,成功,
+Amego,1,參數錯誤,Parameter error,通用,檢查必填欄位
+Amego,2,簽章驗證失敗,Signature verification failed,認證,檢查 MD5 簽章計算
+Amego,3,時間戳記誤差過大,Timestamp error,認證,確保時間戳誤差在 ±60 秒內
+Amego,4,統一編號不存在,Tax ID not found,認證,確認統編正確
+Amego,5,訂單編號重複,Duplicate order ID,開立,使用唯一的 OrderId
+Amego,100,發票號碼不存在,Invoice not found,查詢,確認發票號碼正確
+Amego,101,發票已作廢,Invoice already voided,作廢,發票已被作廢
+Amego,1002,OrderId 已存在,OrderId exists,開立,使用不同的訂單編號
+Amego,1004,BuyerName 不可為空或無效值,Invalid BuyerName,開立,不可填 0/00/000/0000
+Amego,1007,金額計算錯誤,Amount calculation error,開立,檢查金額計算邏輯
+Amego,1012,打統編發票不可使用載具或捐贈,B2B cannot use carrier or donate,開立,移除載具和捐贈設定

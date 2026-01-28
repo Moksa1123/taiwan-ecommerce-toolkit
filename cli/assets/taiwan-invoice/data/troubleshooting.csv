@@ -1,0 +1,17 @@
+issue,symptom,cause,solution,provider,category,severity
+B2B發票開立失敗,回傳錯誤代碼 6000015,ECPay測試環境B2B需預先註冊統編,使用B2C API加統編 或在正式環境測試,ECPay,開立,HIGH
+金額驗算錯誤,AllAmount與商品小計不符,AllAmount使用了錯誤的來源欄位,B2C用SalesAmount B2B用TotalAmount: AllAmount=TotalAmount||SalesAmount,SmilePay,開立,HIGH
+orderid格式錯誤,回傳-10084錯誤,訂單編號超過30字元限制,orderid限30字元 data_id可50字元防重複,SmilePay,開立,MEDIUM
+列印發票空白,彈窗開啟但內容空白,SmilePay用GET但系統用POST提交,判斷method 若為GET則用redirect開啟URL,SmilePay,列印,MEDIUM
+B2C列印需隨機碼,列印失敗或顯示錯誤,未儲存開立時回傳的randomNumber,開立成功後儲存randomNumber到invoiceRandomNum欄位,SmilePay,列印,HIGH
+必填欄位遺漏,開立失敗 參數錯誤,FreeTaxSalesAmount ZeroTaxSalesAmount TaxRate等未填,即使為0也必須填入 TaxRate填"0.05",Amego,開立,HIGH
+隨機碼未儲存,列印時出錯,未儲存開立時回傳的random_number,開立成功後儲存randomNumber欄位,Amego,列印,HIGH
+B2B金額計算錯誤,稅額不正確,未正確區分含稅/未稅價格,使用DetailVat區分: B2B=0未稅 B2C=1含稅,Amego,開立,HIGH
+列印錯誤服務商,查詢不到發票,用其他服務商的API查光貿開的發票,開立時儲存invoiceProvider 列印時優先使用,All,列印,HIGH
+加密驗證失敗,TransCode非1或code=2,HashKey/HashIV錯誤或加密流程問題,確認加密流程: URL Encode→AES-128-CBC(ECPay) 或 MD5簽章(Amego),ECPay/Amego,認證,HIGH
+時間戳逾時,10分鐘或60秒誤差,伺服器時間與本地時間不同步,使用API查詢伺服器時間 或同步本地時間,ECPay/Amego,認證,MEDIUM
+載具與捐贈衝突,不可同時存在,同時設定載具和捐贈,二擇一: 有載具則捐贈=0 有捐贈則載具為空,All,開立,MEDIUM
+B2B不可使用載具,統編發票不可用載具,打統編發票設定了載具,B2B發票移除載具設定,All,開立,MEDIUM
+B2B不可捐贈,統編發票不可捐贈,打統編發票設定了捐贈,B2B發票設定Donation=0,All,開立,MEDIUM
+發票已作廢,無法重複作廢,發票狀態已是作廢,檢查發票狀態後再操作,All,作廢,LOW
+折讓超過發票金額,折讓金額大於原發票,折讓總額累計超過發票金額,計算剩餘可折讓金額,All,折讓,MEDIUM

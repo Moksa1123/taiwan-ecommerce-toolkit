@@ -1,0 +1,27 @@
+field_name,description,ecpay_name,smilepay_name,amego_name,type,required_b2c,required_b2b,notes
+merchant_id,商家代號,MerchantID,Grvc,invoice,String,Y,Y,ECPay 10碼 SmilePay 帳號 Amego 統編
+order_id,訂單編號,RelateNumber,data_id,OrderId,String,Y,Y,不可重複 ECPay 50字 SmilePay 50字 Amego 40字
+buyer_identifier,買方統編,CustomerIdentifier,Buyer_id,BuyerIdentifier,String,N,Y,8碼數字 無統編填空(ECPay/SmilePay)或0000000000(Amego)
+buyer_name,買方名稱,CustomerName,Name/CompanyName,BuyerName,String,N,Y,B2C用Name B2B用CompanyName (SmilePay)
+buyer_email,買方信箱,CustomerEmail,Email,BuyerEmailAddress,String,N,N,多組用分號區隔
+buyer_phone,買方電話,CustomerPhone,Phone,BuyerTelephoneNumber,String,N,N,
+buyer_address,買方地址,CustomerAddr,Address,BuyerAddress,String,N,N,
+invoice_type,字軌類別,InvType,Intype,TaxType,String,Y,Y,ECPay: 07一般/08特種 SmilePay: 07/08 Amego: 1-4/9
+tax_type,課稅別,TaxType,TaxType,TaxType,Number,Y,Y,1應稅 2零稅率 3免稅 9混合
+sales_amount,銷售額,SalesAmount,AllAmount/SalesAmount,SalesAmount,Number,Y,Y,B2C含稅 B2B未稅
+tax_amount,稅額,TaxAmount,TaxAmount,TaxAmount,Number,N,Y,B2C為0 B2B需計算
+total_amount,總金額,TotalAmount,AllAmount,TotalAmount,Number,N,Y,SalesAmount + TaxAmount
+carrier_type,載具類別,CarrierType,CarrierType,CarrierType,String,N,N,手機條碼: ECPay=3 SmilePay=3J0002 Amego=3J0002
+carrier_id,載具編號,CarrierNum,CarrierID,CarrierId1,String,N,N,手機條碼以/開頭共8碼
+donation,捐贈註記,Donation,DonateMark,NPOBAN,String,Y,N,ECPay/SmilePay: 0不捐1捐 Amego: 直接填愛心碼
+love_code,愛心碼,LoveCode,LoveKey,NPOBAN,String,N,N,捐贈時必填 7碼
+print,列印註記,Print,,,String,Y,N,ECPay專用 0不列印 1列印 B2B固定1
+invoice_date,發票日期,InvCreateDate,InvoiceDate,InvoiceDate,String,N,N,ECPay可回溯6天 SmilePay B2C 48hr B2B 168hr
+invoice_time,發票時間,,InvoiceTime,InvoiceTime,String,N,N,SmilePay/Amego專用 HH:MM:SS
+item_name,商品名稱,ItemName,Description,Description,String,Y,Y,ECPay 100字 SmilePay 256字 Amego 256字
+item_count,商品數量,ItemCount,Quantity,Quantity,Number,Y,Y,
+item_price,商品單價,ItemPrice,UnitPrice,UnitPrice,Number,Y,Y,B2C含稅 B2B未稅
+item_amount,商品小計,ItemAmount,Amount,Amount,Number,Y,Y,ItemCount * ItemPrice
+item_unit,商品單位,ItemWord,Unit,Unit,String,N,N,6字以內
+item_remark,商品備註,ItemRemark,Remark,Remark,String,N,N,40字以內
+random_number,隨機碼,RandomNumber,RandomNumber,random_number,String,N,N,開立成功後回傳 列印時需要
