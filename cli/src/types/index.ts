@@ -15,7 +15,7 @@ export type AIType =
   | 'codebuddy'
   | 'all';
 
-export type InstallType = 'full' | 'reference';
+export type InstallType = 'full' | 'reference' | 'workflow';
 
 // GitHub Release API types
 export interface Asset {
@@ -41,6 +41,8 @@ export interface PlatformConfig {
     root: string;
     skillPath: string;
     filename: string;
+    sharedRoot?: string;
+    sharedPath?: string;
   };
   scriptPath?: string;
   frontmatter: Record<string, string> | null;
@@ -77,7 +79,7 @@ export const AI_FOLDERS: Record<Exclude<AIType, 'all'>, string[]> = {
   claude: ['.claude'],
   cursor: ['.cursor'],
   windsurf: ['.windsurf'],
-  antigravity: ['.agent'],
+  antigravity: ['.agent', '.shared'],
   copilot: ['.github'],
   kiro: ['.kiro'],
   codex: ['.codex'],

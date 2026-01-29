@@ -1,6 +1,6 @@
 {
   "name": "taiwan-invoice-skill",
-  "version": "2.3.0",
+  "version": "2.4.0",
   "description": "CLI to install Taiwan E-Invoice skill for AI coding assistants",
   "bin": {
     "taiwan-invoice": "./dist/index.js"
