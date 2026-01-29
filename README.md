@@ -218,20 +218,17 @@ claude-skills/
 ├── invoice-cli/                   # 發票 CLI (npm: taiwan-invoice-skill)
 │   ├── src/                       # TypeScript 源碼
 │   ├── assets/                    # 打包資源
-│   ├── dist/                      # 編譯輸出
-│   └── package.json               # v2.5.4
+│   └── dist/                      # 編譯輸出
 │
 ├── payment-cli/                   # 金流 CLI (npm: taiwan-payment-skill)
 │   ├── src/                       # TypeScript 源碼
 │   ├── assets/                    # 打包資源
-│   ├── dist/                      # 編譯輸出
-│   └── package.json               # v1.0.0
+│   └── dist/                      # 編譯輸出
 │
 └── logistics-cli/                 # 物流 CLI (npm: taiwan-logistics-skill)
     ├── src/                       # TypeScript 源碼
     ├── assets/                    # 打包資源
-    ├── dist/                      # 編譯輸出
-    └── package.json               # v1.0.0
+    └── dist/                      # 編譯輸出
 ```
 
 ---
