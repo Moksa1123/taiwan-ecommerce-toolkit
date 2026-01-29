@@ -131,7 +131,7 @@ TotalAmount = 1050
 | **Cursor** | AI 程式編輯器 | `/taiwan-invoice` |
 | **Windsurf** | Codeium 編輯器 | 自動 |
 | **Copilot** | GitHub Copilot | `/taiwan-invoice` |
-| **Antigravity** | Google AI 助手 | 自動 |
+| **Antigravity** | Google AI 助手 | `/taiwan-invoice` |
 | **Kiro** | AWS AI 助手 | `/taiwan-invoice` |
 | **Codex** | OpenAI CLI | 自動 |
 | **Qoder** | Qodo AI 助手 | 自動 |
