@@ -7,3 +7,5 @@ okmart,OK 便利商店,OK Mart,cvs,true,,,,,,店到店,全台 900+ 門市
 tcat,黑貓宅急便,t-cat,home,true,,,,https://www.t-cat.com.tw,https://www.t-cat.com.tw,"常溫,冷藏,冷凍",全台
 hct,新竹物流,HCT,home,true,,,,https://www.hct.com.tw,https://www.hct.com.tw,常溫,全台
 pelican,宅配通,Pelican Express,home,true,,,,https://www.pelican.com.tw,https://www.pelican.com.tw,常溫,全台
+newebpay,藍新物流,NewebPay Logistics,payment_aggregator,true,請至後台申請,請至後台申請,請至後台申請,https://ccore.newebpay.com/API/Logistic,https://core.newebpay.com/API/Logistic,"7-11,全家,萊爾富,OK,黑貓,AES-256-CBC加密",全台
+payuni,統一物流,PAYUNi Logistics,payment_aggregator,true,請至後台申請,請至後台申請,請至後台申請,https://sandbox-api.payuni.com.tw/api/logistics,https://api.payuni.com.tw/api/logistics,"7-11常溫/冷凍,T-Cat宅配,AES-256-GCM加密",全台

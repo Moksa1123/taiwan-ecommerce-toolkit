@@ -15,3 +15,11 @@ B2B不可使用載具,統編發票不可用載具,打統編發票設定了載具
 B2B不可捐贈,統編發票不可捐贈,打統編發票設定了捐贈,B2B發票設定Donation=0,All,開立,MEDIUM
 發票已作廢,無法重複作廢,發票狀態已是作廢,檢查發票狀態後再操作,All,作廢,LOW
 折讓超過發票金額,折讓金額大於原發票,折讓總額累計超過發票金額,計算剩餘可折讓金額,All,折讓,MEDIUM
+AES 加密失敗,加密驗證失敗 | 10000004,HashKey/HashIV錯誤 | AES-128-CBC模式錯誤,確認使用AES-128-CBC | 檢查PKCS7 padding | 驗證Base64編碼,ecpay,認證,HIGH
+B2B 統編未註冊,6000015錯誤 | 買方識別碼不存在,測試環境B2B需預先註冊統編,至測試環境預先註冊買方統編 | 或使用已註冊的測試統編,ecpay,開立,HIGH
+RelateNumber 重複,10000006錯誤,同一訂單編號重複開立,使用timestamp生成唯一RelateNumber | 格式: ORDER{timestamp},ecpay,開立,MEDIUM
+金額計算不符,10000016錯誤,SalesAmount + TaxAmount ≠ TotalAmount,確認B2C: TaxAmount=0 | B2B: 正確計算稅額 | 檢查四捨五入,ecpay,開立,MEDIUM
+字軌未配置,-10071錯誤 | 無可用字軌,測試環境字軌未配置,聯繫速買配客服配置測試字軌,smilepay,開立,HIGH
+B2C 開立逾時,-10033錯誤,開立時間超過48小時,確保B2C發票在48小時內開立 | 調整InvoiceDate,smilepay,開立,MEDIUM
+MD5 簽章錯誤,code=2 | 簽章驗證失敗,簽章計算順序錯誤 | 欄位缺失,按官方文件排序欄位 | 檢查HashKey拼接 | 移除空值欄位,amego,認證,HIGH
+BuyerName 不合法,code=1004,填入0/00/000/0000等無效值,BuyerName不可為純數字0 | 使用真實姓名或公司名,amego,開立,MEDIUM

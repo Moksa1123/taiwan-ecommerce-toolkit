@@ -1,14 +1,35 @@
-code,status_zh,status_en,category,description,next_action
-300,訂單建立成功,Order Created,success,物流訂單已成功建立,等待出貨
-310,訂單取消,Order Cancelled,cancelled,訂單已取消,
-2030,已交寄,Package Shipped,in_transit,商品已交給物流商,等待配送
-2063,配達完成,Delivered,delivered,宅配已送達收件人,
-2067,消費者取貨完成,Pickup Completed,completed,消費者已至超商取貨,
-2073,退貨中,Return in Progress,returning,退貨流程進行中,
-2074,退貨完成,Return Completed,returned,退貨流程已完成,
-2030,包裹已到店,Arrived at Store,at_store,包裹已送達指定門市,通知取貨
-2031,包裹已取件,Picked Up by Carrier,picked_up,物流商已取件,
-2032,轉運中,In Transit,in_transit,包裹配送中,
-2061,配達失敗,Delivery Failed,failed,配送失敗,聯繫收件人
-2070,包裹已退回,Package Returned,returned,包裹已退回寄件人,
-3001,系統錯誤,System Error,error,系統發生錯誤,聯繫客服
+provider,code,status_zh,status_en,category,description,next_action
+ecpay,300,訂單建立成功,Order Created,success,物流訂單已成功建立,等待出貨
+ecpay,310,訂單取消,Order Cancelled,cancelled,訂單已取消,
+ecpay,2030,已交寄,Package Shipped,in_transit,商品已交給物流商,等待配送
+ecpay,2063,配達完成,Delivered,delivered,宅配已送達收件人,
+ecpay,2067,消費者取貨完成,Pickup Completed,completed,消費者已至超商取貨,
+ecpay,2073,退貨中,Return in Progress,returning,退貨流程進行中,
+ecpay,2074,退貨完成,Return Completed,returned,退貨流程已完成,
+ecpay,2030,包裹已到店,Arrived at Store,at_store,包裹已送達指定門市,通知取貨
+ecpay,2031,包裹已取件,Picked Up by Carrier,picked_up,物流商已取件,
+ecpay,2032,轉運中,In Transit,in_transit,包裹配送中,
+ecpay,2061,配達失敗,Delivery Failed,failed,配送失敗,聯繫收件人
+ecpay,2070,包裹已退回,Package Returned,returned,包裹已退回寄件人,
+ecpay,3001,系統錯誤,System Error,error,系統發生錯誤,聯繫客服
+newebpay,300,訂單建立成功,Order Created,success,物流訂單已成功建立,等待出貨
+newebpay,310,訂單取消,Order Cancelled,cancelled,訂單已取消,
+newebpay,2030,已交寄,Package Shipped,in_transit,商品已交給物流商,等待配送
+newebpay,2063,配達完成,Delivered,delivered,宅配已送達收件人,
+newebpay,2067,消費者取貨完成,Pickup Completed,completed,消費者已至超商取貨,
+newebpay,2030,包裹已到店,Arrived at Store,at_store,包裹已送達指定門市,通知取貨
+newebpay,2031,包裹已取件,Picked Up by Carrier,picked_up,物流商已取件,
+newebpay,2032,轉運中,In Transit,in_transit,包裹配送中,
+newebpay,2061,配達失敗,Delivery Failed,failed,配送失敗,聯繫收件人
+newebpay,2070,包裹已退回,Package Returned,returned,包裹已退回寄件人,
+newebpay,3001,系統錯誤,System Error,error,系統發生錯誤,聯繫客服
+payuni,200,訂單建立成功,Order Created,success,物流訂單已成功建立,等待出貨
+payuni,201,訂單處理中,Processing,pending,訂單處理中,等待配送
+payuni,202,已交寄,Shipped,in_transit,商品已交給物流商,等待配送
+payuni,203,配達完成,Delivered,delivered,已送達收件人,
+payuni,204,取貨完成,Pickup Completed,completed,已至超商取貨,
+payuni,205,配達失敗,Delivery Failed,failed,配送失敗,聯繫收件人
+payuni,206,退貨中,Return in Progress,returning,退貨流程進行中,
+payuni,207,退貨完成,Return Completed,returned,退貨已完成,
+payuni,400,訂單錯誤,Order Error,error,訂單資料錯誤,檢查訂單參數
+payuni,500,系統錯誤,System Error,error,系統發生錯誤,聯繫客服

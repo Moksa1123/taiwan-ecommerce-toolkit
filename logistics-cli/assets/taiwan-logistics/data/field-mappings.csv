@@ -1,27 +1,27 @@
-field_name,field_zh,ecpay_name,type,required,max_length,format,notes
-merchant_id,商店代號,MerchantID,string,true,10,,
-order_id,訂單編號,MerchantTradeNo,string,true,20,英數字,需唯一
-order_date,訂單日期,MerchantTradeDate,string,true,20,yyyy/MM/dd HH:mm:ss,
-logistics_type,物流類型,LogisticsType,string,true,20,CVS/Home,
-logistics_sub_type,物流子類型,LogisticsSubType,string,true,20,,見代碼表
-ecpay_logistics_id,綠界物流編號,AllPayLogisticsID,string,false,20,,ECPay回傳
-goods_amount,商品金額,GoodsAmount,integer,true,,,
-goods_name,商品名稱,GoodsName,string,true,50,,
-sender_name,寄件人姓名,SenderName,string,true,10,,
-sender_phone,寄件人電話,SenderPhone,string,true,20,,
-sender_cell_phone,寄件人手機,SenderCellPhone,string,false,20,,
-sender_zipcode,寄件人郵遞區號,SenderZipCode,string,false,6,,宅配必填
-sender_address,寄件人地址,SenderAddress,string,false,200,,宅配必填
-receiver_name,收件人姓名,ReceiverName,string,true,10,,
-receiver_phone,收件人電話,ReceiverPhone,string,true,20,,
-receiver_cell_phone,收件人手機,ReceiverCellPhone,string,false,20,,
-receiver_zipcode,收件人郵遞區號,ReceiverZipCode,string,false,6,,宅配必填
-receiver_address,收件人地址,ReceiverAddress,string,false,200,,宅配必填
-receiver_store_id,收件門市代號,ReceiverStoreID,string,false,6,,超商必填
-return_store_id,退貨門市代號,ReturnStoreID,string,false,6,,
-is_collection,是否代收,IsCollection,string,false,1,Y/N,超商適用
-collection_amount,代收金額,CollectionAmount,integer,false,,,
-temperature,溫層,Temperature,string,false,4,0001/0002/0003,宅配適用
-distance,距離,Distance,string,false,2,00/01,00同縣市 01外縣市
-specification,規格,Specification,string,false,4,,包裹尺寸
-server_reply_url,通知網址,ServerReplyURL,string,true,200,URL,
+field_name,field_zh,ecpay_name,newebpay_name,payuni_name,type,required,max_length,format,notes
+merchant_id,商店代號,MerchantID,uid,MerID,string,true,10,,
+order_id,訂單編號,MerchantTradeNo,merchant_order_no,MerTradeNo,string,true,20,英數字,需唯一
+order_date,訂單日期,MerchantTradeDate,create_time,TradeTime,string,true,20,yyyy/MM/dd HH:mm:ss,
+logistics_type,物流類型,LogisticsType,lgs_type,LogisticsType,string,true,20,CVS/Home,
+logistics_sub_type,物流子類型,LogisticsSubType,lgs_sub_type,LogisticsSubType,string,true,20,,見代碼表
+ecpay_logistics_id,物流編號,AllPayLogisticsID,logistics_id,PayUniLogisticsID,string,false,20,,廠商回傳
+goods_amount,商品金額,GoodsAmount,goods_amount,GoodsAmount,integer,true,,,
+goods_name,商品名稱,GoodsName,goods_name,GoodsName,string,true,50,,
+sender_name,寄件人姓名,SenderName,sender_name,SenderName,string,true,10,,
+sender_phone,寄件人電話,SenderPhone,sender_tel,SenderPhone,string,true,20,,
+sender_cell_phone,寄件人手機,SenderCellPhone,sender_cell_phone,SenderCellPhone,string,false,20,,
+sender_zipcode,寄件人郵遞區號,SenderZipCode,sender_zipcode,SenderZipCode,string,false,6,,宅配必填
+sender_address,寄件人地址,SenderAddress,sender_address,SenderAddress,string,false,200,,宅配必填
+receiver_name,收件人姓名,ReceiverName,receiver_name,ReceiverName,string,true,10,,
+receiver_phone,收件人電話,ReceiverPhone,receiver_tel,ReceiverPhone,string,true,20,,
+receiver_cell_phone,收件人手機,ReceiverCellPhone,receiver_cell_phone,ReceiverCellPhone,string,false,20,,
+receiver_zipcode,收件人郵遞區號,ReceiverZipCode,receiver_zipcode,ReceiverZipCode,string,false,6,,宅配必填
+receiver_address,收件人地址,ReceiverAddress,receiver_address,ReceiverAddress,string,false,200,,宅配必填
+receiver_store_id,收件門市代號,ReceiverStoreID,receiver_store_code,ReceiverStoreID,string,false,6,,超商必填
+return_store_id,退貨門市代號,ReturnStoreID,return_store_code,ReturnStoreID,string,false,6,,
+is_collection,是否代收,IsCollection,is_collection,N/A,string,false,1,Y/N,超商適用
+collection_amount,代收金額,CollectionAmount,collection_amount,N/A,integer,false,,,
+temperature,溫層,Temperature,temperature,Temperature,string,false,4,0001/0002/0003,宅配適用
+distance,距離,Distance,distance,N/A,string,false,2,00/01,00同縣市 01外縣市
+specification,規格,Specification,specification,Specification,string,false,4,,包裹尺寸
+server_reply_url,通知網址,ServerReplyURL,notify_url,NotifyURL,string,true,200,URL,

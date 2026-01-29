@@ -27,6 +27,10 @@ SmilePay,-10071,無可用字軌,No available track,開立,聯繫速買配配置�
 SmilePay,-10072,自訂發票編號重複,Duplicate data_id,開立,使用唯一的 data_id
 SmilePay,-10084,自訂號碼格式錯誤,Invalid orderid format,開立,orderid 限 30 字元
 SmilePay,-2008,發票目前狀態不允許執行該動作,Invalid invoice status,作廢,檢查發票狀態
+SmilePay,-10085,商品數量驗算錯誤,Item quantity calculation error,開立,確認 Quantity 為正整數
+SmilePay,-10086,單價驗算錯誤,Unit price calculation error,開立,確認 UnitPrice 為正數
+SmilePay,-10090,載具格式錯誤,Invalid carrier format,開立,手機條碼需為/開頭8碼
+SmilePay,-2009,折讓金額超過剩餘金額,Allowance exceeds remaining,折讓,確認折讓金額小於發票剩餘金額
 Amego,0,成功,Success,成功,
 Amego,1,參數錯誤,Parameter error,通用,檢查必填欄位
 Amego,2,簽章驗證失敗,Signature verification failed,認證,檢查 MD5 簽章計算
@@ -39,3 +43,8 @@ Amego,1002,OrderId 已存在,OrderId exists,開立,使用不同的訂單編號
 Amego,1004,BuyerName 不可為空或無效值,Invalid BuyerName,開立,不可填 0/00/000/0000
 Amego,1007,金額計算錯誤,Amount calculation error,開立,檢查金額計算邏輯
 Amego,1012,打統編發票不可使用載具或捐贈,B2B cannot use carrier or donate,開立,移除載具和捐贈設定
+Amego,1005,商品明細不可為空,Item details required,開立,至少提供一項商品明細
+Amego,1008,載具與捐贈不可同時存在,Carrier and donation conflict,開立,二擇一
+Amego,1009,打統編不可使用載具,B2B cannot use carrier,開立,移除 CarrierId1
+Amego,1010,打統編不可捐贈,B2B cannot donate,開立,設定 NPOBAN 為空
+Amego,102,折讓單號不存在,Allowance not found,作廢折讓,確認折讓單號正確

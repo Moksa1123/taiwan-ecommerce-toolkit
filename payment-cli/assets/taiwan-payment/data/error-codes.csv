@@ -18,3 +18,18 @@ newebpay,TRA10014,商店代號錯誤,Invalid Merchant,auth,error,確認商店代
 newebpay,TRA10027,檢查碼錯誤,CheckValue Error,auth,error,重新計算檢查碼
 newebpay,TRA20001,交易失敗,Transaction Failed,payment,error,稍後重試
 newebpay,TRA20014,交易逾時,Transaction Timeout,payment,error,重新交易
+payuni,SUCCESS,交易成功,Success,success,info,
+payuni,FAILED,交易失敗,Transaction Failed,payment,error,確認交易狀態
+payuni,INVALID_MERID,商店代號不存在,Invalid Merchant ID,auth,error,確認 MerID 正確
+payuni,INVALID_CHECKSUM,CheckSum 驗證失敗,CheckSum Verification Failed,auth,error,重新計算 CheckSum
+payuni,AES_ENCRYPT_ERROR,AES-GCM 加密錯誤,AES-GCM Encryption Error,encryption,error,確認 HashKey/HashIV 格式
+payuni,AES_DECRYPT_ERROR,AES-GCM 解密錯誤,AES-GCM Decryption Error,encryption,error,確認加密資料完整性
+payuni,INVALID_NONCE,Nonce 長度錯誤,Invalid Nonce Length,encryption,error,確保 Nonce 為 12 bytes
+payuni,TAG_VERIFICATION_FAILED,Tag 驗證失敗,Tag Verification Failed,encryption,error,檢查 16 bytes tag 完整性
+payuni,INVALID_AMOUNT,金額驗算錯誤,Invalid Amount,validation,error,確保金額為正整數
+payuni,DUPLICATE_ORDER,訂單編號重複,Duplicate Order,validation,error,使用唯一訂單編號
+payuni,ORDER_NOT_FOUND,訂單不存在,Order Not Found,query,error,檢查訂單編號
+payuni,API_TIMEOUT,API 請求逾時,API Timeout,system,error,重新交易
+payuni,PAYMENT_FAILED,付款失敗,Payment Failed,payment,error,稍後重試或使用其他支付方式
+payuni,INVALID_PAYMENT_TYPE,不支援的支付方式,Unsupported Payment Type,validation,error,使用支援的支付方式
+payuni,JSON_PARSE_ERROR,JSON 解析失敗,JSON Parse Error,system,error,檢查 API 回應格式

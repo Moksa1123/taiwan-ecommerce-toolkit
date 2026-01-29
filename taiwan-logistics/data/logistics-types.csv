@@ -9,3 +9,17 @@ CVS,OKMART,OK B2C,OK,cvs_b2c,true,20000,45x30x30cm,常溫,大宗寄倉
 CVS,OKMARTC2C,OK 店到店,OK,cvs_c2c,true,20000,45x30x30cm,常溫,C2C 店到店
 Home,TCAT,黑貓宅急便,黑貓,home,false,200000,150cm,常溫/冷藏/冷凍,宅配到府
 Home,ECAN,宅配通,宅配通,home,false,100000,120cm,常溫,常溫宅配
+CVS,UNIMART_NWP,7-11 B2C (NewebPay),newebpay,cvs_b2c,true,20000,45x30x30cm,常溫,藍新7-11取貨
+CVS,UNIMARTC2C_NWP,7-11 店到店 (NewebPay),newebpay,cvs_c2c,true,6000,45x30x30cm,常溫,藍新7-11 C2C
+CVS,FAMI_NWP,全家 B2C (NewebPay),newebpay,cvs_b2c,true,20000,45x30x30cm,常溫,藍新全家取貨
+CVS,FAMIC2C_NWP,全家店到店 (NewebPay),newebpay,cvs_c2c,true,6000,45x30x30cm,常溫,藍新全家 C2C
+CVS,HILIFE_NWP,萊爾富 B2C (NewebPay),newebpay,cvs_b2c,true,20000,45x30x30cm,常溫,藍新萊爾富取貨
+CVS,HILIFEC2C_NWP,萊爾富店到店 (NewebPay),newebpay,cvs_c2c,true,6000,45x30x30cm,常溫,藍新萊爾富 C2C
+CVS,OKMART_NWP,OK B2C (NewebPay),newebpay,cvs_b2c,true,20000,45x30x30cm,常溫,藍新OK取貨
+CVS,OKMARTC2C_NWP,OK 店到店 (NewebPay),newebpay,cvs_c2c,true,6000,45x30x30cm,常溫,藍新OK C2C
+CVS,UNIMART_PAY,7-11 C2C 常溫 (PAYUNi),payuni,cvs_c2c,false,6000,45x30x30cm,常溫,統一7-11常溫
+CVS,UNIMART_FREEZE,7-11 C2C 冷凍 (PAYUNi),payuni,cvs_c2c,false,6000,45x30x30cm,冷凍,統一7-11冷凍
+CVS,UNIMART_B2C_PAY,7-11 B2C (PAYUNi),payuni,cvs_b2c,true,20000,45x30x30cm,常溫,統一7-11 B2C
+Home,TCAT_PAY,黑貓常溫 (PAYUNi),payuni,home,true,50000,150x150x150cm,常溫,統一T-Cat常溫
+Home,TCAT_FREEZE,黑貓冷凍 (PAYUNi),payuni,home,true,50000,100x100x100cm,冷凍,統一T-Cat冷凍
+Home,TCAT_COLD,黑貓冷藏 (PAYUNi),payuni,home,true,50000,100x100x100cm,冷藏,統一T-Cat冷藏

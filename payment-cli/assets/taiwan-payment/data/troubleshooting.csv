@@ -16,3 +16,7 @@ ATM 虛擬帳號未產生,ATM 付款未產生帳號,參數設定錯誤 | ExpireD
 跨域問題,前端導向付款頁失敗,CORS 限制 | 使用 AJAX,使用 Form POST 方式導向 | 不可使用 AJAX | 需整頁跳轉,ecpay/newebpay,medium
 商店代號錯誤,回傳商店不存在,MerchantID 錯誤 | 測試正式環境混用,確認 MerchantID 正確 | 測試環境用測試商店代號 | 正式環境用正式商店代號,ecpay/newebpay/payuni,high
 時間格式錯誤,MerchantTradeDate 格式錯誤,日期格式不符 | 時區問題,使用 yyyy/MM/dd HH:mm:ss 格式 | 使用伺服器時區 | 不可超過當前時間太多,ecpay/newebpay,medium
+JSON API 解析失敗,API 回應無法解析 | JSON 結構不符,回應格式錯誤 | API 版本不符,確認 PAYUNi API 版本 | 檢查 Content-Type: application/json | 記錄完整回應內容,payuni,high
+Nonce 長度錯誤,加密失敗 | 回傳 AES_ENCRYPT_ERROR,Nonce 不是 12 bytes | UTF-8 編碼問題,確認 HashIV 為 12 字節 UTF-8 編碼 | 使用 len(nonce.encode('utf-8')) 檢查長度,payuni,high
+GCM Tag 未附加,解密失敗 | Tag verification failed,加密後未附加 16 bytes tag | 資料截斷,確認加密後總長度 = ciphertext + 16 | 使用 cipher.encrypt_and_digest() 正確取得 tag,payuni,high
+RESTful 端點錯誤,404 Not Found | 405 Method Not Allowed,端點路徑錯誤 | HTTP 方法錯誤,確認使用 POST 方法 | 檢查端點路徑 /api/upp | 測試環境使用 sandbox-api.payuni.com.tw,payuni,medium
