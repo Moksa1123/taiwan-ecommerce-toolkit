@@ -29,7 +29,7 @@ export function infoCommand(): void {
   console.log();
 
   console.log(chalk.cyan('Links:'));
-  console.log(chalk.dim('  GitHub: https://github.com/Moksa1123/taiwan-invoice'));
+  console.log(chalk.dim('  GitHub: https://github.com/Moksa1123/taiwan-ecommerce-toolkit'));
   console.log(chalk.dim('  npm:    https://www.npmjs.com/package/taiwan-payment-skill'));
   console.log();
 }

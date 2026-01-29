@@ -182,7 +182,7 @@ taiwan-logistics init --ai claude --global
 
 ## 相關專案
 
-- [taiwan-invoice-skill](https://github.com/Moksa1123/taiwan-invoice) - 台灣電子發票整合
+- [taiwan-invoice-skill](https://github.com/Moksa1123/taiwan-ecommerce-toolkit) - 台灣電子發票整合
 - [taiwan-payment-skill](https://github.com/Moksa1123/taiwan-payment) - 台灣金流整合
 
 ---

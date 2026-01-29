@@ -11,7 +11,7 @@
   <a href="https://www.npmjs.com/package/taiwan-invoice-skill"><img src="https://img.shields.io/npm/dm/taiwan-invoice-skill?style=flat-square&label=downloads" alt="npm downloads"></a>
   <img src="https://img.shields.io/badge/node-%3E%3D18-339933?style=flat-square&logo=node.js&logoColor=white" alt="Node.js">
   <img src="https://img.shields.io/badge/platforms-14-blue?style=flat-square" alt="14 Platforms">
-  <a href="https://github.com/Moksa1123/taiwan-invoice/blob/main/LICENSE"><img src="https://img.shields.io/github/license/Moksa1123/taiwan-invoice?style=flat-square" alt="License"></a>
+  <a href="https://github.com/Moksa1123/taiwan-ecommerce-toolkit/blob/main/LICENSE"><img src="https://img.shields.io/github/license/Moksa1123/taiwan-ecommerce-toolkit?style=flat-square" alt="License"></a>
 </p>
 
 <p align="center">
@@ -140,7 +140,7 @@ python scripts/generate-invoice-service.py ECPay --output ts
 
 ## 授權
 
-[MIT License](https://github.com/Moksa1123/taiwan-invoice/blob/main/LICENSE)
+[MIT License](https://github.com/Moksa1123/taiwan-ecommerce-toolkit/blob/main/LICENSE)
 
 ---
 

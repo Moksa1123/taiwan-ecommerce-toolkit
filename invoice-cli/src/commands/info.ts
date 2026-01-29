@@ -16,7 +16,7 @@ export async function infoCommand(): Promise<void> {
   console.log(`  ${chalk.dim('License:')}     MIT`);
   console.log();
   console.log(chalk.cyan('Links:'));
-  console.log(`  ${chalk.dim('GitHub:')}      https://github.com/Moksa1123/taiwan-invoice`);
+  console.log(`  ${chalk.dim('GitHub:')}      https://github.com/Moksa1123/taiwan-ecommerce-toolkit`);
   console.log(`  ${chalk.dim('npm:')}         https://www.npmjs.com/package/taiwan-invoice-skill`);
   console.log(`  ${chalk.dim('Support:')}     https://paypal.me/cccsubcom`);
   console.log();

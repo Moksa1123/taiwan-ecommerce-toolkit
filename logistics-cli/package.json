@@ -32,12 +32,12 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Moksa1123/taiwan-invoice.git"
+    "url": "git+https://github.com/Moksa1123/taiwan-ecommerce-toolkit.git"
   },
   "bugs": {
-    "url": "https://github.com/Moksa1123/taiwan-invoice/issues"
+    "url": "https://github.com/Moksa1123/taiwan-ecommerce-toolkit/issues"
   },
-  "homepage": "https://github.com/Moksa1123/taiwan-invoice#readme",
+  "homepage": "https://github.com/Moksa1123/taiwan-ecommerce-toolkit#readme",
   "dependencies": {
     "chalk": "^4.1.2",
     "cli-progress": "^3.12.0",
