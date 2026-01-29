@@ -2,7 +2,7 @@ import chalk from 'chalk';
 import ora from 'ora';
 import { logger } from '../utils/logger.js';
 
-const VERSION = '2.0.0';
+const VERSION = '2.5.4';
 
 export async function updateCommand(): Promise<void> {
   logger.title('Taiwan Invoice Skill - Update');

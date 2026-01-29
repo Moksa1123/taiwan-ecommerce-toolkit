@@ -22,7 +22,6 @@ program
   .option('-a, --ai <type>', `AI assistant type (${AI_TYPES.join(', ')})`)
   .option('-f, --force', 'Overwrite existing files')
   .option('-g, --global', 'Install to global directory')
-  .option('-o, --offline', 'Skip GitHub download, use bundled assets only')
   .action(async (options) => {
     if (options.ai && !AI_TYPES.includes(options.ai)) {
       console.error(`Invalid AI type: ${options.ai}`);
@@ -33,7 +32,6 @@ program
       ai: options.ai as AIType | undefined,
       force: options.force,
       global: options.global,
-      offline: options.offline,
     });
   });
 

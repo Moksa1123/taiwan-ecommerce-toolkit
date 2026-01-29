@@ -3741,10 +3741,10 @@ var require_ansi_styles = __commonJS({
     };
     var ansi2ansi = (n) => n;
     var rgb2rgb = (r, g, b) => [r, g, b];
-    var setLazyProperty = (object, property, get2) => {
+    var setLazyProperty = (object, property, get) => {
       Object.defineProperty(object, property, {
         get: () => {
-          const value = get2();
+          const value = get();
           Object.defineProperty(object, property, {
             value,
             enumerable: true,
@@ -13075,7 +13075,7 @@ var require_stream_writable = __commonJS({
       // because otherwise some prototype manipulation in
       // userland will fail
       enumerable: false,
-      get: function get2() {
+      get: function get() {
         return this._writableState && this._writableState.getBuffer();
       }
     });
@@ -13090,7 +13090,7 @@ var require_stream_writable = __commonJS({
       // because otherwise some prototype manipulation in
       // userland will fail
       enumerable: false,
-      get: function get2() {
+      get: function get() {
         return this._writableState.highWaterMark;
       }
     });
@@ -13260,7 +13260,7 @@ var require_stream_writable = __commonJS({
       // because otherwise some prototype manipulation in
       // userland will fail
       enumerable: false,
-      get: function get2() {
+      get: function get() {
         return this._writableState.length;
       }
     });
@@ -13333,7 +13333,7 @@ var require_stream_writable = __commonJS({
       // because otherwise some prototype manipulation in
       // userland will fail
       enumerable: false,
-      get: function get2() {
+      get: function get() {
         if (this._writableState === void 0) {
           return false;
         }
@@ -13396,7 +13396,7 @@ var require_stream_duplex = __commonJS({
       // because otherwise some prototype manipulation in
       // userland will fail
       enumerable: false,
-      get: function get2() {
+      get: function get() {
         return this._writableState.highWaterMark;
       }
     });
@@ -13405,7 +13405,7 @@ var require_stream_duplex = __commonJS({
       // because otherwise some prototype manipulation in
       // userland will fail
       enumerable: false,
-      get: function get2() {
+      get: function get() {
         return this._writableState && this._writableState.getBuffer();
       }
     });
@@ -13414,7 +13414,7 @@ var require_stream_duplex = __commonJS({
       // because otherwise some prototype manipulation in
       // userland will fail
       enumerable: false,
-      get: function get2() {
+      get: function get() {
         return this._writableState.length;
       }
     });
@@ -13430,7 +13430,7 @@ var require_stream_duplex = __commonJS({
       // because otherwise some prototype manipulation in
       // userland will fail
       enumerable: false,
-      get: function get2() {
+      get: function get() {
         if (this._readableState === void 0 || this._writableState === void 0) {
           return false;
         }
@@ -14238,7 +14238,7 @@ var require_stream_readable = __commonJS({
       // because otherwise some prototype manipulation in
       // userland will fail
       enumerable: false,
-      get: function get2() {
+      get: function get() {
         if (this._readableState === void 0) {
           return false;
         }
@@ -14779,7 +14779,7 @@ var require_stream_readable = __commonJS({
       // because otherwise some prototype manipulation in
       // userland will fail
       enumerable: false,
-      get: function get2() {
+      get: function get() {
         return this._readableState.highWaterMark;
       }
     });
@@ -14788,7 +14788,7 @@ var require_stream_readable = __commonJS({
       // because otherwise some prototype manipulation in
       // userland will fail
       enumerable: false,
-      get: function get2() {
+      get: function get() {
         return this._readableState && this._readableState.buffer;
       }
     });
@@ -14797,7 +14797,7 @@ var require_stream_readable = __commonJS({
       // because otherwise some prototype manipulation in
       // userland will fail
       enumerable: false,
-      get: function get2() {
+      get: function get() {
         return this._readableState.flowing;
       },
       set: function set(state) {
@@ -14812,7 +14812,7 @@ var require_stream_readable = __commonJS({
       // because otherwise some prototype manipulation in
       // userland will fail
       enumerable: false,
-      get: function get2() {
+      get: function get() {
         return this._readableState.length;
       }
     });
@@ -15138,7 +15138,7 @@ var require_BufferList = __commonJS({
       }
       return offset;
     };
-    BufferList.prototype.get = function get2(index) {
+    BufferList.prototype.get = function get(index) {
       if (index > this.length || index < 0) {
         return void 0;
       }
@@ -16068,15 +16068,6 @@ ${msg}
 var import_cli_progress = __toESM(require_cli_progress());
 var import_chalk2 = __toESM(require_source());
 var INSTALL_STEPS = [
-  { name: "Checking for updates", weight: 10 },
-  { name: "Downloading release", weight: 25 },
-  { name: "Extracting files", weight: 15 },
-  { name: "Installing skill files", weight: 20 },
-  { name: "Installing references", weight: 10 },
-  { name: "Installing scripts", weight: 10 },
-  { name: "Installing data files", weight: 10 }
-];
-var OFFLINE_STEPS = [
   { name: "Loading templates", weight: 20 },
   { name: "Generating skill files", weight: 30 },
   { name: "Installing references", weight: 20 },
@@ -16175,7 +16166,7 @@ async function initCommand(options) {
   logger.info(`Installing for: ${import_chalk3.default.cyan(getAITypeDescription(aiType))}${options.global ? " (global)" : ""}`);
   let copiedFolders = [];
   try {
-    const progress = new InstallProgress(OFFLINE_STEPS);
+    const progress = new InstallProgress(INSTALL_STEPS);
     progress.start();
     await animatedDelay(300);
     progress.nextStep();
@@ -16280,68 +16271,37 @@ async function infoCommand() {
 // src/commands/versions.ts
 var import_chalk6 = __toESM(require_source());
 var import_ora = __toESM(require_ora());
-
-// src/utils/github.ts
-var https = __toESM(require("https"));
-var REPO_OWNER = "Moksa1123";
-var REPO_NAME = "taiwan-invoice";
-async function fetchReleases() {
-  return new Promise((resolve, reject) => {
-    const options = {
-      hostname: "api.github.com",
-      path: `/repos/${REPO_OWNER}/${REPO_NAME}/releases`,
-      headers: {
-        "User-Agent": "taiwan-invoice-skill-cli",
-        "Accept": "application/vnd.github.v3+json"
-      }
-    };
-    https.get(options, (res) => {
-      let data = "";
-      res.on("data", (chunk) => data += chunk);
-      res.on("end", () => {
-        if (res.statusCode === 200) {
-          try {
-            resolve(JSON.parse(data));
-          } catch (e) {
-            reject(new Error("Failed to parse GitHub response"));
-          }
-        } else if (res.statusCode === 404) {
-          resolve([]);
-        } else {
-          reject(new Error(`GitHub API error: ${res.statusCode}`));
-        }
-      });
-    }).on("error", reject);
-  });
-}
-
-// src/commands/versions.ts
-var VERSION2 = "2.0.0";
+var VERSION2 = "2.5.4";
 async function versionsCommand() {
   logger.title("Taiwan Invoice Skill - Available Versions");
-  const spinner = (0, import_ora.default)("Fetching releases from GitHub...").start();
+  const spinner = (0, import_ora.default)("Fetching versions from npm...").start();
   try {
-    const releases = await fetchReleases();
-    spinner.succeed("Fetched releases from GitHub");
+    const response = await fetch("https://registry.npmjs.org/taiwan-invoice-skill", {
+      headers: {
+        "Accept": "application/json"
+      }
+    });
+    if (!response.ok) {
+      throw new Error(`npm registry error: ${response.status}`);
+    }
+    const data = await response.json();
+    const versions = Object.keys(data.versions || {}).reverse().slice(0, 10);
+    spinner.succeed("Fetched versions from npm");
     console.log();
     console.log(import_chalk6.default.cyan("Available Versions:"));
     console.log();
-    if (releases.length === 0) {
-      console.log(import_chalk6.default.dim("  No releases found"));
+    if (versions.length === 0) {
+      console.log(import_chalk6.default.dim("  No versions found"));
     } else {
-      for (const release of releases.slice(0, 10)) {
-        const date = new Date(release.published_at).toLocaleDateString();
-        const isCurrent = release.tag_name === `v${VERSION2}`;
+      for (const version of versions) {
+        const isCurrent = version === VERSION2;
         const marker = isCurrent ? import_chalk6.default.green(" (current)") : "";
-        console.log(`  ${import_chalk6.default.green(release.tag_name.padEnd(12))} ${date}${marker}`);
+        console.log(`  ${import_chalk6.default.green(version.padEnd(12))}${marker}`);
       }
     }
     console.log();
-    console.log(import_chalk6.default.cyan("Current CLI Version:"));
-    console.log(import_chalk6.default.dim(`  ${VERSION2}`));
-    console.log();
   } catch (error) {
-    spinner.fail("Failed to fetch releases");
+    spinner.fail("Failed to fetch versions");
     console.log();
     console.log(import_chalk6.default.cyan("Current CLI Version:"));
     console.log(import_chalk6.default.dim(`  ${VERSION2}`));
@@ -16354,7 +16314,7 @@ async function versionsCommand() {
 // src/commands/update.ts
 var import_chalk7 = __toESM(require_source());
 var import_ora2 = __toESM(require_ora());
-var VERSION3 = "2.0.0";
+var VERSION3 = "2.5.4";
 async function updateCommand() {
   logger.title("Taiwan Invoice Skill - Update");
   console.log(import_chalk7.default.cyan("Current Version:"));
@@ -16393,7 +16353,7 @@ async function updateCommand() {
 var VERSION4 = "2.0.0";
 var program2 = new Command();
 program2.name("taiwan-invoice").description("CLI to install Taiwan E-Invoice skill for AI coding assistants").version(VERSION4);
-program2.command("init").description("Install Taiwan Invoice skill to current project").option("-a, --ai <type>", `AI assistant type (${AI_TYPES.join(", ")})`).option("-f, --force", "Overwrite existing files").option("-g, --global", "Install to global directory").option("-o, --offline", "Skip GitHub download, use bundled assets only").action(async (options) => {
+program2.command("init").description("Install Taiwan Invoice skill to current project").option("-a, --ai <type>", `AI assistant type (${AI_TYPES.join(", ")})`).option("-f, --force", "Overwrite existing files").option("-g, --global", "Install to global directory").action(async (options) => {
   if (options.ai && !AI_TYPES.includes(options.ai)) {
     console.error(`Invalid AI type: ${options.ai}`);
     console.error(`Valid types: ${AI_TYPES.join(", ")}`);
@@ -16402,8 +16362,7 @@ program2.command("init").description("Install Taiwan Invoice skill to current pr
   await initCommand({
     ai: options.ai,
     force: options.force,
-    global: options.global,
-    offline: options.offline
+    global: options.global
   });
 });
 program2.command("list").description("List supported AI platforms").action(listCommand);

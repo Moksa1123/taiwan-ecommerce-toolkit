@@ -6,13 +6,12 @@ import { AI_TYPES } from '../types/index.js';
 import { generatePlatformFiles, generateAllPlatformFiles, loadPlatformConfig } from '../utils/template.js';
 import { detectAIType, getAITypeDescription } from '../utils/detect.js';
 import { logger } from '../utils/logger.js';
-import { InstallProgress, OFFLINE_STEPS, animatedDelay } from '../utils/progress.js';
+import { InstallProgress, INSTALL_STEPS, animatedDelay } from '../utils/progress.js';
 
 interface InitOptions {
   ai?: AIType;
   force?: boolean;
   global?: boolean;
-  offline?: boolean;
 }
 
 export async function initCommand(options: InitOptions): Promise<void> {
@@ -72,7 +71,7 @@ export async function initCommand(options: InitOptions): Promise<void> {
 
   try {
     // Generate skill files from bundled templates
-    const progress = new InstallProgress(OFFLINE_STEPS);
+    const progress = new InstallProgress(INSTALL_STEPS);
     progress.start();
 
     // Step 1: Loading templates

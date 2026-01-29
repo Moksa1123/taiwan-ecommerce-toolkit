@@ -74,7 +74,6 @@ taiwan-invoice update       # 檢查更新
 ### 選項
 
 ```bash
-taiwan-invoice init --offline   # 跳過 GitHub 下載，使用內建資源
 taiwan-invoice init --force     # 覆蓋現有檔案
 taiwan-invoice init --global    # 安裝到全域目錄（所有專案共用）
 ```
@@ -88,14 +87,6 @@ taiwan-invoice init --ai cursor --global       # ~/.cursor/skills/taiwan-invoice
 taiwan-invoice init --ai claude --global       # ~/.claude/skills/taiwan-invoice/
 taiwan-invoice init --ai antigravity --global  # ~/.gemini/antigravity/global_skills/taiwan-invoice/
 ```
-
----
-
-## 運作原理
-
-`taiwan-invoice init` 預設會從 GitHub 下載最新版本。如果下載失敗（網路錯誤、速率限制），會自動使用 CLI 內建的資源。
-
-使用 `--offline` 可跳過 GitHub 下載，直接使用內建資源。
 
 ---
 

@@ -7,16 +7,6 @@ export interface InstallStep {
 }
 
 export const INSTALL_STEPS: InstallStep[] = [
-  { name: 'Checking for updates', weight: 10 },
-  { name: 'Downloading release', weight: 25 },
-  { name: 'Extracting files', weight: 15 },
-  { name: 'Installing skill files', weight: 20 },
-  { name: 'Installing references', weight: 10 },
-  { name: 'Installing scripts', weight: 10 },
-  { name: 'Installing data files', weight: 10 },
-];
-
-export const OFFLINE_STEPS: InstallStep[] = [
   { name: 'Loading templates', weight: 20 },
   { name: 'Generating skill files', weight: 30 },
   { name: 'Installing references', weight: 20 },
