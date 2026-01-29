@@ -236,54 +236,47 @@ App Key: sHeq7t8G1wiQvhAuIM27
 
 export async function generatePlatformFiles(
   targetDir: string,
-  aiType: string
+  aiType: string,
+  isGlobal: boolean = false
 ): Promise<string[]> {
   const config = await loadPlatformConfig(aiType);
   const createdFolders: string[] = [];
 
-  // Handle workflow type (e.g., Antigravity)
-  if (config.installType === 'workflow') {
-    // Create workflow file in .agent/workflows/
-    const workflowDir = join(
+  // For global installation, structure is different
+  // Global: targetDir is already the globalRoot (e.g., ~/.cursor)
+  // Project: targetDir is the project root, and we add .cursor/skills/...
+  let skillDir: string;
+
+  if (isGlobal) {
+    // Global installation paths vary by platform:
+    // - Cursor: ~/.cursor/skills/taiwan-invoice/
+    // - Antigravity: ~/.gemini/antigravity/global_skills/taiwan-invoice/
+    // The skillPath is like "skills/taiwan-invoice", we use it directly for most platforms
+    // But for Antigravity global_skills, we only need "taiwan-invoice"
+    let skillPath = config.folderStructure.skillPath;
+
+    // If globalRoot already ends with "global_skills" or similar, remove "skills/" prefix
+    if (config.folderStructure.globalRoot?.includes('global_skills')) {
+      skillPath = skillPath.replace(/^skills\//, '');
+    }
+
+    skillDir = join(targetDir, skillPath);
+    createdFolders.push(targetDir);
+  } else {
+    // Project installation: targetDir/.cursor/skills/taiwan-invoice/
+    skillDir = join(
       targetDir,
       config.folderStructure.root,
       config.folderStructure.skillPath
     );
-    await mkdir(workflowDir, { recursive: true });
-
-    const workflowContent = await renderWorkflowFile(config);
-    const workflowFilePath = join(workflowDir, config.folderStructure.filename);
-    await writeFile(workflowFilePath, workflowContent, 'utf-8');
     createdFolders.push(config.folderStructure.root);
-
-    // Copy assets to .shared/taiwan-invoice/
-    if (config.folderStructure.sharedRoot && config.folderStructure.sharedPath) {
-      const sharedDir = join(
-        targetDir,
-        config.folderStructure.sharedRoot,
-        config.folderStructure.sharedPath
-      );
-      await mkdir(sharedDir, { recursive: true });
-      await copyTaiwanInvoiceAssets(sharedDir, config.sections);
-      createdFolders.push(config.folderStructure.sharedRoot);
-    }
-
-    return createdFolders;
   }
-
-  // Standard skill installation
-  const skillDir = join(
-    targetDir,
-    config.folderStructure.root,
-    config.folderStructure.skillPath
-  );
 
   await mkdir(skillDir, { recursive: true });
 
   const skillContent = await renderSkillFile(config);
   const skillFilePath = join(skillDir, config.folderStructure.filename);
   await writeFile(skillFilePath, skillContent, 'utf-8');
-  createdFolders.push(config.folderStructure.root);
 
   // Copy additional assets
   await copyTaiwanInvoiceAssets(skillDir, config.sections);

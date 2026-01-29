@@ -43,6 +43,7 @@ export interface PlatformConfig {
     filename: string;
     sharedRoot?: string;
     sharedPath?: string;
+    globalRoot?: string;  // Global installation path (e.g., ~/.cursor/skills/)
   };
   scriptPath?: string;
   frontmatter: Record<string, string> | null;
@@ -79,7 +80,7 @@ export const AI_FOLDERS: Record<Exclude<AIType, 'all'>, string[]> = {
   claude: ['.claude'],
   cursor: ['.cursor'],
   windsurf: ['.windsurf'],
-  antigravity: ['.agent', '.shared'],
+  antigravity: ['.agent'],
   copilot: ['.github'],
   kiro: ['.kiro'],
   codex: ['.codex'],

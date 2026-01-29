@@ -1,8 +1,9 @@
-# taiwan-invoice-skill
+<h1 align="center">taiwan-invoice-skill</h1>
+
+<h3 align="center">台灣電子發票 AI 開發技能包</h3>
 
 <p align="center">
-  <strong>台灣電子發票 AI 開發技能包</strong><br>
-  <sub>支援 ECPay 綠界 · SmilePay 速買配 · Amego 光貿</sub>
+  <strong>支援 ECPay 綠界 · SmilePay 速買配 · Amego 光貿</strong>
 </p>
 
 <p align="center">
@@ -75,7 +76,17 @@ taiwan-invoice update       # 檢查更新
 ```bash
 taiwan-invoice init --offline   # 跳過 GitHub 下載，使用內建資源
 taiwan-invoice init --force     # 覆蓋現有檔案
-taiwan-invoice init --global    # 安裝到全域目錄
+taiwan-invoice init --global    # 安裝到全域目錄（所有專案共用）
+```
+
+### 全域安裝
+
+使用 `--global` 可將技能安裝到使用者目錄，讓所有專案都能使用：
+
+```bash
+taiwan-invoice init --ai cursor --global       # ~/.cursor/skills/taiwan-invoice/
+taiwan-invoice init --ai claude --global       # ~/.claude/skills/taiwan-invoice/
+taiwan-invoice init --ai antigravity --global  # ~/.gemini/antigravity/global_skills/taiwan-invoice/
 ```
 
 ---

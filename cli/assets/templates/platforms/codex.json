@@ -5,7 +5,8 @@
   "folderStructure": {
     "root": ".codex",
     "skillPath": "skills/taiwan-invoice",
-    "filename": "SKILL.md"
+    "filename": "SKILL.md",
+    "globalRoot": "~/.codex"
   },
   "scriptPath": "skills/taiwan-invoice/scripts",
   "frontmatter": {

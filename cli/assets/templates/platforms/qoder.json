@@ -4,10 +4,10 @@
   "installType": "full",
   "folderStructure": {
     "root": ".qoder",
-    "skillPath": "rules/taiwan-invoice",
+    "skillPath": "skills/taiwan-invoice",
     "filename": "SKILL.md"
   },
-  "scriptPath": "rules/taiwan-invoice/scripts",
+  "scriptPath": "skills/taiwan-invoice/scripts",
   "frontmatter": null,
   "sections": {
     "examples": true,

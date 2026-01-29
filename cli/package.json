@@ -1,6 +1,6 @@
 {
   "name": "taiwan-invoice-skill",
-  "version": "2.4.0",
+  "version": "2.5.0",
   "description": "CLI to install Taiwan E-Invoice skill for AI coding assistants",
   "bin": {
     "taiwan-invoice": "./dist/index.js"
@@ -41,11 +41,13 @@
   "homepage": "https://github.com/Moksa1123/taiwan-invoice#readme",
   "dependencies": {
     "chalk": "^4.1.2",
+    "cli-progress": "^3.12.0",
     "commander": "^11.1.0",
     "ora": "^5.4.1",
     "prompts": "^2.4.2"
   },
   "devDependencies": {
+    "@types/cli-progress": "^3.11.6",
     "@types/node": "^22.10.1",
     "@types/prompts": "^2.4.9",
     "esbuild": "^0.24.0",

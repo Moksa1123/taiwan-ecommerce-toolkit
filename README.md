@@ -1,8 +1,9 @@
-# Taiwan Invoice Skill
+<h1 align="center">Taiwan Invoice Skill</h1>
+
+<h3 align="center">台灣電子發票 AI 開發技能包</h3>
 
 <p align="center">
-  <strong>台灣電子發票 AI 開發技能包</strong><br>
-  <sub>支援 ECPay 綠界 · SmilePay 速買配 · Amego 光貿</sub>
+  <strong>支援 ECPay 綠界 · SmilePay 速買配 · Amego 光貿</strong>
 </p>
 
 <p align="center">

@@ -5,7 +5,8 @@
   "folderStructure": {
     "root": ".claude",
     "skillPath": "skills/taiwan-invoice",
-    "filename": "SKILL.md"
+    "filename": "SKILL.md",
+    "globalRoot": "~/.claude"
   },
   "scriptPath": "skills/taiwan-invoice/scripts",
   "frontmatter": {

@@ -1,15 +1,15 @@
 import chalk from 'chalk';
-import ora from 'ora';
 import prompts from 'prompts';
 import * as path from 'path';
 import * as os from 'os';
 import type { AIType } from '../types/index.js';
 import { AI_TYPES } from '../types/index.js';
-import { generatePlatformFiles, generateAllPlatformFiles } from '../utils/template.js';
+import { generatePlatformFiles, generateAllPlatformFiles, loadPlatformConfig } from '../utils/template.js';
 import { detectAIType, getAITypeDescription } from '../utils/detect.js';
 import { logger } from '../utils/logger.js';
 import { getLatestRelease, downloadRelease, getSourceZipUrl } from '../utils/github.js';
 import { installFromZip, cleanup } from '../utils/extract.js';
+import { InstallProgress, INSTALL_STEPS, OFFLINE_STEPS, animatedDelay } from '../utils/progress.js';
 
 interface InitOptions {
   ai?: AIType;
@@ -18,41 +18,54 @@ interface InitOptions {
   offline?: boolean;
 }
 
-async function tryGitHubDownload(aiType: Exclude<AIType, 'all'>, targetDir: string): Promise<{ success: boolean; folders: string[] }> {
-  const spinner = ora('Checking for latest release on GitHub...').start();
-
+async function tryGitHubDownload(
+  aiType: Exclude<AIType, 'all'>,
+  targetDir: string,
+  progress: InstallProgress
+): Promise<{ success: boolean; folders: string[] }> {
   try {
+    // Step 1: Check for updates
     const release = await getLatestRelease();
     if (!release) {
-      spinner.info('No releases found, using bundled assets');
       return { success: false, folders: [] };
     }
 
-    spinner.text = `Found release: ${release.tag_name}`;
+    progress.nextStep(`Found ${release.tag_name}`);
+    await animatedDelay(200);
 
-    // Download source ZIP
+    // Step 2: Download
     const zipUrl = getSourceZipUrl(release);
     const tempDir = os.tmpdir();
     const zipPath = path.join(tempDir, `taiwan-invoice-${release.tag_name}.zip`);
 
-    spinner.text = 'Downloading release...';
     await downloadRelease(zipUrl, zipPath);
+    progress.nextStep();
+    await animatedDelay(200);
 
-    spinner.text = 'Extracting and installing...';
+    // Step 3: Extract
     const { copiedFolders, tempDir: extractedDir } = await installFromZip(zipPath, targetDir, aiType);
+    progress.nextStep();
+    await animatedDelay(200);
 
     // Clean up
     cleanup(extractedDir, zipPath);
 
     if (copiedFolders.length > 0) {
-      spinner.succeed(`Installed from GitHub release ${release.tag_name}`);
+      // Steps 4-7: Individual file installations
+      progress.nextStep(); // skill files
+      await animatedDelay(150);
+      progress.nextStep(); // references
+      await animatedDelay(150);
+      progress.nextStep(); // scripts
+      await animatedDelay(150);
+      progress.nextStep(); // data files
+      await animatedDelay(150);
+
       return { success: true, folders: copiedFolders };
     } else {
-      spinner.info('No matching folders in release, using bundled assets');
       return { success: false, folders: [] };
     }
-  } catch (error) {
-    spinner.info('GitHub download failed, using bundled assets');
+  } catch {
     return { success: false, folders: [] };
   }
 }
@@ -89,40 +102,81 @@ export async function initCommand(options: InitOptions): Promise<void> {
     aiType = response.aiType as AIType;
   }
 
-  logger.info(`Installing for: ${chalk.cyan(getAITypeDescription(aiType))}`);
+  // Determine target directory
+  let targetDir = process.cwd();
 
-  const cwd = process.cwd();
+  if (options.global && aiType !== 'all') {
+    try {
+      const config = await loadPlatformConfig(aiType);
+      if (config.folderStructure.globalRoot) {
+        // Expand ~ to home directory
+        const globalRoot = config.folderStructure.globalRoot.replace(/^~/, os.homedir());
+        targetDir = globalRoot;
+        logger.info(`Installing globally to: ${chalk.cyan(targetDir)}`);
+      } else {
+        logger.warn(`Global installation not supported for ${aiType}, using project directory`);
+      }
+    } catch {
+      logger.warn('Failed to load platform config, using project directory');
+    }
+  }
+
+  logger.info(`Installing for: ${chalk.cyan(getAITypeDescription(aiType))}${options.global ? ' (global)' : ''}`);
+
   let copiedFolders: string[] = [];
   let usedGitHub = false;
 
   try {
     // Try GitHub download first (unless offline mode)
     if (!options.offline && aiType !== 'all') {
-      const result = await tryGitHubDownload(aiType, cwd);
+      const progress = new InstallProgress(INSTALL_STEPS);
+      progress.start();
+
+      const result = await tryGitHubDownload(aiType, targetDir, progress);
       if (result.success) {
         copiedFolders = result.folders;
         usedGitHub = true;
+        progress.complete();
+      } else {
+        progress.fail('GitHub unavailable, switching to offline mode...');
+        await animatedDelay(500);
       }
     }
 
     // Fall back to bundled assets
     if (!usedGitHub) {
-      const spinner = ora('Generating skill files from bundled templates...').start();
+      const progress = new InstallProgress(OFFLINE_STEPS);
+      progress.start();
 
+      // Step 1: Loading templates
+      await animatedDelay(300);
+      progress.nextStep();
+
+      // Step 2: Generating skill files
       if (aiType === 'all') {
-        copiedFolders = await generateAllPlatformFiles(cwd);
+        copiedFolders = await generateAllPlatformFiles(targetDir);
       } else {
-        copiedFolders = await generatePlatformFiles(cwd, aiType);
+        copiedFolders = await generatePlatformFiles(targetDir, aiType, options.global);
       }
+      progress.nextStep();
+      await animatedDelay(200);
 
-      spinner.succeed('Generated from bundled templates!');
+      // Step 3-5: File installation steps
+      progress.nextStep(); // references
+      await animatedDelay(150);
+      progress.nextStep(); // scripts
+      await animatedDelay(150);
+      progress.nextStep(); // data files
+      await animatedDelay(150);
+
+      progress.complete();
     }
 
     // Summary
     console.log();
     logger.info('Installed folders:');
     copiedFolders.forEach(folder => {
-      console.log(`  ${chalk.green('+')} ${folder}`);
+      console.log(`  ${chalk.green('✓')} ${folder}`);
     });
 
     console.log();
