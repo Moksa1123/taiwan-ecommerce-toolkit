@@ -160,7 +160,7 @@ export async function initCommand(options: InitOptions): Promise<void> {
       console.log(chalk.yellow('支援的金流平台：'));
       console.log(chalk.dim('  • 綠界金流 (ECPay)'));
       console.log(chalk.dim('  • 藍新金流 (NewebPay)'));
-      console.log(chalk.dim('  • 統一金流 (PayUni)'));
+      console.log(chalk.dim('  • 統一金流 (PAYUNi)'));
       console.log();
       console.log(chalk.yellow('常見使用範例：'));
       console.log(chalk.dim('  1. 「幫我整合綠界信用卡支付」'));

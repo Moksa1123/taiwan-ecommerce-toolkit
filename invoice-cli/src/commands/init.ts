@@ -159,8 +159,8 @@ export async function initCommand(options: InitOptions): Promise<void> {
       console.log();
       console.log(chalk.yellow('支援的發票平台：'));
       console.log(chalk.dim('  • 綠界發票 (ECPay)'));
-      console.log(chalk.dim('  • 笑臉科技 (SmilePay)'));
-      console.log(chalk.dim('  • 安美戈科技 (Amego)'));
+      console.log(chalk.dim('  • 速買配 (SmilePay)'));
+      console.log(chalk.dim('  • 光貿 (Amego)'));
       console.log();
       console.log(chalk.yellow('常見使用範例：'));
       console.log(chalk.dim('  1. 「幫我整合綠界電子發票開立」'));

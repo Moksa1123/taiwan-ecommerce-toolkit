@@ -160,7 +160,7 @@ export async function initCommand(options: InitOptions): Promise<void> {
       console.log(chalk.yellow('支援的物流平台：'));
       console.log(chalk.dim('  • 綠界物流 (ECPay)'));
       console.log(chalk.dim('  • 藍新物流 (NewebPay)'));
-      console.log(chalk.dim('  • 統一金流 (PayUni)'));
+      console.log(chalk.dim('  • 統一物流 (PAYUNi)'));
       console.log();
       console.log(chalk.yellow('常見使用範例：'));
       console.log(chalk.dim('  1. 「幫我整合綠界超商取貨 API」'));

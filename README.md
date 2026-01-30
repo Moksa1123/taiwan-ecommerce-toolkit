@@ -177,58 +177,60 @@ python taiwan-logistics/scripts/generate-logistics-service.py PAYUNi --output ts
 
 ## 快速開始
 
-### 安裝套件
+### Step 1: 安裝 CLI 工具
 
 ```bash
-# 安裝電子發票整合工具
-npm install -g taiwan-invoice-skill
-
-# 安裝金流串接整合工具
-npm install -g taiwan-payment-skill
-
-# 安裝物流串接整合工具
-npm install -g taiwan-logistics-skill
+# 依需求選擇安裝 (擇一或全裝)
+npm install -g taiwan-invoice-skill     # 電子發票
+npm install -g taiwan-payment-skill     # 金流串接
+npm install -g taiwan-logistics-skill   # 物流整合
 ```
 
-### 專案初始化
+### Step 2: 初始化專案
 
 ```bash
-# 進入專案目錄
+# 進入你的專案目錄
 cd /path/to/your/project
 
-# 選擇 AI 編碼助手並初始化
-taiwan-invoice init --ai claude      # 電子發票
-taiwan-payment init --ai claude      # 金流串接
-taiwan-logistics init --ai claude    # 物流串接
+# 執行初始化，選擇你使用的 AI 編碼助手
+taiwan-invoice init      # 會出現互動式選單讓你選擇平台
+```
+
+或直接指定平台：
+
+```bash
+taiwan-invoice init --ai claude      # Claude Code
+taiwan-invoice init --ai cursor      # Cursor
+taiwan-invoice init --ai windsurf    # Windsurf
+taiwan-invoice init --ai copilot     # GitHub Copilot
+taiwan-invoice init --ai all         # 全部平台
 ```
 
 <details>
-<summary>完整平台列表</summary>
+<summary>完整支援平台 (14 個)</summary>
 
-```bash
-# 支援所有 14 個 AI 平台
-taiwan-invoice init --ai claude        # Claude Code
-taiwan-invoice init --ai cursor        # Cursor
-taiwan-invoice init --ai windsurf      # Windsurf
-taiwan-invoice init --ai copilot       # GitHub Copilot
-taiwan-invoice init --ai antigravity   # Antigravity
-taiwan-invoice init --ai kiro          # Kiro (AWS)
-taiwan-invoice init --ai codex         # Codex CLI (OpenAI)
-taiwan-invoice init --ai qoder         # Qoder
-taiwan-invoice init --ai roocode       # Roo Code
-taiwan-invoice init --ai gemini        # Gemini CLI
-taiwan-invoice init --ai trae          # Trae (ByteDance)
-taiwan-invoice init --ai opencode      # OpenCode
-taiwan-invoice init --ai continue      # Continue
-taiwan-invoice init --ai codebuddy     # CodeBuddy (Tencent)
-taiwan-invoice init --ai all           # 全部安裝
-```
+| 平台 | 指令 |
+|------|------|
+| Claude Code | `--ai claude` |
+| Cursor | `--ai cursor` |
+| Windsurf | `--ai windsurf` |
+| GitHub Copilot | `--ai copilot` |
+| Antigravity | `--ai antigravity` |
+| Kiro (AWS) | `--ai kiro` |
+| Codex CLI (OpenAI) | `--ai codex` |
+| Qoder | `--ai qoder` |
+| Roo Code | `--ai roocode` |
+| Gemini CLI | `--ai gemini` |
+| Trae (ByteDance) | `--ai trae` |
+| OpenCode | `--ai opencode` |
+| Continue | `--ai continue` |
+| CodeBuddy (Tencent) | `--ai codebuddy` |
 
 </details>
 
-### 使用方式
+### Step 3: 開始使用
 
-安裝完成後，在 AI 助手中使用自然語言描述需求：
+初始化完成後，啟動你的 AI 助手，直接用自然語言描述需求：
 
 ```
 使用綠界測試環境產生 B2C 發票開立程式碼，金額 1050 元
@@ -587,19 +589,43 @@ git push -u origin feat/your-feature
 gh pr create
 ```
 
-### 發布流程
+### 發布流程 (維護者)
 
 ```bash
-# 更新版本號
+# 1. 同步核心內容到 CLI assets
+cp -r taiwan-invoice/* invoice-cli/assets/taiwan-invoice/
+cp -r taiwan-payment/* payment-cli/assets/taiwan-payment/
+cp -r taiwan-logistics/* logistics-cli/assets/taiwan-logistics/
+
+# 2. 更新版本號
 cd invoice-cli && npm version patch  # 或 minor, major
 cd ../payment-cli && npm version patch
 cd ../logistics-cli && npm version patch
 
-# 建置
-npm run build
+# 3. 建置並發布
+npm run build && npm publish
+```
 
-# 發布到 NPM
-npm publish
+### 使用者安裝流程
+
+```bash
+# 1. 全域安裝 CLI 工具
+npm install -g taiwan-invoice-skill
+npm install -g taiwan-payment-skill
+npm install -g taiwan-logistics-skill
+
+# 2. 進入專案目錄
+cd /path/to/your/project
+
+# 3. 初始化技能檔案 (選擇 AI 平台)
+taiwan-invoice init --ai claude
+taiwan-payment init --ai claude
+taiwan-logistics init --ai claude
+
+# 4. 啟動 AI 助手，開始使用
+# Claude Code: 直接描述需求或使用 /taiwan-invoice
+# Cursor: 使用 /taiwan-invoice 斜線命令
+# Windsurf: 自動載入，直接描述需求
 ```
 
 ---
