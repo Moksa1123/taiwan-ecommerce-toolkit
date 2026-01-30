@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>超商門市地圖整合範例 - Taiwan Logistics Skill</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Microsoft JhengHei', 'PingFang TC', 'Noto Sans TC', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 8px;
+        }
+
+        .header p {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .content {
+            padding: 30px;
+        }
+
+        .section {
+            margin-bottom: 30px;
+        }
+
+        .section-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #333;
+            display: flex;
+            align-items: center;
+        }
+
+        .section-title::before {
+            content: '';
+            width: 4px;
+            height: 20px;
+            background: #667eea;
+            margin-right: 10px;
+            border-radius: 2px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            font-size: 14px;
+            font-weight: 500;
+            color: #555;
+            margin-bottom: 8px;
+        }
+
+        input[type="text"],
+        select {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+
+        input[type="text"]:focus,
+        select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        button {
+            flex: 1;
+            min-width: 150px;
+            padding: 14px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-secondary {
+            background: #f0f0f0;
+            color: #333;
+        }
+
+        .btn-secondary:hover {
+            background: #e0e0e0;
+        }
+
+        .store-info {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 20px;
+            display: none;
+        }
+
+        .store-info.active {
+            display: block;
+            animation: slideDown 0.3s ease;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .info-row {
+            display: flex;
+            padding: 10px 0;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .info-row:last-child {
+            border-bottom: none;
+        }
+
+        .info-label {
+            font-weight: 600;
+            color: #667eea;
+            min-width: 100px;
+        }
+
+        .info-value {
+            color: #333;
+        }
+
+        .alert {
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+
+        .alert-info {
+            background: #e3f2fd;
+            color: #1976d2;
+            border-left: 4px solid #1976d2;
+        }
+
+        .alert-success {
+            background: #e8f5e9;
+            color: #388e3c;
+            border-left: 4px solid #388e3c;
+        }
+
+        .code-block {
+            background: #f5f5f5;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 15px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            overflow-x: auto;
+            margin-top: 15px;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-left: 8px;
+        }
+
+        .badge-ecpay {
+            background: #ff9800;
+            color: white;
+        }
+
+        .badge-newebpay {
+            background: #2196f3;
+            color: white;
+        }
+
+        .badge-payuni {
+            background: #4caf50;
+            color: white;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                margin: 0;
+                border-radius: 0;
+            }
+
+            .content {
+                padding: 20px;
+            }
+
+            .button-group {
+                flex-direction: column;
+            }
+
+            button {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🏪 超商門市地圖整合範例</h1>
+            <p>Taiwan Logistics Skill - Store Map Integration</p>
+        </div>
+
+        <div class="content">
+            <div class="alert alert-info">
+                <strong>💡 說明:</strong> 此範例展示如何整合超商門市地圖,讓使用者選擇取貨門市。支援 ECPay、NewebPay、PAYUNi 三家物流服務商。
+            </div>
+
+            <div class="section">
+                <div class="section-title">1. 選擇物流服務商</div>
+                <div class="form-group">
+                    <label for="provider">物流服務商</label>
+                    <select id="provider">
+                        <option value="ecpay">ECPay 綠界物流 <span class="badge badge-ecpay">MD5</span></option>
+                        <option value="newebpay">NewebPay 藍新物流 <span class="badge badge-newebpay">AES-256</span></option>
+                        <option value="payuni">PAYUNi 統一物流 <span class="badge badge-payuni">AES-GCM</span></option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="logisticsType">物流類型</label>
+                    <select id="logisticsType">
+                        <option value="CVS">超商取貨</option>
+                        <option value="Home">宅配到府</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="storeType">超商類型</label>
+                    <select id="storeType">
+                        <option value="UNIMART">7-ELEVEN (統一超商)</option>
+                        <option value="FAMI">FamilyMart (全家便利商店)</option>
+                        <option value="HILIFE">Hi-Life (萊爾富)</option>
+                        <option value="OKMART">OK Mart (OK 便利商店)</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="section-title">2. 訂單資訊</div>
+                <div class="form-group">
+                    <label for="orderNo">訂單編號</label>
+                    <input type="text" id="orderNo" placeholder="例: ORD20240130001" readonly>
+                </div>
+
+                <div class="form-group">
+                    <label for="amount">訂單金額 (元)</label>
+                    <input type="text" id="amount" placeholder="例: 1200" value="1200">
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="section-title">3. 開啟門市地圖</div>
+                <div class="button-group">
+                    <button class="btn-primary" onclick="openStoreMap()">🗺️ 選擇門市</button>
+                    <button class="btn-secondary" onclick="resetForm()">🔄 重置</button>
+                </div>
+            </div>
+
+            <div id="storeInfo" class="store-info">
+                <div class="alert alert-success">
+                    <strong>✓ 門市選擇成功!</strong>
+                </div>
+                <div class="info-row">
+                    <div class="info-label">門市代號:</div>
+                    <div class="info-value" id="storeId">-</div>
+                </div>
+                <div class="info-row">
+                    <div class="info-label">門市名稱:</div>
+                    <div class="info-value" id="storeName">-</div>
+                </div>
+                <div class="info-row">
+                    <div class="info-label">門市地址:</div>
+                    <div class="info-value" id="storeAddress">-</div>
+                </div>
+                <div class="info-row">
+                    <div class="info-label">門市電話:</div>
+                    <div class="info-value" id="storePhone">-</div>
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="section-title">4. 後端整合範例</div>
+                <div class="code-block" id="codeExample"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 生成唯一訂單編號
+        function generateOrderNo() {
+            const timestamp = Date.now();
+            const random = Math.floor(Math.random() * 1000).toString().padStart(3, '0');
+            return `ORD${timestamp}${random}`;
+        }
+
+        // 初始化訂單編號
+        document.getElementById('orderNo').value = generateOrderNo();
+
+        // 開啟門市地圖
+        function openStoreMap() {
+            const provider = document.getElementById('provider').value;
+            const storeType = document.getElementById('storeType').value;
+            const orderNo = document.getElementById('orderNo').value;
+
+            if (!orderNo) {
+                alert('請輸入訂單編號');
+                return;
+            }
+
+            // 在實際應用中,這裡會呼叫後端 API 取得門市地圖表單
+            // 然後開啟新視窗顯示門市地圖
+
+            // 模擬門市選擇
+            simulateStoreSelection();
+
+            // 更新程式碼範例
+            updateCodeExample(provider, storeType, orderNo);
+        }
+
+        // 模擬門市選擇 (實際上會從回呼取得)
+        function simulateStoreSelection() {
+            setTimeout(() => {
+                const storeType = document.getElementById('storeType').value;
+                const mockStores = {
+                    'UNIMART': {
+                        id: '991182',
+                        name: '統一超商 信義門市',
+                        address: '台北市信義區信義路五段7號',
+                        phone: '02-2723-4567'
+                    },
+                    'FAMI': {
+                        id: '001779',
+                        name: '全家便利商店 台北信義店',
+                        address: '台北市信義區松仁路100號',
+                        phone: '02-2723-8901'
+                    },
+                    'HILIFE': {
+                        id: '001234',
+                        name: '萊爾富 信義門市',
+                        address: '台北市信義區基隆路一段200號',
+                        phone: '02-2723-5678'
+                    },
+                    'OKMART': {
+                        id: '100456',
+                        name: 'OK 便利商店 信義店',
+                        address: '台北市信義區松壽路18號',
+                        phone: '02-2723-6789'
+                    }
+                };
+
+                const selectedStore = mockStores[storeType];
+
+                document.getElementById('storeId').textContent = selectedStore.id;
+                document.getElementById('storeName').textContent = selectedStore.name;
+                document.getElementById('storeAddress').textContent = selectedStore.address;
+                document.getElementById('storePhone').textContent = selectedStore.phone;
+
+                document.getElementById('storeInfo').classList.add('active');
+            }, 1000);
+        }
+
+        // 更新程式碼範例
+        function updateCodeExample(provider, storeType, orderNo) {
+            const examples = {
+                ecpay: `# ECPay 綠界物流 - 門市地圖整合
+
+from ecpay_logistics import ECPayLogisticsService
+
+# 1. 初始化服務
+service = ECPayLogisticsService(
+    merchant_id='YOUR_MERCHANT_ID',
+    hash_key='YOUR_HASH_KEY',
+    hash_iv='YOUR_HASH_IV',
+    is_test=True
+)
+
+# 2. 取得門市地圖 HTML
+map_html = service.get_cvs_map(StoreMapData(
+    merchant_trade_no='${orderNo}',
+    logistics_sub_type='${storeType}',
+    is_collection='Y',
+    server_reply_url='https://your-domain.com/api/logistics/map-callback'
+))
+
+# 3. 回傳 HTML 給前端 (開啟新視窗)
+return {'html': map_html}
+
+# 4. 處理門市選擇回呼
+@app.post('/api/logistics/map-callback')
+def handle_map_callback(request):
+    store_id = request.form.get('CVSStoreID')
+    store_name = request.form.get('CVSStoreName')
+    store_address = request.form.get('CVSAddress')
+    store_phone = request.form.get('CVSTelephone')
+
+    # 儲存門市資訊到訂單
+    update_order_store_info(
+        order_no='${orderNo}',
+        store_id=store_id,
+        store_name=store_name
+    )
+
+    return '1|OK'  # 回應成功`,
+
+                newebpay: `# NewebPay 藍新物流 - 門市地圖整合
+
+from newebpay_logistics import NewebPayLogisticsService
+
+# 1. 初始化服務
+service = NewebPayLogisticsService(
+    merchant_id='YOUR_MERCHANT_ID',
+    hash_key='YOUR_HASH_KEY',
+    hash_iv='YOUR_HASH_IV',
+    is_test=True
+)
+
+# 2. 取得門市地圖 HTML
+map_html = service.get_store_map(StoreMapData(
+    merchant_order_no='${orderNo}',
+    logistics_type='C2C',
+    store_type='${storeType === 'UNIMART' ? '1' : storeType === 'FAMI' ? '2' : storeType === 'HILIFE' ? '3' : '4'}',
+    return_url='https://your-domain.com/api/logistics/map-callback'
+))
+
+# 3. 回傳 HTML 給前端
+return {'html': map_html}
+
+# 4. 處理門市選擇回呼
+@app.post('/api/logistics/map-callback')
+def handle_map_callback(request):
+    # NewebPay 回傳加密資料,需先解密
+    encrypt_data = request.form.get('EncryptData_')
+    hash_data = request.form.get('HashData_')
+
+    # 驗證並解密
+    if service.verify_callback(encrypt_data, hash_data):
+        data = service.decrypt(encrypt_data)
+        store_id = data.get('StoreID')
+        store_name = data.get('StoreName')
+
+        # 儲存門市資訊
+        update_order_store_info('${orderNo}', store_id, store_name)
+
+    return '1|OK'`,
+
+                payuni: `# PAYUNi 統一物流 - 門市地圖整合
+
+from payuni_logistics import PAYUNiLogisticsService
+
+# 1. 初始化服務
+service = PAYUNiLogisticsService(
+    merchant_id='YOUR_MERCHANT_ID',
+    hash_key='YOUR_HASH_KEY',
+    hash_iv='YOUR_HASH_IV',
+    is_test=True
+)
+
+# 2. 取得門市地圖 URL (PAYUNi 使用 RESTful API)
+map_url = service.get_store_map_url(
+    merchant_trade_no='${orderNo}',
+    logistics_type='PAYUNi_Logistic_711',
+    callback_url='https://your-domain.com/api/logistics/map-callback'
+)
+
+# 3. 回傳 URL 給前端 (重定向到門市地圖)
+return {'url': map_url}
+
+# 4. 處理門市選擇回呼
+@app.post('/api/logistics/map-callback')
+def handle_map_callback(request):
+    # PAYUNi 回傳 JSON
+    data = request.json
+
+    store_id = data.get('ReceiverStoreID')
+    store_name = data.get('ReceiverStoreName')
+    store_address = data.get('ReceiverStoreAddress')
+
+    # 儲存門市資訊
+    update_order_store_info(
+        order_no='${orderNo}',
+        store_id=store_id,
+        store_name=store_name,
+        store_address=store_address
+    )
+
+    return {'status': 'SUCCESS'}`
+            };
+
+            document.getElementById('codeExample').textContent = examples[provider];
+        }
+
+        // 重置表單
+        function resetForm() {
+            document.getElementById('orderNo').value = generateOrderNo();
+            document.getElementById('amount').value = '1200';
+            document.getElementById('storeInfo').classList.remove('active');
+            document.getElementById('codeExample').textContent = '';
+        }
+
+        // 初始化程式碼範例
+        updateCodeExample('ecpay', 'UNIMART', document.getElementById('orderNo').value);
+
+        // 監聽服務商變更
+        document.getElementById('provider').addEventListener('change', function() {
+            const provider = this.value;
+            const storeType = document.getElementById('storeType').value;
+            const orderNo = document.getElementById('orderNo').value;
+            updateCodeExample(provider, storeType, orderNo);
+        });
+    </script>
+</body>
+</html>
