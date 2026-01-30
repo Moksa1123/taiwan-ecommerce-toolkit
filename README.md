@@ -97,6 +97,137 @@ ECPay · NewebPay · PAYUNi
 
 ---
 
+## 快速開始
+
+### Step 1: 安裝 CLI 工具
+
+```bash
+# 依需求選擇安裝 (擇一或全裝)
+npm install -g taiwan-invoice-skill     # 電子發票
+npm install -g taiwan-payment-skill     # 金流串接
+npm install -g taiwan-logistics-skill   # 物流整合
+```
+
+### Step 2: 初始化專案
+
+```bash
+# 進入你的專案目錄
+cd /path/to/your/project
+```
+
+<details>
+<summary><b>電子發票 (taiwan-invoice)</b></summary>
+
+```bash
+# 互動式選擇平台
+taiwan-invoice init
+
+# 或直接指定平台
+taiwan-invoice init --ai claude        # Claude Code
+taiwan-invoice init --ai cursor        # Cursor
+taiwan-invoice init --ai windsurf      # Windsurf
+taiwan-invoice init --ai copilot       # GitHub Copilot
+taiwan-invoice init --ai antigravity   # Antigravity
+taiwan-invoice init --ai kiro          # Kiro (AWS)
+taiwan-invoice init --ai codex         # Codex CLI (OpenAI)
+taiwan-invoice init --ai qoder         # Qoder
+taiwan-invoice init --ai roocode       # Roo Code
+taiwan-invoice init --ai gemini        # Gemini CLI
+taiwan-invoice init --ai trae          # Trae (ByteDance)
+taiwan-invoice init --ai opencode      # OpenCode
+taiwan-invoice init --ai continue      # Continue
+taiwan-invoice init --ai codebuddy     # CodeBuddy (Tencent)
+taiwan-invoice init --ai all           # 全部平台
+
+# 其他指令
+taiwan-invoice list                    # 列出支援平台
+taiwan-invoice info                    # 顯示技能資訊
+taiwan-invoice update                  # 檢查更新
+taiwan-invoice init --force            # 覆蓋安裝
+```
+
+</details>
+
+<details>
+<summary><b>金流串接 (taiwan-payment)</b></summary>
+
+```bash
+# 互動式選擇平台
+taiwan-payment init
+
+# 或直接指定平台
+taiwan-payment init --ai claude        # Claude Code
+taiwan-payment init --ai cursor        # Cursor
+taiwan-payment init --ai windsurf      # Windsurf
+taiwan-payment init --ai copilot       # GitHub Copilot
+taiwan-payment init --ai antigravity   # Antigravity
+taiwan-payment init --ai kiro          # Kiro (AWS)
+taiwan-payment init --ai codex         # Codex CLI (OpenAI)
+taiwan-payment init --ai qoder         # Qoder
+taiwan-payment init --ai roocode       # Roo Code
+taiwan-payment init --ai gemini        # Gemini CLI
+taiwan-payment init --ai trae          # Trae (ByteDance)
+taiwan-payment init --ai opencode      # OpenCode
+taiwan-payment init --ai continue      # Continue
+taiwan-payment init --ai codebuddy     # CodeBuddy (Tencent)
+taiwan-payment init --ai all           # 全部平台
+
+# 其他指令
+taiwan-payment list                    # 列出支援平台
+taiwan-payment info                    # 顯示技能資訊
+taiwan-payment update                  # 檢查更新
+taiwan-payment init --force            # 覆蓋安裝
+```
+
+</details>
+
+<details>
+<summary><b>物流整合 (taiwan-logistics)</b></summary>
+
+```bash
+# 互動式選擇平台
+taiwan-logistics init
+
+# 或直接指定平台
+taiwan-logistics init --ai claude        # Claude Code
+taiwan-logistics init --ai cursor        # Cursor
+taiwan-logistics init --ai windsurf      # Windsurf
+taiwan-logistics init --ai copilot       # GitHub Copilot
+taiwan-logistics init --ai antigravity   # Antigravity
+taiwan-logistics init --ai kiro          # Kiro (AWS)
+taiwan-logistics init --ai codex         # Codex CLI (OpenAI)
+taiwan-logistics init --ai qoder         # Qoder
+taiwan-logistics init --ai roocode       # Roo Code
+taiwan-logistics init --ai gemini        # Gemini CLI
+taiwan-logistics init --ai trae          # Trae (ByteDance)
+taiwan-logistics init --ai opencode      # OpenCode
+taiwan-logistics init --ai continue      # Continue
+taiwan-logistics init --ai codebuddy     # CodeBuddy (Tencent)
+taiwan-logistics init --ai all           # 全部平台
+
+# 其他指令
+taiwan-logistics list                    # 列出支援平台
+taiwan-logistics info                    # 顯示技能資訊
+taiwan-logistics update                  # 檢查更新
+taiwan-logistics init --force            # 覆蓋安裝
+```
+
+</details>
+
+### Step 3: 開始使用
+
+初始化完成後，啟動你的 AI 助手，直接用自然語言描述需求：
+
+```
+使用綠界測試環境產生 B2C 發票開立程式碼，金額 1050 元
+
+建立 ECPay 信用卡付款訂單，交易金額 2500 元
+
+查詢台北市信義區的 7-11 超商取貨點資訊
+```
+
+---
+
 ## 核心特色
 
 ### 企業級程式碼標準
@@ -172,73 +303,6 @@ python taiwan-logistics/scripts/generate-logistics-service.py PAYUNi --output ts
 - **自動重試** - 4 種重試策略 (NO_RETRY/IMMEDIATE/EXPONENTIAL_BACKOFF/LINEAR_BACKOFF)
 - **智能建議** - 針對性錯誤解決方案
 - **詳細日誌** - 完整的錯誤追蹤記錄
-
----
-
-## 快速開始
-
-### Step 1: 安裝 CLI 工具
-
-```bash
-# 依需求選擇安裝 (擇一或全裝)
-npm install -g taiwan-invoice-skill     # 電子發票
-npm install -g taiwan-payment-skill     # 金流串接
-npm install -g taiwan-logistics-skill   # 物流整合
-```
-
-### Step 2: 初始化專案
-
-```bash
-# 進入你的專案目錄
-cd /path/to/your/project
-
-# 執行初始化，選擇你使用的 AI 編碼助手
-taiwan-invoice init      # 會出現互動式選單讓你選擇平台
-```
-
-或直接指定平台：
-
-```bash
-taiwan-invoice init --ai claude      # Claude Code
-taiwan-invoice init --ai cursor      # Cursor
-taiwan-invoice init --ai windsurf    # Windsurf
-taiwan-invoice init --ai copilot     # GitHub Copilot
-taiwan-invoice init --ai all         # 全部平台
-```
-
-<details>
-<summary>完整支援平台 (14 個)</summary>
-
-| 平台 | 指令 |
-|------|------|
-| Claude Code | `--ai claude` |
-| Cursor | `--ai cursor` |
-| Windsurf | `--ai windsurf` |
-| GitHub Copilot | `--ai copilot` |
-| Antigravity | `--ai antigravity` |
-| Kiro (AWS) | `--ai kiro` |
-| Codex CLI (OpenAI) | `--ai codex` |
-| Qoder | `--ai qoder` |
-| Roo Code | `--ai roocode` |
-| Gemini CLI | `--ai gemini` |
-| Trae (ByteDance) | `--ai trae` |
-| OpenCode | `--ai opencode` |
-| Continue | `--ai continue` |
-| CodeBuddy (Tencent) | `--ai codebuddy` |
-
-</details>
-
-### Step 3: 開始使用
-
-初始化完成後，啟動你的 AI 助手，直接用自然語言描述需求：
-
-```
-使用綠界測試環境產生 B2C 發票開立程式碼，金額 1050 元
-
-建立 ECPay 信用卡付款訂單，交易金額 2500 元
-
-查詢台北市信義區的 7-11 超商取貨點資訊
-```
 
 ---
 
