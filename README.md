@@ -27,7 +27,11 @@
 
 ## 專案概覽
 
-本專案提供台灣電商生態系統的企業級整合工具包，涵蓋三大核心領域：
+Taiwan E-Commerce Toolkit 是專為台灣電商生態系統設計的企業級整合開發工具包，提供完整的電子發票、金流串接、物流整合解決方案。本工具包整合台灣三大領域共 9 家主流服務商，搭配智能開發工具與生產級程式碼範例，協助開發團隊快速完成電商系統整合。
+
+**版本資訊:** v2.0.0 Complete Edition
+**發布日期:** 2026-01-30
+**狀態:** Production Ready
 
 <table>
 <tr>
@@ -93,6 +97,84 @@ ECPay · NewebPay · PAYUNi
 
 ---
 
+## 核心特色
+
+### 企業級程式碼標準
+
+所有程式碼範例均達到生產環境品質標準：
+
+- **完整型別定義** - Python Dataclass 搭配 Literal、Optional、Dict 型別提示
+- **專業文件規範** - 詳細的 Docstring 文件 (Args/Returns/Raises/Example)
+- **嚴謹錯誤處理** - 系統化錯誤分類與自動重試機制
+- **實戰測試憑證** - 包含測試環境憑證，可直接執行驗證
+- **可維護架構** - 遵循 SOLID 原則，易於擴展與維護
+
+### BM25 智能搜尋引擎
+
+採用 BM25 演算法實作的語義搜尋系統，支援跨領域智能查詢：
+
+```bash
+# 錯誤碼查詢
+python scripts/search.py "10000016" --domain error
+
+# 欄位映射搜尋
+python scripts/search.py "CheckMacValue" --domain field
+
+# 稅務規則查詢
+python scripts/search.py "B2B 稅額計算" --domain tax
+```
+
+### 智能推薦系統
+
+基於關鍵字權重與 BM25 評分的服務商推薦引擎：
+
+```bash
+# 發票加值中心推薦
+python taiwan-invoice/scripts/recommend.py "電商平台 高交易量 系統穩定"
+
+# 金流平台推薦
+python taiwan-payment/scripts/recommend.py "整合簡單 快速上線 多元支付"
+
+# 物流服務推薦
+python taiwan-logistics/scripts/recommend.py "超商取貨 溫控配送 冷凍宅配"
+```
+
+### 自動化程式碼生成器
+
+支援 TypeScript 與 Python 雙語言輸出的程式碼生成工具：
+
+```bash
+# 生成發票服務模組
+python taiwan-invoice/scripts/generate-invoice-service.py ECPay --output ts
+
+# 生成金流服務模組
+python taiwan-payment/scripts/generate-payment-service.py NewebPay --output py
+
+# 生成物流服務模組
+python taiwan-logistics/scripts/generate-logistics-service.py PAYUNi --output ts
+```
+
+### 資料驅動架構
+
+採用 CSV 檔案管理核心數據，便於維護與更新：
+
+- **providers.csv** - 服務商比較資訊
+- **operations.csv** - API 端點定義
+- **error-codes.csv** - 錯誤碼對照表
+- **field-mappings.csv** - 欄位映射關係
+- **tax-rules.csv** - 稅務計算規則
+
+### 系統化錯誤處理
+
+完整的錯誤處理機制與自動重試策略：
+
+- **錯誤分類** - 6 大類別 (驗證/認證/權限/業務邏輯/網路/伺服器)
+- **自動重試** - 4 種重試策略 (NO_RETRY/IMMEDIATE/EXPONENTIAL_BACKOFF/LINEAR_BACKOFF)
+- **智能建議** - 針對性錯誤解決方案
+- **詳細日誌** - 完整的錯誤追蹤記錄
+
+---
+
 ## 快速開始
 
 ### 安裝套件
@@ -120,9 +202,33 @@ taiwan-payment init --ai claude      # 金流串接
 taiwan-logistics init --ai claude    # 物流串接
 ```
 
+<details>
+<summary>完整平台列表</summary>
+
+```bash
+# 支援所有 14 個 AI 平台
+taiwan-invoice init --ai claude        # Claude Code
+taiwan-invoice init --ai cursor        # Cursor
+taiwan-invoice init --ai windsurf      # Windsurf
+taiwan-invoice init --ai copilot       # GitHub Copilot
+taiwan-invoice init --ai antigravity   # Antigravity
+taiwan-invoice init --ai kiro          # Kiro (AWS)
+taiwan-invoice init --ai codex         # Codex CLI (OpenAI)
+taiwan-invoice init --ai qoder         # Qoder
+taiwan-invoice init --ai roocode       # Roo Code
+taiwan-invoice init --ai gemini        # Gemini CLI
+taiwan-invoice init --ai trae          # Trae (ByteDance)
+taiwan-invoice init --ai opencode      # OpenCode
+taiwan-invoice init --ai continue      # Continue
+taiwan-invoice init --ai codebuddy     # CodeBuddy (Tencent)
+taiwan-invoice init --ai all           # 全部安裝
+```
+
+</details>
+
 ### 使用方式
 
-安裝完成後，直接在 AI 助手中使用自然語言描述需求：
+安裝完成後，在 AI 助手中使用自然語言描述需求：
 
 ```
 使用綠界測試環境產生 B2C 發票開立程式碼，金額 1050 元
@@ -134,66 +240,20 @@ taiwan-logistics init --ai claude    # 物流串接
 
 ---
 
-## 核心特色
-
-### 企業級程式碼標準
-
-所有 Python 範例程式碼均遵循嚴格的開發規範：
-
-- 使用 Dataclass 結構搭配完整型別提示 (Literal, Optional, Dict)
-- 完整的 Docstring 文件 (Args/Returns/Raises/Example)
-- 完善的錯誤處理機制與中文錯誤訊息
-- 附帶實際使用範例與測試環境憑證
-
-### 智能搜尋引擎
-
-基於 BM25 演算法的語義搜尋系統：
-
-```bash
-# 跨領域智能搜尋
-python scripts/search.py "10000016" --domain error
-python scripts/search.py "CheckMacValue" --domain field
-python scripts/search.py "B2B 稅額計算" --domain tax
-```
-
-### 資料驅動架構
-
-採用 CSV 檔案管理，易於維護與更新：
-
-- providers.csv - 廠商比較資訊
-- operations.csv - API 端點定義
-- error-codes.csv - 錯誤碼對照表
-- field-mappings.csv - 欄位映射關係
-- tax-rules.csv - 稅務計算規則
-
-### 多平台相容
-
-支援 14 種 AI 編碼助手：
-
-| 平台 | 啟動方式 | 平台 | 啟動方式 |
-|------|----------|------|----------|
-| **Claude Code** | `/taiwan-*` | **Antigravity** | `/taiwan-*` |
-| **Cursor** | `/taiwan-*` | **Kiro** | `/taiwan-*` |
-| **Windsurf** | 自動載入 | **Codex** | 自動載入 |
-| **GitHub Copilot** | `/taiwan-*` | **Qoder** | 自動載入 |
-| **RooCode** | `/taiwan-*` | **OpenCode** | 自動載入 |
-| **Gemini CLI** | 自動載入 | **Continue** | 自動載入 |
-| **Trae** | 自動載入 | **CodeBuddy** | 自動載入 |
-
----
-
 ## 專案結構
 
 ```
 taiwan-ecommerce-toolkit/
 ├── README.md                      # 本文件 (總覽)
-├── LICENSE
+├── LICENSE                        # MIT 授權
+├── CLAUDE.md                      # Claude Code 專案指引
 │
 ├── taiwan-invoice/                # 電子發票核心內容 (Source of Truth)
 │   ├── README.md                  # 發票專案說明
 │   ├── SKILL.md                   # AI 技能文檔
 │   ├── EXAMPLES.md                # 程式碼範例
 │   ├── references/                # API 文件
+│   ├── examples/                  # 生產級 Python 範例
 │   ├── scripts/                   # Python 智能工具
 │   └── data/                      # CSV 數據檔
 │
@@ -237,27 +297,43 @@ taiwan-ecommerce-toolkit/
 
 ### 電子發票加值中心 (3 家)
 
-| 加值中心 | 加密技術 | 技術特點 |
-|----------|----------|----------|
-| **ECPay 綠界** | AES-128-CBC | 市場佔有率高，技術文件完整 |
-| **SmilePay 速買配** | URL Signature | 支援雙協定，整合流程簡化 |
-| **Amego 光貿** | MD5 Signature | RESTful API 設計，架構清晰 |
+| 加值中心 | 加密技術 | 技術特點 | API 風格 |
+|----------|----------|----------|----------|
+| **ECPay 綠界** | AES-128-CBC | 市場佔有率高，技術文件完整 | RESTful + Form POST |
+| **SmilePay 速買配** | URL Signature | 支援雙協定，整合流程簡化 | RESTful JSON |
+| **Amego 光貿** | MD5 Signature | API 設計清晰，架構現代化 | RESTful JSON (MIG 4.0) |
 
 ### 金流串接平台 (3 家)
 
-| 金流平台 | 加密技術 | 支援付款方式 |
-|----------|----------|--------------|
-| **ECPay 綠界** | SHA256 CheckMacValue | 信用卡、ATM 轉帳、超商代碼、超商條碼 |
-| **NewebPay 藍新** | AES-256-CBC + SHA256 | 信用卡、ATM、超商代碼、LINE Pay、Apple Pay |
-| **PAYUNi 統一** | AES-256-GCM + SHA256 | 信用卡、ATM、超商代碼、AFTEE、iCash Pay |
+| 金流平台 | 加密技術 | 支援付款方式 | 技術特點 |
+|----------|----------|--------------|----------|
+| **ECPay 綠界** | SHA256 CheckMacValue | 信用卡、ATM、超商代碼、超商條碼 | 市佔率最高，穩定性佳 |
+| **NewebPay 藍新** | AES-256-CBC + SHA256 | 信用卡、ATM、超商、LINE Pay、Apple Pay | 支援付款方式最多 (13 種) |
+| **PAYUNi 統一** | AES-256-GCM + SHA256 | 信用卡、ATM、超商、AFTEE、iCash Pay | RESTful 設計，API 現代化 |
 
 ### 物流串接服務 (3 家)
 
-| 物流服務 | 加密技術 | 支援物流類型 |
-|----------|----------|--------------|
-| **ECPay 綠界** | MD5 CheckMacValue | 7-11、全家、萊爾富、OK、黑貓宅急便、新竹貨運 |
-| **NewebPay 藍新** | AES-256-CBC + SHA256 | 7-11、全家、萊爾富、OK、黑貓宅急便 |
-| **PAYUNi 統一** | AES-256-GCM + SHA256 | 7-11 (常溫/冷凍)、黑貓宅急便 (常溫/冷凍/冷藏) |
+| 物流服務 | 加密技術 | 支援物流類型 | 技術特點 |
+|----------|----------|--------------|----------|
+| **ECPay 綠界** | MD5 CheckMacValue | 7-11、全家、萊爾富、OK、黑貓、新竹貨運 | 市佔率最高，穩定性佳 |
+| **NewebPay 藍新** | AES-256-CBC + SHA256 | 7-11、全家、萊爾富、OK、黑貓宅急便 | 整合流程完整 |
+| **PAYUNi 統一** | AES-256-GCM + SHA256 | 7-11 (常溫/冷凍)、黑貓 (常溫/冷凍/冷藏) | 支援溫控配送，適合生鮮電商 |
+
+---
+
+## 多平台支援
+
+支援 14 種 AI 編碼助手平台，涵蓋主流開發工具：
+
+| 平台 | 啟動方式 | 平台 | 啟動方式 |
+|------|----------|------|----------|
+| **Claude Code** | `/taiwan-*` | **Antigravity** | `/taiwan-*` |
+| **Cursor** | `/taiwan-*` | **Kiro** | `/taiwan-*` |
+| **Windsurf** | 自動載入 | **Codex** | 自動載入 |
+| **GitHub Copilot** | `/taiwan-*` | **Qoder** | 自動載入 |
+| **RooCode** | `/taiwan-*` | **OpenCode** | 自動載入 |
+| **Gemini CLI** | 自動載入 | **Continue** | 自動載入 |
+| **Trae** | 自動載入 | **CodeBuddy** | 自動載入 |
 
 ---
 
@@ -287,46 +363,38 @@ taiwan-payment init --force
 taiwan-logistics init --force
 ```
 
-### 完整平台列表
-
-```bash
-# 支援所有 14 個 AI 平台
-taiwan-invoice init --ai claude        # Claude Code
-taiwan-invoice init --ai cursor        # Cursor
-taiwan-invoice init --ai windsurf      # Windsurf
-taiwan-invoice init --ai copilot       # GitHub Copilot
-taiwan-invoice init --ai antigravity   # Antigravity
-taiwan-invoice init --ai kiro          # Kiro (AWS)
-taiwan-invoice init --ai codex         # Codex CLI
-taiwan-invoice init --ai qoder         # Qoder
-taiwan-invoice init --ai roocode       # Roo Code
-taiwan-invoice init --ai gemini        # Gemini CLI
-taiwan-invoice init --ai trae          # Trae
-taiwan-invoice init --ai opencode      # OpenCode
-taiwan-invoice init --ai continue      # Continue
-taiwan-invoice init --ai codebuddy     # CodeBuddy
-taiwan-invoice init --ai all           # 全部安裝
-```
-
 ---
 
 ## Python 範例程式
 
+### 電子發票範例
+
+生產級 ECPay 發票整合實作：
+
+- **ecpay-invoice-example.py**
+  - B2C 二聯式發票開立
+  - B2B 三聯式發票開立
+  - 發票作廢 (void_invoice)
+  - 發票折讓 (issue_allowance)
+  - AES-128-CBC 完整加解密
+  - B2B 金額自動計算 (含稅轉未稅+稅額)
+
 ### 金流串接範例
 
-企業級程式碼實作，遵循嚴格開發規範：
+完整的金流整合實作，遵循企業級開發規範：
 
-- [ecpay-payment-example.py](taiwan-payment/examples/ecpay-payment-example.py) - ECPay 金流整合
-- [newebpay-payment-example.py](taiwan-payment/examples/newebpay-payment-example.py) - NewebPay MPG 整合
-- [payuni-payment-example.py](taiwan-payment/examples/payuni-payment-example.py) - PAYUNi 統一金流
+- **ecpay-payment-example.py** - ECPay 金流整合 (信用卡、ATM、超商代碼)
+- **newebpay-payment-example.py** - NewebPay MPG 整合 (多元支付)
+- **payuni-payment-example.py** - PAYUNi 統一金流 (RESTful API)
 
 ### 物流串接範例
 
-完整的超商物流 (CVS) 整合實作：
+完整的超商物流 (CVS) 與宅配整合實作：
 
-- [ECPay CVS Python](taiwan-logistics/EXAMPLES.md#ecpay-cvs-python) - 綠界 C2C 物流
-- [newebpay-logistics-cvs-example.py](taiwan-logistics/examples/newebpay-logistics-cvs-example.py) - 藍新超商物流
-- [payuni-logistics-cvs-example.py](taiwan-logistics/examples/payuni-logistics-cvs-example.py) - 統一超商物流
+- **ecpay-logistics-cvs-example.py** - 綠界 C2C 物流
+- **newebpay-logistics-cvs-example.py** - 藍新超商物流
+- **payuni-logistics-cvs-example.py** - 統一超商物流
+- **store-map-integration-example.html** - 門市地圖整合
 
 ### 程式碼規範
 
@@ -334,18 +402,18 @@ taiwan-invoice init --ai all           # 全部安裝
 
 - 完整的 Dataclass 資料結構定義
 - 詳細的型別提示 (Literal, Optional, Dict[str, any])
-- 專業的 Docstring 說明文件 (Args/Returns/Raises/Example)
+- 專業的 Docstring 說明文件
 - 完善的錯誤處理機制與中文錯誤訊息
 - 測試環境憑證與使用範例
 - 可直接用於生產環境的程式碼品質
 
 ---
 
-## 開發工具
+## 智能開發工具
 
-### BM25 智能搜尋引擎
+所有工具皆採用純 Python 實作，無需安裝外部依賴套件。
 
-基於語義搜尋技術的文件查詢系統：
+### BM25 搜尋引擎
 
 ```bash
 # 電子發票錯誤碼查詢
@@ -358,9 +426,7 @@ python taiwan-payment/scripts/search.py "CheckMacValue" --domain field
 python taiwan-logistics/scripts/search.py "查詢物流狀態" --domain api
 ```
 
-### 廠商推薦系統
-
-根據需求自動推薦最適合的整合廠商：
+### 服務商推薦系統
 
 ```bash
 # 電子發票加值中心推薦
@@ -375,8 +441,6 @@ python taiwan-logistics/scripts/recommend.py "超商取貨 溫控配送"
 
 ### 程式碼生成器
 
-自動產生整合服務的程式碼模組：
-
 ```bash
 # 產生發票服務模組
 python taiwan-invoice/scripts/generate-invoice-service.py ECPay --output ts
@@ -388,7 +452,22 @@ python taiwan-payment/scripts/generate-payment-service.py NewebPay --output py
 python taiwan-logistics/scripts/generate-logistics-service.py PAYUNi --output ts
 ```
 
-> 所有工具皆採用純 Python 實作，無需安裝外部依賴套件
+### 系統化錯誤處理
+
+```python
+from error_handler import InvoiceErrorHandler, retry_on_error
+
+# 查詢錯誤資訊
+handler = InvoiceErrorHandler(provider='ecpay')
+info = handler.get_error_info('10000016')
+print(info.suggestion)
+
+# 自動重試裝飾器
+@retry_on_error(max_retries=3, backoff_factor=2)
+def issue_invoice(data):
+    # 失敗時自動重試 3 次 (1s, 2s, 4s 間隔)
+    pass
+```
 
 ---
 
@@ -397,27 +476,27 @@ python taiwan-logistics/scripts/generate-logistics-service.py PAYUNi --output ts
 <details>
 <summary><b>是否需要申請 API 憑證？</b></summary>
 
-是的。需向選定的廠商申請商店代號 (Merchant ID) 與 API 金鑰 (Hash Key/IV)。三個領域共 9 家廠商皆提供測試環境與測試帳號供開發使用。
+是的。需向選定的服務商申請商店代號 (Merchant ID) 與 API 金鑰 (Hash Key/IV)。三個領域共 9 家服務商皆提供測試環境與測試帳號供開發使用。
 
 </details>
 
 <details>
-<summary><b>是否支援多家廠商同時整合？</b></summary>
+<summary><b>是否支援多家服務商同時整合？</b></summary>
 
-支援。建議採用 Service Factory Pattern 設計模式，可在執行階段動態切換不同廠商服務，提高系統彈性。
+支援。建議採用 Service Factory Pattern 設計模式，可在執行階段動態切換不同服務商服務，提高系統彈性。
 
 </details>
 
 <details>
-<summary><b>如何選擇合適的整合廠商？</b></summary>
+<summary><b>如何選擇合適的整合服務商？</b></summary>
 
-**廠商選擇建議：**
+**服務商選擇建議：**
 
 - **ECPay 綠界科技**: 三個領域全面支援，整合流程最為簡便，適合需要一站式解決方案的專案
 - **NewebPay 藍新金流**: 金流功能最為完整，支援多元付款方式，適合需要豐富支付選項的電商平台
 - **PAYUNi 統一金流**: 物流溫控服務最完整，支援冷凍/冷藏配送，適合生鮮電商與需要溫控的產業
 
-可使用本專案提供的智能推薦系統，根據專案需求自動分析推薦最適合的廠商。
+可使用本專案提供的智能推薦系統，根據專案需求自動分析推薦最適合的服務商。
 
 </details>
 
@@ -447,6 +526,33 @@ python taiwan-logistics/scripts/generate-logistics-service.py PAYUNi --output ts
 程式碼已包含完整的型別提示、錯誤處理與文件說明，可直接整合至專案中使用。
 
 </details>
+
+---
+
+## 技術規格
+
+### 系統需求
+
+- **Node.js**: >= 18.0.0 (CLI 工具)
+- **Python**: >= 3.8 (範例程式與智能工具)
+- **TypeScript**: >= 5.0 (程式碼生成器輸出)
+
+### Python 依賴
+
+```bash
+# 範例程式所需依賴
+pip install pycryptodome requests
+
+# 智能工具無需外部依賴 (純 Python 標準庫)
+```
+
+### 支援的加密方式
+
+- **AES-128-CBC** - ECPay 電子發票
+- **AES-256-CBC** - NewebPay 金流/物流
+- **AES-256-GCM** - PAYUNi 金流/物流
+- **SHA256** - 所有服務商的 CheckMacValue
+- **MD5** - Amego 發票、ECPay 物流
 
 ---
 
@@ -492,9 +598,6 @@ cd ../logistics-cli && npm version patch
 # 建置
 npm run build
 
-# 測試
-npm test
-
 # 發布到 NPM
 npm publish
 ```
@@ -515,6 +618,7 @@ npm publish
 - [NPM: taiwan-invoice-skill](https://www.npmjs.com/package/taiwan-invoice-skill)
 - [NPM: taiwan-payment-skill](https://www.npmjs.com/package/taiwan-payment-skill)
 - [NPM: taiwan-logistics-skill](https://www.npmjs.com/package/taiwan-logistics-skill)
+- [GitHub Repository](https://github.com/Moksa1123/taiwan-ecommerce-toolkit)
 
 ---
 
