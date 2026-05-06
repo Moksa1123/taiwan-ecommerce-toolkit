@@ -1,361 +1,852 @@
+
 # {{TITLE}}
 
 > {{DESCRIPTION}}
 
-## Quick Navigation
+## 快速導覽
 
-### Related Documents
-When using this skill, refer to the API reference documents in the project:
-- `references/ECPAY_API_REFERENCE.md` - ECPay API Specification
-- `references/SMILEPAY_API_REFERENCE.md` - SmilePay API Specification
-- `references/AMEGO_API_REFERENCE.md` - Amego API Specification
-- [EXAMPLES.md](EXAMPLES.md) - Code Examples
+### 相關文件
+使用此技能時，請參考專案中的 API 規格文件：
+- `references/ECPAY_PAYMENT_REFERENCE.md` - 綠界金流 API 規格
+- `references/NEWEBPAY_PAYMENT_REFERENCE.md` - 藍新金流 API 規格
+- `references/PAYUNI_PAYMENT_REFERENCE.md` - 統一金流 API 規格
+- [EXAMPLES.md](EXAMPLES.md) - 程式碼範例集
 
-### When to Use This Skill
-- Developing e-invoice issuance functionality
-- Integrating Taiwan E-Invoice provider APIs
-- Implementing B2C or B2B invoices
-- Handling invoice printing, void, and allowance
-- Processing encryption/signatures (AES, MD5)
-- Troubleshooting invoice API integration issues
+### 智能工具
+- `scripts/search.py` - BM25 搜索引擎（查詢 API、錯誤碼、欄位映射、付款方式）
+- `scripts/recommend.py` - 金流服務商推薦系統
+- `scripts/test_payment.py` - 付款測試工具
+- `data/` - CSV 數據檔（providers, operations, error-codes, field-mappings, payment-methods, troubleshooting, reasoning）
 
-## Invoice Types
+### 何時使用此技能
+- 開發線上金流付款功能
+- 整合台灣金流服務商 API
+- 實作信用卡、ATM、超商、電子錢包等付款方式
+- 處理訂單查詢、退款、定期定額扣款
+- 處理加密簽章（SHA256、AES-256-CBC、AES-256-GCM）
+- 解決金流 API 整合問題
 
-### B2C Invoice (Two-Part)
-- Buyer without tax ID
-- `BuyerIdentifier` = `0000000000`
-- Amount is **tax-inclusive**
-- Can use carrier or donation
-- Example: General consumer purchase
+## 智能搜索與推薦
 
-### B2B Invoice (Three-Part)
-- Buyer has 8-digit tax ID
-- `BuyerIdentifier` = actual tax ID (validate format)
-- Amount is **pre-tax**, requires separate tax calculation
-- **Cannot** use carrier or donation
-- Example: Company purchase
+### 搜索引擎 (search.py)
 
-## Provider Comparison
+使用 BM25 算法在資料庫中搜索相關資訊：
 
-| Feature | ECPay | SmilePay | Amego |
-|---------|-------|----------|-------|
-| Test/Prod URL | Different URLs | Different URLs | **Same URL** |
-| Authentication | AES encryption + HashKey/HashIV | Grvc + Verify_key | MD5 signature + App Key |
-| Print Method | POST form submit | GET URL params | API returns PDF URL |
-| B2B Amount Field | SalesAmount (pre-tax) | UnitTAX=N | DetailVat=0 |
-| Transport Format | JSON (AES encrypted) | URL Parameters | JSON (URL Encoded) |
+```bash
+# 搜索服務商
+python scripts/search.py "ecpay" --domain provider
 
-## Implementation Steps
+# 搜索錯誤碼
+python scripts/search.py "10100058" --domain error
 
-### 1. Service Architecture
+# 搜索欄位映射
+python scripts/search.py "MerchantTradeNo" --domain field
 
-Create services following this structure:
+# 搜索付款方式
+python scripts/search.py "信用卡" --domain payment_method
+
+# 搜索疑難排解
+python scripts/search.py "CheckMacValue 錯誤" --domain troubleshoot
+
+# 全域搜索
+python scripts/search.py "金額計算" --domain all
+
+# JSON 輸出
+python scripts/search.py "ATM" --format json
+```
+
+**搜索域：**
+| 域 | 說明 | CSV 檔案 |
+|-----|------|----------|
+| `provider` | 服務商比較 | providers.csv |
+| `operation` | API 操作端點 | operations.csv |
+| `error` | 錯誤碼查詢 | error-codes.csv |
+| `field` | 欄位映射 | field-mappings.csv |
+| `payment_method` | 付款方式 | payment-methods.csv |
+| `troubleshoot` | 疑難排解 | troubleshooting.csv |
+| `reasoning` | 推薦決策規則 | reasoning.csv |
+
+**域自動偵測：**
+搜索引擎會自動偵測查詢內容並選擇最適合的域：
+- 錯誤碼格式（如 "10100058"）→ error
+- 服務商名稱（如 "ECPay"）→ provider
+- 付款方式（如 "信用卡"、"ATM"）→ payment_method
+- API 欄位（如 "MerchantID"）→ field
+
+### 推薦系統 (recommend.py)
+
+根據需求自動推薦最適合的金流服務商：
+
+```bash
+# 高交易量電商
+python scripts/recommend.py "高交易量 穩定 電商"
+# → 推薦 ECPay (市佔率高，穩定性佳)
+
+# 多元支付需求
+python scripts/recommend.py "多元支付 LINE Pay Apple Pay"
+# → 推薦 NewebPay (支援 13 種付款方式)
+
+# API 設計優先
+python scripts/recommend.py "API RESTful JSON"
+# → 推薦 PAYUNi (RESTful JSON API)
+
+# JSON 輸出
+python scripts/recommend.py "新創公司 快速整合" --format json
+
+# 簡單文字輸出
+python scripts/recommend.py "會員制 定期扣款" --format simple
+```
+
+**推薦關鍵字：**
+- **ECPay**: 穩定、市佔、高交易量、電商、ATM、超商、定期、訂閱、分期、發票、物流
+- **NewebPay**: 多元、支付方式、電子錢包、LINE、行動、記憶、會員、跨境
+- **PAYUNi**: API、JSON、RESTful、統一、新創
+
+**反模式警告：**
+推薦系統會自動提示不建議的場景：
+- ECPay: 無技術資源、極簡需求
+- NewebPay: 簡單 API、單一支付
+- PAYUNi: 大型專案、完整文檔
+
+### 付款測試工具 (test_payment.py)
+
+快速測試金流服務商連線：
+
+```bash
+# 測試 ECPay 連線
+python scripts/test_payment.py ecpay
+
+# 測試 NewebPay 連線
+python scripts/test_payment.py newebpay
+
+# 測試 PAYUNi 連線
+python scripts/test_payment.py payuni
+
+# 測試所有服務商
+python scripts/test_payment.py all
+```
+
+---
+
+## 付款方式說明
+
+### 信用卡支付
+- **一次付清**: 最常用的付款方式，2-3 天到帳
+- **信用卡分期**: 3/6/12/18/24/30 期，需最低金額 1000 元
+- **信用卡定期**: 週期扣款，適用訂閱制服務
+- **信用卡紅利**: 紅利折抵功能
+- **銀聯卡**: 需另外申請，支援中國銀聯
+- **美國運通卡**: 需另外申請
+
+### 電子錢包
+- **Apple Pay**: 需申請，適合 iOS 用戶
+- **Google Pay**: 需申請，適合 Android 用戶
+- **Samsung Pay**: 需申請，三星手機專用
+- **LINE Pay**: 需申請，LINE 生態系整合
+- **玉山 Wallet**: 玉山銀行電子錢包
+- **台灣 Pay**: 官方行動支付，最高 49,999 元
+
+### ATM 轉帳
+- **網路 ATM**: 即時轉帳，最高 49,999 元，1 天到帳
+- **ATM 虛擬帳號**: 產生專屬繳費帳號，1-3 天到帳，最高 49,999 元
+
+### 超商支付
+- **超商代碼**: 至四大超商繳費，30-20,000 元，1-3 天到帳
+- **超商條碼**: 產生繳費條碼，20-40,000 元，1-3 天到帳
+
+### 其他支付方式
+- **TWQR**: 台灣 Pay QR Code 掃碼支付
+- **BNPL 無卡分期**: 先買後付，50-300,000 元
+- **AFTEE**: PAYUNi 專屬先享後付
+- **iCash**: PAYUNi 專屬愛金卡支付
+- **簡單付支付寶/微信**: 跨境支付（中國市場）
+
+## 三家服務商特性比較
+
+| 特性 | 綠界 ECPay | 藍新 NewebPay | 統一 PAYUNi |
+|------|-----------|--------------|------------|
+| 加密方式 | URL Encode + SHA256 | AES-256-CBC + SHA256 雙層 | AES-256-GCM + SHA256 |
+| API 風格 | Form POST | Form POST + AES | RESTful JSON |
+| 內容格式 | application/x-www-form-urlencoded | application/x-www-form-urlencoded | application/json |
+| 測試/正式 URL | 不同 URL | 不同 URL | 不同 URL |
+| 市佔率 | 最高 | 高 | 中等 |
+| 支付方式 | 11 種（含 BNPL、TWQR） | 13 種（含 LINE Pay、Apple Pay） | 8 種（含 AFTEE、iCash） |
+| 特色功能 | 完整文檔、SDK、同時支援發票物流 | MPG 整合、信用卡記憶、多元電子錢包 | RESTful 設計、統一集團背景 |
+| 適用場景 | 高交易量電商、傳統產業、PHP 開發 | 多元支付、會員制、行動 App | 新創公司、API 優先、Node.js 開發 |
+
+### ECPay 特性
+- **優勢**: 市佔率最高、穩定性最佳、文檔完整、社群資源豐富、測試帳號可用
+- **加密**: URL Encode + SHA256（參數排序 + HashKey + HashIV）
+- **傳輸**: Form POST，application/x-www-form-urlencoded
+- **特色**: 同時支援金流、發票、物流三合一服務
+
+### NewebPay 特性
+- **優勢**: 支援最多支付方式（13 種）、MPG 整合、信用卡記憶功能、完整電子錢包
+- **加密**: AES-256-CBC 加密 TradeInfo，再計算 SHA256 TradeSha
+- **傳輸**: Form POST，雙層加密（AES + SHA256）
+- **特色**: LINE Pay、Apple Pay、Google Pay 原生支援
+
+### PAYUNi 特性
+- **優勢**: RESTful JSON API、統一集團背景、AES-GCM 現代加密
+- **加密**: AES-256-GCM 加密 + SHA256 簽章
+- **傳輸**: RESTful JSON，application/json
+- **特色**: AFTEE 先享後付、iCash 愛金卡（獨家）
+
+## 開發實作步驟
+
+### 1. 服務實作架構
+
+創建服務時遵循以下結構：
 
 ```typescript
-// lib/services/invoice-provider.ts - Interface definition
-export interface InvoiceService {
-    issueInvoice(userId: string, data: InvoiceIssueData): Promise<InvoiceIssueResponse>
-    voidInvoice(userId: string, invoiceNumber: string, reason: string): Promise<InvoiceVoidResponse>
-    printInvoice(userId: string, invoiceNumber: string): Promise<InvoicePrintResponse>
+// lib/services/payment-provider.ts - 介面定義
+export interface PaymentService {
+    createOrder(userId: string, data: PaymentOrderData): Promise<PaymentOrderResponse>
+    queryOrder(userId: string, merchantTradeNo: string): Promise<PaymentQueryResponse>
+    refundOrder(userId: string, tradeNo: string, amount: number): Promise<PaymentRefundResponse>
+    createPeriodic(userId: string, data: PeriodicPaymentData): Promise<PeriodicResponse>
 }
 
-// lib/services/{provider}-invoice-service.ts - Provider implementation
-export class ECPayInvoiceService implements InvoiceService {
-    private async encryptData(data: any, hashKey: string, hashIV: string): Promise<string> {
-        // AES-128-CBC encryption implementation
+// lib/services/{provider}-payment-service.ts - 各服務商實作
+export class ECPayPaymentService implements PaymentService {
+    private generateCheckMacValue(params: Record<string, any>, hashKey: string, hashIV: string): string {
+        // SHA256 簽章實作
     }
 
-    async issueInvoice(userId: string, data: InvoiceIssueData) {
-        // 1. Get user settings
-        // 2. Prepare API data
-        // 3. Encrypt and sign
-        // 4. Send request
-        // 5. Decrypt response
-        // 6. Return standard format
+    async createOrder(userId: string, data: PaymentOrderData) {
+        // 1. 取得使用者設定
+        // 2. 準備 API 資料
+        // 3. 計算 CheckMacValue
+        // 4. 生成表單 HTML
+        // 5. 回傳標準格式
     }
 }
 ```
 
-### 2. Amount Calculation
+### 2. 加密實作
 
-**Tax-inclusive total -> Pre-tax amount + Tax:**
-
-```typescript
-function calculateInvoiceAmounts(totalAmount: number, isB2B: boolean) {
-    if (isB2B) {
-        // B2B: Need to split tax
-        const taxAmount = Math.round(totalAmount - (totalAmount / 1.05))
-        const salesAmount = totalAmount - taxAmount
-        return { salesAmount, taxAmount, totalAmount }
-    } else {
-        // B2C: Tax-inclusive total
-        return { salesAmount: totalAmount, taxAmount: 0, totalAmount }
-    }
-}
-
-// Example
-const amounts = calculateInvoiceAmounts(1050, true)
-// { salesAmount: 1000, taxAmount: 50, totalAmount: 1050 }
-```
-
-### 3. Encryption Implementation
-
-**ECPay - AES Encryption:**
+**綠界 (ECPay) - SHA256 簽章：**
 
 ```typescript
 import crypto from 'crypto'
 
-function encryptECPay(data: object, hashKey: string, hashIV: string): string {
-    // 1. Convert JSON to string and URL encode
-    const jsonString = JSON.stringify(data)
-    const urlEncoded = encodeURIComponent(jsonString)
+function generateECPayCheckMacValue(params: Record<string, any>, hashKey: string, hashIV: string): string {
+    // 1. 移除 CheckMacValue 本身
+    const { CheckMacValue, ...cleanParams } = params
 
-    // 2. AES-128-CBC encryption
-    const cipher = crypto.createCipheriv('aes-128-cbc', hashKey, hashIV)
-    let encrypted = cipher.update(urlEncoded, 'utf8', 'base64')
-    encrypted += cipher.final('base64')
+    // 2. 依照 key 排序（字母順序）
+    const sortedKeys = Object.keys(cleanParams).sort()
 
-    return encrypted
+    // 3. 組合參數字串: key1=value1&key2=value2
+    const paramString = sortedKeys
+        .map(key => `${key}=${cleanParams[key]}`)
+        .join('&')
+
+    // 4. 前後加上 HashKey 和 HashIV
+    const rawString = `HashKey=${hashKey}&${paramString}&HashIV=${hashIV}`
+
+    // 5. URL Encode (lowercase)
+    const encoded = encodeURIComponent(rawString).toLowerCase()
+
+    // 6. SHA256 雜湊
+    const hash = crypto.createHash('sha256').update(encoded).digest('hex')
+
+    // 7. 轉大寫
+    return hash.toUpperCase()
+}
+```
+
+**藍新 (NewebPay) - AES-256-CBC 雙層加密：**
+
+```typescript
+function encryptNewebPay(data: Record<string, any>, hashKey: string, hashIV: string): {
+    TradeInfo: string,
+    TradeSha: string
+} {
+    // 1. 轉換為查詢字串
+    const queryString = new URLSearchParams(data).toString()
+
+    // 2. AES-256-CBC 加密
+    const cipher = crypto.createCipheriv('aes-256-cbc', hashKey, hashIV)
+    cipher.setAutoPadding(true)
+    let encrypted = cipher.update(queryString, 'utf8', 'hex')
+    encrypted += cipher.final('hex')
+
+    // 3. 計算 SHA256
+    const tradeSha = crypto
+        .createHash('sha256')
+        .update(`HashKey=${hashKey}&${encrypted}&HashIV=${hashIV}`)
+        .digest('hex')
+        .toUpperCase()
+
+    return {
+        TradeInfo: encrypted,
+        TradeSha: tradeSha
+    }
 }
 
-function decryptECPay(encryptedData: string, hashKey: string, hashIV: string): object {
-    const decipher = crypto.createDecipheriv('aes-128-cbc', hashKey, hashIV)
-    let decrypted = decipher.update(encryptedData, 'base64', 'utf8')
+function decryptNewebPay(encryptedData: string, hashKey: string, hashIV: string): Record<string, any> {
+    const decipher = crypto.createDecipheriv('aes-256-cbc', hashKey, hashIV)
+    decipher.setAutoPadding(true)
+    let decrypted = decipher.update(encryptedData, 'hex', 'utf8')
     decrypted += decipher.final('utf8')
 
-    const urlDecoded = decodeURIComponent(decrypted)
-    return JSON.parse(urlDecoded)
+    return Object.fromEntries(new URLSearchParams(decrypted))
 }
 ```
 
-**Amego - MD5 Signature:**
+**統一 (PAYUNi) - AES-256-GCM 加密：**
 
 ```typescript
-function generateAmegoSign(data: object, time: number, appKey: string): string {
-    const dataString = JSON.stringify(data)
-    const signString = dataString + time + appKey
-    return crypto.createHash('md5').update(signString).digest('hex')
-}
-```
+function encryptPAYUNi(data: Record<string, any>, hashKey: string, hashIV: string): {
+    EncryptInfo: string,
+    HashInfo: string
+} {
+    // 1. JSON 字串化
+    const jsonString = JSON.stringify(data)
 
-### 4. Provider Binding
+    // 2. AES-256-GCM 加密
+    const cipher = crypto.createCipheriv('aes-256-gcm', hashKey, hashIV)
+    let encrypted = cipher.update(jsonString, 'utf8', 'hex')
+    encrypted += cipher.final('hex')
 
-**Key: When issuing invoice, must record the provider used so printing can call the correct one**
+    // 3. 取得 Auth Tag (16 bytes)
+    const authTag = cipher.getAuthTag().toString('hex')
 
-```typescript
-// Save provider when issuing
-await prisma.financialRecord.update({
-    where: { id: recordId },
-    data: {
-        invoiceNo: result.invoiceNumber,
-        invoiceProvider: actualProvider,  // 'ECPAY' | 'SMILEPAY' | 'AMEGO'
-        invoiceRandomNum: result.randomNumber, // **Important**: needed for printing
-        invoiceDate: new Date(),
+    // 4. 組合加密資料 (encrypted + tag)
+    const encryptInfo = encrypted + authTag
+
+    // 5. SHA256 簽章
+    const hashInfo = crypto
+        .createHash('sha256')
+        .update(`HashKey=${hashKey}&${encryptInfo}&HashIV=${hashIV}`)
+        .digest('hex')
+        .toUpperCase()
+
+    return {
+        EncryptInfo: encryptInfo,
+        HashInfo: hashInfo
     }
-})
-
-// Use the issuing provider when printing
-const service = record.invoiceProvider
-    ? InvoiceServiceFactory.getService(record.invoiceProvider)
-    : await InvoiceServiceFactory.getServiceForUser(userId)
-```
-
-### 5. Print Response Handling
-
-Frontend needs to handle based on response type:
-
-```typescript
-// Backend response format
-interface InvoicePrintResponse {
-    success: boolean
-    type?: 'html' | 'redirect' | 'form'
-    htmlContent?: string      // ECPay
-    printUrl?: string          // SmilePay/Amego
-    formUrl?: string
-    formParams?: Record<string, string>
 }
 
-// Frontend handling example
-if (result.type === 'html') {
-    const win = window.open('', '_blank')
-    win.document.write(result.htmlContent)
-} else if (result.type === 'redirect') {
-    window.open(result.url, '_blank')
-} else if (result.type === 'form') {
-    // Dynamically create form submission
+function decryptPAYUNi(encryptedData: string, hashKey: string, hashIV: string): Record<string, any> {
+    // 1. 分離加密內容和 Auth Tag (最後 32 個字元 = 16 bytes hex)
+    const encryptedContent = encryptedData.slice(0, -32)
+    const authTag = Buffer.from(encryptedData.slice(-32), 'hex')
+
+    // 2. AES-256-GCM 解密
+    const decipher = crypto.createDecipheriv('aes-256-gcm', hashKey, hashIV)
+    decipher.setAuthTag(authTag)
+    let decrypted = decipher.update(encryptedContent, 'hex', 'utf8')
+    decrypted += decipher.final('utf8')
+
+    return JSON.parse(decrypted)
+}
+```
+
+### 3. 訂單建立流程
+
+**關鍵：各服務商都使用 Form POST 導向付款頁**
+
+```typescript
+// 後端產生付款表單
+async function createPaymentOrder(provider: string, orderData: OrderData) {
+    const service = PaymentServiceFactory.getService(provider)
+    const result = await service.createOrder(userId, orderData)
+
+    // 儲存訂單資訊
+    await prisma.order.update({
+        where: { id: orderId },
+        data: {
+            merchantTradeNo: result.merchantTradeNo,
+            paymentProvider: provider,  // **重要**：儲存使用的服務商
+            paymentMethod: orderData.paymentMethod,
+            status: 'PENDING'
+        }
+    })
+
+    // 回傳表單資料
+    return {
+        type: 'form',
+        action: result.formAction,
+        method: result.formMethod,
+        params: result.formParams
+    }
+}
+
+// 前端提交表單
+function submitPaymentForm(formData: PaymentFormData) {
     const form = document.createElement('form')
-    form.method = 'POST'
-    form.action = result.formUrl
-    form.target = '_blank'
-    // ... add parameters
+    form.method = formData.method
+    form.action = formData.action
+    form.target = '_self'  // 整頁跳轉
+
+    // 添加隱藏欄位
+    Object.entries(formData.params).forEach(([key, value]) => {
+        const input = document.createElement('input')
+        input.type = 'hidden'
+        input.name = key
+        input.value = value
+        form.appendChild(input)
+    })
+
+    document.body.appendChild(form)
     form.submit()
 }
 ```
 
-## Common Issues
+### 4. 付款通知處理
 
-### Issue 1: Invoice issuance failed with unclear error
-
-**Diagnostic steps:**
-1. Check logger output for complete error in `raw` field
-2. Confirm environment variables (test/prod) are correct
-3. Verify required fields are complete
-
-**ECPay common errors:**
-- `10000006`: RelateNumber duplicate -> Order number already used
-- `10000016`: Amount calculation error -> Check B2C/B2B calculation
-- `10000019`: Cannot use carrier with tax ID -> Remove CarrierType
-
-**SmilePay common errors:**
-- `-10066`: AllAmount validation error -> Check if TotalAmount was sent
-- `-10084`: orderid format error -> Limit to 30 characters
-- `-10053`: Carrier number error -> Validate mobile barcode format
-
-**Amego common errors:**
-- `1002`: OrderId already exists -> Use unique order number
-- `1007`: Amount calculation error -> Check DetailVat setting
-- `1012`: B2B invoice cannot use carrier or donation
-
-### Issue 2: Print shows "Invoice not found"
-
-**Solution:**
-Confirm `invoiceProvider` field is saved correctly, use the issuing provider when printing.
+**ReturnURL 處理（付款完成後）：**
 
 ```typescript
-// Correct: Use provider from invoice record
-const service = record.invoiceProvider
-    ? InvoiceServiceFactory.getService(record.invoiceProvider)
-    : await InvoiceServiceFactory.getServiceForUser(userId)
+// app/api/payment/callback/route.ts
+export async function POST(request: Request) {
+    const formData = await request.formData()
+    const params = Object.fromEntries(formData)
 
-// Incorrect: Use user's current default provider
-const service = await InvoiceServiceFactory.getServiceForUser(userId)
-```
+    // 1. 偵測服務商（根據欄位判斷）
+    const provider = detectProvider(params)
+    const service = PaymentServiceFactory.getService(provider)
 
-### Issue 3: B2B invoice amount error
+    // 2. 驗證簽章
+    const isValid = service.verifyCallback(params)
+    if (!isValid) {
+        return new Response('0|CheckMacValue Error', { status: 400 })
+    }
 
-**Amount fields by provider:**
+    // 3. 更新訂單狀態
+    const merchantTradeNo = params.MerchantTradeNo || params.MerchantOrderNo
+    await prisma.order.update({
+        where: { merchantTradeNo },
+        data: {
+            status: params.RtnCode === '1' ? 'PAID' : 'FAILED',
+            paidAt: new Date(),
+            tradeNo: params.TradeNo,  // **重要**：儲存金流商訂單號（退款時需要）
+            paymentDetails: params
+        }
+    })
 
-```typescript
-// ECPay
-const b2bData = {
-    SalesAmount: 1000,      // Pre-tax sales
-    TaxAmount: 50,          // Tax
-    TotalAmount: 1050,      // Total
-    ItemPrice: 100,         // Item unit price (pre-tax)
-    ItemAmount: 1000,       // Item subtotal (pre-tax)
-    ItemTax: 50             // Item tax
-}
-
-// SmilePay
-const b2bData = {
-    AllAmount: '1050',      // Tax-inclusive total
-    SalesAmount: '1000',    // Pre-tax sales (optional but recommended)
-    TaxAmount: '50',        // Tax (optional)
-    UnitTAX: 'N',           // **Important**: Unit price is pre-tax
-    UnitPrice: '100',       // Item unit price (pre-tax)
-    Amount: '1000'          // Item subtotal (pre-tax)
-}
-
-// Amego
-const b2bData = {
-    DetailVat: 0,           // **Important**: 0=pre-tax
-    SalesAmount: 1000,      // Pre-tax sales
-    TaxAmount: 50,          // Tax
-    TotalAmount: 1050,      // Total
-    ProductItem: [{
-        UnitPrice: 100,     // Item unit price (pre-tax)
-        Amount: 1000        // Item subtotal (pre-tax)
-    }]
+    // 4. 回應固定格式
+    return new Response('1|OK')  // ECPay/NewebPay 要求
 }
 ```
 
-### Issue 4: SmilePay print blank
+### 5. 查詢訂單
 
-**Cause:** Using `type: 'form'` when response has `method: 'GET'`
-
-**Solution:**
 ```typescript
-// Correct
-if (printData.method === 'GET' && printData.url) {
-    return { type: 'redirect', url: printData.url }
+async function queryPaymentOrder(merchantTradeNo: string) {
+    // 1. 查詢訂單取得服務商
+    const order = await prisma.order.findUnique({
+        where: { merchantTradeNo }
+    })
+
+    // 2. 使用訂單記錄的服務商查詢
+    const service = PaymentServiceFactory.getService(order.paymentProvider)
+    const result = await service.queryOrder(order.userId, merchantTradeNo)
+
+    return result
+}
+```
+
+### 6. 退款處理
+
+```typescript
+async function refundPaymentOrder(merchantTradeNo: string, refundAmount: number) {
+    const order = await prisma.order.findUnique({
+        where: { merchantTradeNo }
+    })
+
+    // **重要**：使用開立時的服務商和 TradeNo
+    const service = PaymentServiceFactory.getService(order.paymentProvider)
+    const result = await service.refundOrder(
+        order.userId,
+        order.tradeNo,  // 金流商訂單號
+        refundAmount
+    )
+
+    // 更新訂單狀態
+    await prisma.order.update({
+        where: { merchantTradeNo },
+        data: {
+            status: 'REFUNDED',
+            refundAmount,
+            refundedAt: new Date()
+        }
+    })
+
+    return result
+}
+```
+
+## 常見問題排除
+
+### 問題 1: CheckMacValue 驗證失敗
+
+**錯誤訊息：** ECPay 回傳 `10100058`，NewebPay 回傳 `CheckValue Error`
+
+**常見原因：**
+1. 參數排序錯誤（必須按照字母順序）
+2. URL Encode 不正確（ECPay 需要 lowercase）
+3. 編碼問題（UTF-8）
+4. 忘記移除 CheckMacValue 本身
+
+**解決方案：**
+```typescript
+// * 正確
+function generateCheckMacValue(params: Record<string, any>, hashKey: string, hashIV: string) {
+    // 1. 移除 CheckMacValue
+    const { CheckMacValue, ...cleanParams } = params
+
+    // 2. 排序
+    const sortedKeys = Object.keys(cleanParams).sort()
+
+    // 3. 組合字串
+    const paramString = sortedKeys.map(k => `${k}=${cleanParams[k]}`).join('&')
+
+    // 4. 加上 HashKey/HashIV
+    const rawString = `HashKey=${hashKey}&${paramString}&HashIV=${hashIV}`
+
+    // 5. URL Encode (lowercase for ECPay)
+    const encoded = encodeURIComponent(rawString).toLowerCase()
+
+    // 6. SHA256
+    return crypto.createHash('sha256').update(encoded).digest('hex').toUpperCase()
 }
 
-// Incorrect
-return { type: 'form', url: printData.url, params: printData.params }
+// * 錯誤：未排序
+const paramString = Object.entries(params).map(([k, v]) => `${k}=${v}`).join('&')
+
+// * 錯誤：URL Encode 使用 uppercase
+const encoded = encodeURIComponent(rawString)  // 應該用 toLowerCase()
 ```
 
-### Issue 5: Timestamp expired
+### 問題 2: 訂單編號重複
 
-**ECPay error 10000005:** Timestamp exceeds 10 minutes
+**錯誤訊息：** ECPay `10100003`，NewebPay/PAYUNi 訂單已存在
 
-**Solution:**
+**原因：** 使用相同的 MerchantTradeNo
+
+**解決方案：**
 ```typescript
-// Ensure using current timestamp
-const timestamp = Math.floor(Date.now() / 1000)
+// * 建議：加入時間戳保證唯一性
+function generateMerchantTradeNo(prefix: string = 'ORD') {
+    const timestamp = Date.now()
+    const random = Math.random().toString(36).substring(2, 8).toUpperCase()
+    return `${prefix}${timestamp}${random}`.substring(0, 20)  // ECPay 限制 20 字元
+}
 
-// Amego: tolerance is +/- 60 seconds
-const time = Math.floor(Date.now() / 1000)
+// 範例輸出: ORD1706512345A7B2
 ```
 
-## Test Accounts
+### 問題 3: 金額計算錯誤
 
-### ECPay Test Environment
+**錯誤訊息：** 回傳金額驗算錯誤
+
+**常見原因：**
+1. 金額包含小數
+2. 金額為負數或 0
+3. 商品金額總和不等於訂單金額
+
+**解決方案：**
+```typescript
+// * 確保金額為正整數
+function validateAmount(amount: number): number {
+    if (amount <= 0) {
+        throw new Error('金額必須大於 0')
+    }
+    return Math.round(amount)  // 移除小數
+}
+
+// * 驗證商品金額總和
+function validateItemsAmount(items: Item[], totalAmount: number) {
+    const itemsSum = items.reduce((sum, item) => sum + (item.price * item.quantity), 0)
+    if (Math.round(itemsSum) !== Math.round(totalAmount)) {
+        throw new Error(`商品金額總和 ${itemsSum} 不等於訂單金額 ${totalAmount}`)
+    }
+}
 ```
-MerchantID: 2000132
-HashKey: ejCk326UnaZWKisg
-HashIV: q9jcZX8Ib9LM8wYk
-URL: https://einvoice-stage.ecpay.com.tw
+
+### 問題 4: 收不到付款通知
+
+**原因：**
+1. ReturnURL 不是 HTTPS
+2. 防火牆阻擋
+3. 回應格式錯誤
+
+**解決方案：**
+```typescript
+// * 確認 ReturnURL 使用 HTTPS
+const returnURL = 'https://yourdomain.com/api/payment/callback'  // 必須 HTTPS
+
+// * 正確回應格式
+export async function POST(request: Request) {
+    // ... 處理邏輯
+
+    // ECPay/NewebPay 需要回應 "1|OK"
+    return new Response('1|OK', {
+        status: 200,
+        headers: { 'Content-Type': 'text/plain' }
+    })
+}
+
+// * 錯誤：JSON 回應
+return Response.json({ success: true })  // 不正確
 ```
 
-### SmilePay Test Environment
+### 問題 5: 測試卡無法付款
+
+**原因：** 使用真實卡號或測試卡格式錯誤
+
+**解決方案：**
 ```
-Grvc: SEI1000034
-Verify_key: 9D73935693EE0237FABA6AB744E48661
-Test Tax ID: 80129529
-URL: https://ssl.smse.com.tw/api_test/SPEinvoice_Storage.asp
+# ECPay 測試卡
+卡號: 4311-9522-2222-2222
+有效期: 任意未來月年
+CVV: 任意 3 碼
+
+# NewebPay 測試卡
+卡號: 4000-2211-1111-1111
+有效期: 任意未來月年
+CVV: 任意 3 碼
+
+# PAYUNi 測試卡
+請至後台查詢官方測試卡號
 ```
 
-### Amego Test Environment
+### 問題 6: AES 加密失敗
+
+**NewebPay AES-256-CBC 加密錯誤：**
+
+```typescript
+// * 確認 Key/IV 長度
+const hashKey = 'your32BytesHashKeyHere123456'  // 必須 32 bytes
+const hashIV = 'your16BytesIV123'              // 必須 16 bytes
+
+// * 使用正確的 padding
+const cipher = crypto.createCipheriv('aes-256-cbc', hashKey, hashIV)
+cipher.setAutoPadding(true)  // PKCS7 padding
 ```
-Tax ID: 12345678
-App Key: sHeq7t8G1wiQvhAuIM27
-Admin: https://invoice.amego.tw/
-Test Account: test@amego.tw
-Test Password: 12345678
+
+**PAYUNi AES-256-GCM 加密錯誤：**
+
+```typescript
+// * 記得附加 Auth Tag
+const cipher = crypto.createCipheriv('aes-256-gcm', hashKey, hashIV)
+let encrypted = cipher.update(jsonString, 'utf8', 'hex')
+encrypted += cipher.final('hex')
+const authTag = cipher.getAuthTag().toString('hex')  // **重要**
+const encryptInfo = encrypted + authTag  // 總長度 = encrypted + 32 chars (16 bytes hex)
 ```
 
-## Development Checklist
+### 問題 7: ATM 虛擬帳號未產生
 
-Use this checklist to ensure complete implementation:
+**原因：**
+1. 未設定 ChoosePayment=ATM
+2. ExpireDate 格式錯誤
+3. ExpireDate 超過範圍（3-60 天）
 
-- [ ] Implement `InvoiceService` interface
-- [ ] Handle B2C / B2B amount calculation differences
-- [ ] Implement encryption/signature mechanism (AES or MD5)
-- [ ] Save `invoiceProvider` field
-- [ ] Save `invoiceRandomNum` (needed for printing)
-- [ ] Handle print response types (html/redirect/form)
-- [ ] Implement error handling and logging
-- [ ] Test environment verification
-- [ ] Handle carrier and donation mutual exclusion
-- [ ] Validate tax ID format (8-digit number)
+**解決方案：**
+```typescript
+// * ECPay ATM 設定
+const params = {
+    ChoosePayment: 'ATM',
+    ExpireDate: 3,  // 3-60 天
+    PaymentInfoURL: 'https://yourdomain.com/api/payment/atm-info',  // 接收帳號通知
+    // ...
+}
 
-## Adding New Provider
+// * NewebPay ATM 設定
+const params = {
+    VACC: 1,  // 啟用 ATM
+    ExpireDate: '2024-12-31',  // yyyy-MM-dd 格式
+    // ...
+}
+```
 
-1. Create `{provider}-invoice-service.ts` in `lib/services/`
-2. Implement all methods of `InvoiceService` interface
-3. Register new provider in `InvoiceServiceFactory`
-4. Add option to `InvoiceProvider` enum in `prisma/schema.prisma`
-5. Run `prisma migrate` or `prisma db push`
-6. Update frontend settings page (`app/settings/invoice/page.tsx`)
-7. Write unit tests
+### 問題 8: 定期定額建立失敗
 
-## References
+**原因：** 週期參數不完整
 
-For detailed API specifications, see the `references/` directory:
-- [ECPay API Specification](./references/ECPAY_API_REFERENCE.md)
-- [SmilePay API Specification](./references/SMILEPAY_API_REFERENCE.md)
-- [Amego API Specification](./references/AMEGO_API_REFERENCE.md)
+**解決方案：**
+```typescript
+// * ECPay 定期定額
+const periodicParams = {
+    PeriodAmount: 1000,      // 扣款金額
+    PeriodType: 'M',         // D=日, M=月, Y=年
+    Frequency: 1,            // 頻率（每 1 個週期）
+    ExecTimes: 12,           // 執行次數（12 次）
+    PeriodReturnURL: 'https://yourdomain.com/api/payment/periodic-callback',
+    // ...
+}
+
+// * NewebPay 定期定額
+const periodicParams = {
+    PeriodAmt: 1000,
+    PeriodType: 'M',
+    PeriodPoint: '01',       // 每月 1 號扣款
+    PeriodTimes: 12,
+    // ...
+}
+```
+
+### 問題 9: 跨域問題
+
+**錯誤：** 前端導向付款頁失敗
+
+**原因：** 使用 AJAX 或 Fetch，受 CORS 限制
+
+**解決方案：**
+```typescript
+// * 錯誤：使用 AJAX
+fetch(paymentUrl, { method: 'POST', body: formData })  // 會被 CORS 阻擋
+
+// * 正確：使用 Form POST 整頁跳轉
+function submitPaymentForm(action: string, params: Record<string, string>) {
+    const form = document.createElement('form')
+    form.method = 'POST'
+    form.action = action
+    form.target = '_self'  // 整頁跳轉
+
+    Object.entries(params).forEach(([key, value]) => {
+        const input = document.createElement('input')
+        input.type = 'hidden'
+        input.name = key
+        input.value = value
+        form.appendChild(input)
+    })
+
+    document.body.appendChild(form)
+    form.submit()  // 直接提交
+}
+```
+
+### 問題 10: 商店代號錯誤
+
+**錯誤訊息：** 回傳商店不存在
+
+**原因：**
+1. MerchantID 錯誤
+2. 測試/正式環境混用
+
+**解決方案：**
+```typescript
+// * 使用環境變數區分
+const config = {
+    merchantID: process.env.NODE_ENV === 'production'
+        ? process.env.ECPAY_MERCHANT_ID_PROD
+        : process.env.ECPAY_MERCHANT_ID_TEST,
+    apiUrl: process.env.NODE_ENV === 'production'
+        ? 'https://payment.ecpay.com.tw/Cashier/AioCheckOut/V5'
+        : 'https://payment-stage.ecpay.com.tw/Cashier/AioCheckOut/V5'
+}
+```
+
+## 測試帳號
+
+### 綠界測試環境
+```
+MerchantID: 3002607
+HashKey: pwFHCqoQZGmho4w6
+HashIV: EkRm7iFT261dpevs
+測試 URL: https://payment-stage.ecpay.com.tw/Cashier/AioCheckOut/V5
+測試卡號: 4311-9522-2222-2222
+後台: https://vendor-stage.ecpay.com.tw/
+```
+
+### 藍新測試環境
+```
+MerchantID: 請至後台申請
+HashKey: 請至後台申請（32 bytes）
+HashIV: 請至後台申請（16 bytes）
+測試 URL: https://ccore.newebpay.com/MPG/mpg_gateway
+測試卡號: 4000-2211-1111-1111
+後台: https://cwww.newebpay.com/
+```
+
+### 統一測試環境
+```
+MerchantID: 請至後台申請
+HashKey: 請至後台申請
+HashIV: 請至後台申請
+測試 URL: https://sandbox-api.payuni.com.tw/api/upp
+後台: https://sandbox.payuni.com.tw/
+```
+
+## 開發檢查清單
+
+使用此清單確保實作完整：
+
+### 基礎設定
+- [ ] 實作 `PaymentService` 介面
+- [ ] 實作各服務商加密機制（SHA256 / AES-CBC / AES-GCM）
+- [ ] 設定環境變數（測試/正式）
+- [ ] 配置 ReturnURL（HTTPS）
+- [ ] 配置 OrderResultURL（付款完成導向頁）
+
+### 訂單處理
+- [ ] 儲存 `paymentProvider` 欄位（查詢/退款時需要）
+- [ ] 儲存 `merchantTradeNo`（唯一訂單編號）
+- [ ] 儲存 `tradeNo`（金流商訂單號，退款時需要）
+- [ ] 金額驗證（正整數、最小金額）
+- [ ] 商品金額總和驗證
+
+### 付款方式
+- [ ] 支援信用卡一次付清
+- [ ] 支援 ATM 虛擬帳號（可選）
+- [ ] 支援超商代碼/條碼（可選）
+- [ ] 支援電子錢包（可選）
+- [ ] 支援信用卡分期（可選）
+- [ ] 支援定期定額（可選）
+
+### 回呼處理
+- [ ] 驗證 CheckMacValue / TradeSha / HashInfo
+- [ ] 更新訂單狀態
+- [ ] 回應 "1|OK" 格式
+- [ ] 防止重複通知處理（冪等性）
+
+### 查詢退款
+- [ ] 實作訂單查詢 API
+- [ ] 實作退款 API
+- [ ] 處理部分退款邏輯
+- [ ] 檢查退款期限
+
+### 錯誤處理
+- [ ] 實作錯誤處理與 logger
+- [ ] 記錄完整請求/回應（除敏感資訊）
+- [ ] 處理加密錯誤
+- [ ] 處理網路逾時
+
+### 測試驗證
+- [ ] 測試環境驗證
+- [ ] 使用官方測試卡測試
+- [ ] 測試付款通知接收
+- [ ] 測試查詢功能
+- [ ] 測試退款功能
+
+## 新增服務商步驟
+
+1. 在 `lib/services/` 建立 `{provider}-payment-service.ts`
+2. 實作 `PaymentService` 介面的所有方法
+3. 在 `PaymentServiceFactory` 註冊新服務商
+4. 在 `prisma/schema.prisma` 的 `PaymentProvider` enum 新增選項
+5. 執行 `prisma migrate` 或 `prisma db push`
+6. 更新前端設定頁面
+7. 撰寫單元測試
+8. 更新文檔
+
+## 參考資料
+
+詳細 API 規格請查看 `references/` 目錄：
+- [綠界 ECPay Payment API 規格](./references/ECPAY_PAYMENT_REFERENCE.md)
+- [藍新 NewebPay Payment API 規格](./references/NEWEBPAY_PAYMENT_REFERENCE.md)
+- [統一 PAYUNi Payment API 規格](./references/PAYUNI_PAYMENT_REFERENCE.md)
+
+官方文檔：
+- ECPay: https://developers.ecpay.com.tw/
+- NewebPay: https://www.newebpay.com/website/Page/content/download_api
+- PAYUNi: https://www.payuni.com.tw/docs/
 
 ---
 
-Last updated: 2026/01/28
+最後更新：2026/01/29

@@ -5,12 +5,12 @@ import { logger } from '../utils/logger.js';
 const VERSION = '2.5.4';
 
 export async function versionsCommand(): Promise<void> {
-  logger.title('Taiwan Invoice Skill - Available Versions');
+  logger.title('Taiwan Logistics Skill - Available Versions');
 
   const spinner = ora('Fetching versions from npm...').start();
 
   try {
-    const response = await fetch('https://registry.npmjs.org/taiwan-invoice-skill', {
+    const response = await fetch('https://registry.npmjs.org/taiwan-logistics-skill', {
       headers: {
         'Accept': 'application/json',
       },

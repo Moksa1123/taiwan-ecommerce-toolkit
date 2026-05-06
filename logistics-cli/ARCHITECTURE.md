@@ -4,10 +4,10 @@
 
 ```
 claude-skills/
-├── invoice-cli/                # Taiwan Invoice Skill CLI (npm: taiwan-invoice-skill)
+├── invoice-cli/                # Taiwan Logistics Skill CLI (npm: taiwan-logistics-skill)
 ├── payment-cli/                # Taiwan Payment Skill CLI (npm: taiwan-payment-skill)
 ├── logistics-cli/              # Taiwan Logistics Skill CLI (npm: taiwan-logistics-skill)
-├── taiwan-invoice/             # Invoice skill core content (Source of Truth)
+├── taiwan-logistics/             # Invoice skill core content (Source of Truth)
 ├── taiwan-payment/             # Payment skill core content (Source of Truth)
 └── taiwan-logistics/           # Logistics skill core content (Source of Truth)
 ```
@@ -63,10 +63,10 @@ logistics-cli/
 
 ## Three NPM Packages
 
-1. **taiwan-invoice-skill** (invoice-cli/)
+1. **taiwan-logistics-skill** (invoice-cli/)
    - E-Invoice integration for ECPay, SmilePay, Amego
-   - Install: `npm install -g taiwan-invoice-skill`
-   - Usage: `taiwan-invoice init --ai claude`
+   - Install: `npm install -g taiwan-logistics-skill`
+   - Usage: `taiwan-logistics init --ai claude`
 
 2. **taiwan-payment-skill** (payment-cli/)
    - Payment gateway integration for ECPay, NewebPay, PAYUNi
