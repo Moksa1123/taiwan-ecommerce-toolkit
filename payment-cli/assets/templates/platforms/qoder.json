@@ -10,7 +10,7 @@
   "scriptPath": "skills/taiwan-payment/scripts",
   "frontmatter": {
     "name": "taiwan-payment",
-    "description": "Taiwan Payment API integration for ECPay, NewebPay, PAYUNi, SmilePay, PChomePay, ezPay, and PayNow.",
+    "description": "Taiwan Payment API integration for ECPay, NewebPay, PAYUNi, SmilePay, PChomePay, ezPay, PayNow, Shopline, LINE Pay, and TapPay.",
     "user-invocable": "true"
   },
   "sections": {
@@ -20,6 +20,6 @@
     "quickReference": false
   },
   "title": "Taiwan Payment Skill",
-  "description": "Comprehensive guide for Taiwan Payment Gateway API integration. Supports ECPay, NewebPay, PAYUNi, SmilePay, PChomePay, ezPay, and PayNow providers with credit card, ATM, CVS, and e-wallet payment operations.",
+  "description": "Comprehensive guide for Taiwan Payment Gateway API integration. Supports ECPay, NewebPay, PAYUNi, SmilePay, PChomePay, ezPay, PayNow, Shopline, LINE Pay, and TapPay providers with credit card, ATM, CVS, and e-wallet payment operations.",
   "skillOrWorkflow": "Skill"
 }

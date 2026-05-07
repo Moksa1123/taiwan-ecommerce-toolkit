@@ -14,6 +14,9 @@
 - `references/pchomepay-payment-api.md` - 拍錢包 API 規格（含 Basic Auth → Token 兩階段認證）
 - `references/ezpay-payment-api.md` - ezPay 簡單付 API 規格（與藍新 Newebpay 同集團、同加密）
 - `references/paynow-payment-api.md` - 立吉富 API 規格（傳統版 cashflow + 現代版 PaymentIntent 雙 API）
+- `references/shopline-payment-api.md` - Shopline Payments API 規格（Redirect + Embedded SDK 雙模式）
+- `references/linepay-payment-api.md` - LINE Pay v4 API 規格（HMAC-SHA256 + Preapproved Pay）
+- `references/tappay-payment-api.md` - TapPay API 規格（Prime 兩段式 / PCI 隔離 / pay-by-token 重複扣款）
 - [EXAMPLES.md](EXAMPLES.md) - 程式碼範例集
 
 ### 智能工具
@@ -109,6 +112,9 @@ python scripts/recommend.py "會員制 定期扣款" --format simple
 - **PChomePay**: 拍錢包、PChome、P 幣、Basic Auth、Token、虛擬帳號、超商代碼條碼、物流二合一
 - **ezPay**: 簡單付、藍新小型、低門檻、跨境、智冠、支付寶、微信
 - **PayNow**: 立吉富、Apple Pay、PaymentIntent、Stripe-like、JWT、票券、mPOS、現代+傳統雙 API
+- **Shopline**: SHOPLINE 商店、Redirect、Embedded SDK、街口、中租 BNPL、cents、HMAC-SHA256
+- **LINE Pay**: LINE、自動扣款、Preapproved、Capture、Void、跨國、Channel Secret、Nonce
+- **TapPay**: PCI 隔離、Prime、自製結帳頁、card_secret、CherryTech、Apple Pay、Google Pay
 
 **反模式警告：**
 推薦系統會自動提示不建議的場景：
@@ -119,6 +125,9 @@ python scripts/recommend.py "會員制 定期扣款" --format simple
 - PChomePay: 不在 PChome 生態系
 - ezPay: 大型商家、需要分期、需要完整支付方式
 - PayNow: 簡單需求（雙 API 學習成本高）
+- Shopline: 不在 SHOPLINE 商店生態
+- LINE Pay: 主要客戶不用 LINE
+- TapPay: 不想自製結帳頁、無前端能力
 
 ### 付款測試工具 (test_payment.py)
 
@@ -240,6 +249,24 @@ python scripts/test_payment.py all
   - **現代版（apidoc）**: JWT Bearer Token + RESTful JSON
 - **傳輸**: 傳統用 Form POST；現代用 application/json
 - **特色**: 13 種付款方式（含 LINE Pay 線上線下、Apple Pay v1/v2、Apple Pay Deferred 延遲扣款）、Customer / Card Token 會員記憶、`webhookUrl` 推送回呼。**新專案應優先採用現代版 PaymentIntent**
+
+### Shopline Payments 特性
+- **優勢**: SHOPLINE 集團官方金流、RESTful JSON 設計、Redirect + Embedded SDK 雙模式
+- **認證**: HTTP Header 帶 `merchantId` + `apiKey`；Webhook 用 HMAC-SHA256
+- **傳輸**: application/json，金額以**分**為單位 (1 TWD = 100)，僅支援 TWD
+- **特色**: Embedded SDK 適合自訂 UI 與 PCI 隔離；Redirect 模式快速上線；6 種主流支付（信用卡/Apple Pay/LINE Pay/街口/ATM/中租 BNPL）
+
+### LINE Pay 特性
+- **優勢**: LINE 生態系直連、跨國（TW/JP/TH/TW）、自動扣款（Preapproved Pay）、Capture/Void 雙階段授權
+- **認證**: Channel ID + Channel Secret；每次請求需產生 Nonce 並用 HMAC-SHA256 簽章 (`X-LINE-Authorization`)
+- **傳輸**: RESTful JSON v4 規格
+- **特色**: Request → Confirm 兩段式流程；Capture 可手動請款（autoCapture=false）；19 位 transactionId（JS 需用字串避免精度遺失）；不支援 Apple Pay / Google Pay（這是 LINE Pay 自身就是支付工具）
+
+### TapPay 特性
+- **優勢**: PCI 隔離設計（前端 SDK 取 Prime → 後端付款）、支援多元電子錢包（Apple Pay / Google Pay / LINE Pay / 街口）、適合自製結帳頁
+- **認證**: Partner Key（後端）+ App Key（前端）+ Merchant ID 三段式金鑰；Prime 60 秒過期
+- **傳輸**: RESTful JSON
+- **特色**: 兩段式架構 (Prime → pay-by-prime)；`card_secret` 機制可記憶卡片做重複扣款 (pay-by-token)；`result_url` 雙網址回調；無自家結帳頁，UI 完全在商家自管
 
 ## 開發實作步驟
 

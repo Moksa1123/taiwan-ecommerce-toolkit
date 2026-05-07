@@ -36,7 +36,10 @@ taiwan-payment/                     # Source of Truth
 │   ├── smilepay-payment-api.md
 │   ├── pchomepay-payment-api.md
 │   ├── ezpay-payment-api.md
-│   └── paynow-payment-api.md
+│   ├── paynow-payment-api.md
+│   ├── shopline-payment-api.md
+│   ├── linepay-payment-api.md
+│   └── tappay-payment-api.md
 ├── scripts/                        # Utility scripts
 │   ├── core.py                     # BM25 search engine
 │   ├── recommend.py                # Recommendation system

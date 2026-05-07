@@ -72,3 +72,31 @@ paynow,P001,信用卡授權失敗,Card authorization failed,payment,error,改用
 paynow,Q001,Token 過期,JWT expired,auth,error,重新申請 JWT Bearer Token
 paynow,R001,退款超過原訂單,Refund exceeds original,refund,error,確認可退金額
 paynow,T001,信用卡 token 不存在,Card token not found,payment,error,確認 customer 與 card token 仍有效
+shopline,400,參數錯誤,Bad Request,validation,error,檢查 request body 與必填欄位
+shopline,401,認證失敗,Unauthorized,auth,error,檢查 merchantId / apiKey HTTP header
+shopline,403,沒有權限,Forbidden,auth,error,確認 API 權限與 IP 白名單
+shopline,404,資源不存在,Not Found,resource,error,確認 sessionId / paymentId 正確
+shopline,409,重複請求,Conflict,validation,error,使用唯一 referenceNumber
+shopline,422,驗證失敗,Unprocessable Entity,validation,error,檢查欄位格式與業務規則
+shopline,500,伺服器錯誤,Internal Server Error,server,error,稍後重試;持續出現聯繫 SLP support
+linepay,1101,請求超時,Request Timeout,network,error,重試;通常為網路問題
+linepay,1102,認證失敗,Authentication Failed,auth,error,檢查 ChannelId/ChannelSecret 與 HMAC 簽章
+linepay,1104,商戶尚未上線,Merchant not activated,auth,error,於 LINE Pay Merchant Center 啟用商戶
+linepay,1106,Header 錯誤,Header Error,validation,error,檢查 X-LINE-Authorization 與 Nonce
+linepay,1133,認證資訊過期,Authentication Expired,auth,error,Nonce 不可重複;重新產生
+linepay,1141,無效金額,Invalid Amount,validation,error,amount 必須為正整數
+linepay,1142,無效幣別,Invalid Currency,validation,error,Currency 必須為 TWD/USD 等支援值
+linepay,1170,訂單不存在,Order Not Found,resource,error,確認 transactionId
+linepay,1172,訂單已存在,Duplicate Order,validation,error,使用唯一 orderId
+linepay,1183,無效 Confirm,Invalid Confirm,validation,error,Confirm payload amount/currency 須與 Request 完全相同
+linepay,1198,內部錯誤,Internal Error,server,error,聯繫 LINE Pay 技術支援
+tappay,1,付款失敗,Payment Failure,payment,error,檢查 prime 與卡片是否有效
+tappay,2,參數錯誤,Invalid Parameters,validation,error,檢查 partner_key/merchant_id 與 amount 等必填
+tappay,3,prime 錯誤,Invalid Prime,validation,error,Prime 已使用或過期 (60秒);重新取得
+tappay,4,卡片資訊錯誤,Invalid Card,validation,error,卡號/到期/CVC 不正確
+tappay,5,卡片風控,Card Risk,risk,error,銀行風控拒絕;聯繫卡片發行銀行
+tappay,6,系統錯誤,System Error,server,error,聯繫 TapPay 技術支援
+tappay,7,卡片過期,Card Expired,validation,error,使用未過期卡片
+tappay,10003,Partner Key 錯誤,Invalid Partner Key,auth,error,確認 Partner Key 與環境一致 (sandbox/prod)
+tappay,10005,Merchant ID 錯誤,Invalid Merchant ID,auth,error,確認 Merchant ID 設定
+tappay,88001,卡片驗證失敗,Card Verification Failed,validation,error,3DS 驗證失敗;聯繫銀行
