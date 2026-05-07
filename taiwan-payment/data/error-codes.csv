@@ -40,3 +40,63 @@ payuni,API_TIMEOUT,API 請求逾時,API Timeout,system,error,重新交易
 payuni,PAYMENT_FAILED,付款失敗,Payment Failed,payment,error,稍後重試或使用其他支付方式
 payuni,INVALID_PAYMENT_TYPE,不支援的支付方式,Unsupported Payment Type,validation,error,使用支援的支付方式
 payuni,JSON_PARSE_ERROR,JSON 解析失敗,JSON Parse Error,system,error,檢查 API 回應格式
+smilepay,1,交易成功,Success,success,info,
+smilepay,-1,參數錯誤,Parameter error,validation,error,檢查必填欄位 Dcvc/Rvg2c/Verify_key
+smilepay,-2,商家驗證失敗,Merchant verification failed,auth,error,確認 Verify_key 與 mid 正確
+smilepay,-3,簽章/檢核碼不正確,Signature mismatch,auth,error,通知時驗證 Mid_smilepay 加權檢核碼
+smilepay,-10,Pay_zg 不支援,Unsupported payment type,validation,error,改用支援的 Pay_zg 值 (1/2/3/4/6/11)
+smilepay,-15,訂單金額異常,Amount invalid,validation,error,Amount 必須為正整數
+smilepay,-20,訂單編號重複,Duplicate Data_id,validation,error,使用唯一 Data_id
+smilepay,-23,逾期訂單/訂單已關閉,Order expired,validation,error,檢查 Deadline_date 設定
+pchomepay,10001,APP ID 或 SECRET 錯誤,Invalid Basic Auth credentials,auth,error,檢查 APP ID 與 SECRET 是否正確 base64 編碼
+pchomepay,10003,Token 已過期,Token expired,auth,error,重新呼叫 POST /v1/token 取得新 token
+pchomepay,10004,Token 不存在,Token not found,auth,error,header 必須帶 pcpay-token
+pchomepay,10005,IP 不在白名單,IP not whitelisted,auth,error,將呼叫端 IP 加入後台白名單
+pchomepay,20001,訂單已存在,Duplicate order_id,validation,error,使用唯一 order_id
+pchomepay,20002,訂單金額錯誤,Invalid amount,validation,error,amount 必須為正整數
+pchomepay,30001,退款金額超過原訂單,Refund exceeds original,refund,error,退款金額 + 退款手續費需小於原訂單
+pchomepay,30002,餘額不足,Insufficient balance,refund,error,商家代收帳戶餘額不足以扣除退款 + 手續費
+pchomepay,40001,卡號驗證失敗,Card validation failed,payment,error,信用卡資料錯誤；於 sandbox 改用測試卡號
+pchomepay,90001,超商取貨建立失敗,CVS COD creation failed,logistics,error,參見 taiwan-logistics 文件確認物流欄位
+ezpay,KEY10001,商店代號錯誤,Invalid MerchantID,auth,error,確認 MerchantID 與後台一致
+ezpay,KEY10002,簽章驗證失敗,TradeSha mismatch,auth,error,SHA256 計算需含 HashKey/HashIV 且大寫
+ezpay,KEY10003,加密資料解密失敗,TradeInfo decrypt failed,auth,error,確認 AES-256-CBC + Hex + PKCS7 與 32-char HashKey 16-char HashIV
+ezpay,MEM10001,商家未啟用該付款方式,Method not enabled,validation,error,於 ezPay 後台啟用該付款方式
+ezpay,MPG10001,訂單編號重複,Duplicate MerchantOrderNo,validation,error,使用唯一訂單編號
+ezpay,VACC10001,虛擬帳號逾期,VACC expired,validation,error,檢查 ExpireDate 設定
+paynow,M001,商家代號錯誤,Invalid Merchant,auth,error,確認商家代號正確
+paynow,A001,加密驗證失敗,Encryption validation failed,auth,error,傳統版檢查 GP/GK 動態金鑰；現代版檢查 JWT Bearer
+paynow,B001,訂單金額錯誤,Invalid Amount,validation,error,確認 amount 為正整數且小於 1,000,000,000,000
+paynow,C001,訂單編號重複,Duplicate paymentNo,validation,error,使用唯一 paymentNo (現代版可省略由系統產生)
+paynow,P001,信用卡授權失敗,Card authorization failed,payment,error,改用其他卡或聯繫銀行
+paynow,Q001,Token 過期,JWT expired,auth,error,重新申請 JWT Bearer Token
+paynow,R001,退款超過原訂單,Refund exceeds original,refund,error,確認可退金額
+paynow,T001,信用卡 token 不存在,Card token not found,payment,error,確認 customer 與 card token 仍有效
+shopline,400,參數錯誤,Bad Request,validation,error,檢查 request body 與必填欄位
+shopline,401,認證失敗,Unauthorized,auth,error,檢查 merchantId / apiKey HTTP header
+shopline,403,沒有權限,Forbidden,auth,error,確認 API 權限與 IP 白名單
+shopline,404,資源不存在,Not Found,resource,error,確認 sessionId / paymentId 正確
+shopline,409,重複請求,Conflict,validation,error,使用唯一 referenceNumber
+shopline,422,驗證失敗,Unprocessable Entity,validation,error,檢查欄位格式與業務規則
+shopline,500,伺服器錯誤,Internal Server Error,server,error,稍後重試;持續出現聯繫 SLP support
+linepay,1101,請求超時,Request Timeout,network,error,重試;通常為網路問題
+linepay,1102,認證失敗,Authentication Failed,auth,error,檢查 ChannelId/ChannelSecret 與 HMAC 簽章
+linepay,1104,商戶尚未上線,Merchant not activated,auth,error,於 LINE Pay Merchant Center 啟用商戶
+linepay,1106,Header 錯誤,Header Error,validation,error,檢查 X-LINE-Authorization 與 Nonce
+linepay,1133,認證資訊過期,Authentication Expired,auth,error,Nonce 不可重複;重新產生
+linepay,1141,無效金額,Invalid Amount,validation,error,amount 必須為正整數
+linepay,1142,無效幣別,Invalid Currency,validation,error,Currency 必須為 TWD/USD 等支援值
+linepay,1170,訂單不存在,Order Not Found,resource,error,確認 transactionId
+linepay,1172,訂單已存在,Duplicate Order,validation,error,使用唯一 orderId
+linepay,1183,無效 Confirm,Invalid Confirm,validation,error,Confirm payload amount/currency 須與 Request 完全相同
+linepay,1198,內部錯誤,Internal Error,server,error,聯繫 LINE Pay 技術支援
+tappay,1,付款失敗,Payment Failure,payment,error,檢查 prime 與卡片是否有效
+tappay,2,參數錯誤,Invalid Parameters,validation,error,檢查 partner_key/merchant_id 與 amount 等必填
+tappay,3,prime 錯誤,Invalid Prime,validation,error,Prime 已使用或過期 (60秒);重新取得
+tappay,4,卡片資訊錯誤,Invalid Card,validation,error,卡號/到期/CVC 不正確
+tappay,5,卡片風控,Card Risk,risk,error,銀行風控拒絕;聯繫卡片發行銀行
+tappay,6,系統錯誤,System Error,server,error,聯繫 TapPay 技術支援
+tappay,7,卡片過期,Card Expired,validation,error,使用未過期卡片
+tappay,10003,Partner Key 錯誤,Invalid Partner Key,auth,error,確認 Partner Key 與環境一致 (sandbox/prod)
+tappay,10005,Merchant ID 錯誤,Invalid Merchant ID,auth,error,確認 Merchant ID 設定
+tappay,88001,卡片驗證失敗,Card Verification Failed,validation,error,3DS 驗證失敗;聯繫銀行

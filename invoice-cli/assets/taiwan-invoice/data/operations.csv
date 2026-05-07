@@ -1,11 +1,12 @@
-operation,operation_zh,ecpay_b2c_endpoint,ecpay_b2b_endpoint,smilepay_endpoint,amego_endpoint,required_fields,notes
-issue,開立發票,/B2CInvoice/Issue,/B2BInvoice/Issue,/SPEinvoice_Storage.asp,/json/f0401,"MerchantID,RelateNumber,Items,SalesAmount",B2C/B2B 端點不同(ECPay)
-void,作廢發票,/B2CInvoice/Invalid,/B2BInvoice/Invalid,/SPEinvoice_Storage_Modify.asp?types=Cancel,/json/f0501,"InvoiceNo,InvoiceDate,Reason",SmilePay 需帶 CancelReason
-allowance,開立折讓,/B2CInvoice/Allowance,/B2BInvoice/Allowance,/SPEinvoice_Storage_Allowance.asp,/json/g0401,"InvoiceNo,AllowanceAmount,Items",折讓金額不可超過發票金額
-void_allowance,作廢折讓,/B2CInvoice/AllowanceInvalid,/B2BInvoice/AllowanceInvalid,/SPEinvoice_Storage_Modify.asp?types=CancelAllowance,/json/g0501,"AllowanceNo,Reason",
-query,查詢發票,/B2CInvoice/GetIssue,,/SPEinvoice_Storage_Modify.asp,/json/invoice_query,RelateNumber|InvoiceNo,ECPay用RelateNumber 其他用InvoiceNo
-print,列印發票,/Invoice/Print,/Invoice/Print,/SmilePayCarrier/InvoiceDetails.php,/json/invoice_file,"InvoiceNo,InvoiceDate",ECPay用POST表單 SmilePay用GET Amego回傳PDF URL
-check_barcode,驗證手機條碼,/B2CInvoice/CheckBarcode,,/SPCarrier/CheckBarCode.asp,/json/barcode,CarrierNum|barCode,驗證載具是否有效
-check_lovecode,驗證愛心碼,/B2CInvoice/CheckLoveCode,,/SPCarrier/CheckLoveCode.asp,/json/lovecode,LoveCode,驗證捐贈碼是否有效
-notify,發票通知,/B2CInvoice/InvoiceNotify,,,/json/invoice_file,"InvoiceNo,Email",補寄發票通知
-invoice_list,發票列表,,,,/json/invoice_list,"date_start,date_end",僅Amego支援
+operation,operation_zh,ecpay_b2c_endpoint,ecpay_b2b_endpoint,smilepay_endpoint,amego_endpoint,ezpay_endpoint,paynow_endpoint,required_fields,notes
+issue,開立發票,/B2CInvoice/Issue,/B2BInvoice/Issue,/SPEinvoice_Storage.asp,/json/f0401,/Api_invoice_issue,/invoice/issue,"MerchantID,RelateNumber,Items,SalesAmount",B2C/B2B 端點不同(ECPay) ezPay統一端點以Category=B2B區分 PayNow JWT認證
+void,作廢發票,/B2CInvoice/Invalid,/B2BInvoice/Invalid,/SPEinvoice_Storage_Modify.asp?types=Cancel,/json/f0501,/Api_invoice_invalid,/invoice/invalid,"InvoiceNo,InvoiceDate,Reason",SmilePay 需帶 CancelReason
+allowance,開立折讓,/B2CInvoice/Allowance,/B2BInvoice/Allowance,/SPEinvoice_Storage_Allowance.asp,/json/g0401,/Api_allowance_issue,/invoice/allowance,"InvoiceNo,AllowanceAmount,Items",折讓金額不可超過發票金額
+void_allowance,作廢折讓,/B2CInvoice/AllowanceInvalid,/B2BInvoice/AllowanceInvalid,/SPEinvoice_Storage_Modify.asp?types=CancelAllowance,/json/g0501,/Api_allowanceInvalid,/invoice/allowance/invalid,"AllowanceNo,Reason",ezPay 此端點為 camelCase
+query,查詢發票,/B2CInvoice/GetIssue,,/SPEinvoice_Storage_Modify.asp,/json/invoice_query,/Api_invoice_search,,RelateNumber|InvoiceNo,ECPay用RelateNumber 其他用InvoiceNo PayNow未公開查詢端點
+print,列印發票,/Invoice/Print,/Invoice/Print,/SmilePayCarrier/InvoiceDetails.php,/json/invoice_file,/Api_invoice_touch,,"InvoiceNo,InvoiceDate",ECPay用POST表單 SmilePay用GET Amego回傳PDF URL ezPay觸發補開立
+check_barcode,驗證手機條碼,/B2CInvoice/CheckBarcode,,/SPCarrier/CheckBarCode.asp,/json/barcode,/Api_carruerCheck,,CarrierNum|barCode,驗證載具是否有效
+check_lovecode,驗證愛心碼,/B2CInvoice/CheckLoveCode,,/SPCarrier/CheckLoveCode.asp,/json/lovecode,/Api_loveCodeCheck,,LoveCode,驗證捐贈碼是否有效
+notify,發票通知,/B2CInvoice/InvoiceNotify,,,/json/invoice_file,,,"InvoiceNo,Email",補寄發票通知
+invoice_list,發票列表,,,,/json/invoice_list,,,"date_start,date_end",僅Amego支援
+pos_batch_get,POS 批次取號,,,,,,/invoice/pos/batch,"merchantId,quantity",PayNow 專屬 POS 流程

@@ -48,3 +48,25 @@ Amego,1008,載具與捐贈不可同時存在,Carrier and donation conflict,開�
 Amego,1009,打統編不可使用載具,B2B cannot use carrier,開立,移除 CarrierId1
 Amego,1010,打統編不可捐贈,B2B cannot donate,開立,設定 NPOBAN 為空
 Amego,102,折讓單號不存在,Allowance not found,作廢折讓,確認折讓單號正確
+ezPay,KEY10001,商店代號錯誤,Invalid MerchantID,認證,確認 MerchantID_ 正確且後方有底線
+ezPay,KEY10002,加密驗證失敗,CheckCode mismatch,認證,SHA256 計算需含 HashIV={HashIV} 且大寫
+ezPay,KEY10003,加密資料解密失敗,PostData_ decrypt failed,認證,確認 AES-256-CBC + Hex + PKCS7 與 32-char HashKey 16-char HashIV
+ezPay,KEY10004,版本不符,Invalid Version,通用,Version 需為 1.5
+ezPay,KEY10005,時間戳記逾時,Timestamp expired,認證,TimeStamp 與 server 時間誤差需在 60 秒內
+ezPay,INV10001,發票號碼重複,Duplicate MerchantOrderNo,開立,使用唯一訂單編號
+ezPay,INV10002,發票字軌不足,Track number exhausted,開立,於後台「發票字軌號碼設定」新增字軌
+ezPay,INV10003,金額計算錯誤,Amount calculation error,開立,Amt + TaxAmt = TotalAmt
+ezPay,INV10004,商品明細不可為空,Item details required,開立,至少提供一項商品
+ezPay,INV10005,字軌類別錯誤,Invalid Category,開立,Category 須為 B2C 或 B2B
+ezPay,LIB10001,愛心碼驗證失敗,Invalid LoveCode,開立,呼叫 Api_loveCodeCheck 驗證
+ezPay,LIB10002,手機條碼驗證失敗,Invalid CarrierNum,開立,/開頭8碼大寫英數
+ezPay,IAI10001,折讓金額超過原發票,Allowance exceeds invoice,折讓,折讓金額需小於剩餘金額
+ezPay,IAI10002,折讓單號重複,Duplicate AllowanceNo,折讓,使用唯一折讓單號
+ezPay,API10001,API 端點不存在,API not found,通用,確認端點 URL 與大小寫(camelCase 注意 allowanceInvalid)
+PayNow,I0001,JWT-Token 驗證失敗,Invalid JWT Bearer Token,認證,Authorization Header 須為 Bearer <token>
+PayNow,I0002,商家停權,Merchant disabled,認證,聯繫 einvoice@paynow.com.tw
+PayNow,I1001,字軌不足,Track exhausted,開立,聯繫 PayNow 配置字軌
+PayNow,I1002,POS 取號超限,POS quota exceeded,開立,POS 批次取號有商家配額限制
+PayNow,I2001,發票不存在,Invoice not found,查詢,確認 InvoiceNo 與 RandomNumber
+PayNow,I2002,發票已作廢,Invoice already invalidated,作廢,發票已被作廢無法重複操作
+PayNow,I3001,折讓金額超過原發票,Allowance exceeds invoice,折讓,折讓金額需小於剩餘金額

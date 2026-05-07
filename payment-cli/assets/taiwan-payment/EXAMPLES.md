@@ -1422,4 +1422,121 @@ console.log('一致:', JSON.stringify(testData) === JSON.stringify(decryptedPAYU
 
 ---
 
+## SmilePay 速買配範例
+
+SmilePay 採用 `Verify_key` + `mid` 共享密鑰機制，無 AES 加密，整合最簡單。回應為 XML（部分欄位可能是 BIG-5 編碼，需轉 UTF-8）。
+
+### 完整 Python 範例
+請見 [`examples/smilepay-payment-example.py`](examples/smilepay-payment-example.py) — 涵蓋 ATM (Pay_zg=2) / Barcode (Pay_zg=3) / ibon (Pay_zg=4) / FamiPort (Pay_zg=6) / 信用卡 (Pay_zg=1) / 信用卡分期 / 聯合信用卡 (Pay_zg=11) 七種付款方式。
+
+### 五大踩坑
+
+1. **Pay_zg 是核心參數**：每種付款方式對應不同的 Pay_zg 值；分期是 `Pay_zg=1` + `Stage` 額外欄位。
+2. **回應是 XML，不是 JSON**：用 `xml.etree.ElementTree` 解析；常用欄位 `Status`、`Desc`、`Smseid`、`PaymentNo`。
+3. **通知時要驗證 `Mid_smilepay` 加權檢核碼**：這是 SmilePay 防偽機制；演算法在 `smilepay-payment-api.md` 文件中（從 plugin 反推）。
+4. **部分通知欄位為 BIG-5 編碼**：`Process_time` / `Address` / `Errdesc` 需 BIG-5→UTF-8。
+5. **沒有正式查詢端點**：靠通知 + `mtmk_utf.asp` 補；通知會重試但無公開重試 SLA。
+
+---
+
+## PChomePay 拍錢包範例
+
+PChomePay 採用 **HTTP Basic Auth → pcpay-token** 兩階段認證：先用 APP_ID + SECRET 取得 token（8 小時有效），後續 API 帶 `pcpay-token` header。
+
+### 完整 Python 範例
+請見 [`examples/pchomepay-payment-example.py`](examples/pchomepay-payment-example.py) — 涵蓋 token 自動刷新、信用卡、ATM、超商代碼、訂單查詢、退款。
+
+### 四大要點
+
+1. **白名單 IP**：PChomePay notify 的來源 IP 是 `113.196.231.190`，**必須加入後台白名單**。
+2. **Token 機制**：開立 token 預設 28800 秒（8h）有效；要在程式自行 cache 並避免逾期重發。
+3. **沙箱測試靠金額尾數**：例如 ATM 訂單金額尾數 `0-7` 自動付款成功、`8` 過期、`9` 5 分鐘後過期。
+4. **退款手續費**：除信用卡免手續費外，ATM/超商等需「退款金額 + 退款手續費」共同從餘額扣除；退款手續費為 NT$15（依官方）。
+
+---
+
+## ezPay 簡單付範例
+
+ezPay 是藍新 NewebPay 集團的小型商家品牌，金流 API **與 NewebPay MPG 完全相同**（TradeInfo / TradeSha / AES-256-CBC + SHA256），只在 MerchantID、HashKey、URL 與部分付款方式上有差異。
+
+### 完整 Python 範例
+請見 [`examples/ezpay-payment-example.py`](examples/ezpay-payment-example.py) — 由 `newebpay-payment-example.py` 衍生，凸顯差異點。
+
+### 三大要點
+
+1. **加密邏輯完全照抄 NewebPay**：可直接複用同一份加解密 helper。
+2. **URL 不同**：ezPay 沙箱 `https://ccore.spgateway.com/MPG/mpg_gateway`（spgateway.com 是舊網域，仍可用）。
+3. **付款方式受限**：分期、部分電子錢包在 ezPay 計劃下不可用；以後台啟用為準。
+
+---
+
+## PayNow 立吉富範例
+
+PayNow 有**兩代 API 並行**：
+- **傳統版（cashflow）**：form-post，動態 AES-256（每次以 GP/GK 檢核碼即時取得 Key/IV）
+- **現代版（apidoc）**：JWT Bearer + RESTful JSON + PaymentIntent / Customer / Card Token（接近 Stripe）
+
+新專案應優先採用現代版。
+
+### 完整 Python 範例
+請見 [`examples/paynow-payment-example.py`](examples/paynow-payment-example.py) — 涵蓋 PaymentIntent 建立 / Checkout / Refund / Apple Pay session / Customer / Card Token，搭配傳統版的 form-post 範例 stub。
+
+### 五大要點
+
+1. **新專案走現代版**：傳統版的 GP/GK 動態金鑰機制學習成本高、易出錯；只有舊系統相容才需要。
+2. **Apple Pay 完整支援**：含 v1 / v2 一般流程 + Deferred 延遲扣款（PayNow 獨家）。
+3. **Card Token 可跨訂單記憶**：透過 Customer + Card Token 機制做訂閱、回購快速結帳。
+4. **`webhookUrl` 是現代版的 callback 機制**：不同於傳統版的 `Roturl`。
+5. **`channelId` 對 LINE Pay 必須額外設定**：`paymentMethodType=LINEPayOnline` 時需提供 PayNow 簽發的 channelId。
+
+---
+
+## Shopline Payments 範例
+
+Shopline Payments (SLP) 採 **HTTP Header `merchantId` + `apiKey`** 認證，所有金額以**分**為單位（NT$1000 = 100000）。提供 Redirect 與 Embedded SDK 雙模式，Webhook 用 HMAC-SHA256 驗章。
+
+### 完整 Python 範例
+請見 [`examples/shopline-payment-example.py`](examples/shopline-payment-example.py) — 涵蓋 sessions/create / sessionQuery / refund / Webhook 驗章。
+
+### 三大要點
+
+1. **金額是分（cents）**：NT$1,050 要傳 `value: 105000`，弄錯會差 100 倍。
+2. **僅支援 TWD**：`currency` 固定為 `TWD`；其他幣別不支援。
+3. **Webhook 驗章**：`x-slp-signature: sha256=<hex>` header，HMAC-SHA256 用 `webhookSecret` 對 raw body 簽。**用 raw bytes，不要 parse JSON 後再 stringify**（會差換行/空白）。
+
+---
+
+## LINE Pay v4 範例
+
+LINE Pay 採 **兩段式流程**：`Request → Confirm`。每次請求需產生 Nonce + HMAC-SHA256 簽章。
+
+### 完整 Python 範例
+請見 [`examples/linepay-payment-example.py`](examples/linepay-payment-example.py) — 涵蓋 Request / Confirm / Capture / Void / Refund / Preapproved Pay (自動扣款)。
+
+### 五大要點
+
+1. **HMAC string-to-sign 公式（v3 慣例）**：`ChannelSecret + ApiPath + Body + Nonce` (POST) / `ChannelSecret + ApiPath + QueryString + Nonce` (GET)。⚠️ v4 公式與 v3 是否完全一致需以官方 PDF 驗證。
+2. **transactionId 是 19 位數字**：在 JS 直接用 number 會被 IEEE-754 截斷，**永遠用字串處理**。
+3. **Confirm 的 amount/currency 必須與 Request 完全一致**：差一塊錢就 1183 錯誤。
+4. **Capture 兩階段授權**：建立時 `options.payment.capture=false` 只授權；之後手動呼叫 `/capture` 請款，可分批請款多次。
+5. **Preapproved Pay 自動扣款**：建立時帶 `payType=PREAPPROVED` 取得 `regKey`，之後用 `/preapprovedPay/{regKey}/payment` 直接扣款，免使用者再次確認。
+
+---
+
+## TapPay 範例
+
+TapPay 是 **PCI 隔離設計**：前端 SDK 取 Prime（60 秒 TTL）→ 後端用 Prime 呼叫 pay-by-prime。商家從不接觸卡號。
+
+### 完整 Python 範例
+請見 [`examples/tappay-payment-example.py`](examples/tappay-payment-example.py) — 涵蓋 pay-by-prime / pay-by-card-token (重複扣款) / refund / query / remove-card。
+
+### 四大要點
+
+1. **三段式金鑰**：`Partner Key` (後端密鑰) / `App Key` (前端 SDK 公鑰) / `Merchant ID`。**Partner Key 絕對不可放前端**。
+2. **Prime 是 60 秒一次性 token**：前端取 Prime 後要立刻送後端付款；過期或重用會 status=3。
+3. **重複扣款**：`pay-by-prime` 帶 `remember=true` 後，回應內 `card_secret` 含 `card_key + card_token`，存起來下次直接 `pay-by-card-token`，免再過 SDK。適合訂閱與快速結帳。
+4. **status=0 才是成功**：別只看 HTTP 200；TapPay HTTP 200 但 status≠0 是業務失敗。
+
+---
+
 **更多範例持續更新中...**
