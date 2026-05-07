@@ -630,4 +630,77 @@ const result = await service.printInvoice(userId, invoiceNo)
 
 ---
 
+## ezPay 簡單付範例
+
+ezPay 是藍新金流集團旗下發票服務，與藍新 Newebpay 金流共用同一套加密邏輯（AES-256-CBC + Hex + PKCS7 Padding + SHA256 CheckCode），但發票端與金流端的 HashKey/HashIV 為**獨立**金鑰。
+
+### 完整 Python 範例
+請見 [`examples/ezpay-invoice-example.py`](examples/ezpay-invoice-example.py) — 涵蓋 B2C / B2B 開立、作廢、折讓、查詢、`Api_invoice_touch` 觸發列印。
+
+### 五大踩坑
+
+1. **HashKey 是 32 碼**，與 ECPay 16 碼不同。HashIV 仍是 16 碼。
+2. **欄位名稱有 `_`**：`MerchantID_` 與 `PostData_` 後綴底線**不可省略**，否則會被當成缺少參數。
+3. **加密輸出是 Hex 不是 Base64**：與 ECPay 的 Base64 不同。Hex 字串小寫即可。
+4. **作廢折讓端點是 camelCase**：`/Api_allowanceInvalid`（不是 `/Api_allowance_invalid`）。其他端點都是 snake_case，這是 ezPay 唯一的例外。
+5. **沒有 Webhook**：開立成功只能依靠同步回應。如需狀態通知，須自行排程定時呼叫 `/Api_invoice_search`。
+
+### 開立 B2C 發票（最小範例）
+
+```python
+from ezpay_invoice_example import EzpayInvoiceService, InvoiceIssueData
+
+svc = EzpayInvoiceService(
+    merchant_id='YOUR_MERCHANT_ID',
+    hash_key='YOUR_HASH_KEY_32_CHARS',
+    hash_iv='YOUR_HASH_IV_16C',
+    is_test=True,
+)
+
+resp = svc.issue_invoice(InvoiceIssueData(
+    merchant_order_no='ORD20260507001',
+    category='B2C',
+    buyer_name='王小明',
+    buyer_email='test@example.com',
+    amt=1000, tax_amt=50, total_amt=1050,
+    item_name='測試商品', item_count='1',
+    item_unit='個', item_price='1050', item_amt='1050',
+))
+print(resp.invoice_number, resp.random_num)
+```
+
+---
+
+## PayNow 立吉富範例 (preliminary)
+
+> ⚠️ PayNow 公開技術文件較稀疏，下方端點與欄位有部分為合理推測。串接前請向 `einvoice@paynow.com.tw` 索取官方 Invoice Management v1.5 PDF。詳見 [`references/PAYNOW_API_REFERENCE.md`](references/PAYNOW_API_REFERENCE.md) 中列出的 12 項待確認項目。
+
+### 完整 Python 範例
+請見 [`examples/paynow-invoice-example.py`](examples/paynow-invoice-example.py) — 涵蓋一般串接（External）的開立 / 作廢 / 折讓，以及 POS 機批次取號流程。
+
+### 三大要點
+
+1. **認證用 JWT Bearer Token**：與其他四家發票服務商（ECPay/SmilePay/Amego/ezPay 都用 HashKey/HashIV）完全不同。需向 PayNow 申請商家 JWT-Token。
+2. **POS 流程的「次期單數月 5 號自動上傳空白發票」陷阱**：批次取號後若該期未開立完，剩餘號碼會在次期單數月（1/3/5/7/9/11 月之次月）的 5 號被自動上傳為空白發票。商家若需重新使用須事先取消。
+3. **金流與發票兩套加密模型**：PayNow 金流端用動態 AES-256（每呼叫透過 GP/GK 檢核碼即時取得 Key/IV），發票端用靜態 JWT。**不要混用**。
+
+### 開立 B2C 發票（最小範例）
+
+```python
+from paynow_invoice_example import PayNowInvoiceService, InvoiceIssueData
+
+svc = PayNowInvoiceService(jwt_token='YOUR_JWT', is_test=True)
+
+resp = svc.issue_invoice(InvoiceIssueData(
+    merchant_trade_no='ORD20260507001',
+    buyer_name='王小明',
+    buyer_email='test@example.com',
+    sales_amount=1050, total_amount=1050,
+    items=[{'ItemName': '測試商品', 'ItemCount': 1, 'ItemPrice': 1050, 'ItemAmount': 1050, 'ItemUnit': '個'}],
+))
+print(resp.invoice_no, resp.random_number)
+```
+
+---
+
 **更多範例持續更新中...**

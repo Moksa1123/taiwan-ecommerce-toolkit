@@ -4,14 +4,14 @@
   "installType": "full",
   "folderStructure": {
     "root": ".agent",
-    "skillPath": "skills/taiwan-invoice",
+    "skillPath": "skills/taiwan-logistics",
     "filename": "SKILL.md",
     "globalRoot": "~/.gemini/antigravity/global_skills"
   },
-  "scriptPath": "skills/taiwan-invoice/scripts",
+  "scriptPath": "skills/taiwan-logistics/scripts",
   "frontmatter": {
-    "name": "taiwan-invoice",
-    "description": "Taiwan E-Invoice API integration for ECPay, SmilePay, and Amego. Provides B2C/B2B invoice issuance, void, allowance, query, and print functionality.",
+    "name": "taiwan-logistics",
+    "description": "Taiwan Logistics API integration specialist for ECPay, NewebPay, and PAYUNi logistics aggregators. Use when developing shipping flows, implementing CVS pickup (7-11/全家/萊爾富/OK), home delivery (黑貓/宅配通), store-map selectors, COD orders, or shipment tracking. Handles encryption, store-map iframes, and provider field mappings.",
     "user-invocable": "true"
   },
   "sections": {
@@ -20,7 +20,7 @@
     "scripts": true,
     "quickReference": false
   },
-  "title": "Taiwan E-Invoice Skill",
-  "description": "Comprehensive guide for Taiwan E-Invoice API integration. Supports ECPay, SmilePay, and Amego providers with B2C/B2B invoice operations.",
+  "title": "Taiwan Logistics Skill",
+  "description": "Comprehensive guide for Taiwan Logistics API integration. Supports ECPay, NewebPay, and PAYUNi providers covering CVS store-to-store, B2C bulk pickup, home delivery, and shipment tracking.",
   "skillOrWorkflow": "Skill"
 }
