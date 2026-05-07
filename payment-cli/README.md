@@ -3,14 +3,18 @@
 <h3 align="center">台灣金流 AI 開發技能包</h3>
 
 <p align="center">
-  <strong>支援 ECPay 綠界 · NewebPay 藍新 · PAYUNi 統一 · SmilePay 速買配 · PChomePay 拍錢包 · ezPay 簡單付 · PayNow 立吉富</strong>
+  <strong>10 大金流平台一次串接</strong>
+</p>
+
+<p align="center">
+  ECPay · NewebPay · PAYUNi · SmilePay · PChomePay · ezPay · PayNow · Shopline · LINE Pay · TapPay
 </p>
 
 <p align="center">
   <a href="https://www.npmjs.com/package/taiwan-payment-skill"><img src="https://img.shields.io/npm/v/taiwan-payment-skill?style=flat-square&logo=npm" alt="npm version"></a>
   <a href="https://www.npmjs.com/package/taiwan-payment-skill"><img src="https://img.shields.io/npm/dm/taiwan-payment-skill?style=flat-square&label=downloads" alt="npm downloads"></a>
-  <img src="https://img.shields.io/badge/node-%3E%3D18-339933?style=flat-square&logo=node.js&logoColor=white" alt="Node.js">
-  <img src="https://img.shields.io/badge/platforms-14-blue?style=flat-square" alt="14 Platforms">
+  <img src="https://img.shields.io/badge/providers-10-success?style=flat-square" alt="10 Providers">
+  <img src="https://img.shields.io/badge/AI%20platforms-14-blue?style=flat-square" alt="14 AI Platforms">
   <a href="https://github.com/Moksa1123/taiwan-ecommerce-toolkit/blob/main/LICENSE"><img src="https://img.shields.io/github/license/Moksa1123/taiwan-ecommerce-toolkit?style=flat-square" alt="License"></a>
 </p>
 
@@ -26,172 +30,97 @@
 npm install -g taiwan-payment-skill
 ```
 
----
-
-## 使用方式
+## 快速開始
 
 ```bash
-# 進入專案目錄
 cd /path/to/your/project
 
-# 選擇你的 AI 助手
+taiwan-payment init                    # 互動式
 taiwan-payment init --ai claude        # Claude Code
 taiwan-payment init --ai cursor        # Cursor
 taiwan-payment init --ai windsurf      # Windsurf
-taiwan-payment init --ai copilot       # GitHub Copilot
-taiwan-payment init --ai antigravity   # Antigravity
 taiwan-payment init --ai all           # 全部安裝
 ```
 
-<details>
-<summary>完整平台列表</summary>
+安裝完後，AI 助手裡用自然語言：
 
-```bash
-taiwan-payment init --ai kiro          # Kiro (AWS)
-taiwan-payment init --ai codex         # Codex CLI (OpenAI)
-taiwan-payment init --ai qoder         # Qoder
-taiwan-payment init --ai roocode       # Roo Code
-taiwan-payment init --ai gemini        # Gemini CLI
-taiwan-payment init --ai trae          # Trae (ByteDance)
-taiwan-payment init --ai opencode      # OpenCode
-taiwan-payment init --ai continue      # Continue
-taiwan-payment init --ai codebuddy     # CodeBuddy (Tencent)
 ```
-
-</details>
-
----
-
-## 其他指令
-
-```bash
-taiwan-payment list         # 列出支援平台
-taiwan-payment info         # 顯示技能資訊
-taiwan-payment versions     # 列出可用版本
-taiwan-payment update       # 檢查更新
-```
-
-### 選項
-
-```bash
-taiwan-payment init --force     # 覆蓋現有檔案
-taiwan-payment init --global    # 安裝到全域目錄（所有專案共用）
-```
-
-### 全域安裝
-
-使用 `--global` 可將技能安裝到使用者目錄，讓所有專案都能使用：
-
-```bash
-taiwan-payment init --ai cursor --global       # ~/.cursor/skills/taiwan-payment/
-taiwan-payment init --ai claude --global       # ~/.claude/skills/taiwan-payment/
-taiwan-payment init --ai antigravity --global  # ~/.gemini/antigravity/global_skills/taiwan-payment/
+建立 ECPay 信用卡付款訂單，金額 2500 元
+NewebPay MPG 整合 LINE Pay + Apple Pay
+PChomePay 拍錢包訂單，5% P 幣回饋
+PayNow PaymentIntent，啟用 LINE Pay 線上+線下扣款
+TapPay 用 Prime 一次付清，remember=true 存成 card_token 供下次自動扣款
 ```
 
 ---
 
-## 支援平台
+## 10 家金流平台
 
-| 平台 | 說明 | 啟動方式 |
-|------|------|----------|
-| **Claude Code** | Anthropic 官方 CLI | `/taiwan-payment` |
-| **Cursor** | AI 程式編輯器 | `/taiwan-payment` |
-| **Windsurf** | Codeium 編輯器 | 自動 |
-| **Copilot** | GitHub Copilot | `/taiwan-payment` |
-| **Antigravity** | Google AI 助手 | `/taiwan-payment` |
-| **Kiro** | AWS AI 助手 | `/taiwan-payment` |
-| **Codex** | OpenAI CLI | 自動 |
-| **Qoder** | Qodo AI 助手 | 自動 |
-| **RooCode** | VSCode 擴充 | `/taiwan-payment` |
-| **Gemini CLI** | Google Gemini | 自動 |
-| **Trae** | ByteDance AI | 自動 |
-| **OpenCode** | 開源 AI 助手 | 自動 |
-| **Continue** | 開源 AI 助手 | 自動 |
-| **CodeBuddy** | Tencent AI | 自動 |
+| 服務商 | 加密 / 認證 | 特色 |
+|---|---|---|
+| **ECPay 綠界** | SHA256 CheckMacValue | 市佔率最高、文檔最完整 |
+| **NewebPay 藍新** | AES-256-CBC + SHA256 | MPG 整合、信用卡記憶、13 種支付 |
+| **PAYUNi 統一** | AES-256-GCM + SHA256 | RESTful JSON、AFTEE、iCash |
+| **SmilePay 速買配** | Verify_key + 加權檢核碼 | 無 AES、ibon / FamiPort 直接打單 |
+| **PChomePay 拍錢包** | Basic Auth → 8h pcpay-token | PChome 生態、5% P 幣回饋、金物流二合一 |
+| **ezPay 簡單付** | 同 NewebPay (AES-256-CBC) | 藍新小型商家品牌、低門檻 |
+| **PayNow 立吉富** | JWT Bearer (現代) / 動態 AES-256 (傳統) | 雙 API、Stripe-like、Apple Pay 完整 |
+| **Shopline Payments** | merchantId + apiKey | 金額以分為單位、HMAC-SHA256 webhook |
+| **LINE Pay v4** | Channel ID/Secret + HMAC-SHA256 + Nonce | Request→Confirm 兩段、Preapproved Pay |
+| **TapPay** | Partner Key (Header) | PCI 隔離、Prime 兩段式、Card Token |
 
----
+每家附完整 Python 範例 + 反推的加密實作 + 錯誤碼對照 + 測試帳號。
 
-## 金流服務商
+## 技能包內容
 
-| 服務商 | 加密方式 | API 風格 | 特點 |
-|--------|---------|---------|------|
-| **ECPay 綠界** | URL Encode + SHA256 | Form POST | 市佔率最高，穩定性佳 |
-| **NewebPay 藍新** | AES-256-CBC + SHA256 | Form POST + AES | 支援最多支付方式 (13 種) |
-| **PAYUNi 統一** | AES-256-GCM + SHA256 | RESTful JSON | RESTful 設計，API 現代化 |
-| **SmilePay 速買配** | Verify_key + Mid_smilepay 加權檢核碼 | Form POST + XML 回應 | 老牌、簡單、無 AES 加密門檻 |
-| **PChomePay 拍錢包** | HTTP Basic Auth → pcpay-token | RESTful JSON | PChome 生態、5% P 幣回饋、自帶超商取貨物流 |
-| **ezPay 簡單付** | 同 NewebPay (AES-256-CBC + SHA256) | Form POST + AES | 藍新小型商家品牌，跨境支付寶/微信 |
-| **PayNow 立吉富** | JWT Bearer (現代) / 動態 AES-256 (傳統) | RESTful JSON / Form POST | 雙 API 並行，Apple Pay 完整支援（含延遲扣款） |
-
----
-
-## 付款方式支援
-
-### 信用卡支付
-- 一次付清、分期付款 (3/6/12/18/24 期)
-- 信用卡定期定額、信用卡記憶
-
-### 電子錢包
-- Apple Pay、Google Pay、Samsung Pay
-- LINE Pay、台灣 Pay
-
-### 轉帳支付
-- 網路 ATM、ATM 虛擬帳號
-
-### 超商支付
-- 超商代碼、超商條碼
-
-### 其他
-- TWQR、BNPL 無卡分期、AFTEE 先享後付
-
----
-
-## 智能工具
-
-安裝後包含以下 Python 工具（純 Python，無需外部依賴）：
-
-```bash
-# BM25 搜索引擎 - 搜索錯誤碼、欄位映射、付款方式
-python scripts/search.py "10100058" --domain error
-python scripts/search.py "信用卡" --domain payment_method
-python scripts/search.py "CheckMacValue" --domain troubleshoot
-
-# 智能推薦系統 - 根據需求推薦金流服務商
-python scripts/recommend.py "高交易量 電商 穩定"
-python scripts/recommend.py "多元支付 LINE Pay Apple Pay"
-
-# 連線測試工具 - 測試 API 連線
-python scripts/test_payment.py ecpay
-python scripts/test_payment.py all
+```
+taiwan-payment/
+├── SKILL.md                              # AI 技能主文檔
+├── EXAMPLES.md                           # 實戰範例集
+├── references/                           # 10 份 API 規格 (~9,200 行)
+│   ├── ecpay-payment-api.md
+│   ├── newebpay-payment-api.md
+│   ├── payuni-payment-api.md
+│   ├── smilepay-payment-api.md          # 反推 Mid_smilepay 加權檢核碼
+│   ├── pchomepay-payment-api.md         # 含 8h token 流程
+│   ├── ezpay-payment-api.md             # diff vs Newebpay
+│   ├── paynow-payment-api.md            # 雙 API 並行
+│   ├── shopline-payment-api.md          # Redirect + Embedded
+│   ├── linepay-payment-api.md           # HMAC + Preapproved
+│   └── tappay-payment-api.md            # Prime + Token 重複扣款
+├── examples/                             # 10 個生產級 Python 範例
+└── data/                                 # 7 份 CSV
+    ├── providers.csv                    # 10 服務商完整比較
+    ├── operations.csv                   # 26 個 API 操作
+    ├── payment-methods.csv              # 25+ 支付方式對照
+    ├── error-codes.csv                  # 130+ 錯誤碼
+    └── ...
 ```
 
-### 搜索域
+## CLI 指令
 
-- `provider` - 服務商比較
-- `operation` - API 操作端點
-- `error` - 錯誤碼查詢
-- `field` - 欄位映射
-- `payment_method` - 付款方式
-- `troubleshoot` - 疑難排解
-- `reasoning` - 推薦決策規則
+```bash
+taiwan-payment list                # 列出 AI 平台
+taiwan-payment info                # 技能資訊
+taiwan-payment update              # 檢查更新
+taiwan-payment init --force        # 覆蓋安裝
+taiwan-payment init --global       # 全域安裝
+```
 
----
+## 14 個 AI 平台支援
 
-## 功能特色
+Claude Code · Cursor · Windsurf · Antigravity · GitHub Copilot · Kiro · Codex · Qoder · Roo Code · Gemini · Trae · OpenCode · Continue · CodeBuddy
 
-- 完整 API 文檔 (ECPay, NewebPay, PAYUNi, SmilePay, PChomePay, ezPay, PayNow)
-- BM25 搜索引擎
-- 智能推薦系統
-- 7 個 Python 範例（每家服務商一個）
-- 7 個 CSV 數據檔 (易於維護)
-- 加密實作指南 (SHA256, AES-128-CBC, AES-256-CBC, AES-256-GCM, JWT, 動態 AES, Basic Auth → Token)
-- 16+ 個疑難排解案例
+## 相關套件
 
----
+本套件是 **[Taiwan E-Commerce Toolkit](https://github.com/Moksa1123/taiwan-ecommerce-toolkit)** 的一部分：
+
+- [taiwan-invoice-skill](https://www.npmjs.com/package/taiwan-invoice-skill) — 5 家電子發票
+- [taiwan-logistics-skill](https://www.npmjs.com/package/taiwan-logistics-skill) — 7 家物流（含 HCT 直連）
 
 ## 授權
 
-[MIT License](https://github.com/Moksa1123/taiwan-payment/blob/main/LICENSE)
+[MIT License](https://github.com/Moksa1123/taiwan-ecommerce-toolkit/blob/main/LICENSE)
 
 ---
 

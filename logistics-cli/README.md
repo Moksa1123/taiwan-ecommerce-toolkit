@@ -1,13 +1,21 @@
 <h1 align="center">taiwan-logistics-skill</h1>
 
-<p align="center">台灣物流 AI 開發技能包 - 支援綠界 ECPay、藍新 NewebPay、統一 PAYUNi</p>
+<h3 align="center">台灣物流 AI 開發技能包</h3>
 
 <p align="center">
-  <a href="https://www.npmjs.com/package/taiwan-logistics-skill"><img src="https://img.shields.io/npm/v/taiwan-logistics-skill.svg" alt="npm version" /></a>
-  <a href="https://www.npmjs.com/package/taiwan-logistics-skill"><img src="https://img.shields.io/npm/dm/taiwan-logistics-skill.svg" alt="npm downloads" /></a>
-  <a href="https://nodejs.org"><img src="https://img.shields.io/badge/node-%3E%3D18.0.0-brightgreen.svg" alt="node version" /></a>
-  <a href="#支援平台"><img src="https://img.shields.io/badge/platforms-14-blue.svg" alt="platforms" /></a>
-  <a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="License: MIT" /></a>
+  <strong>6 家物流 aggregator + HCT 新竹物流直連 carrier API</strong>
+</p>
+
+<p align="center">
+  ECPay · NewebPay · PAYUNi · SmilePay · PChomePay · PayNow · HCT 直連
+</p>
+
+<p align="center">
+  <a href="https://www.npmjs.com/package/taiwan-logistics-skill"><img src="https://img.shields.io/npm/v/taiwan-logistics-skill?style=flat-square&logo=npm" alt="npm version"></a>
+  <a href="https://www.npmjs.com/package/taiwan-logistics-skill"><img src="https://img.shields.io/npm/dm/taiwan-logistics-skill?style=flat-square&label=downloads" alt="npm downloads"></a>
+  <img src="https://img.shields.io/badge/providers-7-success?style=flat-square" alt="7 Providers">
+  <img src="https://img.shields.io/badge/AI%20platforms-14-blue?style=flat-square" alt="14 AI Platforms">
+  <a href="https://github.com/Moksa1123/taiwan-ecommerce-toolkit/blob/main/LICENSE"><img src="https://img.shields.io/github/license/Moksa1123/taiwan-ecommerce-toolkit?style=flat-square" alt="License"></a>
 </p>
 
 <p align="center">
@@ -22,169 +30,103 @@
 npm install -g taiwan-logistics-skill
 ```
 
----
-
-## 使用方式
-
-### 基本安裝
+## 快速開始
 
 ```bash
-# 自動偵測 AI 助手
-taiwan-logistics init
+cd /path/to/your/project
 
-# 指定 AI 助手類型
-taiwan-logistics init --ai claude
-taiwan-logistics init --ai cursor
-taiwan-logistics init --ai windsurf
+taiwan-logistics init                    # 互動式
+taiwan-logistics init --ai claude        # Claude Code
+taiwan-logistics init --ai all           # 全部安裝
 ```
 
-<details>
-<summary><b>完整平台列表</b></summary>
+安裝完後，在 AI 助手用自然語言：
+
+```
+查詢台北市信義區的 7-11 取貨點，整合 ECPay 物流
+建立 SmilePay 黑貓宅急便冷凍 C2C 訂單，COD 1000 元
+PChomePay 7-11 取貨付款，金額 1500 元，notify URL 設好
+PayNow 7-11 大宗寄倉，使用 3DES 加密
+HCT 直連 API 傳入託運資料，逆物流單獨處理
+```
+
+---
+
+## 7 家物流服務商
+
+| 服務商 | 類型 | 加密 / 認證 | 特色 |
+|---|---|---|---|
+| **ECPay 綠界** | aggregator | MD5 CheckMacValue | 市佔率最高、SDK 完整、7-11/全家/萊爾富/OK/黑貓/宅配通/HCT |
+| **NewebPay 藍新** | aggregator | AES-256-CBC + SHA256 | 7-11/全家/萊爾富/OK/黑貓 |
+| **PAYUNi 統一** | aggregator | AES-256-GCM + SHA256 | 7-11 常溫/冷凍 + T-Cat 常溫/冷藏/冷凍（溫控配送最完整） |
+| **SmilePay 速買配** | aggregator | Verify_key + 加權檢核碼 | Pay_zg 矩陣 51/52/55/56/81/82/83，含逆物流 |
+| **PChomePay 拍錢包** | aggregator | HTTP Basic Auth → token | 金物流二合一、Notify IP 113.196.231.190、4 大超商 |
+| **PayNow 立吉富** | aggregator | **3DES/ECB/Zero-Padding** | 11 條產品線（含海外配送）；不同於金流端 AES |
+| **HCT 新竹物流** | **direct carrier API** | 申請後提供金鑰 | 直連 carrier API（vs 透過 aggregator） |
+
+## 技能包內容
+
+```
+taiwan-logistics/
+├── SKILL.md                              # AI 技能主文檔
+├── EXAMPLES.md                           # 實戰範例集
+├── references/                           # 7 份 API 規格 (~10,300 行)
+│   ├── ecpay-logistics-api.md
+│   ├── NEWEBPAY_LOGISTICS_REFERENCE.md
+│   ├── payuni-logistics-api.md
+│   ├── smilepay-logistics-api.md         # 1,332 行 / Pay_zg 矩陣
+│   ├── pchomepay-logistics-api.md        # 1,154 行 / NDJSON 對帳 parser
+│   ├── paynow-logistics-api.md           # 1,670 行 / 11 產品線
+│   └── hct-logistics-api.md              # 1,102 行 / 直連 HCT
+├── examples/                             # Python 範例
+└── data/                                 # 5 份 CSV
+    ├── providers.csv                    # 7 服務商
+    ├── operations.csv                   # 30+ API 操作
+    ├── logistics-types.csv              # CVS / Home / 溫控
+    ├── status-codes.csv                 # 跨服務商狀態碼
+    └── field-mappings.csv               # 欄位對照
+```
+
+## CLI 指令
 
 ```bash
-# 主流平台
-taiwan-logistics init --ai claude      # Claude Code
-taiwan-logistics init --ai cursor      # Cursor
-taiwan-logistics init --ai windsurf    # Windsurf (Codeium)
-taiwan-logistics init --ai copilot     # GitHub Copilot
-taiwan-logistics init --ai antigravity # Google Antigravity
-
-# 其他支援平台
-taiwan-logistics init --ai kiro        # AWS Kiro
-taiwan-logistics init --ai codex       # OpenAI Codex
-taiwan-logistics init --ai qoder       # Qodo
-taiwan-logistics init --ai roocode     # Roo Code
-taiwan-logistics init --ai gemini      # Google Gemini CLI
-taiwan-logistics init --ai trae        # ByteDance Trae
-taiwan-logistics init --ai opencode    # OpenCode
-taiwan-logistics init --ai continue    # Continue.dev
-taiwan-logistics init --ai codebuddy   # Tencent CodeBuddy
-
-# 安裝到所有平台
-taiwan-logistics init --ai all
+taiwan-logistics list                  # 列出 AI 平台
+taiwan-logistics info                  # 技能資訊
+taiwan-logistics update                # 檢查更新
+taiwan-logistics init --force          # 覆蓋安裝
+taiwan-logistics init --global         # 全域安裝
 ```
 
-</details>
+## 14 個 AI 平台支援
 
----
+Claude Code · Cursor · Windsurf · Antigravity · GitHub Copilot · Kiro · Codex · Qoder · Roo Code · Gemini · Trae · OpenCode · Continue · CodeBuddy
 
-## 其他指令
+## 物流類型支援矩陣
 
-```bash
-# 列出支援的平台
-taiwan-logistics list
+| 取貨方式 | 7-11 | 全家 | 萊爾富 | OK | 黑貓 | 海外 | HCT |
+|---|---|---|---|---|---|---|---|
+| ECPay | ✅ | ✅ | ✅ | ✅ | ✅（常溫） | — | ✅ |
+| NewebPay | ✅ | ✅ | ✅ | ✅ | ✅ | — | — |
+| PAYUNi | ✅ | — | — | — | ✅（常溫/冷凍/冷藏） | — | — |
+| SmilePay | ✅ C2C+B2C | ✅ C2C+B2C | — | — | ✅（COD/PICKUP/逆物流） | — | — |
+| PChomePay | ✅ | ✅ | ✅ | ✅ | — | — | — |
+| PayNow | ✅（含冷凍） | ✅（含冷凍） | ✅ | ✅ | ✅（宅配 + 店到店） | ✅（7-11） | — |
+| HCT 直連 | — | — | — | — | — | — | ✅（直連） |
 
-# 顯示技能資訊
-taiwan-logistics info
+## 相關套件
 
-# 列出可用版本
-taiwan-logistics versions
+本套件是 **[Taiwan E-Commerce Toolkit](https://github.com/Moksa1123/taiwan-ecommerce-toolkit)** 的一部分：
 
-# 檢查更新
-taiwan-logistics update
-```
-
-### 選項
-
-- `--ai <type>` - 指定 AI 助手類型
-- `--force` - 強制覆蓋現有檔案
-- `--global` - 安裝到使用者全域目錄 (`~/.claude`, `~/.cursor` 等)
-
----
-
-## 全域安裝
-
-安裝到使用者目錄，所有專案共用：
-
-```bash
-taiwan-logistics init --ai claude --global
-```
-
-全域技能路徑：
-- Claude Code: `~/.claude/skills/taiwan-logistics/`
-- Cursor: `~/.cursor/skills/taiwan-logistics/`
-- Windsurf: 不支援全域安裝
-
----
-
-## 支援平台
-
-| 平台 | 資料夾 | 啟動方式 |
-|-----|-------|---------|
-| **Claude Code** | `.claude` | `claude` 或瀏覽器開啟 [claude.ai/code](https://claude.ai/code) |
-| **Cursor** | `.cursor` | `cursor` |
-| **Windsurf** | `.windsurf` | `windsurf` |
-| **GitHub Copilot** | `.github` | VS Code 擴充功能 |
-| **Antigravity** | `.agent` | Google AI Studio |
-| **Kiro** | `.kiro` | AWS Kiro CLI |
-| **Codex** | `.codex` | OpenAI Codex |
-| **Qoder** | `.qoder` | Qodo CLI |
-| **Roo Code** | `.roo` | Roo Code Editor |
-| **Gemini CLI** | `.gemini` | Google Gemini CLI |
-| **Trae** | `.trae` | ByteDance Trae |
-| **OpenCode** | `.opencode` | OpenCode Editor |
-| **Continue** | `.continue` | Continue.dev VS Code 擴充功能 |
-| **CodeBuddy** | `.codebuddy` | Tencent CodeBuddy |
-
----
-
-## 物流服務商
-
-| 服務商 | 加密方式 | API 風格 | 特色 |
-|--------|---------|---------|------|
-| **綠界 ECPay** | SHA256 | Form POST | 市佔率最高，穩定性佳，完整文檔 |
-| **藍新 NewebPay** | AES-256-CBC + SHA256 | Form POST + AES | 支援多種物流方式 |
-| **統一 PAYUNi** | AES-256-GCM + SHA256 | RESTful JSON | 統一集團，RESTful 設計 |
-
----
-
-## 功能特色
-
-- **完整 API 文檔** - ECPay、NewebPay、PAYUNi 詳細規格
-- **代碼範例** - TypeScript/Python 完整可執行範例
-- **加密實作指南** - SHA256、AES-256-CBC、AES-256-GCM
-- **14 個 AI 平台** - 支援主流 AI 編程助手
-
----
-
-## 物流方式支援
-
-### 宅配
-- 宅配到府、宅配貨到付款
-
-### 超商取貨
-- 7-ELEVEN 取貨、全家取貨、OK超商取貨、萊爾富取貨
-- 超商取貨付款
-
-### 其他
-- 冷鏈宅配、國際物流
-
----
-
-## 開發要求
-
-- **Node.js** >= 18.0.0 (CLI 工具)
-- **Python** >= 3.x (智能腳本，無外部依賴)
-
----
+- [taiwan-invoice-skill](https://www.npmjs.com/package/taiwan-invoice-skill) — 5 家電子發票
+- [taiwan-payment-skill](https://www.npmjs.com/package/taiwan-payment-skill) — 10 家金流
 
 ## 授權
 
-本專案採用 [MIT License](https://opensource.org/licenses/MIT) 授權。
+[MIT License](https://github.com/Moksa1123/taiwan-ecommerce-toolkit/blob/main/LICENSE)
 
 ---
 
-## 作者
-
-由 [Moksa](https://github.com/Moksa1123) 開發維護。
-
----
-
-## 相關專案
-
-- [taiwan-logistics-skill](https://github.com/Moksa1123/taiwan-ecommerce-toolkit) - 台灣電子發票整合
-- [taiwan-payment-skill](https://github.com/Moksa1123/taiwan-payment) - 台灣金流整合
-
----
-
-<p align="center">Made for Taiwan developers</p>
+<p align="center">
+  <sub>Made by <strong>Moksa</strong></sub><br>
+  <sub>service@moksaweb.com</sub>
+</p>
