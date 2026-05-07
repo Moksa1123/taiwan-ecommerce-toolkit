@@ -995,3 +995,24 @@ composer require payuni/sdk
 - **API 文件**: https://www.payuni.com.tw/docs/web/
 - **GitHub**: https://github.com/payuni
 - **WooCommerce 外掛**: https://github.com/payuni/PAYUNi_for_WooCommerce
+
+---
+
+## PAYUNi 支援的付款方式 (TYPE 對照表)
+
+從官方文件 docs.payuni.com.tw 確認支援以下付款方式（其他方式請依後台啟用為準）：
+
+| TYPE / API 路徑提示 | 中文名 | 狀態 |
+|---|---|---|
+| `CREDIT` | 信用卡（含一次/分期/紅利/Token 約定/快速結帳） | ✅ 確認 |
+| `VACC` (虛擬帳號) | ATM 虛擬帳號 | ✅ 確認 |
+| `CVS` | 超商代碼 | ✅ 確認 |
+| `ICASH` | 愛金卡 (iCashPay) | ✅ 獨立 API: 交易建立/退款 |
+| `AFTEE` | AFTEE 先享後付 | ✅ 獨立 API: 建立/確認/退款 |
+| `LinePay` | LINE Pay | ✅ 獨立 API: 交易建立 |
+| `JKoPay` | 街口支付（JKO Pay） | ✅ **獨立 API: 交易建立/退款**（注意 camelCase 不是 JKOPAY） |
+| TWQR | TWQR / 台灣 Pay | ✅ 啟用後可用 |
+
+> **注意**：PAYUNi 的「街口支付」TYPE 為 `JKoPay`（駱駝命名），與 NewebPay 的 `JKOPAY` 不同。整合時需注意大小寫。
+
+最後更新：2026/05/07
