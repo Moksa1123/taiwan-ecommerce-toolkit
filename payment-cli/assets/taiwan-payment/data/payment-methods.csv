@@ -13,22 +13,22 @@ applepay,Apple Pay,Apple Pay,ApplePay,APPLEPAY,ApplePay,,,APPLEPAY,ApplePay,1,,2
 applepay_deferred,Apple Pay 延遲扣款,Apple Pay Deferred,,,,,,,,ApplePayDeferred,,1,,2-3,percentage,PayNow 現代版獨家；先授權後扣款
 googlepay,Google Pay,Google Pay,,ANDROIDPAY,GooglePay,,,ANDROIDPAY,,1,,2-3,percentage,需申請
 samsungpay,Samsung Pay,Samsung Pay,,SAMSUNGPAY,SamsungPay,,,SAMSUNGPAY,,1,,2-3,percentage,需申請
-linepay,LINE Pay,LINE Pay,,LINEPAY,LinePay,,,LINEPAY,LINEPayOnline,1,,2-3,percentage,PayNow 現代版分線上 (LINEPayOnline) 與線下 (LINEPayOffline)
+linepay,LINE Pay,LINE Pay,DigitalPayment,LINEPAY,LinePay,,,LINEPAY,LINEPayOnline,1,,2-3,percentage,ECPay 走 DigitalPayment umbrella；NewebPay/ezPay 直送 LINEPAY；PAYUNi 直送 LinePay；PayNow 現代版分線上/線下
 linepay_offline,LINE Pay 線下,LINE Pay Offline,,,,,,,,LINEPayOffline,1,,2-3,percentage,PayNow 現代版獨家
 esunwallet,玉山 Wallet,E.SUN Wallet,,ESUNWALLET,,,,ESUNWALLET,,1,,2-3,percentage,需申請
 taiwanpay,台灣 Pay,Taiwan Pay,,TAIWANPAY,,,,TAIWANPAY,,1,49999,2-3,percentage,需申請
 bitopay,BitoPay,BitoPay,,BITOPAY,,,,BITOPAY,,100,49999,2-3,percentage,加密貨幣
 twqr,TWQR,TWQR,TWQR,TWQR,TWQR,,,TWQR,,1,,2-3,percentage,台灣Pay QR Code
 bnpl,無卡分期,BNPL,BNPL,,,,,,,50,300000,依方案,percentage,先買後付
-aftee,AFTEE先享後付,AFTEE,,,AFTEE,,,,,1,,2-3,percentage,PayUNi專屬
-icash,愛金卡,iCash,,,iCash,,,,iCashPay,1,,2-3,percentage,PayUNi 與 PayNow 兩家支援
+aftee,AFTEE先享後付,AFTEE,,,AFTEE,,,,,1,,2-3,percentage,PayUNi 直送 AFTEE；ECPay 透過 BNPL umbrella
+icash,愛金卡,iCash,,,ICASH,,,,iCashPay,1,,2-3,percentage,PAYUNi 直送 ICASH；PayNow 現代版 iCashPay；ECPay 走 DigitalPayment umbrella
 ezpalipay,簡單付支付寶,Alipay,,EZPALIPAY,,,,EZPALIPAY,,1,,2-3,percentage,跨境支付
 ezpwechat,簡單付微信,WeChat Pay,,EZPWECHAT,,,,EZPWECHAT,,1,,2-3,percentage,跨境支付
 pcpay_wallet,拍錢包,PChome Wallet,,,,,PI,,,,1,,2-3,percentage,PChomePay 獨家；含 5% P 幣回饋
 cvs_cod,超商取貨付款,CVS COD,,,,,COD,,,,1,20000,1-3,fixed,PChomePay 獨家；含 7-Eleven 取貨
 weixinpay,微信支付,WeChat Pay (ECPay),WeiXin,EZPWECHAT,,,,EZPWECHAT,,1,,2-3,percentage,ECPay 直接 ChoosePayment=WeiXin；NewebPay/ezPay 走 EZPWECHAT
 digital_payment,電子支付/電子錢包 umbrella,Digital Payment Umbrella,DigitalPayment,,,,,,,,1,,2-3,percentage,ECPay 專屬 umbrella；客戶於選擇頁挑街口/全盈+PAY/全支付/一卡通/悠遊付/icashpay
-jkopay,街口支付,JKO Pay,DigitalPayment,JKOPAY,,,,JKOPAY,,1,,2-3,percentage,ECPay 走 DigitalPayment umbrella；NewebPay/ezPay 直送 JKOPAY
+jkopay,街口支付,JKO Pay,DigitalPayment,JKOPAY,JKoPay,,,JKOPAY,,1,,2-3,percentage,ECPay 走 DigitalPayment umbrella；NewebPay/ezPay 直送 JKOPAY；PAYUNi 直送 JKoPay (camelCase)
 pxpay_plus,全支付,PX Pay Plus,DigitalPayment,PXPAY,,,,PXPAY,,1,,2-3,percentage,全聯系；ECPay umbrella；NewebPay 直送 PXPAY
 plus_pay,全盈+PAY,Plus Pay,DigitalPayment,PLUSPAY,,,,PLUSPAY,,1,,2-3,percentage,玉山金控；ECPay umbrella；NewebPay 直送 PLUSPAY
 ipass_money,一卡通 MONEY,iPASS Money,DigitalPayment,IPASSPAY,,,,IPASSPAY,,1,,2-3,percentage,一卡通；ECPay umbrella
