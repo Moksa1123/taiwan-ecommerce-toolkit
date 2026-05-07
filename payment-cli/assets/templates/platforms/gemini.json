@@ -4,13 +4,13 @@
   "installType": "full",
   "folderStructure": {
     "root": ".gemini",
-    "skillPath": "skills/taiwan-invoice",
+    "skillPath": "skills/taiwan-payment",
     "filename": "SKILL.md"
   },
-  "scriptPath": "skills/taiwan-invoice/scripts",
+  "scriptPath": "skills/taiwan-payment/scripts",
   "frontmatter": {
-    "name": "taiwan-invoice",
-    "description": "Taiwan E-Invoice API integration specialist for ECPay, SmilePay, and Amego.",
+    "name": "taiwan-payment",
+    "description": "Taiwan Payment API integration for ECPay, NewebPay, PAYUNi, SmilePay, PChomePay, ezPay, and PayNow.",
     "user-invocable": "true"
   },
   "sections": {
@@ -19,7 +19,7 @@
     "scripts": true,
     "quickReference": false
   },
-  "title": "Taiwan E-Invoice Skill",
-  "description": "Comprehensive guide for Taiwan E-Invoice API integration. Supports ECPay, SmilePay, and Amego providers with B2C/B2B invoice operations.",
+  "title": "Taiwan Payment Skill",
+  "description": "Comprehensive guide for Taiwan Payment Gateway API integration. Supports ECPay, NewebPay, PAYUNi, SmilePay, PChomePay, ezPay, and PayNow providers with credit card, ATM, CVS, and e-wallet payment operations.",
   "skillOrWorkflow": "Skill"
 }

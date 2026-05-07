@@ -40,3 +40,35 @@ payuni,API_TIMEOUT,API 請求逾時,API Timeout,system,error,重新交易
 payuni,PAYMENT_FAILED,付款失敗,Payment Failed,payment,error,稍後重試或使用其他支付方式
 payuni,INVALID_PAYMENT_TYPE,不支援的支付方式,Unsupported Payment Type,validation,error,使用支援的支付方式
 payuni,JSON_PARSE_ERROR,JSON 解析失敗,JSON Parse Error,system,error,檢查 API 回應格式
+smilepay,1,交易成功,Success,success,info,
+smilepay,-1,參數錯誤,Parameter error,validation,error,檢查必填欄位 Dcvc/Rvg2c/Verify_key
+smilepay,-2,商家驗證失敗,Merchant verification failed,auth,error,確認 Verify_key 與 mid 正確
+smilepay,-3,簽章/檢核碼不正確,Signature mismatch,auth,error,通知時驗證 Mid_smilepay 加權檢核碼
+smilepay,-10,Pay_zg 不支援,Unsupported payment type,validation,error,改用支援的 Pay_zg 值 (1/2/3/4/6/11)
+smilepay,-15,訂單金額異常,Amount invalid,validation,error,Amount 必須為正整數
+smilepay,-20,訂單編號重複,Duplicate Data_id,validation,error,使用唯一 Data_id
+smilepay,-23,逾期訂單/訂單已關閉,Order expired,validation,error,檢查 Deadline_date 設定
+pchomepay,10001,APP ID 或 SECRET 錯誤,Invalid Basic Auth credentials,auth,error,檢查 APP ID 與 SECRET 是否正確 base64 編碼
+pchomepay,10003,Token 已過期,Token expired,auth,error,重新呼叫 POST /v1/token 取得新 token
+pchomepay,10004,Token 不存在,Token not found,auth,error,header 必須帶 pcpay-token
+pchomepay,10005,IP 不在白名單,IP not whitelisted,auth,error,將呼叫端 IP 加入後台白名單
+pchomepay,20001,訂單已存在,Duplicate order_id,validation,error,使用唯一 order_id
+pchomepay,20002,訂單金額錯誤,Invalid amount,validation,error,amount 必須為正整數
+pchomepay,30001,退款金額超過原訂單,Refund exceeds original,refund,error,退款金額 + 退款手續費需小於原訂單
+pchomepay,30002,餘額不足,Insufficient balance,refund,error,商家代收帳戶餘額不足以扣除退款 + 手續費
+pchomepay,40001,卡號驗證失敗,Card validation failed,payment,error,信用卡資料錯誤；於 sandbox 改用測試卡號
+pchomepay,90001,超商取貨建立失敗,CVS COD creation failed,logistics,error,參見 taiwan-logistics 文件確認物流欄位
+ezpay,KEY10001,商店代號錯誤,Invalid MerchantID,auth,error,確認 MerchantID 與後台一致
+ezpay,KEY10002,簽章驗證失敗,TradeSha mismatch,auth,error,SHA256 計算需含 HashKey/HashIV 且大寫
+ezpay,KEY10003,加密資料解密失敗,TradeInfo decrypt failed,auth,error,確認 AES-256-CBC + Hex + PKCS7 與 32-char HashKey 16-char HashIV
+ezpay,MEM10001,商家未啟用該付款方式,Method not enabled,validation,error,於 ezPay 後台啟用該付款方式
+ezpay,MPG10001,訂單編號重複,Duplicate MerchantOrderNo,validation,error,使用唯一訂單編號
+ezpay,VACC10001,虛擬帳號逾期,VACC expired,validation,error,檢查 ExpireDate 設定
+paynow,M001,商家代號錯誤,Invalid Merchant,auth,error,確認商家代號正確
+paynow,A001,加密驗證失敗,Encryption validation failed,auth,error,傳統版檢查 GP/GK 動態金鑰；現代版檢查 JWT Bearer
+paynow,B001,訂單金額錯誤,Invalid Amount,validation,error,確認 amount 為正整數且小於 1,000,000,000,000
+paynow,C001,訂單編號重複,Duplicate paymentNo,validation,error,使用唯一 paymentNo (現代版可省略由系統產生)
+paynow,P001,信用卡授權失敗,Card authorization failed,payment,error,改用其他卡或聯繫銀行
+paynow,Q001,Token 過期,JWT expired,auth,error,重新申請 JWT Bearer Token
+paynow,R001,退款超過原訂單,Refund exceeds original,refund,error,確認可退金額
+paynow,T001,信用卡 token 不存在,Card token not found,payment,error,確認 customer 與 card token 仍有效

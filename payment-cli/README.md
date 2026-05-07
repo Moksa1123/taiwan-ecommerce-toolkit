@@ -175,7 +175,7 @@ python scripts/test_payment.py all
 
 ## 功能特色
 
-- 完整 API 文檔 (ECPay, NewebPay, PAYUNi)
+- 完整 API 文檔 (ECPay, NewebPay, PAYUNi, SmilePay, PChomePay, ezPay, PayNow)
 - BM25 搜索引擎
 - 智能推薦系統
 - 9 組完整代碼範例 (TypeScript/Python)
