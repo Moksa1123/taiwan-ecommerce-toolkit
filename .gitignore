@@ -30,3 +30,12 @@ Thumbs.db
 
 # Generated service files
 *-invoice-service.ts
+
+# Private research / proprietary source materials
+# Anything in _studies/ is local-only — raw PDFs, scraped docs, Google Doc exports,
+# private specs that we read but never commit. Distilled output lives in the
+# public skill folders (taiwan-invoice/, taiwan-payments/, taiwan-logistics/).
+_studies/
+*.pdf
+*-private.md
+*-internal.md

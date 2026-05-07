@@ -4,7 +4,7 @@ import { logger } from '../utils/logger.js';
 const VERSION = '2.0.0';
 
 export async function infoCommand(): Promise<void> {
-  logger.title('Taiwan Invoice Skill');
+  logger.title('Taiwan Logistics Skill');
 
   console.log(chalk.cyan('Skill Information:'));
   console.log();

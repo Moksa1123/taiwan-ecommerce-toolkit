@@ -4,26 +4,26 @@ import { getAITypeDescription } from '../utils/detect.js';
 import { AI_TYPES } from '../types/index.js';
 
 export async function listCommand(): Promise<void> {
-  logger.title('Taiwan Invoice Skill - Supported Platforms');
+  logger.title('Taiwan Logistics Skill - Supported Platforms');
 
   console.log(chalk.cyan('Available AI Assistants:'));
   console.log();
 
   const platforms = [
-    { key: 'claude', path: '.claude/skills/taiwan-invoice/' },
-    { key: 'cursor', path: '.cursor/skills/taiwan-invoice/' },
-    { key: 'windsurf', path: '.windsurf/skills/taiwan-invoice/' },
-    { key: 'antigravity', path: '.agent/skills/taiwan-invoice/' },
-    { key: 'copilot', path: '.github/prompts/taiwan-invoice/' },
-    { key: 'kiro', path: '.kiro/steering/taiwan-invoice/' },
-    { key: 'codex', path: '.codex/skills/taiwan-invoice/' },
-    { key: 'qoder', path: '.qoder/rules/taiwan-invoice/' },
-    { key: 'roocode', path: '.roo/commands/taiwan-invoice/' },
-    { key: 'gemini', path: '.gemini/skills/taiwan-invoice/' },
-    { key: 'trae', path: '.trae/skills/taiwan-invoice/' },
-    { key: 'opencode', path: '.opencode/skills/taiwan-invoice/' },
-    { key: 'continue', path: '.continue/skills/taiwan-invoice/' },
-    { key: 'codebuddy', path: '.codebuddy/skills/taiwan-invoice/' },
+    { key: 'claude', path: '.claude/skills/taiwan-logistics/' },
+    { key: 'cursor', path: '.cursor/skills/taiwan-logistics/' },
+    { key: 'windsurf', path: '.windsurf/skills/taiwan-logistics/' },
+    { key: 'antigravity', path: '.agent/skills/taiwan-logistics/' },
+    { key: 'copilot', path: '.github/prompts/taiwan-logistics/' },
+    { key: 'kiro', path: '.kiro/steering/taiwan-logistics/' },
+    { key: 'codex', path: '.codex/skills/taiwan-logistics/' },
+    { key: 'qoder', path: '.qoder/rules/taiwan-logistics/' },
+    { key: 'roocode', path: '.roo/commands/taiwan-logistics/' },
+    { key: 'gemini', path: '.gemini/skills/taiwan-logistics/' },
+    { key: 'trae', path: '.trae/skills/taiwan-logistics/' },
+    { key: 'opencode', path: '.opencode/skills/taiwan-logistics/' },
+    { key: 'continue', path: '.continue/skills/taiwan-logistics/' },
+    { key: 'codebuddy', path: '.codebuddy/skills/taiwan-logistics/' },
   ];
 
   for (const platform of platforms) {
@@ -35,14 +35,14 @@ export async function listCommand(): Promise<void> {
 
   console.log();
   console.log(chalk.cyan('Installation:'));
-  console.log(chalk.dim('  taiwan-invoice init --ai claude'));
-  console.log(chalk.dim('  taiwan-invoice init --ai cursor'));
-  console.log(chalk.dim('  taiwan-invoice init --ai windsurf'));
-  console.log(chalk.dim('  taiwan-invoice init --ai copilot'));
-  console.log(chalk.dim('  taiwan-invoice init --ai all'));
+  console.log(chalk.dim('  taiwan-logistics init --ai claude'));
+  console.log(chalk.dim('  taiwan-logistics init --ai cursor'));
+  console.log(chalk.dim('  taiwan-logistics init --ai windsurf'));
+  console.log(chalk.dim('  taiwan-logistics init --ai copilot'));
+  console.log(chalk.dim('  taiwan-logistics init --ai all'));
   console.log();
   console.log(chalk.cyan('Other Commands:'));
-  console.log(chalk.dim('  taiwan-invoice versions    List available versions'));
-  console.log(chalk.dim('  taiwan-invoice update      Update to latest version'));
+  console.log(chalk.dim('  taiwan-logistics versions    List available versions'));
+  console.log(chalk.dim('  taiwan-logistics update      Update to latest version'));
   console.log();
 }
