@@ -1010,9 +1010,9 @@ composer require payuni/sdk
 | `ICASH` | 愛金卡 (iCashPay) | ✅ 獨立 API: 交易建立/退款 |
 | `AFTEE` | AFTEE 先享後付 | ✅ 獨立 API: 建立/確認/退款 |
 | `LinePay` | LINE Pay | ✅ 獨立 API: 交易建立 |
-| `JKoPay` | 街口支付（JKO Pay） | ✅ **獨立 API: 交易建立/退款**（注意 camelCase 不是 JKOPAY） |
+| `JKoPay` | 街口支付（JKO Pay） | ✅ **獨立 API: 交易建立/退款**；同 NewebPay `JKOPAY`，僅命名習慣不同 |
 | TWQR | TWQR / 台灣 Pay | ✅ 啟用後可用 |
 
-> **注意**：PAYUNi 的「街口支付」TYPE 為 `JKoPay`（駱駝命名），與 NewebPay 的 `JKOPAY` 不同。整合時需注意大小寫。
+> **注意**：PAYUNi 的「街口支付」TYPE 為 `JKoPay`（駱駝命名），NewebPay 用 `JKOPAY`（全大寫）。**指向同一個街口服務，只是各家命名習慣不同**——程式中需依該家文件正確大小寫傳值，不能跨家複用字面值。
 
 最後更新：2026/05/07
