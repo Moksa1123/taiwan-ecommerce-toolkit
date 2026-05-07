@@ -3181,3 +3181,78 @@ try {
 **Total Lines**: 1400+
 
 This comprehensive guide covers all major NewebPay Logistics integration scenarios with production-ready code examples.
+
+---
+
+## SmilePay 速買配物流範例
+
+SmilePay 透過 `Pay_zg` 矩陣編碼涵蓋 7-11/全家 + 黑貓三大配送：
+
+| Pay_zg | 用途 |
+|---|---|
+| 51 / 52 | C2C COD / PICKUP |
+| 55 / 56 | B2C COD / PICKUP |
+| 81 / 82 | TCAT 黑貓 COD / PICKUP |
+| 83 | TCAT 逆物流 |
+
+完整範例見 [`examples/smilepay-logistics-cvs-example.py`](examples/smilepay-logistics-cvs-example.py)。
+
+### 三大要點
+
+1. **Pay_subzg**：`7NET` 對應 7-11、`FAMI` 對應全家。
+2. **回應是 XML**：用 `xml.etree.ElementTree` parse；常用欄位 `Status` / `PaymentNo` / `Smseid` / `Storeid`。
+3. **電子地圖選店**：先導轉到 `LogisticsEmap.asp`，客戶選完門市後 SmilePay 會 redirect 回 RtURL 並帶 storeid/storename。
+
+---
+
+## PChomePay 拍錢包物流範例
+
+⚠️ Notify IP 必加白名單：**`113.196.231.190`**。
+
+完整範例見 [`examples/pchomepay-logistics-cvs-example.py`](examples/pchomepay-logistics-cvs-example.py)。涵蓋：
+- 取號列印交寄單 (`/v1/logistic/batch`)
+- 物流歷程查詢 (`/v1/logistic/query/{order_id}/history`)
+- 對帳資料 NDJSON 解析 (`/v1/logistic/accounting/{date}`)
+- 賠款入帳查詢 (`/v1/logistic/compensation/{date}`)
+
+### 三大要點
+
+1. **兩段式認證**：先用 Basic Auth 取 `pcpay-token`（8 小時 TTL），後續 API 帶 token header。
+2. **對帳資料是 NDJSON**：每行一個獨立 JSON 物件，須逐行 parse；不是標準 JSON array。
+3. **沙箱依金額尾數模擬情境**：例 ATM 金額尾數 `0-7` 自動付款成功、`8` 過期、`9` 5 分鐘後過期。
+
+---
+
+## PayNow 立吉富物流範例
+
+⚠️ **加密用 3DES (TripleDES) / ECB / Zero-Padding**，24-byte Key + 8-byte IV。**不同於金流端的動態 AES-256**。
+
+完整範例見 [`examples/paynow-logistics-cvs-example.py`](examples/paynow-logistics-cvs-example.py)。涵蓋 11 條產品線（7-11 大宗 / 冷凍 / 海外、全家 大宗 / 冷凍、4 大超商常溫 C2C、黑貓宅配 / 店到店）。
+
+### 四大要點
+
+1. **3DES 不要用 AES**：物流端跟金流端是兩套不同加密；混用會直接失敗。
+2. **ServiceID 對應產品線**：`20=7-11 大宗 B2C` `40=4 大超商常溫 C2C` `50=黑貓宅配` 等。
+3. **海外配送限 7-11**：透過 `7-11 over-sea` 產品線寄送；其他超商不支援海外。
+4. **Webhook 簽章機制官方未明示**：建議自行驗證 LogisticTradeNo + 商家代號比對。
+
+---
+
+## HCT 新竹物流（直連 carrier API）範例
+
+⚠️ **先確認你需要的是直連還是 aggregator**：
+- **透過 ECPay/PayNow/SmilePay** 走 HCT 配送 → 用 aggregator 的 `LogisticsType=HCT`，不需要本範例
+- **直接打 HCT 自家系統**（大量出貨、自備站所對接）→ 用本範例，需向 HCT 申請
+
+完整範例見 [`examples/hct-logistics-example.py`](examples/hct-logistics-example.py)。
+
+### 四大要點
+
+1. **加密演算法申請後才提供**：HCT 給的是 C# Sample Code，需自行轉譯。範例的 `_encrypt()` 是 placeholder，串接前必填。
+2. **`TransReport` 必須當日 18:00 前呼叫**：否則無法列印託運單，包裹無法配送。
+3. **JSON / XML / DataSet 三種變體**：建議用 JSON 變體，避開 .NET DataSet 跨語言難題。
+4. **逆物流只有 JSON**：`R_TransData` 沒有 XML 或 DataSet 版本。
+
+---
+
+**更多範例持續更新中...**
