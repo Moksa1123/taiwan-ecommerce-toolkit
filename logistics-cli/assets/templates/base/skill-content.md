@@ -1,8 +1,24 @@
 # {{TITLE}}
 
-> {{DESCRIPTION}}
+**Comprehensive guide for Taiwan Logistics integration (ECPay, NewebPay, PAYUNi, SmilePay, PChomePay, PayNow + HCT direct API)**
 
-**Comprehensive guide for Taiwan Logistics integration (NewebPay, ECPay, PAYUNi)**
+---
+
+## Supported Providers
+
+This skill covers **6 logistics aggregators** + **1 direct carrier API**:
+
+| Provider | 類型 | Reference |
+|---|---|---|
+| **ECPay 綠界** | aggregator | `references/ecpay-logistics-api.md` |
+| **NewebPay 藍新** | aggregator | `references/NEWEBPAY_LOGISTICS_REFERENCE.md` |
+| **PAYUNi 統一** | aggregator | `references/payuni-logistics-api.md` |
+| **SmilePay 速買配** | aggregator (含 7-11/全家 + 黑貓 Pay_zg 矩陣) | `references/smilepay-logistics-api.md` |
+| **PChomePay 拍錢包** | aggregator (金物流二合一) | `references/pchomepay-logistics-api.md` |
+| **PayNow 立吉富** | aggregator (11 條產品線, 3DES/ECB/Zero-Padding) | `references/paynow-logistics-api.md` |
+| **HCT 新竹物流** | **直連 carrier API** | `references/hct-logistics-api.md` |
+
+> {{DESCRIPTION}}
 
 ---
 

@@ -62,7 +62,7 @@ ECPay · SmilePay · Amego
 
 整合 3 家金流平台
 
-ECPay · NewebPay · PAYUNi
+ECPay · NewebPay · PAYUNi · SmilePay · PChomePay · PayNow · HCT
 
 <p align="center">
   <a href="https://www.npmjs.com/package/taiwan-payment-skill"><img src="https://img.shields.io/npm/v/taiwan-payment-skill?style=flat-square&color=cb3837&logo=npm" alt="npm version"></a>
@@ -79,9 +79,9 @@ ECPay · NewebPay · PAYUNi
 
 **taiwan-logistics-skill**
 
-整合 3 家物流服務
+整合 7 家物流服務
 
-ECPay · NewebPay · PAYUNi
+ECPay · NewebPay · PAYUNi · SmilePay · PChomePay · PayNow · HCT
 
 <p align="center">
   <a href="https://www.npmjs.com/package/taiwan-logistics-skill"><img src="https://img.shields.io/npm/v/taiwan-logistics-skill?style=flat-square&color=cb3837&logo=npm" alt="npm version"></a>

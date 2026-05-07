@@ -9,3 +9,24 @@ update_store,更新門市,/Express/UpdateStoreInfo,/API/Logistic/modifyShipment,
 get_shipment_no,取得託運單號,,/API/Logistic/getShipmentNo,,POST,"MerchantID,LogisticsID",,NewebPay專用
 trace,追蹤物流,,/API/Logistic/trace,,POST,"MerchantID,LogisticsID",,NewebPay專用
 cancel,取消物流訂單,,,/logistics/cancel,POST,"MerID,MerTradeNo",,PAYUNi專用
+sp_cvs_get,SmilePay 超商取號,,,,POST,"Dcvc,Verify_key,Pay_zg,Pay_subzg,Data_id,Amount,Pur_name,Pur_telno,Roturl",,SmilePay /api/C2CPayment.asp 或 /api/B2CPayment.asp
+sp_tcat_get,SmilePay 黑貓取號,,,,POST,"Dcvc,Verify_key,Pay_zg=81/82/83,Data_id,Amount,Pur_name,Address",,SmilePay /api/ezcatGetTrackNum.asp (Pay_zg=81 COD, =82 PICKUP, =83 逆物流)
+sp_emap,SmilePay 電子地圖選店,,,,GET,"Dcvc,TypesServer,TypesInterface,RtURL",,SmilePay /api/LogisticsEmap.asp; TypesServer=711C2C/FAMIC2C/711B2C/FAMIB2C × MOBILE/WEB
+sp_print_b2c,SmilePay B2C 列印託運單,,,,POST,"PaymentNo[]",,SmilePay /api/B2C_MultiplePrint.asp 多筆列印
+pcp_logistic_batch,PChomePay 取號列印交寄單,,,,POST,"order_id,store_id,return_store_id,name,address",,/v1/logistic/batch
+pcp_logistic_history,PChomePay 查詢物流歷程,,,,GET,"order_id",,/v1/logistic/query/{order_id}/history
+pcp_logistic_yet,PChomePay 查詢未出貨,,,,GET,,,/v1/logistic/yet
+pcp_logistic_store_return,PChomePay 查詢未取貨,,,,GET,"date YYYYMMDD",,/v1/logistic/store_return/{date}
+pcp_logistic_accounting,PChomePay 物流手續費對帳,,,,GET,"date YYYYMMDD",,/v1/logistic/accounting/{date} 回應為 NDJSON
+pcp_logistic_compensation,PChomePay 賠款入帳查詢,,,,GET,"date YYYYMM",,/v1/logistic/compensation/{date}
+pn_logistic_create,PayNow 建立物流訂單,,,,POST,"ServiceID,GoodsName,Amount,Receiver*,Sender*",,PayNow /service/sevp_logistic.aspx; 11 條產品線各有不同 ServiceID
+pn_logistic_emap,PayNow 電子地圖選店,,,,GET,"merID,LogisticServiceID,ReturnURL",,PayNow 物流選店頁面導轉
+pn_logistic_print,PayNow 列印託運單,,,,POST,"LogisticTradeNo",,PayNow 列印託運單
+pn_logistic_status,PayNow 查詢貨況,,,,POST,"LogisticTradeNo",,PayNow 查詢物流狀態
+hct_query_url,HCT 查貨網頁串接,,,,GET,"加密字串,v",,HCT 直連 /phone/searchGoods_Main.aspx?no=加密字串&v=xx (URL 嵌入)
+hct_query_xml,HCT 多筆貨號查詢,,,,POST,"加密後XML",,HCT 直連 /phone/searchGoods_Main_Xml.ashx (XML POST)
+hct_transdata,HCT 傳入託運資料,,,,POST,"esdate,epino,epdcl1,epdcl2,..",,HCT 直連 TransData (DataSet/JSON/XML 三種變體)
+hct_upddata,HCT 修改重量,,,,POST,"esdate,epino,eqmny",,HCT UpdData
+hct_transreport,HCT 列印託運總表,,,,POST,"esdate,epino[]",,HCT TransReport (18:00 前 must call)
+hct_query_edelno,HCT 查詢貨號,,,,POST,"esdate,epino",,HCT QueryEDELNO
+hct_r_transdata,HCT 逆物流託運,,,,POST,"esdate,epino,...",,HCT R_TransData (JSON-only)
