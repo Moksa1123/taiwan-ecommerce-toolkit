@@ -1,8 +1,14 @@
-operation,operation_zh,ecpay_endpoint,newebpay_endpoint,payuni_endpoint,method,required_fields,notes
-create_order,建立訂單,/Cashier/AioCheckOut/V5,/MPG/mpg_gateway,/api/order/create,POST,"MerchantID,MerchantTradeNo,TotalAmount,TradeDesc,ItemName,ReturnURL",主要付款入口
-query_order,查詢訂單,/Cashier/QueryTradeInfo/V5,/API/QueryTradeInfo,/api/order/query,POST,"MerchantID,MerchantTradeNo,TimeStamp",查詢交易狀態
-credit_action,信用卡請退款,/CreditDetail/DoAction,/API/CreditCard/Close,/api/credit/action,POST,"MerchantID,TradeNo,Action,TotalAmount",請款/退款/取消
-query_credit,信用卡查詢,/CreditDetail/QueryTrade/V2,/API/CreditCard/TradeInfo,/api/credit/query,POST,"MerchantID,CreditRefundId",查詢信用卡交易
-periodic_create,定期定額建立,/Cashier/AioCheckOut/V5,/API/CreditCard/Period,/api/trade/periodic,POST,"PeriodAmount,PeriodType,Frequency,ExecTimes",設定週期付款
-periodic_query,定期定額查詢,/Cashier/QueryCreditCardPeriodInfo,/API/CreditCard/PeriodInfo,,POST,"MerchantID,MerchantTradeNo",查詢週期付款
-periodic_action,定期定額操作,/CreditDetail/CreditCardPeriodAction,/API/CreditCard/PeriodAlter,,POST,"MerchantID,Action",取消/修改週期
+operation,operation_zh,ecpay_endpoint,newebpay_endpoint,payuni_endpoint,smilepay_endpoint,pchomepay_endpoint,ezpay_endpoint,paynow_legacy_endpoint,paynow_modern_endpoint,method,required_fields,notes
+create_order,建立訂單,/Cashier/AioCheckOut/V5,/MPG/mpg_gateway,/api/order/create,/api/SPPayment.asp,/v1/payment,/MPG/mpg_gateway,/service/etopm.aspx,/api/v1/payment-intent/create,POST,"MerchantID,MerchantTradeNo,TotalAmount,TradeDesc,ItemName,ReturnURL",主要付款入口；PChomePay 另有 /v1/payment/atmva (ATM) 與 /v1/payment/barcode (CVS code)
+query_order,查詢訂單,/Cashier/QueryTradeInfo/V5,/API/QueryTradeInfo,/api/order/query,/ezpos/mtmk_utf.asp,/v1/payment/{order_id},/API/QueryTradeInfo,N/A,/api/v1/payment-intent/{id},POST,"MerchantID,MerchantTradeNo,TimeStamp",查詢交易狀態；SmilePay 用 mtmk 端點
+credit_action,信用卡請退款,/CreditDetail/DoAction,/API/CreditCard/Close,/api/credit/action,/api/SPPayment_Modify.asp,/v1/refund,/API/CreditCard/Close,N/A,/api/v1/payment-intent/{id}/refund,POST,"MerchantID,TradeNo,Action,TotalAmount",請款/退款/取消；PayNow 現代版用 PaymentIntent refund
+query_credit,信用卡查詢,/CreditDetail/QueryTrade/V2,/API/CreditCard/TradeInfo,/api/credit/query,N/A,/v1/refund/{refund_id},/API/CreditCard/TradeInfo,N/A,/api/v1/refund/{id},POST,"MerchantID,CreditRefundId",查詢信用卡交易
+periodic_create,定期定額建立,/Cashier/AioCheckOut/V5,/API/CreditCard/Period,/api/trade/periodic,N/A,N/A,/API/CreditCard/Period,N/A,/api/v1/customer (saved card),POST,"PeriodAmount,PeriodType,Frequency,ExecTimes",設定週期付款；PayNow 現代版用 Customer + Card Token 機制
+periodic_query,定期定額查詢,/Cashier/QueryCreditCardPeriodInfo,/API/CreditCard/PeriodInfo,,N/A,N/A,/API/CreditCard/PeriodInfo,N/A,N/A,POST,"MerchantID,MerchantTradeNo",查詢週期付款
+periodic_action,定期定額操作,/CreditDetail/CreditCardPeriodAction,/API/CreditCard/PeriodAlter,,N/A,N/A,/API/CreditCard/PeriodAlter,N/A,N/A,POST,"MerchantID,Action",取消/修改週期
+get_token,取得 Token,N/A,N/A,N/A,N/A,/v1/token,N/A,N/A,N/A,POST,"BasicAuth(APP_ID,SECRET)",PChomePay 兩階段認證；token 預設 28800 秒 (8h) 有效
+balance_query,查詢餘額,N/A,N/A,N/A,N/A,/v1/balance,N/A,N/A,N/A,GET,"pcpay-token header",PChomePay 商家後台帳戶餘額
+withdraw,提領款項,N/A,N/A,N/A,N/A,/v1/withdraw,N/A,N/A,N/A,POST,"amount,bank,account",PChomePay 提領至銀行
+checkout,跳轉結帳頁,N/A,N/A,N/A,N/A,N/A,N/A,N/A,/api/v1/payment-intent/{id}/checkout,POST,"paymentMethodType,paymentMethodData",PayNow 現代版 Stripe-like checkout flow
+applepay_session,Apple Pay session,N/A,N/A,N/A,N/A,N/A,N/A,N/A,/api/v1/apple-pay/session,POST,"validationURL,domainName",PayNow 現代版 Apple Pay 商家驗證
+applepay_confirm,Apple Pay 確認,N/A,N/A,N/A,N/A,N/A,N/A,N/A,/api/v1/apple-pay/confirm,POST,"applePayPayload",PayNow 現代版 Apple Pay 付款確認

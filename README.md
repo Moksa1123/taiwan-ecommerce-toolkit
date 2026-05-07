@@ -41,9 +41,9 @@ Taiwan E-Commerce Toolkit 是專為台灣電商生態系統設計的企業級整
 
 **taiwan-invoice-skill**
 
-整合 5 家加值中心
+整合 3 家加值中心
 
-ECPay · SmilePay · Amego · ezPay · PayNow
+ECPay · SmilePay · Amego
 
 <p align="center">
   <a href="https://www.npmjs.com/package/taiwan-invoice-skill"><img src="https://img.shields.io/npm/v/taiwan-invoice-skill?style=flat-square&color=cb3837&logo=npm" alt="npm version"></a>
@@ -60,9 +60,9 @@ ECPay · SmilePay · Amego · ezPay · PayNow
 
 **taiwan-payment-skill**
 
-整合 3 家金流平台
+整合 7 家金流平台
 
-ECPay · NewebPay · PAYUNi
+ECPay · NewebPay · PAYUNi · SmilePay · PChomePay · ezPay · PayNow
 
 <p align="center">
   <a href="https://www.npmjs.com/package/taiwan-payment-skill"><img src="https://img.shields.io/npm/v/taiwan-payment-skill?style=flat-square&color=cb3837&logo=npm" alt="npm version"></a>
@@ -368,8 +368,6 @@ taiwan-ecommerce-toolkit/
 | **ECPay 綠界** | AES-128-CBC | 市場佔有率高，技術文件完整 | RESTful + Form POST |
 | **SmilePay 速買配** | URL Signature | 支援雙協定，整合流程簡化 | RESTful JSON |
 | **Amego 光貿** | MD5 Signature | API 設計清晰，架構現代化 | RESTful JSON (MIG 4.0) |
-| **ezPay 簡單付** | AES-256-CBC + SHA256 CheckCode | 藍新金流集團；與 Newebpay 共用加密；32-char HashKey | Form POST + Hex |
-| **PayNow 立吉富** | JWT Bearer Token | 含 POS 機批次取號流程；雙向 cashflow 整合 | RESTful JSON |
 
 ### 金流串接平台 (3 家)
 
@@ -563,6 +561,10 @@ def issue_invoice(data):
 - **ECPay 綠界科技**: 三個領域全面支援，整合流程最為簡便，適合需要一站式解決方案的專案
 - **NewebPay 藍新金流**: 金流功能最為完整，支援多元付款方式，適合需要豐富支付選項的電商平台
 - **PAYUNi 統一金流**: 物流溫控服務最完整，支援冷凍/冷藏配送，適合生鮮電商與需要溫控的產業
+- **SmilePay 速買配**: 老牌穩定、整合簡單、無 AES 加密門檻，適合預算有限且使用 ibon/FamiPort 的賣家
+- **PChomePay 拍錢包**: PChome 生態整合、5% P 幣回饋、自帶超商取貨付款物流，適合 PChome 賣場與重視物流便利的電商
+- **ezPay 簡單付**: 藍新集團小型商家品牌，上手門檻低，適合月結金額不大的個人賣家或社團團購
+- **PayNow 立吉富**: 雙 API 並行（含 Stripe-like 現代 PaymentIntent）、Apple Pay 完整支援（含延遲扣款），適合新創團隊與需要 Apple Pay 為主要支付方式的專案
 
 可使用本專案提供的智能推薦系統，根據專案需求自動分析推薦最適合的服務商。
 
@@ -617,10 +619,13 @@ pip install pycryptodome requests
 ### 支援的加密方式
 
 - **AES-128-CBC** - ECPay 電子發票
-- **AES-256-CBC** - NewebPay 金流/物流、ezPay 發票/金流
+- **AES-256-CBC** - NewebPay / ezPay 金流（共用 MPG 加密）、ezPay 發票、NewebPay 物流
 - **AES-256-GCM** - PAYUNi 金流/物流
-- **JWT Bearer Token** - PayNow 發票
-- **SHA256** - 所有服務商的 CheckMacValue / TradeSha / CheckCode
+- **動態 AES-256** - PayNow 傳統 cashflow（每次以 GP/GK 檢核碼即時取得 Key/IV）
+- **JWT Bearer Token** - PayNow 現代 PaymentIntent、PayNow 發票
+- **HTTP Basic Auth → Token** - PChomePay（取得 8 小時有效的 pcpay-token）
+- **Verify_key + 加權檢核碼** - SmilePay（無 AES，採共享密鑰 + Mid_smilepay 反推算法）
+- **SHA256** - 多數服務商的 CheckMacValue / TradeSha / HashInfo / CheckCode
 - **MD5** - Amego 發票、ECPay 物流
 
 ---

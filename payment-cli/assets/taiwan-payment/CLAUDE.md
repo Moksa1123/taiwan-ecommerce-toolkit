@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-Taiwan Payment Skill is an AI-powered toolkit for Taiwan Payment Gateway integration, providing API documentation, code examples, and scripts for major payment platforms (ECPay, NewebPay, PAYUNi). It works as a skill/workflow for AI coding assistants (Claude Code, Windsurf, Cursor, etc.).
+Taiwan Payment Skill is an AI-powered toolkit for Taiwan Payment Gateway integration, providing API documentation, code examples, and scripts for major payment platforms (ECPay, NewebPay, PAYUNi, SmilePay, PChomePay, ezPay, PayNow). It works as a skill/workflow for AI coding assistants (Claude Code, Windsurf, Cursor, etc.).
 
 ## Available Scripts
 
@@ -19,7 +19,7 @@ python3 taiwan-payment/scripts/recommend.py "<requirements>"
 python3 taiwan-payment/scripts/test_payment.py [--platform <platform>]
 ```
 
-**Supported Platforms:** `ecpay`, `newebpay`, `payuni`
+**Supported Platforms:** `ecpay`, `newebpay`, `payuni`, `smilepay`, `pchomepay`, `ezpay`, `paynow`
 
 **Search Domains:** `provider`, `operation`, `error`, `field`, `payment_method`, `troubleshoot`, `reasoning`
 
@@ -32,7 +32,11 @@ taiwan-payment/                     # Source of Truth
 ├── references/                     # API documentation
 │   ├── ecpay-payment-api.md
 │   ├── newebpay-payment-api.md
-│   └── payuni-payment-api.md
+│   ├── payuni-payment-api.md
+│   ├── smilepay-payment-api.md
+│   ├── pchomepay-payment-api.md
+│   ├── ezpay-payment-api.md
+│   └── paynow-payment-api.md
 ├── scripts/                        # Utility scripts
 │   ├── core.py                     # BM25 search engine
 │   ├── recommend.py                # Recommendation system

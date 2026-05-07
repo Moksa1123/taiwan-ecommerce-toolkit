@@ -3,7 +3,7 @@
 <h3 align="center">台灣金流 AI 開發技能包</h3>
 
 <p align="center">
-  <strong>支援 ECPay 綠界 · NewebPay 藍新 · PAYUNi 統一</strong>
+  <strong>支援 ECPay 綠界 · NewebPay 藍新 · PAYUNi 統一 · SmilePay 速買配 · PChomePay 拍錢包 · ezPay 簡單付 · PayNow 立吉富</strong>
 </p>
 
 <p align="center">
@@ -118,6 +118,10 @@ taiwan-payment init --ai antigravity --global  # ~/.gemini/antigravity/global_sk
 | **ECPay 綠界** | URL Encode + SHA256 | Form POST | 市佔率最高，穩定性佳 |
 | **NewebPay 藍新** | AES-256-CBC + SHA256 | Form POST + AES | 支援最多支付方式 (13 種) |
 | **PAYUNi 統一** | AES-256-GCM + SHA256 | RESTful JSON | RESTful 設計，API 現代化 |
+| **SmilePay 速買配** | Verify_key + Mid_smilepay 加權檢核碼 | Form POST + XML 回應 | 老牌、簡單、無 AES 加密門檻 |
+| **PChomePay 拍錢包** | HTTP Basic Auth → pcpay-token | RESTful JSON | PChome 生態、5% P 幣回饋、自帶超商取貨物流 |
+| **ezPay 簡單付** | 同 NewebPay (AES-256-CBC + SHA256) | Form POST + AES | 藍新小型商家品牌，跨境支付寶/微信 |
+| **PayNow 立吉富** | JWT Bearer (現代) / 動態 AES-256 (傳統) | RESTful JSON / Form POST | 雙 API 並行，Apple Pay 完整支援（含延遲扣款） |
 
 ---
 
@@ -175,13 +179,13 @@ python scripts/test_payment.py all
 
 ## 功能特色
 
-- 完整 API 文檔 (ECPay, NewebPay, PAYUNi)
+- 完整 API 文檔 (ECPay, NewebPay, PAYUNi, SmilePay, PChomePay, ezPay, PayNow)
 - BM25 搜索引擎
 - 智能推薦系統
-- 9 組完整代碼範例 (TypeScript/Python)
+- 7 個 Python 範例（每家服務商一個）
 - 7 個 CSV 數據檔 (易於維護)
-- 加密實作指南 (SHA256, AES-CBC, AES-GCM)
-- 16 個疑難排解案例
+- 加密實作指南 (SHA256, AES-128-CBC, AES-256-CBC, AES-256-GCM, JWT, 動態 AES, Basic Auth → Token)
+- 16+ 個疑難排解案例
 
 ---
 
