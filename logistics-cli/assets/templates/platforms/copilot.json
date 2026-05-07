@@ -10,7 +10,7 @@
   "scriptPath": "prompts/taiwan-logistics/scripts",
   "frontmatter": {
     "name": "taiwan-logistics",
-    "description": "Taiwan Logistics API integration for ECPay, NewebPay, and PAYUNi.",
+    "description": "Taiwan Logistics API integration for ECPay, NewebPay, PAYUNi, SmilePay, PChomePay, PayNow, HCT, SmilePay, PChomePay, PayNow, and HCT direct.",
     "user-invocable": "true"
   },
   "sections": {
@@ -20,6 +20,6 @@
     "quickReference": false
   },
   "title": "Taiwan Logistics Skill",
-  "description": "Comprehensive guide for Taiwan Logistics API integration. Supports ECPay, NewebPay, and PAYUNi providers covering CVS store-to-store, B2C bulk pickup, home delivery, and shipment tracking.",
+  "description": "Comprehensive guide for Taiwan Logistics API integration. Supports ECPay, NewebPay, PAYUNi, SmilePay, PChomePay, PayNow, HCT, SmilePay, PChomePay, PayNow, and HCT direct providers covering CVS store-to-store, B2C bulk pickup, home delivery, and shipment tracking.",
   "skillOrWorkflow": "Skill"
 }

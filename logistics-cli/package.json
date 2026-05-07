@@ -1,7 +1,7 @@
 {
   "name": "taiwan-logistics-skill",
-  "version": "1.1.5",
-  "description": "CLI to install Taiwan Logistics skill for AI coding assistants",
+  "version": "1.2.0",
+  "description": "CLI to install Taiwan Logistics skill for AI coding assistants. Supports ECPay, NewebPay, PAYUNi, SmilePay, PChomePay, PayNow, and HCT direct API.",
   "bin": {
     "taiwan-logistics": "./dist/index.js"
   },
@@ -20,6 +20,13 @@
     "ecpay",
     "newebpay",
     "payuni",
+    "smilepay",
+    "pchomepay",
+    "paynow",
+    "hct",
+    "新竹物流",
+    "黑貓",
+    "tcat",
     "claude",
     "claude-code",
     "cursor",

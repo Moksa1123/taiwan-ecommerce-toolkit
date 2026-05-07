@@ -9,3 +9,7 @@ hct,新竹物流,HCT,home,true,,,,https://www.hct.com.tw,https://www.hct.com.tw,
 pelican,宅配通,Pelican Express,home,true,,,,https://www.pelican.com.tw,https://www.pelican.com.tw,常溫,全台
 newebpay,藍新物流,NewebPay Logistics,payment_aggregator,true,請至後台申請,請至後台申請,請至後台申請,https://ccore.newebpay.com/API/Logistic,https://core.newebpay.com/API/Logistic,"7-11,全家,萊爾富,OK,黑貓,AES-256-CBC加密",全台
 payuni,統一物流,PAYUNi Logistics,payment_aggregator,true,請至後台申請,請至後台申請,請至後台申請,https://sandbox-api.payuni.com.tw/api/logistics,https://api.payuni.com.tw/api/logistics,"7-11常溫/冷凍,T-Cat宅配,AES-256-GCM加密",全台
+smilepay,速買配物流,SmilePay Logistics,payment_aggregator,true,1111,174A02F97A95F72CE301137B3F98D128,,https://ssl.smse.com.tw/api,https://ssl.smse.com.tw/api,"7-11/全家 C2C+B2C,黑貓 COD/PICKUP/逆物流,Pay_zg矩陣 51/52/55/56/81/82/83",全台
+pchomepay,拍錢包物流,PChomePay Logistics,payment_aggregator,true,請至後台申請,請至後台申請,,https://sandbox-api.pchomepay.com.tw,https://api.pchomepay.com.tw,"金物流二合一,7-11/全家/萊爾富/OK,Notify IP白名單113.196.231.190",全台
+paynow,立吉富物流,PayNow Logistics,payment_aggregator,true,請至後台申請,請至後台申請,12345678,https://test.paynow.com.tw/service/etopm.aspx,https://www.paynow.com.tw/service/etopm.aspx,"11產品線(7-11/全家/黑貓/海外),3DES/ECB/Zero-Padding加密",全台
+hct_direct,新竹物流(直連),HCT Direct API,carrier,true,test,,,https://hctapiweb.hct.com.tw,https://hctapiweb.hct.com.tw,"查貨服務+出貨API,XML/JSON/DataSet,加密金鑰申請後提供",全台

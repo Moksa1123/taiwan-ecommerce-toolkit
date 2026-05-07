@@ -341,7 +341,7 @@ taiwan-logistics/
 <details>
 <summary><b>是否需要申請物流服務商憑證？</b></summary>
 
-是的。需向選定的物流服務商申請商店代號 (Merchant ID) 與 API 金鑰 (Hash Key/IV)。三家物流服務商皆提供測試環境與測試帳號供開發使用。
+是的。需向選定的物流服務商申請商店代號 (Merchant ID) 與 API 金鑰 (Hash Key/IV)。七家物流服務商皆提供測試環境與測試帳號供開發使用。
 
 </details>
 
