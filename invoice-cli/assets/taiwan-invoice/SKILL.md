@@ -1,12 +1,12 @@
 ---
 name: taiwan-invoice
-description: Taiwan E-Invoice API integration specialist for ECPay, SmilePay, and Amego. Use when developing invoice systems, implementing B2C/B2B invoice issuance, invoice printing, allowance creation, or working with Taiwan E-Invoice APIs. Handles encryption (AES, MD5), API requests, and service provider differences.
+description: Taiwan E-Invoice API integration specialist for ECPay, SmilePay, Amego, ezPay, and PayNow. Use when developing invoice systems, implementing B2C/B2B invoice issuance, invoice printing, allowance creation, or working with Taiwan E-Invoice APIs. Handles encryption (AES-128, AES-256, MD5, JWT), API requests, and service provider differences.
 user-invocable: true
 ---
 
 # Taiwan E-Invoice Development Skill
 
-> 此技能涵蓋台灣電子發票 API 整合開發，包含綠界 (ECPay)、速買配 (SmilePay)、光貿 (Amego) 三家服務商。
+> 此技能涵蓋台灣電子發票 API 整合開發，包含綠界 (ECPay)、速買配 (SmilePay)、光貿 (Amego)、ezPay (藍新集團) 與 PayNow (立吉富) 五家服務商。
 
 ## 快速導覽
 
@@ -15,6 +15,8 @@ user-invocable: true
 - `references/ECPAY_API_REFERENCE.md` - 綠界 API 規格
 - `references/SMILEPAY_API_REFERENCE.md` - 速買配 API 規格
 - `references/AMEGO_API_REFERENCE.md` - 光貿 API 規格
+- `references/EZPAY_API_REFERENCE.md` - ezPay 簡單付 API 規格（藍新金流集團）
+- `references/PAYNOW_API_REFERENCE.md` - 立吉富 PayNow API 規格（含 POS 機批次取號流程）
 - [EXAMPLES.md](EXAMPLES.md) - 程式碼範例集
 
 ### 智能工具
@@ -94,6 +96,8 @@ python scripts/recommend.py "穩定 文檔完整" --format json
 - **ECPay**: 穩定、市佔、文檔、SDK、高交易量、電商
 - **SmilePay**: 簡單、快速、小型、測試、無加密、便宜
 - **Amego**: API、設計、新、MIG、標準
+- **ezPay**: 藍新、簡單付、AES-256、字軌管理、批次開立、與 Newebpay 同集團
+- **PayNow**: 立吉富、JWT、金物流發票一站式、POS 批次取號、外帶 POS 機
 
 ### 代碼生成器 (generate-invoice-service.py)
 
@@ -161,13 +165,15 @@ invoice-config/
 
 ## 各服務商特性比較
 
-| 特性 | 綠界 ECPay | 速買配 SmilePay | 光貿 Amego |
-|------|-----------|-----------------|------------|
-| 測試/正式 URL | 不同 URL | 不同 URL | **相同 URL** |
-| 認證方式 | AES 加密 + HashKey/HashIV | Grvc + Verify_key | MD5 簽章 + App Key |
-| 列印方式 | POST 表單提交 | GET URL 參數 | API 取得 PDF URL |
-| B2B 金額欄位 | SalesAmount (未稅) | UnitTAX=N | DetailVat=0 |
-| 傳輸格式 | JSON (AES 加密) | URL Parameters | JSON (URL Encode) |
+| 特性 | 綠界 ECPay | 速買配 SmilePay | 光貿 Amego | ezPay 簡單付 | PayNow 立吉富 |
+|------|-----------|-----------------|------------|--------------|----------------|
+| 測試/正式 URL | 不同 URL | 不同 URL | **相同 URL** | 不同 URL (cinv/inv) | 不同 URL (dev/prod) |
+| 認證方式 | AES-128-CBC + HashKey/HashIV | Grvc + Verify_key | MD5 簽章 + App Key | AES-256-CBC + 32 碼 HashKey + 16 碼 HashIV + SHA256 CheckCode | JWT Bearer Token |
+| 列印方式 | POST 表單提交 | GET URL 參數 | API 取得 PDF URL | API 觸發補開立 (`Api_invoice_touch`) | （需向 PayNow 索取） |
+| B2B 金額欄位 | SalesAmount (未稅) | UnitTAX=N | DetailVat=0 | `Category=B2B` + `Amt`/`TaxAmt` 拆分 | `BuyerIdentifier` + `TaxType` 切換 |
+| 傳輸格式 | JSON (AES 加密) | URL Parameters | JSON (URL Encode) | Form Post (`MerchantID_`/`PostData_` 後綴底線) | JSON (Bearer Header) |
+| 與其他系統共用加密 | 獨立 | 獨立 | 獨立 | **與藍新 Newebpay 金流共用** | 與 PayNow 金流不同（金流端用動態 AES-256） |
+| 文件成熟度 | 高 | 高 | 中 | 中（5 本 PDF） | **低**（公開頁面僅約 70 行，多項 API 須索取 PDF） |
 
 ## 開發實作步驟
 
@@ -447,6 +453,28 @@ App Key: sHeq7t8G1wiQvhAuIM27
 測試帳號: test@amego.tw
 測試密碼: 12345678
 ```
+
+### ezPay 簡單付測試環境
+```
+測試後台: https://cinv.ezpay.com.tw/
+申請流程: 自行註冊測試會員 → 取得 MerchantID + HashKey + HashIV
+官方範例 HashKey: abcdefghijklmnopqrstuvwxyzabcdef (32 碼)
+官方範例 HashIV: 1234567891234567 (16 碼)
+正式環境: https://inv.ezpay.com.tw/
+```
+
+> **重要**：ezPay HashKey 為 **32 碼**、HashIV **16 碼**（與 ECPay 16/16 不同）。
+> ezPay 與藍新 Newebpay 金流共用同一套加密邏輯（TradeInfo / TradeSha 機制），但發票端與金流端的金鑰各自獨立。
+
+### PayNow 立吉富測試環境
+```
+測試環境 URL: https://invoiceapi-dev.paynow.com.tw/
+正式環境 URL: https://invoiceapi-prod.paynow.com.tw/
+認證方式: JWT Bearer Token (向 einvoice@paynow.com.tw 申請)
+主站: https://gateway.paynow.com.tw/
+```
+
+> **注意**：PayNow 公開技術文件較稀疏，多數請求／回應 schema 與錯誤碼需向 PayNow 索取官方 Invoice Management v1.5 PDF 才能取得完整規格。POS 機流程有「未使用發票號碼於次期單數月 5 號自動上傳空白發票」的特殊規則，務必注意。
 
 ## 開發檢查清單
 
