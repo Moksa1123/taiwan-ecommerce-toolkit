@@ -26,3 +26,14 @@ ezpalipay,簡單付支付寶,Alipay,,EZPALIPAY,,,,EZPALIPAY,,1,,2-3,percentage,�
 ezpwechat,簡單付微信,WeChat Pay,,EZPWECHAT,,,,EZPWECHAT,,1,,2-3,percentage,跨境支付
 pcpay_wallet,拍錢包,PChome Wallet,,,,,PI,,,,1,,2-3,percentage,PChomePay 獨家；含 5% P 幣回饋
 cvs_cod,超商取貨付款,CVS COD,,,,,COD,,,,1,20000,1-3,fixed,PChomePay 獨家；含 7-Eleven 取貨
+weixinpay,微信支付,WeChat Pay (ECPay),WeiXin,EZPWECHAT,,,,EZPWECHAT,,1,,2-3,percentage,ECPay 直接 ChoosePayment=WeiXin；NewebPay/ezPay 走 EZPWECHAT
+digital_payment,電子支付/電子錢包 umbrella,Digital Payment Umbrella,DigitalPayment,,,,,,,,1,,2-3,percentage,ECPay 專屬 umbrella；客戶於選擇頁挑街口/全盈+PAY/全支付/一卡通/悠遊付/icashpay
+jkopay,街口支付,JKO Pay,DigitalPayment,JKOPAY,,,,JKOPAY,,1,,2-3,percentage,ECPay 走 DigitalPayment umbrella；NewebPay/ezPay 直送 JKOPAY
+pxpay_plus,全支付,PX Pay Plus,DigitalPayment,PXPAY,,,,PXPAY,,1,,2-3,percentage,全聯系；ECPay umbrella；NewebPay 直送 PXPAY
+plus_pay,全盈+PAY,Plus Pay,DigitalPayment,PLUSPAY,,,,PLUSPAY,,1,,2-3,percentage,玉山金控；ECPay umbrella；NewebPay 直送 PLUSPAY
+ipass_money,一卡通 MONEY,iPASS Money,DigitalPayment,IPASSPAY,,,,IPASSPAY,,1,,2-3,percentage,一卡通；ECPay umbrella
+easywallet,悠遊付,Easy Wallet,DigitalPayment,EASYCARD,,,,EASYCARD,,1,,2-3,percentage,悠遊卡公司；ECPay umbrella
+icash_pay,icash Pay,iCash Pay,DigitalPayment,ICASHPAY,,,,ICASHPAY,iCashPay,1,,2-3,percentage,愛金卡；ECPay umbrella；PAYUNi 專屬代碼 iCash
+ecpay_pay,綠界Pay,ECPay Pay,EcpayPay,,,,,,,1,,2-3,percentage,ECPay 自家錢包
+openpoint,OPENPOINT,OPEN POINT,DigitalPayment,,,,,,,1,,2-3,percentage,7-11/統一集團；ECPay umbrella
+atome,Atome 安多目,Atome,BNPL,,,,,,,1,30000,依方案,percentage,新加坡 BNPL 服務；ECPay 走 BNPL umbrella
