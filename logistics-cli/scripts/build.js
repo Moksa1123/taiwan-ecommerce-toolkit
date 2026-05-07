@@ -7,7 +7,7 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const distDir = join(__dirname, '..', 'dist');
 
 async function main() {
-  console.log('Building taiwan-invoice-skill CLI...');
+  console.log('Building taiwan-logistics-skill CLI...');
 
   // Ensure dist directory exists
   if (!existsSync(distDir)) {

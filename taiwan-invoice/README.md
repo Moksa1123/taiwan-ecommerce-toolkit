@@ -3,7 +3,7 @@
 <h3 align="center">台灣電子發票 AI 開發技能包</h3>
 
 <p align="center">
-  <strong>支援 ECPay 綠界 · SmilePay 速買配 · Amego 光貿</strong>
+  <strong>支援 ECPay 綠界 · SmilePay 速買配 · Amego 光貿 · ezPay 簡單付 · PayNow 立吉富</strong>
 </p>
 
 <p align="center">
@@ -22,10 +22,11 @@
 
 ## 專案簡介
 
-Taiwan Invoice Skill 是專為台灣電子發票整合設計的 AI 開發工具包，支援三大加值中心 (ECPay、SmilePay、Amego) 的完整 API 整合。本工具包提供企業級程式碼範例、智能搜尋引擎、錯誤處理系統與代碼生成器，協助開發團隊快速完成電子發票系統整合。
+Taiwan Invoice Skill 是專為台灣電子發票整合設計的 AI 開發工具包，支援五大加值中心（ECPay 綠界、SmilePay 速買配、Amego 光貿、ezPay 簡單付、PayNow 立吉富）的完整 API 整合。本工具包提供企業級程式碼範例、智能搜尋引擎、錯誤處理系統與代碼生成器，協助開發團隊快速完成電子發票系統整合。
 
-**版本:** 2.6.3
+**版本:** 2.7.0
 **狀態:** Production Ready
+**v2.7.0 新增:** ezPay 簡單付（藍新集團，AES-256-CBC + SHA256）、PayNow 立吉富（JWT Bearer + POS 批次取號）兩家服務商完整支援
 
 ---
 
@@ -182,6 +183,8 @@ taiwan-invoice init --ai claude --global
 | **ECPay 綠界** | AES-128-CBC | RESTful + Form POST | 市佔率高，文件完整 |
 | **SmilePay 速買配** | URL Signature | RESTful JSON | 雙協定支援，整合簡單 |
 | **Amego 光貿** | MD5 Signature | RESTful JSON (MIG 4.0) | API 設計清晰，架構現代化 |
+| **ezPay 簡單付** | AES-256-CBC + SHA256 CheckCode | Form POST + Hex 編碼 | 藍新金流集團發票服務；32-char HashKey；與 Newebpay 共用加密 |
+| **PayNow 立吉富** | JWT Bearer Token | RESTful JSON | 含 POS 機批次取號流程；公開技術文件較稀疏，部分細節需向官方索取 PDF |
 
 ---
 

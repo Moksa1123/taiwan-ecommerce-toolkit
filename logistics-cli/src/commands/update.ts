@@ -5,7 +5,7 @@ import { logger } from '../utils/logger.js';
 const VERSION = '2.5.4';
 
 export async function updateCommand(): Promise<void> {
-  logger.title('Taiwan Invoice Skill - Update');
+  logger.title('Taiwan Logistics Skill - Update');
 
   console.log(chalk.cyan('Current Version:'));
   console.log(chalk.dim(`  ${VERSION}`));
@@ -14,7 +14,7 @@ export async function updateCommand(): Promise<void> {
   const spinner = ora('Checking for updates...').start();
 
   try {
-    const response = await fetch('https://registry.npmjs.org/taiwan-invoice-skill/latest', {
+    const response = await fetch('https://registry.npmjs.org/taiwan-logistics-skill/latest', {
       headers: {
         'Accept': 'application/json',
       },
@@ -33,13 +33,13 @@ export async function updateCommand(): Promise<void> {
       spinner.info(`New version available: ${latestVersion}`);
       console.log();
       console.log(chalk.cyan('To update, run:'));
-      console.log(chalk.dim('  npm install -g taiwan-invoice-skill@latest'));
+      console.log(chalk.dim('  npm install -g taiwan-logistics-skill@latest'));
     }
   } catch (error) {
     spinner.warn('Unable to check for updates');
     console.log();
     console.log(chalk.cyan('To update manually, run:'));
-    console.log(chalk.dim('  npm install -g taiwan-invoice-skill@latest'));
+    console.log(chalk.dim('  npm install -g taiwan-logistics-skill@latest'));
   }
 
   console.log();

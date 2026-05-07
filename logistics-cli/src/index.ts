@@ -13,7 +13,7 @@ const program = new Command();
 
 program
   .name('taiwan-logistics')
-  .description('CLI to install Taiwan E-Invoice skill for AI coding assistants')
+  .description('CLI to install Taiwan Logistics skill for AI coding assistants')
   .version(VERSION);
 
 program
