@@ -3,7 +3,7 @@
 <h3 align="center">台灣電子發票 AI 開發技能包</h3>
 
 <p align="center">
-  <strong>支援 ECPay 綠界 · SmilePay 速買配 · Amego 光貿</strong>
+  <strong>支援 ECPay 綠界 · SmilePay 速買配 · Amego 光貿 · ezPay 簡單付 · PayNow 立吉富</strong>
 </p>
 
 <p align="center">
@@ -118,6 +118,8 @@ taiwan-invoice init --ai antigravity --global  # ~/.gemini/antigravity/global_sk
 | **ECPay 綠界** | AES-128-CBC 加密 | 市佔率高，文件完整 |
 | **SmilePay 速買配** | URL 參數簽章 | 雙協定支援，整合簡單 |
 | **Amego 光貿** | MD5 簽章 (MIG 4.0) | API 設計乾淨 |
+| **ezPay 簡單付** | AES-256-CBC + SHA256 CheckCode | 藍新金流集團；32-char HashKey；與 Newebpay 共用加密 |
+| **PayNow 立吉富** | JWT Bearer Token | 含 POS 機批次取號流程；公開技術文件較稀疏 |
 
 ---
 

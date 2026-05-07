@@ -41,9 +41,9 @@ Taiwan E-Commerce Toolkit 是專為台灣電商生態系統設計的企業級整
 
 **taiwan-invoice-skill**
 
-整合 3 家加值中心
+整合 5 家加值中心
 
-ECPay · SmilePay · Amego
+ECPay · SmilePay · Amego · ezPay · PayNow
 
 <p align="center">
   <a href="https://www.npmjs.com/package/taiwan-invoice-skill"><img src="https://img.shields.io/npm/v/taiwan-invoice-skill?style=flat-square&color=cb3837&logo=npm" alt="npm version"></a>
@@ -368,6 +368,8 @@ taiwan-ecommerce-toolkit/
 | **ECPay 綠界** | AES-128-CBC | 市場佔有率高，技術文件完整 | RESTful + Form POST |
 | **SmilePay 速買配** | URL Signature | 支援雙協定，整合流程簡化 | RESTful JSON |
 | **Amego 光貿** | MD5 Signature | API 設計清晰，架構現代化 | RESTful JSON (MIG 4.0) |
+| **ezPay 簡單付** | AES-256-CBC + SHA256 CheckCode | 藍新金流集團；與 Newebpay 共用加密；32-char HashKey | Form POST + Hex |
+| **PayNow 立吉富** | JWT Bearer Token | 含 POS 機批次取號流程；雙向 cashflow 整合 | RESTful JSON |
 
 ### 金流串接平台 (3 家)
 
@@ -615,9 +617,10 @@ pip install pycryptodome requests
 ### 支援的加密方式
 
 - **AES-128-CBC** - ECPay 電子發票
-- **AES-256-CBC** - NewebPay 金流/物流
+- **AES-256-CBC** - NewebPay 金流/物流、ezPay 發票/金流
 - **AES-256-GCM** - PAYUNi 金流/物流
-- **SHA256** - 所有服務商的 CheckMacValue
+- **JWT Bearer Token** - PayNow 發票
+- **SHA256** - 所有服務商的 CheckMacValue / TradeSha / CheckCode
 - **MD5** - Amego 發票、ECPay 物流
 
 ---
