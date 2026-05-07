@@ -29,12 +29,14 @@
 
 Taiwan E-Commerce Toolkit 是專為台灣電商生態系統設計的企業級整合開發工具包，提供完整的電子發票、金流串接、物流整合解決方案。本工具包整合台灣三大領域共 **22 個服務商串接**（5 家發票 + 10 家金流 + 7 家物流），搭配智能開發工具與生產級程式碼範例，協助開發團隊快速完成電商系統整合。
 
-**最新版本:**
-- `taiwan-invoice-skill@2.7.0` — 5 家發票服務商
-- `taiwan-payment-skill@1.3.0` — 10 家金流平台
-- `taiwan-logistics-skill@1.2.0` — 7 家物流（含 HCT 直連）
+**最新版本（請以 npm 為準）：**
+- `taiwan-invoice-skill@2.7.1+` — 5 家發票（ECPay / SmilePay / Amego / ezPay / PayNow）
+- `taiwan-payment-skill@1.3.4+` — 10 家金流（ECPay / NewebPay / PAYUNi / SmilePay / PChomePay / ezPay / PayNow / Shopline / LINE Pay / TapPay）
+- `taiwan-logistics-skill@1.2.3+` — 7 家物流（6 aggregator + HCT 直連 carrier API）
 
 **狀態:** Production Ready · MIT 授權
+
+> 安裝舊版會看到 npm deprecation 提示（55 個舊版已 deprecated）— 請以 npm shield 上的 latest 版本為準。
 
 <table>
 <tr>
@@ -364,29 +366,42 @@ taiwan-ecommerce-toolkit/
 
 ## 廠商整合支援
 
-### 電子發票加值中心 (3 家)
+### 電子發票加值中心 (5 家)
 
-| 加值中心 | 加密技術 | 技術特點 | API 風格 |
+| 加值中心 | 加密 / 認證 | 技術特點 | API 風格 |
 |----------|----------|----------|----------|
-| **ECPay 綠界** | AES-128-CBC | 市場佔有率高，技術文件完整 | RESTful + Form POST |
-| **SmilePay 速買配** | URL Signature | 支援雙協定，整合流程簡化 | RESTful JSON |
-| **Amego 光貿** | MD5 Signature | API 設計清晰，架構現代化 | RESTful JSON (MIG 4.0) |
+| **ECPay 綠界** | AES-128-CBC + HashKey/HashIV | 市佔率高、SDK 完整、文件最齊 | JSON (AES 加密) |
+| **SmilePay 速買配** | Grvc + Verify_key 共享密鑰 | 老牌穩定、無 AES 門檻、整合最簡單 | URL Parameters |
+| **Amego 光貿** | MD5 簽章 + App Key | MIG 4.0 標準、現代 RESTful | JSON (URL Encoded) |
+| **ezPay 簡單付** | AES-256-CBC + SHA256 (32 碼 HashKey) | 藍新集團小型品牌、字軌管理、批次開立 | Form Post (`MerchantID_` / `PostData_`) |
+| **PayNow 立吉富** | JWT Bearer Token | 金物流發票一站式、POS 機批次取號 | RESTful JSON |
 
-### 金流串接平台 (3 家)
+### 金流串接平台 (10 家)
 
-| 金流平台 | 加密技術 | 支援付款方式 | 技術特點 |
+| 金流平台 | 加密 / 認證 | 支援付款方式 | 技術特點 |
 |----------|----------|--------------|----------|
-| **ECPay 綠界** | SHA256 CheckMacValue | 信用卡、ATM、超商代碼、超商條碼 | 市佔率最高，穩定性佳 |
-| **NewebPay 藍新** | AES-256-CBC + SHA256 | 信用卡、ATM、超商、LINE Pay、Apple Pay | 支援付款方式最多 (13 種) |
-| **PAYUNi 統一** | AES-256-GCM + SHA256 | 信用卡、ATM、超商、AFTEE、iCash Pay | RESTful 設計，API 現代化 |
+| **ECPay 綠界** | SHA256 CheckMacValue | 信用卡 / ATM / CVS / Apple Pay / TWQR / WeiXin / **DigitalPayment umbrella**（街口/全盈+PAY/全支付/一卡通/悠遊付/icashpay/OPENPOINT）/ EcpayPay | 市佔率最高、文檔最完整 |
+| **NewebPay 藍新** | AES-256-CBC + SHA256 | 信用卡 / 分期 (`InstFlag`) / ATM / CVS / LINE Pay / Apple Pay / Google Pay / Samsung Pay / TWQR / 玉山 / 台灣Pay / 跨境支付寶/微信 / CVSCOM | MPG 整合、信用卡記憶 |
+| **PAYUNi 統一** | AES-256-GCM + SHA256 | 信用卡 (Token) / ATM / CVS / **JKoPay** (街口) / **ICASH** (愛金卡) / **AFTEE** / LinePay | RESTful JSON、AFTEE 獨家 |
+| **SmilePay 速買配** | Verify_key + Mid_smilepay 加權檢核碼 | ATM / Barcode / ibon / FamiPort / 信用卡 / 分期 / 聯合信用卡 (Pay_zg=1/2/3/4/6/11) | XML 回應、Pay_zg 編碼 |
+| **PChomePay 拍錢包** | HTTP Basic Auth → 8h pcpay-token | 信用卡 (CARD) / ATM / 超商代碼 (BCODE) / **拍錢包 (PI, 5% P 幣回饋)** / 超商取貨 (IPL7/IPLFM/IPLHL) | 金物流二合一、PChome 生態 |
+| **ezPay 簡單付** | 同 NewebPay (AES-256-CBC) | 同 NewebPay（部分方案受限） | 藍新小型商家品牌 |
+| **PayNow 立吉富** | JWT Bearer (現代) / 動態 AES-256 (傳統) | CreditCard / Installment / ATM / CVS / **LINE Pay 線上+線下** / **Apple Pay + ApplePayDeferred 延遲扣款** | 雙 API、Stripe-like PaymentIntent |
+| **Shopline Payments** | merchantId + apiKey HTTP Header | 信用卡 / Apple Pay / LINE Pay / 街口 / ATM / 中租 BNPL | RESTful JSON、金額以分為單位、HMAC-SHA256 Webhook |
+| **LINE Pay v4** | Channel ID + Secret + 每次 HMAC-SHA256 + Nonce | LINE Pay 直連、Preapproved Pay 自動扣款 | Request → Confirm 兩段、跨國 |
+| **TapPay** | Partner Key + App Key + Merchant ID | 信用卡 / Apple Pay / Google Pay / LINE Pay / 街口 / Virtual Account | PCI 隔離、Prime 兩段式、Card Token 重複扣款 |
 
-### 物流串接服務 (3 家)
+### 物流串接服務 (7 家：6 aggregator + HCT 直連)
 
-| 物流服務 | 加密技術 | 支援物流類型 | 技術特點 |
-|----------|----------|--------------|----------|
-| **ECPay 綠界** | MD5 CheckMacValue | 7-11、全家、萊爾富、OK、黑貓、新竹貨運 | 市佔率最高，穩定性佳 |
-| **NewebPay 藍新** | AES-256-CBC + SHA256 | 7-11、全家、萊爾富、OK、黑貓宅急便 | 整合流程完整 |
-| **PAYUNi 統一** | AES-256-GCM + SHA256 | 7-11 (常溫/冷凍)、黑貓 (常溫/冷凍/冷藏) | 支援溫控配送，適合生鮮電商 |
+| 物流服務 | 類型 | 加密 / 認證 | 支援物流類型 | 技術特點 |
+|----------|----------|----------|--------------|----------|
+| **ECPay 綠界** | aggregator | MD5 CheckMacValue | 7-11 / 全家 / 萊爾富 / OK / 黑貓 / 宅配通 / HCT | 市佔率最高、SDK 完整 |
+| **NewebPay 藍新** | aggregator | AES-256-CBC + SHA256 | 7-11 / 全家 / 萊爾富 / OK / 黑貓 | 整合流程完整 |
+| **PAYUNi 統一** | aggregator | AES-256-GCM + SHA256 | 7-11 (常溫/冷凍) / T-Cat (常溫/冷藏/冷凍) | 溫控配送最完整 |
+| **SmilePay 速買配** | aggregator | Verify_key + Mid_smilepay 加權檢核碼 | 7-11/全家 C2C+B2C / 黑貓 COD+PICKUP+逆物流 | Pay_zg 矩陣 51/52/55/56/81/82/83 |
+| **PChomePay 拍錢包** | aggregator | HTTP Basic Auth → token | 7-11 / 全家 / 萊爾富 / OK | 金物流二合一、Notify IP 113.196.231.190 |
+| **PayNow 立吉富** | aggregator | **3DES / ECB / Zero-Padding**（不同於金流端） | 11 條產品線（含海外配送、冷凍） | 雙 API（金流 vs 物流加密不同） |
+| **HCT 新竹物流** | **direct carrier API** | 自訂加密（申請後提供） | 直連 carrier API | 大量出貨企業專用，非 aggregator routing |
 
 ---
 
@@ -617,11 +632,21 @@ pip install pycryptodome requests
 
 ### 支援的加密方式
 
-- **AES-128-CBC** - ECPay 電子發票
-- **AES-256-CBC** - NewebPay 金流/物流
-- **AES-256-GCM** - PAYUNi 金流/物流
-- **SHA256** - 所有服務商的 CheckMacValue
-- **MD5** - Amego 發票、ECPay 物流
+| 演算法 | 應用 |
+|---|---|
+| **AES-128-CBC** | ECPay 電子發票 |
+| **AES-256-CBC** | NewebPay / ezPay 金流（共用 MPG）、ezPay 發票、NewebPay 物流 |
+| **AES-256-GCM** | PAYUNi 金流 / 物流（含 16-byte auth tag） |
+| **動態 AES-256 (GP/GK)** | PayNow 傳統 cashflow（每次以 GP/GK 檢核碼取 Key/IV） |
+| **3DES / ECB / Zero-Padding** | **PayNow 物流**（24-byte Key + 8-byte IV，不同於金流端 AES-256） |
+| **JWT Bearer Token** | PayNow 現代 PaymentIntent、PayNow 發票 |
+| **HTTP Basic → Token** | PChomePay（取得 8 小時 pcpay-token） |
+| **Verify_key + 加權檢核碼** | SmilePay（無 AES，反推 Mid_smilepay 算法） |
+| **HMAC-SHA256 + Nonce** | LINE Pay v4 |
+| **HMAC-SHA256 (Webhook)** | Shopline Payments |
+| **Partner Key + Prime 兩段式** | TapPay（PCI 隔離） |
+| **SHA256** | ECPay/NewebPay/PAYUNi/ezPay 多家用作 CheckMacValue / TradeSha / HashInfo / CheckCode |
+| **MD5** | Amego 發票、ECPay 物流 |
 
 ---
 
