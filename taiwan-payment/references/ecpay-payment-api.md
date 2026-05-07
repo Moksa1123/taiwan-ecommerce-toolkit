@@ -878,3 +878,56 @@ order_id = f"ORD{int(time.time())}{random.randint(100, 999)}"
 - **商店後台 (正式)**: https://vendor.ecpay.com.tw/
 - **技術客服**: techsupport@ecpay.com.tw
 - **客服電話**: (02) 2655-1775
+
+---
+
+## ChoosePayment 完整對照表 (2024+)
+
+ECPay AIO 支援的所有 `ChoosePayment` 參數值：
+
+| ChoosePayment 值 | 中文名 | 類別 | 說明 |
+|---|---|---|---|
+| `Credit` | 信用卡 (含銀聯/AMEX) | 信用卡 | 一次付清 / 分期 / 紅利 / 定期定額 |
+| `WebATM` | 網路 ATM | ATM | 即時轉帳，最高 NT$49,999 |
+| `ATM` | ATM 虛擬帳號 | ATM | 產生繳費帳號，最高 NT$49,999 |
+| `CVS` | 超商代碼 | 超商 | 至四大超商繳費，30-20,000 元 |
+| `BARCODE` | 超商條碼 | 超商 | 產生繳費條碼，20-40,000 元 |
+| `ApplePay` | Apple Pay | 行動支付 | 需向 ECPay 申請 |
+| `TWQR` | 歐付寶 TWQR | 行動支付 | 台灣 Pay QR Code |
+| `BNPL` | 無卡分期 | 分期 | 含裕富、中租、Atome 等 |
+| `WeiXin` | 微信支付 | 跨境 | **較新**，提供陸客掃碼支付 |
+| `DigitalPayment` | 電子支付 / 電子錢包 umbrella | 行動支付 | **較新**，客戶於 ECPay 收銀頁挑選具體方式 |
+| `EcpayPay` | 綠界Pay | 行動支付 | **較新**，ECPay 自家錢包 |
+| `ALL` | 不指定 (顯示選擇頁) | 全部 | 由 ECPay 統一收銀台讓客戶挑 |
+
+### `DigitalPayment` umbrella 涵蓋範圍
+
+當設定 `ChoosePayment=DigitalPayment` 時，ECPay 收銀頁會列出以下電子支付選項供客戶挑選：
+
+- **街口支付** (JKO Pay)
+- **全盈+PAY** (玉山金控)
+- **全支付** (PX Pay Plus, 全聯系)
+- **一卡通 MONEY** (iPASS Money)
+- **悠遊付** (Easy Wallet)
+- **icash Pay** (愛金卡)
+- **OPENPOINT** (7-11/統一集團)
+
+> ⚠️ DigitalPayment 為**統一收銀頁**設計：商家無法透過 API 直接指定具體方式，只能讓客戶於 ECPay 託管頁面自行選擇。如需指定特定電子支付（例如僅開放街口），請使用 NewebPay / PAYUNi（它們以個別參數開放各方式）。
+
+### 新方式速查
+
+| 方式 | ECPay 直連 | NewebPay 直連 |
+|---|---|---|
+| 街口支付 (JKO Pay) | DigitalPayment umbrella | `JKOPAY` |
+| 全盈+PAY | DigitalPayment umbrella | `PLUSPAY` |
+| 全支付 (PXPay+) | DigitalPayment umbrella | `PXPAY` |
+| 一卡通 MONEY | DigitalPayment umbrella | `IPASSPAY` |
+| 悠遊付 (Easy Wallet) | DigitalPayment umbrella | `EASYCARD` |
+| icash Pay | DigitalPayment umbrella | `ICASHPAY` |
+| OPENPOINT | DigitalPayment umbrella | — |
+| Atome BNPL | `BNPL` umbrella | — |
+| 微信支付 | `WeiXin` 直連 | `EZPWECHAT` |
+
+> NewebPay / PAYUNi 通常以個別 channel/method 參數開放每種方式；ECPay 採 umbrella 設計，整合較簡單但選擇權交給消費者。
+
+最後更新：2026/05/07
