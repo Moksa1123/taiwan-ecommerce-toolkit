@@ -13,8 +13,8 @@
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/providers-9-success?style=flat-square" alt="9 Providers">
-  <img src="https://img.shields.io/badge/platforms-14-blue?style=flat-square" alt="14 Platforms">
+  <img src="https://img.shields.io/badge/providers-22-success?style=flat-square" alt="22 Provider Integrations">
+  <img src="https://img.shields.io/badge/AI%20platforms-14-blue?style=flat-square" alt="14 AI Platforms">
   <img src="https://img.shields.io/badge/quality-production--ready-green?style=flat-square" alt="Production Ready">
   <a href="LICENSE"><img src="https://img.shields.io/github/license/Moksa1123/taiwan-ecommerce-toolkit?style=flat-square" alt="License"></a>
 </p>
@@ -27,11 +27,14 @@
 
 ## 專案概覽
 
-Taiwan E-Commerce Toolkit 是專為台灣電商生態系統設計的企業級整合開發工具包，提供完整的電子發票、金流串接、物流整合解決方案。本工具包整合台灣三大領域共 9 家主流服務商，搭配智能開發工具與生產級程式碼範例，協助開發團隊快速完成電商系統整合。
+Taiwan E-Commerce Toolkit 是專為台灣電商生態系統設計的企業級整合開發工具包，提供完整的電子發票、金流串接、物流整合解決方案。本工具包整合台灣三大領域共 **22 個服務商串接**（5 家發票 + 10 家金流 + 7 家物流），搭配智能開發工具與生產級程式碼範例，協助開發團隊快速完成電商系統整合。
 
-**版本資訊:** v2.0.0 Complete Edition
-**發布日期:** 2026-01-30
-**狀態:** Production Ready
+**最新版本:**
+- `taiwan-invoice-skill@2.7.0` — 5 家發票服務商
+- `taiwan-payment-skill@1.3.0` — 10 家金流平台
+- `taiwan-logistics-skill@1.2.0` — 7 家物流（含 HCT 直連）
+
+**狀態:** Production Ready · MIT 授權
 
 <table>
 <tr>
@@ -41,9 +44,9 @@ Taiwan E-Commerce Toolkit 是專為台灣電商生態系統設計的企業級整
 
 **taiwan-invoice-skill**
 
-整合 3 家加值中心
+整合 5 家加值中心
 
-ECPay · SmilePay · Amego
+ECPay · SmilePay · Amego · ezPay · PayNow
 
 <p align="center">
   <a href="https://www.npmjs.com/package/taiwan-invoice-skill"><img src="https://img.shields.io/npm/v/taiwan-invoice-skill?style=flat-square&color=cb3837&logo=npm" alt="npm version"></a>
@@ -60,9 +63,9 @@ ECPay · SmilePay · Amego
 
 **taiwan-payment-skill**
 
-整合 3 家金流平台
+整合 10 家金流平台
 
-ECPay · NewebPay · PAYUNi · SmilePay · PChomePay · PayNow · HCT
+ECPay · NewebPay · PAYUNi · SmilePay · PChomePay · ezPay · PayNow · Shopline · LINE Pay · TapPay
 
 <p align="center">
   <a href="https://www.npmjs.com/package/taiwan-payment-skill"><img src="https://img.shields.io/npm/v/taiwan-payment-skill?style=flat-square&color=cb3837&logo=npm" alt="npm version"></a>
@@ -79,9 +82,9 @@ ECPay · NewebPay · PAYUNi · SmilePay · PChomePay · PayNow · HCT
 
 **taiwan-logistics-skill**
 
-整合 7 家物流服務
+整合 7 家物流（6 aggregator + HCT 直連）
 
-ECPay · NewebPay · PAYUNi · SmilePay · PChomePay · PayNow · HCT
+ECPay · NewebPay · PAYUNi · SmilePay · PChomePay · PayNow · HCT 新竹物流
 
 <p align="center">
   <a href="https://www.npmjs.com/package/taiwan-logistics-skill"><img src="https://img.shields.io/npm/v/taiwan-logistics-skill?style=flat-square&color=cb3837&logo=npm" alt="npm version"></a>
