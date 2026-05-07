@@ -22,11 +22,12 @@
 
 ## 專案簡介
 
-Taiwan Payment Skill 是專為台灣金流整合設計的 AI 開發工具包，支援七大金流平台（ECPay 綠界、NewebPay 藍新、PAYUNi 統一、SmilePay 速買配、PChomePay 拍錢包、ezPay 簡單付、PayNow 立吉富）的完整 API 整合。本工具包提供企業級程式碼範例、BM25 智能搜尋引擎、服務商推薦系統與代碼生成器，協助開發團隊快速完成金流系統整合。
+Taiwan Payment Skill 是專為台灣金流整合設計的 AI 開發工具包，支援十大金流平台（ECPay 綠界、NewebPay 藍新、PAYUNi 統一、SmilePay 速買配、PChomePay 拍錢包、ezPay 簡單付、PayNow 立吉富）的完整 API 整合。本工具包提供企業級程式碼範例、BM25 智能搜尋引擎、服務商推薦系統與代碼生成器，協助開發團隊快速完成金流系統整合。
 
-**版本:** 1.2.0
+**版本:** 1.3.0
 **狀態:** Production Ready
-**v1.2.0 新增:** SmilePay / PChomePay / ezPay / PayNow 4 家金流服務商完整支援
+**v1.3.0 新增:** Shopline Payments / LINE Pay v4 / TapPay 3 家金流服務商完整支援
+**v1.2.0:** SmilePay / PChomePay / ezPay / PayNow 4 家金流服務商完整支援
 
 ---
 
@@ -41,7 +42,7 @@ Taiwan Payment Skill 是專為台灣金流整合設計的 AI 開發工具包，�
 - **嚴謹錯誤處理** - 完整的例外處理與中文錯誤訊息
 - **實戰測試憑證** - 包含測試環境憑證，可直接執行驗證
 
-### 生產級 Python 範例 (7 個)
+### 生產級 Python 範例 (10 個)
 
 完整的金流整合實作，支援多種付款方式：
 
@@ -52,6 +53,9 @@ Taiwan Payment Skill 是專為台灣金流整合設計的 AI 開發工具包，�
 - **pchomepay-payment-example.py** - PChomePay 整合（Basic Auth → pcpay-token 兩階段認證 + 拍錢包 5% P 幣回饋）
 - **ezpay-payment-example.py** - ezPay 簡單付整合（與 NewebPay 共用 MPG 加密；diff 文件）
 - **paynow-payment-example.py** - PayNow 立吉富整合（現代 PaymentIntent + 傳統 cashflow 雙 API）
+- **shopline-payment-example.py** - Shopline Payments 整合（Redirect / Embedded SDK / HMAC-SHA256 Webhook）
+- **linepay-payment-example.py** - LINE Pay v4 整合（Request → Confirm 兩段式 + Capture/Void + Preapproved Pay）
+- **tappay-payment-example.py** - TapPay 整合（Prime 兩段式 / pay-by-card-token 重複扣款 / PCI 隔離）
 
 ### BM25 智能搜尋引擎
 
@@ -174,6 +178,9 @@ taiwan-payment init --ai claude --global
 | **PChomePay 拍錢包** | HTTP Basic Auth → pcpay-token | RESTful JSON | 信用卡（含分期）、ATM 虛擬帳號、超商代碼、拍錢包（5% P 幣回饋）、超商取貨付款 |
 | **ezPay 簡單付** | 同 NewebPay (AES-256-CBC + SHA256) | Form POST + AES | 信用卡、ATM、超商、跨境支付寶/微信（與 NewebPay 同集團） |
 | **PayNow 立吉富** | JWT Bearer (現代) / 動態 AES-256 (傳統) | RESTful JSON / Form POST | 信用卡、ATM、超商代碼、Apple Pay (含延遲扣款)、LINE Pay 線上+線下 |
+| **Shopline Payments** | merchantId + apiKey HTTP Header | RESTful JSON | 信用卡、Apple Pay、LINE Pay、街口、ATM、中租 BNPL（金額以分為單位） |
+| **LINE Pay v4** | Channel ID + ChannelSecret + HMAC-SHA256 Nonce | RESTful JSON | LINE 生態系直連、Request→Confirm 兩段式、Preapproved Pay 自動扣款、跨國 |
+| **TapPay** | Partner Key + App Key + Merchant ID（Prime 兩段式） | RESTful JSON | 信用卡、Apple Pay、Google Pay、LINE Pay、Virtual Account；PCI 隔離設計 |
 
 ---
 

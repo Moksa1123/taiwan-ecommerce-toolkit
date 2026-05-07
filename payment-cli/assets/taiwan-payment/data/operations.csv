@@ -12,3 +12,12 @@ withdraw,提領款項,N/A,N/A,N/A,N/A,/v1/withdraw,N/A,N/A,N/A,POST,"amount,bank
 checkout,跳轉結帳頁,N/A,N/A,N/A,N/A,N/A,N/A,N/A,/api/v1/payment-intent/{id}/checkout,POST,"paymentMethodType,paymentMethodData",PayNow 現代版 Stripe-like checkout flow
 applepay_session,Apple Pay session,N/A,N/A,N/A,N/A,N/A,N/A,N/A,/api/v1/apple-pay/session,POST,"validationURL,domainName",PayNow 現代版 Apple Pay 商家驗證
 applepay_confirm,Apple Pay 確認,N/A,N/A,N/A,N/A,N/A,N/A,N/A,/api/v1/apple-pay/confirm,POST,"applePayPayload",PayNow 現代版 Apple Pay 付款確認
+session_create,Shopline 建立結帳會話,N/A,N/A,N/A,N/A,N/A,N/A,N/A,N/A,POST,"merchantId,amount,currency,returnUrl",Shopline Redirect 模式; endpoint 為 /sessions/create
+session_query,Shopline 查詢會話,N/A,N/A,N/A,N/A,N/A,N/A,N/A,N/A,GET,"sessionId",Shopline; /sessions/{sessionId}
+linepay_request,LINE Pay 建立交易,N/A,N/A,N/A,N/A,N/A,N/A,N/A,N/A,POST,"amount,currency,orderId,packages",LINE Pay v4; /v3/payments/request
+linepay_confirm,LINE Pay 確認交易,N/A,N/A,N/A,N/A,N/A,N/A,N/A,N/A,POST,"amount,currency,transactionId",LINE Pay; /v3/payments/{transactionId}/confirm
+linepay_capture,LINE Pay 請款,N/A,N/A,N/A,N/A,N/A,N/A,N/A,N/A,POST,"amount,currency,transactionId",LINE Pay; /v3/payments/authorizations/{transactionId}/capture (含手動請款)
+linepay_void,LINE Pay 取消授權,N/A,N/A,N/A,N/A,N/A,N/A,N/A,N/A,POST,"transactionId",LINE Pay; /v3/payments/authorizations/{transactionId}/void
+linepay_preapproved_pay,LINE Pay 自動扣款,N/A,N/A,N/A,N/A,N/A,N/A,N/A,N/A,POST,"amount,currency,orderId,productName",LINE Pay 自動扣款 (Preapproved Pay)
+tappay_pay_by_prime,TapPay Prime 付款,N/A,N/A,N/A,N/A,N/A,N/A,N/A,N/A,POST,"prime,partner_key,merchant_id,amount,details,cardholder",TapPay; /tpc/payment/pay-by-prime
+tappay_pay_by_token,TapPay Token 付款,N/A,N/A,N/A,N/A,N/A,N/A,N/A,N/A,POST,"card_key,card_token,partner_key,merchant_id,amount,details",TapPay 重複扣款; /tpc/payment/pay-by-card-token

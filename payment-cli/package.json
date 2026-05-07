@@ -1,7 +1,7 @@
 {
   "name": "taiwan-payment-skill",
-  "version": "1.2.0",
-  "description": "AI-powered Taiwan Payment Gateway integration toolkit for Claude Code and other AI coding assistants. Supports ECPay, NewebPay, PAYUNi, SmilePay, PChomePay, ezPay, and PayNow.",
+  "version": "1.3.0",
+  "description": "AI-powered Taiwan Payment Gateway integration toolkit for Claude Code and other AI coding assistants. Supports ECPay, NewebPay, PAYUNi, SmilePay, PChomePay, ezPay, PayNow, Shopline Payments, LINE Pay v4, and TapPay.",
   "keywords": [
     "taiwan",
     "payment",
@@ -12,6 +12,9 @@
     "pchomepay",
     "ezpay",
     "paynow",
+    "shopline",
+    "linepay",
+    "tappay",
     "金流",
     "claude",
     "claude-code",

@@ -1491,4 +1491,52 @@ PayNow 有**兩代 API 並行**：
 
 ---
 
+## Shopline Payments 範例
+
+Shopline Payments (SLP) 採 **HTTP Header `merchantId` + `apiKey`** 認證，所有金額以**分**為單位（NT$1000 = 100000）。提供 Redirect 與 Embedded SDK 雙模式，Webhook 用 HMAC-SHA256 驗章。
+
+### 完整 Python 範例
+請見 [`examples/shopline-payment-example.py`](examples/shopline-payment-example.py) — 涵蓋 sessions/create / sessionQuery / refund / Webhook 驗章。
+
+### 三大要點
+
+1. **金額是分（cents）**：NT$1,050 要傳 `value: 105000`，弄錯會差 100 倍。
+2. **僅支援 TWD**：`currency` 固定為 `TWD`；其他幣別不支援。
+3. **Webhook 驗章**：`x-slp-signature: sha256=<hex>` header，HMAC-SHA256 用 `webhookSecret` 對 raw body 簽。**用 raw bytes，不要 parse JSON 後再 stringify**（會差換行/空白）。
+
+---
+
+## LINE Pay v4 範例
+
+LINE Pay 採 **兩段式流程**：`Request → Confirm`。每次請求需產生 Nonce + HMAC-SHA256 簽章。
+
+### 完整 Python 範例
+請見 [`examples/linepay-payment-example.py`](examples/linepay-payment-example.py) — 涵蓋 Request / Confirm / Capture / Void / Refund / Preapproved Pay (自動扣款)。
+
+### 五大要點
+
+1. **HMAC string-to-sign 公式（v3 慣例）**：`ChannelSecret + ApiPath + Body + Nonce` (POST) / `ChannelSecret + ApiPath + QueryString + Nonce` (GET)。⚠️ v4 公式與 v3 是否完全一致需以官方 PDF 驗證。
+2. **transactionId 是 19 位數字**：在 JS 直接用 number 會被 IEEE-754 截斷，**永遠用字串處理**。
+3. **Confirm 的 amount/currency 必須與 Request 完全一致**：差一塊錢就 1183 錯誤。
+4. **Capture 兩階段授權**：建立時 `options.payment.capture=false` 只授權；之後手動呼叫 `/capture` 請款，可分批請款多次。
+5. **Preapproved Pay 自動扣款**：建立時帶 `payType=PREAPPROVED` 取得 `regKey`，之後用 `/preapprovedPay/{regKey}/payment` 直接扣款，免使用者再次確認。
+
+---
+
+## TapPay 範例
+
+TapPay 是 **PCI 隔離設計**：前端 SDK 取 Prime（60 秒 TTL）→ 後端用 Prime 呼叫 pay-by-prime。商家從不接觸卡號。
+
+### 完整 Python 範例
+請見 [`examples/tappay-payment-example.py`](examples/tappay-payment-example.py) — 涵蓋 pay-by-prime / pay-by-card-token (重複扣款) / refund / query / remove-card。
+
+### 四大要點
+
+1. **三段式金鑰**：`Partner Key` (後端密鑰) / `App Key` (前端 SDK 公鑰) / `Merchant ID`。**Partner Key 絕對不可放前端**。
+2. **Prime 是 60 秒一次性 token**：前端取 Prime 後要立刻送後端付款；過期或重用會 status=3。
+3. **重複扣款**：`pay-by-prime` 帶 `remember=true` 後，回應內 `card_secret` 含 `card_key + card_token`，存起來下次直接 `pay-by-card-token`，免再過 SDK。適合訂閱與快速結帳。
+4. **status=0 才是成功**：別只看 HTTP 200；TapPay HTTP 200 但 status≠0 是業務失敗。
+
+---
+
 **更多範例持續更新中...**
