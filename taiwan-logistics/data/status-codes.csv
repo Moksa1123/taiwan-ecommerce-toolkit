@@ -33,3 +33,57 @@ payuni,206,退貨中,Return in Progress,returning,退貨流程進行中,
 payuni,207,退貨完成,Return Completed,returned,退貨已完成,
 payuni,400,訂單錯誤,Order Error,error,訂單資料錯誤,檢查訂單參數
 payuni,500,系統錯誤,System Error,error,系統發生錯誤,聯繫客服
+smilepay,1,Status 1,Success,success,SmilePay 取號或操作成功,
+smilepay,21,待出貨,Awaiting Shipment,pending,商家尚未交件給物流商,商家備貨後交件
+smilepay,22,物流驗收中,Logistics Inspection,in_transit,物流中心收件並驗收,自動轉入配送
+smilepay,31,配送中,In Transit,in_transit,商品配送中（C2C 可能於此階段門市關轉）,
+smilepay,32,待取貨,At Store,at_store,包裹已配達門市，等待消費者取貨,通知消費者
+smilepay,33,異常訂單,Anomaly,error,配送過程發生異常,聯繫物流商
+smilepay,11,已取貨,Picked Up,completed,消費者已至超商取貨,
+smilepay,41,已取消,Cancelled,cancelled,訂單已被商家取消,
+smilepay,43,賠償訂單,Compensation,error,物流中心 / 黑貓宅配確認賠償訂單產生,跟進賠償流程
+smilepay,44,包裹遺失,Lost,error,包裹經 18 天協尋後無法找到,走遺失賠償流程
+smilepay,51,一般退貨,Standard Return,returning,退貨便 / 黑貓退貨,
+smilepay,52,買家未取,Customer Not Picked,returning,買家超過取貨期限未取件,通知商家
+smilepay,53,廠退,Vendor Return,returning,包裹退回物流中心 / 黑貓集貨所,
+smilepay,55,賣家未取,Vendor Not Picked,returning,商店未於期限內至退貨門市領取,
+smilepay,81,門市關轉,Store Closed,error,門市暫歇，需重選其他可配達門市,通知消費者重選
+pchomepay,SSND,出貨成功,Sender Shipped,in_transit,商家已交件並出貨,
+pchomepay,SATB,送達門市,Arrived,at_store,包裹已配達取貨門市,通知取貨
+pchomepay,RATC,已取貨,Received,completed,消費者已取貨完成,
+pchomepay,LINT,配送中,In Transit,in_transit,物流配送中,
+pchomepay,LGNO,出貨單未產生,No Shipment,pending,尚未取得出貨單編號,呼叫 /v1/logistic/batch
+pchomepay,WD,退倉,Returned to Warehouse,returning,包裹未取貨已退倉,
+pchomepay,90001,取號失敗,Get Shipment Failed,error,呼叫 /v1/logistic/batch 失敗,檢查 store_id 與必填欄位
+pchomepay,90002,門市不存在,Store Not Found,error,提供的 store_id 在系統中不存在,使用 PChomePay 提供之門市清單
+pchomepay,90004,訂單尚無物流,No Logistic,error,該訂單尚未呼叫過取號 API,呼叫 /v1/logistic/batch 取號
+paynow,1,Success,Success,success,PayNow 物流操作成功,
+paynow,M01,商家代號錯誤,Invalid merID,error,merID 在系統中不存在,確認商家代號
+paynow,A01,加密驗證失敗,Auth Failed,error,3DES 加密或 PassCode 驗證失敗,檢查 24-byte Key + 8-byte IV
+paynow,B01,訂單金額錯誤,Invalid Amount,error,Amount 超出範圍或格式錯誤,確認金額為正整數
+paynow,C01,訂單編號重複,Duplicate Order,error,paymentNo 已存在,使用唯一訂單編號
+paynow,LS01,7-11 大宗已出貨,7-11 Shipped,in_transit,7-11 大宗 B2C 已出貨,
+paynow,LS02,7-11 已配達門市,7-11 At Store,at_store,7-11 包裹已配達取貨門市,
+paynow,LS03,7-11 已取貨,7-11 Picked,completed,7-11 消費者取貨完成,
+paynow,LS11,全家已出貨,FAMI Shipped,in_transit,全家大宗 B2C 已出貨,
+paynow,LS12,全家已配達門市,FAMI At Store,at_store,
+paynow,LS13,全家已取貨,FAMI Picked,completed,
+paynow,LS21,黑貓已出貨,TCAT Shipped,in_transit,黑貓宅配已出貨,
+paynow,LS22,黑貓配達中,TCAT In Transit,in_transit,
+paynow,LS23,黑貓配達完成,TCAT Delivered,delivered,
+paynow,LE01,異常訂單,Anomaly,error,配送異常,聯繫客服
+paynow,LR01,退貨完成,Return Done,returned,
+hct,集貨,Picked Up,Picked Up,picked_up,HCT 已收件,
+hct,卸集貨,Unloaded,Unloaded,in_transit,包裹進入轉運站,
+hct,發送,Dispatched,Dispatched,in_transit,包裹從站所發送,
+hct,到著,Arrived,Arrived,in_transit,包裹到達目的地站所,
+hct,配達,Delivered,Delivered,delivered,司機已送達收件人,
+hct,持回,Hold,On Hold,error,司機持回（收件人不在或拒收）,聯繫收件人
+hct,派遣,Dispatching,Dispatching,in_transit,司機派遣中,
+hct,客戶不在,Customer Absent,Customer Absent,error,司機到達但客戶不在,
+hct,已取,Picked,Picked,completed,自取站所已取件,
+hct,誤派,Misdelivered,Misrouted,error,派送至錯誤站所,系統重新分配
+hct,址誤,Address Error,Address Error,error,地址錯誤無法配送,聯繫商家更正地址
+hct,拒收退回,Refused,Refused Return,returned,收件人拒收，包裹退回,
+hct,商品保留不退,Hold No Return,Held No Return,on_hold,商品保留不退回,聯繫商家
+hct,公司行號休息,Office Closed,Office Closed,error,公司行號休息日無法配送,延後重新配送

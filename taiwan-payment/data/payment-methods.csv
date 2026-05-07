@@ -1,6 +1,6 @@
 method_code,method_zh,method_en,ecpay_code,newebpay_code,payuni_code,smilepay_code,pchomepay_code,ezpay_code,paynow_code,min_amount,max_amount,settlement_days,fee_type,notes
 credit,信用卡,Credit Card,Credit,CREDIT,credit,Pay_zg=1,CC,CREDIT,CreditCard,1,,2-3,percentage,一次付清
-credit_installment,信用卡分期,Credit Installment,Credit+CreditInstallment,INST,installment,Pay_zg=1+Stage,CC_INSTALLMENT,INST,CreditCardInstallment,1000,,依期數,percentage,3/6/12/18/24/30期
+credit_installment,信用卡分期,Credit Installment,Credit+CreditInstallment,InstFlag,installment,Pay_zg=1+Stage,CC_INSTALLMENT,InstFlag,CreditCardInstallment,1000,,依期數,percentage,3/6/12/18/24/30期；NewebPay/ezPay 輸入用 InstFlag(值=1或3,6,12)，回傳通知 PaymentType=INST
 credit_periodic,信用卡定期,Credit Periodic,Credit+Period,,,,,,,,100,,2-3,percentage,週期扣款；PayNow 現代版用 Customer/Card Token
 credit_red,信用卡紅利,Credit Red,CreditRed,CreditRed,,,,,,,1,,2-3,percentage,紅利折抵
 unionpay,銀聯卡,UnionPay,UnionPay,UNIONPAY,unionpay,Pay_zg=11,,UNIONPAY,,1,,2-3,percentage,需另申請；SmilePay 用 Pay_zg=11
@@ -25,15 +25,15 @@ icash,愛金卡,iCash,,,ICASH,,,,iCashPay,1,,2-3,percentage,PAYUNi 直送 ICASH�
 ezpalipay,簡單付支付寶,Alipay,,EZPALIPAY,,,,EZPALIPAY,,1,,2-3,percentage,跨境支付
 ezpwechat,簡單付微信,WeChat Pay,,EZPWECHAT,,,,EZPWECHAT,,1,,2-3,percentage,跨境支付
 pcpay_wallet,拍錢包,PChome Wallet,,,,,PI,,,,1,,2-3,percentage,PChomePay 獨家；含 5% P 幣回饋
-cvs_cod,超商取貨付款,CVS COD,,,,,COD,,,,1,20000,1-3,fixed,PChomePay 獨家；含 7-Eleven 取貨
+cvs_cod,超商取貨付款,CVS COD,,CVSCOM,,,COD,CVSCOM,,,1,20000,1-3,fixed,NewebPay/ezPay 用 CVSCOM (值: 1=取貨不付款 2=取貨付款 3=兩者)；PChomePay 用 COD 對應 7-Eleven 取貨
 weixinpay,微信支付,WeChat Pay (ECPay),WeiXin,EZPWECHAT,,,,EZPWECHAT,,1,,2-3,percentage,ECPay 直接 ChoosePayment=WeiXin；NewebPay/ezPay 走 EZPWECHAT
 digital_payment,電子支付/電子錢包 umbrella,Digital Payment Umbrella,DigitalPayment,,,,,,,,1,,2-3,percentage,ECPay 專屬 umbrella；客戶於選擇頁挑街口/全盈+PAY/全支付/一卡通/悠遊付/icashpay
-jkopay,街口支付,JKO Pay,DigitalPayment,JKOPAY,JKoPay,,,JKOPAY,,1,,2-3,percentage,ECPay 走 DigitalPayment umbrella；NewebPay/ezPay 直送 JKOPAY；PAYUNi 直送 JKoPay (camelCase)
-pxpay_plus,全支付,PX Pay Plus,DigitalPayment,PXPAY,,,,PXPAY,,1,,2-3,percentage,全聯系；ECPay umbrella；NewebPay 直送 PXPAY
-plus_pay,全盈+PAY,Plus Pay,DigitalPayment,PLUSPAY,,,,PLUSPAY,,1,,2-3,percentage,玉山金控；ECPay umbrella；NewebPay 直送 PLUSPAY
-ipass_money,一卡通 MONEY,iPASS Money,DigitalPayment,IPASSPAY,,,,IPASSPAY,,1,,2-3,percentage,一卡通；ECPay umbrella
-easywallet,悠遊付,Easy Wallet,DigitalPayment,EASYCARD,,,,EASYCARD,,1,,2-3,percentage,悠遊卡公司；ECPay umbrella
-icash_pay,icash Pay,iCash Pay,DigitalPayment,ICASHPAY,,,,ICASHPAY,iCashPay,1,,2-3,percentage,愛金卡；ECPay umbrella；PAYUNi 專屬代碼 iCash
+jkopay,街口支付,JKO Pay,DigitalPayment,JKOPAY?,JKoPay,,,JKOPAY?,,1,,2-3,percentage,同一街口服務跨家命名不同；ECPay 走 DigitalPayment umbrella；PAYUNi JKoPay 已驗證；NewebPay/ezPay JKOPAY 為推測碼（不在 MPG channel-key 表中，需以官方 PDF 確認）
+pxpay_plus,全支付,PX Pay Plus,DigitalPayment,PXPAY?,,,,PXPAY?,,1,,2-3,percentage,全聯系；ECPay umbrella 確認；NewebPay/ezPay PXPAY 為推測碼（不在 MPG channel-key 表中，需以官方 PDF 確認）
+plus_pay,全盈+PAY,Plus Pay,DigitalPayment,PLUSPAY?,,,,PLUSPAY?,,1,,2-3,percentage,玉山金控；ECPay umbrella 確認；NewebPay/ezPay PLUSPAY 為推測碼（需以官方 PDF 確認）
+ipass_money,一卡通 MONEY,iPASS Money,DigitalPayment,IPASSPAY?,,,,IPASSPAY?,,1,,2-3,percentage,一卡通；ECPay umbrella 確認；NewebPay/ezPay IPASSPAY 為推測碼（需以官方 PDF 確認）
+easywallet,悠遊付,Easy Wallet,DigitalPayment,EASYCARD?,,,,EASYCARD?,,1,,2-3,percentage,悠遊卡公司；ECPay umbrella 確認；NewebPay/ezPay EASYCARD 為推測碼（悠遊付為 wallet 產品 vs 悠遊卡實體；可能實際代碼為 EASYWALLET，需以官方 PDF 確認）
+icash_pay,icash Pay,iCash Pay,DigitalPayment,ICASHPAY,,,,ICASHPAY,,1,,2-3,percentage,愛金卡；ECPay umbrella；PAYUNi 直送 ICASH (見 icash 行)；PayNow 現代版 PaymentIntent enum 不含 iCashPay；NewebPay/ezPay ICASHPAY 為推測碼（需以官方 PDF 確認）
 ecpay_pay,綠界Pay,ECPay Pay,EcpayPay,,,,,,,1,,2-3,percentage,ECPay 自家錢包
 openpoint,OPENPOINT,OPEN POINT,DigitalPayment,,,,,,,1,,2-3,percentage,7-11/統一集團；ECPay umbrella
 atome,Atome 安多目,Atome,BNPL,,,,,,,1,30000,依方案,percentage,新加坡 BNPL 服務；ECPay 走 BNPL umbrella

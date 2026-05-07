@@ -1,15 +1,18 @@
-field_name,field_zh,ecpay_name,newebpay_name,payuni_name,type,required,max_length,format,notes
-merchant_id,商店代號,MerchantID,MerchantID,MerID,string,true,10,,
-order_id,訂單編號,MerchantTradeNo,MerchantOrderNo,MerTradeNo,string,true,20,英數字,需唯一
-order_date,訂單日期,MerchantTradeDate,TimeStamp,TradeTime,string,true,20,yyyy/MM/dd HH:mm:ss,
-amount,交易金額,TotalAmount,Amt,TradeAmt,integer,true,,,無小數
-description,交易描述,TradeDesc,ItemDesc,ProdDesc,string,true,200,,需 URL Encode
-item_name,商品名稱,ItemName,ItemDesc,ProdDesc,string,true,400,,多項用#分隔
-return_url,背景通知,ReturnURL,NotifyURL,NotifyURL,string,true,200,URL,
-client_back_url,前台返回,ClientBackURL,ReturnURL,ReturnURL,string,false,200,URL,
-payment_type,付款方式,ChoosePayment,PaymentType,PayType,string,true,20,,
-check_value,檢查碼,CheckMacValue,CheckValue,CheckSum,string,true,,,SHA256
-encrypt_type,加密類型,EncryptType,Version,Version,string,true,,,固定值
-trade_no,交易編號,TradeNo,TradeNo,PayUniTradeNo,string,false,20,,平台回傳
-rtn_code,回傳代碼,RtnCode,Status,Status,string,false,10,,
-rtn_msg,回傳訊息,RtnMsg,Message,Message,string,false,200,,
+field_name,field_zh,ecpay_name,newebpay_name,payuni_name,smilepay_name,pchomepay_name,ezpay_name,paynow_name,shopline_name,linepay_name,tappay_name,type,required,notes
+merchant_id,商店代號,MerchantID,MerchantID,MerID,Dcvc,APP_ID (Basic Auth),MerchantID_,merID,merchantId,channelId,merchant_id,string,true,各家欄位名稱不同；ezPay 後綴底線；PChomePay 用 Basic Auth；TapPay 在 body
+order_id,訂單編號,MerchantTradeNo,MerchantOrderNo,MerTradeNo,Data_id,order_id,MerchantOrderNo,paymentNo,referenceNumber,orderId,order_number,string,true,需唯一；SmilePay/Shopline/LINEPay 限 30+ 字元
+order_date,訂單日期,MerchantTradeDate,TimeStamp,TradeTime,(系統決定),(系統決定),TimeStamp,(系統決定),(系統決定),(系統決定),(系統決定),string,true,ECPay 用 yyyy/MM/dd HH:mm:ss；其他多用 unix timestamp
+amount,交易金額,TotalAmount,Amt,TradeAmt,Amount,amount,Amt,amount,amount.value (cents!),amount,amount,integer,true,Shopline 用分為單位 (NT$1000=100000)；其他用元
+description,交易描述,TradeDesc,ItemDesc,ProdDesc,od_sob,(無),ItemDesc,description,description,(no field),details,string,true,需 URL Encode (ECPay)
+item_name,商品名稱,ItemName,ItemDesc,ProdDesc,od_sob,(無),ItemName,(via order),items[],(no field),details,string,true,多項分隔符: ECPay # SmilePay 與 ezPay |
+return_url,背景通知,ReturnURL,NotifyURL,NotifyURL,Roturl,return_url,NotifyURL,webhookUrl,webhookUrl,(no field),notify_url,string,true,HTTPS only；PayNow 現代版用 webhookUrl
+client_back_url,前台返回,ClientBackURL,ReturnURL,ReturnURL,Roturl_status,(無),ReturnURL,resultUrl,returnUrl,confirmUrl,frontend_redirect_url (in result_url),string,false,客戶完成後導回
+payment_type,付款方式,ChoosePayment,PaymentType / channelid,PayType,Pay_zg,pay_type,PaymentType,paymentMethodType,paymentMethods[],(only LINE Pay),(only credit),string,true,各家 enum 不同；ECPay 看 ChoosePayment 表
+check_value,檢查碼/簽章,CheckMacValue,CheckValue,CheckSum,Mid_smilepay (反推加權檢核碼),(no field — 用 token),CheckValue (sha256),X-LINE-Authorization (HMAC),x-slp-signature (HMAC webhook),X-LINE-Authorization (HMAC),(no field; uses Partner Key),string,true,SHA256；TapPay 用 Partner Key in header
+encrypt_type,加密 / Version,EncryptType,Version,Version,Verify_key,(token-based),Version (固定 2.0),(no field),Version,(no field),(no field),string,true,ECPay 固定 1；NewebPay 2.0 / 2.3；ezPay 2.0
+trade_no,平台交易編號,TradeNo,TradeNo,PayUniTradeNo,PaymentNo,(返回 order_id),TradeNo,id (PaymentIntent),id,transactionId,rec_trade_id,string,false,平台回傳的內部編號；列印時需要
+rtn_code,回傳代碼,RtnCode,Status,Status,Status,code,Status,status / type,status,returnCode,status,string,false,各家不同 — 0/1/SUCCESS/Success；TapPay 用 0=success
+rtn_msg,回傳訊息,RtnMsg,Message,Message,Desc,message,Message,message,error / message,returnMessage,msg,string,false,中文訊息；錯誤時帶
+buyer_email,買方信箱,(no field),Email,Email,Email,(via cardholder),Email,(via customer obj),customer.email,(no field),cardholder.email,string,false,
+card_token,記憶卡 token,(via 定期定額),TokenValue,token,(無),(無),TokenValue,(via Customer.cards[]),(via card object),(no field),card_token,string,false,需另申請；用於重複扣款
+card_key,記憶卡 key,(無),(無),(無),(無),(無),(無),(via Customer),(via card object),(no field),card_key,string,false,TapPay 獨有；搭配 card_token 用
