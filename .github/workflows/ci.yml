@@ -1,0 +1,86 @@
+name: CI
+
+# publish.yml 只在推 tag 時觸發，PR 階段沒有任何檢查。
+# 這支負責在合併前就攔下問題，而不是等到發布當下才發現。
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+# 同一個 PR 連續推 commit 時，取消前一次仍在跑的檢查
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      # assets 會隨 npm publish 一起發布，落後的話使用者會裝到過期內容
+      # 且不會有任何錯誤訊息。在 PR 階段就擋，避免帶著問題合進 main。
+      - name: 驗證 CLI assets 已同步
+        run: node scripts/sync-assets.mjs --check
+
+      - name: 驗證資料檔完整性
+        run: python scripts/validate-data.py
+
+      - name: 推薦系統回歸測試
+        run: |
+          set -euo pipefail
+          python taiwan-invoice/scripts/test_recommend.py
+          python taiwan-payment/scripts/test_recommend.py
+
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - key: invoice
+            dir: invoice-cli
+          - key: payment
+            dir: payment-cli
+          - key: logistics
+            dir: logistics-cli
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: ${{ matrix.dir }}/package-lock.json
+
+      - name: 安裝相依套件
+        working-directory: ${{ matrix.dir }}
+        run: npm ci
+
+      - name: 建置
+        working-directory: ${{ matrix.dir }}
+        run: npm run build
+
+      - name: 確認建置未改動工作區
+        run: |
+          if ! git diff --quiet; then
+            echo "::error::建置後工作區有變動，代表 commit 的 assets 落後於 source of truth"
+            git --no-pager diff --stat
+            exit 1
+          fi
+
+      - name: 檢視發布內容
+        working-directory: ${{ matrix.dir }}
+        run: npm pack --dry-run
