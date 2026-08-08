@@ -4,7 +4,7 @@
   "installType": "full",
   "folderStructure": {
     "root": ".github",
-    "skillPath": "prompts/taiwan-logistics",
+    "skillPath": "skills/taiwan-logistics",
     "filename": "SKILL.md"
   },
   "scriptPath": "prompts/taiwan-logistics/scripts",

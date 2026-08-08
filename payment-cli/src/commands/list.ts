@@ -17,7 +17,7 @@ const PLATFORMS: Platform[] = [
   { name: 'kiro', folder: '.kiro', description: 'Kiro (AWS)' },
   { name: 'codex', folder: '.codex', description: 'Codex CLI (OpenAI)' },
   { name: 'qoder', folder: '.qoder', description: 'Qodo (Qoder)' },
-  { name: 'roocode', folder: '.roo', description: 'Roo Code' },
+  { name: 'cline', folder: '.cline', description: 'Cline' },
   { name: 'gemini', folder: '.gemini', description: 'Gemini CLI' },
   { name: 'trae', folder: '.trae', description: 'Trae (ByteDance)' },
   { name: 'opencode', folder: '.opencode', description: 'OpenCode' },

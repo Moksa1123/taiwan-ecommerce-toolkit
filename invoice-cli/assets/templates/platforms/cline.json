@@ -1,11 +1,12 @@
 {
-  "platform": "roocode",
-  "displayName": "Roo Code",
+  "platform": "cline",
+  "displayName": "Cline",
   "installType": "full",
   "folderStructure": {
-    "root": ".roo",
-    "skillPath": "commands/taiwan-invoice",
-    "filename": "SKILL.md"
+    "root": ".cline",
+    "skillPath": "skills/taiwan-invoice",
+    "filename": "SKILL.md",
+    "globalRoot": "~/.cline"
   },
   "scriptPath": "commands/taiwan-invoice/scripts",
   "frontmatter": {

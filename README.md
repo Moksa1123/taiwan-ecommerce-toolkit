@@ -140,7 +140,7 @@ taiwan-invoice init --ai antigravity   # Antigravity
 taiwan-invoice init --ai kiro          # Kiro (AWS)
 taiwan-invoice init --ai codex         # Codex CLI (OpenAI)
 taiwan-invoice init --ai qoder         # Qoder
-taiwan-invoice init --ai roocode       # Roo Code
+taiwan-invoice init --ai cline         # Cline
 taiwan-invoice init --ai gemini        # Gemini CLI
 taiwan-invoice init --ai trae          # Trae (ByteDance)
 taiwan-invoice init --ai opencode      # OpenCode
@@ -173,7 +173,7 @@ taiwan-payment init --ai antigravity   # Antigravity
 taiwan-payment init --ai kiro          # Kiro (AWS)
 taiwan-payment init --ai codex         # Codex CLI (OpenAI)
 taiwan-payment init --ai qoder         # Qoder
-taiwan-payment init --ai roocode       # Roo Code
+taiwan-payment init --ai cline         # Cline
 taiwan-payment init --ai gemini        # Gemini CLI
 taiwan-payment init --ai trae          # Trae (ByteDance)
 taiwan-payment init --ai opencode      # OpenCode
@@ -206,7 +206,7 @@ taiwan-logistics init --ai antigravity   # Antigravity
 taiwan-logistics init --ai kiro          # Kiro (AWS)
 taiwan-logistics init --ai codex         # Codex CLI (OpenAI)
 taiwan-logistics init --ai qoder         # Qoder
-taiwan-logistics init --ai roocode       # Roo Code
+taiwan-logistics init --ai cline         # Cline
 taiwan-logistics init --ai gemini        # Gemini CLI
 taiwan-logistics init --ai trae          # Trae (ByteDance)
 taiwan-logistics init --ai opencode      # OpenCode
