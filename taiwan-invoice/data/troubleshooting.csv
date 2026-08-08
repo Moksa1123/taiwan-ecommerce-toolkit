@@ -23,3 +23,9 @@ RelateNumber 重複,10000006錯誤,同一訂單編號重複開立,使用timestam
 B2C 開立逾時,-10033錯誤,開立時間超過48小時,確保B2C發票在48小時內開立 | 調整InvoiceDate,smilepay,開立,MEDIUM
 MD5 簽章錯誤,code=2 | 簽章驗證失敗,簽章計算順序錯誤 | 欄位缺失,按官方文件排序欄位 | 檢查HashKey拼接 | 移除空值欄位,amego,認證,HIGH
 BuyerName 不合法,code=1004,填入0/00/000/0000等無效值,BuyerName不可為純數字0 | 使用真實姓名或公司名,amego,開立,MEDIUM
+紅陽發票 Token 驗證失敗,回傳 ERROR 且訊息指向 Token 或時間,TimeStamp 定義為台灣時間(UTC+8)自1970/1/1的總秒數 比標準 Unix epoch 多 28800 秒 用 time.time() 會差 8 小時,以 UTC 時間加 8 小時再換算 epoch;超過 300 秒即失敗需校時,SunPay,認證,HIGH
+紅陽發票連不上或 404,API 呼叫失敗,正式環境 API 網域是 einv.sunpay.com.tw 不是 inv.sunpay.com.tw(後者僅為管理後台),測試用 testinv.sunpay.com.tw 正式用 einv.sunpay.com.tw,SunPay,設定,HIGH
+紅陽發票拿不到隨機碼與 QRCode,result 缺少 randomNumber barcode leftQrCode rightQrCode,這四個欄位僅在 isprint=1 時提供,需自行產生發票證明聯時 isprint 必須帶 1,SunPay,開立,MEDIUM
+紅陽發票重複開立,同一訂單開出多張發票,內建冪等的前提是 PostData 參數完全一致 重試時只要有任一欄位不同就會視為新發票,重試時送出位元組層級相同的 payload 勿重算金額或改備註,SunPay,開立,HIGH
+歐付寶 B2B 端點呼叫失敗,Confirm 類端點回錯誤或流程卡住,B2B 分交換與存證兩種模式 Confirm 兩階段僅存在於交換模式 且須先設定交易對象,先呼叫 MaintainMerchantCustomerData 設定 type 與 ExchangeMode 再串其他端點,OPay,開立,HIGH
+歐付寶延遲開立被誤判失敗,RtnCode 非 1 被當成錯誤,延遲開立回 4000003 觸發開立回 4000004 皆為成功,勿只判斷 RtnCode==1 需納入 4000003 與 4000004,OPay,開立,MEDIUM

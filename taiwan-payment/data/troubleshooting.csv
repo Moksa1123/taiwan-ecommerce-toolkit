@@ -20,3 +20,13 @@ JSON API 解析失敗,API 回應無法解析 | JSON 結構不符,回應格式錯
 Nonce 長度錯誤,加密失敗 | 回傳 AES_ENCRYPT_ERROR,Nonce 不是 12 bytes | UTF-8 編碼問題,確認 HashIV 為 12 字節 UTF-8 編碼 | 使用 len(nonce.encode('utf-8')) 檢查長度,payuni,high
 GCM Tag 未附加,解密失敗 | Tag verification failed,加密後未附加 16 bytes tag | 資料截斷,確認加密後總長度 = ciphertext + 16 | 使用 cipher.encrypt_and_digest() 正確取得 tag,payuni,high
 RESTful 端點錯誤,404 Not Found | 405 Method Not Allowed,端點路徑錯誤 | HTTP 方法錯誤,確認使用 POST 方法 | 檢查端點路徑 /api/upp | 測試環境使用 sandbox-api.payuni.com.tw,payuni,medium
+紅陽 send_time 一直逾時,交易被拒或回無效交易,send_time 格式為 fffssmmHHyyyyMMdd 毫秒在前日期在後 易誤寫成 yyyyMMddHHmmssfff | 超過 120 秒即失效,依手冊格式組字串並校時主機 NTP,sunpay,high
+紅陽 RSA 解密失敗,rsamsg 解出亂碼或長度不符,加密分段為 117 byte 但解密分段是 128 byte 兩者不同 易誤用同一數值,加密時每 117 byte 一段先 urlencode 再加密;解密時先 base64decode 後每 128 byte 一段 最後 urldecode,sunpay,high
+紅陽 check_value 驗證失敗,簽章不符被拒,head 與 body 未做 ASCII 升序排序 | null 值參數誤入簽名 | SHA2 密鑰位置錯誤,排序後 urlencode 再把 SHA2 密鑰接在字串尾端 最後 SHA256;null 值不參與簽名,sunpay,high
+紅陽 pay_result 12 判斷錯誤,訂單狀態誤判為已建立或誤判為不存在,交易 CallBack 的 12 是已建立 但查詢 API 的 12 是查無該筆訂單 同值不同義,兩支 API 的 pay_result 判斷邏輯必須分開寫 不可共用 mapping,sunpay,high
+紅陽超商取貨參數拼字,送出 receiver_name 被視為未帶必填欄位,請求端官方參數為 recevier_name 與 recevier_phone(i 與 e 顛倒) 但回應端是正確的 receiver_name,送出時用 recevier_* 接收時解析 receiver_*,sunpay,medium
+紅陽 CallBack 收不到,交易完成但系統未更新狀態,回傳網址含連接埠會被資安風控阻擋 | CallBack 僅在 30 分鐘內每 5 分鐘補發 超過即不再補發,移除網址中的 port;另實作查詢 API 定時對帳補回漏收的交易,sunpay,high
+紅陽超商代碼商品金額不符,交易被拒不允許送出,product 陣列的單價乘數量總和與 mn 不一致,調整商品明細使總和等於 mn;商品過多或含負數金額時整合為單一商品名稱送出,sunpay,medium
+紅陽物流通知解析失敗,貨態通知內容為亂碼或無法解析 JSON,物流狀態通知是 HTTP FORM POST key-value 非 JSON 且全部欄位經過 URL Encode,先 URL Decode(UTF-8) 再處理;注意訂單編號欄位為大寫 Td 與請求端的 td 不同,sunpay,medium
+街口授權扣款夜間失敗,回 306 Authpay payment transaction time invalid,授權扣款僅限 08:00-20:00 UTC+8 發動,將扣款排程改到白天時段;失敗需保留重試佇列待隔日,jkopay,high
+街口授權扣款併發失敗,回 307 Payment with the same auth_no is allowed one at a time,同一 auth_no 同時僅允許一筆付款,以授權編號為鍵序列化扣款請求 勿並行送出,jkopay,high
