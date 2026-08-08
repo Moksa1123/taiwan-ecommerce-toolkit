@@ -87,3 +87,14 @@ hct,址誤,Address Error,Address Error,error,地址錯誤無法配送,聯繫商�
 hct,拒收退回,Refused,Refused Return,returned,收件人拒收，包裹退回,
 hct,商品保留不退,Hold No Return,Held No Return,on_hold,商品保留不退回,聯繫商家
 hct,公司行號休息,Office Closed,Office Closed,error,公司行號休息日無法配送,延後重新配送
+ezship,A01,超商取貨,CVS Pickup,order_type,建單時的訂單狀態分組 超商取貨類 須帶 st_code,
+ezship,A02,超商取貨,CVS Pickup,order_type,建單時的訂單狀態分組 超商取貨類 須帶 st_code,
+ezship,A03,超商取貨,CVS Pickup,order_type,建單時的訂單狀態分組 超商取貨類 須帶 st_code,
+ezship,A04,超商取貨,CVS Pickup,order_type,建單時的訂單狀態分組 超商取貨類 須帶 st_code,
+ezship,A05,宅配,Home Delivery,order_type,建單時的訂單狀態分組 宅配類 須帶 rv_addr 與 rv_zip,
+ezship,A06,宅配,Home Delivery,order_type,建單時的訂單狀態分組 宅配類 須帶 rv_addr 與 rv_zip,
+ezship,A11,店港澳,HK/Macau Store,order_type,建單時的訂單狀態分組 店港澳類 須帶 st_code,
+ezship,A12,店港澳,HK/Macau Store,order_type,建單時的訂單狀態分組 店港澳類 須帶 st_code,
+ezship,S05,包裹退貨,Package Returned,returned,貨況查詢回傳 此狀態無法呈現最終貨況,登入 ezShip 系統查詢最終貨況
+ezship,S06,包裹配送異常,Delivery Exception,error,貨況查詢回傳 此狀態無法呈現最終貨況,登入 ezShip 系統查詢最終貨況
+ezship,00000000,建單失敗,Order Creation Failed,error,傳送訂單回傳的 sn_id 為八個零即代表建單失敗 無獨立錯誤碼欄位,檢查必填欄位與帳號是否已開通網站串接
