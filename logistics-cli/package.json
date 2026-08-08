@@ -1,6 +1,6 @@
 {
   "name": "taiwan-logistics-skill",
-  "version": "1.3.0",
+  "version": "1.3.1",
   "description": "AI-powered Taiwan Logistics toolkit. Supports 7 providers: 6 aggregators (ECPay, NewebPay, PAYUNi, SmilePay, PChomePay, PayNow) plus HCT 新竹物流 direct carrier API.",
   "bin": {
     "taiwan-logistics": "./dist/index.js"
