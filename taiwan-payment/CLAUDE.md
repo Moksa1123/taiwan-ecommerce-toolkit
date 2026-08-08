@@ -19,7 +19,9 @@ python3 taiwan-payment/scripts/recommend.py "<requirements>"
 python3 taiwan-payment/scripts/test_payment.py [--platform <platform>]
 ```
 
-**Supported Platforms:** `ecpay`, `newebpay`, `payuni`, `smilepay`, `pchomepay`, `ezpay`, `paynow`
+**Supported Platforms:** `ecpay`, `newebpay`, `payuni`, `smilepay`, `pchomepay`, `ezpay`, `paynow`, `shopline`, `linepay`, `tappay`, `opay`, `jkopay`, `sunpay`, `gomypay`
+
+**電子支付錢包生態（街口/全支付/全盈+PAY/悠遊付/一卡通/icash Pay/橘子支/TWQR/零售自有 pay）:** 見 `references/twqr-ewallet-landscape.md`——多數不直接串，走聚合商或 TWQR。
 
 **Search Domains:** `provider`, `operation`, `error`, `field`, `payment_method`, `troubleshoot`, `reasoning`
 
@@ -46,7 +48,7 @@ taiwan-payment/                     # Source of Truth
 │   ├── search.py                   # Search CLI (150+ lines)
 │   └── test_payment.py             # Connection testing
 └── data/                           # Data-driven architecture (7 CSVs)
-    ├── providers.csv               # 3 providers with details
+    ├── providers.csv               # 14 providers（含 doc_access 文件公開程度分級）
     ├── operations.csv              # 8 API operations
     ├── error-codes.csv             # 20+ error codes + solutions
     ├── field-mappings.csv          # 15 field mappings

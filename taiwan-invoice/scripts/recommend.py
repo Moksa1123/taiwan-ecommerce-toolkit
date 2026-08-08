@@ -110,11 +110,8 @@ def analyze_requirements(query: str) -> Dict[str, Tuple[int, List[str]]]:
     """
     query_lower = query.lower()
 
-    scores = {
-        'ECPay': (0, []),
-        'SmilePay': (0, []),
-        'Amego': (0, []),
-    }
+    # 由 providers.csv 動態建立，避免新增加值中心後推薦規則被靜默丟棄
+    scores = {p['provider']: (0, []) for p in load_providers()}
 
     # 從 reasoning.csv 載入規則
     reasoning_rules = load_reasoning_rules()
@@ -185,7 +182,7 @@ def recommend(query: str, verbose: bool = False) -> Dict[str, Any]:
 
     # 建立結果
     recommended = sorted_providers[0][0]
-    recommended_score, recommended_reasons = sorted_providers[0]
+    recommended_score, recommended_reasons = sorted_providers[0][1]
 
     # 如果沒有匹配任何關鍵字，給預設推薦
     if recommended_score == 0:

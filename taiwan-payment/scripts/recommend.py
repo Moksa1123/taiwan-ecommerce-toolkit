@@ -82,6 +82,16 @@ ANTI_PATTERNS = {
 }
 
 
+def load_providers_csv() -> List[Dict]:
+    """從 providers.csv 載入服務商清單"""
+    csv_path = DATA_DIR / 'providers.csv'
+    if not csv_path.exists():
+        return []
+
+    with open(csv_path, 'r', encoding='utf-8') as f:
+        return list(csv.DictReader(f))
+
+
 def load_reasoning_csv() -> List[Dict]:
     """從 reasoning.csv 載入推薦規則"""
     csv_path = DATA_DIR / 'reasoning.csv'
@@ -105,8 +115,10 @@ def analyze_requirements(query: str) -> Dict[str, Tuple[int, List[str]]]:
         {provider: (score, [reasons])}
     """
     query_lower = query.lower()
-    scores = {'ecpay': 0, 'newebpay': 0, 'payuni': 0}
-    reasons = {'ecpay': [], 'newebpay': [], 'payuni': []}
+    # 由 providers.csv 動態建立，避免新增服務商後推薦規則被靜默丟棄
+    providers = [p['provider'] for p in load_providers_csv()]
+    scores = {p: 0 for p in providers}
+    reasons = {p: [] for p in providers}
 
     # 基於關鍵字規則計分
     for keyword, recommendations in RECOMMENDATION_RULES.items():
@@ -157,11 +169,8 @@ def format_recommendation_ascii(results: Dict[str, Tuple[int, List[str]]], query
             continue
 
         # Provider 名稱
-        provider_names = {
-            'ecpay': '綠界科技 ECPay',
-            'newebpay': '藍新金流 NewebPay',
-            'payuni': '統一金流 PAYUNi'
-        }
+        provider_names = {p['provider']: p['display_name']
+                          for p in load_providers_csv()}
         display_name = provider_names.get(provider, provider)
 
         # Emoji
@@ -203,11 +212,8 @@ def format_recommendation_json(results: Dict[str, Tuple[int, List[str]]], query:
         if score == 0:
             continue
 
-        provider_names = {
-            'ecpay': '綠界科技 ECPay',
-            'newebpay': '藍新金流 NewebPay',
-            'payuni': '統一金流 PAYUNi'
-        }
+        provider_names = {p['provider']: p['display_name']
+                          for p in load_providers_csv()}
 
         rec = {
             'rank': rank,
@@ -232,11 +238,8 @@ def format_recommendation_simple(results: Dict[str, Tuple[int, List[str]]], quer
         if score == 0:
             continue
 
-        provider_names = {
-            'ecpay': '綠界科技 ECPay',
-            'newebpay': '藍新金流 NewebPay',
-            'payuni': '統一金流 PAYUNi'
-        }
+        provider_names = {p['provider']: p['display_name']
+                          for p in load_providers_csv()}
 
         output.append(f'推薦 #{rank}: {provider_names.get(provider, provider)} ({score} 分)')
 

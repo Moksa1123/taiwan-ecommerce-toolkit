@@ -19,7 +19,9 @@ python3 taiwan-invoice/scripts/validate_invoice.py <json_file>
 python3 taiwan-invoice/scripts/generate_code.py <platform> <language>
 ```
 
-**Supported Platforms:** `ecpay`, `smilepay`, `amego`
+**Supported Platforms:** `ecpay`, `smilepay`, `amego`, `ezpay`, `paynow`, `opay`, `mof`（財政部大平台）
+
+**Note:** `mof` 是財政部電子發票整合服務平台（上游），只做查詢/驗證，不能開立發票。見 `taiwan-invoice/references/MOF_EINVOICE_API_REFERENCE.md`。
 
 ## Architecture
 
