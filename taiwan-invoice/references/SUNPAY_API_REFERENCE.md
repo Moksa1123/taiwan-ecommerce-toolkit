@@ -3,7 +3,7 @@
 > Source:《紅陽科技電子發票技術串接手冊》v2.3（70 頁），原始 PDF 存於 `_studies/sunpay/`
 > 開發者專區: https://www.sunpay.com.tw/developers/
 > Captured: 2026-08-08 · doc_access: **public**（PDF 免登入下載）
-> 涵蓋層級: 端點 ✅ / 認證與加密 ✅ / B2C 開立逐欄 ✅ / 回應逐欄 ✅ / B2B 與其餘端點 ⚠️ 待補
+> 涵蓋層級: 端點 ✅ / 認證與加密 ✅ / B2C・B2B 開立逐欄 ✅ / 作廢・折讓・離線 ✅ / 回應逐欄 ✅ / 查詢類端點 ⚠️ 待補
 > 金流端: [../../taiwan-payment/references/sunpay-payment-api.md](../../taiwan-payment/references/sunpay-payment-api.md)
 
 ## 0. 定位
@@ -100,9 +100,28 @@ long timeStamp = Convert.ToInt32(
 | `buyerIdentifier` | 買受人統編 | | String(20) | 純數字 |
 | `buyerName` | 買受人名稱 | ✅ | String(60) | |
 | `buyerEmailAddress` | 買受人信箱 | 條件 | String(80) | 開立時寄送查詢資訊。**`carrierType=3` 時必填**；**`taxType=9` 且明細含零稅率時必填** |
+| `carrierType` | 載具類型 | ✅ | Integer | `0` 無載具 / `1` 手機條碼 / `2` 自然人憑證 / **`3` 紅陽會員載具** |
+| `carrierId1` | 載具號碼 | 條件 | String(64) | `carrierType=0`/`3` 不需傳；`=1` 手機條碼 8 碼（首碼 `/`）；`=2` 自然人憑證 16 碼（前 2 碼 `A-Z` + 後 14 碼數字）|
+| `donateMark` | 捐贈 | ✅ | Integer | `0` 不捐贈 / `1` 捐贈 |
+| `PaperInvoiceOption` | 發票提供方式 | 條件 | Integer | **`carrierType=0`（無載具）時必填**：`0` 商店提供 / `1` **紅陽代印**。有載具或捐贈時不需傳。代印為加值服務需先申請 |
+| `buyerAddress` | 買受人地址 | 條件 | String(100) | **`PaperInvoiceOption=1` 時必填** |
+| `invoiceType` | 發票類別 | ✅ | Integer | `7` 一般稅額（配 `taxType` 1/2/3/9）/ `8` 特種稅額（配 `taxType=4`）|
+| `taxType` | 課稅別 | ✅ | Integer | `1` 應稅 / `2` 零稅率 / `3` 免稅 / `4` 應稅（特種）/ **`9` 混合應稅與免稅或零稅率** |
+| `taxRate` | 稅率 | ✅ | Decimal(10,2) | `taxType=1` 帶 `0.05`；`=2`/`3` 帶 `0`；`=4` 帶規定稅率（如 18% 帶 `0.18`）；**`=9` 不需傳** |
+| `taxAmount` | 稅額 | ✅ | Decimal(12,0) | 純數字 |
+| `salesAmount` | 應稅銷售額 | ✅ | Decimal(12,0) | 純數字（**未稅**）|
+| `zeroTaxSalesAmount` | 零稅率銷售額 | ✅ | Decimal(12,0) | 純數字 |
+| `freeTaxSalesAmount` | 免稅銷售額 | ✅ | Decimal(12,0) | 純數字 |
+| `totalAmount` | 發票總金額 | ✅ | Decimal(12,0) | 含稅。**銷售額 + 稅額須等於此值** |
+| `customsClearanceMark` | 通關方式註記 | ✅ | Integer | `taxType=2` 必填 `1` 非經海關 / `2` 經海關；**`taxType=1/3/4` 請填 `0`**；`=9` 且明細含零稅率時必填 |
+| `zeroTaxRateReason` | 零稅率原因 | 條件 | String | `taxType=2` 必填，代碼 `71`–`79`（營業稅法第七條九款）；`=1/3/4` 不需傳 |
+| `mem` | 發票備註 | | String(200) | |
 | `isprint` | 紙本列印狀態 | ✅ | Integer | `0` 未列印 / `1` 列印 |
 | `productItems` | 發票明細 | ✅ | Array | 見下 |
 | `Token` | API 交易檢查碼 | ✅ | String(200) | AES 加密字串，見 §3 |
+
+> ⚠️ **三個銷售額欄位都是必填**（`salesAmount` / `zeroTaxSalesAmount` / `freeTaxSalesAmount`），即使該類別為 0 也要帶。這與 O'Pay B2C 只帶單一含稅 `SalesAmount` 的設計完全不同。
+> ⚠️ **`carrierType=3` 是紅陽自家會員載具**，不是財政部載具體系的一員；跨加值中心遷移時這類發票的載具無法直接對應。
 
 ### `productItems[]`
 
@@ -118,7 +137,99 @@ long timeStamp = Convert.ToInt32(
 
 > `quantity` 限純整數——若你的系統有「0.5 小時」這類小數數量，需先換算單位。這點與 O'Pay（支援小數 2 位）不同。
 
-## 5. 回應格式
+## 5. B2B 開立發票
+
+`POST /api/v1/SunPay/CreateInvoiceb2b`
+
+**與 B2C 共用絕大多數欄位**，差異如下：
+
+| 參數 | B2C | B2B |
+|---|---|---|
+| `buyerIdentifier` 買受人統編 | 選填，String(20) | **✅ 必填，String(10)** |
+| `taxType` | 含 `9` 混合 | **不含 `9`**（僅 1/2/3/4）|
+| `invoiceType=7` 適用 | `taxType` 1/2/3/9 | `taxType` 1/2/3 |
+| `carrierType` / `carrierId1` / `donateMark` | 有 | **無**（B2B 不走載具與捐贈）|
+| `buyerEmailAddress` | 僅一組 | **可多組，半形逗號分隔** |
+| `IsSendMessage` 簡訊通知 | — | **✅ 必填**，`0` 不寄 / `1` 寄送（需先啟用加值服務）|
+| `buyerTelephoneNumber` | — | String(26)，**`IsSendMessage=1` 時必填** |
+
+`buyerName` 在 B2B 另有一句提醒：長度限 60 字元，**若長度不足建議改帶買方統一編號**。
+
+其餘欄位（`PaperInvoiceOption`、`buyerAddress`、`taxRate`、四個金額、`customsClearanceMark`、`zeroTaxRateReason`、`mem`、`productItems`、`Token`）與 B2C 相同。
+
+## 6. 作廢發票
+
+`POST /api/v1/SunPay/CreateInvoiceInvalid`
+
+| 參數 | 必填 | 型態 | 說明 |
+|---|---|---|---|
+| `merchantID` | ✅ | String(10) | |
+| `invoiceNumber` | ✅ | String(10) | 要作廢的發票號碼 |
+| `cancelReason` | ✅ | String(20) | **作廢原因，限 20 碼** |
+| `Token` | ✅ | String(200) | |
+
+回應 `result`：`merchantID`、`invoiceNumber`、`cancelDateTime`（`yyyy/MM/dd HH:mm:ss`）。
+
+## 7. 開立折讓
+
+`POST /api/v1/SunPay/Createallowance`
+
+| 參數 | 必填 | 型態 | 說明 |
+|---|---|---|---|
+| `merchantID` | ✅ | String(10) | |
+| `invoiceNumber` | ✅ | String(10) | 要折讓的發票號碼 |
+| `orderNo` | ✅ | String(60) | 自訂訂單編號 |
+| `productItems` | ✅ | Array | 折讓商品明細，見下 |
+| `remindEmail` | ✅ | String(200) | **買受人信箱，折讓開立時寄送查詢資訊** |
+| `Token` | ✅ | String(200) | |
+
+折讓 `productItems[]`：
+
+| 參數 | 必填 | 型態 | 說明 |
+|---|---|---|---|
+| `description` | ✅ | String(256) | 商品名稱 |
+| `quantity` | ✅ | Integer | 純整數 |
+| `unit` | | String(6) | 中文 2 字或英數 6 字 |
+| `unitPrice` | ✅ | Decimal(10,2) | 見下方 ⚠️ |
+| `amount` | ✅ | Decimal(10,2) | **小計，不含稅之進貨額**；數量 × 單價 |
+| `Tax` | ✅ | Decimal(12,0) | 商品營業稅額（⚠️ **大寫 `T`**）|
+| `taxType` | ✅ | Integer | 商品課稅別 |
+
+> ⚠️ **稅務陷阱**：折讓的 `unitPrice` 可帶未稅或含稅金額。**若帶含稅金額則 `taxAmount=0`，申報時將無法扣抵該項營業稅額。** 手冊明文要求「請自行與會計人員確認採何種金額」。這是會實際影響公司稅務的選擇，不是純技術決定。
+
+折讓的金額檢核只有一條：`折讓總金額 = 折讓商品小計 + 折讓商品稅額`。
+
+作廢折讓為 `POST /api/v1/SunPay/CreateallowanceInvalid`。
+
+## 8. 離線發票
+
+`POST /api/v1/SunPay/CreateOfflineInvoiceB2c`
+
+用於離線字軌發票**需要開立統一編號**的情境。與一般 B2C 的差別是**發票號碼由你提供**，而非平台配號：
+
+| 參數 | 必填 | 型態 | 說明 |
+|---|---|---|---|
+| `merchantID` | ✅ | String(10) | |
+| `orderNo` | ✅ | String(60) | |
+| `DeviceIdCode` | ✅ | String(10) | **發票機台代碼** |
+| `InvoiceNumber` | ✅ | String(10) | **自行帶入的發票號碼** |
+| `RandomNumber` | ✅ | String(4) | **自行帶入的隨機碼** |
+| `CreationDate` | ✅ | DateTime | `yyyy/MM/dd HH:mm:ss` |
+| `buyerIdentifier` | | String(20) | 買受人統編 |
+| `buyerName` | ✅ | String(60) | |
+| `IsSendMessage` | ✅ | Integer | ⚠️ **離線發票固定帶 `0`（不寄簡訊）** |
+
+其餘欄位比照 B2C。可用 `GetOfflineInvoiceDeviceList` 查詢已登記的機台清單。
+
+## 9. `ValidateToken` — 先驗加密實作
+
+`POST /api/v1/SunPay/ValidateToken`
+
+只需 `merchantID` 與 `Token` 兩個欄位，回應同樣是 `status` / `message` / `result`。
+
+> 💡 **這是串接紅陽發票的正確第一步**。AES 參數、Key/IV、以及那個容易寫錯的 UTC+8 `TimeStamp`（見 §3）都能在這支驗證，而且**不會產生任何發票資料**。先讓這支回 `SUCCESS` 再去串開立，可以省下大量在真實開立端點上盲試的時間。
+
+## 10. 回應格式
 
 所有端點共用：
 
@@ -150,17 +261,7 @@ long timeStamp = Convert.ToInt32(
 
 > ⚠️ **`isprint=0` 時拿不到 `randomNumber` / `barcode` / `leftQrCode` / `rightQrCode`**。如果你要自行產生發票證明聯，`isprint` 必須帶 `1`。
 
-## 6. 折讓的金額檢核
-
-手冊明載本服務只檢核一條：
-
-```
-折讓總金額 = 折讓商品小計 + 折讓商品稅額
-```
-
-> 手冊同時附上一句提醒：「發票計算方式，請串接人員務必與公司財會人員進行確認，發票資料關係到公司稅務」。平台端檢核寬鬆**不等於**稅務上正確。
-
-## 7. 與其他加值中心對照
+## 11. 與其他加值中心對照
 
 | 面向 | SunPay | O'Pay | ECPay | ezPay | Amego |
 |---|---|---|---|---|---|
@@ -172,20 +273,19 @@ long timeStamp = Convert.ToInt32(
 
 > **紅陽最特別的兩點**：一是**只加密 `Token` 一個欄位**，業務參數走明文——這讓 debug 容易很多，但也代表傳輸層安全完全靠 HTTPS；二是**內建冪等**，這在台灣加值中心裡少見。
 
-## 8. 待補
+## 12. 待補
+
+開立類端點（B2C／B2B／作廢／折讓／作廢折讓／離線）與認證皆已完整。
 
 | 項目 | 備註 |
 |---|---|
-| B2B 開立逐欄 | 端點與回應格式已確認，請求欄位待擷取 |
-| 作廢 / 折讓 / 作廢折讓 的請求欄位 | 端點已確認 |
-| 離線 B2C 開立與裝置清單 | 端點已確認 |
-| `GetInvoiceList` / `GetPrefixList` 查詢參數 | 端點已確認 |
-| 錯誤訊息清單 | 手冊未提供統一錯誤碼表，僅 `message` String(30) 動態說明 |
-| 發票課稅別 `taxType` 主欄位取值 | 已知 `9` 為混合，其餘待確認 |
+| `GetInvoiceList` / `GetPrefixList` / `GetOfflineInvoiceDeviceList` 查詢參數 | 端點已確認，查詢條件欄位待擷取 |
+| `UpdateDestroyInvoiceB2b` | 端點已確認，用途與欄位待確認 |
+| 錯誤訊息清單 | ⚠️ **手冊未提供統一錯誤碼表**，僅 `message` String(30) 動態說明。無法整理成 `error-codes.csv` |
 
 原始 PDF 與抽出文字存於 `_studies/sunpay/`，可直接再解析。
 
-## 9. 來源
+## 13. 來源
 
 - 電子發票技術串接手冊 v2.3 — `https://storage.googleapis.com/joinchill-image/sunpay_techdoc/202603/紅陽科技電子發票技術串接手冊V2.3.pdf`
 - 開發者專區 — https://www.sunpay.com.tw/developers/
