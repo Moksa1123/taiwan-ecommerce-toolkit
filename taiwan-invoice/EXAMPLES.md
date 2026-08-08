@@ -701,6 +701,52 @@ resp = svc.issue_invoice(InvoiceIssueData(
 print(resp.invoice_no, resp.random_number)
 ```
 
+## O'Pay 歐付寶發票範例
+
+### 完整 Python 範例
+請見 [`examples/opay-invoice-example.py`](examples/opay-invoice-example.py) — 涵蓋 B2C 開立、作廢、手機條碼與捐贈碼驗證、離線取號，並內建**官方測試向量的自我驗證**。
+
+### 四大要點
+
+1. **與 ECPay 發票同源**：同樣的三層信封、同樣的 AES 資料層、同樣的路徑命名。**測試金鑰甚至完全相同**（`ejCk326UnaZWKisg` / `q9jcZX8Ib9LM8wYk`）。已有 ECPay 實作者遷移成本很低。
+2. **先 URLEncode 再 AES**：順序做反是最常見的錯。強度固定 **128 bit 不是 256**。
+3. **兩層錯誤處理**：`TransCode=1` 只代表「信封收到了」，**不代表發票開立成功**——業務結果在解密後的 `Data` 裡（`RtnCode`）。
+4. **`Timestamp` 有效期 10 分鐘**：自架環境「參數都對但一直失敗」多半是主機沒做 NTP 校時。
+
+### ⚠️ 四欄互斥規則
+
+`Print` / `Donation` / `CarrierType` / `CustomerIdentifier` 互相牽制，規則散在官方 PDF 各處註解。範例檔的 `check_b2c_constraints()` 在送出前就攔下，避免打到 API 才被打回。
+
+### ⚠️ 延遲開立不能只判斷 `RtnCode == 1`
+
+`4000003`（延後開立成功）與 `4000004`（觸發後開立成功）也是成功。只判斷 `== 1` 會把整個延遲開立流程誤判為失敗。
+
+## 紅陽科技 SunPay 發票範例
+
+### 完整 Python 範例
+請見 [`examples/sunpay-invoice-example.py`](examples/sunpay-invoice-example.py) — 涵蓋 Token 產生、B2C 開立、作廢、載具驗證，並內建自我驗證。
+
+### ⚠️ 最容易卡整天的一點：`TimeStamp` 不是標準 Unix timestamp
+
+手冊定義為「從 1970/1/1 至今的**台灣時間（UTC+8）**之總秒數」：
+
+```
+標準 Unix epoch   1666175330
+紅陽要的值        1666204130   ← 多 28800 秒（8 小時）
+```
+
+用 `time.time()`、`Date.now()/1000` 或 `DateTimeOffset.UtcNow.ToUnixTimeSeconds()` 會**整整差 8 小時**，而限制只有 **300 秒**——必定逾時失敗，且錯誤訊息不會告訴你原因。
+
+### 三個其他要點
+
+1. **金流與發票是兩套機制**：金流用 RSA + SHA256（`trade.sunpay.com.tw`），發票用 AES-128-CBC（`einv.sunpay.com.tw`）。串完金流不能沿用。
+2. **正式網域是 `einv.` 不是 `inv.`**——`inv.sunpay.com.tw` 是管理後台，不是 API 網域。
+3. **先打 `ValidateToken`**：只驗 Token、**不產生任何發票資料**。AES 參數與那個 UTC+8 時間戳都能在這支驗證，先讓它回 `SUCCESS` 再去串開立。
+
+### 內建冪等，但前提是「參數完全一致」
+
+相同 `PostData` 重送會回原本那張發票，網路逾時後可安全重送——台灣加值中心裡少見。但**只要有任一欄位不同就會開出新發票**，重試務必送出位元組層級相同的 payload，不要重新組一次。
+
 ---
 
 **更多範例持續更新中...**
