@@ -42,3 +42,5 @@ WooCommerce/Magento/OpenCart 官方模組,sunpay,MEDIUM,三大自架購物車皆
 不定期不定額授權,jkopay,HIGH,limited 模式授權後可在額度內隨時扣款 | 適合用量計費與儲值加值 | 額度上限由消費者在App自行設定商家不可控,固定金額訂閱請改用 regular 模式,按用量計費 | 儲值加值 | 變動金額扣款
 RSA加密金流,sunpay,MEDIUM,紅陽為本 skill 14 家中唯一使用 RSA 分段加密者 | 加密117byte解密128byte | check_value 為 ASCII 排序後尾接 SHA2 密鑰的 SHA256,團隊已熟悉 ECPay CheckMacValue 或 AES 家族且不想再導入 RSA,既有系統已用 RSA | 需要非對稱加密
 金流發票物流一家包辦,sunpay,MEDIUM,金流+電子發票+超商代收+物流(超商便利送/宅配通)同一家 | 支援隨交易自動開立發票 | 宅配通少數可經聚合商取得的路徑,已自行串接發票系統者請勿啟用隨交易開立以免重複開立,一站式整合 | 宅配通需求 | 減少廠商數量
+街口幣行銷發放,jkopay,HIGH,街口幣發放 API 可直接發幣給指定用戶做行銷 為聚合商完全無法提供的能力,需自行處理重試冪等 收到 internal error 必須以同一 exchangeId 重送否則重複發幣,街口幣 行銷發放 會員獎勵 積分
+街口實體店POS完整串接,jkopay,HIGH,POS 模組含付款 取消 退款 查詢四支與 33 個統一錯誤碼,簽章與線上支付不同須另寫;折抵金額正負與線上支付相反,POS 實體店 收銀機 條碼收款

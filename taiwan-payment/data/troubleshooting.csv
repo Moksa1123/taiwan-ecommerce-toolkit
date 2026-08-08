@@ -35,3 +35,9 @@ RESTful 端點錯誤,404 Not Found | 405 Method Not Allowed,端點路徑錯誤 |
 街口 POS 折抵金額算錯,對帳金額與街口不符,POS 回傳的 RedeemAmount 與 StoreRedeemAmount 為負值 與線上支付 redeem_detail 的正值相反,POS 端對帳時折抵金額需取絕對值或直接相加(因其為負);實扣金額請用 DebitAmount,jkopay,medium
 街口 POS 斷線重送重複計費,同一筆交易出現兩筆成功紀錄,POS 端逾時重送時未檢查回應的 IsRep 欄位,IsRep=1 代表街口判定為重複交易 應視為同一筆而非新交易,jkopay,high
 街口代碼 301 意義判斷錯誤,依錯誤碼處理卻走錯分支,Platform API 的 301 是 Invalid auth_no 但 POS 的 StatusCode 301 是網路或系統異常 兩套代碼空間數字會相撞,依模組分開維護代碼對照表 勿共用同一份 mapping,jkopay,high
+街口幣重複發放,同一筆行銷活動發了兩次街口幣,收到 2-MT-9005 或 2-MT-9999 後換了新的 exchangeId 重送 街口視為新交易,必須用同一個 exchangeId 重送;帶相同 exchangeId 為冪等會回原訂單結果,jkopay,high
+街口折抵金額正負號反了,對帳金額差兩倍折抵金額,同名欄位在不同情境正負相反 付款與付款查詢為負值 退款與退款查詢為正值 線上支付的 redeem_detail 則一律為正值,在解析層依來源正規化正負號 勿在計算層才處理,jkopay,high
+街口 POS 查詢回 916 查無此訂單,剛送出的交易查不到,付款或退款送出後 15 秒內查詢可能因交易仍進行中而回 916,等待 15 秒後再查;另已送出 Cancel 的交易不可使用查詢 API,jkopay,medium
+街口 POS 退款單號用錯欄位,退款失敗或退到錯的訂單,POS 退款的 MerchantTradeNo 是退款流水號不是原付款流水號 原交易須用 TradeNo 指定,MerchantTradeNo 帶新的唯一退款單號 TradeNo 帶原街口端交易序號,jkopay,high
+街口線上支付退款單號重送無效,重送退款請求沒有反應或被拒,refund_order_id 一筆只能退一次 重送同號不會重試而是視為已使用,逾時後改用 Inquiry API 查詢結果 勿換號重送否則會變成第二筆退款,jkopay,high
+街口幣回應欄位解析失敗,取不到 Result 或 ResultObject,街口幣發放的回應欄位為 PascalCase(Result/Message/ResultObject) 與線上支付的小寫(result/message/result_object)不同,依模組分別定義回應模型 勿共用同一個 DTO,jkopay,medium
