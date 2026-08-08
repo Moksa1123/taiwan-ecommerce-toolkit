@@ -103,7 +103,7 @@ When modifying files:
 | Trae | `.trae/skills/` | docs.trae.ai/ide/skills |
 | OpenCode | `.opencode/skills/` | opencode.ai/docs/skills |
 | CodeBuddy | `.codebuddy/skills/` | AgentSkillsManager |
-| Continue | `.continue/skills/` | ⚠️ **未能查證**，見下 |
+| Continue | `.continue/skills/` | 原始碼 `extensions/cli/src/util/loadMarkdownSkills.ts` |
 
 安裝型別皆為 `full`。
 
@@ -115,11 +115,20 @@ When modifying files:
 | Kiro | `.kiro/steering/` | `.kiro/skills/` | Kiro 的 steering（常駐規範）與 skills（按需能力）是兩套機制 |
 | Roo Code | `.roo/commands/` | — | **Roo Code 已於 2026-05-15 封存停止營運**，改為支援其上游 Cline |
 
-### ⚠️ Continue 待確認
+### Continue —— 文件沒寫，但原始碼確認支援
 
-查無 Continue 支援 Agent Skills 的證據：不在 [Agent Skills 官方 Client Showcase](https://agentskills.io/clients) 名單內，官方文件的客製化機制只列出 rules / prompts / MCP，未提及 skills；社群 issue [continuedev/continue#9216](https://github.com/continuedev/continue/issues/9216) 已關閉但無可見結論。
+Continue 的官方文件只列出 rules / prompts / MCP，也不在 [Agent Skills 官方 Client Showcase](https://agentskills.io/clients) 名單內，一度以為不支援。**實際查原始碼後確認支援**，且 CLI 與 IDE 兩邊掃描的路徑不同：
 
-現行設定 `.continue/skills/` **可能無效**。已確認存在的是 `.continue/rules/`。待決定要移除支援、或改輸出成 rules 格式。
+| 實作 | 掃描路徑 |
+|---|---|
+| CLI（`extensions/cli/src/util/loadMarkdownSkills.ts`）| `.continue/skills/`、`.claude/skills/`、`{continueHome}/skills` |
+| IDE 擴充（`core/config/markdown/loadMarkdownSkills.ts`）| `.claude/skills/` 明確列出；`.continue/` 走通用的 definition-file 載入器 |
+
+兩邊都要求檔名為 `SKILL.md`。
+
+現行設定 `.continue/skills/` **正確**，無需更動。附帶好處：同時安裝 Claude Code 版本的使用者，Continue IDE 擴充也會一併讀到 `.claude/skills/`。
+
+> 這是本次查核唯一「文件說沒有、實際上有」的案例。判斷平台支援與否時，官方文件與 showcase 名單都不足以作為否定證據。
 
 ### 通用 fallback 路徑
 
