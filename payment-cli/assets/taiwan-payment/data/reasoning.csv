@@ -30,3 +30,15 @@ Python 開發,ecpay,HIGH,Python 範例完整 | 加密庫支援,無特定框架�
 API 文檔,ecpay,HIGH,官方文檔完整 | 中英文,不需文檔參考,學習階段 | 整合開發
 社群支援,ecpay,HIGH,使用者多 | 問題解決快,技術能力強,遇到問題需支援
 成本考量,三家比較,MEDIUM,費率需個別洽談 | 交易量影響,成本非主要考量,費率敏感 | 高毛利商品
+街口訂閱扣款,jkopay,HIGH,街口官方公開文件站 | 授權扣款(定期/訂閱)模組 | 聚合商多半不支援街口定期扣款,只是結帳頁想多一個街口按鈕（走 ECPay DigitalPayment umbrella 更省事）,訂閱制 | 街口定期扣款 | 街口幣行銷 | 街口 inApp OAuth
+街口實體店POS,jkopay,MEDIUM,街口線下交易(POS)模組 | 亦可改用 TWQR 一碼收全部電支,純線上電商,實體門市 | POS 收款
+歐付寶多元支付,opay,HIGH,與 ECPay 同源架構可沿用 CheckMacValue 程式碼 | 獨有 AccountLink 銀行快付/TopUpUsed 儲值消費/WeiXinpay/TWQR | 文件全公開免登入,已深度綁定 ECPay 且無跨境或微信需求,微信支付 | 銀行快付 | 儲值消費 | 從 ECPay 遷移 | 金流+發票同一家
+延遲撥款/擔保交易,opay,HIGH,HoldTradeAMT=1 延遲撥款 | 款項先留在歐付寶待確認出貨後再申請撥款 | 適合代收代付情境,信用卡付款不適用延遲撥款,平台型電商 | 代收代付 | 擔保交易 | C2C 市集
+WooCommerce/Magento/OpenCart 官方模組,sunpay,MEDIUM,三大自架購物車皆有官方模組 | 金流+發票+超商代收+物流(超商便利送/宅配通)一家包辦,需要極高市佔與社群資源者請選 ECPay,自架購物車 | WooCommerce | Magento 2 | OpenCart
+悠遊付/台灣PAY 串接文件,gomypay,MEDIUM,行動支付手冊完整(台灣PAY/悠遊付/Apple Pay/Google Pay) | 悠遊付本身不公開商家文件此為可行路徑,大型電商建議選市佔更高者,悠遊付 | 台灣PAY | 微信線上線下
+電子支付錢包選型,ecpay,HIGH,DigitalPayment umbrella 一次涵蓋街口/全支付/全盈+PAY/一卡通/悠遊付/icash pay | 最省事,需要指定特定錢包做行銷者請改用 PAYUNi 直送代碼或 TapPay,多錢包收款 | 不在意消費者選哪個錢包
+指定特定電子支付錢包,tappay,HIGH,每個錢包有獨立文件與 Prime 流程 | 可精確指定街口/全支付/全盈+PAY/悠遊付/一卡通,只想接一次就好者請用 ECPay umbrella,錢包別行銷 | 分錢包對帳 | 指定錢包
+電子錢包訂閱制,jkopay,HIGH,街口授權扣款支援定期定額(regular)與不定期不定額(limited)兩種綁定 | 扣款須在08:00-20:00 UTC+8且同一auth_no不可併發 | 週期次數上限week/month/quarter各7次 year 12次,需要跨錢包一次涵蓋者請改用 TWQR 或聚合商 umbrella,電子錢包訂閱 | 街口定期定額 | 按用量計費 | 課金儲值
+不定期不定額授權,jkopay,HIGH,limited 模式授權後可在額度內隨時扣款 | 適合用量計費與儲值加值 | 額度上限由消費者在App自行設定商家不可控,固定金額訂閱請改用 regular 模式,按用量計費 | 儲值加值 | 變動金額扣款
+RSA加密金流,sunpay,MEDIUM,紅陽為本 skill 14 家中唯一使用 RSA 分段加密者 | 加密117byte解密128byte | check_value 為 ASCII 排序後尾接 SHA2 密鑰的 SHA256,團隊已熟悉 ECPay CheckMacValue 或 AES 家族且不想再導入 RSA,既有系統已用 RSA | 需要非對稱加密
+金流發票物流一家包辦,sunpay,MEDIUM,金流+電子發票+超商代收+物流(超商便利送/宅配通)同一家 | 支援隨交易自動開立發票 | 宅配通少數可經聚合商取得的路徑,已自行串接發票系統者請勿啟用隨交易開立以免重複開立,一站式整合 | 宅配通需求 | 減少廠商數量

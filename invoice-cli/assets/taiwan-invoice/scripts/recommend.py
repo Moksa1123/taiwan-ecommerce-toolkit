@@ -16,6 +16,9 @@ from typing import List, Dict, Any, Optional, Tuple
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 DATA_DIR = os.path.join(os.path.dirname(SCRIPT_DIR), 'data')
 
+sys.path.insert(0, SCRIPT_DIR)
+from core import rule_match_score, MIN_RULE_MATCH  # noqa: E402
+
 # 推薦規則定義
 RECOMMENDATION_RULES = {
     # 關鍵字 → (provider, weight, reason)
@@ -110,33 +113,31 @@ def analyze_requirements(query: str) -> Dict[str, Tuple[int, List[str]]]:
     """
     query_lower = query.lower()
 
-    scores = {
-        'ECPay': (0, []),
-        'SmilePay': (0, []),
-        'Amego': (0, []),
-    }
+    # 由 providers.csv 動態建立，避免新增加值中心後推薦規則被靜默丟棄
+    scores = {p['provider']: (0, []) for p in load_providers()}
 
     # 從 reasoning.csv 載入規則
     reasoning_rules = load_reasoning_rules()
     confidence_weights = {'HIGH': 3, 'MEDIUM': 2, 'LOW': 1}
 
     for rule in reasoning_rules:
-        scenario = rule.get('scenario', '').lower()
-        use_cases = rule.get('use_cases', '').lower()
+        # 以匹配強度加權，而非命中任一詞就給滿分；後者會讓「開立」這類
+        # 高頻短詞使不相干的規則以同分勝出
+        strength = rule_match_score(
+            query, rule.get('scenario', ''), rule.get('use_cases', '')
+        )
+        if strength < MIN_RULE_MATCH:
+            continue
 
-        # 檢查場景或使用案例是否匹配查詢
-        scenario_words = scenario.replace(' ', '')
-        if any(word in query_lower for word in scenario.split()) or \
-           any(word in query_lower for word in use_cases.split()):
-            provider = rule.get('recommended_provider', '')
-            confidence = rule.get('confidence', 'LOW')
-            reason = rule.get('reason', '')
+        provider = rule.get('recommended_provider', '')
+        confidence = rule.get('confidence', 'LOW')
+        reason = rule.get('reason', '')
 
-            if provider in scores:
-                weight = confidence_weights.get(confidence, 1)
-                current_score, reasons = scores[provider]
-                if reason and reason not in reasons:
-                    scores[provider] = (current_score + weight, reasons + [reason])
+        if provider in scores:
+            weight = confidence_weights.get(confidence, 1) * strength
+            current_score, reasons = scores[provider]
+            if reason and reason not in reasons:
+                scores[provider] = (current_score + weight, reasons + [reason])
 
     # 根據關鍵字累計分數 (fallback)
     for keyword, rules in RECOMMENDATION_RULES.items():
@@ -185,7 +186,7 @@ def recommend(query: str, verbose: bool = False) -> Dict[str, Any]:
 
     # 建立結果
     recommended = sorted_providers[0][0]
-    recommended_score, recommended_reasons = sorted_providers[0]
+    recommended_score, recommended_reasons = sorted_providers[0][1]
 
     # 如果沒有匹配任何關鍵字，給預設推薦
     if recommended_score == 0:
@@ -245,7 +246,7 @@ def format_ascii_box(result: Dict[str, Any]) -> str:
     # 推薦結果
     recommended = result['recommended']
     score = result['score']
-    lines.append('║' + f' ⭐ 推薦: {recommended} (信心分數: {score})'.ljust(width - 2) + '║')
+    lines.append('║' + f' ⭐ 推薦: {recommended} (信心分數: {score:.1f})'.ljust(width - 2) + '║')
     lines.append('║' + ' '.ljust(width - 2) + '║')
 
     # 推薦原因
@@ -272,7 +273,7 @@ def format_ascii_box(result: Dict[str, Any]) -> str:
         lines.append('╠' + '─' * (width - 2) + '╣')
         lines.append('║' + ' 🔄 替代方案:'.ljust(width - 2) + '║')
         for alt in result['alternatives']:
-            alt_line = f'    • {alt["provider"]} (分數: {alt["score"]})'
+            alt_line = f'    • {alt["provider"]} (分數: {alt["score"]:.1f})'
             lines.append('║' + alt_line.ljust(width - 2) + '║')
             for reason in alt['reasons'][:2]:  # 只顯示前 2 個原因
                 reason_line = f'      - {reason}'
@@ -311,7 +312,7 @@ def format_simple(result: Dict[str, Any]) -> str:
     """格式化為簡單文字輸出"""
     lines = []
     lines.append(f"推薦加值中心: {result['recommended']}")
-    lines.append(f"信心分數: {result['score']}")
+    lines.append(f"信心分數: {result['score']:.1f}")
     lines.append("")
     lines.append("推薦原因:")
     for reason in result['reasons']:
@@ -327,7 +328,7 @@ def format_simple(result: Dict[str, Any]) -> str:
         lines.append("")
         lines.append("替代方案:")
         for alt in result['alternatives']:
-            lines.append(f"  - {alt['provider']} (分數: {alt['score']})")
+            lines.append(f"  - {alt['provider']} (分數: {alt['score']:.1f})")
 
     return '\n'.join(lines)
 

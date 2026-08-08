@@ -89,10 +89,18 @@ When modifying files:
    - `base/quick-reference.md` - Quick reference (Claude only)
    - `platforms/*.json` - Platform-specific configs (14 platforms)
 
-3. **CLI Assets** - Run sync before publishing:
+3. **CLI Assets** - 自動同步，無需手動複製：
+   - `<cli>/scripts/build.js` 會在打包前呼叫 `scripts/sync-assets.mjs`，
+     因此 `npm run build` 與 `npm publish`（透過 prepublishOnly）都會自動帶到最新內容
+   - 發布流程另以 `node scripts/sync-assets.mjs --check` 驗證，落差會擋下發布
+
    ```bash
-   cp -r taiwan-payment/* cli/assets/taiwan-payment/
+   node scripts/sync-assets.mjs            # 手動同步全部
+   node scripts/sync-assets.mjs --check    # 只檢查，有落差 exit 1
    ```
+
+   > assets 會隨 npm publish 一起發布（package.json 的 `files` 含 `assets`），
+   > 過去忘記同步會靜默發出過期的 skill 內容，因此改為自動化。
 
 4. **Reference Folders** - No manual sync needed. The CLI generates these from templates during `taiwan-payment init`.
 
@@ -291,7 +299,7 @@ HashIV:   請至後台申請
 Before publishing to npm:
 
 1. Update version in `cli/package.json`
-2. Sync assets: `cp -r taiwan-payment/* cli/assets/taiwan-payment/`
+2. Sync assets: 由 `npm run build` 自動處理（`scripts/sync-assets.mjs`）
 3. Build CLI: `cd cli && npm run build`
 4. Test locally: `npm test`
 5. Publish: `npm publish`

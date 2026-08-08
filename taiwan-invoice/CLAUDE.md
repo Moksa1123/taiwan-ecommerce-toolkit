@@ -69,10 +69,18 @@ When modifying files:
    - `base/skill-content.md` - Common skill content
    - `platforms/*.json` - Platform-specific configs (14 platforms)
 
-3. **CLI Assets** - Run sync before publishing:
+3. **CLI Assets** - 自動同步，無需手動複製：
+   - `<cli>/scripts/build.js` 會在打包前呼叫 `scripts/sync-assets.mjs`，
+     因此 `npm run build` 與 `npm publish`（透過 prepublishOnly）都會自動帶到最新內容
+   - 發布流程另以 `node scripts/sync-assets.mjs --check` 驗證，落差會擋下發布
+
    ```bash
-   cp -r taiwan-invoice/* cli/assets/taiwan-invoice/
+   node scripts/sync-assets.mjs            # 手動同步全部
+   node scripts/sync-assets.mjs --check    # 只檢查，有落差 exit 1
    ```
+
+   > assets 會隨 npm publish 一起發布（package.json 的 `files` 含 `assets`），
+   > 過去忘記同步會靜默發出過期的 skill 內容，因此改為自動化。
 
 4. **Reference Folders** - No manual sync needed. The CLI generates these from templates during `taiwan-invoice init`.
 

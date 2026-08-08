@@ -11,16 +11,19 @@ Taiwan Payment 推薦系統
     python recommend.py "新創公司 API" --format simple
 """
 
-from typing import List, Dict, Tuple, Optional
 import argparse
 import csv
-from pathlib import Path
-from typing import Dict, List, Tuple
 import json
+import sys
+from pathlib import Path
+from typing import Dict, List, Optional, Tuple
 
 # 路徑設定
 SCRIPT_DIR = Path(__file__).parent
 DATA_DIR = SCRIPT_DIR.parent / 'data'
+
+sys.path.insert(0, str(SCRIPT_DIR))
+from core import rule_match_score, MIN_RULE_MATCH  # noqa: E402
 
 # 推薦規則 (關鍵字 -> [(provider, 權重, 理由)])
 RECOMMENDATION_RULES = {
@@ -82,6 +85,16 @@ ANTI_PATTERNS = {
 }
 
 
+def load_providers_csv() -> List[Dict]:
+    """從 providers.csv 載入服務商清單"""
+    csv_path = DATA_DIR / 'providers.csv'
+    if not csv_path.exists():
+        return []
+
+    with open(csv_path, 'r', encoding='utf-8') as f:
+        return list(csv.DictReader(f))
+
+
 def load_reasoning_csv() -> List[Dict]:
     """從 reasoning.csv 載入推薦規則"""
     csv_path = DATA_DIR / 'reasoning.csv'
@@ -105,8 +118,10 @@ def analyze_requirements(query: str) -> Dict[str, Tuple[int, List[str]]]:
         {provider: (score, [reasons])}
     """
     query_lower = query.lower()
-    scores = {'ecpay': 0, 'newebpay': 0, 'payuni': 0}
-    reasons = {'ecpay': [], 'newebpay': [], 'payuni': []}
+    # 由 providers.csv 動態建立，避免新增服務商後推薦規則被靜默丟棄
+    providers = [p['provider'] for p in load_providers_csv()]
+    scores = {p: 0 for p in providers}
+    reasons = {p: [] for p in providers}
 
     # 基於關鍵字規則計分
     for keyword, recommendations in RECOMMENDATION_RULES.items():
@@ -118,18 +133,24 @@ def analyze_requirements(query: str) -> Dict[str, Tuple[int, List[str]]]:
     # 從 CSV 載入額外規則
     csv_rules = load_reasoning_csv()
     for rule in csv_rules:
-        scenario = rule.get('scenario', '').lower()
-        if any(word in scenario for word in query_lower.split()):
-            provider = rule.get('recommended_provider', '').lower()
-            if provider in scores:
-                confidence = rule.get('confidence', 'MEDIUM')
-                weight_map = {'HIGH': 3, 'MEDIUM': 2, 'LOW': 1}
-                weight = weight_map.get(confidence, 1)
-                scores[provider] += weight
+        # 以匹配強度加權。原本只比對 scenario 且命中任一詞就給滿分，
+        # use_cases 整欄被忽略，導致規則命中率與分數都失真
+        strength = rule_match_score(
+            query, rule.get('scenario', ''), rule.get('use_cases', '')
+        )
+        if strength < MIN_RULE_MATCH:
+            continue
 
-                reason_text = rule.get('reason', '')
-                if reason_text:
-                    reasons[provider].append(f'✓ {reason_text} (+{weight})')
+        provider = rule.get('recommended_provider', '').lower()
+        if provider in scores:
+            confidence = rule.get('confidence', 'MEDIUM')
+            weight_map = {'HIGH': 3, 'MEDIUM': 2, 'LOW': 1}
+            weight = weight_map.get(confidence, 1) * strength
+            scores[provider] += weight
+
+            reason_text = rule.get('reason', '')
+            if reason_text:
+                reasons[provider].append(f'✓ {reason_text} (+{weight:.1f})')
 
     return {p: (s, reasons[p]) for p, s in scores.items()}
 
@@ -157,18 +178,15 @@ def format_recommendation_ascii(results: Dict[str, Tuple[int, List[str]]], query
             continue
 
         # Provider 名稱
-        provider_names = {
-            'ecpay': '綠界科技 ECPay',
-            'newebpay': '藍新金流 NewebPay',
-            'payuni': '統一金流 PAYUNi'
-        }
+        provider_names = {p['provider']: p['display_name']
+                          for p in load_providers_csv()}
         display_name = provider_names.get(provider, provider)
 
         # Emoji
         emoji = '🥇' if rank == 1 else '🥈' if rank == 2 else '🥉'
 
         output.append(f'{emoji} 推薦 #{rank}: {display_name}')
-        output.append(f'   評分: {score} 分')
+        output.append(f'   評分: {score:.1f} 分')
         output.append('')
 
         if reason_list:
@@ -203,11 +221,8 @@ def format_recommendation_json(results: Dict[str, Tuple[int, List[str]]], query:
         if score == 0:
             continue
 
-        provider_names = {
-            'ecpay': '綠界科技 ECPay',
-            'newebpay': '藍新金流 NewebPay',
-            'payuni': '統一金流 PAYUNi'
-        }
+        provider_names = {p['provider']: p['display_name']
+                          for p in load_providers_csv()}
 
         rec = {
             'rank': rank,
@@ -232,13 +247,10 @@ def format_recommendation_simple(results: Dict[str, Tuple[int, List[str]]], quer
         if score == 0:
             continue
 
-        provider_names = {
-            'ecpay': '綠界科技 ECPay',
-            'newebpay': '藍新金流 NewebPay',
-            'payuni': '統一金流 PAYUNi'
-        }
+        provider_names = {p['provider']: p['display_name']
+                          for p in load_providers_csv()}
 
-        output.append(f'推薦 #{rank}: {provider_names.get(provider, provider)} ({score} 分)')
+        output.append(f'推薦 #{rank}: {provider_names.get(provider, provider)} ({score:.1f} 分)')
 
         if reason_list:
             for reason in reason_list:
