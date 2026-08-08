@@ -1,42 +1,42 @@
-method_code,method_zh,method_en,ecpay_code,newebpay_code,payuni_code,opay_code,smilepay_code,pchomepay_code,ezpay_code,paynow_code,min_amount,max_amount,settlement_days,fee_type,notes
-credit,信用卡,Credit Card,Credit,CREDIT,credit,Credit,Pay_zg=1,CC,CREDIT,CreditCard,1,,2-3,percentage,一次付清
-credit_installment,信用卡分期,Credit Installment,Credit+CreditInstallment,InstFlag,installment,Credit,Pay_zg=1+Stage,CC_INSTALLMENT,InstFlag,CreditCardInstallment,1000,,依期數,percentage,"3/6/12/18/24/30期；NewebPay/ezPay 輸入用 InstFlag(值=1或3,6,12)，回傳通知 PaymentType=INST"
-credit_periodic,信用卡定期,Credit Periodic,Credit+Period,,,Credit,,,,,100,,2-3,percentage,週期扣款；PayNow 現代版用 Customer/Card Token
-credit_red,信用卡紅利,Credit Red,CreditRed,CreditRed,,,,,,,1,,2-3,percentage,紅利折抵
-unionpay,銀聯卡,UnionPay,UnionPay,UNIONPAY,unionpay,,Pay_zg=11,,UNIONPAY,,1,,2-3,percentage,需另申請；SmilePay 用 Pay_zg=11
-creditae,美國運通卡,AMEX,,CREDITAE,,,,,CREDITAE,,1,,2-3,percentage,需另申請
-webatm,網路ATM,WebATM,WebATM,WEBATM,webatm,WebATM,,,WEBATM,,1,49999,1,fixed,即時轉帳
-atm,ATM虛擬帳號,ATM Virtual Account,ATM,VACC,atm,ATM,Pay_zg=2,ATMVA,VACC,ATM,1,49999,1-3,fixed,產生繳費帳號
-cvs,超商代碼,CVS Code,CVS,CVS,cvs,CVS,Pay_zg=4 (ibon)/6 (FamiPort),BARCODE_CVS,CVS,ConvenienceStore,30,20000,1-3,fixed,至超商繳費；SmilePay 細分 ibon/FamiPort
-barcode,超商條碼,CVS Barcode,BARCODE,BARCODE,,,Pay_zg=3,,BARCODE,,20,40000,1-3,fixed,產生條碼
-applepay,Apple Pay,Apple Pay,ApplePay,APPLEPAY,ApplePay,,,,APPLEPAY,ApplePay,1,,2-3,percentage,PayNow 現代版含 Apple Pay v1/v2 + Deferred (延遲扣款)
-applepay_deferred,Apple Pay 延遲扣款,Apple Pay Deferred,,,,,,,,ApplePayDeferred,1,,2-3,percentage,PayNow 現代版獨家；先授權後扣款
-googlepay,Google Pay,Google Pay,,ANDROIDPAY,GooglePay,,,,ANDROIDPAY,,1,,2-3,percentage,需申請
-samsungpay,Samsung Pay,Samsung Pay,,SAMSUNGPAY,SamsungPay,,,,SAMSUNGPAY,,1,,2-3,percentage,需申請
-linepay,LINE Pay,LINE Pay,DigitalPayment,LINEPAY,LinePay,,,,LINEPAY,LINEPayOnline,1,,2-3,percentage,ECPay 走 DigitalPayment umbrella；NewebPay/ezPay 直送 LINEPAY；PAYUNi 直送 LinePay；PayNow 現代版分線上/線下
-linepay_offline,LINE Pay 線下,LINE Pay Offline,,,,,,,,LINEPayOffline,1,,2-3,percentage,PayNow 現代版獨家
-esunwallet,玉山 Wallet,E.SUN Wallet,,ESUNWALLET,,,,,ESUNWALLET,,1,,2-3,percentage,需申請
-taiwanpay,台灣 Pay,Taiwan Pay,,TAIWANPAY,,,,,TAIWANPAY,,1,49999,2-3,percentage,需申請
-bitopay,BitoPay,BitoPay,,BITOPAY,,,,,BITOPAY,,100,49999,2-3,percentage,加密貨幣
-twqr,TWQR,TWQR,TWQR,TWQR,TWQR,TWQR,,,TWQR,,1,,2-3,percentage,台灣Pay QR Code；O'Pay ChoosePayment=TWQR 已由官方 PDF 驗證
-bnpl,無卡分期,BNPL,BNPL,,,,,,,,50,300000,依方案,percentage,先買後付
-aftee,AFTEE先享後付,AFTEE,,,AFTEE,,,,,,1,,2-3,percentage,PayUNi 直送 AFTEE；ECPay 透過 BNPL umbrella
-icash,愛金卡,iCash,,,ICASH,,,,,iCashPay,1,,2-3,percentage,PAYUNi 直送 ICASH；PayNow 現代版 iCashPay；ECPay 走 DigitalPayment umbrella
-ezpalipay,簡單付支付寶,Alipay,,EZPALIPAY,,,,,EZPALIPAY,,1,,2-3,percentage,跨境支付
-ezpwechat,簡單付微信,WeChat Pay,,EZPWECHAT,,,,,EZPWECHAT,,1,,2-3,percentage,跨境支付
-pcpay_wallet,拍錢包,PChome Wallet,,,,,,PI,,,1,,2-3,percentage,PChomePay 獨家；含 5% P 幣回饋
-cvs_cod,超商取貨付款,CVS COD,,CVSCOM,,,,COD,CVSCOM,,1,20000,1-3,fixed,NewebPay/ezPay 用 CVSCOM (值: 1=取貨不付款 2=取貨付款 3=兩者)；PChomePay 用 COD 對應 7-Eleven 取貨
-weixinpay,微信支付,WeChat Pay (ECPay),WeiXin,EZPWECHAT,,WeiXinpay,,,EZPWECHAT,,1,,2-3,percentage,ECPay 直接 ChoosePayment=WeiXin；NewebPay/ezPay 走 EZPWECHAT；O'Pay WeiXinpay 已驗證（MerchantTradeNo 限 32 位元、繳費期限 2 小時、無測試回應）
-digital_payment,電子支付/電子錢包 umbrella,Digital Payment Umbrella,DigitalPayment,,,,,,,,1,,2-3,percentage,ECPay 專屬 umbrella；客戶於選擇頁挑街口/全盈+PAY/全支付/一卡通/悠遊付/icashpay
-jkopay,街口支付,JKO Pay,DigitalPayment,JKOPAY?,JKoPay,,,,JKOPAY?,,1,,2-3,percentage,同一街口服務跨家命名不同；ECPay 走 DigitalPayment umbrella；PAYUNi JKoPay 已驗證；NewebPay/ezPay JKOPAY 為推測碼（不在 MPG channel-key 表中，需以官方 PDF 確認）
-pxpay_plus,全支付,PX Pay Plus,DigitalPayment,PXPAY?,,,,,PXPAY?,,1,,2-3,percentage,全聯系；ECPay umbrella 確認；NewebPay/ezPay PXPAY 為推測碼（不在 MPG channel-key 表中，需以官方 PDF 確認）
-plus_pay,全盈+PAY,Plus Pay,DigitalPayment,PLUSPAY?,,,,,PLUSPAY?,,1,,2-3,percentage,玉山金控；ECPay umbrella 確認；NewebPay/ezPay PLUSPAY 為推測碼（需以官方 PDF 確認）
-ipass_money,一卡通 MONEY,iPASS Money,DigitalPayment,IPASSPAY?,,,,,IPASSPAY?,,1,,2-3,percentage,一卡通；ECPay umbrella 確認；NewebPay/ezPay IPASSPAY 為推測碼（需以官方 PDF 確認）
-easywallet,悠遊付,Easy Wallet,DigitalPayment,EASYCARD?,,,,,EASYCARD?,,1,,2-3,percentage,悠遊卡公司；ECPay umbrella 確認；NewebPay/ezPay EASYCARD 為推測碼（悠遊付為 wallet 產品 vs 悠遊卡實體；可能實際代碼為 EASYWALLET，需以官方 PDF 確認）
-icash_pay,icash Pay,iCash Pay,DigitalPayment,ICASHPAY,,,,,ICASHPAY,,1,,2-3,percentage,愛金卡；ECPay umbrella；PAYUNi 直送 ICASH (見 icash 行)；PayNow 現代版 PaymentIntent enum 不含 iCashPay；NewebPay/ezPay ICASHPAY 為推測碼（需以官方 PDF 確認）
-ecpay_pay,綠界Pay,ECPay Pay,EcpayPay,,,,,,,,1,,2-3,percentage,ECPay 自家錢包
-openpoint,OPENPOINT,OPEN POINT,DigitalPayment,,,,,,,,1,,2-3,percentage,7-11/統一集團；ECPay umbrella
-atome,Atome 安多目,Atome,BNPL,,,,,,,,1,30000,依方案,percentage,新加坡 BNPL 服務；ECPay 走 BNPL umbrella
-account_link,銀行快付,Account Link,,,,AccountLink,,,,,1,,2-3,percentage,歐付寶獨有付款方式；ECPay 無對應代碼
-topup_used,儲值消費,Top Up Used,,,,TopUpUsed,,,,,1,,2-3,percentage,歐付寶獨有；以歐付寶電支帳戶儲值餘額支付
-gamapay,橘子支付,GAMA PAY,DigitalPayment,,,,,,,,1,,2-3,percentage,橘子支行動支付（第 10 家專營電支機構，先前未收錄）；無公開商家文件；TWQR 參與機構；各聚合商代碼待驗證，見 references/twqr-ewallet-landscape.md
+method_code,method_zh,method_en,ecpay_code,newebpay_code,payuni_code,opay_code,smilepay_code,pchomepay_code,ezpay_code,paynow_code,sunpay_code,min_amount,max_amount,settlement_days,fee_type,notes
+credit,信用卡,Credit Card,Credit,CREDIT,credit,Credit,Pay_zg=1,CC,CREDIT,CreditCard,01,1,,2-3,percentage,一次付清
+credit_installment,信用卡分期,Credit Installment,Credit+CreditInstallment,InstFlag,installment,Credit,Pay_zg=1+Stage,CC_INSTALLMENT,InstFlag,CreditCardInstallment,01 (term=3/6/12/18/24/30),1000,,依期數,percentage,"3/6/12/18/24/30期；NewebPay/ezPay 輸入用 InstFlag(值=1或3,6,12)，回傳通知 PaymentType=INST"
+credit_periodic,信用卡定期,Credit Periodic,Credit+Period,,,Credit,,,,,,100,,2-3,percentage,週期扣款；PayNow 現代版用 Customer/Card Token
+credit_red,信用卡紅利,Credit Red,CreditRed,CreditRed,,,,,,,,1,,2-3,percentage,紅利折抵
+unionpay,銀聯卡,UnionPay,UnionPay,UNIONPAY,unionpay,,Pay_zg=11,,UNIONPAY,,02 (不支援分期),1,,2-3,percentage,需另申請；SmilePay 用 Pay_zg=11
+creditae,美國運通卡,AMEX,,CREDITAE,,,,,CREDITAE,,,1,,2-3,percentage,需另申請
+webatm,網路ATM,WebATM,WebATM,WEBATM,webatm,WebATM,,,WEBATM,,,1,49999,1,fixed,即時轉帳
+atm,ATM虛擬帳號,ATM Virtual Account,ATM,VACC,atm,ATM,Pay_zg=2,ATMVA,VACC,ATM,08,1,49999,1-3,fixed,產生繳費帳號
+cvs,超商代碼,CVS Code,CVS,CVS,cvs,CVS,Pay_zg=4 (ibon)/6 (FamiPort),BARCODE_CVS,CVS,ConvenienceStore,06,30,20000,1-3,fixed,至超商繳費；SmilePay 細分 ibon/FamiPort
+barcode,超商條碼,CVS Barcode,BARCODE,BARCODE,,,Pay_zg=3,,BARCODE,,07,20,40000,1-3,fixed,產生條碼
+applepay,Apple Pay,Apple Pay,ApplePay,APPLEPAY,ApplePay,,,,APPLEPAY,ApplePay,03,1,,2-3,percentage,PayNow 現代版含 Apple Pay v1/v2 + Deferred (延遲扣款)
+applepay_deferred,Apple Pay 延遲扣款,Apple Pay Deferred,,,,,,,,ApplePayDeferred,,1,,2-3,percentage,PayNow 現代版獨家；先授權後扣款
+googlepay,Google Pay,Google Pay,,ANDROIDPAY,GooglePay,,,,ANDROIDPAY,,03,1,,2-3,percentage,需申請
+samsungpay,Samsung Pay,Samsung Pay,,SAMSUNGPAY,SamsungPay,,,,SAMSUNGPAY,,,1,,2-3,percentage,需申請
+linepay,LINE Pay,LINE Pay,DigitalPayment,LINEPAY,LinePay,,,,LINEPAY,LINEPayOnline,,1,,2-3,percentage,ECPay 走 DigitalPayment umbrella；NewebPay/ezPay 直送 LINEPAY；PAYUNi 直送 LinePay；PayNow 現代版分線上/線下
+linepay_offline,LINE Pay 線下,LINE Pay Offline,,,,,,,,LINEPayOffline,,1,,2-3,percentage,PayNow 現代版獨家
+esunwallet,玉山 Wallet,E.SUN Wallet,,ESUNWALLET,,,,,ESUNWALLET,,,1,,2-3,percentage,需申請
+taiwanpay,台灣 Pay,Taiwan Pay,,TAIWANPAY,,,,,TAIWANPAY,,,1,49999,2-3,percentage,需申請
+bitopay,BitoPay,BitoPay,,BITOPAY,,,,,BITOPAY,,,100,49999,2-3,percentage,加密貨幣
+twqr,TWQR,TWQR,TWQR,TWQR,TWQR,TWQR,,,TWQR,,,1,,2-3,percentage,台灣Pay QR Code；O'Pay ChoosePayment=TWQR 已由官方 PDF 驗證
+bnpl,無卡分期,BNPL,BNPL,,,,,,,,,50,300000,依方案,percentage,先買後付
+aftee,AFTEE先享後付,AFTEE,,,AFTEE,,,,,,,1,,2-3,percentage,PayUNi 直送 AFTEE；ECPay 透過 BNPL umbrella
+icash,愛金卡,iCash,,,ICASH,,,,,iCashPay,,1,,2-3,percentage,PAYUNi 直送 ICASH；PayNow 現代版 iCashPay；ECPay 走 DigitalPayment umbrella
+ezpalipay,簡單付支付寶,Alipay,,EZPALIPAY,,,,,EZPALIPAY,,,1,,2-3,percentage,跨境支付
+ezpwechat,簡單付微信,WeChat Pay,,EZPWECHAT,,,,,EZPWECHAT,,,1,,2-3,percentage,跨境支付
+pcpay_wallet,拍錢包,PChome Wallet,,,,,,PI,,,,1,,2-3,percentage,PChomePay 獨家；含 5% P 幣回饋
+cvs_cod,超商取貨付款,CVS COD,,CVSCOM,,,,COD,CVSCOM,,09 (需 lgs_flag=1),1,20000,1-3,fixed,NewebPay/ezPay 用 CVSCOM (值: 1=取貨不付款 2=取貨付款 3=兩者)；PChomePay 用 COD 對應 7-Eleven 取貨
+weixinpay,微信支付,WeChat Pay (ECPay),WeiXin,EZPWECHAT,,WeiXinpay,,,EZPWECHAT,,,1,,2-3,percentage,ECPay 直接 ChoosePayment=WeiXin；NewebPay/ezPay 走 EZPWECHAT；O'Pay WeiXinpay 已驗證（MerchantTradeNo 限 32 位元、繳費期限 2 小時、無測試回應）
+digital_payment,電子支付/電子錢包 umbrella,Digital Payment Umbrella,DigitalPayment,,,,,,,,,1,,2-3,percentage,ECPay 專屬 umbrella；客戶於選擇頁挑街口/全盈+PAY/全支付/一卡通/悠遊付/icashpay
+jkopay,街口支付,JKO Pay,DigitalPayment,JKOPAY?,JKoPay,,,,JKOPAY?,,10,1,,2-3,percentage,同一街口服務跨家命名不同；ECPay 走 DigitalPayment umbrella；PAYUNi JKoPay 已驗證；NewebPay/ezPay JKOPAY 為推測碼（不在 MPG channel-key 表中，需以官方 PDF 確認）
+pxpay_plus,全支付,PX Pay Plus,DigitalPayment,PXPAY?,,,,,PXPAY?,,,1,,2-3,percentage,全聯系；ECPay umbrella 確認；NewebPay/ezPay PXPAY 為推測碼（不在 MPG channel-key 表中，需以官方 PDF 確認）
+plus_pay,全盈+PAY,Plus Pay,DigitalPayment,PLUSPAY?,,,,,PLUSPAY?,,,1,,2-3,percentage,玉山金控；ECPay umbrella 確認；NewebPay/ezPay PLUSPAY 為推測碼（需以官方 PDF 確認）
+ipass_money,一卡通 MONEY,iPASS Money,DigitalPayment,IPASSPAY?,,,,,IPASSPAY?,,,1,,2-3,percentage,一卡通；ECPay umbrella 確認；NewebPay/ezPay IPASSPAY 為推測碼（需以官方 PDF 確認）
+easywallet,悠遊付,Easy Wallet,DigitalPayment,EASYCARD?,,,,,EASYCARD?,,,1,,2-3,percentage,悠遊卡公司；ECPay umbrella 確認；NewebPay/ezPay EASYCARD 為推測碼（悠遊付為 wallet 產品 vs 悠遊卡實體；可能實際代碼為 EASYWALLET，需以官方 PDF 確認）
+icash_pay,icash Pay,iCash Pay,DigitalPayment,ICASHPAY,,,,,ICASHPAY,,,1,,2-3,percentage,愛金卡；ECPay umbrella；PAYUNi 直送 ICASH (見 icash 行)；PayNow 現代版 PaymentIntent enum 不含 iCashPay；NewebPay/ezPay ICASHPAY 為推測碼（需以官方 PDF 確認）
+ecpay_pay,綠界Pay,ECPay Pay,EcpayPay,,,,,,,,,1,,2-3,percentage,ECPay 自家錢包
+openpoint,OPENPOINT,OPEN POINT,DigitalPayment,,,,,,,,,1,,2-3,percentage,7-11/統一集團；ECPay umbrella
+atome,Atome 安多目,Atome,BNPL,,,,,,,,,1,30000,依方案,percentage,新加坡 BNPL 服務；ECPay 走 BNPL umbrella
+account_link,銀行快付,Account Link,,,,AccountLink,,,,,,1,,2-3,percentage,歐付寶獨有付款方式；ECPay 無對應代碼
+topup_used,儲值消費,Top Up Used,,,,TopUpUsed,,,,,,1,,2-3,percentage,歐付寶獨有；以歐付寶電支帳戶儲值餘額支付
+gamapay,橘子支付,GAMA PAY,DigitalPayment,,,,,,,,,1,,2-3,percentage,橘子支行動支付（第 10 家專營電支機構，先前未收錄）；無公開商家文件；TWQR 參與機構；各聚合商代碼待驗證，見 references/twqr-ewallet-landscape.md

@@ -132,3 +132,17 @@ jkopay,304,金額與授權帳單金額不一致,Order finalPrice is not consiste
 jkopay,305,超過當前週期扣款次數,Authpay payment exceeds current billing cycle times,business,error,週期次數上限 week/month/quarter<=7 year<=12 檢查 billing_cycle.times
 jkopay,306,授權扣款時段無效,Authpay payment transaction time invalid.(Available at 08:00 - 20:00 UTC+8),business,error,授權扣款僅限 08:00-20:00 UTC+8 排程勿排夜間
 jkopay,307,同一授權不可併發扣款,Payment with the same auth_no is allowed one at a time,business,error,同一 auth_no 同時僅允許一筆付款 扣款須序列化
+sunpay,10,交易成功,Transaction Success,success,info,
+sunpay,11,交易失敗,Transaction Failed,payment,error,查 CallBack 內容確認失敗原因 或改用其他支付方式
+sunpay,12-callback,已建立(交易通知),Order Created,payment,warning,交易 CallBack 的 12 代表已建立尚未付款 勿與查詢 API 的 12 混淆
+sunpay,12-query,查無該筆訂單(查詢API),Order Not Found,query,error,查詢 API 的 12 代表查無訂單 與交易通知的 12 意義不同 判斷邏輯須分開
+sunpay,06,交易編號或訂單編號須擇一,Trade No or Order No required,validation,error,查詢時 trade_no 與 td 必須擇一帶入
+sunpay,13,交易未完成,Transaction Incomplete,query,warning,消費者尚未完成付款 可續等或取消
+sunpay,14,訂單退款,Order Refunded,refund,info,該筆訂單已退款 另查 refund_status 取得退款進度
+sunpay,15,交易取消,Transaction Canceled,query,info,交易已取消
+sunpay,RSA-001,RSA 加密失敗,RSA Encryption Failed,encryption,error,加密分段須為 117 byte 且需先 urlencode 再加密
+sunpay,RSA-002,RSA 解密失敗,RSA Decryption Failed,encryption,error,解密分段為 128 byte 非 117 先 base64decode 再分段解密最後 urldecode
+sunpay,SIGN-001,check_value 驗證失敗,Signature Mismatch,auth,error,head 與 body 須 ASCII 升序排序 null 值不參與簽名 SHA2 密鑰接在 urlencode 字串尾端
+sunpay,TIME-001,交易發起時間逾時,Send Time Expired,validation,error,send_time 格式為 fffssmmHHyyyyMMdd 且超過 120 秒視為無效 請校時
+sunpay,LGS-001,物流金額超限,Logistics Amount Exceeded,validation,error,訂單金額大於 2 萬元無法使用物流服務
+sunpay,URL-001,回傳網址含連接埠被擋,Callback URL With Port Blocked,validation,error,回傳網址不可帶 port 紅陽基於資安風控會阻擋
