@@ -66,7 +66,7 @@ ezpay,MPG10001,訂單編號重複,Duplicate MerchantOrderNo,validation,error,使
 ezpay,VACC10001,虛擬帳號逾期,VACC expired,validation,error,檢查 ExpireDate 設定
 paynow,M001,商家代號錯誤,Invalid Merchant,auth,error,確認商家代號正確
 paynow,A001,加密驗證失敗,Encryption validation failed,auth,error,傳統版檢查 GP/GK 動態金鑰；現代版檢查 JWT Bearer
-paynow,B001,訂單金額錯誤,Invalid Amount,validation,error,確認 amount 為正整數且小於 1,000,000,000,000
+paynow,B001,訂單金額錯誤,Invalid Amount,validation,error,"確認 amount 為正整數且小於 1,000,000,000,000"
 paynow,C001,訂單編號重複,Duplicate paymentNo,validation,error,使用唯一 paymentNo (現代版可省略由系統產生)
 paynow,P001,信用卡授權失敗,Card authorization failed,payment,error,改用其他卡或聯繫銀行
 paynow,Q001,Token 過期,JWT expired,auth,error,重新申請 JWT Bearer Token
@@ -100,3 +100,90 @@ tappay,7,卡片過期,Card Expired,validation,error,使用未過期卡片
 tappay,10003,Partner Key 錯誤,Invalid Partner Key,auth,error,確認 Partner Key 與環境一致 (sandbox/prod)
 tappay,10005,Merchant ID 錯誤,Invalid Merchant ID,auth,error,確認 Merchant ID 設定
 tappay,88001,卡片驗證失敗,Card Verification Failed,validation,error,3DS 驗證失敗;聯繫銀行
+jkopay,000,成功,Success,success,info,
+jkopay,101,訂單已付款,Order is paid,duplicate,warning,以 platform_order_id 查詢 Inquiry API 確認狀態後結案勿重複建單
+jkopay,200,參數錯誤,Bad request,validation,error,message 會動態指出錯誤欄位 依訊息修正
+jkopay,200-store,商店代碼錯誤,Store not found,validation,error,確認 store_id 使用該環境(測試/正式)對應代碼
+jkopay,200-currency,商店不支援此幣別,Using the currency unsupported by the Store,validation,error,確認商店已開通該幣別 或改用 TWD
+jkopay,200-identity,此商店訂單需身分驗證,Entry of this store needs identity verification,validation,error,需帶入 identities 資料 洽街口確認商店設定
+jkopay,200-mismatch,同單號但關鍵欄位不一致,Order has been used as entry but they do not match with each others,validation,error,同一 platform_order_id 重送時 store_id/currency/total_price/final_price 必須完全相同
+jkopay,200-digits,幣別小數位檢核失敗,Invalid number of digits for the order currency amount,validation,error,依 currency 規定的小數位數送出金額
+jkopay,200-minamount,低於該幣別最低金額,Order price below limit for this currency,validation,error,JPY>=5 USD>=0.02 CNY>=0.11 HKD>=0.13
+jkopay,100,訂單不存在,Invaid Order ID,not_found,error,確認 platform_order_id 正確且已建單
+jkopay,102,超過180天退款期限,Order has excessed 180 days cannot be refunded,business,error,街口退款期限為 180 天 逾期須改走線下退款
+jkopay,105,金額不一致,Inconsistent remain amount / Inconsistent refund amount,validation,error,同一 refund_order_id 重送時 refund_amount 必須相同
+jkopay,111,交易已關帳,Transaction has been closed,business,error,已關帳交易無法退款 須洽街口處理
+jkopay,113,商家餘額不足,Refund reject due to refund amount exceeds total unreimbursed amount.,business,error,退款金額超過未撥款總額 待撥款入帳後再退
+jkopay,116,街口券退款失敗,JKOPAY coupon reimbursement failed please contact JKOPAY for assistance in refund,business,error,聯繫街口客服協助處理
+jkopay,117,用券訂單僅接受全額退款,JKOPAY Coupon is used in this transaction and we will only accept full refund,business,error,退款前先檢查 redeem_detail 有券則不可部分退款
+jkopay,922,退款金額超過可退金額,Refund amount exceeds order final price,validation,error,退款金額不可超過 final_price 扣除已退金額
+jkopay,978,帳戶已關閉,Closed account can't use JKOPay's service please contact the JKOPay's customer service.,auth,error,聯繫街口客服確認帳戶狀態
+jkopay,999,街口系統錯誤,Internal Error,server,error,街口方非預期錯誤 稍後重試並保留 platform_order_id 供查詢
+jkopay,103,退款金額錯誤,Error in refund amount,validation,error,授權扣款退款 檢查 refund_amount 是否正確
+jkopay,104,超過月限額,Payment/transfer amount is over the monthly limit,business,error,電支個人月限額已滿 須待次月或改用其他支付工具
+jkopay,110,查無此商店,Store not found,validation,error,確認 store_id 為該環境對應代碼
+jkopay,115,付款失敗,Payment failed,business,error,消費者付款工具失敗 請消費者改用其他支付工具
+jkopay,121,銀行帳戶餘額不足,Insufficient bank account balance.,business,error,消費者綁定的銀行帳戶餘額不足 建議通知消費者後重試
+jkopay,201,驗證錯誤,Validation error,validation,error,授權扣款模組專屬 檢查必填欄位與型態
+jkopay,301,無效的授權編號,Invalid auth_no,validation,error,確認 auth_no 來自綁定 callback 且未過期
+jkopay,302,授權編號已取消,Canceled auth_no,business,error,該授權已終止 需請消費者重新綁定
+jkopay,303,超過用戶設定的最高額度,FinalPrice exceeded the max amount quota set by the user,business,error,額度由消費者在街口 App 自行設定 非商家可控 須請消費者調高
+jkopay,304,金額與授權帳單金額不一致,Order finalPrice is not consistent with authpay billing amount,validation,error,定期定額的 final_price 必須等於綁定時的 billing_amount
+jkopay,305,超過當前週期扣款次數,Authpay payment exceeds current billing cycle times,business,error,週期次數上限 week/month/quarter<=7 year<=12 檢查 billing_cycle.times
+jkopay,306,授權扣款時段無效,Authpay payment transaction time invalid.(Available at 08:00 - 20:00 UTC+8),business,error,授權扣款僅限 08:00-20:00 UTC+8 排程勿排夜間
+jkopay,307,同一授權不可併發扣款,Payment with the same auth_no is allowed one at a time,business,error,同一 auth_no 同時僅允許一筆付款 扣款須序列化
+sunpay,10,交易成功,Transaction Success,success,info,
+sunpay,11,交易失敗,Transaction Failed,payment,error,查 CallBack 內容確認失敗原因 或改用其他支付方式
+sunpay,12-callback,已建立(交易通知),Order Created,payment,warning,交易 CallBack 的 12 代表已建立尚未付款 勿與查詢 API 的 12 混淆
+sunpay,12-query,查無該筆訂單(查詢API),Order Not Found,query,error,查詢 API 的 12 代表查無訂單 與交易通知的 12 意義不同 判斷邏輯須分開
+sunpay,06,交易編號或訂單編號須擇一,Trade No or Order No required,validation,error,查詢時 trade_no 與 td 必須擇一帶入
+sunpay,13,交易未完成,Transaction Incomplete,query,warning,消費者尚未完成付款 可續等或取消
+sunpay,14,訂單退款,Order Refunded,refund,info,該筆訂單已退款 另查 refund_status 取得退款進度
+sunpay,15,交易取消,Transaction Canceled,query,info,交易已取消
+sunpay,RSA-001,RSA 加密失敗,RSA Encryption Failed,encryption,error,加密分段須為 117 byte 且需先 urlencode 再加密
+sunpay,RSA-002,RSA 解密失敗,RSA Decryption Failed,encryption,error,解密分段為 128 byte 非 117 先 base64decode 再分段解密最後 urldecode
+sunpay,SIGN-001,check_value 驗證失敗,Signature Mismatch,auth,error,head 與 body 須 ASCII 升序排序 null 值不參與簽名 SHA2 密鑰接在 urlencode 字串尾端
+sunpay,TIME-001,交易發起時間逾時,Send Time Expired,validation,error,send_time 格式為 fffssmmHHyyyyMMdd 且超過 120 秒視為無效 請校時
+sunpay,LGS-001,物流金額超限,Logistics Amount Exceeded,validation,error,訂單金額大於 2 萬元無法使用物流服務
+sunpay,URL-001,回傳網址含連接埠被擋,Callback URL With Port Blocked,validation,error,回傳網址不可帶 port 紅陽基於資安風控會阻擋
+jkopay,POS-000,交易成功,Success,success,info,
+jkopay,POS-301,交易失敗(網路或系統異常),Transaction failed network or system error,server,error,稍後重試 注意此碼與 Platform API 的 301(Invalid auth_no) 意義不同
+jkopay,POS-601,查無綁定會員,Bound member not found,validation,error,消費者未完成綁定 請其於街口 App 完成設定
+jkopay,POS-801,Gateway 連線異常,Gateway connection error,server,error,街口端連線異常 稍後重試
+jkopay,POS-802,銀行端交易失敗,Bank transaction failed,payment,error,依 StatusDesc 內的銀行端錯誤訊息判斷 請消費者改用其他付款方式
+jkopay,POS-804,缺少必要參數,Missing required parameter,validation,error,POS 付款所有欄位皆為必填 無值請帶空字串而非省略
+jkopay,POS-812,此筆訂單已轉退款,Order already refunded,business,error,查詢原訂單狀態後結案
+jkopay,POS-901,未明確定義錯誤,Undefined error,server,error,保留 MerchantTradeNo 洽街口客服查詢
+jkopay,POS-904,加簽或驗簽失敗,Signature verification failed,auth,error,POS 簽章需將欄位依 Key 字母排序 去除空白換行 JSON 尾接 MerchantKey 後 SHA256 且 Sign 須全小寫
+jkopay,POS-905,解析資料失敗,Data parsing failed,validation,error,檢查 JSON 格式與欄位型態
+jkopay,POS-906,條碼已失效,Barcode expired,validation,error,街口付款條碼有時效 請消費者重新出示條碼
+jkopay,POS-907,非街口合作店鋪,Store not a JKOPAY partner,auth,error,確認 MerchantID 與 StoreID 已開通
+jkopay,POS-909,寫入資料失敗,Data write failed,server,error,稍後重試
+jkopay,POS-911,停權用戶,Suspended user,business,error,請消費者聯繫街口客服 02-87717212
+jkopay,POS-912,查無會員,Member not found,validation,error,確認消費者帳號狀態
+jkopay,POS-916,查無此訂單,Order not found,query,error,確認 MerchantTradeNo 正確且交易已建立
+jkopay,POS-927,條碼錯誤,Invalid barcode,validation,error,CardToken 格式為固定 2 碼 22 加 16 碼亂數 共 18 碼
+jkopay,POS-928,消費者街口帳戶餘額不足,Insufficient JKOPAY balance,business,error,請消費者儲值或改用其他付款方式
+jkopay,POS-929,交易類型不支援此付款方式,Payment type not supported,validation,error,確認該店鋪已開通該付款方式
+jkopay,POS-931,交易金額已達限額,Transaction amount limit reached,business,error,電支法規限額 請拆單或改用其他支付工具
+jkopay,POS-932,店家收款金額已達限額,Store receiving limit reached,business,error,洽街口調整店家限額
+jkopay,POS-934,訂單狀態異常無法退款,Order status invalid for refund,business,error,先查詢訂單狀態確認是否已退款或已取消
+jkopay,POS-935,已達每日店鋪限額,Daily store limit reached,business,error,隔日再行交易或洽街口調整限額
+jkopay,POS-939,學生儲值卡餘額不足,Insufficient student card balance,business,error,請消費者改用其他付款方式
+jkopay,POS-940,支付金額不可小於等於0元,Amount must be greater than zero,validation,error,TradeAmount 需為正整數
+jkopay,POS-951,退款造成街口帳戶支出故拒絕退款,Refund would cause JKOPAY account outflow,business,error,洽街口客服協助處理
+jkopay,POS-961,退款需收回街口幣或現金回饋導致信用卡退刷異常,Refund conflicts with coin or cashback,business,error,洽街口客服協助處理
+jkopay,POS-962,儲值卡退款失敗,Stored value card refund failed,business,error,洽街口客服協助處理
+jkopay,POS-968,使用街口券的交易無法部分退款,Coupon transaction requires full refund,business,error,退款前先檢查折抵資訊 有券則只能全額退款
+jkopay,POS-975,退款金額大於店家累計未請款金額,Refund exceeds unreimbursed balance,business,error,待撥款入帳後再行退款
+jkopay,POS-977,逾一年未使用需先身分驗證,Identity verification required,business,error,請消費者聯繫街口客服 02-87717212 進行身分驗證
+jkopay,POS-978,此用戶無法使用街口服務,User cannot use JKOPAY,business,error,請消費者洽街口客服 02-87717212
+jkopay,POS-980,此店鋪已下線,Store offline,auth,error,確認店鋪狀態並洽街口重新上線
+jkopay,OA-001,OAuth 取得 token 成功,Success,success,info,
+jkopay,OA-205,Auth Code 已被使用,Auth code already used,auth,error,auth_code 僅能使用一次 需重新引導使用者授權
+jkopay,OA-360,Auth Code 過期,Auth code expired,auth,error,重新引導使用者授權取得新的 auth_code
+jkopay,OA-999,OAuth 系統異常,System error,server,error,稍後重試
+jkopay,UP-001,取得用戶資料成功,Success,success,info,
+jkopay,UP-460,Access Token 過期,Access token expired,auth,error,以 refresh_token 換取新的 access_token
+jkopay,UP-999,用戶資料系統異常,System error,server,error,稍後重試
+jkopay,405,權限不足,Permission denied,auth,error,JOP Gateway 該 client_id 未取得此 API 權限 洽街口開放平台開通

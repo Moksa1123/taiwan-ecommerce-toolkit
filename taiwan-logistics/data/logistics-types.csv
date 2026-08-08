@@ -23,3 +23,7 @@ CVS,UNIMART_B2C_PAY,7-11 B2C (PAYUNi),payuni,cvs_b2c,true,20000,45x30x30cm,常�
 Home,TCAT_PAY,黑貓常溫 (PAYUNi),payuni,home,true,50000,150x150x150cm,常溫,統一T-Cat常溫
 Home,TCAT_FREEZE,黑貓冷凍 (PAYUNi),payuni,home,true,50000,100x100x100cm,冷凍,統一T-Cat冷凍
 Home,TCAT_COLD,黑貓冷藏 (PAYUNi),payuni,home,true,50000,100x100x100cm,冷藏,統一T-Cat冷藏
+CVS,EZSHIP_OK,OK 店到店 (ezShip),ezship,cvs_c2c,true,20000,45x30x30cm,常溫,ezShip 不含 7-11
+CVS,EZSHIP_HILIFE,萊爾富店到店 (ezShip),ezship,cvs_c2c,true,20000,45x30x30cm,常溫,ezShip 不含 7-11
+CVS,EZSHIP_FAMI,全家店到店 (ezShip),ezship,cvs_c2c,true,20000,45x30x30cm,常溫,ezShip 不含 7-11
+Ondemand,LALAMOVE,Lalamove 即時配送,lalamove,ondemand,false,依方案,依車型,常溫,先報價後下單;報價效期5分鐘;同城/當日;可換司機;非批次物流

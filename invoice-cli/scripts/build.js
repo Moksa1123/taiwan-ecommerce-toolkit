@@ -2,12 +2,17 @@ import { build } from 'esbuild';
 import { writeFileSync, readFileSync, mkdirSync, existsSync } from 'fs';
 import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';
+import { syncOne } from '../../scripts/sync-assets.mjs';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const distDir = join(__dirname, '..', 'dist');
 
 async function main() {
   console.log('Building taiwan-invoice-skill CLI...');
+
+  // assets 會被 npm publish 一起發布（package.json 的 files 含 assets），
+  // 因此打包前先從 source of truth 同步，避免發出過期的 skill 內容
+  syncOne('invoice');
 
   // Ensure dist directory exists
   if (!existsSync(distDir)) {

@@ -19,7 +19,9 @@ python3 taiwan-payment/scripts/recommend.py "<requirements>"
 python3 taiwan-payment/scripts/test_payment.py [--platform <platform>]
 ```
 
-**Supported Platforms:** `ecpay`, `newebpay`, `payuni`, `smilepay`, `pchomepay`, `ezpay`, `paynow`
+**Supported Platforms:** `ecpay`, `newebpay`, `payuni`, `smilepay`, `pchomepay`, `ezpay`, `paynow`, `shopline`, `linepay`, `tappay`, `opay`, `jkopay`, `sunpay`, `gomypay`
+
+**電子支付錢包生態（街口/全支付/全盈+PAY/悠遊付/一卡通/icash Pay/橘子支/TWQR/零售自有 pay）:** 見 `references/twqr-ewallet-landscape.md`——多數不直接串，走聚合商或 TWQR。
 
 **Search Domains:** `provider`, `operation`, `error`, `field`, `payment_method`, `troubleshoot`, `reasoning`
 
@@ -46,11 +48,11 @@ taiwan-payment/                     # Source of Truth
 │   ├── search.py                   # Search CLI (150+ lines)
 │   └── test_payment.py             # Connection testing
 └── data/                           # Data-driven architecture (7 CSVs)
-    ├── providers.csv               # 3 providers with details
+    ├── providers.csv               # 14 providers（含 doc_access 文件公開程度分級）
     ├── operations.csv              # 8 API operations
-    ├── error-codes.csv             # 20+ error codes + solutions
+    ├── error-codes.csv             # 120 error codes + solutions（11 家）
     ├── field-mappings.csv          # 15 field mappings
-    ├── payment-methods.csv         # 24 payment methods
+    ├── payment-methods.csv         # 40 payment methods
     ├── reasoning.csv               # 30+ recommendation rules
     └── troubleshooting.csv         # 16 troubleshooting cases
 
@@ -87,10 +89,18 @@ When modifying files:
    - `base/quick-reference.md` - Quick reference (Claude only)
    - `platforms/*.json` - Platform-specific configs (14 platforms)
 
-3. **CLI Assets** - Run sync before publishing:
+3. **CLI Assets** - 自動同步，無需手動複製：
+   - `<cli>/scripts/build.js` 會在打包前呼叫 `scripts/sync-assets.mjs`，
+     因此 `npm run build` 與 `npm publish`（透過 prepublishOnly）都會自動帶到最新內容
+   - 發布流程另以 `node scripts/sync-assets.mjs --check` 驗證，落差會擋下發布
+
    ```bash
-   cp -r taiwan-payment/* cli/assets/taiwan-payment/
+   node scripts/sync-assets.mjs            # 手動同步全部
+   node scripts/sync-assets.mjs --check    # 只檢查，有落差 exit 1
    ```
+
+   > assets 會隨 npm publish 一起發布（package.json 的 `files` 含 `assets`），
+   > 過去忘記同步會靜默發出過期的 skill 內容，因此改為自動化。
 
 4. **Reference Folders** - No manual sync needed. The CLI generates these from templates during `taiwan-payment init`.
 
@@ -289,7 +299,7 @@ HashIV:   請至後台申請
 Before publishing to npm:
 
 1. Update version in `cli/package.json`
-2. Sync assets: `cp -r taiwan-payment/* cli/assets/taiwan-payment/`
+2. Sync assets: 由 `npm run build` 自動處理（`scripts/sync-assets.mjs`）
 3. Build CLI: `cd cli && npm run build`
 4. Test locally: `npm test`
 5. Publish: `npm publish`

@@ -6,7 +6,9 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 Taiwan Logistics Skill is an AI-powered toolkit for Taiwan logistics integration, providing API documentation, code examples, and scripts for major logistics platforms. It works as a skill/workflow for AI coding assistants (Claude Code, Windsurf, Cursor, etc.).
 
-**Supported Providers:** `ecpay`, `newebpay`, `payuni`, `smilepay`, `pchomepay`, `paynow`, `hct_direct`
+**Supported Providers:** `ecpay`, `newebpay`, `payuni`, `smilepay`, `pchomepay`, `paynow`, `ezship`, `lalamove`, `hct_direct`
+
+**No public API（僅列於 providers.csv 供查詢，`api_available=false`）:** 黑貓 t-cat、嘉里大榮、宅配通、中華郵政、7-11 交貨便/賣貨便、全家好賣+、萊爾富、OK、蝦皮店到店。原因與替代路徑見 `references/carrier-direct-access.md`。
 
 ## Available Scripts
 
@@ -40,7 +42,7 @@ taiwan-logistics/                   # Source of Truth
 │   └── hct-logistics-api.md        # NEW (Phase 4): HCT 直連 carrier API
 ├── examples/                       # Python examples per provider
 └── data/                           # Data-driven CSVs
-    ├── providers.csv               # 7+ providers/carriers
+    ├── providers.csv               # 9 可串接 + 10 僅供查詢（含 doc_access 分級）
     ├── operations.csv              # cross-provider API operations
     ├── logistics-types.csv         # CVS/Home/temp variants
     ├── status-codes.csv            # vendor-specific status codes
@@ -77,10 +79,18 @@ When modifying files:
    - `base/quick-reference.md` - Quick reference (Claude only)
    - `platforms/*.json` - Platform-specific configs (14 platforms)
 
-3. **CLI Assets** - Run sync before publishing:
+3. **CLI Assets** - 自動同步，無需手動複製：
+   - `<cli>/scripts/build.js` 會在打包前呼叫 `scripts/sync-assets.mjs`，
+     因此 `npm run build` 與 `npm publish`（透過 prepublishOnly）都會自動帶到最新內容
+   - 發布流程另以 `node scripts/sync-assets.mjs --check` 驗證，落差會擋下發布
+
    ```bash
-   cp -r taiwan-logistics/* logistics-cli/assets/taiwan-logistics/
+   node scripts/sync-assets.mjs            # 手動同步全部
+   node scripts/sync-assets.mjs --check    # 只檢查，有落差 exit 1
    ```
+
+   > assets 會隨 npm publish 一起發布（package.json 的 `files` 含 `assets`），
+   > 過去忘記同步會靜默發出過期的 skill 內容，因此改為自動化。
 
 ## Supported AI Platforms
 
@@ -130,7 +140,7 @@ Never push directly to `main`. Always:
 ## Related Projects
 
 - **Taiwan Invoice Skill** - E-Invoice integration (ECPay, SmilePay, Amego, ezPay, PayNow)
-- **Taiwan Payment Skill** - Payment integration (10 providers including ECPay, NewebPay, PAYUNi, SmilePay, PChomePay, ezPay, PayNow, Shopline, LINE Pay, TapPay)
+- **Taiwan Payment Skill** - Payment integration (14 providers: ECPay, NewebPay, PAYUNi, SmilePay, PChomePay, ezPay, PayNow, Shopline, LINE Pay, TapPay, O'Pay, JKOPAY, SunPay, GoMyPay)
 
 ---
 

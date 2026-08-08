@@ -30,3 +30,13 @@ PHP專案,ECPay,HIGH,官方PHP SDK最完整,language=php AND need_sdk=true,避�
 新創公司,SmilePay,MEDIUM,快速上線 成本控制,company_type=startup AND phase=early,避免過度投資基礎建設,早期新創
 企業級應用,ECPay,HIGH,穩定性和支援優先,company_type=enterprise,避免使用非主流方案,大型企業
 政府專案,Amego,MEDIUM,MIG標準合規,project_type=government,避免非標準協議,政府標案
+B2B 存證完整流程,OPay,HIGH,B2B 開立/作廢/退回/折讓皆有確認兩階段 | MaintainMerchantCustomerData 買方資料維護,invoice_type=B2B AND need_confirm_flow=true,B2C 單純開立不需這麼複雜,開立予營業人 需買方確認 存證流程
+離線/實體門市 POS 開立,OPay,HIGH,OfflineIssue 離線開立 | 預先批次取號 | GetOfflineInvoiceWordSettingWithAutoSplit 多台POS自動分段字軌,has_pos=true OR network_reliability=low,純線上電商不需要,實體門市 POS 網路不穩 連鎖店
+POS 批次取號,PayNow,MEDIUM,含 POS 批次取號 金物流發票一站式,has_pos=true AND need_logistics=true,公開文件稀疏 需申請,門市 POS 金物流發票整合
+手機條碼與捐贈碼驗證,MOF,HIGH,財政部大平台為上游 | 加值中心的 CheckBarcode/CheckLoveCode 皆轉呼叫此處,need_carrier_verify=true,單純電商開發票不需申請 AppID 用加值中心端點即可,手機條碼驗證 捐贈碼查驗 載具查詢
+消費者端發票 App,MOF,HIGH,載具發票查詢/歸戶/捐贈 中獎號碼清單 只有財政部 API 提供,app_type=consumer,不能用來開立發票,發票App 記帳App 自動對獎 會員中心
+文件公開免登入,OPay,HIGH,B2C/B2B/離線三份 PDF 免登入直連下載,priority=documentation AND access=public,需要最大社群資源者選 ECPay,快速評估 無帳號先研究
+蝦皮供應商,TradeVAN,MEDIUM,蝦皮供應商電子發票平台走關貿網路,channel=shopee_supplier,文件需申請 本 skill 尚未收錄 reference,蝦皮供應商 大型通路指定
+金流發票同一家串接,SunPay,MEDIUM,紅陽金流與發票同一供應商可搭配隨交易自動開立,vendor_consolidation=true,金流與發票加密機制完全不同(RSA vs AES)不可共用程式碼 已自行串接發票者勿啟用隨交易開立,一站式 減少廠商 隨交易開票 金流發票同一家 紅陽
+需要冪等重試保護,SunPay,HIGH,相同 PostData 且參數完全一致時回傳原發票不會重複開立,idempotency=required,重試時若有任一欄位不同仍會開出新發票 須送出完全相同的 payload,冪等 重試 重複開立 逾時重送 網路不穩 紅陽
+B2B交換模式與存證模式,OPay,HIGH,歐付寶 B2B 同時支援交換模式與存證模式 且 Confirm 兩階段僅存在於交換模式,invoice_type=b2b AND need_buyer_confirm=true,串接前必須先呼叫 MaintainMerchantCustomerData 設定 ExchangeMode 否則後續端點會失敗,B2B交換模式 存證模式 買方確認 營業人對營業人

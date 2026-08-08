@@ -1,0 +1,125 @@
+name: Publish to npm
+
+# 三個 CLI 是各自獨立版號的 npm 套件，以 tag 前綴決定要發哪一個：
+#   invoice-v2.7.2    -> taiwan-invoice-skill
+#   payment-v1.3.5    -> taiwan-payment-skill
+#   logistics-v1.2.4  -> taiwan-logistics-skill
+on:
+  push:
+    tags:
+      - 'invoice-v*'
+      - 'payment-v*'
+      - 'logistics-v*'
+  workflow_dispatch:
+    inputs:
+      package:
+        description: '要發布的套件'
+        required: true
+        type: choice
+        options: [invoice, payment, logistics]
+      dry_run:
+        description: '只做驗證與打包，不實際發布'
+        type: boolean
+        default: true
+
+permissions:
+  contents: read
+  id-token: write # npm Trusted Publishing (OIDC) 必需，用來換取短期憑證
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: 解析 tag 對應的套件
+        id: target
+        run: |
+          set -euo pipefail
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            key="${{ inputs.package }}"
+            version=""
+          else
+            tag="${GITHUB_REF_NAME}"
+            key="${tag%%-v*}"
+            version="${tag#*-v}"
+          fi
+
+          case "$key" in
+            invoice)   dir="invoice-cli";   pkg="taiwan-invoice-skill" ;;
+            payment)   dir="payment-cli";   pkg="taiwan-payment-skill" ;;
+            logistics) dir="logistics-cli"; pkg="taiwan-logistics-skill" ;;
+            *) echo "::error::無法從 '${GITHUB_REF_NAME:-$key}' 判斷套件"; exit 1 ;;
+          esac
+
+          {
+            echo "key=$key"
+            echo "dir=$dir"
+            echo "pkg=$pkg"
+            echo "version=$version"
+          } >> "$GITHUB_OUTPUT"
+          echo "套件 $pkg（$dir）版本 ${version:-由 package.json 決定}"
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          registry-url: https://registry.npmjs.org
+          cache: npm
+          cache-dependency-path: ${{ steps.target.outputs.dir }}/package-lock.json
+
+      # Trusted Publishing 需要 npm 11.5.0 以上
+      - name: 升級 npm
+        run: npm install -g npm@latest
+
+      - name: 驗證 tag 版本與 package.json 一致
+        if: github.event_name == 'push'
+        run: |
+          set -euo pipefail
+          pkg_version=$(node -p "require('./${{ steps.target.outputs.dir }}/package.json').version")
+          tag_version="${{ steps.target.outputs.version }}"
+          if [ "$pkg_version" != "$tag_version" ]; then
+            echo "::error::tag 版本 ($tag_version) 與 ${{ steps.target.outputs.dir }}/package.json ($pkg_version) 不一致"
+            exit 1
+          fi
+          echo "版本一致：$pkg_version"
+
+      # assets 會隨 npm publish 一起發布（package.json 的 files 含 assets）。
+      # 若與 source of truth 有落差，使用者安裝到的會是過期的 skill 內容，
+      # 而且不會有任何錯誤訊息 —— 因此在此擋下。
+      - name: 驗證 CLI assets 已同步
+        run: node scripts/sync-assets.mjs --check
+
+      - name: 驗證資料檔完整性
+        run: python3 scripts/validate-data.py
+
+      - name: 推薦系統回歸測試
+        run: |
+          set -euo pipefail
+          python3 taiwan-invoice/scripts/test_recommend.py
+          python3 taiwan-payment/scripts/test_recommend.py
+
+      - name: 安裝相依套件
+        working-directory: ${{ steps.target.outputs.dir }}
+        run: npm ci
+
+      - name: 建置
+        working-directory: ${{ steps.target.outputs.dir }}
+        run: npm run build
+
+      # 同步後若仍有變動，代表 commit 的 assets 不是最新的
+      - name: 確認建置未改動工作區
+        run: |
+          if ! git diff --quiet; then
+            echo "::error::建置後工作區有變動，代表 commit 的 assets 落後於 source of truth"
+            git --no-pager diff --stat
+            exit 1
+          fi
+
+      - name: 檢視發布內容
+        working-directory: ${{ steps.target.outputs.dir }}
+        run: npm pack --dry-run
+
+      - name: 發布
+        if: github.event_name == 'push' || inputs.dry_run == false
+        working-directory: ${{ steps.target.outputs.dir }}
+        run: npm publish --access public

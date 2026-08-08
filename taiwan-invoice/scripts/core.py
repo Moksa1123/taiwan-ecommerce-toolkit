@@ -83,6 +83,64 @@ def tokenize(text: str) -> List[str]:
     return [t for t in tokens if len(t) >= 1]
 
 
+# reasoning.csv 規則比對的最低匹配強度，低於此值視為雜訊不計分
+MIN_RULE_MATCH = 0.15
+
+
+def match_tokens(text: str) -> set:
+    """抽出用於規則比對的 token：英數詞 + 中文 bigram。
+
+    bigram 只在同一個中文詞塊內組合，不跨空白邊界，避免組出
+    「試避」這類跨詞的無意義片段。
+    """
+    if not text:
+        return set()
+
+    text = text.lower()
+    tokens = set(re.findall(r'[a-z0-9]+', text))
+
+    for chunk in re.findall(r'[一-鿿]+', text):
+        if len(chunk) == 1:
+            tokens.add(chunk)
+        else:
+            for i in range(len(chunk) - 1):
+                tokens.add(chunk[i:i + 2])
+
+    return tokens
+
+
+def rule_match_score(query: str, *rule_fields: str) -> float:
+    """量化查詢與規則文字的匹配強度，回傳 0.0–1.0。
+
+    取代原本「命中任一詞即給滿分」的判斷 —— 舊做法讓「開立」這類高頻
+    短詞使不相干的規則也拿到完整權重。
+
+    計分方式為「規則解釋了查詢的多少比例」，即 overlap / 查詢詞數。
+    刻意不納入 recall（overlap / 規則詞數）：規則的 use_cases 詞數多寡
+    是撰寫風格差異，用它加權會讓寫得詳細的規則反而吃虧。
+
+    另設最低命中詞數，避免單一詞偶然命中就計分；查詢本身很短時放寬，
+    否則兩字查詢將永遠無法命中任何規則。
+    """
+    q = match_tokens(query)
+    if not q:
+        return 0.0
+
+    min_overlap = 1 if len(q) <= 2 else 2
+
+    best = 0.0
+    for field in rule_fields:
+        r = match_tokens(field)
+        if not r:
+            continue
+        overlap = len(q & r)
+        if overlap < min_overlap:
+            continue
+        best = max(best, overlap / len(q))
+
+    return best
+
+
 def compute_idf(documents: List[List[str]]) -> Dict[str, float]:
     """
     計算 IDF (Inverse Document Frequency)

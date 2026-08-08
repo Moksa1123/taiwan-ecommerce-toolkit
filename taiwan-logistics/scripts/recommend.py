@@ -18,10 +18,14 @@ import sys
 import csv
 import json
 import math
+import re
 import argparse
 from pathlib import Path
 from typing import List, Dict, Tuple
 from dataclasses import dataclass
+
+sys.path.insert(0, str(Path(__file__).parent))
+from core import tokenize as core_tokenize
 
 
 @dataclass
@@ -132,26 +136,28 @@ class LogisticsRecommender:
         with open(providers_file, 'r', encoding='utf-8') as f:
             reader = csv.DictReader(f)
             for row in reader:
+                # providers.csv 的實際欄位為 name_zh/type/coverage/doc_access…
+                # 這裡做寬鬆對應，缺欄位時以合理預設值代替，避免 KeyError
+                features = [s for s in re.split(r'\s*[|,]\s*', row.get('features', '')) if s]
                 self.providers.append(
                     LogisticsProvider(
                         provider=row['provider'],
-                        display_name=row['display_name'],
-                        auth_method=row['auth_method'],
-                        encryption=row['encryption'],
-                        test_url=row['test_url'],
-                        prod_url=row['prod_url'],
-                        content_type=row['content_type'],
-                        features=row['features'].split(' | '),
-                        market_share=row['market_share'],
-                        api_style=row['api_style'],
-                        logistics_types=row['logistics_types'].split(' | ')
+                        display_name=row.get('display_name') or row.get('name_zh') or row['provider'],
+                        auth_method=row.get('auth_method', ''),
+                        encryption=row.get('encryption', ''),
+                        test_url=row.get('test_url', ''),
+                        prod_url=row.get('prod_url', ''),
+                        content_type=row.get('content_type', ''),
+                        features=features,
+                        market_share=row.get('market_share') or row.get('coverage', ''),
+                        api_style=row.get('api_style') or row.get('type', ''),
+                        logistics_types=features,
                     )
                 )
 
     def tokenize(self, text: str) -> List[str]:
-        """分詞"""
-        text = text.lower()
-        return text.split()
+        """分詞（沿用 core.py 的中英混合分詞，避免中文查詢整段當成單一 token）"""
+        return core_tokenize(text)
 
     def build_document(self, provider: LogisticsProvider) -> str:
         """建立服務商文件 (用於搜尋)"""

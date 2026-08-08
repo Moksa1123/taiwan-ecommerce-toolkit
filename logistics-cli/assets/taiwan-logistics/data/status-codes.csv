@@ -66,13 +66,13 @@ paynow,LS01,7-11 大宗已出貨,7-11 Shipped,in_transit,7-11 大宗 B2C 已出�
 paynow,LS02,7-11 已配達門市,7-11 At Store,at_store,7-11 包裹已配達取貨門市,
 paynow,LS03,7-11 已取貨,7-11 Picked,completed,7-11 消費者取貨完成,
 paynow,LS11,全家已出貨,FAMI Shipped,in_transit,全家大宗 B2C 已出貨,
-paynow,LS12,全家已配達門市,FAMI At Store,at_store,
-paynow,LS13,全家已取貨,FAMI Picked,completed,
+paynow,LS12,全家已配達門市,FAMI At Store,at_store,全家大宗 B2C 已配達門市,通知取貨
+paynow,LS13,全家已取貨,FAMI Picked,completed,消費者已至全家門市取貨,
 paynow,LS21,黑貓已出貨,TCAT Shipped,in_transit,黑貓宅配已出貨,
-paynow,LS22,黑貓配達中,TCAT In Transit,in_transit,
-paynow,LS23,黑貓配達完成,TCAT Delivered,delivered,
+paynow,LS22,黑貓配達中,TCAT In Transit,in_transit,黑貓宅配配送中,
+paynow,LS23,黑貓配達完成,TCAT Delivered,delivered,黑貓宅配已送達,
 paynow,LE01,異常訂單,Anomaly,error,配送異常,聯繫客服
-paynow,LR01,退貨完成,Return Done,returned,
+paynow,LR01,退貨完成,Return Done,returned,退貨流程已完成,
 hct,集貨,Picked Up,Picked Up,picked_up,HCT 已收件,
 hct,卸集貨,Unloaded,Unloaded,in_transit,包裹進入轉運站,
 hct,發送,Dispatched,Dispatched,in_transit,包裹從站所發送,

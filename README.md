@@ -27,12 +27,16 @@
 
 ## 專案概覽
 
-Taiwan E-Commerce Toolkit 是專為台灣電商生態系統設計的企業級整合開發工具包，提供完整的電子發票、金流串接、物流整合解決方案。本工具包整合台灣三大領域共 **22 個服務商串接**（5 家發票 + 10 家金流 + 7 家物流），搭配智能開發工具與生產級程式碼範例，協助開發團隊快速完成電商系統整合。
+Taiwan E-Commerce Toolkit 是專為台灣電商生態系統設計的企業級整合開發工具包，提供完整的電子發票、金流串接、物流整合解決方案。本工具包整合台灣三大領域共 **32 個可串接服務商**（9 家發票 + 14 家金流 + 9 家物流），另收錄 10 家**無公開 API** 的物流業者與其替代路徑，搭配智能開發工具與生產級程式碼範例，協助開發團隊快速完成電商系統整合。
 
 **最新版本（請以 npm 為準）：**
-- `taiwan-invoice-skill@2.7.1+` — 5 家發票（ECPay / SmilePay / Amego / ezPay / PayNow）
-- `taiwan-payment-skill@1.3.4+` — 10 家金流（ECPay / NewebPay / PAYUNi / SmilePay / PChomePay / ezPay / PayNow / Shopline / LINE Pay / TapPay）
-- `taiwan-logistics-skill@1.2.3+` — 7 家物流（6 aggregator + HCT 直連 carrier API）
+- `taiwan-invoice-skill@2.8.0+` — 9 家發票（ECPay / SmilePay / Amego / ezPay / PayNow / O'Pay / SunPay / 財政部大平台 / 關貿）
+- `taiwan-payment-skill@1.4.0+` — 14 家金流（ECPay / NewebPay / PAYUNi / SmilePay / PChomePay / ezPay / PayNow / Shopline / LINE Pay / TapPay / O'Pay / 街口 / 紅陽 / GoMyPay）
+- `taiwan-logistics-skill@1.3.0+` — 9 家可串接物流（8 aggregator + HCT 直連 carrier API）＋ 10 家僅供查詢
+
+> **發票的兩個例外**：財政部大平台是上游，只做查詢／驗證（手機條碼、載具、捐贈碼），**不能開立發票**；關貿網路已收錄於資料層，但文件需簽約，尚無 reference。
+>
+> **物流的「僅供查詢」是什麼**：黑貓、嘉里大榮、宅配通、中華郵政、7-11 交貨便、全家好賣+、萊爾富、OK、蝦皮店到店都**沒有對外商家 API**，只能經聚合商。這些在 `providers.csv` 標為 `api_available=false` 並附替代路徑，避免誤以為可直連。
 
 **狀態:** Production Ready · MIT 授權
 
@@ -683,20 +687,24 @@ gh pr create
 
 ### 發布流程 (維護者)
 
+發布由 GitHub Actions 於 tag 推送時觸發，**不需手動 `npm publish`**。完整說明見 [RELEASING.md](RELEASING.md)。
+
 ```bash
-# 1. 同步核心內容到 CLI assets
-cp -r taiwan-invoice/* invoice-cli/assets/taiwan-invoice/
-cp -r taiwan-payment/* payment-cli/assets/taiwan-payment/
-cp -r taiwan-logistics/* logistics-cli/assets/taiwan-logistics/
+# 1. 更新版本號（assets 同步已由 build 自動處理，不需手動 cp）
+cd payment-cli && npm version minor --no-git-tag-version && cd ..
 
-# 2. 更新版本號
-cd invoice-cli && npm version patch  # 或 minor, major
-cd ../payment-cli && npm version patch
-cd ../logistics-cli && npm version patch
+# 2. 本機驗證
+node scripts/sync-assets.mjs          # 同步 assets
+python scripts/validate-data.py       # CSV 完整性
+python taiwan-payment/scripts/test_recommend.py
 
-# 3. 建置並發布
-npm run build && npm publish
+# 3. commit 後打 tag 觸發發布
+git add -A && git commit -m "chore(payment): bump to 1.4.0" && git push
+git tag payment-v1.4.0 && git push origin payment-v1.4.0
 ```
+
+tag 前綴決定發布哪個套件：`invoice-v*` / `payment-v*` / `logistics-v*`。
+workflow 會驗證 tag 版號與 `package.json` 一致、assets 已同步、資料檔完整、回歸測試通過，任一不過即中止發布。
 
 ### 使用者安裝流程
 

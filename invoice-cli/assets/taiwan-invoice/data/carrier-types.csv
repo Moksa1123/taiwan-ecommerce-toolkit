@@ -2,4 +2,4 @@ carrier_type,carrier_type_zh,code,format,example,validation_regex,notes
 none,無載具,/,/,/,^/$,列印紙本發票
 mobile,手機條碼,3,/+7碼英數,/ABC1234,^\/[A-Z0-9+-.]{7}$,最常用載具
 citizen,自然人憑證,2,2碼英文+14碼數字,AB12345678901234,^[A-Z]{2}\d{14}$,需讀卡機
-donate,捐贈碼,1,3-7碼數字,12345,^\d{3,7}$,愛心捐贈
+donate,捐贈碼,1,3-7碼數字,12345,"^\d{3,7}$",愛心捐贈

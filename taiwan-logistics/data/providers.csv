@@ -1,15 +1,20 @@
-provider,name_zh,name_en,type,api_available,test_merchant_id,test_hash_key,test_hash_iv,test_url,prod_url,features,coverage
-ecpay,綠界物流,ECPay Logistics,aggregator,true,2000132,5294y06JbISpM5x9,v77hoKGq4kWxNNIS,https://logistics-stage.ecpay.com.tw,https://logistics.ecpay.com.tw,"7-11,全家,萊爾富,OK,黑貓,宅配通",全台
-unimart,7-11 交貨便,7-11 ibon,cvs,true,,,,,https://emap.pcsc.com.tw,店到店,全台 5000+ 門市
-fami,全家店到店,FamilyMart,cvs,true,,,,,https://www.famiport.com.tw,店到店,全台 3500+ 門市
-hilife,萊爾富,Hi-Life,cvs,true,,,,,https://www.hilife.com.tw,店到店,全台 1500+ 門市
-okmart,OK 便利商店,OK Mart,cvs,true,,,,,,店到店,全台 900+ 門市
-tcat,黑貓宅急便,t-cat,home,true,,,,https://www.t-cat.com.tw,https://www.t-cat.com.tw,"常溫,冷藏,冷凍",全台
-hct,新竹物流,HCT,home,true,,,,https://www.hct.com.tw,https://www.hct.com.tw,常溫,全台
-pelican,宅配通,Pelican Express,home,true,,,,https://www.pelican.com.tw,https://www.pelican.com.tw,常溫,全台
-newebpay,藍新物流,NewebPay Logistics,payment_aggregator,true,請至後台申請,請至後台申請,請至後台申請,https://ccore.newebpay.com/API/Logistic,https://core.newebpay.com/API/Logistic,"7-11,全家,萊爾富,OK,黑貓,AES-256-CBC加密",全台
-payuni,統一物流,PAYUNi Logistics,payment_aggregator,true,請至後台申請,請至後台申請,請至後台申請,https://sandbox-api.payuni.com.tw/api/logistics,https://api.payuni.com.tw/api/logistics,"7-11常溫/冷凍,T-Cat宅配,AES-256-GCM加密",全台
-smilepay,速買配物流,SmilePay Logistics,payment_aggregator,true,1111,174A02F97A95F72CE301137B3F98D128,,https://ssl.smse.com.tw/api,https://ssl.smse.com.tw/api,"7-11/全家 C2C+B2C,黑貓 COD/PICKUP/逆物流,Pay_zg矩陣 51/52/55/56/81/82/83",全台
-pchomepay,拍錢包物流,PChomePay Logistics,payment_aggregator,true,請至後台申請,請至後台申請,,https://sandbox-api.pchomepay.com.tw,https://api.pchomepay.com.tw,"金物流二合一,7-11/全家/萊爾富/OK,Notify IP白名單113.196.231.190",全台
-paynow,立吉富物流,PayNow Logistics,payment_aggregator,true,請至後台申請,請至後台申請,12345678,https://test.paynow.com.tw/service/etopm.aspx,https://www.paynow.com.tw/service/etopm.aspx,"11產品線(7-11/全家/黑貓/海外),3DES/ECB/Zero-Padding加密",全台
-hct_direct,新竹物流(直連),HCT Direct API,carrier,true,test,,,https://hctapiweb.hct.com.tw,https://hctapiweb.hct.com.tw,"查貨服務+出貨API,XML/JSON/DataSet,加密金鑰申請後提供",全台
+provider,name_zh,name_en,type,api_available,test_merchant_id,test_hash_key,test_hash_iv,test_url,prod_url,features,coverage,doc_access,doc_url,doc_verified
+ecpay,綠界物流,ECPay Logistics,aggregator,true,2000132,5294y06JbISpM5x9,v77hoKGq4kWxNNIS,https://logistics-stage.ecpay.com.tw,https://logistics.ecpay.com.tw,"7-11,全家,萊爾富,OK,黑貓,中華郵政",全台,public,https://developers.ecpay.com.tw/7380/,2026-08-08
+newebpay,藍新物流,NewebPay Logistics,payment_aggregator,true,請至後台申請,請至後台申請,請至後台申請,https://ccore.newebpay.com/API/Logistic,https://core.newebpay.com/API/Logistic,"7-11,全家,萊爾富,OK,黑貓,AES-256-CBC加密",全台,apply,https://www.newebpay.com/,2026-08-08
+payuni,統一物流,PAYUNi Logistics,payment_aggregator,true,請至後台申請,請至後台申請,請至後台申請,https://sandbox-api.payuni.com.tw/api/logistics,https://api.payuni.com.tw/api/logistics,"7-11常溫/冷凍,T-Cat宅配,AES-256-GCM加密",全台,apply,https://docs.payuni.com.tw/,2026-08-08
+smilepay,速買配物流,SmilePay Logistics,payment_aggregator,true,1111,174A02F97A95F72CE301137B3F98D128,,https://ssl.smse.com.tw/api,https://ssl.smse.com.tw/api,"7-11/全家 C2C+B2C,黑貓 COD/PICKUP/逆物流,Pay_zg矩陣 51/52/55/56/81/82/83",全台,public,https://www.smilepay.net/,2026-08-08
+pchomepay,拍錢包物流,PChomePay Logistics,payment_aggregator,true,請至後台申請,請至後台申請,,https://sandbox-api.pchomepay.com.tw,https://api.pchomepay.com.tw,"金物流二合一,7-11/全家/萊爾富/OK,Notify IP白名單113.196.231.190",全台,apply,https://www.pchomepay.com.tw/,2026-08-08
+paynow,立吉富物流,PayNow Logistics,payment_aggregator,true,請至後台申請,請至後台申請,12345678,https://test.paynow.com.tw/service/etopm.aspx,https://www.paynow.com.tw/service/etopm.aspx,"11產品線(7-11/全家/黑貓/海外),3DES/ECB/Zero-Padding加密",全台,apply,https://owlting.github.io/paynow-guideline/,2026-08-08
+ezship,ezShip 台灣便利配,ezShip,aggregator,true,請至後台申請,請至後台申請,,https://www.ezship.com.tw,https://www.ezship.com.tw,"非金流商的超取聚合商,OK/萊爾富/全家(不含7-11),店到店/取貨付款/大宗直寄/店到宅/店退店,webPara token,WooCommerce/OpenCart/EasyStore/CYBERBIZ/meepShop 模組",全台,apply,https://www.ezship.com.tw/service_doc/service_home_w18v1.jsp?vDocNo=1702,2026-08-08
+lalamove,Lalamove,Lalamove,ondemand,true,請至 Lalamove 申請,請至 Lalamove 申請,,https://rest.sandbox.lalamove.com/v3,https://rest.lalamove.com/v3,"即時/同城配送,先報價後下單(報價5分鐘效期),HMAC-SHA256 CRLF簽章,可查詢/更換司機,加價priority-fee,路線最佳化,POD",台灣及13個市場,public,https://developers.lalamove.com/,2026-08-08
+sunpay,紅陽物流,SunPay Logistics,payment_aggregator,false,,,,https://www.sunpay.com.tw,https://www.sunpay.com.tw,"超商便利送,宅配通(少數可取得宅配通的聚合路徑),參數層待補",全台,public,https://www.sunpay.com.tw/developers/,2026-08-08
+hct_direct,新竹物流(直連),HCT Direct API,carrier,true,test,,,https://hctapiweb.hct.com.tw,https://hctapiweb.hct.com.tw,"查貨服務+出貨API,XML/JSON/DataSet,加密金鑰申請後提供,TransReport須18:00前呼叫",全台,apply,https://www.hct.com.tw,2026-08-08
+unimart,7-11 交貨便,7-11 ibon,cvs,false,,,,,https://emap.pcsc.com.tw,"店到店;無對外商家API;交貨便/賣貨便為賣家自助平台;須經 ECPay/SmilePay/PayNow/PChomePay 聚合商",全台 5000+ 門市,none,https://myship.7-11.com.tw/MyShip/Index,2026-08-08
+fami,全家店到店,FamilyMart,cvs,false,,,,,https://www.famiport.com.tw,"店到店;無對外商家API;好賣+為賣家自助平台;須經聚合商",全台 3500+ 門市,none,https://www.famiport.com.tw,2026-08-08
+hilife,萊爾富,Hi-Life,cvs,false,,,,,https://www.hilife.com.tw,"店到店;無獨立對外API;須經 ECPay/ezShip 等聚合商",全台 1500+ 門市,none,https://www.hilife.com.tw,2026-08-08
+okmart,OK 便利商店,OK Mart,cvs,false,,,,,,"店到店;無獨立對外API;須經 ECPay/ezShip 等聚合商",全台 900+ 門市,none,,2026-08-08
+tcat,黑貓宅急便,t-cat,home,false,,,,https://www.t-cat.com.tw,https://www.t-cat.com.tw,"常溫/冷藏/冷凍;無公開API規格;官方為 ezcat 印單軟體+契約客戶 iCat/API 授權;建議走 SmilePay(Pay_zg 81/82/83) 或 ECPay",全台,contract,https://www.t-cat.com.tw/contract/ezcat.aspx,2026-08-08
+pelican,宅配通,Pelican Express,home,false,,,,https://www.pelican.com.tw,https://www.pelican.com.tw,"常溫;無公開API規格;可經紅陽 SunPay 等聚合商取得",全台,contract,https://www.pelican.com.tw,2026-08-08
+kerrytj,嘉里大榮,Kerry TJ Logistics,home,false,,,,https://www.kerrytj.com,https://www.kerrytj.com,"常溫;官網僅貨態查詢頁,無公開API規格;須簽約洽業務",全台,contract,https://www.kerrytj.com/zh/checking,2026-08-08
+post,中華郵政,Chunghwa Post,home,false,,,,https://www.post.gov.tw,https://www.post.gov.tw,"注意:中華郵政 Open API 僅開放金融類(存款/ATM/匯率/餘額),物流面完全無 API;郵政宅配須經 ECPay 等聚合商;流傳的包裹查詢API為非官方逆向",全台,none,https://www.post.gov.tw/post/internet/Message/index.jsp?ID=1584329354372,2026-08-08
+shopee_store,蝦皮店到店,Shopee Store-to-Store,cvs,false,,,,,,"無對外商家API;僅蝦皮生態內可用;無替代路徑",全台,none,,2026-08-08
