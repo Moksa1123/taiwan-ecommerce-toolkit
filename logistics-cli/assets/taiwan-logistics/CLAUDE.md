@@ -6,7 +6,9 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 Taiwan Logistics Skill is an AI-powered toolkit for Taiwan logistics integration, providing API documentation, code examples, and scripts for major logistics platforms. It works as a skill/workflow for AI coding assistants (Claude Code, Windsurf, Cursor, etc.).
 
-**Supported Providers:** `ecpay`, `newebpay`, `payuni`, `smilepay`, `pchomepay`, `paynow`, `ezship`, `lalamove`, `hct_direct`
+**Supported Providers:** `ecpay`, `newebpay`, `payuni`, `smilepay`, `pchomepay`, `paynow`, `ezship`, `lalamove`, `pandago`, `uber_direct`, `hct_direct`
+
+**即時／同城配送（`ondemand`）:** `lalamove`、`pandago`、`uber_direct` 三家。此分類與批次物流（超取／宅配）的資料模型不同——報價有效期短、以「趟」為單位、司機有即時座標。見 `references/ondemand-delivery.md`。⚠️ Uber Direct 的台灣可用性僅有間接證據，官方未點名確認。
 
 **No public API（僅列於 providers.csv 供查詢，`api_available=false`）:** 黑貓 t-cat、嘉里大榮、宅配通、中華郵政、7-11 交貨便/賣貨便、全家好賣+、萊爾富、OK、蝦皮店到店。原因與替代路徑見 `references/carrier-direct-access.md`。
 
