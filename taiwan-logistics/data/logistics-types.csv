@@ -27,3 +27,5 @@ CVS,EZSHIP_OK,OK 店到店 (ezShip),ezship,cvs_c2c,true,20000,45x30x30cm,常溫,
 CVS,EZSHIP_HILIFE,萊爾富店到店 (ezShip),ezship,cvs_c2c,true,20000,45x30x30cm,常溫,ezShip 不含 7-11
 CVS,EZSHIP_FAMI,全家店到店 (ezShip),ezship,cvs_c2c,true,20000,45x30x30cm,常溫,ezShip 不含 7-11
 Ondemand,LALAMOVE,Lalamove 即時配送,lalamove,ondemand,false,依方案,依車型,常溫,先報價後下單;報價效期5分鐘;同城/當日;可換司機;非批次物流
+Ondemand,PANDAGO,pandago 即時配送,pandago,ondemand,false,依報價,34x34x36cm/20kg,常溫,費用與時間為兩支獨立端點;Sandbox僅新加坡;不需成為foodpanda餐廳夥伴
+Ondemand,UBER_DIRECT,Uber Direct 即時配送,uber_direct,ondemand,false,依報價,依方案,常溫,配送半徑約10英里;可預約最多30天;台灣可用性未經官方確認
