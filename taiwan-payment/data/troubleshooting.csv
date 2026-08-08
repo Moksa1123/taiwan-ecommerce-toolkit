@@ -30,3 +30,8 @@ RESTful 端點錯誤,404 Not Found | 405 Method Not Allowed,端點路徑錯誤 |
 紅陽物流通知解析失敗,貨態通知內容為亂碼或無法解析 JSON,物流狀態通知是 HTTP FORM POST key-value 非 JSON 且全部欄位經過 URL Encode,先 URL Decode(UTF-8) 再處理;注意訂單編號欄位為大寫 Td 與請求端的 td 不同,sunpay,medium
 街口授權扣款夜間失敗,回 306 Authpay payment transaction time invalid,授權扣款僅限 08:00-20:00 UTC+8 發動,將扣款排程改到白天時段;失敗需保留重試佇列待隔日,jkopay,high
 街口授權扣款併發失敗,回 307 Payment with the same auth_no is allowed one at a time,同一 auth_no 同時僅允許一筆付款,以授權編號為鍵序列化扣款請求 勿並行送出,jkopay,high
+街口三套簽章搞混,不同模組驗簽一直失敗,街口線上支付用 HMAC-SHA256 簽 payload 原文;線下 POS 用 SHA256 簽排序後 JSON 尾接 MerchantKey 且須全小寫;OAuth 用 SHA256 簽 secret+jsonBody+timestamp除以1000除以86400 且需先轉小寫再轉大寫,三個模組的簽章程式碼必須各寫一份 不可共用,jkopay,high
+街口 POS 驗簽失敗 904,POS 付款回 StatusCode 904,欄位未依 Key 字母排序 | JSON 含空白或換行 | 字串欄位省略未帶空字串 | Sign 未轉全小寫,序列化時排序去空白 空值欄位帶空字串 最後將 Sign 轉小寫,jkopay,high
+街口 POS 折抵金額算錯,對帳金額與街口不符,POS 回傳的 RedeemAmount 與 StoreRedeemAmount 為負值 與線上支付 redeem_detail 的正值相反,POS 端對帳時折抵金額需取絕對值或直接相加(因其為負);實扣金額請用 DebitAmount,jkopay,medium
+街口 POS 斷線重送重複計費,同一筆交易出現兩筆成功紀錄,POS 端逾時重送時未檢查回應的 IsRep 欄位,IsRep=1 代表街口判定為重複交易 應視為同一筆而非新交易,jkopay,high
+街口代碼 301 意義判斷錯誤,依錯誤碼處理卻走錯分支,Platform API 的 301 是 Invalid auth_no 但 POS 的 StatusCode 301 是網路或系統異常 兩套代碼空間數字會相撞,依模組分開維護代碼對照表 勿共用同一份 mapping,jkopay,high

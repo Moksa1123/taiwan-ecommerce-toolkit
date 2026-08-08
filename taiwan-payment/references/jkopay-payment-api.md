@@ -3,7 +3,7 @@
 > 官方開放文件: https://open-doc.jkos.com/
 > 公司: 街口電子支付股份有限公司（專營電子支付機構）
 > Captured: 2026-08-08 · doc_access: **public**（文件站免登入）
-> Status: **線上支付 OnlinePay（§5）與授權扣款 Authorized Payment（§6）已完整擷取**；線下 POS、inApp OAuth、街口幣發放仍待補
+> Status: **五大模組已擷取四個** —— 線上支付（§5）、授權扣款（§6）、線下 POS（§8）、inApp OAuth（§9）；街口幣發放待補
 > 擷取方式: 文件站為 SPA，WebFetch 深層連結回 404，本次以瀏覽器逐頁取得
 
 ## 0. 為什麼收錄
@@ -411,21 +411,177 @@ Response 的 `result_object` 與 OnlinePay 的 `result_url` 同構（`tradeNo`�
 | `121` | Insufficient bank account balance. | 銀行帳戶餘額不足 |
 | `103` | Error in refund amount | 退款金額錯誤（refund）|
 
-## 7. 仍待補
+## 7. ⚠️ 街口有三套不同的簽章機制
+
+**這是串接街口最容易踩的整體性陷阱**。三個模組各用各的，程式碼完全不能共用：
+
+| 模組 | 演算法 | 簽什麼 | 排序 | 輸出 |
+|---|---|---|---|---|
+| **線上支付 / 授權扣款**（§5、§6）| **HMAC-SHA256** | payload **原文字串** | ❌ 不排序 | 小寫 hex，放 `digest` header |
+| **線下 POS**（§8）| **SHA256**（非 HMAC）| 排序後 JSON **＋ MerchantKey** | ✅ 依 Key 字母排序 | **全小寫** hex，放 `Sign` 欄位 |
+| **inApp OAuth / JOP Gateway**（§9）| **SHA256**（非 HMAC）| `secret` ＋ jsonBody ＋ **`timestamp/1000/86400`** | ✅ 業務參數依 ASCII 排序 | 先 `toLowerCase()` 再 **`toUpperCase()`** |
+
+> 三者連「密鑰放哪」都不同：線上支付當 HMAC 的 key、POS 接在 JSON 尾端、OAuth 放在最前面。
+> OAuth 那個 `timestamp/1000/86400` 是**天數**（毫秒→秒→天），意思是簽章的這一段**一天只變一次**。
+
+## 8. 線下交易 POS
+
+`POST https://pos.jkopay.com/{系統方名稱}/Payment`
+
+端點：付款 / 取消 / 退款 / 查詢 / 店家撥款檔（R 檔）。
+
+### 簽章（與線上支付完全不同）
+
+1. 除 `Sign` 外所有 Request 欄位序列化為 JSON，**依 Key 字母排序**
+2. **不可含空白與換行**（`\r\n`）；字串欄位無值時塞**空字串**
+3. JSON 尾端接上 `MerchantKey`，UTF-8 編碼後 **SHA256**，轉 16 進位
+4. ⚠️ **`Sign` 須為全小寫**
+
+### 付款 Request
+
+| 參數 | 型態 | 長度 | 說明 |
+|---|---|---|---|
+| `MerchantID` | String | 10 | 特店代碼 |
+| `StoreID` / `StoreName` | String | 20 / 100 | **`StoreName` 需為半形字元** |
+| `GatewayTradeNo` | String | 20 | 銀行端交易序號，無則空字串 |
+| `MerchantTradeNo` | String | 60 | 商店端付款流水號，**需唯一** |
+| `PosID` | String | 20 | POS 機號 |
+| `PosTradeTime` | String | 19 | `yyyy/MM/dd HH:mm:ss` |
+| `CardToken` | String | 18 | **支付條碼：固定 2 碼 `22` + 16 碼亂數** |
+| `TradeAmount` / `UnRedeem` | int | | 消費金額 / 不可折抵金額 |
+| `Remark` / `Extra1` / `Extra2` / `Extra3` | String | 1000 / 512 | **全部必填**，無值請帶空字串 |
+| `SendTime` | String | 14 | `yyyyMMddHHmmss`（⚠️ **與 `PosTradeTime` 格式不同**）|
+| `Sign` | String | 64 | 全小寫 |
+
+> ⚠️ 幾乎所有欄位都標 **Y（必要）**，包含保留欄位 `Extra1`–`Extra3`——「無值」的意思是**帶空字串**而非省略。少帶欄位會導致排序後的 JSON 與街口端不一致而驗簽失敗。
+
+### 付款 Response
+
+| 參數 | 說明 |
+|---|---|
+| `StatusCode` | `000` 成功，見 §10 |
+| `TradeNo` | 街口端交易序號 |
+| `IsRep` | **是否為重複交易**：`0` 否 / `1` 是 |
+| `PaymentType` | `1` 儲值帳戶 / `3` **銀行帳戶（Account Link）** / `4` 信用卡 |
+| `DebitAmount` | 折抵後實扣金額 |
+| `RedeemName` | 折抵方式：`Coin` 街口折抵 / `Store` 店家折抵 / `Coin, Store` 兩者 |
+| `RedeemAmount` | 街口折抵金額，**此欄位為負值** |
+| `StoreRedeemAmount` | 店家折抵金額，**負值**；有店家折抵才回傳 |
+| `AvailableAmount` | 儲值帳戶餘額，**目前固定回 0** |
+| `InvoiceVehicle` | **手機條碼發票載具** |
+| `MerMemToken` | 第三方合作廠商會員識別 |
+| `Extra3` | `PaymentType=4` 時以 JSON 字串回傳卡名與前六後四：`{"CardName":"XX卡","CardNo":"222222******3333"}` |
+
+> ⚠️ **折抵金額是負值**，跟線上支付的 `redeem_detail`（正值）相反。對帳時直接相加會算錯。
+> ⚠️ `IsRep=1` 代表街口判定為重複交易——POS 端斷線重送時必須看這個欄位，否則會誤認為兩筆成功交易。
+
+## 9. inApp 第三方服務 — OAuth / JOP Gateway
+
+給 ISV 業者取得街口使用者授權資料用，**網域與支付 API 完全不同**：
+
+| 環境 | BaseURL |
+|---|---|
+| UAT | `https://uat-gw-jop.jkos.app` |
+| 正式 | `https://gw-jop.jkos.com` |
+
+`POST https://{BaseUrl}/api`，`Content-Type: application/x-www-form-urlencoded`。
+
+### 公共參數（每支 API 都要帶）
+
+| 參數 | 必填 | 說明 |
+|---|---|---|
+| `client_id` | ✅ | 開放平台取得的 Credential |
+| `method` | ✅ | 欲呼叫的 API 名稱，如 `jkopay.system.oauth.token` |
+| `sign` | ✅ | 簽章，規則見 §7 |
+| `sign_method` | ✅ | 固定 `JKOS_SIGN` |
+| `timestamp` | ✅ | Unix timestamp（**毫秒**）。⚠️ **允許最大誤差一小時** |
+| `access_token` | | 訪問令牌 |
+
+### 簽章步驟
+
+1. 建立有序 map（`signBody`），依序放入：`client_id` → `access_token`（需要時）→ **業務參數依名稱 ASCII 排序** → `timestamp`
+2. 轉為 JSON 字串 `jsonBody`
+3. 依 `{secret}{jsonBody}{timestamp/1000/86400}` 順序組裝
+4. `SHA256(body.toLowerCase()).toUpperCase()`
+
+### 兩支 API
+
+**`jkopay.system.oauth.token`** — 以 auth code 或 refresh token 換 access token
+
+| 業務參數 | 說明 |
+|---|---|
+| `grant_type` | `authorization_code` 或 `refresh_token` |
+| `code` | 授權碼；帶 `refresh_token` 時免帶 |
+| `refresh_token` | 刷新用；帶 `code` 時免帶 |
+
+回應 `result`：`user_id`、`access_token`、`expires_in`（範例 **2592000 秒 = 30 天**）、`refresh_token`、`refresh_expires_in`（範例 **7776000 秒 = 90 天**）。
+
+**`jkopay.user.profile`** — 取得使用者資料
+
+回應 `result`：`user_id`、`phone`、`email`、**`phone_barcode`（手機載具）**、`name`（範例另含 `id_number`、`birthday`、`gender`、`avatar`、`nickname`、`jkos_account`）。
+
+> 💡 **`phone_barcode` 又是一個跨 skill 接點**：OAuth 拿到的手機載具可直接用於發票 `CarrierType=3` 流程。街口在三個地方都會回載具（OnlinePay 的 `invoice_vehicle`、POS 的 `InvoiceVehicle`、OAuth 的 `phone_barcode`），**欄位名各不相同**。
+
+OAuth 專屬錯誤碼：`OA-001` 成功、`OA-205` Auth Code 已被使用、`OA-360` Auth Code 過期、`OA-999` 系統異常；`UP-001` 成功、`UP-360` Auth Code 過期、`UP-460` **Access Token 過期**、`UP-999`；通用 `205` 參數錯誤、`405` 權限不足、`999` 網關異常。
+
+## 10. 統一錯誤代碼表（線下 POS）
+
+`StatusCode`，共 33 個代碼。**這是街口唯一一份「統一」錯誤碼表**，掛在 POS 模組下。
+
+| 代碼 | 說明 |
+|---|---|
+| `000` | 交易成功 |
+| `301` | 交易失敗（網路或系統異常）|
+| `601` | 查無綁定會員 |
+| `801` | Gateway 連線異常 |
+| `802` | 交易失敗 — 銀行端交易失敗 |
+| `804` | 缺少必要參數 |
+| `812` | 此筆訂單已轉退款 |
+| `901` | 未明確定義錯誤 |
+| `904` | **加簽或驗簽失敗** |
+| `905` | 解析資料失敗 |
+| `906` | **條碼已失效** |
+| `907` | 非街口合作店鋪 |
+| `909` | 寫入資料失敗 |
+| `911` | 停權用戶 |
+| `912` | 查無會員 |
+| `916` | 查無此訂單 |
+| `922` | 退款總金額已超過原付款金額（含多次退款）|
+| `927` | 條碼錯誤 |
+| `928` | 消費者街口帳戶餘額不足 |
+| `929` | 交易類型不支援此付款方式 |
+| `931` | 交易金額已達限額 |
+| `932` | 店家收款金額已達限額 |
+| `934` | 訂單狀態異常，無法退款 |
+| `935` | 已達每日店鋪限額 |
+| `939` | 學生儲值卡餘額不足 |
+| `940` | 支付金額不可 ≤ 0 |
+| `951` | 退款造成街口帳戶支出，拒絕退款 |
+| `961` | 退款需收回街口幣或現金回饋，信用卡退刷金額異常 |
+| `962` | 儲值卡退款失敗 |
+| `968` | **此筆交易使用街口券，無法部分退款** |
+| `975` | 退款金額大於店家累計未請款金額 |
+| `977` | 逾一年未使用，需先聯繫客服身分驗證 |
+| `978` | 此用戶無法使用街口服務 |
+| `980` | 此店鋪已下線 |
+
+> ⚠️ **`906` 條碼已失效與 `927` 條碼錯誤是 POS 最常見的兩個**——街口付款條碼有時效，收銀台掃碼到送出 API 之間不能拖太久。
+
+## 11. 仍待補
 
 | 待補項目 | 優先 | 備註 |
 |---|---|---|
 | OnlinePay 退款 / 查詢 API 的 request 逐欄 | 中 | Response Code 已完整，request 欄位待擷取 |
-| inApp OAuth 流程 | 中 | |
-| 線下 POS API | 低 | |
-| 街口幣發放 API | 低 | |
-| R File 欄位格式 | 低 | |
+| POS 取消 / 退款 / 查詢 API 的欄位 | 中 | 付款 API 與統一錯誤碼已完成 |
+| 街口幣發放 API | 低 | 五大模組中唯一未觸及 |
+| R File（店家撥款檔）欄位格式 | 低 | OnlinePay 與 POS 皆有 |
+| Web SDK | 低 | 版本多（v2.0.2–v2.0.8 + Next），需先確認採用版本 |
 
-已完成：**線上支付 OnlinePay**（§5）、**授權扣款 Authorized Payment**（§6）。
+已完成：**線上支付**（§5）、**授權扣款**（§6）、**線下 POS**（§8）、**inApp OAuth**（§9）、**統一錯誤碼表**（§10）。
 
 `data/payment-methods.csv` 中 NewebPay/ezPay 的 `JKOPAY?` 推測碼**仍未驗證**——街口官方文件只描述直連，不涉及各聚合商如何命名自家代碼，需由各聚合商文件確認。
 
-## 8. 來源
+## 12. 來源
 
 - 街口開放文件 — https://open-doc.jkos.com/
 - 線上支付 OnlinePay — https://open-doc.jkos.com/?docs=線上支付onlinepay

@@ -146,3 +146,44 @@ sunpay,SIGN-001,check_value 驗證失敗,Signature Mismatch,auth,error,head 與 
 sunpay,TIME-001,交易發起時間逾時,Send Time Expired,validation,error,send_time 格式為 fffssmmHHyyyyMMdd 且超過 120 秒視為無效 請校時
 sunpay,LGS-001,物流金額超限,Logistics Amount Exceeded,validation,error,訂單金額大於 2 萬元無法使用物流服務
 sunpay,URL-001,回傳網址含連接埠被擋,Callback URL With Port Blocked,validation,error,回傳網址不可帶 port 紅陽基於資安風控會阻擋
+jkopay,POS-000,交易成功,Success,success,info,
+jkopay,POS-301,交易失敗(網路或系統異常),Transaction failed network or system error,server,error,稍後重試 注意此碼與 Platform API 的 301(Invalid auth_no) 意義不同
+jkopay,POS-601,查無綁定會員,Bound member not found,validation,error,消費者未完成綁定 請其於街口 App 完成設定
+jkopay,POS-801,Gateway 連線異常,Gateway connection error,server,error,街口端連線異常 稍後重試
+jkopay,POS-802,銀行端交易失敗,Bank transaction failed,payment,error,依 StatusDesc 內的銀行端錯誤訊息判斷 請消費者改用其他付款方式
+jkopay,POS-804,缺少必要參數,Missing required parameter,validation,error,POS 付款所有欄位皆為必填 無值請帶空字串而非省略
+jkopay,POS-812,此筆訂單已轉退款,Order already refunded,business,error,查詢原訂單狀態後結案
+jkopay,POS-901,未明確定義錯誤,Undefined error,server,error,保留 MerchantTradeNo 洽街口客服查詢
+jkopay,POS-904,加簽或驗簽失敗,Signature verification failed,auth,error,POS 簽章需將欄位依 Key 字母排序 去除空白換行 JSON 尾接 MerchantKey 後 SHA256 且 Sign 須全小寫
+jkopay,POS-905,解析資料失敗,Data parsing failed,validation,error,檢查 JSON 格式與欄位型態
+jkopay,POS-906,條碼已失效,Barcode expired,validation,error,街口付款條碼有時效 請消費者重新出示條碼
+jkopay,POS-907,非街口合作店鋪,Store not a JKOPAY partner,auth,error,確認 MerchantID 與 StoreID 已開通
+jkopay,POS-909,寫入資料失敗,Data write failed,server,error,稍後重試
+jkopay,POS-911,停權用戶,Suspended user,business,error,請消費者聯繫街口客服 02-87717212
+jkopay,POS-912,查無會員,Member not found,validation,error,確認消費者帳號狀態
+jkopay,POS-916,查無此訂單,Order not found,query,error,確認 MerchantTradeNo 正確且交易已建立
+jkopay,POS-927,條碼錯誤,Invalid barcode,validation,error,CardToken 格式為固定 2 碼 22 加 16 碼亂數 共 18 碼
+jkopay,POS-928,消費者街口帳戶餘額不足,Insufficient JKOPAY balance,business,error,請消費者儲值或改用其他付款方式
+jkopay,POS-929,交易類型不支援此付款方式,Payment type not supported,validation,error,確認該店鋪已開通該付款方式
+jkopay,POS-931,交易金額已達限額,Transaction amount limit reached,business,error,電支法規限額 請拆單或改用其他支付工具
+jkopay,POS-932,店家收款金額已達限額,Store receiving limit reached,business,error,洽街口調整店家限額
+jkopay,POS-934,訂單狀態異常無法退款,Order status invalid for refund,business,error,先查詢訂單狀態確認是否已退款或已取消
+jkopay,POS-935,已達每日店鋪限額,Daily store limit reached,business,error,隔日再行交易或洽街口調整限額
+jkopay,POS-939,學生儲值卡餘額不足,Insufficient student card balance,business,error,請消費者改用其他付款方式
+jkopay,POS-940,支付金額不可小於等於0元,Amount must be greater than zero,validation,error,TradeAmount 需為正整數
+jkopay,POS-951,退款造成街口帳戶支出故拒絕退款,Refund would cause JKOPAY account outflow,business,error,洽街口客服協助處理
+jkopay,POS-961,退款需收回街口幣或現金回饋導致信用卡退刷異常,Refund conflicts with coin or cashback,business,error,洽街口客服協助處理
+jkopay,POS-962,儲值卡退款失敗,Stored value card refund failed,business,error,洽街口客服協助處理
+jkopay,POS-968,使用街口券的交易無法部分退款,Coupon transaction requires full refund,business,error,退款前先檢查折抵資訊 有券則只能全額退款
+jkopay,POS-975,退款金額大於店家累計未請款金額,Refund exceeds unreimbursed balance,business,error,待撥款入帳後再行退款
+jkopay,POS-977,逾一年未使用需先身分驗證,Identity verification required,business,error,請消費者聯繫街口客服 02-87717212 進行身分驗證
+jkopay,POS-978,此用戶無法使用街口服務,User cannot use JKOPAY,business,error,請消費者洽街口客服 02-87717212
+jkopay,POS-980,此店鋪已下線,Store offline,auth,error,確認店鋪狀態並洽街口重新上線
+jkopay,OA-001,OAuth 取得 token 成功,Success,success,info,
+jkopay,OA-205,Auth Code 已被使用,Auth code already used,auth,error,auth_code 僅能使用一次 需重新引導使用者授權
+jkopay,OA-360,Auth Code 過期,Auth code expired,auth,error,重新引導使用者授權取得新的 auth_code
+jkopay,OA-999,OAuth 系統異常,System error,server,error,稍後重試
+jkopay,UP-001,取得用戶資料成功,Success,success,info,
+jkopay,UP-460,Access Token 過期,Access token expired,auth,error,以 refresh_token 換取新的 access_token
+jkopay,UP-999,用戶資料系統異常,System error,server,error,稍後重試
+jkopay,405,權限不足,Permission denied,auth,error,JOP Gateway 該 client_id 未取得此 API 權限 洽街口開放平台開通
