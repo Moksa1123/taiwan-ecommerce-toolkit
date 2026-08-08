@@ -38,8 +38,9 @@ CSV_CONFIG = {
     },
     'operation': {
         'file': 'operations.csv',
-        'search_cols': ['operation', 'name_zh', 'name_en', 'description'],
-        'output_cols': ['operation', 'name_zh', 'ecpay_endpoint', 'newebpay_endpoint', 'payuni_endpoint', 'required_fields', 'description']
+        # 逐一列出所有 provider 端點欄位，與 field 域同理
+        'search_cols': ['operation', 'operation_zh', 'ecpay_endpoint', 'newebpay_endpoint', 'payuni_endpoint', 'smilepay_endpoint', 'pchomepay_endpoint', 'ezpay_endpoint', 'paynow_legacy_endpoint', 'paynow_modern_endpoint', 'opay_endpoint', 'jkopay_endpoint', 'sunpay_endpoint', 'notes'],
+        'output_cols': ['operation', 'operation_zh', 'ecpay_endpoint', 'newebpay_endpoint', 'payuni_endpoint', 'smilepay_endpoint', 'pchomepay_endpoint', 'ezpay_endpoint', 'paynow_legacy_endpoint', 'paynow_modern_endpoint', 'opay_endpoint', 'jkopay_endpoint', 'sunpay_endpoint', 'method', 'required_fields', 'notes']
     },
     'error': {
         'file': 'error-codes.csv',

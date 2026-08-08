@@ -1,12 +1,14 @@
-operation,operation_zh,ecpay_b2c_endpoint,ecpay_b2b_endpoint,smilepay_endpoint,amego_endpoint,ezpay_endpoint,paynow_endpoint,required_fields,notes
-issue,開立發票,/B2CInvoice/Issue,/B2BInvoice/Issue,/SPEinvoice_Storage.asp,/json/f0401,/Api_invoice_issue,/invoice/issue,"MerchantID,RelateNumber,Items,SalesAmount",B2C/B2B 端點不同(ECPay) ezPay統一端點以Category=B2B區分 PayNow JWT認證
-void,作廢發票,/B2CInvoice/Invalid,/B2BInvoice/Invalid,/SPEinvoice_Storage_Modify.asp?types=Cancel,/json/f0501,/Api_invoice_invalid,/invoice/invalid,"InvoiceNo,InvoiceDate,Reason",SmilePay 需帶 CancelReason
-allowance,開立折讓,/B2CInvoice/Allowance,/B2BInvoice/Allowance,/SPEinvoice_Storage_Allowance.asp,/json/g0401,/Api_allowance_issue,/invoice/allowance,"InvoiceNo,AllowanceAmount,Items",折讓金額不可超過發票金額
-void_allowance,作廢折讓,/B2CInvoice/AllowanceInvalid,/B2BInvoice/AllowanceInvalid,/SPEinvoice_Storage_Modify.asp?types=CancelAllowance,/json/g0501,/Api_allowanceInvalid,/invoice/allowance/invalid,"AllowanceNo,Reason",ezPay 此端點為 camelCase
-query,查詢發票,/B2CInvoice/GetIssue,,/SPEinvoice_Storage_Modify.asp,/json/invoice_query,/Api_invoice_search,,RelateNumber|InvoiceNo,ECPay用RelateNumber 其他用InvoiceNo PayNow未公開查詢端點
-print,列印發票,/Invoice/Print,/Invoice/Print,/SmilePayCarrier/InvoiceDetails.php,/json/invoice_file,/Api_invoice_touch,,"InvoiceNo,InvoiceDate",ECPay用POST表單 SmilePay用GET Amego回傳PDF URL ezPay觸發補開立
-check_barcode,驗證手機條碼,/B2CInvoice/CheckBarcode,,/SPCarrier/CheckBarCode.asp,/json/barcode,/Api_carruerCheck,,CarrierNum|barCode,驗證載具是否有效
-check_lovecode,驗證愛心碼,/B2CInvoice/CheckLoveCode,,/SPCarrier/CheckLoveCode.asp,/json/lovecode,/Api_loveCodeCheck,,LoveCode,驗證捐贈碼是否有效
-notify,發票通知,/B2CInvoice/InvoiceNotify,,,/json/invoice_file,,,"InvoiceNo,Email",補寄發票通知
-invoice_list,發票列表,,,,/json/invoice_list,,,"date_start,date_end",僅Amego支援
-pos_batch_get,POS 批次取號,,,,,,/invoice/pos/batch,"merchantId,quantity",PayNow 專屬 POS 流程
+operation,operation_zh,ecpay_b2c_endpoint,ecpay_b2b_endpoint,smilepay_endpoint,amego_endpoint,ezpay_endpoint,paynow_endpoint,opay_endpoint,sunpay_endpoint,mof_endpoint,required_fields,notes
+issue,開立發票,/B2CInvoice/Issue,/B2BInvoice/Issue,/SPEinvoice_Storage.asp,/json/f0401,/Api_invoice_issue,/invoice/issue,/B2CInvoice/Issue,/api/v1/SunPay/CreateInvoiceb2c 與 CreateInvoiceb2b,不可開立(僅查驗),"MerchantID,RelateNumber,Items,SalesAmount",B2C/B2B 端點不同(ECPay) ezPay統一端點以Category=B2B區分 PayNow JWT認證 | 歐付寶 O'Pay 路徑與綠界相同僅換網域;紅陽 SunPay B2C 與 B2B 為兩支獨立端點;財政部 MOF 不可開立僅供查驗
+void,作廢發票,/B2CInvoice/Invalid,/B2BInvoice/Invalid,/SPEinvoice_Storage_Modify.asp?types=Cancel,/json/f0501,/Api_invoice_invalid,/invoice/invalid,/B2CInvoice/Invalid,/api/v1/SunPay/CreateInvoiceInvalid,不可開立(僅查驗),"InvoiceNo,InvoiceDate,Reason",SmilePay 需帶 CancelReason | 紅陽 SunPay 作廢原因 cancelReason 限 20 碼
+allowance,開立折讓,/B2CInvoice/Allowance,/B2BInvoice/Allowance,/SPEinvoice_Storage_Allowance.asp,/json/g0401,/Api_allowance_issue,/invoice/allowance,/B2CInvoice/Allowance,/api/v1/SunPay/Createallowance,不可開立(僅查驗),"InvoiceNo,AllowanceAmount,Items",折讓金額不可超過發票金額 | 紅陽 SunPay 折讓的 unitPrice 帶含稅金額會導致申報無法扣抵營業稅
+void_allowance,作廢折讓,/B2CInvoice/AllowanceInvalid,/B2BInvoice/AllowanceInvalid,/SPEinvoice_Storage_Modify.asp?types=CancelAllowance,/json/g0501,/Api_allowanceInvalid,/invoice/allowance/invalid,/B2CInvoice/AllowanceInvalid,/api/v1/SunPay/CreateallowanceInvalid,不可開立(僅查驗),"AllowanceNo,Reason",ezPay 此端點為 camelCase
+query,查詢發票,/B2CInvoice/GetIssue,,/SPEinvoice_Storage_Modify.asp,/json/invoice_query,/Api_invoice_search,,/B2CInvoice/GetIssue,/api/v1/SunPay/GetInvoiceList,查詢發票開立情形,RelateNumber|InvoiceNo,ECPay用RelateNumber 其他用InvoiceNo PayNow未公開查詢端點
+print,列印發票,/Invoice/Print,/Invoice/Print,/SmilePayCarrier/InvoiceDetails.php,/json/invoice_file,/Api_invoice_touch,,/B2CInvoice/InvoicePrint,isprint=1 時回傳 barcode 與左右 QRCode,N/A,"InvoiceNo,InvoiceDate",ECPay用POST表單 SmilePay用GET Amego回傳PDF URL ezPay觸發補開立
+check_barcode,驗證手機條碼,/B2CInvoice/CheckBarcode,,/SPCarrier/CheckBarCode.asp,/json/barcode,/Api_carruerCheck,,/B2CInvoice/CheckBarcode,(未驗證),手機條碼驗證(上游本尊),CarrierNum|barCode,驗證載具是否有效 | 財政部 MOF 為所有加值中心的上游本尊;已用加值中心開票者直接用其 CheckBarcode 即可不必另申請 AppID
+check_lovecode,驗證愛心碼,/B2CInvoice/CheckLoveCode,,/SPCarrier/CheckLoveCode.asp,/json/lovecode,/Api_loveCodeCheck,,/B2CInvoice/CheckLoveCode,(未驗證),捐贈碼查驗,LoveCode,驗證捐贈碼是否有效 | 財政部 MOF 捐贈碼查驗;歐付寶 O'Pay 與綠界皆代理此查驗
+notify,發票通知,/B2CInvoice/InvoiceNotify,,,/json/invoice_file,,,/B2CInvoice/InvoiceNotify,IsSendMessage=1 發送簡訊(B2B),N/A,"InvoiceNo,Email",補寄發票通知
+invoice_list,發票列表,,,,/json/invoice_list,,,/B2CInvoice/GetAllowanceList,/api/v1/SunPay/GetInvoiceList,N/A,"date_start,date_end",僅Amego支援
+pos_batch_get,POS 批次取號,,,,,,/invoice/pos/batch,/B2CInvoice/GetOfflineInvoiceWordSettingWithAutoSplit,/api/v1/SunPay/CreateOfflineInvoiceB2c,N/A,"merchantId,quantity",PayNow 專屬 POS 流程 | 歐付寶 O'Pay 支援自動分段供多台 POS;紅陽 SunPay 離線發票的號碼與隨機碼由商店自行帶入
+mof_check_barcode,財政部手機條碼驗證,,,,,,,N/A,N/A,/PB2CAPIVAN/invapp/InvApp (action=bcv),"AppID,APIKey,barCode",MOF 為所有加值中心的上游;若已用加值中心開票直接用其 CheckBarcode 即可不必另申請 AppID
+mof_check_lovecode,財政部捐贈碼查驗,,,,,,,N/A,N/A,/PB2CAPIVAN/loveCodeapp/qryLoveCode,"AppID,APIKey,qKey",HMAC-SHA256 加簽;規格見 MOF_EINVOICE_API_REFERENCE.md
