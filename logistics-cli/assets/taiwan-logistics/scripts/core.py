@@ -48,8 +48,10 @@ CSV_CONFIG = {
     },
     'field': {
         'file': 'field-mappings.csv',
-        'search_cols': ['field_name', 'field_zh', 'ecpay_name', 'newebpay_name', 'payuni_name', 'notes'],
-        'output_cols': ['field_name', 'field_zh', 'ecpay_name', 'newebpay_name', 'payuni_name', 'type', 'required', 'format', 'notes']
+        # 逐一列出所有 provider 欄位 —— 原本只涵蓋 3 家，
+        # 導致搜尋其餘 provider 的欄位名時完全比對不到
+        'search_cols': ['field_name', 'field_zh', 'ecpay_name', 'newebpay_name', 'payuni_name', 'smilepay_name', 'pchomepay_name', 'paynow_name', 'hct_name', 'ezship_name', 'lalamove_name', 'pandago_name', 'uber_direct_name', 'notes'],
+        'output_cols': ['field_name', 'field_zh', 'ecpay_name', 'newebpay_name', 'payuni_name', 'smilepay_name', 'pchomepay_name', 'paynow_name', 'hct_name', 'ezship_name', 'lalamove_name', 'pandago_name', 'uber_direct_name', 'type', 'required', 'notes']
     },
     'status': {
         'file': 'status-codes.csv',

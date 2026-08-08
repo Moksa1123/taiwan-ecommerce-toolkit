@@ -138,9 +138,7 @@ Direct API、Organizations API、Courier Pick & Pack API、Refund API、Business
 | 項目 | 說明 |
 |---|---|
 | pandago `/orders` 逐欄 | 端點與認證已確認，request/response 欄位待擷取 |
-| pandago 台灣費率與服務範圍 | Sandbox 只有 `sg`，台灣數據需洽 account manager |
 | Uber Direct 端點逐欄 | 認證已確認；API reference 為 SPA，需以瀏覽器取得 |
-| Uber Direct 台灣官方確認 | 見 §4 |
 | 三家的取消政策與費用 | 即時配送的取消多半收費，各家規則未確認 |
 
 ## 7. 來源

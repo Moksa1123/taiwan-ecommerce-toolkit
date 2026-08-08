@@ -48,7 +48,7 @@ taiwan-logistics/                   # Source of Truth
     ├── operations.csv              # cross-provider API operations
     ├── logistics-types.csv         # CVS/Home/temp variants
     ├── status-codes.csv            # vendor-specific status codes
-    └── field-mappings.csv          # cross-provider field mapping
+    └── field-mappings.csv          # 22 欄位 × 11 家 provider 對照（含即時配送）
 
 logistics-cli/                      # CLI installer (taiwan-logistics-skill on npm)
 ├── src/

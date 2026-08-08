@@ -1,18 +1,20 @@
-field_name,field_zh,ecpay_name,newebpay_name,payuni_name,smilepay_name,pchomepay_name,ezpay_name,paynow_name,shopline_name,linepay_name,tappay_name,type,required,notes
-merchant_id,商店代號,MerchantID,MerchantID,MerID,Dcvc,APP_ID (Basic Auth),MerchantID_,merID,merchantId,channelId,merchant_id,string,true,各家欄位名稱不同；ezPay 後綴底線；PChomePay 用 Basic Auth；TapPay 在 body
-order_id,訂單編號,MerchantTradeNo,MerchantOrderNo,MerTradeNo,Data_id,order_id,MerchantOrderNo,paymentNo,referenceNumber,orderId,order_number,string,true,需唯一；SmilePay/Shopline/LINEPay 限 30+ 字元
-order_date,訂單日期,MerchantTradeDate,TimeStamp,TradeTime,(系統決定),(系統決定),TimeStamp,(系統決定),(系統決定),(系統決定),(系統決定),string,true,ECPay 用 yyyy/MM/dd HH:mm:ss；其他多用 unix timestamp
-amount,交易金額,TotalAmount,Amt,TradeAmt,Amount,amount,Amt,amount,amount.value (cents!),amount,amount,integer,true,Shopline 用分為單位 (NT$1000=100000)；其他用元
-description,交易描述,TradeDesc,ItemDesc,ProdDesc,od_sob,(無),ItemDesc,description,description,(no field),details,string,true,需 URL Encode (ECPay)
-item_name,商品名稱,ItemName,ItemDesc,ProdDesc,od_sob,(無),ItemName,(via order),items[],(no field),details,string,true,多項分隔符: ECPay # SmilePay 與 ezPay |
-return_url,背景通知,ReturnURL,NotifyURL,NotifyURL,Roturl,return_url,NotifyURL,webhookUrl,webhookUrl,(no field),notify_url,string,true,HTTPS only；PayNow 現代版用 webhookUrl
-client_back_url,前台返回,ClientBackURL,ReturnURL,ReturnURL,Roturl_status,(無),ReturnURL,resultUrl,returnUrl,confirmUrl,frontend_redirect_url (in result_url),string,false,客戶完成後導回
-payment_type,付款方式,ChoosePayment,PaymentType / channelid,PayType,Pay_zg,pay_type,PaymentType,paymentMethodType,paymentMethods[],(only LINE Pay),(only credit),string,true,各家 enum 不同；ECPay 看 ChoosePayment 表
-check_value,檢查碼/簽章,CheckMacValue,CheckValue,CheckSum,Mid_smilepay (反推加權檢核碼),(no field — 用 token),CheckValue (sha256),X-LINE-Authorization (HMAC),x-slp-signature (HMAC webhook),X-LINE-Authorization (HMAC),(no field; uses Partner Key),string,true,SHA256；TapPay 用 Partner Key in header
-encrypt_type,加密 / Version,EncryptType,Version,Version,Verify_key,(token-based),Version (固定 2.0),(no field),Version,(no field),(no field),string,true,ECPay 固定 1；NewebPay 2.0 / 2.3；ezPay 2.0
-trade_no,平台交易編號,TradeNo,TradeNo,PayUniTradeNo,PaymentNo,(返回 order_id),TradeNo,id (PaymentIntent),id,transactionId,rec_trade_id,string,false,平台回傳的內部編號；列印時需要
-rtn_code,回傳代碼,RtnCode,Status,Status,Status,code,Status,status / type,status,returnCode,status,string,false,各家不同 — 0/1/SUCCESS/Success；TapPay 用 0=success
-rtn_msg,回傳訊息,RtnMsg,Message,Message,Desc,message,Message,message,error / message,returnMessage,msg,string,false,中文訊息；錯誤時帶
-buyer_email,買方信箱,(no field),Email,Email,Email,(via cardholder),Email,(via customer obj),customer.email,(no field),cardholder.email,string,false,
-card_token,記憶卡 token,(via 定期定額),TokenValue,token,(無),(無),TokenValue,(via Customer.cards[]),(via card object),(no field),card_token,string,false,需另申請；用於重複扣款
-card_key,記憶卡 key,(無),(無),(無),(無),(無),(無),(via Customer),(via card object),(no field),card_key,string,false,TapPay 獨有；搭配 card_token 用
+field_name,field_zh,ecpay_name,newebpay_name,payuni_name,smilepay_name,pchomepay_name,ezpay_name,paynow_name,shopline_name,linepay_name,tappay_name,opay_name,jkopay_name,sunpay_name,gomypay_name,type,required,notes
+merchant_id,商店代號,MerchantID,MerchantID,MerID,Dcvc,APP_ID (Basic Auth),MerchantID_,merID,merchantId,channelId,merchant_id,MerchantID,store_id,web,(待補),string,true,各家欄位名稱不同；ezPay 後綴底線；PChomePay 用 Basic Auth；TapPay 在 body
+order_id,訂單編號,MerchantTradeNo,MerchantOrderNo,MerTradeNo,Data_id,order_id,MerchantOrderNo,paymentNo,referenceNumber,orderId,order_number,MerchantTradeNo,platform_order_id,td,(待補),string,true,需唯一；SmilePay/Shopline/LINEPay 限 30+ 字元
+order_date,訂單日期,MerchantTradeDate,TimeStamp,TradeTime,(系統決定),(系統決定),TimeStamp,(系統決定),(系統決定),(系統決定),(系統決定),MerchantTradeDate,(系統決定),send_time (fffssmmHHyyyyMMdd),(待補),string,true,ECPay 用 yyyy/MM/dd HH:mm:ss；其他多用 unix timestamp
+amount,交易金額,TotalAmount,Amt,TradeAmt,Amount,amount,Amt,amount,amount.value (cents!),amount,amount,TotalAmount,final_price (另有 total_price 原價),mn,(待補),integer,true,Shopline 用分為單位 (NT$1000=100000)；其他用元
+description,交易描述,TradeDesc,ItemDesc,ProdDesc,od_sob,(無),ItemDesc,description,description,(no field),details,TradeDesc,(無),order_info,(待補),string,true,需 URL Encode (ECPay)
+item_name,商品名稱,ItemName,ItemDesc,ProdDesc,od_sob,(無),ItemName,(via order),items[],(no field),details,ItemName,products[].name,order_info,(待補),string,true,多項分隔符: ECPay # SmilePay 與 ezPay |
+return_url,背景通知,ReturnURL,NotifyURL,NotifyURL,Roturl,return_url,NotifyURL,webhookUrl,webhookUrl,(no field),notify_url,ReturnURL,result_url,交易結果通知網址 (後台設定),(待補),string,true,HTTPS only；PayNow 現代版用 webhookUrl
+client_back_url,前台返回,ClientBackURL,ReturnURL,ReturnURL,Roturl_status,(無),ReturnURL,resultUrl,returnUrl,confirmUrl,frontend_redirect_url (in result_url),ClientBackURL,result_display_url,交易完成轉導網址 (後台設定),(待補),string,false,客戶完成後導回
+payment_type,付款方式,ChoosePayment,PaymentType / channelid,PayType,Pay_zg,pay_type,PaymentType,paymentMethodType,paymentMethods[],(only LINE Pay),(only credit),ChoosePayment,(無;街口單一),card_type,(待補),string,true,各家 enum 不同；ECPay 看 ChoosePayment 表
+check_value,檢查碼/簽章,CheckMacValue,CheckValue,CheckSum,Mid_smilepay (反推加權檢核碼),(no field — 用 token),CheckValue (sha256),X-LINE-Authorization (HMAC),x-slp-signature (HMAC webhook),X-LINE-Authorization (HMAC),(no field; uses Partner Key),CheckMacValue,digest (HMAC-SHA256 header),check_value (SHA256) + rsamsg (RSA),(待補),string,true,SHA256；TapPay 用 Partner Key in header
+encrypt_type,加密 / Version,EncryptType,Version,Version,Verify_key,(token-based),Version (固定 2.0),(no field),Version,(no field),(no field),EncryptType,(無),(無),(待補),string,true,ECPay 固定 1；NewebPay 2.0 / 2.3；ezPay 2.0
+trade_no,平台交易編號,TradeNo,TradeNo,PayUniTradeNo,PaymentNo,(返回 order_id),TradeNo,id (PaymentIntent),id,transactionId,rec_trade_id,TradeNo,tradeNo,trade_no,(待補),string,false,平台回傳的內部編號；列印時需要
+rtn_code,回傳代碼,RtnCode,Status,Status,Status,code,Status,status / type,status,returnCode,status,RtnCode,result (字串 000),pay_result,(待補),string,false,各家不同 — 0/1/SUCCESS/Success；TapPay 用 0=success
+rtn_msg,回傳訊息,RtnMsg,Message,Message,Desc,message,Message,message,error / message,returnMessage,msg,RtnMsg,message,StatusDesc / message,(待補),string,false,中文訊息；錯誤時帶
+buyer_email,買方信箱,(no field),Email,Email,Email,(via cardholder),Email,(via customer obj),customer.email,(no field),cardholder.email,(無欄位),(無),email,(待補),string,false,
+card_token,記憶卡 token,(via 定期定額),TokenValue,token,(無),(無),TokenValue,(via Customer.cards[]),(via card object),(no field),card_token,(via 定期定額),(無;走授權扣款 auth_no),save_card_token,(待補),string,false,需另申請；用於重複扣款
+card_key,記憶卡 key,(無),(無),(無),(無),(無),(無),(via Customer),(via card object),(no field),card_key,(無),(無),(無;token 即識別),(待補),string,false,TapPay 獨有；搭配 card_token 用
+signature_algo,簽章/加密演算法,SHA256 (參數排序+URLEncode),AES-256-CBC + SHA256,AES-256-GCM + SHA256 (須附16-byte tag),共享密鑰 + 加權檢核碼 (無 AES),Basic Auth -> pcpay-token (8h),AES-256-CBC + SHA256 (同 NewebPay),JWT Bearer (現代) / 3DES 動態金鑰 (傳統),Header 認證 + HMAC-SHA256 (webhook),HMAC-SHA256 (X-LINE-Authorization),Prime -> pay-by-prime (無自簽),SHA256 (同 ECPay CheckMacValue),HMAC-SHA256 / SHA256 三套並存 (見 reference §7),RSA 分段加密(117/128) + SHA256 簽章,(待補),string,Y,選型與工時評估用。ECPay/O'Pay 同源可共用程式碼；NewebPay/ezPay 同源；紅陽是唯一非對稱加密；街口三個模組三套不可共用
+invoice_carrier,發票載具(手機條碼),(金流端無;發票 API 用 CarrierType+CarrierNum),(未驗證),(未驗證),(未驗證),(未驗證),(未驗證),(未驗證),(未驗證),(未驗證),(未驗證),(金流端無;發票 API 用 CarrierType+CarrierNum),invoice_vehicle (OnlinePay) / InvoiceVehicle (POS) / phone_barcode (OAuth),carrier_type + carrier_id (隨交易開票),(待補),string,N,金流回傳的載具可直接餵給發票 API 的 CarrierType=3 流程。⚠️ 街口在三個模組用了三個不同欄位名。標(未驗證)者為尚未查證非確定無此欄位
