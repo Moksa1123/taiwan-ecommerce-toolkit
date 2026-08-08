@@ -3,7 +3,7 @@
 > 官方開放文件: https://open-doc.jkos.com/
 > 公司: 街口電子支付股份有限公司（專營電子支付機構）
 > Captured: 2026-08-08 · doc_access: **public**（文件站免登入）
-> Status: **線上支付 OnlinePay 已完整擷取**（協議／加簽／Entry／雙 callback／全 Response Code）；授權扣款、POS、inApp、街口幣仍待補
+> Status: **線上支付 OnlinePay（§5）與授權扣款 Authorized Payment（§6）已完整擷取**；線下 POS、inApp OAuth、街口幣發放仍待補
 > 擷取方式: 文件站為 SPA，WebFetch 深層連結回 404，本次以瀏覽器逐頁取得
 
 ## 0. 為什麼收錄
@@ -43,7 +43,7 @@
 | 線上付款 | ✅ | ✅ |
 | 退款 | ✅ | ✅ |
 | 查詢 | ✅ | ✅ |
-| **定期扣款／訂閱** | ✅ 授權扣款模組 | ⚠️ 多數聚合商的街口不支援定期扣款 |
+| **定期扣款／訂閱** | ✅ 授權扣款模組（定期定額 + 不定期不定額，見 §6）| ⚠️ 多數聚合商的街口不支援定期扣款 |
 | **實體店 POS** | ✅ | 部分（多走 TWQR） |
 | **App 內第三方登入（OAuth）** | ✅ | ❌ |
 | **發放街口幣做行銷** | ✅ | ❌ |
@@ -276,20 +276,156 @@ Platform APIs 統一回應格式（**欄位皆小寫**，`result` 為**字串**�
 | `GET /platform/inquiry` | 訂單查詢，參數 `platform_order_ids`（**複數，逗號分隔可批次查**）|
 | 交易撥款檔 R File | 對帳用的撥款檔（Reimburse File）|
 
-## 6. 仍待補
+## 6. 授權扣款 Authorized Payment — 完整規格
+
+**這是聚合商給不了的能力**（見 §2）。整個模組共 7 支端點。
+
+### 6.1 兩種授權型態
+
+| 型態 | 端點 | 適用 |
+|---|---|---|
+| **定期定額 regular** | `POST /platform/authpay/regular` | 訂閱制、固定金額方案（影音串流、會員訂閱）。按約定週期與金額自動扣款 |
+| **不定期不定額 limited** | `POST /platform/authpay/limited` | 單次購買、變動金額（課金儲值、按用量計費）。授權範圍內扣款，時間與金額不固定 |
+
+> **兩者的 Request / Response 規格完全相同**，差別只在端點與 `billing_cycle` 是否必填。
+
+### 6.2 生命週期
+
+```
+授權創建 regular|limited  →  消費者在街口 App 授權  →  result_url callback（granted）
+                                                          ↓
+                              transaction 發動扣款（可重複）→ refund 退款
+                                                          ↓
+                                    cancel 終止授權 / detail 查授權狀態
+```
+
+### 6.3 授權創建 — Request
+
+| 參數 | 型態 | 長度 | 必填 | 說明 |
+|---|---|---|---|---|
+| `authpay_name` | string | 60 | ✅ | 授權扣款項目名稱 |
+| `store_id` | string | 36 | ✅ | 商店編號 |
+| `platform_authpay_id` | string | 60 | | 平台授扣編號（留存用）|
+| `identities` | string[] | | | 授權綁定人驗證 |
+| `billing_amount` | decimal | 20,0 | ✅ | 原始扣款金額 |
+| `billing_currency` | string | | | 預設 `TWD` |
+| `billing_cycle` | fields | | **定期定額必填** | 扣款週期定義 |
+| `billing_cycle.period` | string | | | `week`（週日～週一）/ `month` / `quarter` / `year`，時區 **UTC+8** |
+| `billing_cycle.times` | int | | | 每週期扣款次數，預設 1 |
+| `result_url` | string | 500 | ✅ | 綁定結果 callback（**必須 https**）|
+| `result_display_url` | string | 500 | | 授權後導向的前端頁 |
+| `custom_items.name` / `.value` | string | | | 客製化項目 |
+
+**`billing_cycle.times` 上限**：
+
+| period | 上限 |
+|---|---|
+| `week` | ≤ 7 次 |
+| `month` | ≤ 7 次 |
+| `quarter` | ≤ 7 次 |
+| `year` | ≤ 12 次 |
+
+> ⚠️ `month` 的上限是 **7 次而非 30 次**——想做「每月多次小額扣款」要先確認撞不撞這個上限。
+
+Response 與 OnlinePay 的 Entry 同構：`result_object` 含 `auth_no`（街口端授權編號）、`authpay_url`、`qr_img`、`qr_timeout`（同樣 **20 分鐘**有效）。
+
+> 冪等行為與 Entry 一致：**綁定未完成前重複呼叫回同一個綁定網址**；`platform_authpay_id` 需唯一。
+
+### 6.4 綁定結果 callback（`result_url`）
+
+`POST`，商家實作。街口以 **HTTP 200 視為成功、HTTP 500 視為失敗並重試**。
+
+連線規則同 OnlinePay：timeout 5/10 秒，**2^n 秒退避重試最多 12 次，約 2 小時**。
+
+Body 為 `{ "authpay": { …GrantedAuthPay… } }`：
+
+| 參數 | 型態 | 必填 | 說明 |
+|---|---|---|---|
+| `type` | string(30) | ✅ | `regular` / `limited` |
+| `status` | string(30) | ✅ | **`ungranted` 未授權 / `granted` 已授權 / `cancel` 已取消** |
+| `auth_no` | string(30) | ✅ | 街口端授權編號，**後續扣款都靠它** |
+| `platform_authpay_id` | string(60) | ✅ | 平台授扣編號 |
+| `jkos_account` | string(100) | ✅ | 街口帳號 |
+| `billing_currency` / `billing_amount` | | | 原始扣款幣別與金額 |
+| `billing_cycle[]` | | 定期定額必填 | 週期與次數 |
+
+### 6.5 發動扣款 `POST /platform/authpay/transaction`
+
+| 參數 | 型態 | 長度 | 必填 | 說明 |
+|---|---|---|---|---|
+| `auth_no` | string | 30 | ✅ | 街口端授權編號 |
+| `order.platform_order_id` | string | 60 | ✅ | 平台交易序號，需唯一 |
+| `order.trade_name` | string | 30 | ✅ | **交易名稱，會顯示在消費者 App 的授權交易記錄頁** |
+| `order.currency` | string | 3 | ✅ | 帶 `TWD` |
+| `order.total_price` | decimal | 20,0 | ✅ | 訂單價格 |
+| `order.final_price` | decimal | 20,0 | ✅ | 應付價格 |
+| `order.unredeem` | decimal | 20,0 | | 不可折抵金額，預設 0 |
+| `order.remark` | string | 500 | | 備註 |
+| `order.products[]` | fields | | | 同 OnlinePay，另多 `category_path` string[] |
+
+Response 的 `result_object` 與 OnlinePay 的 `result_url` 同構（`tradeNo`、`debit_amount`、`redeem_detail`、`invoice_vehicle`、`maskNo`、`channel_type`）。
+
+> `status` 非 0 時，其餘欄位一律不回傳——別預期拿得到 `tradeNo`。
+
+### 6.6 ⚠️ 授權扣款的六個硬限制
+
+這些是設計訂閱系統時**必須先知道**的，全部來自 `/authpay/transaction` 的回應碼：
+
+| result | 限制 |
+|---|---|
+| `306` | **扣款只能在 08:00–20:00（UTC+8）發動**。半夜跑 batch 一定失敗——排程要避開 |
+| `307` | **同一 `auth_no` 同時只允許一筆付款**，不能併發 |
+| `303` | 金額超過**用戶自己在 App 設定的最高額度**（不是你設的）|
+| `304` | 訂單 `final_price` 與授權時的 `billing_amount` 不一致 |
+| `305` | 超過當前計費週期的扣款次數（見 6.3 上限表）|
+| `104` | 超過**月限額**（電支法規的個人限額）|
+
+> 前兩項是排程設計的直接約束：**扣款 job 要排在白天，而且同一授權要序列化**。
+
+### 6.7 端點總表與回應碼
+
+| 端點 | Method | 功能 |
+|---|---|---|
+| `/platform/authpay/regular` | POST | 授權創建（定期定額）|
+| `/platform/authpay/limited` | POST | 授權創建（不定期不定額）|
+| `/platform/authpay/transaction` | POST | 發動扣款 |
+| `/platform/authpay/refund` | POST | 退款 |
+| `/platform/authpay/inquiry` | GET | 訂單查詢（`transactions[]`，status 同 OnlinePay 0/100/101/102）|
+| `/platform/authpay/detail` | GET | **查授權狀態**，回 `{authpay:{type,auth_no,status,platform_authpay_id}}` |
+| `/platform/authpay/cancel` | POST | 終止授權 |
+
+授權模組專屬回應碼（其餘與 OnlinePay 共用，見 5.6）：
+
+| result | message | 說明 |
+|---|---|---|
+| `201` | Validation error | 驗證錯誤 |
+| `301` | Invalid auth_no | 無效授權編號 |
+| `302` | Canceled auth_no | 授權已取消（`cancel` 重複呼叫也回這個）|
+| `303` | FinalPrice exceeded the max amount quota set by the user | 超過用戶設定額度 |
+| `304` | Order finalPrice is not consistent with authpay billing amount | 金額與授權不符 |
+| `305` | Authpay payment exceeds current billing cycle times | 超過週期次數 |
+| `306` | Authpay payment transaction time invalid.(Available at 08:00 - 20:00 UTC+8) | **時段限制** |
+| `307` | Payment with the same auth_no is allowed one at a time | 同授權不可併發 |
+| `110` | Store not found | 查無商店 |
+| `115` | Payment failed | 付款失敗 |
+| `121` | Insufficient bank account balance. | 銀行帳戶餘額不足 |
+| `103` | Error in refund amount | 退款金額錯誤（refund）|
+
+## 7. 仍待補
 
 | 待補項目 | 優先 | 備註 |
 |---|---|---|
-| 退款 / 查詢 API 的 request 逐欄 | 中 | Response Code 已完整，request 欄位待擷取 |
-| 授權扣款（定期定額）流程與參數 | 中 | Entry API 已可用 `payment_type=regular` 起手 |
+| OnlinePay 退款 / 查詢 API 的 request 逐欄 | 中 | Response Code 已完整，request 欄位待擷取 |
 | inApp OAuth 流程 | 中 | |
 | 線下 POS API | 低 | |
 | 街口幣發放 API | 低 | |
 | R File 欄位格式 | 低 | |
 
+已完成：**線上支付 OnlinePay**（§5）、**授權扣款 Authorized Payment**（§6）。
+
 `data/payment-methods.csv` 中 NewebPay/ezPay 的 `JKOPAY?` 推測碼**仍未驗證**——街口官方文件只描述直連，不涉及各聚合商如何命名自家代碼，需由各聚合商文件確認。
 
-## 7. 來源
+## 8. 來源
 
 - 街口開放文件 — https://open-doc.jkos.com/
 - 線上支付 OnlinePay — https://open-doc.jkos.com/?docs=線上支付onlinepay
@@ -297,6 +433,11 @@ Platform APIs 統一回應格式（**欄位皆小寫**，`result` 為**字串**�
 - 加簽加密說明 — `…/線上支付onlinepay/串接說明/加簽加密說明`
 - 訂單創建 Entry API — `…/線上支付onlinepay/api列表/訂單創建-api`
 - 代碼意義 API Response Code — `…/線上支付onlinepay/api列表/代碼意義`
+- 授權扣款 Authorized Payment — https://open-doc.jkos.com/?docs=授權扣款-authorized-payment
+- 授權創建 Binding — `…/授權扣款-authorized-payment/api列表-api-lists/授權綁定創建-authorization-binding`
+- 授權綁定結果通知 CallBack — `…/api列表-api-lists/授權綁定結果通知-authorization-callback`
+- 授權扣款發動 — `…/api列表-api-lists/授權扣款發動-merchant-platform-authorization-request`
+- 授權模組代碼意義 — `…/授權扣款-authorized-payment/api列表-api-lists/代碼意義-api-response-code`
 - 街口店家收款 — https://www.jkopay.com/application/store
 - TapPay 街口 Backend 文件 — https://docs.tappaysdk.com/jko-pay/zh/back.html
 - TapPay 街口支付服務頁 — https://www.tappaysdk.com/taiwan-zhtw/service/payments/jko-pay

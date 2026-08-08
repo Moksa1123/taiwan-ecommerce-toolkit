@@ -119,3 +119,16 @@ jkopay,117,用券訂單僅接受全額退款,JKOPAY Coupon is used in this trans
 jkopay,922,退款金額超過可退金額,Refund amount exceeds order final price,validation,error,退款金額不可超過 final_price 扣除已退金額
 jkopay,978,帳戶已關閉,Closed account can't use JKOPay's service please contact the JKOPay's customer service.,auth,error,聯繫街口客服確認帳戶狀態
 jkopay,999,街口系統錯誤,Internal Error,server,error,街口方非預期錯誤 稍後重試並保留 platform_order_id 供查詢
+jkopay,103,退款金額錯誤,Error in refund amount,validation,error,授權扣款退款 檢查 refund_amount 是否正確
+jkopay,104,超過月限額,Payment/transfer amount is over the monthly limit,business,error,電支個人月限額已滿 須待次月或改用其他支付工具
+jkopay,110,查無此商店,Store not found,validation,error,確認 store_id 為該環境對應代碼
+jkopay,115,付款失敗,Payment failed,business,error,消費者付款工具失敗 請消費者改用其他支付工具
+jkopay,121,銀行帳戶餘額不足,Insufficient bank account balance.,business,error,消費者綁定的銀行帳戶餘額不足 建議通知消費者後重試
+jkopay,201,驗證錯誤,Validation error,validation,error,授權扣款模組專屬 檢查必填欄位與型態
+jkopay,301,無效的授權編號,Invalid auth_no,validation,error,確認 auth_no 來自綁定 callback 且未過期
+jkopay,302,授權編號已取消,Canceled auth_no,business,error,該授權已終止 需請消費者重新綁定
+jkopay,303,超過用戶設定的最高額度,FinalPrice exceeded the max amount quota set by the user,business,error,額度由消費者在街口 App 自行設定 非商家可控 須請消費者調高
+jkopay,304,金額與授權帳單金額不一致,Order finalPrice is not consistent with authpay billing amount,validation,error,定期定額的 final_price 必須等於綁定時的 billing_amount
+jkopay,305,超過當前週期扣款次數,Authpay payment exceeds current billing cycle times,business,error,週期次數上限 week/month/quarter<=7 year<=12 檢查 billing_cycle.times
+jkopay,306,授權扣款時段無效,Authpay payment transaction time invalid.(Available at 08:00 - 20:00 UTC+8),business,error,授權扣款僅限 08:00-20:00 UTC+8 排程勿排夜間
+jkopay,307,同一授權不可併發扣款,Payment with the same auth_no is allowed one at a time,business,error,同一 auth_no 同時僅允許一筆付款 扣款須序列化
