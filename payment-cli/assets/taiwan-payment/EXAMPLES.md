@@ -1537,6 +1537,78 @@ TapPay 是 **PCI 隔離設計**：前端 SDK 取 Prime（60 秒 TTL）→ 後端
 3. **重複扣款**：`pay-by-prime` 帶 `remember=true` 後，回應內 `card_secret` 含 `card_key + card_token`，存起來下次直接 `pay-by-card-token`，免再過 SDK。適合訂閱與快速結帳。
 4. **status=0 才是成功**：別只看 HTTP 200；TapPay HTTP 200 但 status≠0 是業務失敗。
 
+## O'Pay 歐付寶範例
+
+**與 ECPay 同源**——`MerchantID` + 排序後 urlencode + SHA256 的 `CheckMacValue`，欄位名幾乎完全一致。已有 ECPay 實作者，**換網域即可**：
+
+```python
+# ECPay
+https://payment-stage.ecpay.com.tw/Cashier/AioCheckOut/V5
+# O'Pay：只換網域，CheckMacValue 演算法與參數名不變
+https://payment-stage.opay.tw/Cashier/AioCheckOut/V5
+```
+
+實作直接沿用 [`examples/ecpay-payment-example.py`](examples/ecpay-payment-example.py)，把 base URL 與金鑰換掉即可。
+
+### O'Pay 獨有、ECPay 沒有的
+
+| 能力 | 說明 |
+|---|---|
+| `AccountLink` | 銀行快付 |
+| `TopUpUsed` | 儲值消費 |
+| `WeiXinpay` | 微信支付（線上線下）|
+| `HoldTradeAMT=1` | **延遲撥款**，款項先留在歐付寶，確認出貨後再申請撥款——做代收代付或擔保交易時很有用 |
+
+## 街口支付 JKOPAY 範例
+
+### 完整 Python 範例
+請見 [`examples/jkopay-payment-example.py`](examples/jkopay-payment-example.py) — 涵蓋 Entry / Refund / Inquiry / 授權扣款（綁定、發動、終止），並內建**官方測試向量的自我驗證**（直接執行即可確認你的環境算出的 digest 與街口一致，不會發網路請求）。
+
+### 五大要點
+
+1. **簽的是 payload 原始字串**，不排序、不 urlencode。這與 ECPay 的 `CheckMacValue` 完全不同路數，從綠界遷移最容易卡在這。
+2. **連空白都算數**。官方範例 `"currency": "TWD"` 冒號後有空格，拿掉 digest 就變。**先組好字串、簽它、原封不動送出**，不要簽完再用另一次 `json.dumps()` 產生 body。
+3. **街口有三套簽章**（線上支付／POS／OAuth），程式碼不可共用。見 [reference §7](references/jkopay-payment-api.md)。
+4. **對帳用 `debit_amount` 不是 `final_price`**。街口幣與券折抵不進撥款，用 `final_price` 對帳會長期短差。
+5. **授權扣款有六個硬限制**，其中兩個直接約束排程設計：`306` 扣款只能在 **08:00–20:00** 發動（夜間 batch 必失敗）、`307` 同一 `auth_no` **不可併發**（扣款必須序列化）。
+
+### 一個資料庫層的地雷
+
+`payment_url` 與 `qr_img` 的**長度會超過 255**，欄位不要開 `VARCHAR(255)`。
+
+## 紅陽科技 SunPay 範例
+
+### 完整 Python 範例
+請見 [`examples/sunpay-payment-example.py`](examples/sunpay-payment-example.py) — 涵蓋 `rsamsg` 加解密、`check_value` 簽章、`send_time` 組法、兩張 `pay_result` 對照表、物流通知解析，並內建**官方測試向量的自我驗證**。
+
+### 四大要點
+
+1. **14 家中唯一使用非對稱加密**。RSA 分段加密 + SHA256 簽章，既有的 SHA256 檢查碼或 AES 程式碼一律不能沿用。
+2. **加密分段 117、解密分段 128**——兩者不同。128 是 1024-bit RSA 的密文區塊長度，117 = 128 − 11（PKCS#1 v1.5 padding）。誤寫成同一個值是最常見的錯。
+3. **`send_time` 格式是反的**：`fffssmmHHyyyyMMdd`，毫秒在最前面、日期在最後。且**超過 120 秒即無效**，主機要 NTP 校時。
+4. **SHA2 密鑰接在字串尾端**，不是 ECPay 那種 `HashKey=...&參數&HashIV=...` 前後包夾。且 `null` 值的參數不參與簽名。
+
+### ⚠️ 最容易踩的一致性陷阱
+
+同一個欄位名 `pay_result`、同一個值 `12`：
+
+| API | `12` 的意思 |
+|---|---|
+| 交易 CallBack | **已建立** |
+| 查詢 API | **查無該筆訂單** |
+
+**兩張代碼表必須分開維護，絕不可共用同一份 mapping。** 範例檔中已拆成 `CALLBACK_RESULT` 與 `QUERY_RESULT` 兩個字典並附自我驗證。
+
+### 其他
+
+- 交易與查詢是 `/v4/`，但**請款與退款仍是 `/v3/`**——同一份手冊裡版號不一致，不是筆誤
+- 物流狀態通知是 **HTTP FORM POST key-value（非 JSON）**且全欄位經 URL Encode，另訂單編號欄位是**大寫 `Td`**
+- 回傳網址**不可帶 port**，會被資安風控擋掉；CallBack **僅補發 30 分鐘**（每 5 分鐘一次），需另實作查詢對帳
+
+## GoMyPay 範例
+
+尚無範例——目前只取得服務層資訊，參數層需洽客服取得完整 API 文件。見 [reference](references/gomypay-payment-api.md)。
+
 ---
 
 **更多範例持續更新中...**
