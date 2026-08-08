@@ -107,3 +107,40 @@ Actions → Publish to npm → **Run workflow**，選套件並保持 `dry_run` �
 v2.5.2  v2.5.3  v2.5.4  v2.6.4      # 裸版號（invoice）
 v1.1.4-payment   v1.1.4-logistics   # 舊的後綴格式
 ```
+
+## 分支保護
+
+`main` 受保護，設定如下：
+
+| 項目 | 值 | 為什麼 |
+|---|---|---|
+| 必要檢查 | `ci-passed` | `ci.yml` 的 gate job。只要求這一個，matrix 內容變動時不會有 job 靜默漏掉 |
+| Require branches up to date | 關閉 | 單人維護少有平行 PR，開啟只會增加來回 rebase |
+| 必要審核 | 不要求 | 單人維護，要求 review 會無法合併自己的 PR |
+| Include administrators | **開啟** | 見下 |
+| Linear history | 開啟 | 配合 squash merge |
+| Force push / 刪除分支 | 禁止 | |
+
+### 為什麼 include administrators 要開
+
+關閉的話，保護對 owner 只是警告——推 `main` 時 remote 會回
+`Required status check "ci-passed" is expected` 但**仍然放行**。
+對單人維護的 repo 而言，這代表保護對唯一有推送權的人完全無效。
+
+`CLAUDE.md` 寫的「Never push directly to main」因此才有實際效力。
+
+### 緊急繞道
+
+CI 故障而必須直接推 `main` 時，暫時關閉再開回來：
+
+```bash
+# 關閉
+gh api -X DELETE repos/Moksa1123/taiwan-ecommerce-toolkit/branches/main/protection
+
+# ... 處理完後立刻恢復 ...
+
+gh api -X PUT repos/Moksa1123/taiwan-ecommerce-toolkit/branches/main/protection \
+  --input .github/branch-protection.json
+```
+
+保護設定存於 `.github/branch-protection.json`，恢復時直接套用即可。
