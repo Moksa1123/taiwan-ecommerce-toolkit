@@ -98,6 +98,9 @@ jobs:
           python3 taiwan-invoice/scripts/test_recommend.py
           python3 taiwan-payment/scripts/test_recommend.py
 
+      - name: 搜尋引擎回歸測試
+        run: python3 taiwan-invoice/scripts/test_search.py
+
       - name: 安裝相依套件
         working-directory: ${{ steps.target.outputs.dir }}
         run: npm ci

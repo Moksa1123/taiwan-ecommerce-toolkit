@@ -25,8 +25,9 @@ CSV_CONFIG = {
     },
     'operation': {
         'file': 'operations.csv',
-        'search_cols': ['operation', 'operation_zh', 'notes'],
-        'output_cols': ['operation', 'operation_zh', 'ecpay_b2c_endpoint', 'smilepay_endpoint', 'amego_endpoint', 'required_fields', 'notes']
+        # 逐一列出所有 provider 端點欄位，與 field 域同理
+        'search_cols': ['operation', 'operation_zh', 'ecpay_b2c_endpoint', 'ecpay_b2b_endpoint', 'smilepay_endpoint', 'amego_endpoint', 'ezpay_endpoint', 'paynow_endpoint', 'opay_endpoint', 'sunpay_endpoint', 'mof_endpoint', 'notes'],
+        'output_cols': ['operation', 'operation_zh', 'ecpay_b2c_endpoint', 'ecpay_b2b_endpoint', 'smilepay_endpoint', 'amego_endpoint', 'ezpay_endpoint', 'paynow_endpoint', 'opay_endpoint', 'sunpay_endpoint', 'mof_endpoint', 'required_fields', 'notes']
     },
     'error': {
         'file': 'error-codes.csv',
@@ -71,18 +72,34 @@ DOMAIN_KEYWORDS = {
 
 def tokenize(text: str) -> List[str]:
     """
-    將文字分詞為 token 列表
-    支援中英文混合
+    將文字分詞為 token 列表，支援中英文混合。
+
+    中文採「單字 + bigram」，與 taiwan-payment / taiwan-logistics 一致。
+
+    先前此處只做 text.split()，等於中文必須整個詞完全相同才命中 ——
+    搜尋「折讓」找不到「折讓的」、搜尋「開立」找不到「開立發票」。
+    中文沒有空白分隔，以空白切詞在本專案的資料上幾乎等同關鍵字全等比對。
     """
     if not text:
         return []
 
     text = text.lower()
-    # 移除標點符號，保留中文、英文、數字
-    text = re.sub(r'[^\w\u4e00-\u9fff\s-]', ' ', text)
-    # 分割並過濾長度 < 2 的 token (英文)
-    tokens = text.split()
-    return [t for t in tokens if len(t) >= 1]
+
+    tokens = []
+
+    # 英數 token
+    for match in re.finditer(r'[a-z0-9]+', text):
+        tokens.append(match.group())
+
+    # 中文單字
+    chinese_chars = re.findall(r'[一-鿿]', text)
+    tokens.extend(chinese_chars)
+
+    # 中文 bigram —— 讓「折讓」能命中「折讓的」
+    for i in range(len(chinese_chars) - 1):
+        tokens.append(chinese_chars[i] + chinese_chars[i + 1])
+
+    return tokens
 
 
 # reasoning.csv 規則比對的最低匹配強度，低於此值視為雜訊不計分

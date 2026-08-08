@@ -38,8 +38,9 @@ CSV_CONFIG = {
     },
     'operation': {
         'file': 'operations.csv',
-        'search_cols': ['operation', 'operation_zh', 'ecpay_endpoint', 'required_fields', 'notes'],
-        'output_cols': ['operation', 'operation_zh', 'ecpay_endpoint', 'method', 'required_fields', 'optional_fields', 'notes']
+        # 逐一列出所有 provider 端點欄位，與 field 域同理
+        'search_cols': ['operation', 'operation_zh', 'ecpay_endpoint', 'newebpay_endpoint', 'payuni_endpoint', 'notes'],
+        'output_cols': ['operation', 'operation_zh', 'ecpay_endpoint', 'newebpay_endpoint', 'payuni_endpoint', 'method', 'required_fields', 'optional_fields', 'notes']
     },
     'logistics_type': {
         'file': 'logistics-types.csv',

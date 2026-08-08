@@ -30,3 +30,22 @@ hct_upddata,HCT 修改重量,,,,POST,"esdate,epino,eqmny",,HCT UpdData
 hct_transreport,HCT 列印託運總表,,,,POST,"esdate,epino[]",,HCT TransReport (18:00 前 must call)
 hct_query_edelno,HCT 查詢貨號,,,,POST,"esdate,epino",,HCT QueryEDELNO
 hct_r_transdata,HCT 逆物流託運,,,,POST,"esdate,epino,...",,HCT R_TransData (JSON-only)
+ez_map,ezShip 電子地圖選店,,,,GET/POST,"suID,processID,rtURL",webPara,https://map.ezship.com.tw/ezship_map_web.jsp 參數為 camelCase 與其餘兩支的 snake_case 不同;官方禁止嵌入 iframe
+ez_order_create,ezShip 建立訂單,,,,POST,"su_id,order_id,order_status,order_type,order_amount,rv_name,rv_mobile,rtn_url",",rv_email,st_code,rv_addr,rv_zip,web_para",https://www.ezship.com.tw/emap/ezship_request_order_api_ex.jsp 舊端點無_ex者已於2017年底停用;回傳 sn_id 八個零代表建單失敗
+ez_status_by_sn,ezShip 依店到店編號查貨況,,,,POST,"su_id,order_no,rtn_url",web_para,https://www.ezship.com.tw/emap/ezship_request_order_status_api.jsp 查詢須間隔3秒以上否則中斷串接權利
+ez_status_by_order,ezShip 依訂單編號查貨況,,,,POST,"su_id,order_no,rtn_url",web_para,https://www.ezship.com.tw/emap/ezship_request_order_status_api_byorder.jsp 不適用簡易版串接的訂單
+llm_quotation,Lalamove 報價,,,,POST,"serviceType,stops,language",scheduleAt,/v3/quotations 報價效期5分鐘;須先報價才能下單
+llm_place_order,Lalamove 下單,,,,POST,"quotationId,sender,recipients",isPODEnabled,/v3/orders 以報價 ID 下單
+llm_order_detail,Lalamove 查詢訂單,,,,GET,orderId,,/v3/orders/{id}
+llm_order_edit,Lalamove 修改訂單,,,,PATCH,orderId,,/v3/orders/{id}
+llm_cancel,Lalamove 取消訂單,,,,DELETE,orderId,,/v3/orders/{id} 司機接單後取消多半收費
+llm_driver,Lalamove 查詢司機,,,,GET,"orderId,driverId",,/v3/orders/{id}/drivers/{driverId} 可取得司機資訊與座標
+llm_change_driver,Lalamove 更換司機,,,,DELETE,"orderId,driverId",,/v3/orders/{id}/drivers/{driverId}
+llm_priority,Lalamove 加價優先,,,,POST,orderId,priorityFee,/v3/orders/{id}/priority
+llm_cities,Lalamove 查詢服務城市,,,,GET,,,/v3/cities
+pdg_order_create,pandago 建立訂單,,,,POST,"client_order_id,sender,recipient,payment_method",description,/orders 台灣正式端點 https://pandago-api-apse.deliveryhero.io/tw
+pdg_order_get,pandago 查詢訂單,,,,GET,order_id,,/orders/{order_id}
+pdg_order_cancel,pandago 取消訂單,,,,DELETE,order_id,reason,/orders/{order_id}
+pdg_fee,pandago 費用估算,,,,POST,"sender,recipient",,/orders/fee 與時間估算為兩支獨立端點
+pdg_time,pandago 時間估算,,,,POST,"sender,recipient",,/orders/time
+pdg_coordinates,pandago 司機座標,,,,GET,order_id,,/orders/{order_id}/coordinates

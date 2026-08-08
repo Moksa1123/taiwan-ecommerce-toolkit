@@ -44,6 +44,9 @@ jobs:
           python taiwan-invoice/scripts/test_recommend.py
           python taiwan-payment/scripts/test_recommend.py
 
+      - name: 搜尋引擎回歸測試
+        run: python taiwan-invoice/scripts/test_search.py
+
   build:
     runs-on: ubuntu-latest
     strategy:
