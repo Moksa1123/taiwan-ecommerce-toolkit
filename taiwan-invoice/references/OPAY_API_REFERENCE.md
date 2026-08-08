@@ -3,7 +3,7 @@
 > Source:《歐付寶電子發票 B2C API》(opay_i100.pdf, 145 頁)、《B2B API》(opay_i200.pdf, 130 頁)、《離線電子發票 API》(opay_i301.pdf, 52 頁)
 > 文件總覽: https://developers.opay.tw/download/document
 > Captured: 2026-08-08 · doc_access: **public**（PDF 免登入直連下載）
-> 涵蓋層級: 信封 ✅ / 加密 ✅（含官方範例）/ B2C `Issue` 逐欄 ✅ / B2B 模式與前置 ✅ / 錯誤碼 ⚠️ 官方不公開（見 §8）
+> 涵蓋層級: 信封 ✅ / 加密 ✅（含官方範例）/ B2C `Issue` 逐欄 ✅ / B2B 模式與 `Issue` 逐欄 ✅ / 離線取號 ✅ / 錯誤碼 ⚠️ 官方不公開（見 §8）
 
 ## 0. 與 ECPay 綠界發票的關係
 
@@ -331,6 +331,58 @@ Base: `https://einvoice.opay.tw/B2BInvoice/`
 
 > ⚠️ **測試環境不會主動發送任何通知**。需登入廠商後台使用「補發通知」才會寄信到指定信箱。
 
+### `Issue` 開立發票 — `Data` 欄位（B2B）
+
+**B2B 的欄位與 B2C 差異很大，不能沿用**。最關鍵的差別是：B2B **必須自己算稅**（`SalesAmount` / `TaxAmount` / `TotalAmount` 三個金額分開帶），B2C 只帶一個含稅 `SalesAmount`。
+
+| 參數 | 名稱 | 型態 | 說明 |
+|---|---|---|---|
+| `*MerchantID` | 特店編號 | String(10) | |
+| `*RelateNumber` | 廠商自訂編號 | **String(20)** | 唯一不可重複。⚠️ **比 B2C 的 String(30) 短** |
+| `InvoiceTime` | 發票開立時間 | String(20) | `yyyy-mm-dd hh:mm:ss`。**有值時僅接受過去 6 天內日期，且須順時順號**；建議不帶，由系統帶當下時間 |
+| `*CustomerIdentifier` | 買方統編 | String(8) | **B2B 必填**（B2C 選填）|
+| `CustomerEmail` | 買方信箱 | String(80) | 多組以半形分號區隔；未帶值自動帶入交易對象維護 API 設定的資料 |
+| `CustomerAddress` | 買方公司地址 | String(100) | |
+| `CustomerTelephoneNumber` | 買方電話 | String(30) | |
+| `ClearanceMark` | 通關方式 | String(1) | `TaxType=2` 時必填，`1` 非經海關 / `2` 經海關 |
+| `*InvType` | 字軌類別 | String(2) | `07` 一般稅額 / `08` 特種稅額 |
+| `*TaxType` | 課稅別 | String(1) | `InvType=07` → `1`/`2`/`3`；`InvType=08` → `3`/`4`。**注意 B2B 沒有 B2C 的 `9`（混合）** |
+| `ZeroTaxRateReason` | 零稅率原因 | String(2) | `TaxType=2` 必填，未帶預設 `71`。代碼同 B2C |
+| `TaxRate` | 稅率 | Number | 非必填，系統自動：`TaxType=1`→`0.05`、`=2`→`0`、`=3`→`0`；**`=4` 不可填**（改設 `SpecialTaxType`）|
+| `SpecialTaxType` | 特種稅額類別 | String(1) | `TaxType=3` 必填 `8`；`=4` 必填 `1`–`8`（稅率對應同 B2C）|
+| `*Items` | 商品 | Array | |
+| `*SalesAmount` | **銷售額合計** | Int | 整數，不可為 0。**須等於 `ItemAmount` 加總四捨五入至整數** |
+| `*TaxAmount` | **稅額合計** | Int | 整數。**與「`SalesAmount` × `TaxRate` 四捨五入」的差距不可大於 2** |
+| `*TotalAmount` | **發票金額** | Int | 整數，不可為 0。**須等於 `SalesAmount` + `TaxAmount`** |
+| `InvoiceRemark` | 發票備註 | String(200) | |
+
+`Items[]` 子欄位（與 B2C 不同）：
+
+| 參數 | 名稱 | 型態 | 說明 |
+|---|---|---|---|
+| `*ItemSeq` | 明細排列序號 | Int | **`1`–`999`，且不可重複**（B2C 的 `ItemSeq` 非必填）|
+| `*ItemName` | 商品名稱 | **String(256)** | B2C 為 String(100) |
+| `*ItemCount` | 商品數量 | Number | 整數 8 位、小數 2 位 |
+| `ItemWord` | 商品單位 | String(6) | **B2B 選填**（B2C 必填）|
+| `*ItemPrice` | 商品價格 | Number | 整數 8 位、小數 7 位 |
+| `*ItemAmount` | 商品合計 | Number | 整數 **12** 位、小數 7 位。與「`ItemCount` × `ItemPrice`」四捨五入的差距**不可大於 1** |
+| `ItemTax` | 商品稅額 | Int | 與「`ItemAmount` × `TaxRate`」四捨五入的差距不可大於 1。**財政部無此欄位，僅供營業人自行檢核 `TaxAmount`，不會上傳**。特種稅額發票直接帶 `0` |
+| `ItemRemark` | 商品備註 | String(200) | B2C 為 String(40) |
+
+#### B2B 三個金額的容差規則（最容易被打回的地方）
+
+| 檢核 | 容差 |
+|---|---|
+| `ItemAmount` vs `ItemCount × ItemPrice` | **≤ 1** |
+| `ItemTax` vs `ItemAmount × TaxRate` | **≤ 1** |
+| `SalesAmount` vs `Σ ItemAmount` 四捨五入 | 須相等 |
+| `TaxAmount` vs `SalesAmount × TaxRate` 四捨五入 | **≤ 2** |
+| `TotalAmount` vs `SalesAmount + TaxAmount` | 須相等 |
+
+> 這套容差設計是為了容納各家系統的浮點捨入差異。實作時**不要**直接用浮點結果送出，先四捨五入成整數再比對這五條。
+
+回應的 `Data` 含 `RtnCode`（`1` 成功）、`RtnMsg`、`InvoiceNumber`。
+
 ## 6. 離線電子發票 API
 
 Base: `https://einvoice.opay.tw/B2CInvoice/`（與 B2C 共用網域，端點名有 `Offline` 前綴）
@@ -348,7 +400,27 @@ Base: `https://einvoice.opay.tw/B2CInvoice/`（與 B2C 共用網域，端點名�
 
 **應用場景**：實體門市 POS 在網路中斷時仍需開立發票。做法是**預先向平台批次取號**（`GetOfflineInvoiceWordSettingNumber`），本地端配號開立，恢復連線後再上傳。
 
-`WithAutoSplit` 版本會自動把字軌區間切分給多台 POS，避免號碼衝突。
+### 兩種取號方式的差別
+
+| 端點 | 回傳 | 適用 |
+|---|---|---|
+| `GetOfflineInvoiceWordSettingNumber` | **單一發票號碼**（含隨機碼與驗證資料）| 一次要一張 |
+| `GetOfflineInvoiceWordSettingWithAutoSplit` | **一組號碼區間**（字軌 + 起訖號碼）| POS 端自行組成發票內容，**多台 POS 分段避免衝突** |
+
+`WithAutoSplit` 取的是「營業人在廠商後台設定之自動配號」後的區間。若你的 POS 只需要知道可開立的區間、後續自行組裝電子發票內容，用這支即可。
+
+### 取號回傳的關鍵欄位
+
+| 參數 | 型態 | 說明 |
+|---|---|---|
+| `InvoiceNo` | String(10) | 發票號碼 |
+| `RandomNumber` | String(4) | 電子發票證明聯上的 4 碼隨機碼。**同一字軌重複取號會回傳不同隨機碼** |
+| `EncryptData` | String(24) | **發票號碼 10 碼 + 隨機碼 4 碼字串合併後 AES 加密再 Base64** |
+| `Times` | Int | 同一字軌已取用次數 |
+| `InvoiceHeader` | String(2) | 字軌英文字軌（如 `AA`、`KK`、`TW`）|
+
+> `EncryptData` 是印在證明聯上供查驗的欄位，**不是你自己算的**——直接用平台回的值，別重算。
+> 查無資料時，官方列出的原因是：**取字軌號碼時未授權於歐付寶，或字軌尚未取號完成**。
 
 > 本 skill 已收錄的 provider 中，**PayNow 也有 POS 批次取號**（見 [PAYNOW_API_REFERENCE.md](PAYNOW_API_REFERENCE.md)）。若需求是實體門市，這兩家是目前有離線方案的選項。
 
@@ -376,8 +448,8 @@ Base: `https://einvoice.opay.tw/B2CInvoice/`（與 B2C 共用網域，端點名�
 
 | 項目 | 狀態 |
 |---|---|
-| B2B `Issue` 逐欄定義 | 端點、模式、前置流程已確認；業務欄位待逐欄擷取（opay_i200.pdf 130 頁）|
-| 離線 POS 各端點欄位 | 端點已確認，欄位待擷取（opay_i301.pdf 55 頁）|
+| B2B 其餘端點（`Invalid`／`Reject`／`Allowance` 與各 `Confirm`）逐欄 | `Issue` 已完成；其餘端點欄位待擷取 |
+| 離線 POS 其餘端點（`OfflineIssue`／`OfflineInvalid`／POS 設定）逐欄 | 取號流程已完成；其餘待擷取 |
 | 完整錯誤碼 | **需商家帳號**，公開文件不提供 |
 | 歐付寶**物流** API | 未出現在官方文件總覽頁，端點待確認 |
 
