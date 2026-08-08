@@ -74,7 +74,30 @@ git push origin payment-v1.3.5
 
 ## 試跑（不實際發布）
 
-Actions → Publish to npm → **Run workflow**，選套件並保持 `dry_run` 勾選。會跑完所有驗證與 `npm pack --dry-run`，但不發布。
+### 方式一：本機（隨時可用，推薦）
+
+```bash
+node scripts/preflight.mjs                 # 檢查全部三個套件
+node scripts/preflight.mjs payment         # 只檢查 payment
+node scripts/preflight.mjs payment 1.4.0   # 另外驗證 tag 版號會不會過
+```
+
+執行與 workflow 相同的所有驗證，唯一不含最後的 `npm publish`（需 GitHub OIDC 憑證）。通過回 exit 0，任一項失敗回 exit 1 並指出原因。
+
+**打 tag 前先跑這個**——否則 tag 推上去才失敗，得刪 tag 重來：
+
+```bash
+git tag -d payment-v1.4.0
+git push origin :refs/tags/payment-v1.4.0
+```
+
+### 方式二：GitHub Actions
+
+Actions → Publish to npm → **Run workflow**，選套件並保持 `dry_run` 勾選。
+
+> ⚠️ **這個按鈕要等 workflow 進入預設分支（`main`）才會出現。** GitHub 的
+> `workflow_dispatch` 只讀取預設分支上的 workflow 定義，在 feature 分支上
+> 推 commit 不會讓它出現在 Actions 頁面。合併前請用方式一。
 
 ## 舊 tag
 
