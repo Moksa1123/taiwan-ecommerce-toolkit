@@ -84,3 +84,19 @@ jobs:
       - name: 檢視發布內容
         working-directory: ${{ matrix.dir }}
         run: npm pack --dry-run
+
+  # 分支保護只需要求這一個 check。
+  # 若改為逐一列出上面的 job，matrix 內容變動（例如新增第四個套件）時
+  # 保護規則不會跟著更新，新 job 會變成「沒有被要求」而靜默失效。
+  ci-passed:
+    if: always()
+    needs: [verify, build]
+    runs-on: ubuntu-latest
+    steps:
+      - name: 確認前置 job 全數成功
+        run: |
+          if [ "${{ contains(needs.*.result, 'failure') || contains(needs.*.result, 'cancelled') }}" = "true" ]; then
+            echo "::error::有前置 job 未通過"
+            exit 1
+          fi
+          echo "全部通過"
