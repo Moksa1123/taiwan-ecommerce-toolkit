@@ -92,7 +92,7 @@ taiwan-invoice init --global       # 全域安裝
 
 ## 14 個 AI 平台支援
 
-Claude Code · Cursor · Windsurf · Antigravity · GitHub Copilot · Kiro · Codex · Qoder · Roo Code · Gemini · Trae · OpenCode · Continue · CodeBuddy
+Claude Code · Cursor · Windsurf · Antigravity · GitHub Copilot · Kiro · Codex · Qoder · Cline · Gemini · Trae · OpenCode · Continue · CodeBuddy
 
 ## 相關套件
 

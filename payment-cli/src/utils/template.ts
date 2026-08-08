@@ -18,7 +18,7 @@ const AI_TO_PLATFORM: Record<string, string> = {
   kiro: 'kiro',
   codex: 'codex',
   qoder: 'qoder',
-  roocode: 'roocode',
+  cline: 'cline',
   gemini: 'gemini',
   trae: 'trae',
   opencode: 'opencode',

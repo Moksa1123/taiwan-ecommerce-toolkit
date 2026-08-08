@@ -7,7 +7,7 @@ export type AIType =
   | 'kiro'
   | 'codex'
   | 'qoder'
-  | 'roocode'
+  | 'cline'
   | 'gemini'
   | 'trae'
   | 'opencode'
@@ -67,7 +67,7 @@ export const AI_TYPES: AIType[] = [
   'kiro',
   'codex',
   'qoder',
-  'roocode',
+  'cline',
   'gemini',
   'trae',
   'opencode',
@@ -85,7 +85,7 @@ export const AI_FOLDERS: Record<Exclude<AIType, 'all'>, string[]> = {
   kiro: ['.kiro'],
   codex: ['.codex'],
   qoder: ['.qoder'],
-  roocode: ['.roo'],
+  cline: ['.cline'],
   gemini: ['.gemini'],
   trae: ['.trae'],
   opencode: ['.opencode'],

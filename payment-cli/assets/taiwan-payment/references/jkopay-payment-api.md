@@ -3,7 +3,7 @@
 > 官方開放文件: https://open-doc.jkos.com/
 > 公司: 街口電子支付股份有限公司（專營電子支付機構）
 > Captured: 2026-08-08 · doc_access: **public**（文件站免登入）
-> Status: **五大模組已擷取四個** —— 線上支付（§5）、授權扣款（§6）、線下 POS（§8）、inApp OAuth（§9）；街口幣發放待補
+> Status: **五大模組全數擷取完成** —— 線上支付（§5）、授權扣款（§6）、線下 POS（§8）、inApp OAuth（§9）、街口幣發放（§11）
 > 擷取方式: 文件站為 SPA，WebFetch 深層連結回 404，本次以瀏覽器逐頁取得
 
 ## 0. 為什麼收錄
@@ -268,13 +268,35 @@ Platform APIs 統一回應格式（**欄位皆小寫**，`result` 為**字串**�
 
 查詢回傳的 `transactions[]` 結構與 `result_url` 的 `transaction` 相同，另含 `refund_history[]`。
 
-### 5.7 其他端點
+### 5.7 訂單退款 `POST /platform/refund`
 
-| 端點 | 用途 |
-|---|---|
-| `POST /platform/refund` | 訂單退款 |
-| `GET /platform/inquiry` | 訂單查詢，參數 `platform_order_ids`（**複數，逗號分隔可批次查**）|
-| 交易撥款檔 R File | 對帳用的撥款檔（Reimburse File）|
+支援全額與**多次部分退款**，累積退款金額不可超過訂單實際消費金額。
+
+| 參數 | 型態 | 長度 | 必填 | 說明 |
+|---|---|---|---|---|
+| `platform_order_id` | string | 60 | ✅ | 原交易序號。街口會比對退款單號與訂單是否對應 |
+| `refund_order_id` | string | 60 | ✅ | **電商端退款單號，須唯一。一筆退款單號只能退一次；要再退必須換號** |
+| `refund_amount` | decimal | 20,0 | ✅ | 退款金額 |
+
+Response `result_object`：`refund_tradeNo`、`debit_amount`、`redeem_amount`、`redeem_detail`（三種折抵）、`refund_time`。
+
+> ⚠️ `refund_order_id` 的一次性語意容易誤用：**重送同一個退款單號不會「重試」，而是被視為已用過**。網路逾時後要確認結果請改用 Inquiry 查，不要換號重送——換號會變成第二筆退款。
+
+### 5.8 訂單查詢 `GET /platform/inquiry`
+
+```
+GET https://[Host]/platform/inquiry?platform_order_ids={id1},{id2}
+```
+
+| 參數 | 型態 | 長度 | 必填 | 說明 |
+|---|---|---|---|---|
+| `platform_order_ids` | string[] | 60 | ✅ | 逗號分隔，**一次最多查 20 筆** |
+
+回傳 `transactions[]`，每筆含付款資訊與 `refund_history[]`（`refund_order_id`、`refund_tradeNo`、`amount`、`debit_amount`、`redeem_amount`、`time`）。
+
+> 官方範例中第二筆退款紀錄沒有 `refund_order_id`——舊資料可能缺欄，解析時別假設必存在。
+
+另有**交易撥款檔 R File**（Reimburse File）供對帳，欄位格式待補。
 
 ## 6. 授權扣款 Authorized Payment — 完整規格
 
@@ -475,6 +497,57 @@ Response 的 `result_object` 與 OnlinePay 的 `result_url` 同構（`tradeNo`�
 > ⚠️ **折抵金額是負值**，跟線上支付的 `redeem_detail`（正值）相反。對帳時直接相加會算錯。
 > ⚠️ `IsRep=1` 代表街口判定為重複交易——POS 端斷線重送時必須看這個欄位，否則會誤認為兩筆成功交易。
 
+### 8.1 取消 `POST /{系統方名稱}/Cancel`
+
+POS 送出付款後**與街口連線異常或逾時**時使用，取消該筆付款。
+
+欄位與付款相同，但**下列五個必須與原 Payment 請求完全一致**：`GatewayTradeNo`、`MerchantTradeNo`、`CardToken`、`TradeAmount`、`UnRedeem`。
+
+Response 只回 `MerchantID`、`StoreID`、`GatewayTradeNo`、`MerchantTradeNo`、`PosID`、`TradeAmount`、`StatusCode`、`StatusDesc`、`ActionCode`。
+
+### 8.2 退款 `POST /{系統方名稱}/Refund`
+
+⚠️ **`MerchantTradeNo` 在這裡是「退款流水號」不是原付款流水號**，且須唯一；原交易改用 `TradeNo`（街口端交易序號）指定。
+
+| 參數 | 說明 |
+|---|---|
+| `TradeNo` | String(25)，**原街口端交易序號** |
+| `MerchantTradeNo` | String(60)，**退款流水號**，需唯一 |
+| `TradeAmount` | 退款金額 |
+
+Response 另含 `RefundTradeNo`、`RefundTradeTime`、`IsRep`、`PaymentType`、折抵三欄。
+
+### 8.3 查詢 `POST /{系統方名稱}/Inquiry`
+
+以 `InquiryType` 區分：`P` 查付款、`R` 查退款。`MerchantTradeNo` 依查詢類型帶付款或退款流水號。
+
+**`OrderStatus` 兩種查詢的取值完全不同**：
+
+| InquiryType | OrderStatus |
+|---|---|
+| `P` 付款查詢 | `1` 付款成功 / `2` 付款失敗 / `4` 全額退款成功 / `7` 部分退款成功 |
+| `R` 退款查詢 | `2` 退款失敗 / `5` 退款成功 |
+
+> ⚠️ **`2` 在付款查詢是「付款失敗」，在退款查詢是「退款失敗」**——語意雖相近但代碼集不同，不可共用 mapping。
+> ⚠️ **交易送出後 15 秒內查詢可能回 `916` 查無此訂單**（交易仍在進行中）。POS 端逾時後不要立刻查，要等一下再查，否則會誤判為交易不存在。
+> ⚠️ **已送出取消（Cancel）的交易請勿使用查詢 API**（官方明訂）。
+> `StatusCode` 非 `000` 時，大部分欄位不會回傳——解析前先判斷 `StatusCode`。
+
+### 8.4 ⚠️ 折抵金額的正負號在 POS 內部就不一致
+
+同樣叫 `RedeemAmount` / `StoreRedeemAmount`，正負相反：
+
+| 情境 | 正負 | 官方範例 |
+|---|---|---|
+| 付款（Payment）| **負值** | `RedeemAmount: -3` |
+| 付款查詢（Inquiry `P`）| **負值** | `RedeemAmount: -2`, `StoreRedeemAmount: -1` |
+| 退款（Refund）| **正值** | `RedeemAmount: 2`, `StoreRedeemAmount: 1` |
+| 退款查詢（Inquiry `R`）| **正值** | `RedeemAmount: 2`, `StoreRedeemAmount: 1` |
+
+規則是「付款相關為負、退款相關為正」。再加上**線上支付（§5）的 `redeem_detail` 一律為正值**，同一家廠商三種正負慣例並存。
+
+> 對帳程式若用同一個函式處理折抵金額，跨模組時金額會反號。建議在解析層就依來源正規化，不要在計算層才處理。
+
 ## 9. inApp 第三方服務 — OAuth / JOP Gateway
 
 給 ISV 業者取得街口使用者授權資料用，**網域與支付 API 完全不同**：
@@ -567,21 +640,90 @@ OAuth 專屬錯誤碼：`OA-001` 成功、`OA-205` Auth Code 已被使用、`OA-
 
 > ⚠️ **`906` 條碼已失效與 `927` 條碼錯誤是 POS 最常見的兩個**——街口付款條碼有時效，收銀台掃碼到送出 API 之間不能拖太久。
 
-## 11. 仍待補
+## 11. 街口幣發放 Issue JKOS Coins
+
+給外部平台發放街口幣做行銷用。**這是聚合商完全給不了的能力**（見 §2）。
+
+| 環境 | Domain |
+|---|---|
+| UAT | `uat-marketing-ext.jkopay.app` |
+| 正式 | `marketing-ext.jkopay.com` |
+
+`POST https://{baseURL}/jkocoin/exchange`
+
+### Header
+
+| Header | 說明 |
+|---|---|
+| `Content-Type` | `application/json` |
+| `Api-Key` | 街口提供的 API Key |
+| `Digest` | HMAC-SHA256 簽章 |
+
+> ⚠️ **Header 名稱是首字大寫的 `Api-Key` / `Digest`**，線上支付則是全小寫 `api-key` / `digest`。HTTP header 雖不分大小寫，但若你的框架或簽章工具做字串比對，這裡會踩到。
+
+簽章規則**與線上支付相同**（HMAC-SHA256 簽 payload 原文），連官方範例用的測試 Secret Key 都是同一組。所以街口全部合計仍是 §7 的**三套**簽章，不是四套。
+
+### Request Body
+
+| 參數 | 型態 | 長度 | 必填 | 說明 |
+|---|---|---|---|---|
+| `clientId` | string | 100 | ✅ | 呼叫端識別碼（街口提供）|
+| `exchangeId` | string | 64 | ✅ | **交易唯一識別碼，需唯一不可重複** |
+| `amount` | decimal | 20,0 | ✅ | 發放金額，**必須 > 0** |
+| `jkosId` | string | 64 | ✅ | 發放對象 UUID |
+
+### Response — ⚠️ 欄位是 PascalCase
+
+```json
+{ "Result": "0001", "Message": null, "ResultObject": { "jkosId": "...", "issueTime": "...", "amount": 20 } }
+```
+
+> ⚠️ **`Result` / `Message` / `ResultObject` 首字大寫**，而線上支付與授權扣款是全小寫 `result` / `message` / `result_object`。街口文件自己也特別標註過這個大小寫差異。
+
+`issueTime` 為 **ISO-8601**（`yyyy-MM-dd'T'HH:mm:ss.SSS'Z'`），與其他模組的 `yyyy-MM-dd HH:mm:ss` 不同。
+
+### 回應碼 — 第四套代碼空間
+
+| Result | 說明 |
+|---|---|
+| `0001` | 成功 |
+| `2-GW-0997` | 服務維護中（Gateway）|
+| `2-GW-0201` | 驗簽失敗（Gateway）|
+| `2-MT-9001` | 欄位檢核失敗 |
+| `2-MT-9002` | 發放對象不存在 |
+| `2-MT-9003` | 發放金額需大於 0 |
+| `2-MT-9004` | 驗證失敗 |
+| `2-MT-9006` | **`exchangeId` 請求不一致** |
+| `2-MT-9005` | Internal service error ← **必須重試** |
+| `2-MT-9999` | 非預期的錯誤 ← **必須重試** |
+
+### ⚠️ 重試語意攸關金錢，不可自行改寫
+
+收到 `2-MT-9005` 或 `2-MT-9999` 時，**必須用同一個 `exchangeId` 重送**直到取得明確結果。
+
+官方說明：這兩種錯誤代表訂單卡在「處理中」，**背後可能已經發幣成功也可能失敗**。用同一 `exchangeId` 重送，街口才會確認狀態並更新為成功或失敗。
+
+> ⚠️ **換一個 `exchangeId` 重送 = 新的一筆交易**，不但拿不到原交易結果，還有**重複發幣**的風險。
+> 相對地，帶相同 `exchangeId` 正常呼叫是**冪等**的，會回同一筆訂單結果——所以重送是安全的。
+> `2-MT-9006`（exchangeId 請求不一致）代表你用同一個 `exchangeId` 但帶了不同的參數，這是實作錯誤而非可重試的暫時性失敗。
+
+### 查詢 API 尚未提供
+
+官方標註「目前尚未提供，但建議先將 GET parameters 處理好未來方便介接」，並已給出簽章格式（`clientId=...,exchangeId=...`）。**目前只能靠重送同一 `exchangeId` 來確認狀態。**
+
+## 12. 仍待補
+
+五大模組的 API 皆已擷取，剩餘為週邊項目：
 
 | 待補項目 | 優先 | 備註 |
 |---|---|---|
-| OnlinePay 退款 / 查詢 API 的 request 逐欄 | 中 | Response Code 已完整，request 欄位待擷取 |
-| POS 取消 / 退款 / 查詢 API 的欄位 | 中 | 付款 API 與統一錯誤碼已完成 |
-| 街口幣發放 API | 低 | 五大模組中唯一未觸及 |
-| R File（店家撥款檔）欄位格式 | 低 | OnlinePay 與 POS 皆有 |
+| R File（店家撥款檔）欄位格式 | 中 | 線上支付與 POS 皆有此檔，對帳需要 |
 | Web SDK | 低 | 版本多（v2.0.2–v2.0.8 + Next），需先確認採用版本 |
-
-已完成：**線上支付**（§5）、**授權扣款**（§6）、**線下 POS**（§8）、**inApp OAuth**（§9）、**統一錯誤碼表**（§10）。
+| 街口幣查詢 API | — | **官方尚未提供**，僅先公布簽章格式 |
 
 `data/payment-methods.csv` 中 NewebPay/ezPay 的 `JKOPAY?` 推測碼**仍未驗證**——街口官方文件只描述直連，不涉及各聚合商如何命名自家代碼，需由各聚合商文件確認。
 
-## 12. 來源
+## 13. 來源
 
 - 街口開放文件 — https://open-doc.jkos.com/
 - 線上支付 OnlinePay — https://open-doc.jkos.com/?docs=線上支付onlinepay

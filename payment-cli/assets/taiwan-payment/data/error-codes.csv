@@ -187,3 +187,13 @@ jkopay,UP-001,取得用戶資料成功,Success,success,info,
 jkopay,UP-460,Access Token 過期,Access token expired,auth,error,以 refresh_token 換取新的 access_token
 jkopay,UP-999,用戶資料系統異常,System error,server,error,稍後重試
 jkopay,405,權限不足,Permission denied,auth,error,JOP Gateway 該 client_id 未取得此 API 權限 洽街口開放平台開通
+jkopay,0001,街口幣發放成功,Success,success,info,
+jkopay,2-GW-0997,服務維護中(Gateway),Service is under maintenance,server,error,街口幣發放閘道維護中 稍後以同一 exchangeId 重試
+jkopay,2-GW-0201,驗簽失敗(Gateway),Signature verification failed,auth,error,街口幣發放的簽章與線上支付同規則 HMAC-SHA256 簽 payload 原文 注意 Header 為 Api-Key 與 Digest 首字大寫
+jkopay,2-MT-9001,欄位檢核失敗,Validation failed,validation,error,檢查 clientId exchangeId amount jkosId 四個必填欄位
+jkopay,2-MT-9002,發放對象不存在,Target user not found,validation,error,確認 jkosId 為有效的街口用戶 UUID
+jkopay,2-MT-9003,發放金額需大於0,Amount must be greater than zero,validation,error,amount 必須大於 0
+jkopay,2-MT-9004,驗證失敗,Authentication failed,auth,error,確認 Api-Key 正確且已開通街口幣發放權限
+jkopay,2-MT-9006,exchangeId 請求不一致,Inconsistent request for exchangeId,validation,error,同一 exchangeId 帶了不同參數 屬實作錯誤非暫時性失敗 請修正參數而非重試
+jkopay,2-MT-9005,街口幣發放內部錯誤,Internal service error,server,error,訂單卡在處理中可能已發幣成功 必須以「同一個」exchangeId 重送直到取得明確結果 換號會重複發幣
+jkopay,2-MT-9999,街口幣發放非預期錯誤,Unspecified Error,server,error,同 2-MT-9005 必須以同一個 exchangeId 重送 不可換號

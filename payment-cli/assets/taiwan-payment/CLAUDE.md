@@ -116,7 +116,7 @@ When modifying files:
 | Kiro        | `.kiro`     | full         |
 | Codex       | `.codex`    | full         |
 | Qoder       | `.qoder`    | full         |
-| Roo Code    | `.roo`      | full         |
+| Cline       | `.cline`    | full         |
 | Gemini      | `.gemini`   | full         |
 | Trae        | `.trae`     | full         |
 | OpenCode    | `.opencode` | full         |

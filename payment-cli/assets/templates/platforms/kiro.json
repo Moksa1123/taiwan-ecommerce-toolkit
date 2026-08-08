@@ -4,7 +4,7 @@
   "installType": "full",
   "folderStructure": {
     "root": ".kiro",
-    "skillPath": "steering/taiwan-payment",
+    "skillPath": "skills/taiwan-payment",
     "filename": "SKILL.md"
   },
   "scriptPath": "steering/taiwan-payment/scripts",

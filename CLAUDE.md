@@ -86,22 +86,44 @@ When modifying files:
 
 ## Supported AI Platforms
 
-| Platform     | Folder      | Install Type |
-|-------------|-------------|--------------|
-| Claude Code | `.claude`   | full         |
-| Cursor      | `.cursor`   | full         |
-| Windsurf    | `.windsurf` | full         |
-| Antigravity | `.agent`    | full         |
-| Copilot     | `.github`   | full         |
-| Kiro        | `.kiro`     | full         |
-| Codex       | `.codex`    | full         |
-| Qoder       | `.qoder`    | full         |
-| Roo Code    | `.roo`      | full         |
-| Gemini      | `.gemini`   | full         |
-| Trae        | `.trae`     | full         |
-| OpenCode    | `.opencode` | full         |
-| Continue    | `.continue` | full         |
-| CodeBuddy   | `.codebuddy`| full         |
+各平台的 skill 目錄慣例會變動，下表於 **2026-08-08** 逐一對照官方文件查核。
+
+| Platform | Skill 路徑 | 查核來源 |
+|---|---|---|
+| Claude Code | `.claude/skills/` | code.claude.com/docs |
+| Cursor | `.cursor/skills/` | cursor.com/docs/context/skills |
+| Windsurf | `.windsurf/skills/` | docs.devin.ai/desktop/cascade/skills |
+| Antigravity | `.agent/skills/` | AgentSkillsManager |
+| Copilot / VS Code | `.github/skills/` | docs.github.com |
+| Kiro | `.kiro/skills/` | kiro.dev/docs/skills |
+| Codex | `.codex/skills/` | developers.openai.com/codex/skills |
+| Qoder | `.qoder/skills/` | docs.qoder.com/extensions/skills |
+| Cline | `.cline/skills/` | docs.cline.bot/customization/skills |
+| Gemini | `.gemini/skills/` | geminicli.com/docs/cli/skills |
+| Trae | `.trae/skills/` | docs.trae.ai/ide/skills |
+| OpenCode | `.opencode/skills/` | opencode.ai/docs/skills |
+| CodeBuddy | `.codebuddy/skills/` | AgentSkillsManager |
+| Continue | `.continue/skills/` | ⚠️ **未能查證**，見下 |
+
+安裝型別皆為 `full`。
+
+### 查核時發現並修正的問題
+
+| 平台 | 原本 | 修正為 | 說明 |
+|---|---|---|---|
+| Copilot | `.github/prompts/` | `.github/skills/` | `prompts/` 是給 `*.prompt.md`，不是 skill |
+| Kiro | `.kiro/steering/` | `.kiro/skills/` | Kiro 的 steering（常駐規範）與 skills（按需能力）是兩套機制 |
+| Roo Code | `.roo/commands/` | — | **Roo Code 已於 2026-05-15 封存停止營運**，改為支援其上游 Cline |
+
+### ⚠️ Continue 待確認
+
+查無 Continue 支援 Agent Skills 的證據：不在 [Agent Skills 官方 Client Showcase](https://agentskills.io/clients) 名單內，官方文件的客製化機制只列出 rules / prompts / MCP，未提及 skills；社群 issue [continuedev/continue#9216](https://github.com/continuedev/continue/issues/9216) 已關閉但無可見結論。
+
+現行設定 `.continue/skills/` **可能無效**。已確認存在的是 `.continue/rules/`。待決定要移除支援、或改輸出成 rules 格式。
+
+### 通用 fallback 路徑
+
+Copilot、Gemini CLI、OpenCode、Windsurf 的文件都額外接受 **`.agents/skills/`** 作為跨工具通用路徑（Agent Skills 標準已由 Anthropic 捐給 Linux Foundation 旗下的 AAIF）。目前 CLI 未輸出此路徑，可考慮作為新平台的預設 fallback。
 
 ## Prerequisites
 

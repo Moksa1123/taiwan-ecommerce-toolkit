@@ -1,11 +1,12 @@
 {
-  "platform": "roocode",
-  "displayName": "Roo Code",
+  "platform": "cline",
+  "displayName": "Cline",
   "installType": "full",
   "folderStructure": {
-    "root": ".roo",
-    "skillPath": "commands/taiwan-logistics",
-    "filename": "SKILL.md"
+    "root": ".cline",
+    "skillPath": "skills/taiwan-logistics",
+    "filename": "SKILL.md",
+    "globalRoot": "~/.cline"
   },
   "scriptPath": "commands/taiwan-logistics/scripts",
   "frontmatter": {

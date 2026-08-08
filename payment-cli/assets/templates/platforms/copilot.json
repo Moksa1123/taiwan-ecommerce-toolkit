@@ -4,7 +4,7 @@
   "installType": "full",
   "folderStructure": {
     "root": ".github",
-    "skillPath": "prompts/taiwan-payment",
+    "skillPath": "skills/taiwan-payment",
     "filename": "SKILL.md"
   },
   "scriptPath": "prompts/taiwan-payment/scripts",

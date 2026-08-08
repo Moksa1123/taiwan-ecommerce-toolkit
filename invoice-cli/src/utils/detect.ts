@@ -34,8 +34,8 @@ export function detectAIType(cwd: string = process.cwd()): DetectionResult {
   if (existsSync(join(cwd, '.qoder'))) {
     detected.push('qoder');
   }
-  if (existsSync(join(cwd, '.roo'))) {
-    detected.push('roocode');
+  if (existsSync(join(cwd, '.cline'))) {
+    detected.push('cline');
   }
   if (existsSync(join(cwd, '.gemini'))) {
     detected.push('gemini');
@@ -74,15 +74,15 @@ export function getAITypeDescription(aiType: AIType): string {
     case 'antigravity':
       return 'Antigravity (.agent/skills/)';
     case 'copilot':
-      return 'GitHub Copilot (.github/prompts/)';
+      return 'GitHub Copilot (.github/skills/)';
     case 'kiro':
-      return 'Kiro (.kiro/steering/)';
+      return 'Kiro (.kiro/skills/)';
     case 'codex':
       return 'Codex CLI (.codex/skills/)';
     case 'qoder':
-      return 'Qoder (.qoder/rules/)';
-    case 'roocode':
-      return 'Roo Code (.roo/commands/)';
+      return 'Qoder (.qoder/skills/)';
+    case 'cline':
+      return 'Cline (.cline/skills/)';
     case 'gemini':
       return 'Gemini CLI (.gemini/skills/)';
     case 'trae':
