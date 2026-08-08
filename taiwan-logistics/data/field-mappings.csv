@@ -1,23 +1,23 @@
-field_name,field_zh,ecpay_name,newebpay_name,payuni_name,smilepay_name,pchomepay_name,paynow_name,hct_name,type,required,notes
-merchant_id,商店代號,MerchantID,uid,MerID,Dcvc,APP_ID (Basic Auth),merID,CustomerNo,string,true,HCT 直連用 CustomerNo；PChomePay 用 Basic Auth → token
-order_id,訂單編號,MerchantTradeNo,merchant_order_no,MerTradeNo,Data_id,order_id,(自選),epino,string,true,HCT 必須 esdate+epino 唯一組合
-order_date,訂單日期,MerchantTradeDate,create_time,TradeTime,(系統決定),(系統決定),(系統決定),esdate (YYYY/MM/DD),string,true,HCT esdate 是「出貨日期」格式為 yyyy/MM/dd
-logistics_type,物流類型,LogisticsType,lgs_type,LogisticsType,Pay_zg,pay_type,LogisticServiceID,(N/A — HCT 直連碳貓),string,true,SmilePay 用 Pay_zg 編碼；PayNow 用 ServiceID 區分 11 條產品線
-logistics_sub_type,物流子類型,LogisticsSubType,lgs_sub_type,LogisticsSubType,Pay_subzg,logistic_type,(內含於 ServiceID),(N/A),string,true,SmilePay Pay_subzg=7NET/FAMI；PChomePay logistic_type=PL711/PLFMI/PLHIL/PLOK
-logistics_id,物流編號,AllPayLogisticsID,logistics_id,PayUniLogisticsID,Smseid,(returned in data),LogisticTradeNo,edelno,string,false,廠商回傳；HCT 在 100 天內唯一
-goods_amount,代收金額,GoodsAmount,goods_amount,GoodsAmount,Amount,(via金流),Amount,eamtcod,integer,true,COD 才填；HCT 用 eamtcod (epaytype=2)
-goods_name,商品名稱,GoodsName,goods_name,GoodsName,od_sob,(無),GoodsName,eprdcl1,string,true,SmilePay 用 od_sob
-sender_name,寄件人姓名,SenderName,sender_name,SenderName,(無 — 商家固定),(後台設定),SenderName,epname,string,true,
-sender_phone,寄件人電話,SenderPhone,sender_tel,SenderPhone,(無),(後台設定),SenderPhone,eptel,string,true,
-sender_address,寄件人地址,SenderAddress,sender_address,SenderAddress,(無),(後台設定),SenderAddress,eaddr2,string,false,宅配必填
-receiver_name,收件人姓名,ReceiverName,receiver_name,ReceiverName,Pur_name,name,ReceiverName,epdcl1,string,true,
-receiver_phone,收件人電話,ReceiverPhone,receiver_tel,ReceiverPhone,Pur_telno,phone,ReceiverPhone,epdcl2,string,true,
-receiver_address,收件人地址,ReceiverAddress,receiver_address,ReceiverAddress,Address,address,ReceiverAddress,eaddr1,string,false,宅配必填
-receiver_store_id,收件門市代號,ReceiverStoreID,receiver_store_code,ReceiverStoreID,(透過 Emap 選店回傳),store_id,ReceiverStoreID,(N/A),string,false,超商必填；SmilePay/PayNow/PChomePay 透過電子地圖選店 callback 回傳
-return_store_id,退貨門市代號,ReturnStoreID,return_store_code,ReturnStoreID,(無),return_store_id,(無),(N/A),string,false,
-is_collection,是否代收,IsCollection,is_collection,N/A,(由 Pay_zg 決定),(由 pay_type 決定),(由 IsCOD/Y/N 決定),epaytype=2,string,false,SmilePay 從 Pay_zg 51/55/81 (COD) vs 52/56/82 (PICKUP) 判斷
-collection_amount,代收金額,CollectionAmount,collection_amount,N/A,Amount,(via 金流),Amount,eamtcod,integer,false,
-temperature,溫層,Temperature,temperature,Temperature,Temperature (1/2/3),(透過 logistic_type),(內含於 ServiceID),eshipment,string,false,1常溫 2冷藏 3冷凍；PayNow 透過產品線細分
-weight,重量,(N/A),(N/A),(N/A),(N/A),(N/A),(N/A),eweight,integer,false,HCT 直連必填；其他 aggregator 通常自動分箱
-package_count,件數,(N/A),(N/A),(N/A),(N/A),(N/A),(N/A),eqmny,integer,false,HCT 必填
-server_reply_url,通知網址,ServerReplyURL,notify_url,NotifyURL,Roturl,(後台設定),ReturnURL,(N/A — 用 webhook),string,true,HCT 直連靠主動查詢，無 push notify
+field_name,field_zh,ecpay_name,newebpay_name,payuni_name,smilepay_name,pchomepay_name,paynow_name,hct_name,ezship_name,lalamove_name,pandago_name,uber_direct_name,type,required,notes
+merchant_id,商店代號,MerchantID,uid,MerID,Dcvc,APP_ID (Basic Auth),merID,CustomerNo,su_id,(無;走 API key),clientId,(無;走 OAuth),string,true,HCT 直連用 CustomerNo；PChomePay 用 Basic Auth → token
+order_id,訂單編號,MerchantTradeNo,merchant_order_no,MerTradeNo,Data_id,order_id,(自選),epino,order_id,ref (自訂),client_order_id,external_id,string,true,HCT 必須 esdate+epino 唯一組合
+order_date,訂單日期,MerchantTradeDate,create_time,TradeTime,(系統決定),(系統決定),(系統決定),esdate (YYYY/MM/DD),(系統決定),(系統決定),(系統決定),(系統決定),string,true,HCT esdate 是「出貨日期」格式為 yyyy/MM/dd
+logistics_type,物流類型,LogisticsType,lgs_type,LogisticsType,Pay_zg,pay_type,LogisticServiceID,(N/A — HCT 直連碳貓),order_status (A01-A06/A11-A12),(單一;即時配送),(單一),(單一),string,true,SmilePay 用 Pay_zg 編碼；PayNow 用 ServiceID 區分 11 條產品線
+logistics_sub_type,物流子類型,LogisticsSubType,lgs_sub_type,LogisticsSubType,Pay_subzg,logistic_type,(內含於 ServiceID),(N/A),(由 stCate 決定 TOK/TLF/TFM),serviceType (車型),(無),(無),string,true,SmilePay Pay_subzg=7NET/FAMI；PChomePay logistic_type=PL711/PLFMI/PLHIL/PLOK
+logistics_id,物流編號,AllPayLogisticsID,logistics_id,PayUniLogisticsID,Smseid,(returned in data),LogisticTradeNo,edelno,sn_id (八個零=建單失敗),orderId,order_id,id,string,false,廠商回傳；HCT 在 100 天內唯一
+goods_amount,代收金額,GoodsAmount,goods_amount,GoodsAmount,Amount,(via金流),Amount,eamtcod,order_amount,item 價值,(無),manifest_total_value,integer,true,COD 才填；HCT 用 eamtcod (epaytype=2)
+goods_name,商品名稱,GoodsName,goods_name,GoodsName,od_sob,(無),GoodsName,eprdcl1,(無),remarks,description,manifest_items[].name,string,true,SmilePay 用 od_sob
+sender_name,寄件人姓名,SenderName,sender_name,SenderName,(無 — 商家固定),(後台設定),SenderName,epname,(由帳號決定),sender.name,sender.name,pickup_name,string,true,
+sender_phone,寄件人電話,SenderPhone,sender_tel,SenderPhone,(無),(後台設定),SenderPhone,eptel,(由帳號決定),sender.phone,sender.phone_number,pickup_phone_number,string,true,
+sender_address,寄件人地址,SenderAddress,sender_address,SenderAddress,(無),(後台設定),SenderAddress,eaddr2,(由帳號決定),stops[0].address,sender.location,pickup_address,string,false,宅配必填
+receiver_name,收件人姓名,ReceiverName,receiver_name,ReceiverName,Pur_name,name,ReceiverName,epdcl1,rv_name (超過四字印不完整),recipient.name,recipient.name,dropoff_name,string,true,
+receiver_phone,收件人電話,ReceiverPhone,receiver_tel,ReceiverPhone,Pur_telno,phone,ReceiverPhone,epdcl2,rv_mobile,recipient.phone,recipient.phone_number,dropoff_phone_number,string,true,
+receiver_address,收件人地址,ReceiverAddress,receiver_address,ReceiverAddress,Address,address,ReceiverAddress,eaddr1,rv_addr + rv_zip (A05/A06),stops[1].address,recipient.location,dropoff_address,string,false,宅配必填
+receiver_store_id,收件門市代號,ReceiverStoreID,receiver_store_code,ReceiverStoreID,(透過 Emap 選店回傳),store_id,ReceiverStoreID,(N/A),st_code (四或五碼),(無;即時配送無門市),(無),(無),string,false,超商必填；SmilePay/PayNow/PChomePay 透過電子地圖選店 callback 回傳
+return_store_id,退貨門市代號,ReturnStoreID,return_store_code,ReturnStoreID,(無),return_store_id,(無),(N/A),(店退店服務;欄位待補),(無),(無),(無),string,false,
+is_collection,是否代收,IsCollection,is_collection,N/A,(由 Pay_zg 決定),(由 pay_type 決定),(由 IsCOD/Y/N 決定),epaytype=2,order_type (1代收/3一般),(無;不支援代收),payment_method,(無),string,false,SmilePay 從 Pay_zg 51/55/81 (COD) vs 52/56/82 (PICKUP) 判斷
+collection_amount,代收金額,CollectionAmount,collection_amount,N/A,Amount,(via 金流),Amount,eamtcod,order_amount,(無),amount,(無),integer,false,
+temperature,溫層,Temperature,temperature,Temperature,Temperature (1/2/3),(透過 logistic_type),(內含於 ServiceID),eshipment,(無;常溫),(無),(無),(無),string,false,1常溫 2冷藏 3冷凍；PayNow 透過產品線細分
+weight,重量,(N/A),(N/A),(N/A),(N/A),(N/A),(N/A),eweight,(無),(依車型),(限20kg),(無),integer,false,HCT 直連必填；其他 aggregator 通常自動分箱
+package_count,件數,(N/A),(N/A),(N/A),(N/A),(N/A),(N/A),eqmny,(無),(無),(無),(無),integer,false,HCT 必填
+server_reply_url,通知網址,ServerReplyURL,notify_url,NotifyURL,Roturl,(後台設定),ReturnURL,(N/A — 用 webhook),rtn_url,webhook (後台設定),callback (後台設定),webhook,string,true,HCT 直連靠主動查詢，無 push notify

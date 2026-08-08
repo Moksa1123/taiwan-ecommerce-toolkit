@@ -51,7 +51,7 @@ taiwan-payment/                     # Source of Truth
     ├── providers.csv               # 14 providers（含 doc_access 文件公開程度分級）
     ├── operations.csv              # 8 API operations
     ├── error-codes.csv             # 120 error codes + solutions（11 家）
-    ├── field-mappings.csv          # 15 field mappings
+    ├── field-mappings.csv          # 19 欄位 × 14 家 provider 對照
     ├── payment-methods.csv         # 40 payment methods
     ├── reasoning.csv               # 30+ recommendation rules
     └── troubleshooting.csv         # 16 troubleshooting cases

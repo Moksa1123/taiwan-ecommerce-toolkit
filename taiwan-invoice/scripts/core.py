@@ -35,8 +35,10 @@ CSV_CONFIG = {
     },
     'field': {
         'file': 'field-mappings.csv',
-        'search_cols': ['field_name', 'description', 'ecpay_name', 'smilepay_name', 'amego_name', 'notes'],
-        'output_cols': ['field_name', 'description', 'ecpay_name', 'smilepay_name', 'amego_name', 'type', 'required_b2c', 'required_b2b']
+        # 逐一列出所有 provider 欄位 —— 原本只涵蓋 3 家，
+        # 導致搜尋其餘 provider 的欄位名時完全比對不到
+        'search_cols': ['field_name', 'description', 'ecpay_name', 'smilepay_name', 'amego_name', 'ezpay_name', 'paynow_name', 'opay_name', 'sunpay_name', 'mof_name', 'notes'],
+        'output_cols': ['field_name', 'description', 'ecpay_name', 'smilepay_name', 'amego_name', 'ezpay_name', 'paynow_name', 'opay_name', 'sunpay_name', 'mof_name', 'type', 'required_b2c', 'required_b2b', 'notes']
     },
     'tax': {
         'file': 'tax-rules.csv',
