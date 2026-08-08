@@ -39,3 +39,4 @@ POS 批次取號,PayNow,MEDIUM,含 POS 批次取號 金物流發票一站式,has
 蝦皮供應商,TradeVAN,MEDIUM,蝦皮供應商電子發票平台走關貿網路,channel=shopee_supplier,文件需申請 本 skill 尚未收錄 reference,蝦皮供應商 大型通路指定
 金流發票同一家串接,SunPay,MEDIUM,紅陽金流與發票同一供應商可搭配隨交易自動開立,vendor_consolidation=true,金流與發票加密機制完全不同(RSA vs AES)不可共用程式碼 已自行串接發票者勿啟用隨交易開立,一站式 減少廠商 隨交易開票 金流發票同一家 紅陽
 需要冪等重試保護,SunPay,HIGH,相同 PostData 且參數完全一致時回傳原發票不會重複開立,idempotency=required,重試時若有任一欄位不同仍會開出新發票 須送出完全相同的 payload,冪等 重試 重複開立 逾時重送 網路不穩 紅陽
+B2B交換模式與存證模式,OPay,HIGH,歐付寶 B2B 同時支援交換模式與存證模式 且 Confirm 兩階段僅存在於交換模式,invoice_type=b2b AND need_buyer_confirm=true,串接前必須先呼叫 MaintainMerchantCustomerData 設定 ExchangeMode 否則後續端點會失敗,B2B交換模式 存證模式 買方確認 營業人對營業人
