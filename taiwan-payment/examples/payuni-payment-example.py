@@ -136,7 +136,7 @@ class PAYUNiPaymentService:
             data: 交易資料字典
 
         Returns:
-            str: AES-GCM 加密後的 hex 字串 (含 tag)
+            str: AES-GCM 加密後的 hex 字串 (base64(密文) + ":::" + base64(tag))
 
         Example:
             >>> data = {'MerID': 'MS123', 'TradeAmt': 100}
@@ -144,6 +144,7 @@ class PAYUNiPaymentService:
             >>> len(encrypted) > 0
             True
         """
+        import base64
         # 步驟 1: 轉換為查詢字串
         query_string = urllib.parse.urlencode(data)
 
@@ -151,15 +152,17 @@ class PAYUNiPaymentService:
         cipher = AES.new(self.hash_key, AES.MODE_GCM, nonce=self.hash_iv)
         encrypted, tag = cipher.encrypt_and_digest(query_string.encode('utf-8'))
 
-        # 步驟 3: 組合加密資料和 tag，轉換為 hex
-        return (encrypted + tag).hex()
+        # 步驟 3: 分別 base64 編碼，用 ":::" 分隔
+        encrypted_b64 = base64.b64encode(encrypted).decode('utf-8')
+        tag_b64 = base64.b64encode(tag).decode('utf-8')
+        return encrypted_b64 + ':::' + tag_b64
 
     def decrypt_data(self, encrypted_data: str) -> Dict[str, any]:
         """
         解密資料 (AES-256-GCM)
 
         Args:
-            encrypted_data: AES-GCM 加密的 hex 字串
+            encrypted_data: AES-GCM 加密的字串 (base64(密文) + ":::" + base64(tag))
 
         Returns:
             Dict: 解密後的資料字典
@@ -168,12 +171,17 @@ class PAYUNiPaymentService:
             ValueError: 解密失敗或驗證失敗
         """
         try:
-            # 步驟 1: hex 轉 bytes
-            data = bytes.fromhex(encrypted_data)
+            import base64
+            # 步驟 1: 分離 base64 編碼的密文和 tag
+            parts = encrypted_data.split(':::')
+            if len(parts) != 2:
+                raise ValueError('格式錯誤: 缺少 ":::" 分隔符')
 
-            # 步驟 2: 分離加密資料和 tag (最後 16 bytes 為 tag)
-            encrypted = data[:-16]
-            tag = data[-16:]
+            encrypted_b64, tag_b64 = parts
+
+            # 步驟 2: Base64 解碼
+            encrypted = base64.b64decode(encrypted_b64)
+            tag = base64.b64decode(tag_b64)
 
             # 步驟 3: AES-256-GCM 解密並驗證
             decipher = AES.new(self.hash_key, AES.MODE_GCM, nonce=self.hash_iv)
@@ -204,8 +212,8 @@ class PAYUNiPaymentService:
             >>> len(checksum)
             64
         """
-        # 組合字串: EncryptInfo + HashKey + HashIV
-        raw = encrypt_info + self.hash_key.decode('utf-8') + self.hash_iv.decode('utf-8')
+        # 組合字串: HashKey + EncryptInfo + HashIV (Key 在前)
+        raw = self.hash_key.decode('utf-8') + encrypt_info + self.hash_iv.decode('utf-8')
 
         # SHA256 雜湊並轉大寫
         return hashlib.sha256(raw.encode('utf-8')).hexdigest().upper()
