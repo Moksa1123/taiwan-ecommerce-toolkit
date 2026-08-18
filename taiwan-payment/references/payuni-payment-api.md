@@ -157,8 +157,8 @@ class PayuniEncryption
             16
         );
 
-        // 3. 組合加密結果 (加密資料 + tag)
-        $encryptInfo = bin2hex($encrypted . $tag);
+        // 3. 組合加密結果 (base64(密文) + ":::" + base64(tag))
+        $encryptInfo = base64_encode($encrypted) . ':::' . base64_encode($tag);
 
         return $encryptInfo;
     }
@@ -168,12 +168,15 @@ class PayuniEncryption
      */
     public function decrypt(string $encryptInfo): array
     {
-        // 1. Hex 轉 Binary
-        $data = hex2bin($encryptInfo);
+        // 1. 分離 base64 編碼的密文和 tag
+        $parts = explode(':::', $encryptInfo);
+        if (count($parts) !== 2) {
+            throw new Exception('格式錯誤: 缺少 ":::" 分隔符');
+        }
 
-        // 2. 分離加密資料和 tag
-        $encrypted = substr($data, 0, -16);
-        $tag = substr($data, -16);
+        // 2. Base64 解碼
+        $encrypted = base64_decode($parts[0]);
+        $tag = base64_decode($parts[1]);
 
         // 3. AES-256-GCM 解密
         $decrypted = openssl_decrypt(
@@ -193,10 +196,11 @@ class PayuniEncryption
 
     /**
      * 產生 HashInfo (SHA256)
+     * 注意: Key 必須在前面 (HashKey + EncryptInfo + HashIV)
      */
     public function hashInfo(string $encryptInfo): string
     {
-        $raw = $encryptInfo . $this->merKey . $this->merIV;
+        $raw = $this->merKey . $encryptInfo . $this->merIV;
         return strtoupper(hash('sha256', $raw));
     }
 }
@@ -219,6 +223,7 @@ class PayuniEncryption:
 
     def encrypt(self, params: dict) -> str:
         """AES-256-GCM 加密"""
+        import base64
         # 1. 組合 Query String
         query_string = urlencode(params)
 
@@ -226,19 +231,24 @@ class PayuniEncryption:
         cipher = AES.new(self.mer_key, AES.MODE_GCM, nonce=self.mer_iv)
         encrypted, tag = cipher.encrypt_and_digest(query_string.encode('utf-8'))
 
-        # 3. 組合加密結果
-        encrypt_info = (encrypted + tag).hex()
+        # 3. 組合加密結果 (base64(密文) + ":::" + base64(tag))
+        encrypted_b64 = base64.b64encode(encrypted).decode('utf-8')
+        tag_b64 = base64.b64encode(tag).decode('utf-8')
+        encrypt_info = encrypted_b64 + ':::' + tag_b64
 
         return encrypt_info
 
     def decrypt(self, encrypt_info: str) -> dict:
         """AES-256-GCM 解密"""
-        # 1. Hex 轉 Binary
-        data = bytes.fromhex(encrypt_info)
+        import base64
+        # 1. 分離 base64 編碼的密文和 tag
+        parts = encrypt_info.split(':::')
+        if len(parts) != 2:
+            raise ValueError('格式錯誤: 缺少 ":::" 分隔符')
 
-        # 2. 分離加密資料和 tag
-        encrypted = data[:-16]
-        tag = data[-16:]
+        # 2. Base64 解碼
+        encrypted = base64.b64decode(parts[0])
+        tag = base64.b64decode(parts[1])
 
         # 3. AES-256-GCM 解密
         cipher = AES.new(self.mer_key, AES.MODE_GCM, nonce=self.mer_iv)
@@ -249,8 +259,8 @@ class PayuniEncryption:
         return {k: v[0] for k, v in result.items()}
 
     def hash_info(self, encrypt_info: str) -> str:
-        """產生 HashInfo (SHA256)"""
-        raw = encrypt_info + self.mer_key.decode() + self.mer_iv.decode()
+        """產生 HashInfo (SHA256) - 注意: Key 必須在前面"""
+        raw = self.mer_key.decode() + encrypt_info + self.mer_iv.decode()
         return hashlib.sha256(raw.encode('utf-8')).hexdigest().upper()
 ```
 
@@ -929,7 +939,7 @@ echo 'SUCCESS';
 **檢查項目**:
 1. Hash Key 和 Hash IV 是否正確
 2. AES-256-GCM 加密是否正確實作
-3. SHA256 計算是否正確
+3. **⚠️ SHA256 計算順序**: 必須是 `SHA256(HashKey + EncryptInfo + HashIV)` 而非 `SHA256(EncryptInfo + HashKey + HashIV)` — **Key 必須在前**
 4. 測試/正式環境金鑰是否混用
 
 ### 訂單編號重複
@@ -960,7 +970,7 @@ order_id = f"ORD{int(time.time())}{random.randint(100, 999)}"
 **檢查項目**:
 1. AES-256-GCM 參數是否正確 (Key 32 bytes, IV 16 bytes)
 2. Tag 長度是否為 16 bytes
-3. Hex 編碼/解碼是否正確
+3. **⚠️ EncryptInfo 格式**: 必須是 `base64(密文) + ":::" + base64(Tag)` 而非 `hex(密文 + tag)` — 密文和 tag **分別 base64 編碼並用 ":::" 分隔**
 
 ---
 
