@@ -2,7 +2,6 @@
 """
 ECPay 綠界金流 Python 完整範例
 
-依照 taiwan-payment-skill 最高規範撰寫
 支援: 信用卡、ATM 轉帳、超商代碼、超商條碼
 
 API 文件: https://developers.ecpay.com.tw
@@ -186,7 +185,7 @@ class ECPayPaymentService:
         Returns:
             bool: 驗證是否通過
         """
-        # 不修改呼叫端傳入的 dict（原本用 pop 會把 CheckMacValue 從請求資料中刪掉）
+        # 不修改呼叫端傳入的 dict
         received_mac = params.get('CheckMacValue', '')
         if not received_mac:
             return False

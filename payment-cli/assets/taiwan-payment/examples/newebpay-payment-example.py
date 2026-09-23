@@ -2,7 +2,6 @@
 """
 NewebPay 藍新金流 Python 完整範例
 
-依照 taiwan-payment-skill 最高規範撰寫
 支援: MPG 整合支付 (信用卡、ATM、超商代碼、LINE Pay、Apple Pay 等)
 
 API 文件: https://www.newebpay.com

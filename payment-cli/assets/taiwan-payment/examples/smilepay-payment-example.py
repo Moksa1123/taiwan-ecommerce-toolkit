@@ -2,7 +2,6 @@
 """
 SmilePay 速買配 Python 完整範例
 
-依照 taiwan-payment-skill 最高規範撰寫
 支援: ATM 虛擬帳號、信用卡 (一次付清/分期)、超商條碼、ibon、FamiPort
 
 API 文件: https://www.smilepay.net/

@@ -1522,6 +1522,3 @@ if (refundAmount > refundable) throw new Error('退款金額超過可退餘額')
 - **支援付款方式**：https://docs.shoplinepayments.com/appendix/paymentMethod/
 - **串接申請**：透過 SHOPLINE Payments 業務窗口
 
----
-
-最後更新：2026/05/07

@@ -1,6 +1,5 @@
 # 即時／同城配送（On-demand Delivery）在台灣
 
-> Captured: 2026-08-08
 > 涵蓋: Lalamove、pandago（foodpanda）、Uber Direct
 > Lalamove 詳細規格見 [lalamove-logistics-api.md](lalamove-logistics-api.md)
 

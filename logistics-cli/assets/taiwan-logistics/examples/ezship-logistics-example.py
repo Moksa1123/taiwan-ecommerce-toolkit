@@ -2,17 +2,15 @@
 """
 ezShip 台灣便利配 物流 Python 範例（參數版）
 
-依照 taiwan-logistics-skill 規範撰寫。
-
-ezShip 是本 skill 收錄的**唯一非金流商的超商取貨聚合商**——
+ezShip 是本 skill 收錄的唯一非金流商的超商取貨聚合商——
 對「只要物流不要金流」的商家，不必為了超取去開一個金流帳號。
 
-⚠️ 通路只有 OK、萊爾富、全家，**不含 7-ELEVEN**。
+通路只有 OK、萊爾富、全家，不含 7-ELEVEN。
 若客群以 7-11 為主，ezShip 不能單獨滿足需求。
 
 流程三步：電子地圖 -> 傳送訂單 -> 貨況查詢
 
-⚠️ 兩個跨端點的不一致，實作前務必知道：
+兩個跨端點的不一致，實作前務必知道：
   1. 參數命名風格不同 —— 電子地圖是 camelCase（suID/rtURL/webPara），
      傳送訂單與貨況查詢是 snake_case（su_id/rtn_url/web_para）
   2. 編碼方向不對稱 —— 以 URL 方式送出時中文需 BIG5 編碼，
@@ -74,10 +72,10 @@ NEEDS_MANUAL_CHECK = {'S05': '包裹退貨', 'S06': '包裹配送異常'}
 # ============================================================================
 
 def encode_big5_params(params: Dict[str, str]) -> str:
-    """以 URL 方式傳遞時，中文需以 **BIG5** 字集做 URL 編碼。
+    """以 URL 方式傳遞時，中文需以 BIG5 字集做 URL 編碼。
 
-    ⚠️ 這是送出方向。ezShip **回傳一律 UTF-8**，兩邊不對稱。
-    ⚠️ 官方建議優先用 FORM SUBMIT（方式一）而非 URL 傳參，
+    這是送出方向。ezShip 回傳一律 UTF-8，兩邊不對稱。
+    官方建議優先用 FORM SUBMIT（方式一）而非 URL 傳參，
     可避開這個編碼問題；本函式供必須用 URL 時使用。
     """
     parts = []
@@ -100,10 +98,10 @@ def check_no_special_chars(value: str, field_name: str) -> None:
 def build_map_form(su_id: str, process_id: str, rt_url: str, web_para: str = '') -> Dict[str, str]:
     """組出導向 ezShip 電子地圖的表單欄位。
 
-    ⚠️ 這一支用 **camelCase**（suID / rtURL / webPara），
+    這一支用 camelCase（suID / rtURL / webPara），
     與後續兩支的 snake_case 不同。
 
-    ⚠️ 官方明文**禁止把電子地圖嵌入 iframe 或以 CSS 內嵌**。
+    官方明文禁止把電子地圖嵌入 iframe 或以 CSS 內嵌。
     """
     if web_para:
         check_no_special_chars(web_para, 'webPara')
@@ -120,8 +118,8 @@ def build_map_form(su_id: str, process_id: str, rt_url: str, web_para: str = '')
 def parse_map_result(query: Dict[str, str]) -> Dict[str, str]:
     """解析電子地圖導回的參數（UTF-8）。
 
-    ⚠️ 門市代碼可能四碼或五碼（如 TFM9771），
-    且**與門市服務代號不一定相同**。
+    門市代碼可能四碼或五碼（如 TFM9771），
+    且與門市服務代號不一定相同。
     直接把 ezShip 給的值原封回傳即可，不要自行轉換。
     """
     return {
@@ -166,7 +164,7 @@ def build_order_form(
     order_status: A01-A04 超商取貨 / A05-A06 宅配 / A11-A12 店港澳
     order_type:   1 代收（取貨付款/貨到付款）/ 3 一般配送
 
-    ⚠️ 代收服務需 ezShip **商務會員**資格且在合約期間內，
+    代收服務需 ezShip 商務會員資格且在合約期間內，
     一般會員只能做「取貨不付款／純配送」。
     """
     validate_order(order_status, st_code, rv_addr, rv_zip, rv_name)
@@ -203,7 +201,7 @@ def validate_order(order_status: str, st_code: str, rv_addr: str, rv_zip: str, r
     else:
         raise ValueError(f'未知的 order_status: {order_status}')
 
-    # ⚠️ 超商取貨單的姓名欄位長度有限，超過四個中英文字會印不完整，
+    # 超商取貨單的姓名欄位長度有限，超過四個中英文字會印不完整，
     # 可能造成取貨問題。官方特別提醒。
     if len(rv_name) > 4:
         raise ValueError(
@@ -214,9 +212,9 @@ def validate_order(order_status: str, st_code: str, rv_addr: str, rv_zip: str, r
 def parse_order_result(query: Dict[str, str]) -> Dict[str, str]:
     """解析建單導回的參數。
 
-    ⚠️ **sn_id 回傳八個零代表建單失敗**——這是唯一的失敗訊號，
+    sn_id 回傳八個零代表建單失敗——這是唯一的失敗訊號，
     沒有獨立的錯誤碼欄位。非八個零即成功，
-    且**必須把 sn_id 存起來**，後續寄件與追蹤貨況都靠它。
+    且必須把 sn_id 存起來，後續寄件與追蹤貨況都靠它。
     """
     sn_id = query.get('sn_id', '')
     return {
@@ -233,7 +231,7 @@ def parse_order_result(query: Dict[str, str]) -> Dict[str, str]:
 # ============================================================================
 
 MIN_QUERY_INTERVAL_SECONDS = 3
-"""⚠️ 官方明文：大量反覆查詢結案資料導致系統忙碌者，
+"""官方明文：大量反覆查詢結案資料導致系統忙碌者，
 ezShip 將「中斷其網路串接之權利」。建議每筆查詢間隔 3 秒以上，
 已結案貨件勿重複查詢，也不要做整批預先輪詢。"""
 
@@ -241,8 +239,8 @@ ezShip 將「中斷其網路串接之權利」。建議每筆查詢間隔 3 秒�
 def build_status_form(config: EzshipConfig, order_no: str, web_para: str = '') -> Dict[str, str]:
     """依購物網站訂單編號查詢貨況。
 
-    ⚠️ 此查法**不適用簡易版**串接的訂單。
-    ⚠️ 訂單號碼重複時，以**最後一次上傳**的訂單資料為主。
+    此查法不適用簡易版串接的訂單。
+    訂單號碼重複時，以最後一次上傳的訂單資料為主。
     """
     if web_para:
         check_no_special_chars(web_para, 'web_para')

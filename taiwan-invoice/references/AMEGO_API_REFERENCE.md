@@ -794,8 +794,6 @@ TotalAmount = SalesAmount + FreeTaxSalesAmount + ZeroTaxSalesAmount + TaxAmount
 > 依光貿官方「API 錯誤代碼」頁（invoice.amego.tw/info_detail?mid=71，2026-09 擷取）節錄；
 > 完整 148 個代碼見 `data/error-codes.csv`。二位數代碼在不同 API 意義不同（例如 `31` 在發票查詢是
 > 「type 查詢類型不存在」、在發票列表是「date_select 參數錯誤」），判讀時要搭配呼叫的 API。
->
-> 舊版本這裡的 `1`～`5`、`100`～`201`、`1001`～`3005` 對照表與官方完全不符，已刪除。
 
 ### 通用錯誤代碼（所有 API）
 
@@ -1102,7 +1100,3 @@ if (result.type === 'redirect' && result.url) {
 | `app/api/v1/financials/[id]/issue-invoice/route.ts` | 開立發票 API |
 | `app/api/v1/financials/[id]/print-invoice/route.ts` | 列印發票 API |
 
----
-
-最後更新：2026/01/28
-文件版本：MIG 4.0

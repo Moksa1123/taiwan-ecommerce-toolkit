@@ -874,6 +874,3 @@ HashIV: 請至後台申請
 - NewebPay: https://www.newebpay.com/website/Page/content/download_api
 - PAYUNi: https://www.payuni.com.tw/docs/
 
----
-
-最後更新：2026/01/29

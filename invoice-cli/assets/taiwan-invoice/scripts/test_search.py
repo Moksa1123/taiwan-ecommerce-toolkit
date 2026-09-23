@@ -4,12 +4,12 @@
 
 鎖住兩件事：
 
-1. **中文分詞**。此處原本只做 text.split()，中文必須整個詞完全相同才命中 ——
+1. 中文分詞。此處原本只做 text.split()，中文必須整個詞完全相同才命中 ——
    搜尋「折讓」找不到「折讓的」。中文沒有空白分隔，以空白切詞在本專案的
    資料上幾乎等同關鍵字全等比對。已改為「單字 + bigram」，與
    taiwan-payment / taiwan-logistics 一致。
 
-2. **各域的欄位涵蓋**。field 與 operation 兩域的 search_cols 原本只列出
+2. 各域的欄位涵蓋。field 與 operation 兩域的 search_cols 原本只列出
    前三家 provider，導致其餘 provider 的資料寫進 CSV 卻搜尋不到。
 
 使用方法:

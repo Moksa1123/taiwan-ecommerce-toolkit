@@ -2,8 +2,7 @@
 
 > Source:《紅陽科技電子發票技術串接手冊》v2.3（70 頁），原始 PDF 存於 `_studies/sunpay/`
 > 開發者專區: https://www.sunpay.com.tw/developers/
-> Captured: 2026-08-08 · doc_access: **public**（PDF 免登入下載）
-> 涵蓋層級: 端點 ✅ / 認證與加密 ✅ / B2C・B2B 開立逐欄 ✅ / 作廢・折讓・離線 ✅ / 回應逐欄 ✅ / 查詢類端點 ⚠️ 待補
+> 文件公開程度：public（PDF 免登入下載）
 > 金流端: [../../taiwan-payment/references/sunpay-payment-api.md](../../taiwan-payment/references/sunpay-payment-api.md)
 
 ## 0. 定位
@@ -72,7 +71,7 @@ JSON  →  URLEncode（%7b%22CompanyID%22%3a...，十六進位小寫）  →  AE
 結果為 `W4fAhQNA5o+Asgcp21dxov01C+Gn6YvWaaP2tTbGHZutZeVe99PBEQsR+TTNCGBs3LR6hFSyxH7WTRUNw7aTFk1YmOuOgrHNU+4406j8g38=`。
 
 直接加密 JSON、或用大寫 `%7B` 的 URLEncode，都會得到不同的 Token。
-（已驗證：`tests/vectors/sunpay.json` 的 `invoice_token`；舊版範例漏了 URLEncode 這一步。）
+（已驗證：`tests/vectors/sunpay.json` 的 `invoice_token`。）
 
 ### 加密前的明文
 

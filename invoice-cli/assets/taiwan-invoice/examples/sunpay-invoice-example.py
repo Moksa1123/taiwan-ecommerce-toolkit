@@ -2,14 +2,12 @@
 """
 紅陽科技 SunPay 電子發票 Python 範例
 
-依照 taiwan-invoice-skill 規範撰寫。
-
-⚠️ 紅陽的金流與發票是**兩套完全不同的機制**：
+紅陽的金流與發票是兩套完全不同的機制：
     金流   RSA 分段加密 + SHA256 簽章，網域 trade.sunpay.com.tw
     發票   AES-128-CBC + PKCS7，網域 einv.sunpay.com.tw
 串完金流不代表發票能沿用同一組加解密程式碼。
 
-⚠️ 而且發票**只加密 Token 這一個欄位**，業務參數走明文。
+而且發票只加密 Token 這一個欄位，業務參數走明文。
 這讓 debug 容易很多，但也代表傳輸層安全完全倚賴 HTTPS。
 
 支援:
@@ -44,7 +42,7 @@ except ImportError:  # pragma: no cover
     Cipher = None
 
 
-# ⚠️ 正式環境是 einv. 不是 inv.
+# 正式環境是 einv. 不是 inv.
 # inv.sunpay.com.tw 是發票管理後台入口，不是 API 網域，兩者很容易混淆。
 TEST_BASE = 'https://testinv.sunpay.com.tw/api/v1/SunPay'
 PROD_BASE = 'https://einv.sunpay.com.tw/api/v1/SunPay'
@@ -60,18 +58,18 @@ TOKEN_MAX_AGE_SECONDS = 300
 def taiwan_epoch(now: Optional[datetime] = None) -> int:
     """產生紅陽發票要的 TimeStamp。
 
-    ⚠️⚠️ 這**不是**標準 Unix timestamp。
+    這不是標準 Unix timestamp。
 
-    手冊定義為「從 1970/1/1 至今的**台灣時間（UTC+8）**之總秒數」，
+    手冊定義為「從 1970/1/1 至今的台灣時間（UTC+8）之總秒數」，
     並附上 C# 範例 `DateTime.UtcNow.AddHours(8).Subtract(new DateTime(1970,1,1))`。
-    注意那個 `.AddHours(8)` —— 送出的值比真正的 epoch **多 28800 秒**。
+    注意那個 `.AddHours(8)` —— 送出的值比真正的 epoch 多 28800 秒。
 
     手冊自己的對照也印證：1666204130 = 2022/10/19 18:28:50（台灣時間），
     而該數字若當成標準 epoch 解讀，在 UTC 下正好也是 18:28:50。
 
     如果你用 time.time()、Date.now()/1000 或
     DateTimeOffset.UtcNow.ToUnixTimeSeconds() 這類標準做法，
-    會**整整差 8 小時**，而限制是 300 秒 —— 必定逾時失敗。
+    會整整差 8 小時，而限制是 300 秒 —— 必定逾時失敗。
     """
     n = now.astimezone(timezone.utc) if now else datetime.now(timezone.utc)
     return int((n.replace(tzinfo=None) + timedelta(hours=8) - datetime(1970, 1, 1)).total_seconds())
@@ -145,9 +143,9 @@ class SunpayInvoiceClient:
         return resp.json()
 
     def validate_token(self) -> Dict[str, Any]:
-        """驗證 Token —— **串接紅陽發票的正確第一步**。
+        """驗證 Token —— 串接紅陽發票的正確第一步。
 
-        只需 merchantID 與 Token，**不會產生任何發票資料**。
+        只需 merchantID 與 Token，不會產生任何發票資料。
         AES 參數、Key/IV、以及上面那個容易寫錯的 UTC+8 TimeStamp
         都能在這支驗證。先讓它回 SUCCESS 再去串開立，
         可以省下大量在真實開立端點上盲試的時間。
@@ -180,7 +178,7 @@ class SunpayInvoiceClient:
     ) -> Dict[str, Any]:
         """B2C 開立。
 
-        ⚠️ **三個銷售額欄位皆必填**（應稅／零稅率／免稅），
+        三個銷售額欄位皆必填（應稅／零稅率／免稅），
         即使該類別為 0 也要帶。這與 O'Pay B2C 只帶單一含稅金額的
         設計正好相反。
         """
@@ -238,7 +236,7 @@ def validate_carrier(carrier_type: int, carrier_id1: str, buyer_email: str) -> N
 
     carrierType: 0 無載具 / 1 手機條碼 / 2 自然人憑證 / 3 紅陽會員載具
 
-    ⚠️ carrierType=3 是**紅陽自家的會員載具**，不屬財政部載具體系，
+    carrierType=3 是紅陽自家的會員載具，不屬財政部載具體系，
     跨加值中心遷移時這類發票的載具無法直接對應。
     """
     if carrier_type == 1:
@@ -262,7 +260,7 @@ def is_success(response: Dict[str, Any]) -> bool:
     return response.get('status') == 'SUCCESS'
 
 
-# ⚠️ 內建冪等，但前提是「參數完全一致」
+# 內建冪等，但前提是「參數完全一致」
 IDEMPOTENCY_NOTE = """
 相同 PostData 且參數完全一致時，紅陽回傳 SUCCESS 並附上「原本那張發票」，
 不會重複開立 —— 這在台灣加值中心裡少見，網路逾時後可安全重送。

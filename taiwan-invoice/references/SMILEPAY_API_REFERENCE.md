@@ -487,6 +487,3 @@ if (printData.method === 'GET' && printData.url) {
 - [光貿 Amego API 規格](./AMEGO_API_REFERENCE.md)
 - [發票開立流程](./INVOICE_FLOW.md)
 
----
-
-最後更新：2026/01/28 + 實作筆記

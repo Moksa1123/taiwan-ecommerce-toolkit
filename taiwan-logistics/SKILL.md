@@ -701,13 +701,3 @@ or `Print` (label result). Match orders by `ShipTradeNo`.
 ### NewebPay Technical Support
 - Phone: 02-2655-8938
 - Official Documentation: https://www.newebpay.com
-
-### API Version
-Current Version: 1.0
-
-### Last Updated
-2026-01-29
-
----
-
-**Total Lines**: 750+

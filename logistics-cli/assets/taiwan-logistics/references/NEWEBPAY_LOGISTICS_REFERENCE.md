@@ -2,8 +2,7 @@
 
 **Complete API specification for NewebPay Logistics Services**
 
-Version: 1.0
-Last Updated: 2026-01-29
+依 NDNS 1.0.0（物流服務技術串接手冊）。
 
 ---
 
@@ -770,8 +769,3 @@ https://ccore.newebpay.com/API/Logistic
 
 For the latest API documentation and updates, visit NewebPay's developer portal or contact technical support.
 
----
-
-**Document Version:** 1.0
-**Last Updated:** 2026-01-29
-**Total Lines:** 950+

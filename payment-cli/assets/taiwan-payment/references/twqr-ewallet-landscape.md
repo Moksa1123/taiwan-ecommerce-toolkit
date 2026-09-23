@@ -1,6 +1,5 @@
 # 台灣電子支付／行動支付生態地圖與 TWQR
 
-> Captured: 2026-08-08
 > 這份文件回答一個高頻問題：**「街口、全支付、全盈+PAY、悠遊付、寶雅 PAY… 這些我要怎麼串？」**
 > 短答：**絕大多數不直接串。** 下面說明為什麼，以及該走哪條路。
 
@@ -51,16 +50,16 @@
 
 > ezPay 簡單付不在本表：它是電支機構，街口、全支付、全盈+PAY、一卡通、悠遊付、icash Pay 等都以 **TWQR 跨機構交易**收款（`PaymentType=TWQR`），不分錢包代碼（ezPay 電子支付平台手冊 W1.0.2「規格介紹」）。
 
-⚠️ **本表部分代碼標為推測，尚未由官方文件驗證**——已在 `data/payment-methods.csv` 用 `?` 標記。串接前務必以該聚合商的官方 PDF 確認。
+NewebPay 的 MPG（NDNF-1.2.2）沒有個別錢包參數，這些錢包都以 `TWQR=1` 收款；PayNow 現代版 `allowedPaymentMethods` 不含這些錢包。
 
 | 錢包 | ECPay | PAYUNi | NewebPay | PayNow | TapPay |
 |---|---|---|---|---|---|
-| 街口 | `DigitalPayment` umbrella | `JKoPay` ✅ | `JKOPAY?` 未驗證 | `JKOPAY?` 未驗證 | ✅ 有專屬文件 |
-| 全支付 | `DigitalPayment` umbrella ✅ | — | `PXPAY?` 未驗證 | — | ✅ 支援 |
-| 全盈+PAY | `DigitalPayment` umbrella ✅ | — | `PLUSPAY?` 未驗證 | — | ✅ 有專屬文件 |
-| 一卡通 | `DigitalPayment` umbrella ✅ | — | `IPASSPAY?` 未驗證 | — | ✅ 支援 |
-| 悠遊付 | `DigitalPayment` umbrella ✅ | — | `EASYCARD?` 未驗證 | — | ✅ 支援 |
-| icash Pay | `DigitalPayment` umbrella | `ICASH` ✅ | `ICASHPAY?` 未驗證 | 現代版 enum 不含 | ✅ 支援 |
+| 街口 | `DigitalPayment` umbrella | `JKoPay` ✅ | `TWQR` | — | ✅ 有專屬文件 |
+| 全支付 | `DigitalPayment` umbrella ✅ | — | `TWQR` | — | ✅ 支援 |
+| 全盈+PAY | `DigitalPayment` umbrella ✅ | — | `TWQR` | — | ✅ 有專屬文件 |
+| 一卡通 | `DigitalPayment` umbrella ✅ | — | `TWQR` | — | ✅ 支援 |
+| 悠遊付 | `DigitalPayment` umbrella ✅ | — | `TWQR` | — | ✅ 支援 |
+| icash Pay | `DigitalPayment` umbrella | `ICASH` ✅ | `TWQR` | — | ✅ 支援 |
 | LINE Pay | ✅ | ✅ | ✅ | ✅ | ✅ |
 | AFTEE | `BNPL` umbrella | `AFTEE` ✅ | — | — | ✅ 支援 |
 
@@ -144,11 +143,8 @@ BNPL 同理：ECPay 用 `BNPL` umbrella 承接 `BNPL_URICH`（裕富無卡分期
 
 | 項目 | 內容 |
 |---|---|
-| NewebPay 電支代碼 | `JKOPAY?` `PXPAY?` `PLUSPAY?` `IPASSPAY?` `EASYCARD?` `ICASHPAY?` 皆為推測，不在已知 MPG channel-key 表中，須以官方 PDF 確認 |
-| 悠遊付代碼 | 悠遊付（wallet 產品）vs 悠遊卡（實體卡）可能是不同代碼，實際值可能為 `EASYWALLET` |
 | 橘子支付 GAMA PAY | 尚未加入 `payment-methods.csv`，需確認各聚合商是否支援及代碼 |
 | TapPay 錢包文件清單 | `docs.tappaysdk.com` 下各錢包子站（`/jko-pay/`、`/plus-pay/` 已確認存在）的完整列表 |
-| 街口官方代碼 | 可用 open-doc.jkos.com 反推並修正上表推測碼 |
 
 ## 8. 來源
 

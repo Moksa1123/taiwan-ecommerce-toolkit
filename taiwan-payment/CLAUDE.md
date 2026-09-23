@@ -331,6 +331,3 @@ Before publishing to npm:
 - **Taiwan Invoice Skill** - E-Invoice integration (ECPay, SmilePay, Amego)
 - **Taiwan Logistics Skill** - Logistics integration (ECPay, NewebPay, PAYUNi)
 
----
-
-**Last Updated**: 2026-01-29

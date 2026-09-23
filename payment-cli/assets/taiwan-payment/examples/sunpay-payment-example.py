@@ -2,9 +2,7 @@
 """
 紅陽科技 SunPay Python 範例
 
-依照 taiwan-payment-skill 規範撰寫。
-
-⚠️ 紅陽是本 skill 收錄的 14 家中**唯一使用非對稱加密**的。
+紅陽是本 skill 收錄的 14 家中唯一使用非對稱加密的。
 其他家不是 SHA256 檢查碼（ECPay / O'Pay）就是 AES 對稱加密
 （NewebPay / PAYUNi / ezPay）。既有的加解密函式一律不能沿用。
 
@@ -56,9 +54,9 @@ RSA_DECRYPT_CHUNK = 128
 def build_send_time(now: Optional[datetime] = None) -> str:
     """組出 send_time。
 
-    ⚠️ 格式是 fffssmmHHyyyyMMdd —— 毫秒在最前面、日期在最後，
+    格式是 fffssmmHHyyyyMMdd —— 毫秒在最前面、日期在最後，
     不是一般的 yyyyMMddHHmmssfff。
-    ⚠️ 超過 120 秒即視為無效交易，主機需做 NTP 校時。
+    超過 120 秒即視為無效交易，主機需做 NTP 校時。
     """
     n = now or datetime.now()
     return f'{n.microsecond // 1000:03d}{n.second:02d}{n.minute:02d}{n.hour:02d}{n:%Y%m%d}'
@@ -67,7 +65,7 @@ def build_send_time(now: Optional[datetime] = None) -> str:
 def _canonical(payload: Dict[str, Any]) -> str:
     """依 ASCII 升序排序後序列化，不留空白。
 
-    ⚠️ 手冊在兩處重複警告「請務必將 head 與 body 參數進行 ASCII 排序，
+    手冊在兩處重複警告「請務必將 head 與 body 參數進行 ASCII 排序，
     以免加密失敗」。排序要套用到巢狀的 head 與 body 內部。
     """
     ordered = {
@@ -80,11 +78,11 @@ def _canonical(payload: Dict[str, Any]) -> str:
 def make_check_value(payload: Dict[str, Any], sha2_key: str) -> str:
     """產生 check_value。
 
-    排序 → JSON → urlencode → **尾端直接串上 SHA2 密鑰** → SHA256。
+    排序 → JSON → urlencode → 尾端直接串上 SHA2 密鑰 → SHA256。
 
-    ⚠️ 密鑰是接在字串尾端，不是 ECPay 那種
+    密鑰是接在字串尾端，不是 ECPay 那種
     `HashKey=...&參數&HashIV=...` 的前後包夾。
-    ⚠️ 值為 null 的參數不參與簽名（官方明註），本函式已於 build 階段排除。
+    值為 null 的參數不參與簽名（官方明註），本函式已於 build 階段排除。
     """
     encoded = urllib.parse.quote(_canonical(payload), safe='')
     return hashlib.sha256((encoded + sha2_key).encode('utf-8')).hexdigest()
@@ -117,10 +115,10 @@ def decrypt_rsamsg(rsamsg: str, public_key_pem: str) -> str:
     """
     解密紅陽回傳的 rsamsg，回傳「尚未 urldecode」的字串。
 
-    紅陽以**它的私鑰**加密回傳資料，特店用紅陽提供的**公鑰**還原（手冊 4.2.2 / 解密步驟）；
+    紅陽以它的私鑰加密回傳資料，特店用紅陽提供的公鑰還原（手冊 4.2.2 / 解密步驟）；
     特店手上沒有私鑰，用 private key 解密的寫法是錯的。
     回傳的 rsamsg 是 URL-safe base64（- 與 _），兩種 base64 都接受。
-    ⚠️ 解密分段是 128 byte，不是加密時的 117。
+    解密分段是 128 byte，不是加密時的 117。
     """
     if serialization is None:
         raise RuntimeError('需要 cryptography 套件：pip install cryptography')
@@ -207,7 +205,7 @@ class SunpayClient:
                    09 超商取貨付款 / 10 街口支付
         不帶則由消費者在紅陽收銀台自行選擇。
 
-        ⚠️ mn 必須是正整數，不可有小數點或千位符號。
+        mn 必須是正整數，不可有小數點或千位符號。
         """
         form = self.build_form({
             'td': td,
@@ -225,7 +223,7 @@ class SunpayClient:
 # 回應處理
 # ============================================================================
 
-# ⚠️ 同一個欄位名 pay_result，在兩支 API 的語意不同 ——
+# 同一個欄位名 pay_result，在兩支 API 的語意不同 ——
 # 12 在交易通知是「已建立」，在查詢 API 卻是「查無該筆訂單」。
 # 因此兩張表必須分開維護，絕不可共用同一份 mapping。
 
@@ -257,9 +255,9 @@ def describe_query(pay_result: str) -> str:
 def parse_logistics_notify(form: Dict[str, str]) -> Dict[str, str]:
     """解析物流狀態通知。
 
-    ⚠️ 與交易 CallBack 的格式不同：這支是 HTTP FORM POST key-value
-    （非 JSON），且**所有欄位都經過 URL Encode**，需先解碼（UTF-8）。
-    ⚠️ 訂單編號欄位是大寫的 Td，與請求端的小寫 td 不同。
+    與交易 CallBack 的格式不同：這支是 HTTP FORM POST key-value
+    （非 JSON），且所有欄位都經過 URL Encode，需先解碼（UTF-8）。
+    訂單編號欄位是大寫的 Td，與請求端的小寫 td 不同。
     """
     return {k: urllib.parse.unquote_plus(v) for k, v in form.items()}
 

@@ -344,7 +344,7 @@ def retry_on_error(
 
     Args:
         max_retries: 最大重試次數
-        backoff_factor: 退避倍數 (每次重試等待時間 = backoff_factor ** retry_count)
+        backoff_factor: 退避倍數 (每次重試等待時間 = backoff_factor  retry_count)
         retryable_errors: 可重試的錯誤碼清單
         logger: 自訂 Logger
 

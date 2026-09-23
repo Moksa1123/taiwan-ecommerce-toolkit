@@ -2,14 +2,12 @@
 """
 歐付寶 O'Pay 電子發票 Python 範例
 
-依照 taiwan-invoice-skill 規範撰寫。
-
-O'Pay 發票與 ECPay 發票**結構同源**：同樣的三層信封
+O'Pay 發票與 ECPay 發票結構同源：同樣的三層信封
 （MerchantID + RqHeader + 加密後的 Data）、同樣的 AES 資料層、
 同樣的 /B2CInvoice/Issue 路徑命名。差別只在網域與金鑰。
 已熟悉 ECPay 發票者遷移成本很低。
 
-⚠️ 但 O'Pay 多了 ECPay 沒有的：完整的 B2B 交換／存證雙模式，
+但 O'Pay 多了 ECPay 沒有的：完整的 B2B 交換／存證雙模式，
 以及離線 POS 發票。
 
 支援:
@@ -55,10 +53,10 @@ PROD_BASE = 'https://einvoice.opay.tw'
 def encrypt_data(payload: Dict[str, Any], hash_key: str, hash_iv: str) -> str:
     """把業務參數加密成 Data 欄位。
 
-    順序是 **先 URL Encode 再 AES 加密**（很多人會做反）：
+    順序是 先 URL Encode 再 AES 加密（很多人會做反）：
         JSON -> URLEncode -> AES-128-CBC/PKCS7 -> Base64
 
-    ⚠️ AES 強度固定 128 bit，不是 256。Key 與 IV 各 16 碼。
+    AES 強度固定 128 bit，不是 256。Key 與 IV 各 16 碼。
     """
     if Cipher is None:
         raise RuntimeError('需要 cryptography 套件：pip install cryptography')
@@ -111,7 +109,7 @@ class OpayInvoiceClient:
         c = self.config
         body: Dict[str, Any] = {
             'MerchantID': c.merchant_id,
-            # ⚠️ Timestamp 有效區間僅 10 分鐘，超過即拒絕。
+            # Timestamp 有效區間僅 10 分鐘，超過即拒絕。
             # 自架環境「參數都對但一直失敗」多半是主機沒做 NTP 校時。
             'RqHeader': {'Timestamp': int(time.time())},
             'Data': encrypt_data({'MerchantID': c.merchant_id, **data}, c.hash_key, c.hash_iv),
@@ -123,7 +121,7 @@ class OpayInvoiceClient:
         resp.raise_for_status()
         envelope = resp.json()
 
-        # ⚠️ 兩層錯誤處理，常被漏掉：
+        # 兩層錯誤處理，常被漏掉：
         # TransCode=1 只代表「信封收到了」，不代表發票開立成功。
         # 業務結果在解密後的 Data 裡（RtnCode）。
         if envelope.get('TransCode') != 1:
@@ -154,7 +152,7 @@ class OpayInvoiceClient:
     ) -> Dict[str, Any]:
         """開立 B2C 發票。
 
-        ⚠️ Print / Donation / CarrierType / CustomerIdentifier 四者互相牽制，
+        Print / Donation / CarrierType / CustomerIdentifier 四者互相牽制，
         本方法在送出前先檢查，避免打到 API 才被打回：
         """
         check_b2c_constraints(print_flag, donation, carrier_type, customer_identifier)
@@ -162,7 +160,7 @@ class OpayInvoiceClient:
         if not customer_email and not customer_phone:
             raise ValueError('CustomerEmail 與 CustomerPhone 至少擇一')
 
-        # ⚠️ 各項 ItemAmount 加總四捨五入後必須等於 SalesAmount
+        # 各項 ItemAmount 加總四捨五入後必須等於 SalesAmount
         total = round(sum(float(i['ItemAmount']) for i in items))
         if total != sales_amount:
             raise ValueError(f'ItemAmount 加總 {total} 與 SalesAmount {sales_amount} 不符')
@@ -233,7 +231,7 @@ RTN_SUCCESS = {
 
 
 def is_success(rtn_code: int) -> bool:
-    """⚠️ 只判斷 RtnCode == 1 會把延遲開立流程誤判為失敗。"""
+    """只判斷 RtnCode == 1 會把延遲開立流程誤判為失敗。"""
     return rtn_code in RTN_SUCCESS
 
 

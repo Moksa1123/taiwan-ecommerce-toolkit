@@ -2,7 +2,6 @@
 """
 TapPay Python 範例 (後端部分)
 
-依照 taiwan-payment-skill 規範撰寫。
 TapPay 採兩段式架構:
   1. 前端 SDK 取得 Prime (60 秒 TTL，single-use)
   2. 後端用 Prime 呼叫 pay-by-prime

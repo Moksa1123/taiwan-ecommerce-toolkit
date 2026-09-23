@@ -1618,11 +1618,7 @@ export { ECPayCVSLogistics };
 
 ```python
 #!/usr/bin/env python3
-"""
-Create CVS C2C Shipment - ECPay Python Example
-
-依照 taiwan-logistics-skill 嚴格規範撰寫
-"""
+"""Create CVS C2C Shipment - ECPay Python Example"""
 
 import requests
 import urllib.parse
@@ -2530,12 +2526,6 @@ try {
 
 ---
 
-**Total Lines**: 1400+
-
-This comprehensive guide covers all major NewebPay Logistics integration scenarios with production-ready code examples.
-
----
-
 ## SmilePay 速買配物流範例
 
 SmilePay 透過 `Pay_zg` 矩陣編碼涵蓋 7-11/全家 + 黑貓三大配送：
@@ -2636,7 +2626,3 @@ SmilePay 透過 `Pay_zg` 矩陣編碼涵蓋 7-11/全家 + 黑貓三大配送：
 ### 門市代碼
 
 可能四碼或五碼（如 `TFM9771`），且**與門市服務代號不一定相同**。直接把 ezShip 給的值原封回傳即可，不要自行轉換。
-
----
-
-**更多範例持續更新中...**

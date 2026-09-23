@@ -133,8 +133,7 @@ def analyze_requirements(query: str) -> Dict[str, Tuple[int, List[str]]]:
     # 從 CSV 載入額外規則
     csv_rules = load_reasoning_csv()
     for rule in csv_rules:
-        # 以匹配強度加權。原本只比對 scenario 且命中任一詞就給滿分，
-        # use_cases 整欄被忽略，導致規則命中率與分數都失真
+        # 以 scenario 與 use_cases 的匹配強度加權
         strength = rule_match_score(
             query, rule.get('scenario', ''), rule.get('use_cases', '')
         )

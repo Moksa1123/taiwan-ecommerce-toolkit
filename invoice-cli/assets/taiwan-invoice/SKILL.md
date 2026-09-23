@@ -508,6 +508,3 @@ App Key: sHeq7t8G1wiQvhAuIM27
 - [速買配 SmilePay API 規格](./references/SMILEPAY_API_REFERENCE.md)
 - [光貿 Amego API 規格](./references/AMEGO_API_REFERENCE.md)
 
----
-
-最後更新：2026/01/29

@@ -1149,6 +1149,3 @@ def pchomepay_notify():
 - **舊版購物車模組**: https://github.com/PChomePayPlugin
 - **技術服務信箱**: tech_support@pchomepay.com.tw
 
----
-
-最後更新：2026/05/07

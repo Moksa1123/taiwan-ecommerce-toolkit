@@ -32,7 +32,7 @@
 
 > **端點路徑依據**：統一金流官方 PHP SDK（github.com/payuni/PHP_SDK）`PayuniApi::UniversalTrade()` 的對照表，
 > 並與 wpbr-payuni-payment 1.7.1 實際呼叫的網址一致。SDK 的操作名稱（如 `trade_query`）**不是**網址路徑，
-> 實際路徑是 `trade/query`；舊版本文件曾把兩者混淆。
+> 實際路徑是 `trade/query`。
 
 ### 基礎 API 路徑
 
@@ -846,5 +846,3 @@ UPP 以「付款方式名稱 = 1」的旗標啟用付款方式（例如 `Credit=
 | `JKoPay` | 街口支付 |
 
 另有幕後（伺服器對伺服器）建立交易的獨立端點：`/atm`、`/cvs`、`/credit`、`/linepay`（Version `1.1`）、`/aftee_direct`。
-
-最後更新：2026-09-23

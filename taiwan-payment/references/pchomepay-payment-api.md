@@ -1426,6 +1426,3 @@ def handle_notify(notify_type, notify_message):
 - **聯名卡 5% P 幣回饋**：https://www.esunbank.com/zh-tw/personal/credit-card/intro/co-branded-card/pi-card
 - **技術服務信箱**：tech_support@pchomepay.com.tw
 
----
-
-最後更新：2026/05/07

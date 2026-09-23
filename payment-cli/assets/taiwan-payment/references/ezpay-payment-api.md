@@ -12,10 +12,6 @@
 > | `API_Cross_Trans_search_ezPay_1.0.1.pdf` 跨境交易單筆查詢 | 1.0.1 | QueryInfo |
 > | `API_Cross_Trans_refund_ezPay_1.0.3.pdf` 跨境交易退款 | 1.0.3 | RefundInfo |
 
-> ⚠️ **舊版本的本文件是錯的。** 它把 ezPay 寫成「與藍新 NewebPay MPG 完全相同」，網址用藍新舊網域
-> `ccore.spgateway.com`、Version 2.0、付款方式列信用卡/ATM/超商…。ezPay 官方手冊實際上是：
-> 境內走全新的**電子支付平台 API**（`/API/Twqr/*`、APIID + UID + EncryptData + HashData），
-> 只有**跨境（支付寶/微信）**才是 MPG 形式，且網域是 `payment.ezpay.com.tw`、Version 1.0。
 
 ---
 

@@ -2,7 +2,6 @@
 """
 PChomePay 拍錢包物流 Python 範例
 
-依 taiwan-logistics-skill 規範撰寫。
 PChomePay 物流走 7-11 / 全家 / 萊爾富 / OK 四大超商，金物流二合一設計。
 
 支援:
@@ -12,7 +11,7 @@ PChomePay 物流走 7-11 / 全家 / 萊爾富 / OK 四大超商，金物流二�
 - 物流手續費對帳 (/v1/logistic/accounting/{date} - NDJSON 格式)
 - 賠款入帳查詢 (/v1/logistic/compensation/{date})
 
-⚠️ Notify IP 白名單: 113.196.231.190（必加）
+Notify IP 白名單: 113.196.231.190（必加）
 
 API 文件: 參見 references/pchomepay-logistics-api.md
 

@@ -3,7 +3,7 @@
 > Source: 《電子發票應用 API 規格》v1.9（財政部財政資訊中心，中華民國 112 年 8 月）
 > Spec PDF: https://www.einvoice.nat.gov.tw/static/ptl/ein_upload/attachments/1693297176294_0.pdf
 > Platform: https://www.einvoice.nat.gov.tw/
-> Captured: 2026-08-08 · doc_access: **public**（規格書免登入下載；AppID/APIKey 需申請）
+> 文件公開程度：public（規格書免登入下載；AppID/APIKey 需申請）
 
 ## 為什麼這份文件在這裡
 
