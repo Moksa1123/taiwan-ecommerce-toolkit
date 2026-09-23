@@ -1,103 +1,54 @@
-# PayUni Logistics API Reference
+# PAYUNi 物流 API
 
-統一金流 (PAYUNi) 物流 API 參考文件。
+統一金流 (PAYUNi) 物流：7-ELEVEN 大宗寄倉 (B2C)／店到店 (C2C)／退貨便 (C2B)、黑貓宅配 (HOME)。
 
-> **資料來源與可信度**（2026-09 重新查核）
->
-> 統一金流的官方文件站 docs.payuni.com.tw 為需登入的 SPA，無法直接擷取。本文件改以**原始碼**為準：
->
-> | 項目 | 依據 |
-> |---|---|
-> | 加解密 | 統一金流官方外掛 PAYUNi_for_WooCommerce 1.2.8、官方 PHP SDK（github.com/payuni/PHP_SDK），並以 `tests/vectors/payuni.json` 逐位元組驗證 |
-> | 端點、Version、欄位、代碼、通知格式 | wpbr-payuni-shipping 1.6.4（WordPress.org 上架外掛，實際於正式環境運作）|
->
-> 舊版本文件中的 `/logistics/create`、`LogisticsType`、`GoodsAmount`、`Receiver*`、`LogisticsID` 等
-> **均不存在於 PAYUNi 物流 API**（其中 `PAYUNi_Logistic_711` 之類的字串其實是 WooCommerce 外掛的運送方式 ID）。
+來源：PAYUNi 官方文件 <https://docs.payuni.com.tw/web/#/7>（物流工具、Notify、物流貨態狀態碼 120、物流錯誤代碼 119）。
+加解密另以官方外掛 PAYUNi_for_WooCommerce 1.2.8 與官方 PHP SDK 逐位元組比對（`tests/vectors/payuni.json`）。
 
 ---
 
 ## 目錄
 
-1. [API 端點總覽](#api-端點總覽)
+1. [API 一覽](#api-一覽)
 2. [加密機制](#加密機制)
-3. [代碼定義](#代碼定義)
+3. [建立物流單](#建立物流單)
 4. [門市地圖](#門市地圖)
-5. [建立物流單](#建立物流單)
-6. [查詢物流單](#查詢物流單)
-7. [列印託運單](#列印託運單)
-8. [NotifyURL 通知](#notifyurl-通知)
-9. [尚未查證的項目](#尚未查證的項目)
+5. [物流單查詢](#物流單查詢)
+6. [列印](#列印)
+7. [貨態通知](#貨態通知)
+8. [代碼](#代碼)
 
 ---
 
-## API 端點總覽
+## API 一覽
 
-| 環境 | 基礎路徑 |
+| 環境 | 基礎網址 |
 |------|----------|
-| 測試環境 | `https://sandbox-api.payuni.com.tw/api` |
-| 正式環境 | `https://api.payuni.com.tw/api` |
+| 測試 | `https://sandbox-api.payuni.com.tw/api` |
+| 正式 | `https://api.payuni.com.tw/api` |
 
-| 功能 | 路徑 | Version | 呼叫方式 |
-|------|------|---------|----------|
-| 7-11 門市地圖 | `/logistics/ship_map` | `1.1` | 瀏覽器表單 POST |
-| 建立 7-11 物流單（C2C / B2C） | `/logistics/trade` | `1.1` | 伺服器 POST |
-| 建立黑貓宅配物流單 | `/home_delivery/trade` | `1.1` | 伺服器 POST |
-| 查詢物流單（7-11 與黑貓共用） | `/logistics/query` | `1.1` | 伺服器 POST |
-| 列印 7-11 託運單 | `/logistics/print_label` | `1.0` | 瀏覽器表單 POST |
-| 黑貓託運單號 PDF | `/home_delivery/get_obt_number_pdf` | — | 瀏覽器表單 POST |
-| 黑貓託運單下載 | `/home_delivery/download_pdf` | — | 瀏覽器表單 POST |
+| 功能 | 路徑 | Version | 方式 |
+|------|------|---------|------|
+| 超商門市地圖 | `/logistics/ship_map` | `1.1` | 前景 Form Post |
+| 物流單查詢 | `/logistics/query` | `1.1` | 幕後 POST（header 帶 `User-Agent: payuni`） |
+| 超商出貨單列印 | `/logistics/print_label` | `1.0` | 前景 Form Post |
+| 黑貓：產宅配編號並下載託運單 PDF | `/home_delivery/get_obt_number_pdf` | `1.0` | 前景 Form Post |
+| 黑貓：補下載託運單 PDF | `/home_delivery/download_pdf` | `1.0` | 前景 Form Post |
 
-所有請求外層皆為 `application/x-www-form-urlencoded`，只有四個欄位：
-
-| 欄位 | 說明 |
-|------|------|
-| `MerID` | 商店代號 |
-| `Version` | 見上表 |
-| `EncryptInfo` | 業務欄位加密後的字串（見加密機制） |
-| `HashInfo` | EncryptInfo 的 SHA256 驗證碼 |
-
-回應為 JSON，外層含 `Status`、`EncryptInfo`、`HashInfo`；業務結果（含內層 `Status` / `Message`）在解密後的 EncryptInfo 內。
-
-> 除了獨立的物流 API，PAYUNi 也可在 **UPP 付款時一併建立物流**（在 UPP 的 EncryptInfo 帶
-> `Ship`、`ShipTag`、`ShipType`、`LgsType`、`GoodsType`、`Consignee` 等欄位），
-> 統一金流官方外掛採用的就是這種方式。見 `taiwan-payment` 的 payuni-payment-api.md。
+外層欄位一律為 `MerID`、`Version`、`EncryptInfo`、`HashInfo`；回應外層含 `Status`、`MerID`、`Version`、`EncryptInfo`、`HashInfo`，
+業務結果（內層 `Status`／`Message`）在解密後的 EncryptInfo。
 
 ---
 
 ## 加密機制
-
-PayUni 採用 **AES-256-GCM** 加密與 **SHA256** 驗證碼（HashInfo）。
-
-> 以下演算法已與統一金流官方外掛 PAYUNi_for_WooCommerce 1.2.8 `class-payuni.php` 的
-> `Encrypt()` / `Decrypt()` / `HashInfo()` 逐位元組比對（repo 的 `tests/vectors/payuni.json`）。
-
-### 格式
 
 ```
 EncryptInfo = hex( base64(AES-256-GCM 密文) + ":::" + base64(tag) )
 HashInfo    = strtoupper( sha256( HashKey + EncryptInfo + HashIV ) )
 ```
 
-常見錯誤（皆會被 PAYUNi 拒絕）：
-
-| 錯誤寫法 | 問題 |
-|---|---|
-| `hex(密文 + tag)` | 少了 base64 與 `:::` 分隔 |
-| `base64(密文) + ":::" + base64(tag)`（沒有最外層 hex） | 少了最外層 `bin2hex` |
-| `sha256(EncryptInfo + HashKey + HashIV)` | HashKey 必須在最前面 |
-
-- 物流與金流共用同一組演算法（官方外掛的物流模組直接呼叫同一個類別）
-- IV（HashIV）直接當 GCM nonce 使用，長度 16 bytes（官方外掛即如此），不是 12 bytes
-- tag 為 16 bytes，base64 後為 24 字元
-
-### 加密流程
-
-1. **準備參數** - 組合所有請求參數
-2. **http_build_query** - 將參數轉為 Query String
-3. **AES-256-GCM 加密** - 以 HashKey 為金鑰、HashIV 為 nonce
-4. **組合 EncryptInfo** - `bin2hex(base64密文 . ':::' . base64(tag))`
-5. **產生 HashInfo** - `sha256(HashKey . EncryptInfo . HashIV)` 轉大寫
-6. **發送請求** - 將 `MerID`、`Version`、`EncryptInfo`、`HashInfo` POST 至 API
+- 明文為 `http_build_query(參數)`；Key = HashKey、nonce = HashIV（16 bytes）；tag 16 bytes
+- 常見錯誤：少了最外層 hex、少了 base64 與 `:::`、HashKey 沒放最前面
 
 ### PHP 加密範例
 
@@ -193,188 +144,151 @@ class PayuniEncryption:
 
 ---
 
-## 代碼定義
+## 建立物流單
 
-以下代碼取自 wpbr-payuni-shipping `src/Utils/*.php`。
+官方文件的建立方式是**在交易 API 一併建立**，成功後回傳 `ShipTradeNo`（UNi 物流序號），後續查詢、列印、通知都用它。
 
-### ShipType 物流廠商
+### 整合式支付頁 UPP（Version 2.0）
 
-| 代碼 | 說明 |
+EncryptInfo 加入：
+
+| 欄位 | 說明 |
 |------|------|
-| `1` | 7-ELEVEN |
-| `2` | 黑貓宅配 |
+| `ShipTag` | `1` = 啟用物流（含取貨不付款與取貨付款） |
+| `Ship` | `1` = 取貨付款；只帶 `Ship=1` 不帶 `ShipTag` 時僅有取貨付款 |
+| `LgsType` | `B2C` 大宗寄倉、`C2C` 店到店、`HOME` 黑貓宅配 |
+| `ShipType` | `1` 7-ELEVEN（B2C／C2C）、`2` 黑貓（HOME） |
+| `GoodsType` | `1` 常溫、`2` 冷凍、`3` 冷藏（僅黑貓） |
+| `Consignee` | 取件人姓名，2–5 個中文字或至少 4 個英文字，超商取件核對身分 |
+| `ConsigneeMobile` | `09` 開頭手機 |
+| `ConsigneeAddress` | 黑貓收件地址，最長 120 |
+| `ConsigneeFix`／`ConsigneeMobileFix`／`ConsigneeAddressFix` | `1` = 支付頁不可修改 |
 
-### LgsType 運送方式
+啟用物流（`Ship=1` 或 `ShipTag=1`）時 `LgsType`、`ShipType`、`GoodsType`、`Consignee`、`ConsigneeMobile` 必填。
+回傳 `PaymentType=5`（超商取貨付款）或純取貨時另含 `ShipTradeNo`、`PartnerId`、`ServiceType`、`ShipAmt`、`StoreID`、`StoreName`、`StoreAddr`。
 
-| 代碼 | 說明 |
+### 幕後交易 API（取貨不付款）
+
+虛擬帳號、超商代碼、信用卡 Token、LINE Pay、街口、AFTEE 幕後 API 皆可帶：
+
+| 欄位 | 說明 |
 |------|------|
-| `C2C` | 7-11 店到店 |
-| `B2C` | 7-11 大宗寄倉 |
-| `HOME` | 黑貓宅配 |
+| `ServiceType` | 固定 `3`（取貨不付款） |
+| `Consignee`／`ConsigneeMobile` | 同上 |
+| `LgsType`／`GoodsType`／`ShipType` | 同上 |
+| `StoreID` | 超商（`ShipType=1`）取件門市代碼 |
+| `ConsigneeAddress`、`DeliveryTimeTag` | 黑貓（`ShipType=2`）必填；配達時段 `01` 13 時前、`02` 14–18 時、`04` 不指定 |
+| `ConsigneeTelAreaCode`／`ConsigneeTel` | 黑貓選填 |
 
-### GoodsType 溫層
+有物流時 `UsrMail` 必填（視為收件人信箱）。
 
-| 代碼 | 說明 |
-|------|------|
-| `1` | 常溫 |
-| `2` | 冷凍 |
-| `3` | 冷藏（黑貓） |
-
-### ServiceType 代收
-
-| 代碼 | 說明 |
-|------|------|
-| `1` | 取貨付款 |
-| `3` | 取貨不付款 |
-
-### DeliveryTimeTag 黑貓配達時段
-
-| 代碼 | 說明 |
-|------|------|
-| `01` | 13:00 前 |
-| `02` | 14:00–18:00 |
-| `04` | 不指定（外掛預設） |
-
-### ShipStatus 貨態
-
-| 代碼 | 說明 |
-|------|------|
-| `21` | 待出貨（已產生單號，等待商店出貨） |
-| `22` | 物流中心驗收中（僅超商物流） |
-| `92` | 待出貨處理中 / 寄件門市已收件（僅超商物流，C2C） |
-| `31` | 配送中 |
-| `32` | 待取貨（已配達取件門市） |
-| `11` | 已取貨 |
-
-> 退貨、逾期未取等貨態代碼外掛未定義，未列入；實際值以通知中的 `ShipStatus` / `ShipStatusDesc` 為準。
+> `/logistics/trade`、`/home_delivery/trade` 未列於官方文件，只見於第三方外掛 wpbr-payuni-shipping 1.6.4。
 
 ---
 
 ## 門市地圖
 
-瀏覽器表單 POST 到 `/logistics/ship_map`（Version `1.1`），EncryptInfo 內容：
+前景 Form Post 到 `/logistics/ship_map`（Version `1.1`）：
 
-| 欄位 | 範例 | 說明 |
+| EncryptInfo 欄位 | 必要 | 說明 |
+|------|:---:|------|
+| `MerID`／`Timestamp` | Y | |
+| `MerKeyNo` | Y | 自訂編號，≤20；`Tag=4`、`5` 時帶 UNi 物流序號 |
+| `GoodsType` | Y | `1` 常溫、`2` 冷凍 |
+| `LgsType` | Y | `B2C`／`C2C` |
+| `ShipType` | Y | `1` |
+| `MapType` | Y | `1` 僅本島、`2` 含離島；冷凍固定 `2` |
+| `MapReturnURL` | C | 有值時選完門市以前景導回 |
+| `Tag` | Y | `2` 回傳門市、`3` 更新商店 C2C 退貨門市、`4` 更新物流單取件門市、`5` 更新單筆 C2C 退貨門市 |
+| `MobileTag` | C | `Y` 手機版、`N` PC 版（預設） |
+
+回傳 EncryptInfo 的 `MapJson` 為 JSON：`StoreType`（SEVEN）、`StoreID`、`StoreName`、`Address`、`InsularArea`（`I` 本島／`O` 離島）。
+
+門市關轉（貨態 `81`）後須以 `Tag=4` 重選門市：B2C 期限為通知日 +2 天 23:59，C2C 為 +6 天 23:59。
+
+---
+
+## 物流單查詢
+
+`POST /logistics/query`，Version `1.1`：
+
+| EncryptInfo 欄位 | 說明 |
+|------|------|
+| `MerID`／`Timestamp` | |
+| `LgsType` | `B2C`、`C2C`、`HOME`、`C2B`（退貨便） |
+| `ShipTradeNo` | B2C／C2C／HOME 必填 |
+| `TradeType` | 黑貓：`1` 正物流（預設）、`2` 逆物流 |
+| `ReturnOdno` | C2B 必填，12 碼（8 碼退貨便單號 + 4 碼驗證碼） |
+
+回傳：`PartnerId`、`MerTradeNo`、`TradeNo`、`ShipTradeNo`、`Odno`（超商 8 碼／黑貓 12 碼）、`GoodsType`、`LgsType`、`ShipType`、
+`ServiceType`、`ShipAmt`、`Consignee`（隱碼）、`ConsigneeMobile`（隱碼）、`ShipStatus`、`PickupStoreType`（貨態 81 時：`1` 取件、`2` 退件門市）、
+`ShipStatusDesc`、`ShipStatusTime`；B2C／C2C 另有 `StoreID`、`StoreName`，C2C 有 `ValidationNo`，黑貓有 `FileNo`（24 小時內有效）、`TradeType`、`ConsigneeAddress`。
+
+7-ELEVEN 配送編號：B2C = `PartnerId`(3) + `Odno`(8)；C2C = `Odno`(8) + `ValidationNo`(4)；C2B = `RefundODNO`(8) + `ValidationNo`(4)。
+
+---
+
+## 列印
+
+### 超商出貨單（`/logistics/print_label`，Version `1.0`）
+
+| EncryptInfo 欄位 | 說明 |
+|------|------|
+| `MerID`／`Timestamp` | |
+| `ShipTradeNo` | 最多 50 筆，半形逗號分隔 |
+| `GoodsType`／`LgsType`（B2C／C2C）／`ShipType`（1） | |
+| `ShipDate` | `YYYYMMDD`，B2C 不得為當日 |
+| `LabelMode` | `1` A4（預設）、`2` 直立式 |
+
+C2C 會跳轉至 7-ELEVEN 列印；B2C 由 PAYUNi 直接顯示。列印成功後以 Notify 回傳 `ApiType=Print`、`PartnerId`、`Odno`、`ValidationNo`。
+
+### 黑貓託運單
+
+`/home_delivery/get_obt_number_pdf`（Version `1.0`）：`ShipTradeNo`（逗號分隔）、`GoodsType`、`LgsType=HOME`、`ShipType=2`、
+`ShipDate`、`DeliveryDate`（皆 `YYYYMMDD`，須晚於今日且非週日與國定假日）、`Spec`（`1` 60、`2` 90、`3` 120、`4` 150，低溫不支援 150）、
+`HideProdDesc`、`Memo`（≤100 位）。`/home_delivery/download_pdf` 以 `FileNo` 補下載（24 小時內）。
+
+---
+
+## 貨態通知
+
+Notify URL 在 PAYUNi 後台「物流設定」填寫（超商與黑貓各自設定）。**先驗 HashInfo 再解密。**
+
+| 類型 | 解密後欄位 |
+|------|-----------|
+| 超商 B2C／C2C | `Status`、`Message`、`MerID`、`PartnerId`、`ShipTradeNo`、`LgsType`、`GoodsType`、`ShipType`、`ShipStatus`、`PickupStoreType`（僅 81）、`ShipStatusDesc`、`ShipStatusTime`、`ApiType=ShipStatus` |
+| 退貨便 C2B | 同上，以 `RefundODNO`、`ValidationNo` 取代 `ShipTradeNo` |
+| 黑貓 | `Status`、`Message`、`MerID`、`TradeType`、`ShipTradeNo`、`OBTNumber`、`GoodsType`、`LgsType=HOME`、`ShipType=2`、`FileNo`、`ShipStatus` |
+
+---
+
+## 代碼
+
+### ShipStatus 物流貨態狀態碼（官方 120）
+
+| 代碼 | 名稱 | 備註 |
 |------|------|------|
-| `MerID` | | 商店代號 |
-| `Timestamp` | `time()` | Unix 時間戳 |
-| `GoodsType` | `1` | 溫層 |
-| `LgsType` | `C2C` / `B2C` | |
-| `ShipType` | `1` | 7-ELEVEN |
-| `MapType` | `2` | |
-| `MapReturnURL` | | 選完門市後 POST 回的網址 |
-| `Tag` | `2` | |
-| `MobileTag` | `Y` / `N` | 是否行動裝置版 |
+| `91` | 未處理 | 尚未取得出貨單編號 |
+| `92` | 處理中 | 僅超商；出貨單編號傳送至上游確認中 |
+| `98` | 處理中（已接收） | 僅超商 B2C；已配出貨單編號，待傳物流中心 |
+| `21` | 待出貨 | 等待商店出貨 |
+| `22` | 物流驗收 | 僅超商；物流中心驗收中 |
+| `31` | 配送中 | 超商可能於此階段門市關轉 |
+| `32` | 待取貨 | 僅超商；包裹配達門市 |
+| `33` | 異常訂單 | 配送過程異常 |
+| `11` | 已取貨 | |
+| `41` | 已取消 | 商店取消 |
+| `43` | 賠償訂單 | |
+| `44` | 包裹遺失 | 協尋 18 天未果，走遺失賠償 |
+| `46` | 包裹拋棄 | 僅 C2C；賣家未取且逾期未提供宅配資料 |
+| `51` | 一般退貨 | 退貨便／黑貓退貨 |
+| `52` | 買家未取 | |
+| `53` | 廠退 | 僅超商；退回物流中心／黑貓集貨所 |
+| `55` | 賣家未取 | 僅 C2C |
+| `56` | 已轉宅配退回 | 僅 C2C |
+| `81` | 門市關轉 | 須期限內重選門市 |
+| `82` | 待轉宅配退回 | 僅 C2C；須於保管期限內提供宅配資料 |
 
-回傳：PAYUNi POST 到 `MapReturnURL`，外層 `Status=SUCCESS`；解密 `EncryptInfo` 後的 `MapJson`
-是 JSON 字串，內含 `StoreID`、`StoreName`、`Address`。
+### 錯誤代碼
 
----
-
-## 建立物流單
-
-7-11：`POST /logistics/trade`；黑貓：`POST /home_delivery/trade`。Version 皆為 `1.1`。
-
-### EncryptInfo 內容
-
-| 欄位 | 7-11 | 黑貓 | 說明 |
-|------|:----:|:----:|------|
-| `MerID` | ● | ● | 商店代號 |
-| `Timestamp` | ● | ● | Unix 時間戳 |
-| `MerTradeNo` | ● | ● | 商店訂單編號 |
-| `GoodsType` | ● | ● | 溫層 |
-| `LgsType` | ● | ● | `C2C` / `B2C` / `HOME` |
-| `ShipType` | ● | ● | `1` / `2` |
-| `TradeAmt` | ● | ● | 取貨付款＝代收金額；取貨不付款＝報值金額（外掛限制 30–20000） |
-| `ServiceType` | ● | ● | `1` 取貨付款 / `3` 取貨不付款 |
-| `StoreID` | ● | 空字串 | 取貨門市（門市地圖回傳） |
-| `Consignee` | ● | ● | 收件人姓名 |
-| `ConsigneeMail` | ● | ● | 收件人 Email |
-| `ConsigneeMobile` | ● | ● | 收件人手機 |
-| `RefundStoreID` | ○ | ○ | 退貨門市 |
-| `SenderName` | ● | ● | 寄件人姓名 |
-| `SenderMobile` | ● | ● | 寄件人手機 |
-| `NotifyURL` | ● | ● | 貨態 / 列印結果通知網址 |
-| `ConsigneeAddress` | | ● | 收件地址 |
-| `ProdDesc` | | ● | 商品描述（外掛截斷為 20 字） |
-| `DeliveryTimeTag` | | ● | 配達時段 |
-
-● = 外掛一律帶入　○ = 外掛帶空字串
-
-### 回應（EncryptInfo 解密後）
-
-| 欄位 | 說明 |
-|------|------|
-| `Status` / `Message` | 業務結果，`SUCCESS` 為成功 |
-| `ShipTradeNo` | **UNi 物流序號**，後續查詢、列印、通知都用它對應訂單 |
-| `TradeAmt` | 金額 |
-| `ServiceType` | 代收類型 |
-
----
-
-## 查詢物流單
-
-`POST /logistics/query`，Version `1.1`（7-11 與黑貓共用）。
-
-| EncryptInfo 欄位 | 說明 |
-|------|------|
-| `MerID` | 商店代號 |
-| `Timestamp` | Unix 時間戳 |
-| `LgsType` | `C2C` / `B2C` / `HOME` |
-| `ShipTradeNo` | 建立時取得的 UNi 物流序號 |
-
-回應解密後常見欄位：`ShipTradeNo`、`LgsType`、`ShipType`、`Odno`（出貨編號 / 黑貓託運單號）、
-`PartnerId`、`ValidationNo`（C2C）、`FileNo`（黑貓）、`ShipStatus`、`ShipStatusDesc`、`ShipStatusTime`。
-值為 `-` 代表尚未產生。
-
-寄件代碼組法（外掛 `build_ship_no`）：C2C 為 `Odno + ValidationNo`；B2C 為 `PartnerId + Odno`；黑貓為 `Odno`。
-
----
-
-## 列印託運單
-
-### 7-11
-
-瀏覽器表單 POST 到 `/logistics/print_label`，Version `1.0`：
-
-| EncryptInfo 欄位 | 說明 |
-|------|------|
-| `MerID` / `Timestamp` | |
-| `ShipTradeNo` | 可用逗號串接多筆 |
-| `GoodsType` / `LgsType` | |
-| `ShipType` | `1` |
-| `ShipDate` | `YYYYMMDD`；外掛在 B2C 時帶隔天 |
-| `LabelMode` | `1` = A4 版型 |
-
-列印結果另以 NotifyURL 通知（`ApiType=Print`）。
-
-### 黑貓
-
-`/home_delivery/get_obt_number_pdf`（取得託運單號）與 `/home_delivery/download_pdf`（下載託運單）。
-
----
-
-## NotifyURL 通知
-
-PAYUNi 以表單 POST 到建立物流單時帶的 `NotifyURL`，外層含 `EncryptInfo`（與 `HashInfo`）。
-**先驗 HashInfo 再解密**（官方外掛收通知時沒有驗，這是外掛的疏漏，不要照抄）。
-
-解密後依 `ApiType` 區分：
-
-| ApiType | 內容 |
-|---------|------|
-| `ShipStatus` | 貨態更新：`ShipTradeNo`、`ShipStatus`、`ShipStatusDesc`、`ShipStatusTime`；黑貓另含 `OBTNumber`（託運單號）、`FileNo` |
-| `Print` | 列印結果：7-11 含 `Odno`、`PartnerId`、`ValidationNo`、`LgsType`；黑貓結果在 `JsonData`（JSON 陣列字串，元素含 `Status`、`ShipTradeNo`） |
-
-內層 `Status` 不是 `SUCCESS` 時代表通知內容為失敗結果。以 `ShipTradeNo` 對應訂單，並比對是否與已存的值相同。
-
----
-
-## 尚未查證的項目
-
-以下資訊在可取得的原始碼中找不到依據，**不要當成規格使用**，請以統一金流後台提供的正式文件為準：
-
-- NotifyURL 需要回應的內容（外掛未輸出任何特定字串）
-- 退貨、逾期未取等貨態代碼
-- 各溫層的材積與重量限制、撥款天數
-- 取消物流單的 API（外掛未實作）
+物流 API 錯誤代碼（官方 119，`API`、`HOME`、`LAB`… 等前綴共 476 碼）收在 `data/status-codes.csv`（`provider=payuni`、`category=error`）。

@@ -220,7 +220,7 @@ class PAYUNiPaymentService:
         result = response.json()
         encrypt_info = result.get('EncryptInfo', '')
         if not encrypt_info:
-            # 外層錯誤（例如 API00003 無 API 版本號）不帶 EncryptInfo
+            # 外層錯誤不帶 EncryptInfo
             return {'Status': result.get('Status', 'ERROR'), 'raw': result}
         if not self.verify_checksum(encrypt_info, result.get('HashInfo', '')):
             raise ValueError('HashInfo 驗證失敗')

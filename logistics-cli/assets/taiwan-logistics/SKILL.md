@@ -140,31 +140,26 @@ This skill covers **6 logistics aggregators** + **1 direct carrier API**:
 **Encryption**: AES-256-GCM + SHA256 (same as PAYUNi payment):
 `EncryptInfo = hex(base64(ciphertext) + ":::" + base64(tag))`, `HashInfo = SHA256(HashKey + EncryptInfo + HashIV)`
 
-**API Style**: form POST (`MerID`, `Version`, `EncryptInfo`, `HashInfo`), JSON response with an encrypted `EncryptInfo`
+**API Style**: form POST (`MerID`, `Version`, `EncryptInfo`, `HashInfo`), JSON response with an encrypted `EncryptInfo`.
+Source: official docs docs.payuni.com.tw/web/#/7; details in `references/payuni-logistics-api.md`.
 
-> Endpoints, fields and codes below follow the production plugin wpbr-payuni-shipping 1.6.4;
-> crypto is verified byte-for-byte against the official PAYUNi plugin and PHP SDK.
-> Full details: `references/payuni-logistics-api.md`.
-
-**Supported Services:**
-- C2C Store-to-Store: 7-ELEVEN (normal temperature + frozen)
-- B2C Bulk Warehouse: 7-ELEVEN only
-- Home Delivery: T-Cat (normal temperature, frozen, refrigerated)
+**Supported Services:** 7-ELEVEN B2C bulk / C2C store-to-store / C2B return (normal + frozen); T-Cat home delivery (normal, frozen, refrigerated)
 
 **Endpoints** (base `https://sandbox-api.payuni.com.tw/api` / `https://api.payuni.com.tw/api`):
 
 | Purpose | Path | Version |
 |---|---|---|
-| 7-11 store map (browser form) | `/logistics/ship_map` | 1.1 |
-| Create 7-11 shipment | `/logistics/trade` | 1.1 |
-| Create T-Cat shipment | `/home_delivery/trade` | 1.1 |
+| Store map (browser form) | `/logistics/ship_map` | 1.1 |
 | Query shipment | `/logistics/query` | 1.1 |
 | Print 7-11 label (browser form) | `/logistics/print_label` | 1.0 |
+| T-Cat label PDF (browser form) | `/home_delivery/get_obt_number_pdf` | 1.0 |
+| T-Cat label re-download | `/home_delivery/download_pdf` | 1.0 |
 
-**Codes:** `ShipType` 1=7-ELEVEN 2=T-Cat · `LgsType` C2C / B2C / HOME · `GoodsType` 1=normal 2=frozen 3=refrigerated ·
-`ServiceType` 1=COD 3=no COD · `DeliveryTimeTag` 01 / 02 / 04(not set)
+Shipments are created inside a payment request: UPP with `ShipTag=1` (+ `Ship=1` for COD), or the backend
+ATM / CVS / credit-token / LINE Pay / JKoPay / AFTEE APIs with `ServiceType=3` (no COD).
 
-> Strings like `PAYUNi_Logistic_711` are WooCommerce shipping-method IDs of the official plugin, **not** API values.
+**Codes:** `ShipType` 1=7-ELEVEN 2=T-Cat · `LgsType` B2C / C2C / HOME / C2B · `GoodsType` 1=normal 2=frozen 3=refrigerated ·
+`DeliveryTimeTag` 01 / 02 / 04(not set)
 
 ---
 
@@ -612,46 +607,45 @@ the status push (NPA-B58) uses the underscored names.
 All requests: form POST `MerID`, `Version`, `EncryptInfo`, `HashInfo`. Verify `HashInfo` on every
 response and notification before decrypting.
 
-### 1. Create shipment
+### 1. Create shipment (inside the payment request)
 
-`POST /api/logistics/trade` (7-11) or `POST /api/home_delivery/trade` (T-Cat), Version `1.1`.
-
-| EncryptInfo field | 7-11 | T-Cat | Notes |
+| EncryptInfo field | UPP | Backend API | Notes |
 |---|:-:|:-:|---|
-| MerID, Timestamp | ● | ● | |
-| MerTradeNo | ● | ● | |
-| GoodsType / LgsType / ShipType | ● | ● | see codes above |
-| TradeAmt | ● | ● | COD amount, or declared value when not COD |
-| ServiceType | ● | ● | 1 = COD, 3 = no COD |
-| StoreID | ● | empty | from the store map |
-| Consignee / ConsigneeMail / ConsigneeMobile | ● | ● | |
-| SenderName / SenderMobile | ● | ● | |
-| NotifyURL | ● | ● | status / print notifications |
-| ConsigneeAddress / ProdDesc / DeliveryTimeTag | | ● | ProdDesc ≤ 20 chars |
+| ShipTag | 1 | | enable logistics |
+| Ship | 1 = COD | | |
+| ServiceType | | 3 | backend APIs support no-COD only |
+| LgsType / ShipType / GoodsType | ● | ● | |
+| Consignee / ConsigneeMobile | ● | ● | real name, 09xxxxxxxx |
+| StoreID | | ● (7-11) | from the store map |
+| ConsigneeAddress / DeliveryTimeTag | ○ | ● (T-Cat) | |
 
-Response (decrypted): `Status`, `Message`, **`ShipTradeNo`** (used for query / print / notifications), `TradeAmt`, `ServiceType`.
+The payment response includes **`ShipTradeNo`** (used for query / print / notifications).
 
 ### 2. Query shipment
 
-`POST /api/logistics/query`, Version `1.1`, EncryptInfo: `MerID`, `Timestamp`, `LgsType`, `ShipTradeNo`.
-Response includes `Odno`, `PartnerId`, `ValidationNo` (C2C), `FileNo` (T-Cat), `ShipStatus`,
-`ShipStatusDesc`, `ShipStatusTime` (`-` = not yet available).
+`POST /api/logistics/query`, Version `1.1`, EncryptInfo: `MerID`, `Timestamp`, `LgsType`, and `ShipTradeNo`
+or `ReturnOdno` (C2B). Response: `Odno`, `PartnerId`, `ValidationNo` (C2C), `FileNo` (T-Cat), `ShipStatus`,
+`ShipStatusDesc`, `ShipStatusTime`, `PickupStoreType` (status 81).
 
-**ShipStatus codes** (plugin `Utils/ShippingStatus.php`):
+**ShipStatus codes** (official page 120):
 
-| Code | Meaning |
-|---|---|
-| 21 | Waiting for shipment |
-| 22 | Checked in at logistics center (CVS only) |
-| 92 | Processing / received at sender store (C2C) |
-| 31 | In delivery |
-| 32 | Arrived at pickup store |
-| 11 | Picked up |
+| Code | Meaning | Code | Meaning |
+|---|---|---|---|
+| 91 | Not processed | 11 | Picked up |
+| 92 | Processing (CVS) | 41 | Cancelled |
+| 98 | Processing, received (B2C) | 43 | Compensation |
+| 21 | Waiting for shipment | 44 | Lost |
+| 22 | Logistics-center check-in (CVS) | 46 | Discarded (C2C) |
+| 31 | In delivery | 51 | Return |
+| 32 | At pickup store (CVS) | 52 | Not collected by buyer |
+| 33 | Exception | 53 | Returned to warehouse (CVS) |
+| 81 | Store closed, reselect | 55 | Not collected by seller (C2C) |
+| 82 | Awaiting home-delivery return (C2C) | 56 | Returned by home delivery (C2C) |
 
 ### 3. Notifications
 
-PAYUNi POSTs `EncryptInfo` (+ `HashInfo`) to `NotifyURL`. Decrypted `ApiType` is `ShipStatus`
-(status update: `ShipTradeNo`, `ShipStatus`, `ShipStatusDesc`, `ShipStatusTime`; T-Cat adds `OBTNumber`, `FileNo`)
+The notify URL is set in the PAYUNi back office (logistics settings). Decrypted `ApiType` is `ShipStatus`
+(`ShipTradeNo`, `ShipStatus`, `ShipStatusDesc`, `ShipStatusTime`; T-Cat adds `OBTNumber`, `FileNo`)
 or `Print` (label result). Match orders by `ShipTradeNo`.
 
 ---

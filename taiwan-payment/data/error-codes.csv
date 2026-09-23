@@ -115,10 +115,1509 @@ newebpay,TRA20011,該筆交易已請款,,request,error,見藍新規格書 NDNF-1
 newebpay,TRA20027,此訂單已申請過退款，退款中,,request,error,見藍新規格書 NDNF-1.2.2 錯誤代碼表
 newebpay,TRA20028,可退款金額不足，請查看常見問題 https://,,request,error,見藍新規格書 NDNF-1.2.2 錯誤代碼表
 newebpay,TRA40014,TimeStamp 欄位錯誤,,request,error,見藍新規格書 NDNF-1.2.2 錯誤代碼表
-payuni,SUCCESS,交易成功,Success,success,info,業務結果看 EncryptInfo 解密後的 Status 與 TradeStatus
-payuni,OK,AFTEE 審核通過,AFTEE approved,success,info,AFTEE 通知的 Status 可能為 OK
-payuni,ERROR,外層錯誤（回應不含 EncryptInfo）,Outer error,system,error,檢查 MerID、Version 與 EncryptInfo / HashInfo 格式
-payuni,API00003,無 API 版本號,Missing API version,validation,error,外層表單須帶 Version：UPP/退款 1.0、物流/LINE Pay 1.1、查詢 v2 為 2.0
+payuni,SUCCESS,成功,,success,info,Status 值；見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）
+payuni,UNKNOWN,等待授權結果逾期,,payment,warning,Status 值；見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）
+payuni,UNAPPROVED,訂單待確認，買家會員資格審查中（AFTEE）,,payment,warning,Status 值；見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）
+payuni,OK,AFTEE 審核通過（不代表付款成功）,,payment,info,Status 值；見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）
+payuni,FAIL,失敗（退款轉匯通知）,,refund,error,Status 值；見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）
+payuni,API00001,[所有API通用錯誤代碼] 無API類型 / [續期收款建立、續期收款狀態修改、續期收款訂單內容修改、續期收款卡號修改、續期收款訂單查詢] API程式不存在,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：所有API通用錯誤代碼、續期收款建立、續期收款狀態修改、續期收款訂單內容修改、續期收款卡號修改、續期收款訂單查詢
+payuni,API00002,[所有API通用錯誤代碼] 無API版本號 / [續期收款建立、續期收款狀態修改、續期收款訂單內容修改、續期收款卡號修改、續期收款訂單查詢] 無API類型,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：所有API通用錯誤代碼、續期收款建立、續期收款狀態修改、續期收款訂單內容修改、續期收款卡號修改、續期收款訂單查詢
+payuni,API00003,[所有API通用錯誤代碼] 無API對應程式 / [續期收款建立、續期收款狀態修改、續期收款訂單內容修改、續期收款卡號修改、續期收款訂單查詢] 無API版本號,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：所有API通用錯誤代碼、續期收款建立、續期收款狀態修改、續期收款訂單內容修改、續期收款卡號修改、續期收款訂單查詢
+payuni,API00004,[所有API通用錯誤代碼] 無API加密資料 / [續期收款建立、續期收款狀態修改、續期收款訂單內容修改、續期收款卡號修改、續期收款訂單查詢] 未有交易Token,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：所有API通用錯誤代碼、續期收款建立、續期收款狀態修改、續期收款訂單內容修改、續期收款卡號修改、續期收款訂單查詢
+payuni,API00005,[所有API通用錯誤代碼] 無API加密比對資料 / [續期收款建立、續期收款狀態修改、續期收款訂單內容修改、續期收款卡號修改、續期收款訂單查詢] 未有加密資料(EncryptInfo),,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：所有API通用錯誤代碼、續期收款建立、續期收款狀態修改、續期收款訂單內容修改、續期收款卡號修改、續期收款訂單查詢
+payuni,API00007,Token已失效,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：所有API通用錯誤代碼
+payuni,API00008,Gateway錯誤,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：所有API通用錯誤代碼
+payuni,API00009,已有相同資料處理中,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：所有API通用錯誤代碼
+payuni,API00010,EncryptInfo 格式錯誤,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：所有API通用錯誤代碼
+payuni,API00011,HashInfo 格式錯誤,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：所有API通用錯誤代碼
+payuni,API01001,執行幕後3D，未有訂單編號,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：所有API通用錯誤代碼
+payuni,API01002,執行幕後3D，未有暫存資訊,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：所有API通用錯誤代碼
+payuni,API01003,執行幕後3D，已超過允許時間,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：所有API通用錯誤代碼
+payuni,API01004,執行幕後3D，解析資料失敗,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：所有API通用錯誤代碼
+payuni,API02001,SamsungPay處理異常(RefID),,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：所有API通用錯誤代碼
+payuni,API02002,SamsungPay處理異常(SendDT),,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：所有API通用錯誤代碼
+payuni,DEF01001,未有商店代號,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：所有API通用錯誤代碼
+payuni,DEF01002,資料解密失敗,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：所有API通用錯誤代碼
+payuni,DEF01003,代理商不存在,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：所有API通用錯誤代碼
+payuni,DEF01004,代理商狀態不符合,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：所有API通用錯誤代碼
+payuni,DEF01005,商店不存在,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：所有API通用錯誤代碼
+payuni,DEF01006,商店狀態不符合,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：所有API通用錯誤代碼
+payuni,DEF01007,Hash比對不符合,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：所有API通用錯誤代碼
+payuni,UPP00000,系統異常,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (整合式支付頁|UPP)
+payuni,UPP01001,已達連線處理上限，請稍後再試,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (整合式支付頁|UPP)
+payuni,UPP01002,未有商店代號,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (整合式支付頁|UPP)
+payuni,UPP01003,資料 HASH 比對不符合,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (整合式支付頁|UPP)
+payuni,UPP01004,資料解密失敗,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (整合式支付頁|UPP)
+payuni,UPP01005,解密資料不存在,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (整合式支付頁|UPP)
+payuni,UPP01006,[交易建立 (整合式支付頁|UPP)] 查無符合商店資料 / [交易建立 (整合式支付頁|UPP)] 查無符合商店(代理商)資料,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (整合式支付頁|UPP)
+payuni,UPP01007,已存在相同商店訂單編號,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (整合式支付頁|UPP)
+payuni,UPP01008,查無符合商店物流資料,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (整合式支付頁|UPP)
+payuni,UPP01009,商店B2C物流服務尚未開通,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (整合式支付頁|UPP)
+payuni,UPP01010,商店C2C物流服務尚未開通,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (整合式支付頁|UPP)
+payuni,UPP01011,商店未啟用B2C物流服務,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (整合式支付頁|UPP)
+payuni,UPP01012,商店未啟用C2C物流服務,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (整合式支付頁|UPP)
+payuni,UPP01013,商店未啟用,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (整合式支付頁|UPP)
+payuni,UPP01014,平台商未啟用,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (整合式支付頁|UPP)
+payuni,UPP01015,收(寄)件人姓名僅支援輸入中文/英文/數字,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (整合式支付頁|UPP)
+payuni,UPP01016,收(寄)件人的姓名包含 emoji 符號,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (整合式支付頁|UPP)
+payuni,UPP02001,未有商店代號,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (整合式支付頁|UPP)
+payuni,UPP02002,未有商店訂單編號,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (整合式支付頁|UPP)
+payuni,UPP02003,商店訂單編號，超過長度限制,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (整合式支付頁|UPP)
+payuni,UPP02004,商店訂單編號，格式錯誤(英數字-_),,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (整合式支付頁|UPP)
+payuni,UPP02005,未有訂單金額,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (整合式支付頁|UPP)
+payuni,UPP02006,訂單金額，僅可輸入整數,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (整合式支付頁|UPP)
+payuni,UPP02007,訂單金額，格式錯誤,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (整合式支付頁|UPP)
+payuni,UPP02008,未有時間戳記,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (整合式支付頁|UPP)
+payuni,UPP02009,時間戳記，僅可輸入整數,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (整合式支付頁|UPP)
+payuni,UPP02010,時間戳記，已過期,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (整合式支付頁|UPP)
+payuni,UPP02011,前景導回網址，格式錯誤,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (整合式支付頁|UPP)
+payuni,UPP02012,背景通知網址，格式錯誤,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (整合式支付頁|UPP)
+payuni,UPP02013,寄送信箱，格式錯誤,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (整合式支付頁|UPP)
+payuni,UPP02014,綁定類型，格式錯誤,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (整合式支付頁|UPP)
+payuni,UPP02015,未有綁定Token,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (整合式支付頁|UPP)
+payuni,UPP02016,綁定Token，長度超過限制,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (整合式支付頁|UPP)
+payuni,UPP02017,綁定Token，格式錯誤,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (整合式支付頁|UPP)
+payuni,UPP02018,綁定Token類型，格式錯誤,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (整合式支付頁|UPP)
+payuni,UPP02019,綁定有效期間，格式錯誤(MMYY),,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (整合式支付頁|UPP)
+payuni,UPP02020,綁定有效期間，年份格式錯誤(MMYY),,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (整合式支付頁|UPP)
+payuni,UPP02021,綁定有效期間，月份格式錯誤(MMYY),,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (整合式支付頁|UPP)
+payuni,UPP02022,無合適的支付工具可供使用，請聯繫商店,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (整合式支付頁|UPP)
+payuni,UPP02023,信用卡(一次)支付開關，格式錯誤,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (整合式支付頁|UPP)
+payuni,UPP02024,ATM 轉帳支付開關，格式錯誤,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (整合式支付頁|UPP)
+payuni,UPP02025,超商代碼支付開關，格式錯誤,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (整合式支付頁|UPP)
+payuni,UPP02026,信用卡(銀聯)支付開關，格式錯誤,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (整合式支付頁|UPP)
+payuni,UPP02027,信用卡(紅利)支付開關，格式錯誤,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (整合式支付頁|UPP)
+payuni,UPP02028,信用卡(分期)支付開關，分期數錯誤,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (整合式支付頁|UPP)
+payuni,UPP02029,此支付工具未啟用，信用卡(一次付清)，請聯繫商店。,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (整合式支付頁|UPP)
+payuni,UPP02030,此支付工具未啟用，ATM轉帳，請聯繫商店。,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (整合式支付頁|UPP)
+payuni,UPP02031,此支付工具未啟用，超商代碼，請聯繫商店。,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (整合式支付頁|UPP)
+payuni,UPP02032,此支付工具未啟用，信用卡(銀聯卡)，請聯繫商店。,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (整合式支付頁|UPP)
+payuni,UPP02033,此支付工具未啟用，信用卡(紅利折抵)，請聯繫商店。,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (整合式支付頁|UPP)
+payuni,UPP02034,支付工具未啟用，信用卡(分期付款3期)，請聯繫商店。,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (整合式支付頁|UPP)
+payuni,UPP02035,支付工具未啟用，信用卡(分期付款6期)，請聯繫商店。,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (整合式支付頁|UPP)
+payuni,UPP02036,支付工具未啟用，信用卡(分期付款9期)，請聯繫商店。,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (整合式支付頁|UPP)
+payuni,UPP02037,支付工具未啟用，信用卡(分期付款12期)，請聯繫商店。,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (整合式支付頁|UPP)
+payuni,UPP02038,支付工具未啟用，信用卡(分期付款18期)，請聯繫商店。,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (整合式支付頁|UPP)
+payuni,UPP02039,支付工具未啟用，信用卡(分期付款24期)，請聯繫商店。,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (整合式支付頁|UPP)
+payuni,UPP02040,支付工具未啟用，信用卡(分期付款30期)，請聯繫商店。,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (整合式支付頁|UPP)
+payuni,UPP02041,寄送信箱(固定)，格式錯誤,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (整合式支付頁|UPP)
+payuni,UPP02042,繳費期限日期格式有誤，應為日期格式,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (整合式支付頁|UPP)
+payuni,UPP02043,繳費期限日期為無效日期，請重新確認,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (整合式支付頁|UPP)
+payuni,UPP02044,返回網址，格式錯誤,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (整合式支付頁|UPP)
+payuni,UPP02045,交易截止秒數，僅可輸入整數,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (整合式支付頁|UPP)
+payuni,UPP02046,交易截止秒數，格式錯誤(60~600),,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (整合式支付頁|UPP)
+payuni,UPP02047,顯示類型(快速)，格式錯誤,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (整合式支付頁|UPP)
+payuni,UPP02048,交易時間已截止,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (整合式支付頁|UPP)
+payuni,UPP02049,此支付工具未啟用，愛金卡，請聯繫商店。,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (整合式支付頁|UPP)
+payuni,UPP02050,此支付工具未啟用，後支付(AFTEE) ，請聯繫商店。,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (整合式支付頁|UPP)
+payuni,UPP02051,愛金卡支付開關，格式錯誤,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (整合式支付頁|UPP)
+payuni,UPP02052,先享後付支付開關，格式錯誤,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (整合式支付頁|UPP)
+payuni,UPP02053,貨到付款支付開關，格式錯誤,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (整合式支付頁|UPP)
+payuni,UPP02054,啟用物流開關，格式錯誤,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (整合式支付頁|UPP)
+payuni,UPP02055,未有物流通路,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (整合式支付頁|UPP)
+payuni,UPP02056,物流通路，格式錯誤,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (整合式支付頁|UPP)
+payuni,UPP02057,未有寄件型態,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (整合式支付頁|UPP)
+payuni,UPP02058,寄件型態，格式錯誤,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (整合式支付頁|UPP)
+payuni,UPP02059,未有門市(貨運)通路類別,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (整合式支付頁|UPP)
+payuni,UPP02060,門市(貨運)通路類別，格式錯誤,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (整合式支付頁|UPP)
+payuni,UPP02061,[交易建立 (整合式支付頁|UPP)] 此支付工具未啟用，7-ELEVEN大宗寄倉-常溫，請聯繫商店。 / [交易建立 (整合式支付頁|UPP)] 此支付工具未啟用，7-ELEVEN店到店-常溫，請聯繫商店。,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (整合式支付頁|UPP)
+payuni,UPP02062,[交易建立 (整合式支付頁|UPP)] 此支付工具未啟用，7-ELEVEN大宗寄倉-冷凍，請聯繫商店。 / [交易建立 (整合式支付頁|UPP)] 此支付工具未啟用，7-ELEVEN店到店-冷凍，請聯繫商店。 / [交易建立 (整合式支付頁|UPP)] 此支付工具未啟用，黑貓宅配，請聯繫商店。,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (整合式支付頁|UPP)
+payuni,UPP02063,此支付工具未啟用，信用卡(ApplePay)，請聯繫商店。,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (整合式支付頁|UPP)
+payuni,UPP02064,GrantExport參數值錯誤,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (整合式支付頁|UPP)
+payuni,UPP02065,代理商未開啟撥款指示功能,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (整合式支付頁|UPP)
+payuni,UPP02066,使用Token類型，格式錯誤,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (整合式支付頁|UPP)
+payuni,UPP02068,AesType，格式錯誤,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (整合式支付頁|UPP)
+payuni,UPP02069,商店未有設定AesType,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (整合式支付頁|UPP)
+payuni,UPP02070,商店AesType不符合,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (整合式支付頁|UPP)
+payuni,UPP02071,啟用ApplePay開關，格式錯誤,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (整合式支付頁|UPP)
+payuni,UPP02072,啟用LinePay開關，格式錯誤,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (整合式支付頁|UPP)
+payuni,UPP02073,此支付工具未啟用，LinePay，請聯繫商店。,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (整合式支付頁|UPP)
+payuni,UPP02074,[交易建立 (整合式支付頁|UPP)] API3D，格式錯誤 / [交易建立 (整合式支付頁|UPP)] Union3D，格式錯誤,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (整合式支付頁|UPP)
+payuni,UPP02075,啟用GooglePay開關，格式錯誤,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (整合式支付頁|UPP)
+payuni,UPP02076,此支付工具未啟用，信用卡(GooglePay)，請聯繫商店。,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (整合式支付頁|UPP)
+payuni,UPP02077,無法辨識的銀行別,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (整合式支付頁|UPP)
+payuni,UPP02078,此支付工具未啟用，信用卡(SamsungPay)，請聯繫商店。,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (整合式支付頁|UPP)
+payuni,UPP02079,收件人地址(固定)，格式錯誤,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (整合式支付頁|UPP)
+payuni,UPP02080,綁定Token(買方)，長度超過限制,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (整合式支付頁|UPP)
+payuni,UPP02081,綁定Token(買方)，格式錯誤,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (整合式支付頁|UPP)
+payuni,UPP02082,綁定Token類型(買方)，格式錯誤,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (整合式支付頁|UPP)
+payuni,UPP02083,查無符合會員資訊,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (整合式支付頁|UPP)
+payuni,UPP02084,電子發票，格式錯誤,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (整合式支付頁|UPP)
+payuni,UPP02085,商店尚未啟用電子發票,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (整合式支付頁|UPP)
+payuni,UPP02086,商店未提供信用卡幕後交易,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (整合式支付頁|UPP)
+payuni,UPP02087,商店未提供約定信用卡幕後交易,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (整合式支付頁|UPP)
+payuni,UPP02088,此交易金額無法使用，信用卡(一次付清)，請聯繫商店。,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (整合式支付頁|UPP)
+payuni,UPP02089,此交易金額無法使用，信用卡(銀聯卡)，請聯繫商店。,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (整合式支付頁|UPP)
+payuni,UPP02090,此交易金額無法使用，信用卡(紅利折抵)，請聯繫商店。,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (整合式支付頁|UPP)
+payuni,UPP02091,此交易金額無法使用，信用卡(分期付款3期)，請聯繫商店。,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (整合式支付頁|UPP)
+payuni,UPP02092,此交易金額無法使用，信用卡(分期付款6期)，請聯繫商店。,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (整合式支付頁|UPP)
+payuni,UPP02093,此交易金額無法使用，信用卡(分期付款9期)，請聯繫商店。,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (整合式支付頁|UPP)
+payuni,UPP02094,此交易金額無法使用，信用卡(分期付款12期)，請聯繫商店。,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (整合式支付頁|UPP)
+payuni,UPP02095,此交易金額無法使用，信用卡(分期付款18期)，請聯繫商店。,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (整合式支付頁|UPP)
+payuni,UPP02096,此交易金額無法使用，信用卡(分期付款24期)，請聯繫商店。,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (整合式支付頁|UPP)
+payuni,UPP02097,此交易金額無法使用，信用卡(分期付款30期)，請聯繫商店。,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (整合式支付頁|UPP)
+payuni,UPP02098,此交易金額無法使用，信用卡(ApplePay)，請聯繫商店。,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (整合式支付頁|UPP)
+payuni,UPP02099,此交易金額無法使用，信用卡(GooglePay)，請聯繫商店。,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (整合式支付頁|UPP)
+payuni,UPP02100,此交易金額無法使用，信用卡(SamsungPay)，請聯繫商店。,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (整合式支付頁|UPP)
+payuni,UPP02101,此交易金額無法使用，ATM轉帳，請聯繫商店。,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (整合式支付頁|UPP)
+payuni,UPP02102,此交易金額無法使用，超商代碼，請聯繫商店。,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (整合式支付頁|UPP)
+payuni,UPP02103,此交易金額無法使用，7-ELEVEN大宗寄倉-常溫，請聯繫商店。,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (整合式支付頁|UPP)
+payuni,UPP02104,此交易金額無法使用，7-ELEVEN大宗寄倉-冷凍，請聯繫商店。,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (整合式支付頁|UPP)
+payuni,UPP02105,此交易金額無法使用，7-ELEVEN店到店-常溫，請聯繫商店。,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (整合式支付頁|UPP)
+payuni,UPP02106,此交易金額無法使用，7-ELEVEN店到店-冷凍，請聯繫商店。,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (整合式支付頁|UPP)
+payuni,UPP02107,此交易金額無法使用，黑貓宅配，請聯繫商店。,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (整合式支付頁|UPP)
+payuni,UPP02108,此交易金額無法使用，後支付(AFTEE)，請聯繫商店。,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (整合式支付頁|UPP)
+payuni,UPP02109,此支付工具未啟用，街口支付，請聯繫商店。,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (整合式支付頁|UPP)
+payuni,UPP02110,街口支付開關，格式錯誤。,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (整合式支付頁|UPP)
+payuni,UPP02111,商店代號比對異常,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (整合式支付頁|UPP)
+payuni,UPP02112,優惠券使用開關，格式錯誤,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (整合式支付頁|UPP)
+payuni,UPP02113,代理商未開啟優惠券功能,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (整合式支付頁|UPP)
+payuni,UPP02114,商店尚未啟用優惠券,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (整合式支付頁|UPP)
+payuni,UPP02120,收件人姓名(固定)，格式錯誤,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (整合式支付頁|UPP)
+payuni,UPP02121,收件人手機(固定)，格式錯誤,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (整合式支付頁|UPP)
+payuni,UPP03000,交易已逾期,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (整合式支付頁|UPP)
+payuni,UPP03001,交易Token已失效,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (整合式支付頁|UPP)
+payuni,UPP03002,商店資料不存在,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (整合式支付頁|UPP)
+payuni,UPP03003,解密資料不存在,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (整合式支付頁|UPP)
+payuni,UPP03004,查無對應Gateway,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (整合式支付頁|UPP)
+payuni,UPP03005,Gateway結果空白,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (整合式支付頁|UPP)
+payuni,UPP03006,送出資料解析失敗,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (整合式支付頁|UPP)
+payuni,UPP03007,未有任何允許交易方式,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (整合式支付頁|UPP)
+payuni,UPP03008,訂單不允許此支付工具,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (整合式支付頁|UPP)
+payuni,UPP03009,未有信用卡卡號,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (整合式支付頁|UPP)
+payuni,UPP03010,信用卡卡號，長度不符合,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (整合式支付頁|UPP)
+payuni,UPP03011,未有信用卡分期數,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (整合式支付頁|UPP)
+payuni,UPP03012,信用卡分期數錯誤,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (整合式支付頁|UPP)
+payuni,UPP03013,未有信用卡到期日,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (整合式支付頁|UPP)
+payuni,UPP03014,信用卡到期日，格式錯誤(MMYY),,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (整合式支付頁|UPP)
+payuni,UPP03015,信用卡到期日，年份錯誤,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (整合式支付頁|UPP)
+payuni,UPP03016,信用卡到期日，月份錯誤,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (整合式支付頁|UPP)
+payuni,UPP03017,未有信用卡安全碼,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (整合式支付頁|UPP)
+payuni,UPP03018,信用卡安全碼，長度不符合,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (整合式支付頁|UPP)
+payuni,UPP03019,信用卡安全碼，僅能輸入數字,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (整合式支付頁|UPP)
+payuni,UPP03020,虛擬帳號(ATM)銀行不符合,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (整合式支付頁|UPP)
+payuni,UPP03021,訂單金額不符合,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (整合式支付頁|UPP)
+payuni,UPP03022,[交易建立 (整合式支付頁|UPP)] 未有AppleDetail確認資料 / [交易建立 (整合式支付頁|UPP)] 未有GoogleDetail確認資料 / [交易建立 (整合式支付頁|UPP)] 未有SamsungDetail確認資料,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (整合式支付頁|UPP)
+payuni,UPP03023,未有選擇物流地圖,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (整合式支付頁|UPP)
+payuni,UPP03024,物流地圖資料異常,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (整合式支付頁|UPP)
+payuni,UPP03025,未有收件人姓名,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (整合式支付頁|UPP)
+payuni,UPP03026,收件人姓名，超過允許長度,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (整合式支付頁|UPP)
+payuni,UPP03027,未有收件人電子信箱,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (整合式支付頁|UPP)
+payuni,UPP03028,收件人電子信箱格式錯誤,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (整合式支付頁|UPP)
+payuni,UPP03029,未有收件人手機號碼,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (整合式支付頁|UPP)
+payuni,UPP03030,手機號碼格式錯誤(09開頭),,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (整合式支付頁|UPP)
+payuni,UPP03031,未有收件人地址,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (整合式支付頁|UPP)
+payuni,UPP03032,收件人地址長度超過限制,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (整合式支付頁|UPP)
+payuni,UPP03033,未有希望配達時段,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (整合式支付頁|UPP)
+payuni,UPP03034,無法辨識的希望配達時段,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (整合式支付頁|UPP)
+payuni,UPP03035,取得資訊失敗(PayDetail),,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (整合式支付頁|UPP)
+payuni,UPP03036,未有登入資訊,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (整合式支付頁|UPP)
+payuni,UPP03037,未有買方名稱(抬頭),,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (整合式支付頁|UPP)
+payuni,UPP03038,未有載具類別,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (整合式支付頁|UPP)
+payuni,UPP03039,無法辨識的載具類別,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (整合式支付頁|UPP)
+payuni,UPP03040,載具資料不可為空,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (整合式支付頁|UPP)
+payuni,UPP03041,載具資料，格式錯誤,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (整合式支付頁|UPP)
+payuni,UPP03042,載具資料，格式錯誤(長度),,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (整合式支付頁|UPP)
+payuni,UPP03043,"英文姓名格式錯誤(限大小寫英文，『,』『-』『.』)，不可空白結尾",,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (整合式支付頁|UPP)
+payuni,UPP03044,未有優惠碼,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (整合式支付頁|UPP)
+payuni,UPP03045,優惠券優惠碼比對不符合,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (整合式支付頁|UPP)
+payuni,UPP03046,未有優惠券優惠碼對應資訊,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (整合式支付頁|UPP)
+payuni,UPP04001,等待Token已失效,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (整合式支付頁|UPP)
+payuni,UPP05001,交易風控(拒絕交易),,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (整合式支付頁|UPP)
+payuni,UPP05002,交易風控(拒絕交易),,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (整合式支付頁|UPP)
+payuni,UPP05003,交易風控(拒絕交易),,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (整合式支付頁|UPP)
+payuni,UPP05004,交易風控(拒絕交易),,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (整合式支付頁|UPP)
+payuni,UPP05005,交易風控(拒絕交易),,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (整合式支付頁|UPP)
+payuni,UPP05006,交易風控(拒絕交易),,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (整合式支付頁|UPP)
+payuni,UPP05007,交易風控(拒絕交易),,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (整合式支付頁|UPP)
+payuni,UPP05008,交易風控(拒絕交易),,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (整合式支付頁|UPP)
+payuni,UPP05009,交易風控(拒絕交易),,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (整合式支付頁|UPP)
+payuni,UPP05010,交易風控(拒絕交易),,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (整合式支付頁|UPP)
+payuni,UPP06001,顯示QRCode(未有TradeNo),,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (整合式支付頁|UPP)
+payuni,UPP06002,顯示QRCode(未有QRCode值),,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (整合式支付頁|UPP)
+payuni,OBJ01000,處理Token異常,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立(信用卡免跳轉支付元件)
+payuni,OBJ01001,查無符合對應類型,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立(信用卡免跳轉支付元件)
+payuni,OBJ01002,未有 Token,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立(信用卡免跳轉支付元件)
+payuni,OBJ01003,Token 已過期,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立(信用卡免跳轉支付元件)
+payuni,OBJ01004,未有商店資料,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立(信用卡免跳轉支付元件)
+payuni,OBJ01005,未有訂單資料,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立(信用卡免跳轉支付元件)
+payuni,OBJ01006,未有任何支付工具可使用,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立(信用卡免跳轉支付元件)
+payuni,TOKEN00000,系統異常,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立(信用卡免跳轉支付元件)
+payuni,TOKEN01001,未有商店代號,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立(信用卡免跳轉支付元件)
+payuni,TOKEN01002,資料 HASH 比對不符合,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立(信用卡免跳轉支付元件)
+payuni,TOKEN01003,資料解密失敗,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立(信用卡免跳轉支付元件)
+payuni,TOKEN01004,解密資料不存在,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立(信用卡免跳轉支付元件)
+payuni,TOKEN01005,[交易建立(信用卡免跳轉支付元件)] 查無符合商店資料 / [交易建立(信用卡免跳轉支付元件)] 查無符合商店(代理商)資料,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立(信用卡免跳轉支付元件)
+payuni,TOKEN01006,已存在相同商店訂單編號,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立(信用卡免跳轉支付元件)
+payuni,TOKEN02000,Token設定失敗,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立(信用卡免跳轉支付元件)
+payuni,TOKEN02001,AesType，格式錯誤,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立(信用卡免跳轉支付元件)
+payuni,TOKEN02002,商店未有設定AesType,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立(信用卡免跳轉支付元件)
+payuni,TOKEN02003,商店AesType不符合,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立(信用卡免跳轉支付元件)
+payuni,TOKEN02004,未有商店代號,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立(信用卡免跳轉支付元件)
+payuni,TOKEN02005,未有商店訂單編號,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立(信用卡免跳轉支付元件)
+payuni,TOKEN02006,商店訂單編號，超過長度限制,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立(信用卡免跳轉支付元件)
+payuni,TOKEN02007,商店訂單編號，格式錯誤(英數字-_),,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立(信用卡免跳轉支付元件)
+payuni,TOKEN02008,未有訂單金額,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立(信用卡免跳轉支付元件)
+payuni,TOKEN02009,訂單金額，僅可輸入整數,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立(信用卡免跳轉支付元件)
+payuni,TOKEN02010,訂單金額，格式錯誤,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立(信用卡免跳轉支付元件)
+payuni,TOKEN02011,時間戳記，已過期,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立(信用卡免跳轉支付元件)
+payuni,TOKEN02012,時間戳記，僅可輸入整數,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立(信用卡免跳轉支付元件)
+payuni,TOKEN02013,時間戳記，已過期,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立(信用卡免跳轉支付元件)
+payuni,TOKEN02014,前景通知網址，格式錯誤,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立(信用卡免跳轉支付元件)
+payuni,TOKEN02015,背景通知網址，格式錯誤,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立(信用卡免跳轉支付元件)
+payuni,TOKEN02016,綁定類型，格式錯誤,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立(信用卡免跳轉支付元件)
+payuni,TOKEN02017,未有綁定Token,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立(信用卡免跳轉支付元件)
+payuni,TOKEN02018,綁定Token，長度超過限制,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立(信用卡免跳轉支付元件)
+payuni,TOKEN02019,綁定Token，格式錯誤,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立(信用卡免跳轉支付元件)
+payuni,TOKEN02020,綁定Token類型，格式錯誤,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立(信用卡免跳轉支付元件)
+payuni,TOKEN02021,超過額度，未有會員HASH,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立(信用卡免跳轉支付元件)
+payuni,TOKEN02022,Domain，不得空白,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立(信用卡免跳轉支付元件)
+payuni,TOKEN02023,Domain，格式錯誤,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立(信用卡免跳轉支付元件)
+payuni,TOKEN02024,GrantExport參數值錯誤,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立(信用卡免跳轉支付元件)
+payuni,TOKEN02025,未有商品說明,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立(信用卡免跳轉支付元件)
+payuni,TOKEN02026,未有消費者電子信箱,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立(信用卡免跳轉支付元件)
+payuni,TOKEN02027,消費者電子信箱，格式錯誤,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立(信用卡免跳轉支付元件)
+payuni,TOKEN02028,未有買方名稱(抬頭),,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立(信用卡免跳轉支付元件)
+payuni,TOKEN02029,未有載具類別,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立(信用卡免跳轉支付元件)
+payuni,TOKEN02030,無法辨識的載具類別,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立(信用卡免跳轉支付元件)
+payuni,TOKEN02031,載具資料不可為空,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立(信用卡免跳轉支付元件)
+payuni,TOKEN02032,載具資料，格式錯誤,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立(信用卡免跳轉支付元件)
+payuni,TOKEN02033,載具資料，格式錯誤(長度),,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立(信用卡免跳轉支付元件)
+payuni,TOKEN02034,商店不提供捐贈發票選項,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立(信用卡免跳轉支付元件)
+payuni,TOKEN02035,此捐贈碼不在商店提供範圍內,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立(信用卡免跳轉支付元件)
+payuni,TOKEN02036,手機條碼不正確,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立(信用卡免跳轉支付元件)
+payuni,TOKEN03001,未有商店資料,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立(信用卡免跳轉支付元件)
+payuni,TOKEN03002,確認支付工具異常,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立(信用卡免跳轉支付元件)
+payuni,TOKEN03003,商店資料異常,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立(信用卡免跳轉支付元件)
+payuni,TOKEN03004,未有設定允許Domain,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立(信用卡免跳轉支付元件)
+payuni,TOKEN03005,未有設定允許幕後IP,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立(信用卡免跳轉支付元件)
+payuni,TOKEN03006,設定允許幕後IP不符合,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立(信用卡免跳轉支付元件)
+payuni,TOKEN03007,代理商未開啟撥款指示功能,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立(信用卡免跳轉支付元件)
+payuni,TOKEN03008,商店未提供約定信用卡交易,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立(信用卡免跳轉支付元件)
+payuni,TOKEN04001,買方會員資料取得(驗證)失敗,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立(信用卡免跳轉支付元件)
+payuni,IFTRADE00000,系統異常,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立(信用卡免跳轉支付元件)
+payuni,IFTRADE01001,未有商店代號,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立(信用卡免跳轉支付元件)
+payuni,IFTRADE01002,資料 HASH 比對不符合,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立(信用卡免跳轉支付元件)
+payuni,IFTRADE01003,資料解密失敗,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立(信用卡免跳轉支付元件)
+payuni,IFTRADE01004,解密資料不存在,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立(信用卡免跳轉支付元件)
+payuni,IFTRADE01005,[交易建立(信用卡免跳轉支付元件)] 查無符合商店資料 / [交易建立(信用卡免跳轉支付元件)] 查無符合商店(代理商)資料,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立(信用卡免跳轉支付元件)
+payuni,IFTRADE01006,已存在相同商店訂單編號,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立(信用卡免跳轉支付元件)
+payuni,IFTRADE02001,AesType，格式錯誤,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立(信用卡免跳轉支付元件)
+payuni,IFTRADE02002,商店未有設定AesType,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立(信用卡免跳轉支付元件)
+payuni,IFTRADE02003,商店AesType不符合,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立(信用卡免跳轉支付元件)
+payuni,IFTRADE02004,未有交易Token,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立(信用卡免跳轉支付元件)
+payuni,IFTRADE02005,未有商店代號,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立(信用卡免跳轉支付元件)
+payuni,IFTRADE02006,未有商店訂單編號,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立(信用卡免跳轉支付元件)
+payuni,IFTRADE02007,商店訂單編號，超過長度限制,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立(信用卡免跳轉支付元件)
+payuni,IFTRADE02008,商店訂單編號，格式錯誤(英數字-_),,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立(信用卡免跳轉支付元件)
+payuni,IFTRADE02009,未有訂單金額,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立(信用卡免跳轉支付元件)
+payuni,IFTRADE02010,訂單金額，僅可輸入整數,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立(信用卡免跳轉支付元件)
+payuni,IFTRADE02011,訂單金額，格式錯誤,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立(信用卡免跳轉支付元件)
+payuni,IFTRADE02012,未有時間戳記,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立(信用卡免跳轉支付元件)
+payuni,IFTRADE02013,時間戳記，僅可輸入整數,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立(信用卡免跳轉支付元件)
+payuni,IFTRADE02014,時間戳記，已過期,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立(信用卡免跳轉支付元件)
+payuni,IFTRADE02015,前景通知網址，格式錯誤,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立(信用卡免跳轉支付元件)
+payuni,IFTRADE02016,[交易建立(信用卡免跳轉支付元件)] 背景通知網址，格式錯誤 / [交易建立(信用卡免跳轉支付元件)] 綁定類型，格式錯誤,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立(信用卡免跳轉支付元件)
+payuni,IFTRADE02017,超過額度，未有會員HASH,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立(信用卡免跳轉支付元件)
+payuni,IFTRADE02018,未有商品說明,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立(信用卡免跳轉支付元件)
+payuni,IFTRADE02019,未有消費者電子信箱,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立(信用卡免跳轉支付元件)
+payuni,IFTRADE02020,消費者電子信箱，格式錯誤,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立(信用卡免跳轉支付元件)
+payuni,IFTRADE02021,未有買方名稱(抬頭),,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立(信用卡免跳轉支付元件)
+payuni,IFTRADE02022,未有載具類別,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立(信用卡免跳轉支付元件)
+payuni,IFTRADE02023,無法辨識的載具類別,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立(信用卡免跳轉支付元件)
+payuni,IFTRADE02024,載具資料不可為空,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立(信用卡免跳轉支付元件)
+payuni,IFTRADE02025,載具資料，格式錯誤,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立(信用卡免跳轉支付元件)
+payuni,IFTRADE02026,載具資料，格式錯誤(長度),,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立(信用卡免跳轉支付元件)
+payuni,IFTRADE02027,商店不提供捐贈發票選項,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立(信用卡免跳轉支付元件)
+payuni,IFTRADE02028,此捐贈碼不在商店提供範圍內,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立(信用卡免跳轉支付元件)
+payuni,IFTRADE02029,手機條碼不正確,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立(信用卡免跳轉支付元件)
+payuni,IFTRADE02030,API3D，格式錯誤,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立(信用卡免跳轉支付元件)
+payuni,IFTRADE02031,使用者IP格式錯誤,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立(信用卡免跳轉支付元件)
+payuni,IFTRADE03001,買方會員資料取得(驗證)失敗,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立(信用卡免跳轉支付元件)
+payuni,IFTRADE04001,Token已過期,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立(信用卡免跳轉支付元件)
+payuni,IFTRADE04002,未有交易設定資料,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立(信用卡免跳轉支付元件)
+payuni,IFTRADE04003,交易設定資料異常,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立(信用卡免跳轉支付元件)
+payuni,IFTRADE05001,交易設定異常(原始資料),,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立(信用卡免跳轉支付元件)
+payuni,IFTRADE05002,交易設定異常(輸入資料),,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立(信用卡免跳轉支付元件)
+payuni,IFTRADE05003,交易設定異常(商店資料),,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立(信用卡免跳轉支付元件)
+payuni,TRADE00000,系統異常,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立(信用卡免跳轉支付元件)
+payuni,TRADE00001,無API對應程式,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立(信用卡免跳轉支付元件)
+payuni,TRADE01001,送出資料解析失敗,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立(信用卡免跳轉支付元件)
+payuni,TRADE01002,送出資料解析失敗(KEY),,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立(信用卡免跳轉支付元件)
+payuni,TRADE01003,送出資料解析失敗(Decrypt),,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立(信用卡免跳轉支付元件)
+payuni,TRADE01004,未有Token,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立(信用卡免跳轉支付元件)
+payuni,TRADE01005,Token已過期,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立(信用卡免跳轉支付元件)
+payuni,TRADE01006,未有支付方式,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立(信用卡免跳轉支付元件)
+payuni,TRADE01007,未有符合支付方式,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立(信用卡免跳轉支付元件)
+payuni,TRADE02001,未有解密資料,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立(信用卡免跳轉支付元件)
+payuni,TRADE02002,支付方式錯誤,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立(信用卡免跳轉支付元件)
+payuni,TRADE02003,信用卡號，僅可輸入整數,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立(信用卡免跳轉支付元件)
+payuni,TRADE02004,信用卡號，僅可輸入整數,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立(信用卡免跳轉支付元件)
+payuni,TRADE02005,信用卡號，長度限制錯誤,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立(信用卡免跳轉支付元件)
+payuni,TRADE02006,未有信用卡到期日,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立(信用卡免跳轉支付元件)
+payuni,TRADE02007,信用卡到期日，格式錯誤(MMYY),,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立(信用卡免跳轉支付元件)
+payuni,TRADE02008,信用卡到期日，已逾期,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立(信用卡免跳轉支付元件)
+payuni,TRADE02009,信用卡末三碼，長度限制錯誤,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立(信用卡免跳轉支付元件)
+payuni,TRADE02010,信用卡末三碼，格式錯誤,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立(信用卡免跳轉支付元件)
+payuni,TRADE02011,未有信用卡分期數,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立(信用卡免跳轉支付元件)
+payuni,TRADE02012,信用卡分期數，期數格式錯誤,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立(信用卡免跳轉支付元件)
+payuni,TRADE02013,未有信用卡末三碼,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立(信用卡免跳轉支付元件)
+payuni,TRADE03001,未有商店資料,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立(信用卡免跳轉支付元件)
+payuni,TRADE03002,確認支付工具異常,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立(信用卡免跳轉支付元件)
+payuni,TRADE03003,商店資料異常,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立(信用卡免跳轉支付元件)
+payuni,ATM01001,已達連線處理上限，請稍後再試,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (虛擬帳號|ATM)
+payuni,ATM01002,未有商店代號,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (虛擬帳號|ATM)
+payuni,ATM01003,資料 HASH 比對不符合,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (虛擬帳號|ATM)
+payuni,ATM01004,資料解密失敗,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (虛擬帳號|ATM)
+payuni,ATM01005,解密資料不存在,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (虛擬帳號|ATM)
+payuni,ATM01006,查無符合商店資料,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (虛擬帳號|ATM)
+payuni,ATM01007,ATM 轉帳帳號編譯異常,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (虛擬帳號|ATM)
+payuni,ATM01008,查無符合商店物流設定資料,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (虛擬帳號|ATM)
+payuni,ATM01009,商店B2C物流服務尚未開通,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (虛擬帳號|ATM)
+payuni,ATM01010,商店C2C物流服務尚未開通,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (虛擬帳號|ATM)
+payuni,ATM01011,商店未啟用B2C物流服務,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (虛擬帳號|ATM)
+payuni,ATM01012,商店未啟用C2C物流服務,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (虛擬帳號|ATM)
+payuni,ATM01013,中信ATM建檔失敗,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (虛擬帳號|ATM)
+payuni,ATM01014,未有API處理結果,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (虛擬帳號|ATM)
+payuni,ATM01015,回傳加密失敗,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (虛擬帳號|ATM)
+payuni,ATM01016,查無符合代理商資料,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (虛擬帳號|ATM)
+payuni,ATM01017,代理商狀態不符合,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (虛擬帳號|ATM)
+payuni,ATM01018,商店代號比對異常,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (虛擬帳號|ATM)
+payuni,ATM02001,未有商店代號,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (虛擬帳號|ATM)
+payuni,ATM02002,未有商店訂單編號,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (虛擬帳號|ATM)
+payuni,ATM02003,商店訂單編號，超過長度限制,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (虛擬帳號|ATM)
+payuni,ATM02004,商店訂單編號，格式錯誤(英數字-_),,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (虛擬帳號|ATM)
+payuni,ATM02005,未有訂單金額,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (虛擬帳號|ATM)
+payuni,ATM02006,訂單金額，僅可輸入整數,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (虛擬帳號|ATM)
+payuni,ATM02007,訂單金額，不為允許範圍區間,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (虛擬帳號|ATM)
+payuni,ATM02008,未有時間戳記,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (虛擬帳號|ATM)
+payuni,ATM02009,時間戳記，僅可輸入整數,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (虛擬帳號|ATM)
+payuni,ATM02010,時間戳記，已過期,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (虛擬帳號|ATM)
+payuni,ATM02011,未有銀行別,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (虛擬帳號|ATM)
+payuni,ATM02012,無法辨識的銀行別,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (虛擬帳號|ATM)
+payuni,ATM02013,繳費期限日期格式有誤，應為日期格式,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (虛擬帳號|ATM)
+payuni,ATM02014,繳費期限日期為無效日期，請重新確認,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (虛擬帳號|ATM)
+payuni,ATM02015,無法載入該銀行系統程序檔,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (虛擬帳號|ATM)
+payuni,ATM02016,無法辨識的繳費類型,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (虛擬帳號|ATM)
+payuni,ATM02017,NotifyURL 格式有誤，請確認,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (虛擬帳號|ATM)
+payuni,ATM02018,消費者電子信箱，格式錯誤,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (虛擬帳號|ATM)
+payuni,ATM02019,訂單金額格式錯誤(隨繳代碼限帶0元金額),,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (虛擬帳號|ATM)
+payuni,ATM02020,該銀行不支援隨繳虛擬帳號功能,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (虛擬帳號|ATM)
+payuni,ATM02021,GrantExport參數值錯誤,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (虛擬帳號|ATM)
+payuni,ATM02022,收(寄)件人姓名僅支援輸入中文/英文/數字,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (虛擬帳號|ATM)
+payuni,ATM02023,訂單金額超過洗防法限額，須有買方實名制TOKEN,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (虛擬帳號|ATM)
+payuni,ATM02024,買方會員資料取得(驗證)失敗,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (虛擬帳號|ATM)
+payuni,ATM02025,訂單金額超過洗防法限額，須先完成買方會員實名制(註冊),,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (虛擬帳號|ATM)
+payuni,ATM02026,未有買方名稱(抬頭),,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (虛擬帳號|ATM)
+payuni,ATM02027,買方統編長度有誤,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (虛擬帳號|ATM)
+payuni,ATM02028,未有消費者電子信箱,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (虛擬帳號|ATM)
+payuni,ATM02029,未有載具類別,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (虛擬帳號|ATM)
+payuni,ATM02030,無法辨識的載具類別,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (虛擬帳號|ATM)
+payuni,ATM02031,載具資料不可為空(手機條碼、自然人憑證條碼或是捐贈碼),,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (虛擬帳號|ATM)
+payuni,ATM02032,買方統編格式有誤,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (虛擬帳號|ATM)
+payuni,ATM02033,未有公司統編,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (虛擬帳號|ATM)
+payuni,ATM02034,商店不提供捐贈發票選項,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (虛擬帳號|ATM)
+payuni,ATM02035,此捐贈碼不在商店提供範圍內,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (虛擬帳號|ATM)
+payuni,ATM02036,手機條碼(格式)不正確,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (虛擬帳號|ATM)
+payuni,ATM02037,收(寄)件人的姓名包含 emoji 符號,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (虛擬帳號|ATM)
+payuni,ATM03001,商店未啟用,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (虛擬帳號|ATM)
+payuni,ATM03002,商店未啟用ATM 轉帳服務,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (虛擬帳號|ATM)
+payuni,ATM03003,商店未啟用ATM轉帳之隨繳功能,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (虛擬帳號|ATM)
+payuni,ATM03004,未有代理商幕後相關設定,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (虛擬帳號|ATM)
+payuni,ATM03005,不提供此IP幕後交易,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (虛擬帳號|ATM)
+payuni,ATM03006,商店未提供ATM轉帳幕後交易,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (虛擬帳號|ATM)
+payuni,ATM03007,代理商未開啟撥款指示功能,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (虛擬帳號|ATM)
+payuni,ATM03008,商店未有設定AesType,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (虛擬帳號|ATM)
+payuni,ATM03009,商店AesType不符合,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (虛擬帳號|ATM)
+payuni,ATM03010,商店尚未啟用優惠券,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (虛擬帳號|ATM)
+payuni,ATM04001,已存在相同商店訂單編號,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (虛擬帳號|ATM)
+payuni,ATM04002,未有交易唯一Token,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (虛擬帳號|ATM)
+payuni,ATM04003,訂單已失效,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (虛擬帳號|ATM)
+payuni,ATM04004,訂單失敗,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (虛擬帳號|ATM)
+payuni,ATM04005,訂單已取消,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (虛擬帳號|ATM)
+payuni,ATM06001,未有物流別,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (虛擬帳號|ATM)
+payuni,ATM06002,無法辨識的物流別,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (虛擬帳號|ATM)
+payuni,ATM06003,未有超商/宅配通路別,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (虛擬帳號|ATM)
+payuni,ATM06004,無法辨識的超商/宅配通路別,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (虛擬帳號|ATM)
+payuni,ATM06005,無超商/宅配的合作模式資訊,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (虛擬帳號|ATM)
+payuni,ATM06006,無法辨識的取貨後付款方式,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (虛擬帳號|ATM)
+payuni,ATM06007,無超商的門市代碼,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (虛擬帳號|ATM)
+payuni,ATM06008,未有收件人姓名,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (虛擬帳號|ATM)
+payuni,ATM06009,未有收件人電子信箱,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (虛擬帳號|ATM)
+payuni,ATM06010,收件人電子信箱格式錯誤,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (虛擬帳號|ATM)
+payuni,ATM06011,未有收件人手機號碼,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (虛擬帳號|ATM)
+payuni,ATM06012,手機號碼格式錯誤(09開頭),,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (虛擬帳號|ATM)
+payuni,ATM06013,暫不支援此物流,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (虛擬帳號|ATM)
+payuni,ATM06014,該門市無法配送，請重新選擇門市,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (虛擬帳號|ATM)
+payuni,ATM06015,未有寄件型態,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (虛擬帳號|ATM)
+payuni,ATM06016,無法辨識的寄件型態,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (虛擬帳號|ATM)
+payuni,ATM06017,收件人姓名長度超過限制,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (虛擬帳號|ATM)
+payuni,ATM06018,收件人電話區碼長度超過限制,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (虛擬帳號|ATM)
+payuni,ATM06019,收件人電話區碼格式錯誤,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (虛擬帳號|ATM)
+payuni,ATM06020,收件人電話長度超過限制,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (虛擬帳號|ATM)
+payuni,ATM06021,收件人電話格式錯誤,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (虛擬帳號|ATM)
+payuni,ATM06022,未有收件人地址,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (虛擬帳號|ATM)
+payuni,ATM06023,收件人地址長度超過限制,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (虛擬帳號|ATM)
+payuni,ATM06024,未有希望配達時間代碼,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (虛擬帳號|ATM)
+payuni,ATM06025,無法辨識的希望配達時間代碼,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (虛擬帳號|ATM)
+payuni,ATM06026,未有商品名稱,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (虛擬帳號|ATM)
+payuni,ATM06027,商品名稱長度超過限制,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (虛擬帳號|ATM)
+payuni,ATM06028,商品名稱不可含有禁用字眼,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (虛擬帳號|ATM)
+payuni,ATM06029,無法驗證(地址)郵遞區號,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (虛擬帳號|ATM)
+payuni,ATM06030,收件人的地址不在服務範圍內,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (虛擬帳號|ATM)
+payuni,ATM06031,無法辨識寄本島或是離島，須技術人員確認,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (虛擬帳號|ATM)
+payuni,ATM06032,未有優惠碼,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (虛擬帳號|ATM)
+payuni,ATM06033,折扣金額，格式錯誤,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (虛擬帳號|ATM)
+payuni,ATM06034,有優惠碼時，折扣金額(DiscountAmt)為必要欄位,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (虛擬帳號|ATM)
+payuni,ATM06035,訂單原始金額，格式錯誤,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (虛擬帳號|ATM)
+payuni,ATM06036,有優惠碼時，訂單原始金額(OrderAmt)為必要欄位,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (虛擬帳號|ATM)
+payuni,ATM06037,訂單原始金額(OrderAmt)不等於訂單金額(TradeAmt)+折扣金額(DiscountAmt),,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (虛擬帳號|ATM)
+payuni,ATM06038,優惠券發券背景通知網址，格式錯誤,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (虛擬帳號|ATM)
+payuni,ATM07001,訂單建立失敗，請稍後再試,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (虛擬帳號|ATM)
+payuni,ATM05001,交易風控(拒絕交易),,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (虛擬帳號|ATM)
+payuni,ATM05002,交易風控(拒絕交易),,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (虛擬帳號|ATM)
+payuni,ATM05003,交易風控(拒絕交易),,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (虛擬帳號|ATM)
+payuni,ATM05004,交易風控(拒絕交易),,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (虛擬帳號|ATM)
+payuni,ATM05005,交易風控(拒絕交易),,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (虛擬帳號|ATM)
+payuni,ATM10001,取得國泰世華虛擬帳號失敗,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (虛擬帳號|ATM)
+payuni,ATM10002,傳遞資料不可為空(國泰世華虛擬帳號建檔),,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (虛擬帳號|ATM)
+payuni,ATM10003,無商店代號(國泰世華虛擬帳號建檔),,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (虛擬帳號|ATM)
+payuni,ATM10004,無虛擬帳號資料(國泰世華虛擬帳號建檔),,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (虛擬帳號|ATM)
+payuni,ATM10005,虛擬帳號建檔筆數超過系統限制(國泰世華),,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (虛擬帳號|ATM)
+payuni,ATM10006,虛擬帳號建檔產XML失敗(國泰世華),,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (虛擬帳號|ATM)
+payuni,ATM10007,虛擬帳號XML檔寫入暫存區失敗(國泰世華),,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (虛擬帳號|ATM)
+payuni,ATM10008,網路連線異常，傳送建檔失敗(國泰世華),,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (虛擬帳號|ATM)
+payuni,ATM10009,驗證建檔結果-無回覆資料(國泰世華),,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (虛擬帳號|ATM)
+payuni,ATM10010,驗證建檔結果-無回應處理狀態(國泰世華),,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (虛擬帳號|ATM)
+payuni,ATM10011,取得虛擬帳號失敗-國泰世華系統維護中,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (虛擬帳號|ATM)
+payuni,CVS01001,已達連線處理上限，請稍後再試,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (超商代碼|CVS)
+payuni,CVS01002,未有商店代號,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (超商代碼|CVS)
+payuni,CVS01003,資料 HASH 比對不符合,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (超商代碼|CVS)
+payuni,CVS01004,資料解密失敗,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (超商代碼|CVS)
+payuni,CVS01005,解密資料不存在,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (超商代碼|CVS)
+payuni,CVS01006,查無符合商店資料,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (超商代碼|CVS)
+payuni,CVS01007,超商代碼編譯異常,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (超商代碼|CVS)
+payuni,CVS01008,超商代碼取號失敗,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (超商代碼|CVS)
+payuni,CVS01019,商店尚未啟用優惠券,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (超商代碼|CVS)
+payuni,CVS02001,未有商店代號,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (超商代碼|CVS)
+payuni,CVS02002,未有商店訂單編號,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (超商代碼|CVS)
+payuni,CVS02003,商店訂單編號，超過長度限制,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (超商代碼|CVS)
+payuni,CVS02004,商店訂單編號，格式錯誤,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (超商代碼|CVS)
+payuni,CVS02005,未有訂單金額,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (超商代碼|CVS)
+payuni,CVS02006,訂單金額，僅可輸入整數,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (超商代碼|CVS)
+payuni,CVS02007,訂單金額，格式錯誤,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (超商代碼|CVS)
+payuni,CVS02008,未有時間戳記,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (超商代碼|CVS)
+payuni,CVS02009,時間戳記，僅可輸入整數,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (超商代碼|CVS)
+payuni,CVS02010,時間戳記，已過期,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (超商代碼|CVS)
+payuni,CVS02011,繳費期限日期格式有誤，應為日期格式,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (超商代碼|CVS)
+payuni,CVS02012,繳費期限日期為無效日期，請重新確認,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (超商代碼|CVS)
+payuni,CVS02013,無法載入該超商系統程序檔,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (超商代碼|CVS)
+payuni,CVS02014,NotifyURL 格式有誤，請確認,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (超商代碼|CVS)
+payuni,CVS02015,寄送信箱，格式錯誤,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (超商代碼|CVS)
+payuni,CVS02017,收(寄)件人姓名僅支援輸入中文/英文/數字,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (超商代碼|CVS)
+payuni,CVS02018,未有超商代碼,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (超商代碼|CVS)、交易取消(超商代碼|CVS)
+payuni,CVS02019,超商代碼長度規格有誤,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (超商代碼|CVS)、交易取消(超商代碼|CVS)
+payuni,CVS02020,查無該筆訂單資料,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (超商代碼|CVS)、交易取消(超商代碼|CVS)
+payuni,CVS02021,該筆訂單已經無法取消代碼了,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (超商代碼|CVS)、交易取消(超商代碼|CVS)
+payuni,CVS02022,該筆訂單因已有物流單已處理，無法取消代碼了,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (超商代碼|CVS)、交易取消(超商代碼|CVS)
+payuni,CVS02023,無法取得超商代碼中的驗證碼(4碼),,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (超商代碼|CVS)、交易取消(超商代碼|CVS)
+payuni,CVS02024,系統異常，無法取得超商代碼編碼流水號,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (超商代碼|CVS)、交易取消(超商代碼|CVS)
+payuni,CVS02025,取消超商代碼失敗,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (超商代碼|CVS)、交易取消(超商代碼|CVS)
+payuni,CVS02026,系統異常，取消條件不齊全,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (超商代碼|CVS)、交易取消(超商代碼|CVS)
+payuni,CVS02027,更新訂單狀態失敗(取消超商代碼),,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (超商代碼|CVS)、交易取消(超商代碼|CVS)
+payuni,CVS02028,更新物流單狀態失敗(取消超商代碼),,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (超商代碼|CVS)
+payuni,CVS02029,更新宅配單狀態失敗(取消超商代碼),,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (超商代碼|CVS)
+payuni,CVS02030,未有買方名稱(抬頭),,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (超商代碼|CVS)
+payuni,CVS02031,買方統編長度有誤,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (超商代碼|CVS)
+payuni,CVS02032,未有消費者電子信箱,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (超商代碼|CVS)
+payuni,CVS02033,未有載具類別,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (超商代碼|CVS)
+payuni,CVS02034,無法辨識的載具類別,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (超商代碼|CVS)
+payuni,CVS02035,載具資料不可為空(手機條碼、自然人憑證條碼或是捐贈碼),,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (超商代碼|CVS)
+payuni,CVS02036,買方統編格式有誤,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (超商代碼|CVS)
+payuni,CVS02037,未有公司統編,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (超商代碼|CVS)
+payuni,CVS02038,商店不提供捐贈發票選項,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (超商代碼|CVS)
+payuni,CVS02039,此捐贈碼不在商店提供範圍內,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (超商代碼|CVS)
+payuni,CVS02040,手機條碼不正確,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (超商代碼|CVS)
+payuni,CVS02042,繳費期限最少應設定訂單成立後 2 小時,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (超商代碼|CVS)
+payuni,CVS03001,商店未啟用,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (超商代碼|CVS)
+payuni,CVS03002,商店未啟用超商代碼服務,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (超商代碼|CVS)
+payuni,CVS03003,未有代理商幕後相關設定,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (超商代碼|CVS)
+payuni,CVS03004,不提供此IP幕後交易,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (超商代碼|CVS)
+payuni,CVS03005,商店未提供超商代碼幕後交易,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (超商代碼|CVS)
+payuni,CVS03007,商店未有設定AesType,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (超商代碼|CVS)
+payuni,CVS03008,商店AesType不符合,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (超商代碼|CVS)
+payuni,CVS04001,已存在相同商店訂單編號,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (超商代碼|CVS)
+payuni,CVS04002,未有交易唯一Token,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (超商代碼|CVS)
+payuni,CVS04003,訂單已失效,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (超商代碼|CVS)
+payuni,CVS04004,訂單失敗,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (超商代碼|CVS)
+payuni,CVS04005,訂單已取消,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (超商代碼|CVS)
+payuni,CVS06001,未有API處理結果,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (超商代碼|CVS)
+payuni,CVS06002,回傳加密失敗,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (超商代碼|CVS)
+payuni,CVS06006,無法辨識的取貨後付款方式,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (超商代碼|CVS)
+payuni,CVS06032,未有優惠碼,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (超商代碼|CVS)
+payuni,CVS06033,折扣金額，格式錯誤,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (超商代碼|CVS)
+payuni,CVS06034,有優惠碼時，折扣金額(DiscountAmt)為必要欄位,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (超商代碼|CVS)
+payuni,CVS06035,訂單原始金額，格式錯誤,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (超商代碼|CVS)
+payuni,CVS06036,有優惠碼時，訂單原始金額(OrderAmt)為必要欄位,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (超商代碼|CVS)
+payuni,CVS06037,訂單原始金額(OrderAmt)不等於訂單金額(TradeAmt)+折扣金額(DiscountAmt),,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (超商代碼|CVS)
+payuni,CVS06038,優惠券發券背景通知網址，格式錯誤,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (超商代碼|CVS)
+payuni,CVS05001,交易風控，黑名單(IP)，取得失敗,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (超商代碼|CVS)
+payuni,CVS05002,交易風控，黑名單(IP-全平台禁止),,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (超商代碼|CVS)
+payuni,CVS05003,交易風控，黑名單(IP-該商店禁止),,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (超商代碼|CVS)
+payuni,CVS05004,交易風控，黑名單(IP-該會員禁止),,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (超商代碼|CVS)
+payuni,CVS05005,交易風控，白名單(IP),,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (超商代碼|CVS)
+payuni,REF01001,已達連線處理上限，請稍後再試,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：非信用卡退款轉匯
+payuni,REF01002,未有商店代號,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：非信用卡退款轉匯
+payuni,REF01003,資料 HASH 比對不符合,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：非信用卡退款轉匯
+payuni,REF01004,資料解密失敗,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：非信用卡退款轉匯
+payuni,REF01005,解密資料不存在,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：非信用卡退款轉匯
+payuni,REF01006,查無符合商店資料,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：非信用卡退款轉匯
+payuni,REF01007,網路連線異常,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：非信用卡退款轉匯
+payuni,REF01017,未有代理商幕後相關設定,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：非信用卡退款轉匯
+payuni,REF01018,不提供此IP幕後交易,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：非信用卡退款轉匯
+payuni,REF01019,商店未有設定AesType,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：非信用卡退款轉匯
+payuni,REF01020,商店AesType不符合,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：非信用卡退款轉匯
+payuni,REF02001,未有商店代號,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：非信用卡退款轉匯
+payuni,REF02002,未有商店訂單編號,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：非信用卡退款轉匯
+payuni,REF02003,商店訂單編號，超過長度限制,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：非信用卡退款轉匯
+payuni,REF02004,商店訂單編號，格式錯誤,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：非信用卡退款轉匯
+payuni,REF02005,未有退款金額,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：非信用卡退款轉匯
+payuni,REF02006,退款金額，僅可輸入整數,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：非信用卡退款轉匯
+payuni,REF02007,退款金額，格式錯誤,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：非信用卡退款轉匯
+payuni,REF02008,未有時間戳記,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：非信用卡退款轉匯
+payuni,REF02009,時間戳記，僅可輸入整數,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：非信用卡退款轉匯
+payuni,REF02010,時間戳記，已過期,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：非信用卡退款轉匯
+payuni,REF02011,未有支付方式,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：非信用卡退款轉匯
+payuni,REF02012,無法辨識的支付方式,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：非信用卡退款轉匯
+payuni,REF02018,無銀行代碼(3碼),,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：非信用卡退款轉匯
+payuni,REF02019,銀行代碼格式錯誤,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：非信用卡退款轉匯
+payuni,REF02020,無銀行[分行代碼](4碼),,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：非信用卡退款轉匯
+payuni,REF02021,銀行[分行代碼]格式錯誤,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：非信用卡退款轉匯
+payuni,REF02022,無收款人金融帳戶號碼,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：非信用卡退款轉匯
+payuni,REF02023,收款人金融帳戶號碼格式錯誤,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：非信用卡退款轉匯
+payuni,REF02024,無收款人金融帳戶戶名,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：非信用卡退款轉匯
+payuni,REF02025,無收款人身分證字號或是公司統編,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：非信用卡退款轉匯
+payuni,REF02026,未有UNi序號,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：非信用卡退款轉匯
+payuni,REF02028,收款人身分證字號或是公司統編格式有誤,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：非信用卡退款轉匯
+payuni,REF02030,UNi序號，超過長度限制,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：非信用卡退款轉匯
+payuni,REF02031,UNi序號格式有誤,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：非信用卡退款轉匯
+payuni,REF02032,返回商店網址格式有誤,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：非信用卡退款轉匯
+payuni,REF02033,前景導回網址，格式錯誤,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：非信用卡退款轉匯
+payuni,REF02034,無法取得金融機構名單資料,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：非信用卡退款轉匯
+payuni,REF02035,查無該筆訂單資料,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：非信用卡退款轉匯
+payuni,REF02036,該訂單支付方式暫不支援退款轉匯相關功能,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：非信用卡退款轉匯
+payuni,REF02037,無足夠金額可退款,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：非信用卡退款轉匯
+payuni,REF02038,該筆退款訂單的支付工具類別有誤,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：非信用卡退款轉匯
+payuni,REF03001,商店未啟用,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：非信用卡退款轉匯
+payuni,REF03002,商店未提供非信用卡退款轉匯幕後交易服務,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：非信用卡退款轉匯
+payuni,REF03003,商店未啟用非信用卡退款轉匯服務,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：非信用卡退款轉匯
+payuni,REF03004,商店退款功能已受限制,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：非信用卡退款轉匯
+payuni,REF04001,已存在相同商店訂單編號,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：非信用卡退款轉匯
+payuni,REF06001,未有API處理結果,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：非信用卡退款轉匯
+payuni,REF06002,回傳加密失敗,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：非信用卡退款轉匯
+payuni,REF05001,查無該會員的詳細資料,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：非信用卡退款轉匯
+payuni,REF05002,查無該商店的虛擬資金資訊,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：非信用卡退款轉匯
+payuni,REF05003,該訂單不為付款完成狀態，無法退款,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：非信用卡退款轉匯
+payuni,REF05004,該訂單付款完成日期時間，已超過可退款的期限,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：非信用卡退款轉匯
+payuni,REF05005,該帳戶的金融機構分行已不存在或是合併，無法使用,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：非信用卡退款轉匯
+payuni,REF05006,已有退款處理中，請先取消退款再重新,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：非信用卡退款轉匯
+payuni,REF05007,更新支付金額資料失敗,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：非信用卡退款轉匯
+payuni,REF05008,更新預計撥款日期失敗,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：非信用卡退款轉匯
+payuni,REF05009,新增退款匯轉資料失敗,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：非信用卡退款轉匯
+payuni,REF05010,更新系統流水號末6碼失敗,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：非信用卡退款轉匯
+payuni,REF05011,金融機構代碼格式有誤,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：非信用卡退款轉匯
+payuni,REF05012,該金融機構分行已將業務移轉至其它分行服務了，請更換其他金融帳戶,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：非信用卡退款轉匯
+payuni,REF05013,該筆退款資料已無法取消,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：非信用卡退款轉匯
+payuni,REF05014,已超過可取消退款操作的時間,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：非信用卡退款轉匯
+payuni,REF05015,更新該筆退款訂單狀態失敗,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：非信用卡退款轉匯
+payuni,REF05016,更新該筆訂單失敗,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：非信用卡退款轉匯
+payuni,REF05017,更新前筆退款轉匯紀錄狀態失敗,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：非信用卡退款轉匯
+payuni,REF05018,更新商店資金池失敗,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：非信用卡退款轉匯
+payuni,REF05019,新增帳務明細紀錄表失敗,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：非信用卡退款轉匯
+payuni,REF05020,還原預計撥款日期失敗,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：非信用卡退款轉匯
+payuni,REF05021,取消退款轉匯申請失敗,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：非信用卡退款轉匯
+payuni,QUERY01001,[交易查詢、信用卡綁定查詢 (約定) (CREDIT)] 未有商店代號 / [撥款提領查詢] 解密資料不存在,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易查詢、信用卡綁定查詢 (約定) (CREDIT)、撥款提領查詢
+payuni,QUERY01002,[交易查詢、信用卡綁定查詢 (約定) (CREDIT)] 資料 HASH 比對不符合 / [撥款提領查詢] 查無符合商店資料,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易查詢、信用卡綁定查詢 (約定) (CREDIT)、撥款提領查詢
+payuni,QUERY01003,資料解密失敗,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易查詢、信用卡綁定查詢 (約定) (CREDIT)
+payuni,QUERY01004,解密資料不存在,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易查詢、信用卡綁定查詢 (約定) (CREDIT)
+payuni,QUERY01005,查無符合商店資料,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易查詢、信用卡綁定查詢 (約定) (CREDIT)
+payuni,QUERY01006,網路連線異常,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易查詢、信用卡綁定查詢 (約定) (CREDIT)
+payuni,QUERY02001,[交易查詢、撥款提領查詢] 未有商店代號 / [信用卡綁定查詢 (約定) (CREDIT)] 綁定Token/Hash，請擇一送入,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易查詢、信用卡綁定查詢 (約定) (CREDIT)、撥款提領查詢
+payuni,QUERY02002,[交易查詢] 商店訂單或訂單編號，請擇一送入 / [信用卡綁定查詢 (約定) (CREDIT)] 未有商店代號 / [撥款提領查詢] 未有查詢日期,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易查詢、信用卡綁定查詢 (約定) (CREDIT)、撥款提領查詢
+payuni,QUERY02003,[交易查詢] 商店訂單編號，超過長度限制 / [信用卡綁定查詢 (約定) (CREDIT)] 未有時間戳記 / [撥款提領查詢] 查詢日期格式錯誤(yyyy-mm-dd),,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易查詢、信用卡綁定查詢 (約定) (CREDIT)、撥款提領查詢
+payuni,QUERY02004,[交易查詢] 商店訂單編號，格式錯誤 / [信用卡綁定查詢 (約定) (CREDIT)] 時間戳記，僅可輸入整數 / [撥款提領查詢] 查詢日期須30天內，請重新確認,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易查詢、信用卡綁定查詢 (約定) (CREDIT)、撥款提領查詢
+payuni,QUERY02005,[交易查詢] 訂單編號，超過長度限制 / [信用卡綁定查詢 (約定) (CREDIT)] 時間戳記，已過期 / [撥款提領查詢] 頁碼錯誤，僅可輸入整數,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易查詢、信用卡綁定查詢 (約定) (CREDIT)、撥款提領查詢
+payuni,QUERY02006,[交易查詢] 訂單編號，格式錯誤 / [信用卡綁定查詢 (約定) (CREDIT)] 未有綁定Token類型,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易查詢、信用卡綁定查詢 (約定) (CREDIT)
+payuni,QUERY02007,[交易查詢] 未有時間戳記 / [信用卡綁定查詢 (約定) (CREDIT)] 綁定Token類型，格式錯誤,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易查詢、信用卡綁定查詢 (約定) (CREDIT)
+payuni,QUERY02008,時間戳記，僅可輸入整數,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易查詢
+payuni,QUERY02009,時間戳記，已過期,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易查詢
+payuni,QUERY02010,未有查詢類別,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易查詢
+payuni,QUERY02011,非可使用的查詢類別,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易查詢
+payuni,QUERY02012,參數格式錯誤(QueryNo),,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易查詢
+payuni,QUERY02013,超過單次可查詢筆數上限,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易查詢
+payuni,QUERY03001,[交易查詢] 查無符合訂單資料 / [信用卡綁定查詢 (約定) (CREDIT)] 查無符合綁定資料 / [撥款提領查詢] 網路連線異常,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易查詢、信用卡綁定查詢 (約定) (CREDIT)、撥款提領查詢
+payuni,QUERY04001,未有API處理結果,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易查詢、撥款提領查詢
+payuni,QUERY04002,回傳加密失敗,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易查詢
+payuni,CREDIT01000,系統發生錯誤，請聯絡客服,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (信用卡|CREDIT)
+payuni,CREDIT01001,已達連線處理上限，請稍後再試,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (信用卡|CREDIT)
+payuni,CREDIT01002,未有商店代號,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (信用卡|CREDIT)
+payuni,CREDIT01003,資料 HASH 比對不符合,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (信用卡|CREDIT)
+payuni,CREDIT01004,資料解密失敗,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (信用卡|CREDIT)
+payuni,CREDIT01005,解密資料不存在,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (信用卡|CREDIT)
+payuni,CREDIT01006,[交易建立 (信用卡|CREDIT)] 查無符合商店資料 / [交易建立 (信用卡|CREDIT)] 查無符合代理商資料 / [交易建立 (信用卡|CREDIT)] 代理商狀態不符合,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (信用卡|CREDIT)
+payuni,CREDIT01007,未有交易 HASH,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (信用卡|CREDIT)
+payuni,CREDIT01008,查無符合商店物流資料,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (信用卡|CREDIT)
+payuni,CREDIT01009,商店B2C物流服務尚未開通,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (信用卡|CREDIT)
+payuni,CREDIT01010,商店C2C物流服務尚未開通,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (信用卡|CREDIT)
+payuni,CREDIT01011,商店未啟用B2C物流服務,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (信用卡|CREDIT)
+payuni,CREDIT01012,商店未啟用C2C物流服務,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (信用卡|CREDIT)
+payuni,CREDIT01013,收(寄)件人姓名僅支援輸入中文/英文/數字,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (信用卡|CREDIT)
+payuni,CREDIT02001,未有商店代號,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (信用卡|CREDIT)
+payuni,CREDIT02002,未有商店訂單編號,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (信用卡|CREDIT)
+payuni,CREDIT02003,商店訂單編號，超過長度限制,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (信用卡|CREDIT)
+payuni,CREDIT02004,商店訂單編號，格式錯誤,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (信用卡|CREDIT)
+payuni,CREDIT02005,未有訂單金額,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (信用卡|CREDIT)
+payuni,CREDIT02006,訂單金額，僅可輸入整數,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (信用卡|CREDIT)
+payuni,CREDIT02007,訂單金額，不為允許範圍區間,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (信用卡|CREDIT)
+payuni,CREDIT02008,未有時間戳記,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (信用卡|CREDIT)
+payuni,CREDIT02009,時間戳記，僅可輸入整數,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (信用卡|CREDIT)
+payuni,CREDIT02010,時間戳記，已過期,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (信用卡|CREDIT)
+payuni,CREDIT02011,未有信用卡號,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (信用卡|CREDIT)
+payuni,CREDIT02012,信用卡號，僅可輸入整數,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (信用卡|CREDIT)
+payuni,CREDIT02013,信用卡號，長度限制錯誤,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (信用卡|CREDIT)
+payuni,CREDIT02014,未有信用卡到期日,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (信用卡|CREDIT)
+payuni,CREDIT02015,信用卡到期日，格式錯誤,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (信用卡|CREDIT)
+payuni,CREDIT02016,信用卡到期日，年份格式錯誤,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (信用卡|CREDIT)
+payuni,CREDIT02017,信用卡到期日，月份格式錯誤,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (信用卡|CREDIT)
+payuni,CREDIT02018,信用卡末三碼，長度限制錯誤,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (信用卡|CREDIT)
+payuni,CREDIT02019,信用卡末三碼，格式錯誤,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (信用卡|CREDIT)
+payuni,CREDIT02020,信用卡分期數，期數格式錯誤,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (信用卡|CREDIT)
+payuni,CREDIT02021,信用卡類型，格式錯誤,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (信用卡|CREDIT)
+payuni,CREDIT02022,背景通知網址，格式錯誤,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (信用卡|CREDIT)
+payuni,CREDIT02023,未有信用卡末三碼,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (信用卡|CREDIT)
+payuni,CREDIT02024,寄送信箱，格式錯誤,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (信用卡|CREDIT)
+payuni,CREDIT02025,約定信用卡不存在,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (信用卡|CREDIT)
+payuni,CREDIT02026,約定信用卡不符合，限制會員使用,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (信用卡|CREDIT)
+payuni,CREDIT02027,約定信用卡不符合，限制商店使用,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (信用卡|CREDIT)
+payuni,CREDIT02028,綁定Token，長度超過限制,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (信用卡|CREDIT)
+payuni,CREDIT02029,綁定Token，格式錯誤,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (信用卡|CREDIT)
+payuni,CREDIT02030,綁定Token類型，格式錯誤,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (信用卡|CREDIT)
+payuni,CREDIT02031,綁定有效期間，格式錯誤,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (信用卡|CREDIT)
+payuni,CREDIT02032,綁定有效期間，年份格式錯誤,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (信用卡|CREDIT)
+payuni,CREDIT02033,綁定有效期間，月份格式錯誤,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (信用卡|CREDIT)
+payuni,CREDIT02034,API3D，格式錯誤,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (信用卡|CREDIT)
+payuni,CREDIT02035,不提供國外卡分期,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (信用卡|CREDIT)
+payuni,CREDIT02036,不提供國外卡紅利,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (信用卡|CREDIT)
+payuni,CREDIT02037,物流(取貨不付款)，未有電子信箱,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (信用卡|CREDIT)
+payuni,CREDIT02038,物流(取貨不付款)，電子信箱格式錯誤,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (信用卡|CREDIT)
+payuni,CREDIT02039,物流(取貨不付款)，未有寄件型態,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (信用卡|CREDIT)
+payuni,CREDIT02040,物流(取貨不付款)，無法辨識的寄件型態,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (信用卡|CREDIT)
+payuni,CREDIT02041,物流(取貨不付款)，未有物流別,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (信用卡|CREDIT)
+payuni,CREDIT02042,物流(取貨不付款)，無法辨識的物流別,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (信用卡|CREDIT)
+payuni,CREDIT02043,物流(取貨不付款)，未有超商別,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (信用卡|CREDIT)
+payuni,CREDIT02044,物流(取貨不付款)，無法辨識的超商別,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (信用卡|CREDIT)
+payuni,CREDIT02045,物流(取貨不付款)，無超商的合作模式資訊,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (信用卡|CREDIT)
+payuni,CREDIT02046,物流(取貨不付款)，無法辨識的取貨後付款方式,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (信用卡|CREDIT)
+payuni,CREDIT02047,物流(取貨不付款)，無超商的門市代碼,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (信用卡|CREDIT)
+payuni,CREDIT02048,[交易建立 (信用卡|CREDIT)] 物流(取貨不付款)，未有收件人姓名 / [交易建立 (信用卡|CREDIT)] 物流(取貨不付款)，收件人姓名，長度超過限制,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (信用卡|CREDIT)
+payuni,CREDIT02049,物流(取貨不付款)，未有收件人手機號碼,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (信用卡|CREDIT)
+payuni,CREDIT02050,物流(取貨不付款)，手機號碼格式錯誤(09開頭),,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (信用卡|CREDIT)
+payuni,CREDIT02051,物流(取貨不付款)，暫不支援此物流,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (信用卡|CREDIT)
+payuni,CREDIT02052,物流(取貨不付款)，該門市無法配送，請重新選擇門市,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (信用卡|CREDIT)
+payuni,CREDIT02053,"""GrantExport參數值錯誤",,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (信用卡|CREDIT)
+payuni,CREDIT02054,使用Token類型，格式錯誤,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (信用卡|CREDIT)
+payuni,CREDIT02055,不提供信用卡(國內卡)交易,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (信用卡|CREDIT)
+payuni,CREDIT02056,不提供信用卡(國外卡)交易,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (信用卡|CREDIT)
+payuni,CREDIT02057,使用者IP格式錯誤,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (信用卡|CREDIT)
+payuni,CREDIT02058,物流(取貨不付款)，收件人電話區碼長度超過限制,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (信用卡|CREDIT)
+payuni,CREDIT02059,物流(取貨不付款)，收件人電話區碼格式錯誤,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (信用卡|CREDIT)
+payuni,CREDIT02060,物流(取貨不付款)，收件人電話長度超過限制,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (信用卡|CREDIT)
+payuni,CREDIT02061,物流(取貨不付款)，收件人電話格式錯誤,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (信用卡|CREDIT)
+payuni,CREDIT02062,物流(取貨不付款)，未有收件人地址,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (信用卡|CREDIT)
+payuni,CREDIT02063,物流(取貨不付款)，收件人地址長度超過限制,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (信用卡|CREDIT)
+payuni,CREDIT02064,物流(取貨不付款)，未有希望配達時間代碼,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (信用卡|CREDIT)
+payuni,CREDIT02065,物流(取貨不付款)，無法辨識的希望配達時間代碼,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (信用卡|CREDIT)
+payuni,CREDIT02066,物流(取貨不付款)，未有商品說明,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (信用卡|CREDIT)
+payuni,CREDIT02067,未有消費者電子信箱,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (信用卡|CREDIT)
+payuni,CREDIT02068,未有買方名稱(抬頭),,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (信用卡|CREDIT)
+payuni,CREDIT02069,未有載具類別,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (信用卡|CREDIT)
+payuni,CREDIT02070,無法辨識的載具類別,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (信用卡|CREDIT)
+payuni,CREDIT02071,載具資料不可為空,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (信用卡|CREDIT)
+payuni,CREDIT02072,載具資料，格式錯誤,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (信用卡|CREDIT)
+payuni,CREDIT02073,載具資料，格式錯誤(長度),,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (信用卡|CREDIT)
+payuni,CREDIT02074,商店不提供捐贈發票選項,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (信用卡|CREDIT)
+payuni,CREDIT02078,未有優惠碼,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (信用卡|CREDIT)
+payuni,CREDIT02079,折扣金額，格式錯誤,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (信用卡|CREDIT)
+payuni,CREDIT02080,有優惠碼時，折扣金額(DiscountAmt)為必要欄位內,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (信用卡|CREDIT)
+payuni,CREDIT02081,訂單原始金額，格式錯誤,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (信用卡|CREDIT)
+payuni,CREDIT02082,有優惠碼時，訂單原始金額(OrderAmt)為必要欄位,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (信用卡|CREDIT)
+payuni,CREDIT02083,訂單原始金額(OrderAmt)不等於訂單金額(TradeAmt)+折扣金額(DiscountAmt),,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (信用卡|CREDIT)
+payuni,CREDIT02084,優惠券發券背景通知網址，格式錯誤,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (信用卡|CREDIT)
+payuni,CREDIT03001,商店未啟用,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (信用卡|CREDIT)
+payuni,CREDIT03002,商店未提供信用卡一次,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (信用卡|CREDIT)
+payuni,CREDIT03003,商店未提供信用卡分期,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (信用卡|CREDIT)
+payuni,CREDIT03004,商店未提供信用卡紅利,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (信用卡|CREDIT)
+payuni,CREDIT03005,商店設定為3D商店,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (信用卡|CREDIT)
+payuni,CREDIT03006,商店未提供信用卡銀聯,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (信用卡|CREDIT)
+payuni,CREDIT03007,商店未提供信用卡幕後交易,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (信用卡|CREDIT)
+payuni,CREDIT03008,商店未提供約定信用卡幕後交易,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (信用卡|CREDIT)
+payuni,CREDIT03009,未有代理商幕後相關設定,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (信用卡|CREDIT)
+payuni,CREDIT03010,不提供此IP幕後交易,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (信用卡|CREDIT)
+payuni,CREDIT03012,商店未有設定AesType,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (信用卡|CREDIT)
+payuni,CREDIT03013,商店AesType不符合,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (信用卡|CREDIT)
+payuni,CREDIT03014,買方會員資料取得(驗證)失敗,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (信用卡|CREDIT)
+payuni,CREDIT03015,商店尚未啟用電子發票,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (信用卡|CREDIT)
+payuni,CREDIT03016,商店尚未啟用優惠券,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (信用卡|CREDIT)
+payuni,CREDIT04001,已存在相同商店訂單編號,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (信用卡|CREDIT)
+payuni,CREDIT04002,未有交易唯一Token,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (信用卡|CREDIT)
+payuni,CREDIT05001,取得授權閘道失敗,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (信用卡|CREDIT)
+payuni,CREDIT05002,授權失敗,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (信用卡|CREDIT)
+payuni,CREDIT05003,已取消授權(ECI不符合),,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (信用卡|CREDIT)
+payuni,CREDIT05004,已取消授權,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (信用卡|CREDIT)
+payuni,CREDIT05010,授權連線失敗,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (信用卡|CREDIT)
+payuni,CREDIT05011,授權回覆設定失敗,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (信用卡|CREDIT)
+payuni,CREDIT06001,未有API處理結果,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (信用卡|CREDIT)
+payuni,CREDIT06002,回傳加密失敗,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (信用卡|CREDIT)
+payuni,CREDIT07000,系統發生錯誤(00)，請聯絡客服,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (信用卡|CREDIT)
+payuni,CREDIT07001,系統發生錯誤(01)，請聯絡客服,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (信用卡|CREDIT)
+payuni,CREDIT07002,設定交易風控失敗,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (信用卡|CREDIT)
+payuni,CREDIT07003,信用卡交易額度，未設置,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (信用卡|CREDIT)
+payuni,CREDIT07004,商店信用卡收款額度已達上限，無法進行信用卡交易,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (信用卡|CREDIT)
+payuni,CREDIT07005,信用卡交易風控，同卡號達授權成功上限,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (信用卡|CREDIT)
+payuni,CREDIT07006,信用卡交易風控，卡片已鎖定,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (信用卡|CREDIT)
+payuni,CREDIT07007,信用卡交易風控，IP已鎖定,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (信用卡|CREDIT)
+payuni,CREDIT07008,交易風控，黑名單(卡號)，取得失敗,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (信用卡|CREDIT)
+payuni,CREDIT07009,交易風控，黑名單(卡號-全平台禁止),,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (信用卡|CREDIT)
+payuni,CREDIT07010,交易風控，黑名單(卡號-該商店禁止),,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (信用卡|CREDIT)
+payuni,CREDIT07011,交易風控，黑名單(卡號-該會員禁止),,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (信用卡|CREDIT)
+payuni,CREDIT07012,交易風控，黑名單(IP)，取得失敗,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (信用卡|CREDIT)
+payuni,CREDIT07013,交易風控，黑名單(IP-全平台禁止),,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (信用卡|CREDIT)
+payuni,CREDIT07014,交易風控，黑名單(IP-該商店禁止),,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (信用卡|CREDIT)
+payuni,CREDIT07015,交易風控，黑名單(IP-該會員禁止),,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (信用卡|CREDIT)
+payuni,CREDIT07016,單筆額度超過限制,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (信用卡|CREDIT)
+payuni,CREDIT07017,交易風控(拒絕交易),,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (信用卡|CREDIT)
+payuni,CREDIT07018,交易風控(拒絕交易),,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (信用卡|CREDIT)
+payuni,CREDIT08001,建立TokenHash失敗,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (信用卡|CREDIT)
+payuni,CREDIT08002,建立幕後3D失敗,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (信用卡|CREDIT)
+payuni,CREDIT08003,[交易建立 (信用卡|CREDIT)] 訂單建立失敗，請稍後再試 / [交易建立 (信用卡|CREDIT)] 訂單建立失敗(物流資料失敗)，請稍後再試,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (信用卡|CREDIT)
+payuni,CLOSE01001,未有商店代號,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易請退款 (信用卡|CREDIT)
+payuni,CLOSE01002,資料 HASH 比對不符合,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易請退款 (信用卡|CREDIT)
+payuni,CLOSE01003,資料解密失敗,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易請退款 (信用卡|CREDIT)
+payuni,CLOSE01004,解密資料不存在,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易請退款 (信用卡|CREDIT)
+payuni,CLOSE01005,查無符合商店資料,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易請退款 (信用卡|CREDIT)
+payuni,CLOSE01006,網路連線異常,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易請退款 (信用卡|CREDIT)
+payuni,CLOSE01007,商店退款功能已受限制,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易請退款 (信用卡|CREDIT)
+payuni,CLOSE02001,未有商店代號,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易請退款 (信用卡|CREDIT)
+payuni,CLOSE02005,訂單編號，超過長度限制,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易請退款 (信用卡|CREDIT)
+payuni,CLOSE02006,訂單編號，格式錯誤,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易請退款 (信用卡|CREDIT)
+payuni,CLOSE02007,未有時間戳記,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易請退款 (信用卡|CREDIT)
+payuni,CLOSE02008,時間戳記，僅可輸入整數,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易請退款 (信用卡|CREDIT)
+payuni,CLOSE02009,時間戳記，已過期,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易請退款 (信用卡|CREDIT)
+payuni,CLOSE02010,未有請退款金額,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易請退款 (信用卡|CREDIT)
+payuni,CLOSE02011,請退款金額，僅可輸入整數,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易請退款 (信用卡|CREDIT)
+payuni,CLOSE02012,請退款金額，格式錯誤,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易請退款 (信用卡|CREDIT)
+payuni,CLOSE02013,未有執行類別,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易請退款 (信用卡|CREDIT)
+payuni,CLOSE02014,執行類別，僅可輸入整數,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易請退款 (信用卡|CREDIT)
+payuni,CLOSE02015,執行類別，數值錯誤,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易請退款 (信用卡|CREDIT)
+payuni,CLOSE02016,未有訂單編號,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易請退款 (信用卡|CREDIT)
+payuni,CLOSE03001,處理失敗,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易請退款 (信用卡|CREDIT)
+payuni,CLOSE04001,未有API處理結果,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易請退款 (信用卡|CREDIT)
+payuni,CLOSE04002,回傳加密失敗,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易請退款 (信用卡|CREDIT)
+payuni,CANCEL01001,未有商店代號,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易取消授權 (信用卡|CREDIT)、信用卡綁定取消 (約定/快速) (CREDIT)
+payuni,CANCEL01002,資料 HASH 比對不符合,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易取消授權 (信用卡|CREDIT)、信用卡綁定取消 (約定/快速) (CREDIT)
+payuni,CANCEL01003,資料解密失敗,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易取消授權 (信用卡|CREDIT)、信用卡綁定取消 (約定/快速) (CREDIT)
+payuni,CANCEL01004,解密資料不存在,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易取消授權 (信用卡|CREDIT)、信用卡綁定取消 (約定/快速) (CREDIT)
+payuni,CANCEL01005,查無符合商店資料,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易取消授權 (信用卡|CREDIT)、信用卡綁定取消 (約定/快速) (CREDIT)
+payuni,CANCEL01006,網路連線異常,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易取消授權 (信用卡|CREDIT)、信用卡綁定取消 (約定/快速) (CREDIT)
+payuni,CANCEL02001,未有商店代號,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易取消授權 (信用卡|CREDIT)、信用卡綁定取消 (約定/快速) (CREDIT)
+payuni,CANCEL02005,[交易取消授權 (信用卡|CREDIT)] 訂單編號，超過長度限制 / [信用卡綁定取消 (約定/快速) (CREDIT)] 未有綁定類型,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易取消授權 (信用卡|CREDIT)、信用卡綁定取消 (約定/快速) (CREDIT)
+payuni,CANCEL02006,[交易取消授權 (信用卡|CREDIT)] 訂單編號，格式錯誤 / [信用卡綁定取消 (約定/快速) (CREDIT)] 綁定類型，格式錯誤,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易取消授權 (信用卡|CREDIT)、信用卡綁定取消 (約定/快速) (CREDIT)
+payuni,CANCEL02007,[交易取消授權 (信用卡|CREDIT)] 未有時間戳記 / [信用卡綁定取消 (約定/快速) (CREDIT)] 未有綁定唯一值,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易取消授權 (信用卡|CREDIT)、信用卡綁定取消 (約定/快速) (CREDIT)
+payuni,CANCEL02008,[交易取消授權 (信用卡|CREDIT)] 時間戳記，僅可輸入整數 / [信用卡綁定取消 (約定/快速) (CREDIT)] 未有綁定Token類型,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易取消授權 (信用卡|CREDIT)、信用卡綁定取消 (約定/快速) (CREDIT)
+payuni,CANCEL02009,[交易取消授權 (信用卡|CREDIT)] 時間戳記，已過期 / [信用卡綁定取消 (約定/快速) (CREDIT)] 綁定Token類型，格式錯誤,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易取消授權 (信用卡|CREDIT)、信用卡綁定取消 (約定/快速) (CREDIT)
+payuni,CANCEL02010,未有訂單編號,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易取消授權 (信用卡|CREDIT)
+payuni,CANCEL03001,[交易取消授權 (信用卡|CREDIT)] 取消授權失敗 / [信用卡綁定取消 (約定/快速) (CREDIT)] 取消失敗,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易取消授權 (信用卡|CREDIT)、信用卡綁定取消 (約定/快速) (CREDIT)
+payuni,CANCEL04001,未有API處理結果,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易取消授權 (信用卡|CREDIT)
+payuni,CANCEL04002,回傳加密失敗,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易取消授權 (信用卡|CREDIT)
+payuni,QUERY03002,[信用卡綁定查詢 (約定) (CREDIT)] 查詢綁定資料失敗，不符合該會員 / [撥款提領查詢] 查無符合撥款/提領資料,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：信用卡綁定查詢 (約定) (CREDIT)、撥款提領查詢
+payuni,QUERY03003,查詢綁定資料失敗，不符合該商店,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：信用卡綁定查詢 (約定) (CREDIT)
+payuni,CANCEL02002,未有時間戳記,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：信用卡綁定取消 (約定/快速) (CREDIT)
+payuni,CANCEL02003,時間戳記，僅可輸入整數,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：信用卡綁定取消 (約定/快速) (CREDIT)
+payuni,CANCEL02004,時間戳記，已過期,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：信用卡綁定取消 (約定/快速) (CREDIT)
+payuni,ICASH01008,查無符合商店資料(MID),,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (愛金卡|ICASH)
+payuni,ICASH02001,未有商店代號,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (愛金卡|ICASH)
+payuni,ICASH02002,未有商店訂單編號,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (愛金卡|ICASH)
+payuni,ICASH02003,商店訂單編號，超過長度限制,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (愛金卡|ICASH)
+payuni,ICASH02004,商店訂單編號，格式錯誤,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (愛金卡|ICASH)
+payuni,ICASH02005,未有訂單金額,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (愛金卡|ICASH)
+payuni,ICASH02006,訂單金額，僅可輸入整數,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (愛金卡|ICASH)
+payuni,ICASH02007,訂單金額，格式錯誤,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (愛金卡|ICASH)
+payuni,ICASH02008,未有時間戳記,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (愛金卡|ICASH)
+payuni,ICASH02009,時間戳記，僅可輸入整數,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (愛金卡|ICASH)
+payuni,ICASH02010,時間戳記，已過期,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (愛金卡|ICASH)
+payuni,ICASH02011,背景通知網址，格式錯誤,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (愛金卡|ICASH)
+payuni,ICASH02012,寄送信箱，格式錯誤,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (愛金卡|ICASH)
+payuni,ICASH02017,未有優惠碼,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (愛金卡|ICASH)
+payuni,ICASH02018,折扣金額，格式錯誤,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (愛金卡|ICASH)
+payuni,ICASH02019,有優惠碼時，折扣金額(DiscountAmt)為必要欄位,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (愛金卡|ICASH)
+payuni,ICASH02020,訂單原始金額，格式錯誤,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (愛金卡|ICASH)
+payuni,ICASH02021,有優惠碼時，訂單原始金額(OrderAmt)為必要欄位,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (愛金卡|ICASH)
+payuni,ICASH02022,訂單原始金額(OrderAmt)不等於訂單金額(TradeAmt)+折扣金額(DiscountAmt),,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (愛金卡|ICASH)
+payuni,ICASH02023,優惠券發券背景通知網址，格式錯誤,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (愛金卡|ICASH)
+payuni,ICASH03001,商店未啟用,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (愛金卡|ICASH)
+payuni,ICASH03002,商店未提供ICash支付,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (愛金卡|ICASH)
+payuni,ICASH04001,已存在相同商店訂單編號,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (愛金卡|ICASH)
+payuni,ICASH04002,未有交易唯一Token,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (愛金卡|ICASH)
+payuni,ICASH05001,產生QRCode(未有訂單編號),,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (愛金卡|ICASH)
+payuni,ICASH05002,產生QRCode(未有訂單金額),,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (愛金卡|ICASH)
+payuni,ICASH05003,未有對應處理網址,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (愛金卡|ICASH)
+payuni,ICASH05004,未有申請完成檔案,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (愛金卡|ICASH)
+payuni,ICASH05005,加密KEY空白,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (愛金卡|ICASH)
+payuni,ICASH05006,簽章KEY空白,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (愛金卡|ICASH)
+payuni,ICASH05007,資料加密失敗,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (愛金卡|ICASH)
+payuni,ICASH05008,資料簽章失敗,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (愛金卡|ICASH)
+payuni,ICASH05009,連線失敗,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (愛金卡|ICASH)
+payuni,ICASH05010,未有回傳代碼,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (愛金卡|ICASH)
+payuni,ICASH05011,回傳解析失敗,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (愛金卡|ICASH)
+payuni,ICASH05012,回傳參數缺失,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (愛金卡|ICASH)
+payuni,ICASH05013,處理失敗,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (愛金卡|ICASH)
+payuni,ICASH07001,付款失敗,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (愛金卡|ICASH)
+payuni,REFUND01001,未有商店代號,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易退款 (愛金卡|ICASH)、交易退款 (後支付|AFTEE)、交易退款 (LINE PAY)、交易退款（街口支付）
+payuni,REFUND01002,資料 HASH 比對不符合,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易退款 (愛金卡|ICASH)、交易退款 (後支付|AFTEE)、交易退款 (LINE PAY)、交易退款（街口支付）
+payuni,REFUND01003,資料解密失敗,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易退款 (愛金卡|ICASH)、交易退款 (後支付|AFTEE)、交易退款 (LINE PAY)、交易退款（街口支付）
+payuni,REFUND01004,解密資料不存在,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易退款 (愛金卡|ICASH)、交易退款 (後支付|AFTEE)、交易退款 (LINE PAY)、交易退款（街口支付）
+payuni,REFUND01005,[交易退款 (愛金卡|ICASH)、交易退款（街口支付）] 查無符合代理商資料 / [交易退款 (愛金卡|ICASH)、交易退款 (後支付|AFTEE)、交易退款 (LINE PAY)、交易退款（街口支付）] 查無符合商店資料 / [交易退款 (愛金卡|ICASH)、交易退款（街口支付）] 代理商狀態不符合 / [交易退款 (愛金卡|ICASH)、交易退款（街口支付）] 商店狀態不符合,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易退款 (愛金卡|ICASH)、交易退款 (後支付|AFTEE)、交易退款 (LINE PAY)、交易退款（街口支付）
+payuni,REFUND01006,網路連線異常,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易退款 (愛金卡|ICASH)、交易退款 (後支付|AFTEE)、交易退款 (LINE PAY)、交易退款（街口支付）
+payuni,REFUND01007,查無符合商店資料(MID),,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易退款 (愛金卡|ICASH)、交易退款（街口支付）
+payuni,REFUND01008,商店退款功能已受限制,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易退款 (愛金卡|ICASH)、交易退款 (後支付|AFTEE)、交易退款 (LINE PAY)、交易退款（街口支付）
+payuni,REFUND02001,未有商店代號,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易退款 (愛金卡|ICASH)、交易退款 (後支付|AFTEE)、交易退款 (LINE PAY)、交易退款（街口支付）
+payuni,REFUND02002,未有訂單編號,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易退款 (愛金卡|ICASH)、交易退款 (後支付|AFTEE)、交易退款 (LINE PAY)、交易退款（街口支付）
+payuni,REFUND02003,訂單編號，超過長度限制,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易退款 (愛金卡|ICASH)、交易退款 (後支付|AFTEE)、交易退款 (LINE PAY)、交易退款（街口支付）
+payuni,REFUND02004,訂單編號，格式錯誤,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易退款 (愛金卡|ICASH)、交易退款 (後支付|AFTEE)、交易退款 (LINE PAY)、交易退款（街口支付）
+payuni,REFUND02005,未有時間戳記,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易退款 (愛金卡|ICASH)、交易退款 (後支付|AFTEE)、交易退款 (LINE PAY)、交易退款（街口支付）
+payuni,REFUND02006,時間戳記，僅可輸入整數,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易退款 (愛金卡|ICASH)、交易退款 (後支付|AFTEE)、交易退款 (LINE PAY)、交易退款（街口支付）
+payuni,REFUND02007,時間戳記，已過期,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易退款 (愛金卡|ICASH)、交易退款 (後支付|AFTEE)、交易退款 (LINE PAY)、交易退款（街口支付）
+payuni,REFUND02008,未有退款金額,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易退款 (愛金卡|ICASH)、交易退款 (後支付|AFTEE)、交易退款 (LINE PAY)、交易退款（街口支付）
+payuni,REFUND02009,退款金額，僅可輸入整數,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易退款 (愛金卡|ICASH)、交易退款 (後支付|AFTEE)、交易退款 (LINE PAY)、交易退款（街口支付）
+payuni,REFUND02010,退款金額，格式錯誤,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易退款 (愛金卡|ICASH)、交易退款 (後支付|AFTEE)、交易退款 (LINE PAY)、交易退款（街口支付）
+payuni,REFUND03001,[交易退款 (愛金卡|ICASH)、交易退款 (LINE PAY)、交易退款（街口支付）] 查無符合訂單資料 / [交易退款 (後支付|AFTEE)] 查無符合訂單資料(AFTEE),,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易退款 (愛金卡|ICASH)、交易退款 (後支付|AFTEE)、交易退款 (LINE PAY)、交易退款（街口支付）
+payuni,REFUND03002,[交易退款 (愛金卡|ICASH)] 訂單不為愛金卡 / [交易退款 (後支付|AFTEE)] 訂單不為後支付(AFTEE) / [交易退款 (LINE PAY)] 訂單不為LinePay / [交易退款（街口支付）] 訂單不為JKoPay,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易退款 (愛金卡|ICASH)、交易退款 (後支付|AFTEE)、交易退款 (LINE PAY)、交易退款（街口支付）
+payuni,REFUND03003,[交易退款 (愛金卡|ICASH)、交易退款 (LINE PAY)、交易退款（街口支付）] 訂單不為付款成功 / [交易退款 (後支付|AFTEE)] 訂單不為付款成功(AFTEE),,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易退款 (愛金卡|ICASH)、交易退款 (後支付|AFTEE)、交易退款 (LINE PAY)、交易退款（街口支付）
+payuni,REFUND03004,[交易退款 (愛金卡|ICASH)] 退款金額需為全額 / [交易退款 (後支付|AFTEE)] 未有訂單ID(AFTEE) / [交易退款 (LINE PAY)] 未有LinePay序號 / [交易退款（街口支付）] 超過可退款金額(JKoPay),,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易退款 (愛金卡|ICASH)、交易退款 (後支付|AFTEE)、交易退款 (LINE PAY)、交易退款（街口支付）
+payuni,REFUND03005,[交易退款 (愛金卡|ICASH)] 已有退款紀錄 / [交易退款 (後支付|AFTEE)] 未有訂單KEY(AFTEE) / [交易退款 (LINE PAY)] 超過可退款金額(LinePay),,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易退款 (愛金卡|ICASH)、交易退款 (後支付|AFTEE)、交易退款 (LINE PAY)
+payuni,REFUND03006,未有愛金卡序號,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易退款 (愛金卡|ICASH)
+payuni,REFUND04001,[交易退款 (愛金卡|ICASH)、交易退款 (LINE PAY)] 未有對應處理網址 / [交易退款 (後支付|AFTEE)] 查無符合訂單(AFTEE) / [交易退款（街口支付）] 連線失敗,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易退款 (愛金卡|ICASH)、交易退款 (後支付|AFTEE)、交易退款 (LINE PAY)、交易退款（街口支付）
+payuni,REFUND04002,[交易退款 (愛金卡|ICASH)] 未有申請完成檔案 / [交易退款 (後支付|AFTEE)] 訂單編號比對不符合(AFTEE) / [交易退款 (LINE PAY)] 未有ChannelKey / [交易退款（街口支付）] 查無符合訂單(街口),,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易退款 (愛金卡|ICASH)、交易退款 (後支付|AFTEE)、交易退款 (LINE PAY)、交易退款（街口支付）
+payuni,REFUND04003,[交易退款 (愛金卡|ICASH)] 加密KEY空白 / [交易退款 (後支付|AFTEE)] 訂單未審核通過(AFTEE) / [交易退款 (LINE PAY)] 未有SecretKey / [交易退款（街口支付）] 訂單不為付款成功(街口),,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易退款 (愛金卡|ICASH)、交易退款 (後支付|AFTEE)、交易退款 (LINE PAY)、交易退款（街口支付）
+payuni,REFUND04004,[交易退款 (愛金卡|ICASH)] 簽章KEY空白 / [交易退款 (後支付|AFTEE)] 訂單未有授權Token(AFTEE) / [交易退款 (LINE PAY)] 連線失敗 / [交易退款（街口支付）] 未有退款訂單編號,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易退款 (愛金卡|ICASH)、交易退款 (後支付|AFTEE)、交易退款 (LINE PAY)、交易退款（街口支付）
+payuni,REFUND04005,[交易退款 (愛金卡|ICASH)] 資料加密失敗 / [交易退款 (後支付|AFTEE)] 超過可退款金額(AFTEE) / [交易退款 (LINE PAY)、交易退款（街口支付）] 未有回覆資訊,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易退款 (愛金卡|ICASH)、交易退款 (後支付|AFTEE)、交易退款 (LINE PAY)、交易退款（街口支付）
+payuni,REFUND04006,[交易退款 (愛金卡|ICASH)] 資料簽章失敗 / [交易退款 (後支付|AFTEE)] 可退款金額不符合(AFTEE) / [交易退款 (LINE PAY)] 未有回傳代碼 / [交易退款（街口支付）] 訂單退款失敗(街口),,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易退款 (愛金卡|ICASH)、交易退款 (後支付|AFTEE)、交易退款 (LINE PAY)、交易退款（街口支付）
+payuni,REFUND04007,[交易退款 (愛金卡|ICASH)] 連線失敗 / [交易退款 (後支付|AFTEE)] 訂單退款失敗(AFTEE) / [交易退款 (LINE PAY)] 訂單未請款,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易退款 (愛金卡|ICASH)、交易退款 (後支付|AFTEE)、交易退款 (LINE PAY)
+payuni,REFUND04008,[交易退款 (愛金卡|ICASH)] 未有回傳代碼 / [交易退款 (後支付|AFTEE)] 訂單退款失敗_預期ID錯誤(AFTEE) / [交易退款 (LINE PAY)] 退款失敗,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易退款 (愛金卡|ICASH)、交易退款 (後支付|AFTEE)、交易退款 (LINE PAY)
+payuni,REFUND04009,[交易退款 (愛金卡|ICASH)] 回傳解析失敗 / [交易退款 (後支付|AFTEE)] 訂單退款失敗_預期金額錯誤(退款)(AFTEE),,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易退款 (愛金卡|ICASH)、交易退款 (後支付|AFTEE)
+payuni,REFUND04010,[交易退款 (愛金卡|ICASH)] 回傳參數缺失 / [交易退款 (後支付|AFTEE)] 訂單退款失敗_預期金額錯誤(取消)(AFTEE),,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易退款 (愛金卡|ICASH)、交易退款 (後支付|AFTEE)
+payuni,REFUND04011,處理失敗,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易退款 (愛金卡|ICASH)
+payuni,REFUND06001,未有API處理結果,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易退款 (愛金卡|ICASH)、交易退款 (後支付|AFTEE)、交易退款 (LINE PAY)、交易退款（街口支付）
+payuni,REFUND06002,回傳加密失敗,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易退款 (愛金卡|ICASH)、交易退款 (後支付|AFTEE)、交易退款 (LINE PAY)、交易退款（街口支付）
+payuni,AFTEEP01000,系統發生錯誤，請聯絡客服,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (後支付|AFTEE)
+payuni,AFTEEP01001,解密資料不存在,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (後支付|AFTEE)
+payuni,AFTEEP02001,未有商店代號,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (後支付|AFTEE)
+payuni,AFTEEP02002,未有商店訂單編號,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (後支付|AFTEE)
+payuni,AFTEEP02003,商店訂單編號，超過長度限制,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (後支付|AFTEE)
+payuni,AFTEEP02004,商店訂單編號，格式錯誤(英數字-_),,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (後支付|AFTEE)
+payuni,AFTEEP02005,未有訂單金額,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (後支付|AFTEE)
+payuni,AFTEEP02006,訂單金額，僅可輸入整數,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (後支付|AFTEE)
+payuni,AFTEEP02007,訂單金額，不為允許範圍區間,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (後支付|AFTEE)
+payuni,AFTEEP02008,未有時間戳記,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (後支付|AFTEE)
+payuni,AFTEEP02009,時間戳記，僅可輸入整數,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (後支付|AFTEE)
+payuni,AFTEEP02010,時間戳記，已過期,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (後支付|AFTEE)
+payuni,AFTEEP02011,前景通知網址，格式錯誤,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (後支付|AFTEE)
+payuni,AFTEEP02012,背景通知網址，格式錯誤,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (後支付|AFTEE)
+payuni,AFTEEP02013,寄送信箱，格式錯誤,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (後支付|AFTEE)
+payuni,AFTEEP02015,物流(取貨不付款)，未有寄件型態,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (後支付|AFTEE)
+payuni,AFTEEP02016,物流(取貨不付款)，無法辨識的寄件型態,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (後支付|AFTEE)
+payuni,AFTEEP02017,物流(取貨不付款)，未有物流別,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (後支付|AFTEE)
+payuni,AFTEEP02018,物流(取貨不付款)，無法辨識的物流別,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (後支付|AFTEE)
+payuni,AFTEEP02019,物流(取貨不付款)，未有超商別,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (後支付|AFTEE)
+payuni,AFTEEP02020,物流(取貨不付款)，無法辨識的超商別,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (後支付|AFTEE)
+payuni,AFTEEP02021,物流(取貨不付款)，無超商的合作模式資訊,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (後支付|AFTEE)
+payuni,AFTEEP02022,物流(取貨不付款)，無法辨識的取貨後付款方式,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (後支付|AFTEE)
+payuni,AFTEEP02023,物流(取貨不付款)，無超商的門市代碼,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (後支付|AFTEE)
+payuni,AFTEEP02024,物流(取貨不付款)，未有收件人姓名,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (後支付|AFTEE)
+payuni,AFTEEP02025,物流(取貨不付款)，收件人姓名，長度超過限制,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (後支付|AFTEE)
+payuni,AFTEEP02026,物流(取貨不付款)，未有收件人手機號碼,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (後支付|AFTEE)
+payuni,AFTEEP02027,物流(取貨不付款)，手機號碼格式錯誤(09開頭),,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (後支付|AFTEE)
+payuni,AFTEEP02028,物流(取貨不付款)，該門市無法配送，請重新選擇門市,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (後支付|AFTEE)
+payuni,AFTEEP02029,物流(取貨不付款)，收件人電話區碼長度超過限制,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (後支付|AFTEE)
+payuni,AFTEEP02030,物流(取貨不付款)，收件人電話區碼格式錯誤,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (後支付|AFTEE)
+payuni,AFTEEP02031,物流(取貨不付款)，收件人電話長度超過限制,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (後支付|AFTEE)
+payuni,AFTEEP02032,物流(取貨不付款)，收件人電話格式錯誤,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (後支付|AFTEE)
+payuni,AFTEEP02033,物流(取貨不付款)，未有收件人地址,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (後支付|AFTEE)
+payuni,AFTEEP02034,物流(取貨不付款)，未有希望配達時間代碼,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (後支付|AFTEE)
+payuni,AFTEEP02035,物流(取貨不付款)，無法辨識的希望配達時間代碼,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (後支付|AFTEE)
+payuni,AFTEEP02036,物流(取貨不付款)，未有商品說明,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (後支付|AFTEE)
+payuni,AFTEEP02037,未有消費者電子信箱,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (後支付|AFTEE)
+payuni,AFTEEP02038,未有買方名稱(抬頭),,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (後支付|AFTEE)
+payuni,AFTEEP02039,未有載具類別,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (後支付|AFTEE)
+payuni,AFTEEP02040,無法辨識的載具類別,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (後支付|AFTEE)
+payuni,AFTEEP02041,載具資料不可為空,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (後支付|AFTEE)
+payuni,AFTEEP02042,載具資料，格式錯誤,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (後支付|AFTEE)
+payuni,AFTEEP02043,載具資料，格式錯誤(長度),,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (後支付|AFTEE)
+payuni,AFTEEP02044,商店不提供捐贈發票選項,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (後支付|AFTEE)
+payuni,AFTEEP02045,此捐贈碼不在商店提供範圍內,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (後支付|AFTEE)
+payuni,AFTEEP02046,GrantExport參數值錯誤,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (後支付|AFTEE)
+payuni,AFTEEP02047,消費者姓名，超過長度限制,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (後支付|AFTEE)
+payuni,AFTEEP02048,消費者手機，格式錯誤 (09 開頭 10 碼數字),,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (後支付|AFTEE)
+payuni,AFTEEP02049,消費者地址，超過長度限制,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (後支付|AFTEE)
+payuni,AFTEEP02050,消費者額外資訊碼，超過長度限制,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (後支付|AFTEE)
+payuni,AFTEEP02051,消費者額外資訊碼，格式錯誤,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (後支付|AFTEE)
+payuni,AFTEEP02052,消費者註冊日期，格式錯誤 (YYYY-MM-DD),,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (後支付|AFTEE)
+payuni,AFTEEP02053,收件姓名，超過長度限制,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (後支付|AFTEE)
+payuni,AFTEEP02054,收件地址，超過長度限制,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (後支付|AFTEE)
+payuni,AFTEEP02055,收件電話，格式錯誤 (0 開頭 9-10 碼的數字),,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (後支付|AFTEE)
+payuni,AFTEEP02056,未有商品ID,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (後支付|AFTEE)
+payuni,AFTEEP02057,商品ID，數量比對不符合,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (後支付|AFTEE)
+payuni,AFTEEP02058,未有商品名稱,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (後支付|AFTEE)
+payuni,AFTEEP02059,商品名稱，數量比對不符合,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (後支付|AFTEE)
+payuni,AFTEEP02060,未有商品類別,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (後支付|AFTEE)
+payuni,AFTEEP02061,商品類別，數量比對不符合,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (後支付|AFTEE)
+payuni,AFTEEP02062,未有商品數量,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (後支付|AFTEE)
+payuni,AFTEEP02063,商品數量，數量比對不符合,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (後支付|AFTEE)
+payuni,AFTEEP02064,未有商品價格,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (後支付|AFTEE)
+payuni,AFTEEP02065,商品價格，數量比對不符合,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (後支付|AFTEE)
+payuni,AFTEEP02066,未有商品URL,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (後支付|AFTEE)
+payuni,AFTEEP02067,商品URL，數量比對不符合,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (後支付|AFTEE)
+payuni,AFTEEP02068,商品ID，格式錯誤(半形英數字 100字以内),,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (後支付|AFTEE)
+payuni,AFTEEP02069,商品名稱，格式錯誤(100字以内),,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (後支付|AFTEE)
+payuni,AFTEEP02070,商品類別，格式錯誤(100字以内),,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (後支付|AFTEE)
+payuni,AFTEEP02071,商品數量，格式錯誤(大於零的數字),,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (後支付|AFTEE)
+payuni,AFTEEP02072,商品價格，格式錯誤(大於零的數字),,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (後支付|AFTEE)
+payuni,AFTEEP02073,商品總價格，比對不符合,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (後支付|AFTEE)
+payuni,AFTEEP02074,商品 URL，格式錯誤(1000字以内),,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (後支付|AFTEE)
+payuni,AFTEEP02075,未有優惠碼,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (後支付|AFTEE)
+payuni,AFTEEP02076,折扣金額，格式錯誤,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (後支付|AFTEE)
+payuni,AFTEEP02077,有優惠碼時，折扣金額(DiscountAmt)為必要欄位,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (後支付|AFTEE)
+payuni,AFTEEP02078,訂單原始金額，格式錯誤,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (後支付|AFTEE)
+payuni,AFTEEP02079,有優惠碼時，訂單原始金額(OrderAmt)為必要欄位,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (後支付|AFTEE)
+payuni,AFTEEP02080,訂單原始金額(OrderAmt)不等於訂單金額(TradeAmt)+折扣金額(DiscountAmt),,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (後支付|AFTEE)
+payuni,AFTEEP02081,優惠券發券背景通知網址，格式錯誤,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (後支付|AFTEE)
+payuni,AFTEE02001,商店不提供捐贈發票選項,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (後支付|AFTEE)
+payuni,AFTEE02002,此捐贈碼不在商店提供範圍內,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (後支付|AFTEE)
+payuni,AFTEE02003,手機條碼(格式)不正確,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (後支付|AFTEE)
+payuni,AFTEE02004,未有優惠碼,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (後支付|AFTEE)
+payuni,AFTEE02005,折扣金額，格式錯誤,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (後支付|AFTEE)
+payuni,AFTEE02006,有優惠碼時，折扣金額(DiscountAmt)為必要欄位,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (後支付|AFTEE)
+payuni,AFTEE02007,訂單原始金額，格式錯誤,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (後支付|AFTEE)
+payuni,AFTEE02008,有優惠碼時，訂單原始金額(OrderAmt)為必要欄位,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (後支付|AFTEE)
+payuni,AFTEE02009,訂單原始金額(OrderAmt)不等於訂單金額(TradeAmt)+折扣金額(DiscountAmt),,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (後支付|AFTEE)
+payuni,AFTEE02010,優惠券發券背景通知網址，格式錯誤,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (後支付|AFTEE)
+payuni,AFTEEP03001,商店未啟用,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (後支付|AFTEE)
+payuni,AFTEEP03002,商店未提供AFTEEPay幕後交易,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (後支付|AFTEE)
+payuni,AFTEEP03003,未有代理商幕後相關設定,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (後支付|AFTEE)
+payuni,AFTEEP03004,不提供此IP幕後交易,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (後支付|AFTEE)
+payuni,AFTEEP03005,商店未有設定AesType,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (後支付|AFTEE)
+payuni,AFTEEP03006,商店AesType不符合,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (後支付|AFTEE)
+payuni,AFTEEP03007,商店未提供AFTEE,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (後支付|AFTEE)
+payuni,AFTEEP03008,商店尚未啟用電子發票,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (後支付|AFTEE)
+payuni,AFTEEP03009,買方會員資料取得(驗證)失敗,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (後支付|AFTEE)
+payuni,AFTEEP03010,商店尚未啟用優惠券,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (後支付|AFTEE)
+payuni,AFTEE03001,商店未啟用,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (後支付|AFTEE)
+payuni,AFTEE03002,交易閘道錯誤,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (後支付|AFTEE)
+payuni,AFTEE03003,交易KEY錯誤,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (後支付|AFTEE)
+payuni,AFTEE03004,買方會員資料取得(驗證)失敗,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (後支付|AFTEE)
+payuni,AFTEEP04001,已存在相同商店訂單編號,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (後支付|AFTEE)
+payuni,AFTEEP04002,未有交易唯一Token,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (後支付|AFTEE)
+payuni,AFTEE04001,已存在相同商店訂單編號,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (後支付|AFTEE)
+payuni,AFTEEP05001,預註冊失敗,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (後支付|AFTEE)
+payuni,AFTEEP05002,預註冊資料異常,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (後支付|AFTEE)
+payuni,AFTEEP06001,未有API處理結果,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (後支付|AFTEE)
+payuni,AFTEEP06002,回傳加密失敗,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (後支付|AFTEE)
+payuni,AFTEE07001,付款取消,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (後支付|AFTEE)
+payuni,AFTEE07002,付款失敗,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (後支付|AFTEE)
+payuni,AFTEE08001,交易風控(拒絕交易),,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (後支付|AFTEE)
+payuni,AFTEE08002,交易風控(拒絕交易),,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (後支付|AFTEE)
+payuni,AFTEE08003,交易風控(拒絕交易),,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (後支付|AFTEE)
+payuni,AFTEE08004,交易風控(拒絕交易),,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (後支付|AFTEE)
+payuni,AFTEE08005,交易風控(拒絕交易),,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (後支付|AFTEE)
+payuni,CONFIRM01001,未有商店代號,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易確認 (後支付|AFTEE)
+payuni,CONFIRM01002,資料 HASH 比對不符合,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易確認 (後支付|AFTEE)
+payuni,CONFIRM01003,資料解密失敗,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易確認 (後支付|AFTEE)
+payuni,CONFIRM01004,解密資料不存在,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易確認 (後支付|AFTEE)
+payuni,CONFIRM01005,查無符合商店資料,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易確認 (後支付|AFTEE)
+payuni,CONFIRM01006,網路連線異常,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易確認 (後支付|AFTEE)
+payuni,CONFIRM02001,未有商店代號,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易確認 (後支付|AFTEE)
+payuni,CONFIRM02002,未有訂單編號,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易確認 (後支付|AFTEE)
+payuni,CONFIRM02003,訂單編號，超過長度限制,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易確認 (後支付|AFTEE)
+payuni,CONFIRM02004,訂單編號，格式錯誤,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易確認 (後支付|AFTEE)
+payuni,CONFIRM02005,未有時間戳記,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易確認 (後支付|AFTEE)
+payuni,CONFIRM02006,時間戳記，僅可輸入整數,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易確認 (後支付|AFTEE)
+payuni,CONFIRM02007,時間戳記，已過期,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易確認 (後支付|AFTEE)
+payuni,CONFIRM03001,查無符合訂單資料(AFTEE),,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易確認 (後支付|AFTEE)
+payuni,CONFIRM03002,訂單不為後支付(AFTEE),,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易確認 (後支付|AFTEE)
+payuni,CONFIRM03003,未有訂單ID(AFTEE),,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易確認 (後支付|AFTEE)
+payuni,CONFIRM03004,未有訂單KEY(AFTEE),,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易確認 (後支付|AFTEE)
+payuni,CONFIRM04001,查無符合訂單(AFTEE),,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易確認 (後支付|AFTEE)
+payuni,CONFIRM04002,訂單編號比對不符合(AFTEE),,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易確認 (後支付|AFTEE)
+payuni,CONFIRM04003,訂單金額比對不符合(AFTEE),,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易確認 (後支付|AFTEE)
+payuni,CONFIRM04004,訂單未審核通過(AFTEE),,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易確認 (後支付|AFTEE)
+payuni,CONFIRM04005,訂單確認失敗(AFTEE),,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易確認 (後支付|AFTEE)
+payuni,CONFIRM04006,訂單確認失敗_未有確認日期(AFTEE),,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易確認 (後支付|AFTEE)
+payuni,LINE01000,系統發生錯誤，請聯絡客服,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (LINE Pay)
+payuni,LINE01001,未有商店代號,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (LINE Pay)
+payuni,LINE01002,資料 HASH 比對不符合,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (LINE Pay)
+payuni,LINE01003,資料解密失敗,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (LINE Pay)
+payuni,LINE01004,解密資料不存在,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (LINE Pay)
+payuni,LINE01005,[交易建立 (LINE Pay)] 查無符合代理商資料 / [交易建立 (LINE Pay)] 代理商狀態不符合,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (LINE Pay)
+payuni,LINE01006,未有交易 HASH,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (LINE Pay)
+payuni,LINE01007,查無符合商店物流資料,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (LINE Pay)
+payuni,LINE01008,商店B2C物流服務尚未開通,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (LINE Pay)
+payuni,LINE01009,商店C2C物流服務尚未開通,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (LINE Pay)
+payuni,LINE01010,商店未啟用B2C物流服務,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (LINE Pay)
+payuni,LINE01011,商店未啟用C2C物流服務,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (LINE Pay)
+payuni,LINE01012,收(寄)件人姓名僅支援輸入中文/英文/數字,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (LINE Pay)
+payuni,LINE02001,未有商店代號,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (LINE Pay)
+payuni,LINE02002,未有商店訂單編號,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (LINE Pay)
+payuni,LINE02003,商店訂單編號，超過長度限制,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (LINE Pay)
+payuni,LINE02004,商店訂單編號，格式錯誤(英數字-_),,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (LINE Pay)
+payuni,LINE02005,未有訂單金額,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (LINE Pay)
+payuni,LINE02006,訂單金額，僅可輸入整數,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (LINE Pay)
+payuni,LINE02007,訂單金額，不為允許範圍區間,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (LINE Pay)
+payuni,LINE02008,未有時間戳記,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (LINE Pay)
+payuni,LINE02009,時間戳記，僅可輸入整數,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (LINE Pay)
+payuni,LINE02010,時間戳記，已過期,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (LINE Pay)
+payuni,LINE02011,前景通知網址，格式錯誤,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (LINE Pay)
+payuni,LINE02012,背景通知網址，格式錯誤,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (LINE Pay)
+payuni,LINE02013,寄送信箱，格式錯誤,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (LINE Pay)
+payuni,LINE02014,物流(取貨不付款)，未有電子信箱,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (LINE Pay)
+payuni,LINE02015,物流(取貨不付款)，未有寄件型態,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (LINE Pay)
+payuni,LINE02016,物流(取貨不付款)，無法辨識的寄件型態,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (LINE Pay)
+payuni,LINE02017,物流(取貨不付款)，無法辨識的物流別,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (LINE Pay)
+payuni,LINE02018,物流(取貨不付款)，未有超商別,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (LINE Pay)
+payuni,LINE02019,物流(取貨不付款)，無法辨識的超商別,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (LINE Pay)
+payuni,LINE02020,物流(取貨不付款)，無超商的合作模式資訊,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (LINE Pay)
+payuni,LINE02021,物流(取貨不付款)，無法辨識的取貨後付款方式,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (LINE Pay)
+payuni,LINE02022,物流(取貨不付款)，無超商的門市代碼,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (LINE Pay)
+payuni,LINE02023,物流(取貨不付款)，未有收件人姓名,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (LINE Pay)
+payuni,LINE02024,物流(取貨不付款)，收件人姓名，長度超過限制,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (LINE Pay)
+payuni,LINE02025,物流(取貨不付款)，未有收件人手機號碼,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (LINE Pay)
+payuni,LINE02026,物流(取貨不付款)，手機號碼格式錯誤(09開頭),,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (LINE Pay)
+payuni,LINE02027,物流(取貨不付款)，該門市無法配送，請重新選擇門市,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (LINE Pay)
+payuni,LINE02028,物流(取貨不付款)，收件人電話區碼長度超過限制,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (LINE Pay)
+payuni,LINE02029,物流(取貨不付款)，收件人電話區碼格式錯誤,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (LINE Pay)
+payuni,LINE02030,物流(取貨不付款)，收件人電話長度超過限制,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (LINE Pay)
+payuni,LINE02031,物流(取貨不付款)，收件人電話格式錯誤,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (LINE Pay)
+payuni,LINE02032,物流(取貨不付款)，未有收件人地址,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (LINE Pay)
+payuni,LINE02033,物流(取貨不付款)，未有希望配達時間代碼,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (LINE Pay)
+payuni,LINE02034,物流(取貨不付款)，無法辨識的希望配達時間代碼,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (LINE Pay)
+payuni,LINE02035,物流(取貨不付款)，未有商品說明,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (LINE Pay)
+payuni,LINE02036,未有消費者電子信箱,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (LINE Pay)
+payuni,LINE02037,未有買方名稱(抬頭),,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (LINE Pay)
+payuni,LINE02038,未有載具類別,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (LINE Pay)
+payuni,LINE02039,無法辨識的載具類別,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (LINE Pay)
+payuni,LINE02040,載具資料不可為空,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (LINE Pay)
+payuni,LINE02041,載具資料，格式錯誤,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (LINE Pay)
+payuni,LINE02042,載具資料，格式錯誤(長度),,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (LINE Pay)
+payuni,LINE02043,商店不提供捐贈發票選項,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (LINE Pay)
+payuni,LINE02044,此捐贈碼不在商店提供範圍內,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (LINE Pay)
+payuni,LINE02045,未有優惠碼,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (LINE Pay)
+payuni,LINE02046,折扣金額，格式錯誤,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (LINE Pay)
+payuni,LINE02047,有優惠碼時，折扣金額(DiscountAmt)為必要欄位,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (LINE Pay)
+payuni,LINE02048,訂單原始金額，格式錯誤,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (LINE Pay)
+payuni,LINE02049,有優惠碼時，訂單原始金額(OrderAmt)為必要欄位,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (LINE Pay)
+payuni,LINE02050,訂單原始金額(OrderAmt)不等於訂單金額(TradeAmt)+折扣金額(DiscountAmt),,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (LINE Pay)
+payuni,LINE02051,優惠券發券背景通知網址，格式錯誤,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (LINE Pay)
+payuni,LINE03001,商店未啟用,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (LINE Pay)
+payuni,LINE03002,商店未提供LinePay幕後交易,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (LINE Pay)
+payuni,LINE03003,未有代理商幕後相關設定,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (LINE Pay)
+payuni,LINE03004,不提供此IP幕後交易,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (LINE Pay)
+payuni,LINE03005,商店未有設定AesType,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (LINE Pay)
+payuni,LINE03006,商店AesType不符合,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (LINE Pay)
+payuni,LINE03007,商店未提供LinePay,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (LINE Pay)
+payuni,LINE03008,商店尚未啟用電子發票,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (LINE Pay)
+payuni,LINE03009,商店尚未啟用優惠券,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (LINE Pay)
+payuni,LINE04001,已存在相同商店訂單編號,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (LINE Pay)
+payuni,LINE04002,未有交易唯一Token,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (LINE Pay)
+payuni,LINE05001,未有訂單編號,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (LINE Pay)
+payuni,LINE05002,未有訂單金額,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (LINE Pay)
+payuni,LINE05003,處理失敗,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (LINE Pay)
+payuni,LINE05004,解析資料失敗,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (LINE Pay)
+payuni,LINE05005,未有對應處理網址,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (LINE Pay)
+payuni,LINE05006,未有ChannelKey,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (LINE Pay)
+payuni,LINE05007,未有SecretKey,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (LINE Pay)
+payuni,LINE05008,連線失敗,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (LINE Pay)
+payuni,LINE05009,未有回覆資訊,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (LINE Pay)
+payuni,LINE06001,未有API處理結果,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (LINE Pay)
+payuni,LINE06002,回傳加密失敗,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (LINE Pay)
+payuni,LINE07001,付款失敗,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (LINE Pay)
+payuni,LINE07002,付款取消,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (LINE Pay)
+payuni,LINE07003,付款未確認,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (LINE Pay)
+payuni,JKO01000,系統發生錯誤，請聯絡客服,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (街口支付 | JKoPay)
+payuni,JKO01001,未有商店代號,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (街口支付 | JKoPay)
+payuni,JKO01002,資料 HASH 比對不符合,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (街口支付 | JKoPay)
+payuni,JKO01003,資料解密失敗,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (街口支付 | JKoPay)
+payuni,JKO01004,解密資料不存在,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (街口支付 | JKoPay)
+payuni,JKO01005,[交易建立 (街口支付 | JKoPay)] 查無符合代理商資料 / [交易建立 (街口支付 | JKoPay)] 查無符合商店資料,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (街口支付 | JKoPay)
+payuni,JKO01006,未有交易 HASH,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (街口支付 | JKoPay)
+payuni,JKO01007,查無符合商店物流資料,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (街口支付 | JKoPay)
+payuni,JKO01008,商店B2C物流服務尚未開通,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (街口支付 | JKoPay)
+payuni,JKO01009,商店C2C物流服務尚未開通,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (街口支付 | JKoPay)
+payuni,JKO01010,商店未啟用B2C物流服務,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (街口支付 | JKoPay)
+payuni,JKO01011,商店未啟用C2C物流服務,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (街口支付 | JKoPay)
+payuni,JKO01012,收(寄)件人姓名僅支援輸入中文/英文/數字,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (街口支付 | JKoPay)
+payuni,JKO01013,收(寄)件人的姓名包含 emoji 符號,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (街口支付 | JKoPay)
+payuni,JKO02001,未有商店代號,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (街口支付 | JKoPay)
+payuni,JKO02002,未有商店訂單編號,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (街口支付 | JKoPay)
+payuni,JKO02003,商店訂單編號，超過長度限制,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (街口支付 | JKoPay)
+payuni,JKO02004,商店訂單編號，格式錯誤(英數字-_),,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (街口支付 | JKoPay)
+payuni,JKO02005,未有訂單金額,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (街口支付 | JKoPay)
+payuni,JKO02006,訂單金額，僅可輸入整數,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (街口支付 | JKoPay)
+payuni,JKO02007,訂單金額，不為允許範圍區間,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (街口支付 | JKoPay)
+payuni,JKO02008,未有時間戳記,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (街口支付 | JKoPay)
+payuni,JKO02009,時間戳記，僅可輸入整數,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (街口支付 | JKoPay)
+payuni,JKO02010,時間戳記，已過期,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (街口支付 | JKoPay)
+payuni,JKO02011,前景通知網址，格式錯誤,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (街口支付 | JKoPay)
+payuni,JKO02012,背景通知網址，格式錯誤,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (街口支付 | JKoPay)
+payuni,JKO02013,寄送信箱，格式錯誤,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (街口支付 | JKoPay)
+payuni,JKO02014,物流(取件不付款)，未有電子信箱,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (街口支付 | JKoPay)
+payuni,JKO02015,物流(取件不付款)，未有寄件型態,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (街口支付 | JKoPay)
+payuni,JKO02016,物流(取件不付款)，無法辨識的寄件型態,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (街口支付 | JKoPay)
+payuni,JKO02017,物流(取件不付款)，無法辨識的物流別,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (街口支付 | JKoPay)
+payuni,JKO02018,物流(取件不付款)，未有超商別,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (街口支付 | JKoPay)
+payuni,JKO02019,物流(取件不付款)，無法辨識的超商別,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (街口支付 | JKoPay)
+payuni,JKO02020,物流(取件不付款)，無超商的合作模式資訊,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (街口支付 | JKoPay)
+payuni,JKO02021,物流(取件不付款)，無法辨識的取件後付款方式,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (街口支付 | JKoPay)
+payuni,JKO02022,物流(取件不付款)，無超商的門市代碼,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (街口支付 | JKoPay)
+payuni,JKO02023,物流(取件不付款)，未有收件人姓名,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (街口支付 | JKoPay)
+payuni,JKO02024,物流(取件不付款)，收件人姓名，長度超過限制,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (街口支付 | JKoPay)
+payuni,JKO02025,物流(取件不付款)，未有收件人手機號碼,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (街口支付 | JKoPay)
+payuni,JKO02026,物流(取件不付款)，手機號碼格式錯誤(09開頭),,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (街口支付 | JKoPay)
+payuni,JKO02027,物流(取件不付款)，該門市無法配送，請重新選擇門市,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (街口支付 | JKoPay)
+payuni,JKO02028,物流(取件不付款)，收件人電話區碼長度超過限制,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (街口支付 | JKoPay)
+payuni,JKO02029,物流(取件不付款)，收件人電話區碼格式錯誤,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (街口支付 | JKoPay)
+payuni,JKO02030,物流(取件不付款)，收件人電話長度超過限制,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (街口支付 | JKoPay)
+payuni,JKO02031,物流(取件不付款)，收件人電話格式錯誤,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (街口支付 | JKoPay)
+payuni,JKO02032,物流(取件不付款)，未有收件人地址,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (街口支付 | JKoPay)
+payuni,JKO02033,物流(取件不付款)，收件人地址長度超過限制,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (街口支付 | JKoPay)
+payuni,JKO02034,物流(取件不付款)，未有希望配達時間代碼,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (街口支付 | JKoPay)
+payuni,JKO02035,物流(取件不付款)，無法辨識的希望配達時間代碼,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (街口支付 | JKoPay)
+payuni,JKO02036,未有商品說明,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (街口支付 | JKoPay)
+payuni,JKO02037,未有消費者電子信箱,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (街口支付 | JKoPay)
+payuni,JKO02038,未有買方名稱(抬頭),,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (街口支付 | JKoPay)
+payuni,JKO02039,未有載具類別,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (街口支付 | JKoPay)
+payuni,JKO02040,無法辨識的載具類別,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (街口支付 | JKoPay)
+payuni,JKO02041,載具資料不可為空,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (街口支付 | JKoPay)
+payuni,JKO02042,載具資料，格式錯誤,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (街口支付 | JKoPay)
+payuni,JKO02043,載具資料，格式錯誤(長度),,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (街口支付 | JKoPay)
+payuni,JKO02044,商店不提供捐贈發票選項,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (街口支付 | JKoPay)
+payuni,JKO02045,此捐贈碼不在商店提供範圍內,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (街口支付 | JKoPay)
+payuni,JKO02046,未有優惠碼,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (街口支付 | JKoPay)
+payuni,JKO02047,折扣金額，格式錯誤,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (街口支付 | JKoPay)
+payuni,JKO02048,有優惠碼時，折扣金額(DiscountAmt)為必要欄位,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (街口支付 | JKoPay)
+payuni,JKO02049,訂單原始金額，格式錯誤,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (街口支付 | JKoPay)
+payuni,JKO02050,有優惠碼時，訂單原始金額(OrderAmt)為必要欄位,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (街口支付 | JKoPay)
+payuni,JKO02051,訂單原始金額(OrderAmt)不等於訂單金額(TradeAmt)+折扣金額(DiscountAmt),,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (街口支付 | JKoPay)
+payuni,JKO02052,優惠券發券背景通知網址，格式錯誤,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (街口支付 | JKoPay)
+payuni,JKO03001,商店未啟用,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (街口支付 | JKoPay)
+payuni,JKO03002,商店未提供街口幕後交易,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (街口支付 | JKoPay)
+payuni,JKO03003,未有代理商幕後相關設定,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (街口支付 | JKoPay)
+payuni,JKO03004,不提供此IP幕後交易,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (街口支付 | JKoPay)
+payuni,JKO03005,商店未有設定AesType,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (街口支付 | JKoPay)
+payuni,JKO03006,商店AesType不符合,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (街口支付 | JKoPay)
+payuni,JKO03007,商店未提供街口支付,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (街口支付 | JKoPay)
+payuni,JKO03008,商店尚未啟用電子發票,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (街口支付 | JKoPay)
+payuni,JKO04001,已存在相同商店訂單編號,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (街口支付 | JKoPay)
+payuni,JKO04002,未有交易唯一Token,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (街口支付 | JKoPay)
+payuni,JKO05001,未有訂單編號,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (街口支付 | JKoPay)
+payuni,JKO05002,未有訂單金額,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (街口支付 | JKoPay)
+payuni,JKO05003,處理失敗,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (街口支付 | JKoPay)
+payuni,JKO05004,解析資料失敗,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (街口支付 | JKoPay)
+payuni,JKO05005,未有對應處理網址,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (街口支付 | JKoPay)
+payuni,JKO05006,未有ChannelKey,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (街口支付 | JKoPay)
+payuni,JKO05007,未有SecretKey,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (街口支付 | JKoPay)
+payuni,JKO05008,連線失敗,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (街口支付 | JKoPay)
+payuni,JKO05009,未有回覆資訊,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (街口支付 | JKoPay)
+payuni,JKO07001,付款失敗,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (街口支付 | JKoPay)
+payuni,JKO08001,交易風控(拒絕交易),,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (街口支付 | JKoPay)
+payuni,JKO08002,交易風控(拒絕交易),,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (街口支付 | JKoPay)
+payuni,JKO08003,交易風控(拒絕交易),,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (街口支付 | JKoPay)
+payuni,JKO08004,交易風控(拒絕交易),,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (街口支付 | JKoPay)
+payuni,JKO08005,交易風控(拒絕交易),,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：交易建立 (街口支付 | JKoPay)
+payuni,API00006,未有Hash資料(HashInfo),,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：續期收款建立、續期收款狀態修改、續期收款訂單內容修改、續期收款卡號修改、續期收款訂單查詢
+payuni,PRD01002,未有商店代號,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：續期收款建立
+payuni,PRD01003,資料 HASH 比對不符合,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：續期收款建立
+payuni,PRD01004,資料解密失敗,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：續期收款建立
+payuni,PRD01005,解密資料不存在,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：續期收款建立
+payuni,PRD01006,查無符合商店資料,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：續期收款建立
+payuni,PRD02001,未有商店代號,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：續期收款建立
+payuni,PRD02002,未有商店自訂編號,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：續期收款建立
+payuni,PRD02003,"商店訂單編號,超過長度限制",,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：續期收款建立
+payuni,PRD02004,"商店訂單編號,格式錯誤(英數字-)",,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：續期收款建立
+payuni,PRD02005,訂單金額，僅可輸入整數,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：續期收款建立
+payuni,PRD02006,訂單金額，格式錯誤(1~199999),,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：續期收款建立
+payuni,PRD02007,未有預計授權日期,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：續期收款建立
+payuni,PRD02008,未有信用卡卡號,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：續期收款建立
+payuni,PRD02009,信用卡卡號需為數字型態,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：續期收款建立
+payuni,PRD02010,信用卡卡號需為16位數字,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：續期收款建立
+payuni,PRD02011,未有信用卡卡片到期日,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：續期收款建立
+payuni,PRD02012,信用卡到期日，格式錯誤(YYMM),,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：續期收款建立
+payuni,PRD02013,未有信用卡末三碼,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：續期收款建立
+payuni,PRD02014,未有代理商幕後相關設定,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：續期收款建立
+payuni,PRD02015,信用卡末三碼，格式錯誤,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：續期收款建立
+payuni,PRD02016,付款人姓名，超過長度限制,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：續期收款建立
+payuni,PRD02017,付款人電話，超過長度限制,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：續期收款建立
+payuni,PRD02018,付款人電話，格式錯誤,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：續期收款建立
+payuni,PRD02019,付款人Email，格式錯誤,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：續期收款建立
+payuni,PRD02020,付款人地址，超過長度限制,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：續期收款建立
+payuni,PRD02021,收件人姓名，超過長度限制,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：續期收款建立
+payuni,PRD02022,收件人電話，超過長度限制,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：續期收款建立
+payuni,PRD02023,收件人電話，格式錯誤,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：續期收款建立
+payuni,PRD02025,收件人地址，超過長度限制,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：續期收款建立
+payuni,PRD02026,預計授權日期格式錯誤,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：續期收款建立
+payuni,PRD02029,不可修改欄位條件超過限制,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：續期收款建立
+payuni,PRD02030,前景通知網址，格式錯誤,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：續期收款建立
+payuni,PRD02031,背景通知網址，格式錯誤,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：續期收款建立
+payuni,PRD02032,返回通知網址，格式錯誤,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：續期收款建立
+payuni,PRD02033,商店未提供約定信用卡幕後交易,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：續期收款建立
+payuni,PRD02034,交易截止秒數，超過範圍(60-600),,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：續期收款建立
+payuni,PRD02035,首期扣款日期格式錯誤,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：續期收款建立
+payuni,PRD02036,扣款週期格式錯誤,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：續期收款建立
+payuni,PRD02037,扣款日期格式錯誤,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：續期收款建立
+payuni,PRD02038,扣款期數僅可輸入數字,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：續期收款建立
+payuni,PRD02039,扣款期數超過上限(900),,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：續期收款建立
+payuni,PRD02040,未有首期扣款設定,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：續期收款建立
+payuni,PRD02041,首期扣款設定格式錯誤,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：續期收款建立
+payuni,PRD02042,自訂扣款日期及扣款週期、日期、期數只可則一傳入,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：續期收款建立
+payuni,PRD02043,商店未提供續期收款幕後交易,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：續期收款建立
+payuni,PRD02044,不可修改欄位條件格式錯誤,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：續期收款建立
+payuni,PRD02045,不提供此IP幕後交易,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：續期收款建立
+payuni,PRD02046,未有商品說明,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：續期收款建立
+payuni,PRD02047,商品說明，超過長度限制,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：續期收款建立
+payuni,PRD02048,未有訂單金額,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：續期收款建立
+payuni,PRD02050,首期金額，僅可輸入整數,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：續期收款建立
+payuni,PRD02051,首期金額，格式錯誤(1~199999),,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：續期收款建立
+payuni,PRD02052,續期收款單號重複,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：續期收款建立
+payuni,PRD03001,商店未啟用,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：續期收款建立、續期收款狀態修改、續期收款訂單查詢
+payuni,PRD04001,授權失敗,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：續期收款建立
+payuni,PRD04002,訂單建立失敗，請洽客服人員,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：續期收款建立
+payuni,PMDF01002,未有商店代號,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：續期收款狀態修改、續期收款訂單查詢
+payuni,PMDF01003,資料 HASH 比對不符合,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：續期收款狀態修改、續期收款訂單查詢
+payuni,PMDF01004,資料解密失敗,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：續期收款狀態修改、續期收款訂單查詢
+payuni,PMDF01005,解密資料不存在,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：續期收款狀態修改、續期收款訂單查詢
+payuni,PMDF01006,查無符合商店資料,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：續期收款狀態修改、續期收款訂單查詢
+payuni,PMDF02001,未有商店代號,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：續期收款狀態修改、續期收款訂單查詢
+payuni,PMDF02002,商店訂單編號，超過長度限制,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：續期收款狀態修改
+payuni,PMDF02003,"商店訂單編號,格式錯誤(英數字-)",,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：續期收款狀態修改
+payuni,PMDF02004,未有修改訂單狀態,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：續期收款狀態修改
+payuni,PMDF02005,修改訂單狀態格式錯誤,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：續期收款狀態修改
+payuni,PMDF02006,未有續期收款單號,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：續期收款狀態修改、續期收款訂單查詢
+payuni,PMDF02007,續期收款單號，超過長度限制,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：續期收款狀態修改、續期收款訂單查詢
+payuni,PMDF02008,修改期數編號，格式錯誤,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：續期收款狀態修改
+payuni,PMDF02009,修改期數編號，超過限制,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：續期收款狀態修改
+payuni,PMDF02010,缺少重新授權必要參數,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：續期收款狀態修改
+payuni,PMDF02011,終止參數格式錯誤,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：續期收款狀態修改
+payuni,PMDF02012,查詢訂單資料錯誤，請稍後再試,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：續期收款狀態修改、續期收款訂單查詢
+payuni,PMDF02013,不可調整已終止訂單狀態,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：續期收款狀態修改
+payuni,PMDF02014,該期數無需重新授權，請確認,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：續期收款狀態修改
+payuni,PMDF02015,該期數已執行過重新授權，請確認,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：續期收款狀態修改
+payuni,PMDF02016,重新授權失敗,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：續期收款狀態修改
+payuni,PMDF02017,狀態修改失敗,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：續期收款狀態修改
+payuni,PMDF02018,查詢訂單資料錯誤，請確認續期收款單號是否正確,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：續期收款狀態修改、續期收款訂單查詢
+payuni,PMDF04001,授權失敗,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：續期收款狀態修改、續期收款訂單查詢
+payuni,PMDF04002,訂單建立失敗，請洽客服人員,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：續期收款狀態修改、續期收款訂單查詢
+payuni,PMDD01002,未有商店代號,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：續期收款訂單內容修改
+payuni,PMDD01003,資料 HASH 比對不符合,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：續期收款訂單內容修改
+payuni,PMDD01004,資料解密失敗,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：續期收款訂單內容修改
+payuni,PMDD01005,解密資料不存在,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：續期收款訂單內容修改
+payuni,PMDD01006,查無符合商店資料,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：續期收款訂單內容修改
+payuni,PMDD02001,未有商店代號,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：續期收款訂單內容修改
+payuni,PMDD02002,每期金額僅可輸入數字,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：續期收款訂單內容修改
+payuni,PMDD02003,每期金額，格式錯誤(1~199999),,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：續期收款訂單內容修改
+payuni,PMDD02004,首期金額僅可輸入數字,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：續期收款訂單內容修改
+payuni,PMDD02005,首期金額，格式錯誤(1~199999),,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：續期收款訂單內容修改
+payuni,PMDD02006,未有續期收款單號,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：續期收款訂單內容修改
+payuni,PMDD02007,續期收款單號，超過長度限制,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：續期收款訂單內容修改
+payuni,PMDD02008,付款人姓名，超過長度限制,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：續期收款訂單內容修改
+payuni,PMDD02009,付款人電話，超過長度限制,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：續期收款訂單內容修改
+payuni,PMDD02010,付款人電話，格式錯誤,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：續期收款訂單內容修改
+payuni,PMDD02011,付款人Email，格式錯誤,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：續期收款訂單內容修改
+payuni,PMDD02013,扣款週期格式錯誤,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：續期收款訂單內容修改
+payuni,PMDD02014,扣款日期格式錯誤,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：續期收款訂單內容修改
+payuni,PMDD02015,扣款期數僅可輸入數字,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：續期收款訂單內容修改
+payuni,PMDD02016,扣款期數超過上限(900),,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：續期收款訂單內容修改
+payuni,PMDD02017,自訂扣款日期及扣款週期、日期、期數只可則一傳入,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：續期收款訂單內容修改
+payuni,PMDD02018,預計授權日期格式錯誤,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：續期收款訂單內容修改
+payuni,PMDD02019,修改資料失敗,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：續期收款訂單內容修改
+payuni,PMDD02020,不可更換週期方式,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：續期收款訂單內容修改
+payuni,PMDD02021,不可透過api方式修改該資料,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：續期收款訂單內容修改
+payuni,PMDD02022,查詢編輯資料錯誤，請稍後再試,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：續期收款訂單內容修改
+payuni,PMDD02023,查詢訂單資料錯誤，請稍後再試,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：續期收款訂單內容修改
+payuni,PMDD02024,非啟用訂單不可修改,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：續期收款訂單內容修改
+payuni,PRDD3001,商店未啟用,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：續期收款訂單內容修改
+payuni,PMDD04001,授權失敗,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：續期收款訂單內容修改
+payuni,PMDD04002,訂單建立失敗，請洽客服人員,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：續期收款訂單內容修改
+payuni,PCHG01002,未有商店代號,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：續期收款卡號修改
+payuni,PCHG01003,資料 HASH 比對不符合,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：續期收款卡號修改
+payuni,PCHG01004,資料解密失敗,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：續期收款卡號修改
+payuni,PCHG01005,解密資料不存在,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：續期收款卡號修改
+payuni,PCHG01006,查無符合商店資料,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：續期收款卡號修改
+payuni,PCHG02001,未有商店代號,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：續期收款卡號修改
+payuni,PCHG02002,商店未提供續期收款幕後交易,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：續期收款卡號修改
+payuni,PCHG02003,不提供此IP幕後交易,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：續期收款卡號修改
+payuni,PCHG02004,未有續期收款單號,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：續期收款卡號修改
+payuni,PCHG02005,續期收款單號，超過長度限制,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：續期收款卡號修改
+payuni,PCHG02006,續期收款單號，格式錯誤(英數字-),,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：續期收款卡號修改
+payuni,PCHG02007,支付頁型態參數錯誤,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：續期收款卡號修改
+payuni,PCHG02008,信用卡卡號需為數字型態,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：續期收款卡號修改
+payuni,PCHG02009,信用卡卡號需為16位數字,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：續期收款卡號修改
+payuni,PCHG02010,信用卡到期日，格式錯誤(MMYY),,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：續期收款卡號修改
+payuni,PCHG02011,信用卡末三碼，長度限制錯誤,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：續期收款卡號修改
+payuni,PCHG02012,信用卡末三碼，格式錯誤,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：續期收款卡號修改
+payuni,PCHG02013,支付頁參數及信用卡資訊只可則一傳入,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：續期收款卡號修改
+payuni,PCHG02014,已達每日修改上限(5次),,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：續期收款卡號修改
+payuni,PCHG02015,取得訂單資料失敗，請稍後再試,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：續期收款卡號修改
+payuni,PCHG02016,更新交易資訊失敗(token),,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：續期收款卡號修改
+payuni,PCHG02017,狀態修改失敗,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：續期收款卡號修改
+payuni,PCHG03001,商店未啟用,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：續期收款卡號修改
+payuni,PCHG04001,授權失敗,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：續期收款卡號修改
+payuni,PCHG04002,訂單建立失敗，請洽客服人員,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：續期收款卡號修改
+payuni,PCHG04003,系統忙碌中，尚未確認交易結果,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：續期收款卡號修改
+payuni,OPMA01001,解密資料不存在,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：OPEN POINT
+payuni,OPMA01002,未有商店代號,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：OPEN POINT
+payuni,OPMA01003,未有時間戳記,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：OPEN POINT
+payuni,OPMA01004,時間戳記，僅可輸入整數,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：OPEN POINT
+payuni,OPMA01005,時間戳記，已過期,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：OPEN POINT
+payuni,OPMA01006,未有電話格式,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：OPEN POINT
+payuni,OPMA01007,電話格式不符,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：OPEN POINT
+payuni,OPMA01008,再次驗證格式不符合,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：OPEN POINT
+payuni,OPMA02001,未有商店資料,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：OPEN POINT
+payuni,OPMA02002,商店未啟用,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：OPEN POINT
+payuni,OPMA03001,取得驗證碼失敗,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：OPEN POINT
+payuni,OPMC01001,解密資料不存在,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：OPEN POINT
+payuni,OPMC01002,未有商店代號,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：OPEN POINT
+payuni,OPMC01003,未有時間戳記,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：OPEN POINT
+payuni,OPMC01004,時間戳記，僅可輸入整數,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：OPEN POINT
+payuni,OPMC01005,時間戳記，已過期,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：OPEN POINT
+payuni,OPMC01006,未有驗證Token,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：OPEN POINT
+payuni,OPMC01007,未有驗證碼,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：OPEN POINT
+payuni,OPMC02001,未有商店資料,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：OPEN POINT
+payuni,OPMC02002,商店未啟用,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：OPEN POINT
+payuni,OPMC03001,資料異常,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：OPEN POINT
+payuni,OPMC03002,確認會員失敗,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：OPEN POINT
+payuni,OPPQ01001,解密資料不存在,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：OPEN POINT
+payuni,OPPQ01002,未有商店代號,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：OPEN POINT
+payuni,OPPQ01003,未有時間戳記,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：OPEN POINT
+payuni,OPPQ01004,時間戳記，僅可輸入整數,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：OPEN POINT
+payuni,OPPQ01005,時間戳記，已過期,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：OPEN POINT
+payuni,OPPQ01006,[OPEN POINT] 未有會員Token / [OPEN POINT] 未有會員GID,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：OPEN POINT
+payuni,OPPQ02001,未有商店資料,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：OPEN POINT
+payuni,OPPQ02002,商店未啟用,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：OPEN POINT
+payuni,OPPQ03001,查詢會員點數失敗,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：OPEN POINT
+payuni,OPPQ03002,查詢條件異常,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：OPEN POINT
+payuni,OPPT01001,解密資料不存在,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：OPEN POINT
+payuni,OPPT01002,未有商店代號,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：OPEN POINT
+payuni,OPPT01003,未有時間戳記,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：OPEN POINT
+payuni,OPPT01004,時間戳記，僅可輸入整數,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：OPEN POINT
+payuni,OPPT01005,時間戳記，已過期,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：OPEN POINT
+payuni,OPPT01006,[OPEN POINT] 未有會員Token / [OPEN POINT] 未有會員GID,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：OPEN POINT
+payuni,OPPT01007,未有處理類型,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：OPEN POINT
+payuni,OPPT01008,處理類型，格式錯誤,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：OPEN POINT
+payuni,OPPT01009,未有訂單編號,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：OPEN POINT
+payuni,OPPT01010,訂單編號，超過長度限制,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：OPEN POINT
+payuni,OPPT01011,訂單編號，格式錯誤,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：OPEN POINT
+payuni,OPPT01012,未有商店自訂編號,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：OPEN POINT
+payuni,OPPT01013,商店自訂編號，超過長度限制,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：OPEN POINT
+payuni,OPPT01014,商店自訂編號，格式錯誤,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：OPEN POINT
+payuni,OPPT01015,未有點數,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：OPEN POINT
+payuni,OPPT01016,點數，僅可輸入整數,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：OPEN POINT
+payuni,OPPT01017,點數，格式錯誤,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：OPEN POINT
+payuni,OPPT02001,未有商店資料,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：OPEN POINT
+payuni,OPPT02002,商店未啟用,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：OPEN POINT
+payuni,OPPT03001,處理失敗,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：OPEN POINT
+payuni,OPPT03002,[OPEN POINT] 存在相同商店自訂編號 / [OPEN POINT] 查詢條件異常,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：OPEN POINT
+payuni,CHKUSE01000,系統發生錯誤，請聯絡客服,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：優惠券使用查詢
+payuni,CHKUSE01001,未有商店代號,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：優惠券使用查詢
+payuni,CHKUSE01002,資料 HASH 比對不符合,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：優惠券使用查詢
+payuni,CHKUSE01003,資料解密失敗,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：優惠券使用查詢
+payuni,CHKUSE01004,解密資料不存在,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：優惠券使用查詢
+payuni,CHKUSE01005,[優惠券使用查詢] 查無符合代理商資料 / [優惠券使用查詢] 查無符合商店資料 / [優惠券使用查詢] 代理商狀態不符合,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：優惠券使用查詢
+payuni,CHKUSE01006,未有交易 HASH,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：優惠券使用查詢
+payuni,CHKUSE02001,未有商店代號,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：優惠券使用查詢
+payuni,CHKUSE02002,未有訂單編號,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：優惠券使用查詢
+payuni,CHKUSE02003,訂單編號，超過長度限制,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：優惠券使用查詢
+payuni,CHKUSE02004,訂單編號，格式錯誤,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：優惠券使用查詢
+payuni,CHKUSE02005,未有時間戳記,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：優惠券使用查詢
+payuni,CHKUSE02006,時間戳記，僅可輸入整數,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：優惠券使用查詢
+payuni,CHKUSE02007,時間戳記，已過期,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：優惠券使用查詢
+payuni,CHKUSE02008,未有優惠碼,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：優惠券使用查詢
+payuni,CHKUSE02009,未有訂單原始金額,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：優惠券使用查詢
+payuni,CHKUSE02010,[優惠券使用查詢] 訂單原始金額，格式錯誤 / [優惠券使用查詢] 訂單金額，不為允許範圍區間,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：優惠券使用查詢
+payuni,CHKUSE03001,優惠券不可使用,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：優惠券使用查詢
+payuni,COUPON01000,系統發生錯誤，請聯絡客服,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：優惠券全額折抵幕後API
+payuni,COUPON01001,未有商店代號,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：優惠券全額折抵幕後API
+payuni,COUPON01002,資料 HASH 比對不符合,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：優惠券全額折抵幕後API
+payuni,COUPON01003,資料解密失敗,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：優惠券全額折抵幕後API
+payuni,COUPON01004,解密資料不存在,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：優惠券全額折抵幕後API
+payuni,COUPON01005,[優惠券全額折抵幕後API] 查無符合代理商資料 / [優惠券全額折抵幕後API] 查無符合商店資料 / [優惠券全額折抵幕後API] 代理商狀態不符合,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：優惠券全額折抵幕後API
+payuni,COUPON01006,未有交易 HASH,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：優惠券全額折抵幕後API
+payuni,COUPON01007,查無符合商店物流資料,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：優惠券全額折抵幕後API
+payuni,COUPON01008,商店 B2C 物流服務尚未開通,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：優惠券全額折抵幕後API
+payuni,COUPON01009,商店 C2C 物流服務尚未開通,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：優惠券全額折抵幕後API
+payuni,COUPON01010,商店未啟用 B2C 物流服務,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：優惠券全額折抵幕後API
+payuni,COUPON01011,商店未啟用 C2C 物流服務,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：優惠券全額折抵幕後API
+payuni,COUPON01012,收(寄)件人姓名僅支援輸入中文/英文/數字,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：優惠券全額折抵幕後API
+payuni,COUPON01013,收(寄)件人的姓名包含 emoji 符號,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：優惠券全額折抵幕後API
+payuni,COUPON02001,未有商店代號,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：優惠券全額折抵幕後API
+payuni,COUPON02002,未有訂單編號,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：優惠券全額折抵幕後API
+payuni,COUPON02003,訂單編號，超過長度限制,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：優惠券全額折抵幕後API
+payuni,COUPON02004,訂單編號，格式錯誤,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：優惠券全額折抵幕後API
+payuni,COUPON02005,未有時間戳記,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：優惠券全額折抵幕後API
+payuni,COUPON02006,時間戳記，僅可輸入整數,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：優惠券全額折抵幕後API
+payuni,COUPON02007,時間戳記，已過期,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：優惠券全額折抵幕後API
+payuni,COUPON02008,背景通知網址，格式錯誤,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：優惠券全額折抵幕後API
+payuni,COUPON02009,寄送信箱，格式錯誤,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：優惠券全額折抵幕後API
+payuni,COUPON02010,物流(取貨不付款)，未有電子信箱,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：優惠券全額折抵幕後API
+payuni,COUPON02011,物流(取貨不付款)，未有寄件型態,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：優惠券全額折抵幕後API
+payuni,COUPON02012,物流(取貨不付款)，無法辨識的寄件型態,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：優惠券全額折抵幕後API
+payuni,COUPON02013,物流(取貨不付款)，無法辨識的物流別,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：優惠券全額折抵幕後API
+payuni,COUPON02014,物流(取貨不付款)，未有超商別,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：優惠券全額折抵幕後API
+payuni,COUPON02015,物流(取貨不付款)，無法辨識的超商別,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：優惠券全額折抵幕後API
+payuni,COUPON02016,物流(取貨不付款)，無超商的合作模式資訊,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：優惠券全額折抵幕後API
+payuni,COUPON02017,物流(取貨不付款)，無法辨識的取貨後付款方式,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：優惠券全額折抵幕後API
+payuni,COUPON02018,物流(取貨不付款)，無超商的門市代碼,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：優惠券全額折抵幕後API
+payuni,COUPON02019,物流(取貨不付款)，未有收件人姓名,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：優惠券全額折抵幕後API
+payuni,COUPON02020,物流(取貨不付款)，收件人姓名，長度超過限制,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：優惠券全額折抵幕後API
+payuni,COUPON02021,物流(取貨不付款)，未有收件人手機號碼,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：優惠券全額折抵幕後API
+payuni,COUPON02022,物流(取貨不付款)，手機號碼格式錯誤(09開頭),,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：優惠券全額折抵幕後API
+payuni,COUPON02023,物流(取貨不付款)，該門市無法配送，請重新選擇門市,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：優惠券全額折抵幕後API
+payuni,COUPON02024,物流(取貨不付款)，收件人電話區碼長度超過限制,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：優惠券全額折抵幕後API
+payuni,COUPON02025,物流(取貨不付款)，收件人電話區碼格式錯誤,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：優惠券全額折抵幕後API
+payuni,COUPON02026,物流(取貨不付款)，收件人電話長度超過限制,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：優惠券全額折抵幕後API
+payuni,COUPON02027,物流(取貨不付款)，收件人電話格式錯誤,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：優惠券全額折抵幕後API
+payuni,COUPON02028,物流(取貨不付款)，未有收件人地址,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：優惠券全額折抵幕後API
+payuni,COUPON02029,物流(取貨不付款)，未有希望配達時間代碼,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：優惠券全額折抵幕後API
+payuni,COUPON02030,物流(取貨不付款)，無法辨識的希望配達時間代碼,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：優惠券全額折抵幕後API
+payuni,COUPON02031,物流(取貨不付款)，未有商品說明,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：優惠券全額折抵幕後API
+payuni,COUPON02032,未有優惠碼,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：優惠券全額折抵幕後API
+payuni,COUPON02033,未有訂單原始金額訂單原始金額，格式錯誤,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：優惠券全額折抵幕後API
+payuni,COUPON02034,訂單原始金額，格式錯誤,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：優惠券全額折抵幕後API
+payuni,COUPON02035,未有訂單折扣金額,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：優惠券全額折抵幕後API
+payuni,COUPON02036,訂單折扣金額，格式錯誤,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：優惠券全額折抵幕後API
+payuni,COUPON02037,訂單折扣金額(DiscountAmt)需大於等於訂單金額(OrderAmt),,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：優惠券全額折抵幕後API
+payuni,COUPON02038,優惠券發券背景通知網址，格式錯誤,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：優惠券全額折抵幕後API
+payuni,COUPON03001,[優惠券全額折抵幕後API] 商店未啟用 / [優惠券全額折抵幕後API] 已存在相同商店訂單編號,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：優惠券全額折抵幕後API
+payuni,COUPON03002,商店未提供優惠券完全折抵,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：優惠券全額折抵幕後API
+payuni,COUPON03003,商店未提供信用卡幕後交易,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：優惠券全額折抵幕後API
+payuni,COUPON03004,未有優惠券完全折抵相關設定,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：優惠券全額折抵幕後API
+payuni,COUPON03005,不提供此IP幕後交易,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：優惠券全額折抵幕後API
+payuni,COUPON03006,商店未有設定AesType,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：優惠券全額折抵幕後API
+payuni,COUPON03007,商店AesType不符合,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：優惠券全額折抵幕後API
+payuni,COUPON04001,已存在相同商店訂單編號,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：優惠券全額折抵幕後API
+payuni,COUPON07001,付款失敗,,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：優惠券全額折抵幕後API
+payuni,COUPON08001,交易風控(拒絕交易),,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：優惠券全額折抵幕後API
+payuni,COUPON08002,交易風控(拒絕交易),,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：優惠券全額折抵幕後API
+payuni,COUPON08003,交易風控(拒絕交易),,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：優惠券全額折抵幕後API
+payuni,COUPON07004,交易風控(拒絕交易),,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：優惠券全額折抵幕後API
+payuni,COUPON07005,交易風控(拒絕交易),,api,error,見 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）「錯誤代碼」：優惠券全額折抵幕後API
 smilepay,1,取號／建立成功,Success,success,info,只有 1 代表成功；其他值以 Desc 判讀（速買配未公開金流錯誤代碼表）
 pchomepay,10001,APPID 和 Secret 錯誤,invalid user password,auth,error,見 PChomePay API 文件「7. 錯誤代碼」
 pchomepay,10002,不被允許的 IP 位址,Server IP not allow,auth,error,見 PChomePay API 文件「7. 錯誤代碼」
@@ -1189,3 +2688,128 @@ jkopay,2-MT-9004,驗證失敗,Authentication failed,auth,error,確認 Api-Key �
 jkopay,2-MT-9006,exchangeId 請求不一致,Inconsistent request for exchangeId,validation,error,同一 exchangeId 帶了不同參數 屬實作錯誤非暫時性失敗 請修正參數而非重試
 jkopay,2-MT-9005,街口幣發放內部錯誤,Internal service error,server,error,訂單卡在處理中可能已發幣成功 必須以「同一個」exchangeId 重送直到取得明確結果 換號會重複發幣
 jkopay,2-MT-9999,街口幣發放非預期錯誤,Unspecified Error,server,error,同 2-MT-9005 必須以同一個 exchangeId 重送 不可換號
+paynow,M000,參數錯誤 (Contract_check) PayNow合約認可,,api,error,見 PayNow 金流錯誤代碼表（docs.paynow.com.tw/developer/docs/apipdf/cashflow/cashflow-errorcode）：會員資料新增
+paynow,M001,參數錯誤 (mem_kind) 會員類別,,api,error,見 PayNow 金流錯誤代碼表（docs.paynow.com.tw/developer/docs/apipdf/cashflow/cashflow-errorcode）：會員資料新增
+paynow,M002,參數錯誤 (mem_namebrain) 公司名稱或申請人姓名,,api,error,見 PayNow 金流錯誤代碼表（docs.paynow.com.tw/developer/docs/apipdf/cashflow/cashflow-errorcode）：會員資料新增
+paynow,M003,參數錯誤 (mem_cid) 公司統編或個人身分證,,api,error,見 PayNow 金流錯誤代碼表（docs.paynow.com.tw/developer/docs/apipdf/cashflow/cashflow-errorcode）：會員資料新增
+paynow,M004,參數錯誤 (mem_tax) 公司稅籍編號,,api,error,見 PayNow 金流錯誤代碼表（docs.paynow.com.tw/developer/docs/apipdf/cashflow/cashflow-errorcode）：會員資料新增
+paynow,M005,參數錯誤 (mem_nameregist) 負責人姓名,,api,error,見 PayNow 金流錯誤代碼表（docs.paynow.com.tw/developer/docs/apipdf/cashflow/cashflow-errorcode）：會員資料新增
+paynow,M006,參數錯誤 (mem_idregist) 負責人身分證,,api,error,見 PayNow 金流錯誤代碼表（docs.paynow.com.tw/developer/docs/apipdf/cashflow/cashflow-errorcode）：會員資料新增
+paynow,M007,參數錯誤 (mem_tel) 公司代表號,,api,error,見 PayNow 金流錯誤代碼表（docs.paynow.com.tw/developer/docs/apipdf/cashflow/cashflow-errorcode）：會員資料新增
+paynow,M008,參數錯誤 (mem_zipcode) 郵遞區號,,api,error,見 PayNow 金流錯誤代碼表（docs.paynow.com.tw/developer/docs/apipdf/cashflow/cashflow-errorcode）：會員資料新增
+paynow,M009,參數錯誤 (mem_add) 公司地址,,api,error,見 PayNow 金流錯誤代碼表（docs.paynow.com.tw/developer/docs/apipdf/cashflow/cashflow-errorcode）：會員資料新增
+paynow,M025,已有註冊相同帳號但未開通，請至下列網址進行開通 正式：https://www.paynow.com.tw/index/mem_identification.aspx 測試：https://test.paynow.com.tw/index/mem_identification.aspx,,api,error,見 PayNow 金流錯誤代碼表（docs.paynow.com.tw/developer/docs/apipdf/cashflow/cashflow-errorcode）：會員資料新增
+paynow,M026,參數錯誤 (mem_fax) 傳真號碼錯誤,,api,error,見 PayNow 金流錯誤代碼表（docs.paynow.com.tw/developer/docs/apipdf/cashflow/cashflow-errorcode）：會員資料新增
+paynow,M027,會員加入系統錯誤，請連絡系統商,,api,error,見 PayNow 金流錯誤代碼表（docs.paynow.com.tw/developer/docs/apipdf/cashflow/cashflow-errorcode）：會員資料新增
+paynow,M028,會員驗證開通錯誤，請連絡系統商,,api,error,見 PayNow 金流錯誤代碼表（docs.paynow.com.tw/developer/docs/apipdf/cashflow/cashflow-errorcode）：會員資料新增
+paynow,M029,公司名稱或申請人姓名或負責人姓名，姓名不可輸入英數字,,api,error,見 PayNow 金流錯誤代碼表（docs.paynow.com.tw/developer/docs/apipdf/cashflow/cashflow-errorcode）：會員資料新增
+paynow,M030,此帳號可能已被註冊為賣家,,api,error,見 PayNow 金流錯誤代碼表（docs.paynow.com.tw/developer/docs/apipdf/cashflow/cashflow-errorcode）：會員資料新增
+paynow,M031,參數錯誤 (upmem) 是否買家升級賣家,,api,error,見 PayNow 金流錯誤代碼表（docs.paynow.com.tw/developer/docs/apipdf/cashflow/cashflow-errorcode）：會員資料新增
+paynow,M032,買家升級賣家錯誤，無此買家,,api,error,見 PayNow 金流錯誤代碼表（docs.paynow.com.tw/developer/docs/apipdf/cashflow/cashflow-errorcode）：會員資料新增
+paynow,M033,此帳號可能已被註冊為買家,,api,error,見 PayNow 金流錯誤代碼表（docs.paynow.com.tw/developer/docs/apipdf/cashflow/cashflow-errorcode）：會員資料新增
+paynow,M034,此帳號未通過驗證,,api,error,見 PayNow 金流錯誤代碼表（docs.paynow.com.tw/developer/docs/apipdf/cashflow/cashflow-errorcode）：會員資料新增
+paynow,M035,MCC_CODE格式錯誤,,api,error,見 PayNow 金流錯誤代碼表（docs.paynow.com.tw/developer/docs/apipdf/cashflow/cashflow-errorcode）：會員資料新增
+paynow,M036,非使用中MCC_CODE代碼,,api,error,見 PayNow 金流錯誤代碼表（docs.paynow.com.tw/developer/docs/apipdf/cashflow/cashflow-errorcode）：會員資料新增
+paynow,M037,手續費率設定錯誤,,api,error,見 PayNow 金流錯誤代碼表（docs.paynow.com.tw/developer/docs/apipdf/cashflow/cashflow-errorcode）：會員資料新增
+paynow,A000,額度查詢錯誤,,api,error,見 PayNow 金流錯誤代碼表（docs.paynow.com.tw/developer/docs/apipdf/cashflow/cashflow-errorcode）：升級商務資格
+paynow,A001,商務升級會員帳號錯誤,,api,error,見 PayNow 金流錯誤代碼表（docs.paynow.com.tw/developer/docs/apipdf/cashflow/cashflow-errorcode）：升級商務資格
+paynow,A002,未使用信用卡認證，請先申請信用卡認證,,api,error,見 PayNow 金流錯誤代碼表（docs.paynow.com.tw/developer/docs/apipdf/cashflow/cashflow-errorcode）：升級商務資格
+paynow,A003,您已經使用過信用卡認證服務,,api,error,見 PayNow 金流錯誤代碼表（docs.paynow.com.tw/developer/docs/apipdf/cashflow/cashflow-errorcode）：升級商務資格
+paynow,A004,信用卡認證碼錯誤，請重新輸入,,api,error,見 PayNow 金流錯誤代碼表（docs.paynow.com.tw/developer/docs/apipdf/cashflow/cashflow-errorcode）：升級商務資格
+paynow,A005,額度提升系統程式錯誤，請連絡系統商,,api,error,見 PayNow 金流錯誤代碼表（docs.paynow.com.tw/developer/docs/apipdf/cashflow/cashflow-errorcode）：升級商務資格
+paynow,C000,非PayNow會員,,api,error,見 PayNow 金流錯誤代碼表（docs.paynow.com.tw/developer/docs/apipdf/cashflow/cashflow-errorcode）：會員請款
+paynow,C001,無可請款資料,,api,error,見 PayNow 金流錯誤代碼表（docs.paynow.com.tw/developer/docs/apipdf/cashflow/cashflow-errorcode）：會員請款
+paynow,C002,無訂單編號資料,,api,error,見 PayNow 金流錯誤代碼表（docs.paynow.com.tw/developer/docs/apipdf/cashflow/cashflow-errorcode）：會員請款
+paynow,C003,可請款筆數與欲請款筆數不符，請確認是否已請款或該交易是否可請款,,api,error,見 PayNow 金流錯誤代碼表（docs.paynow.com.tw/developer/docs/apipdf/cashflow/cashflow-errorcode）：會員請款
+paynow,C004,訂單編號請款程式錯誤，請與系統商連絡,,api,error,見 PayNow 金流錯誤代碼表（docs.paynow.com.tw/developer/docs/apipdf/cashflow/cashflow-errorcode）：會員請款
+paynow,C005,全數請款程式錯誤，請與系統商連絡,,api,error,見 PayNow 金流錯誤代碼表（docs.paynow.com.tw/developer/docs/apipdf/cashflow/cashflow-errorcode）：會員請款
+paynow,C006,無對應驗證碼ID,,api,error,見 PayNow 金流錯誤代碼表（docs.paynow.com.tw/developer/docs/apipdf/cashflow/cashflow-errorcode）：會員請款
+paynow,C007,驗證碼錯誤,,api,error,見 PayNow 金流錯誤代碼表（docs.paynow.com.tw/developer/docs/apipdf/cashflow/cashflow-errorcode）：會員請款
+paynow,C008,無此EC廠商,,api,error,見 PayNow 金流錯誤代碼表（docs.paynow.com.tw/developer/docs/apipdf/cashflow/cashflow-errorcode）：會員請款
+paynow,C009,此會員無EC廠商,,api,error,見 PayNow 金流錯誤代碼表（docs.paynow.com.tw/developer/docs/apipdf/cashflow/cashflow-errorcode）：會員請款
+paynow,B000,更新會員銀行帳戶失敗,,api,error,見 PayNow 金流錯誤代碼表（docs.paynow.com.tw/developer/docs/apipdf/cashflow/cashflow-errorcode）：銀行帳號變更
+paynow,B001,驗證碼錯誤,,api,error,見 PayNow 金流錯誤代碼表（docs.paynow.com.tw/developer/docs/apipdf/cashflow/cashflow-errorcode）：銀行帳號變更
+paynow,B002,變更會員銀行帳戶系統錯誤，請連絡系統商,,api,error,見 PayNow 金流錯誤代碼表（docs.paynow.com.tw/developer/docs/apipdf/cashflow/cashflow-errorcode）：銀行帳號變更
+paynow,R000,退款系統程式錯誤，請與系統商連絡,,api,error,見 PayNow 金流錯誤代碼表（docs.paynow.com.tw/developer/docs/apipdf/cashflow/cashflow-errorcode）：交易退款
+paynow,R001,申請人類別無填寫,,api,error,見 PayNow 金流錯誤代碼表（docs.paynow.com.tw/developer/docs/apipdf/cashflow/cashflow-errorcode）：交易退款
+paynow,R002,參數錯誤 (buysafeno) 訂單編號,,api,error,見 PayNow 金流錯誤代碼表（docs.paynow.com.tw/developer/docs/apipdf/cashflow/cashflow-errorcode）：交易退款
+paynow,R003,參數錯誤 (WebNo) 賣家會員帳號(公司統編或個人身分證),,api,error,見 PayNow 金流錯誤代碼表（docs.paynow.com.tw/developer/docs/apipdf/cashflow/cashflow-errorcode）：交易退款
+paynow,R004,參數錯誤 (id) 買家會員帳號,,api,error,見 PayNow 金流錯誤代碼表（docs.paynow.com.tw/developer/docs/apipdf/cashflow/cashflow-errorcode）：交易退款
+paynow,R005,參數錯誤 (refundvalue) 退貨原因,,api,error,見 PayNow 金流錯誤代碼表（docs.paynow.com.tw/developer/docs/apipdf/cashflow/cashflow-errorcode）：交易退款
+paynow,R006,參數錯誤 (refunddate) 退貨日期,,api,error,見 PayNow 金流錯誤代碼表（docs.paynow.com.tw/developer/docs/apipdf/cashflow/cashflow-errorcode）：交易退款
+paynow,R007,參數錯誤 (ECPlatform) EC廠商名稱,,api,error,見 PayNow 金流錯誤代碼表（docs.paynow.com.tw/developer/docs/apipdf/cashflow/cashflow-errorcode）：交易退款
+paynow,R008,參數錯誤 (IDKey) IDKey檢驗識別碼,,api,error,見 PayNow 金流錯誤代碼表（docs.paynow.com.tw/developer/docs/apipdf/cashflow/cashflow-errorcode）：交易退款
+paynow,R009,參數錯誤 (PassCode) 檢驗識別碼,,api,error,見 PayNow 金流錯誤代碼表（docs.paynow.com.tw/developer/docs/apipdf/cashflow/cashflow-errorcode）：交易退款
+paynow,R010,參數錯誤 (refundmode) 退貨型態,,api,error,見 PayNow 金流錯誤代碼表（docs.paynow.com.tw/developer/docs/apipdf/cashflow/cashflow-errorcode）：交易退款
+paynow,R011,今日交易不可當日退款,,api,error,見 PayNow 金流錯誤代碼表（docs.paynow.com.tw/developer/docs/apipdf/cashflow/cashflow-errorcode）：交易退款
+paynow,R012,此交易賣家與申請退貨賣家不符,,api,error,見 PayNow 金流錯誤代碼表（docs.paynow.com.tw/developer/docs/apipdf/cashflow/cashflow-errorcode）：交易退款
+paynow,R013,查無此交易,,api,error,見 PayNow 金流錯誤代碼表（docs.paynow.com.tw/developer/docs/apipdf/cashflow/cashflow-errorcode）：交易退款
+paynow,R014,參數錯誤 (mem_bankaccno) 銀行帳號,,api,error,見 PayNow 金流錯誤代碼表（docs.paynow.com.tw/developer/docs/apipdf/cashflow/cashflow-errorcode）：交易退款
+paynow,R015,參數錯誤 (accountbankno) 銀行代碼,,api,error,見 PayNow 金流錯誤代碼表（docs.paynow.com.tw/developer/docs/apipdf/cashflow/cashflow-errorcode）：交易退款
+paynow,R016,參數錯誤 (mem_bankaccount) 撥款銀行分行名稱,,api,error,見 PayNow 金流錯誤代碼表（docs.paynow.com.tw/developer/docs/apipdf/cashflow/cashflow-errorcode）：交易退款
+paynow,R017,由賣家取消信用卡交易，系統自動通知發卡行退還額度,,api,error,見 PayNow 金流錯誤代碼表（docs.paynow.com.tw/developer/docs/apipdf/cashflow/cashflow-errorcode）：交易退款
+paynow,R018,非成功交易不得退款,,api,error,見 PayNow 金流錯誤代碼表（docs.paynow.com.tw/developer/docs/apipdf/cashflow/cashflow-errorcode）：交易退款
+paynow,R019,此貨品已配送不得退款,,api,error,見 PayNow 金流錯誤代碼表（docs.paynow.com.tw/developer/docs/apipdf/cashflow/cashflow-errorcode）：交易退款
+paynow,R020,此交易超過保管天數不得退款,,api,error,見 PayNow 金流錯誤代碼表（docs.paynow.com.tw/developer/docs/apipdf/cashflow/cashflow-errorcode）：交易退款
+paynow,R021,此交易小於30元不得退款,,api,error,見 PayNow 金流錯誤代碼表（docs.paynow.com.tw/developer/docs/apipdf/cashflow/cashflow-errorcode）：交易退款
+paynow,R022,此交易買家與申請退貨買家不符,,api,error,見 PayNow 金流錯誤代碼表（docs.paynow.com.tw/developer/docs/apipdf/cashflow/cashflow-errorcode）：交易退款
+paynow,R023,此交易已請款不得退款,,api,error,見 PayNow 金流錯誤代碼表（docs.paynow.com.tw/developer/docs/apipdf/cashflow/cashflow-errorcode）：交易退款
+paynow,R024,參數錯誤 (idRegist) 消費者身分證字號錯誤,,api,error,見 PayNow 金流錯誤代碼表（docs.paynow.com.tw/developer/docs/apipdf/cashflow/cashflow-errorcode）：交易退款
+paynow,R025,退貨取消錯誤，請聯絡系統商,,api,error,見 PayNow 金流錯誤代碼表（docs.paynow.com.tw/developer/docs/apipdf/cashflow/cashflow-errorcode）：交易退款
+paynow,R026,此買家無可退貨交易,,api,error,見 PayNow 金流錯誤代碼表（docs.paynow.com.tw/developer/docs/apipdf/cashflow/cashflow-errorcode）：交易退款
+paynow,R027,交易已報送發卡行待回覆，目前不得退款,,api,error,見 PayNow 金流錯誤代碼表（docs.paynow.com.tw/developer/docs/apipdf/cashflow/cashflow-errorcode）：交易退款
+paynow,R028,只能是商家發動退款,,api,error,見 PayNow 金流錯誤代碼表（docs.paynow.com.tw/developer/docs/apipdf/cashflow/cashflow-errorcode）：交易退款
+paynow,R029,只能是確認退款狀態,,api,error,見 PayNow 金流錯誤代碼表（docs.paynow.com.tw/developer/docs/apipdf/cashflow/cashflow-errorcode）：交易退款
+paynow,R030,只能是信用卡交易,,api,error,見 PayNow 金流錯誤代碼表（docs.paynow.com.tw/developer/docs/apipdf/cashflow/cashflow-errorcode）：交易退款
+paynow,R031,退款金額錯誤,,api,error,見 PayNow 金流錯誤代碼表（docs.paynow.com.tw/developer/docs/apipdf/cashflow/cashflow-errorcode）：交易退款
+paynow,R032,此交易不支援部分退款,,api,error,見 PayNow 金流錯誤代碼表（docs.paynow.com.tw/developer/docs/apipdf/cashflow/cashflow-errorcode）：交易退款
+paynow,R033,今日請款金額(+30)須大於退款金額。,,api,error,見 PayNow 金流錯誤代碼表（docs.paynow.com.tw/developer/docs/apipdf/cashflow/cashflow-errorcode）：交易退款
+paynow,R035,退款無法取消,,api,error,見 PayNow 金流錯誤代碼表（docs.paynow.com.tw/developer/docs/apipdf/cashflow/cashflow-errorcode）：交易退款
+paynow,R036,票券訂單已核銷，無法退款,,api,error,見 PayNow 金流錯誤代碼表（docs.paynow.com.tw/developer/docs/apipdf/cashflow/cashflow-errorcode）：交易退款
+paynow,R037,此為已撥款超過180天交易，退款作業完成須2-3個工作天；若於3個工作天後仍未顯示退款，請與PayNow聯繫。,,api,error,見 PayNow 金流錯誤代碼表（docs.paynow.com.tw/developer/docs/apipdf/cashflow/cashflow-errorcode）：交易退款
+paynow,N000,會員資料修改程式錯誤，請與開發商聯絡,,api,error,見 PayNow 金流錯誤代碼表（docs.paynow.com.tw/developer/docs/apipdf/cashflow/cashflow-errorcode）：會員資料修改
+paynow,N001,參數錯誤 (WebNo) 賣家會員帳號(公司統編或個人身分證),,api,error,見 PayNow 金流錯誤代碼表（docs.paynow.com.tw/developer/docs/apipdf/cashflow/cashflow-errorcode）：會員資料修改
+paynow,N002,參數錯誤 (PassCode) 檢驗識別碼,,api,error,見 PayNow 金流錯誤代碼表（docs.paynow.com.tw/developer/docs/apipdf/cashflow/cashflow-errorcode）：會員資料修改
+paynow,N003,參數錯誤 (IDKey) IDKey檢驗識別碼,,api,error,見 PayNow 金流錯誤代碼表（docs.paynow.com.tw/developer/docs/apipdf/cashflow/cashflow-errorcode）：會員資料修改
+paynow,N004,參數錯誤 (ECPlatform) EC廠商名稱,,api,error,見 PayNow 金流錯誤代碼表（docs.paynow.com.tw/developer/docs/apipdf/cashflow/cashflow-errorcode）：會員資料修改
+paynow,N005,參數錯誤 (webtel) 客服電話,,api,error,見 PayNow 金流錯誤代碼表（docs.paynow.com.tw/developer/docs/apipdf/cashflow/cashflow-errorcode）：會員資料修改
+paynow,N006,參數錯誤 (mem_fax) 傳真號碼,,api,error,見 PayNow 金流錯誤代碼表（docs.paynow.com.tw/developer/docs/apipdf/cashflow/cashflow-errorcode）：會員資料修改
+paynow,N007,參數錯誤 (memtel) 公司代表號,,api,error,見 PayNow 金流錯誤代碼表（docs.paynow.com.tw/developer/docs/apipdf/cashflow/cashflow-errorcode）：會員資料修改
+paynow,N008,參數錯誤 (mem_zipcode) 郵遞區號,,api,error,見 PayNow 金流錯誤代碼表（docs.paynow.com.tw/developer/docs/apipdf/cashflow/cashflow-errorcode）：會員資料修改
+paynow,N009,參數錯誤 (mem_add) 地址,,api,error,見 PayNow 金流錯誤代碼表（docs.paynow.com.tw/developer/docs/apipdf/cashflow/cashflow-errorcode）：會員資料修改
+paynow,N010,參數錯誤 (mem_namecontect) 聯絡人姓名,,api,error,見 PayNow 金流錯誤代碼表（docs.paynow.com.tw/developer/docs/apipdf/cashflow/cashflow-errorcode）：會員資料修改
+paynow,N011,參數錯誤 (mem_emailcontect) 聯絡人Email,,api,error,見 PayNow 金流錯誤代碼表（docs.paynow.com.tw/developer/docs/apipdf/cashflow/cashflow-errorcode）：會員資料修改
+paynow,N012,參數錯誤 (mem_telcontect) 聯絡人電話,,api,error,見 PayNow 金流錯誤代碼表（docs.paynow.com.tw/developer/docs/apipdf/cashflow/cashflow-errorcode）：會員資料修改
+paynow,N013,參數錯誤 (mem_telpcontect) 聯絡人手機,,api,error,見 PayNow 金流錯誤代碼表（docs.paynow.com.tw/developer/docs/apipdf/cashflow/cashflow-errorcode）：會員資料修改
+paynow,N014,參數錯誤 (mem_checkpw) 網站交易密碼,,api,error,見 PayNow 金流錯誤代碼表（docs.paynow.com.tw/developer/docs/apipdf/cashflow/cashflow-errorcode）：會員資料修改
+paynow,N015,地址不接受郵政信箱,,api,error,見 PayNow 金流錯誤代碼表（docs.paynow.com.tw/developer/docs/apipdf/cashflow/cashflow-errorcode）：會員資料修改
+paynow,N016,地址錯誤，請輸入正確地址,,api,error,見 PayNow 金流錯誤代碼表（docs.paynow.com.tw/developer/docs/apipdf/cashflow/cashflow-errorcode）：會員資料修改
+paynow,N017,郵遞區號錯誤，請輸入正確郵遞區號,,api,error,見 PayNow 金流錯誤代碼表（docs.paynow.com.tw/developer/docs/apipdf/cashflow/cashflow-errorcode）：會員資料修改
+paynow,N018,該賣家非PayNow會員,,api,error,見 PayNow 金流錯誤代碼表（docs.paynow.com.tw/developer/docs/apipdf/cashflow/cashflow-errorcode）：會員資料修改
+paynow,N019,賣家帳號不可輸入全形字,,api,error,見 PayNow 金流錯誤代碼表（docs.paynow.com.tw/developer/docs/apipdf/cashflow/cashflow-errorcode）：會員資料修改
+paynow,N020,公司代表號不可輸入全形字,,api,error,見 PayNow 金流錯誤代碼表（docs.paynow.com.tw/developer/docs/apipdf/cashflow/cashflow-errorcode）：會員資料修改
+paynow,N021,聯絡人電話不可輸入全形字,,api,error,見 PayNow 金流錯誤代碼表（docs.paynow.com.tw/developer/docs/apipdf/cashflow/cashflow-errorcode）：會員資料修改
+paynow,N022,聯絡人手機不可輸入全形字,,api,error,見 PayNow 金流錯誤代碼表（docs.paynow.com.tw/developer/docs/apipdf/cashflow/cashflow-errorcode）：會員資料修改
+paynow,N023,客服電話不可輸入全形字,,api,error,見 PayNow 金流錯誤代碼表（docs.paynow.com.tw/developer/docs/apipdf/cashflow/cashflow-errorcode）：會員資料修改
+paynow,N024,聯絡人Email不可輸入全形字,,api,error,見 PayNow 金流錯誤代碼表（docs.paynow.com.tw/developer/docs/apipdf/cashflow/cashflow-errorcode）：會員資料修改
+paynow,N025,客服Email不可輸入全形字,,api,error,見 PayNow 金流錯誤代碼表（docs.paynow.com.tw/developer/docs/apipdf/cashflow/cashflow-errorcode）：會員資料修改
+paynow,N026,身分證字號驗證錯誤 或 賣家統一編號不正確,,api,error,見 PayNow 金流錯誤代碼表（docs.paynow.com.tw/developer/docs/apipdf/cashflow/cashflow-errorcode）：會員資料修改
+paynow,N027,參數錯誤 (mem_type) 會員類型,,api,error,見 PayNow 金流錯誤代碼表（docs.paynow.com.tw/developer/docs/apipdf/cashflow/cashflow-errorcode）：會員資料修改
+paynow,N028,參數錯誤 (mem_webname)網站名稱,,api,error,見 PayNow 金流錯誤代碼表（docs.paynow.com.tw/developer/docs/apipdf/cashflow/cashflow-errorcode）：會員資料修改
+paynow,P000,交易查詢系統錯誤，請連絡系統開發商,,api,error,見 PayNow 金流錯誤代碼表（docs.paynow.com.tw/developer/docs/apipdf/cashflow/cashflow-errorcode）：交易查詢
+paynow,Q000,系統錯誤請聯絡開發廠商,,api,error,見 PayNow 金流錯誤代碼表（docs.paynow.com.tw/developer/docs/apipdf/cashflow/cashflow-errorcode）：會員查詢
+paynow,Q001,會員身分不符,,api,error,見 PayNow 金流錯誤代碼表（docs.paynow.com.tw/developer/docs/apipdf/cashflow/cashflow-errorcode）：會員查詢
+paynow,Q002,查無此會員,,api,error,見 PayNow 金流錯誤代碼表（docs.paynow.com.tw/developer/docs/apipdf/cashflow/cashflow-errorcode）：會員查詢
+paynow,Q003,未開通會員，系統已開通帳號，請重新修改會員資料,,api,error,見 PayNow 金流錯誤代碼表（docs.paynow.com.tw/developer/docs/apipdf/cashflow/cashflow-errorcode）：會員查詢
+paynow,Q004,單純買家會員，請轉換成賣家會員,,api,error,見 PayNow 金流錯誤代碼表（docs.paynow.com.tw/developer/docs/apipdf/cashflow/cashflow-errorcode）：會員查詢
+paynow,T000,系統錯誤請聯絡開發廠商,,api,error,見 PayNow 金流錯誤代碼表（docs.paynow.com.tw/developer/docs/apipdf/cashflow/cashflow-errorcode）：票券交易核銷
+paynow,T001,票券未開通,,api,error,見 PayNow 金流錯誤代碼表（docs.paynow.com.tw/developer/docs/apipdf/cashflow/cashflow-errorcode）：票券交易核銷
+paynow,T002,核銷碼格式錯誤(確認是否數字並為7碼),,api,error,見 PayNow 金流錯誤代碼表（docs.paynow.com.tw/developer/docs/apipdf/cashflow/cashflow-errorcode）：票券交易核銷
+paynow,T003,非票券交易,,api,error,見 PayNow 金流錯誤代碼表（docs.paynow.com.tw/developer/docs/apipdf/cashflow/cashflow-errorcode）：票券交易核銷
+paynow,T004,核銷碼檢核錯誤,,api,error,見 PayNow 金流錯誤代碼表（docs.paynow.com.tw/developer/docs/apipdf/cashflow/cashflow-errorcode）：票券交易核銷
+paynow,T008,非成功交易不可核銷,,api,error,見 PayNow 金流錯誤代碼表（docs.paynow.com.tw/developer/docs/apipdf/cashflow/cashflow-errorcode）：票券交易核銷
+paynow,T009,訂單所屬賣家與商家帳號不合,,api,error,見 PayNow 金流錯誤代碼表（docs.paynow.com.tw/developer/docs/apipdf/cashflow/cashflow-errorcode）：票券交易核銷
+paynow,T010,該票券已使用不可重複核銷,,api,error,見 PayNow 金流錯誤代碼表（docs.paynow.com.tw/developer/docs/apipdf/cashflow/cashflow-errorcode）：票券交易核銷
+paynow,T005,統編驗證錯誤(非公司戶會員),,api,error,見 PayNow 金流錯誤代碼表（docs.paynow.com.tw/developer/docs/apipdf/cashflow/cashflow-errorcode）：核銷會員轉換
+paynow,T006,此會員已為票券使用者,,api,error,見 PayNow 金流錯誤代碼表（docs.paynow.com.tw/developer/docs/apipdf/cashflow/cashflow-errorcode）：核銷會員轉換
+paynow,T007,此會員非EC票券使用者,,api,error,見 PayNow 金流錯誤代碼表（docs.paynow.com.tw/developer/docs/apipdf/cashflow/cashflow-errorcode）：核銷會員轉換

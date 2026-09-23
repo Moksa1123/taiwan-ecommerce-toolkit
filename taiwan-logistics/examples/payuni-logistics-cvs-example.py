@@ -1,26 +1,19 @@
 #!/usr/bin/env python3
 """
-PAYUNi 統一物流 Python 完整範例
+PAYUNi 統一物流範例：7-ELEVEN 大宗寄倉 (B2C)／店到店 (C2C)、黑貓宅配 (HOME)
 
-支援: 7-11 店到店（C2C，常溫/冷凍）、7-11 大宗寄倉（B2C）、黑貓宅配（常溫/冷凍/冷藏）
-
-依據（皆已對照原始碼）:
-- 加解密：統一金流官方外掛 PAYUNi_for_WooCommerce 1.2.8 與官方 PHP SDK（payuni/PHP_SDK）
-- 端點、欄位、版本、通知格式：wpbr-payuni-shipping 1.6.4（WordPress.org 上架的正式外掛）
-  src/Api/ShippingRequest.php、ShippingResponse.php、Frontend/StoreSelector.php
-
-端點一覽（皆為 POST，外層欄位 MerID / Version / EncryptInfo / HashInfo）:
+依據 PAYUNi 官方文件 https://docs.payuni.com.tw/web/#/7（物流工具、Notify、貨態碼 120、錯誤碼 119）；
+加解密與官方外掛 PAYUNi_for_WooCommerce 1.2.8、官方 PHP SDK 逐位元組相同（tests/vectors/payuni.json）。
 
 | 用途 | 路徑 | Version |
 |---|---|---|
-| 建立 7-11 物流單 | /api/logistics/trade | 1.1 |
-| 建立黑貓物流單 | /api/home_delivery/trade | 1.1 |
-| 查詢物流單 | /api/logistics/query | 1.1 |
-| 7-11 門市地圖（瀏覽器表單） | /api/logistics/ship_map | 1.1 |
-| 列印 7-11 託運單（瀏覽器表單） | /api/logistics/print_label | 1.0 |
-| 黑貓託運單號 PDF（瀏覽器表單） | /api/home_delivery/get_obt_number_pdf | — |
+| 門市地圖（前景） | /api/logistics/ship_map | 1.1 |
+| 物流單查詢 | /api/logistics/query | 1.1 |
+| 超商出貨單列印（前景） | /api/logistics/print_label | 1.0 |
+| 黑貓產編號並下載託運單（前景） | /api/home_delivery/get_obt_number_pdf | 1.0 |
+| 黑貓補下載託運單（前景） | /api/home_delivery/download_pdf | 1.0 |
 
-API 文件: https://docs.payuni.com.tw/web/
+物流單在交易 API（UPP 或幕後交易）一併建立，見 shipment_fields()。
 """
 
 import base64
@@ -29,7 +22,6 @@ import hmac
 import json
 import time
 import urllib.parse
-from dataclasses import dataclass, field
 from typing import Any, Dict, Literal, Optional
 
 try:
@@ -40,57 +32,56 @@ except ImportError:
     HAS_DEPENDENCIES = False
 
 
-# 代碼定義（同 wpbr-payuni-shipping src/Utils/*.php）
-SHIP_TYPE_SEVEN = '1'       # 7-ELEVEN
-SHIP_TYPE_TCAT = '2'        # 黑貓
+SHIP_TYPE_SEVEN = '1'
+SHIP_TYPE_TCAT = '2'
 GOODS_TYPE_NORMAL = '1'     # 常溫
 GOODS_TYPE_FROZEN = '2'     # 冷凍
 GOODS_TYPE_COLD = '3'       # 冷藏（僅黑貓）
-SERVICE_TYPE_COD = '1'      # 取貨付款
-SERVICE_TYPE_NOT_COD = '3'  # 取貨不付款
+
+# 物流貨態狀態碼（官方 page 120）
+SHIP_STATUS = {
+    '91': '未處理', '92': '處理中', '98': '處理中(已接收)', '21': '待出貨', '22': '物流驗收',
+    '31': '配送中', '32': '待取貨', '33': '異常訂單', '11': '已取貨', '41': '已取消',
+    '43': '賠償訂單', '44': '包裹遺失', '46': '包裹拋棄', '51': '一般退貨', '52': '買家未取',
+    '53': '廠退', '55': '賣家未取', '56': '已轉宅配退回', '81': '門市關轉', '82': '待轉宅配退回',
+}
 
 
-@dataclass
-class ShipmentData:
+def shipment_fields(lgs_type: Literal['B2C', 'C2C', 'HOME'], consignee: str, consignee_mobile: str,
+                    goods_type: str = GOODS_TYPE_NORMAL, backend: bool = False, cod: bool = False,
+                    store_id: str = '', consignee_address: str = '', delivery_time_tag: str = '04') -> Dict[str, Any]:
     """
-    物流訂單資料（對應 build_request_args 的 trade 欄位）
+    交易 API 的物流欄位，併入 EncryptInfo。
 
-    ship_type 決定走 7-11（/logistics/trade）或黑貓（/home_delivery/trade）。
+    - UPP（backend=False）：ShipTag=1；cod=True 另帶 Ship=1（取貨付款）。門市由消費者在支付頁選。
+    - 幕後交易（backend=True，ATM／CVS／信用卡 Token／LINE Pay／街口／AFTEE）：只支援取貨不付款，
+      ServiceType=3；超商須帶 StoreID，黑貓須帶 ConsigneeAddress、DeliveryTimeTag。
     """
-    mer_trade_no: str
-    ship_type: Literal['1', '2']
-    lgs_type: Literal['C2C', 'B2C', 'HOME']
-    goods_type: Literal['1', '2', '3']
-    trade_amt: int                       # 取貨付款＝代收金額；取貨不付款＝報值金額（外掛限制 30–20000）
-    consignee: str
-    consignee_mobile: str
-    consignee_mail: str
-    sender_name: str
-    sender_mobile: str
-    notify_url: str
-    service_type: Literal['1', '3'] = SERVICE_TYPE_NOT_COD
-    store_id: str = ''                   # 7-11 取貨門市（由門市地圖取得）
-    refund_store_id: str = ''
-    consignee_address: str = ''          # 黑貓必填
-    prod_desc: str = ''                  # 黑貓必填，外掛截斷為 20 字
-    delivery_time_tag: str = ''          # 黑貓配達時段
-
-
-@dataclass
-class ShipmentResponse:
-    """建立物流單結果（EncryptInfo 解密後內容）"""
-    success: bool
-    status: str
-    message: str
-    ship_trade_no: Optional[str] = None  # UNi 物流序號，後續查詢 / 列印 / 通知都以它對應
-    trade_amt: Optional[str] = None
-    service_type: Optional[str] = None
-    raw: Dict[str, Any] = field(default_factory=dict)
+    ship_type = SHIP_TYPE_TCAT if lgs_type == 'HOME' else SHIP_TYPE_SEVEN
+    fields: Dict[str, Any] = {'LgsType': lgs_type, 'ShipType': ship_type, 'GoodsType': goods_type,
+                              'Consignee': consignee, 'ConsigneeMobile': consignee_mobile}
+    if not backend:
+        fields['ShipTag'] = 1
+        if cod:
+            fields['Ship'] = 1
+        if ship_type == SHIP_TYPE_TCAT and consignee_address:
+            fields['ConsigneeAddress'] = consignee_address
+        return fields
+    if cod:
+        raise ValueError('幕後交易 API 只支援取貨不付款')
+    fields['ServiceType'] = '3'
+    if ship_type == SHIP_TYPE_SEVEN:
+        if not store_id:
+            raise ValueError('超商取貨需要 StoreID（門市地圖取得）')
+        fields['StoreID'] = store_id
+    else:
+        if not consignee_address:
+            raise ValueError('黑貓宅配需要 ConsigneeAddress')
+        fields.update({'ConsigneeAddress': consignee_address, 'DeliveryTimeTag': delivery_time_tag})
+    return fields
 
 
 class PAYUNiLogistics:
-    """PAYUNi 統一物流服務"""
-
     TEST_API_URL = 'https://sandbox-api.payuni.com.tw/api'
     PROD_API_URL = 'https://api.payuni.com.tw/api'
 
@@ -157,8 +148,8 @@ class PAYUNiLogistics:
 
         encrypt_info = result.get('EncryptInfo', '')
         if not encrypt_info:
-            # 外層錯誤（例如 API00003 無 API 版本號）不會有 EncryptInfo
-            return {'Status': result.get('Status', 'ERROR'), 'Message': result.get('Message', ''), 'raw': result}
+            # 外層錯誤不帶 EncryptInfo
+            return {'Status': result.get('Status', ''), 'Message': result.get('Message', ''), 'raw': result}
         if not self.verify_hash_info(encrypt_info, result.get('HashInfo', '')):
             raise ValueError('HashInfo 驗證失敗')
         return self.decrypt_data(encrypt_info)
@@ -167,171 +158,94 @@ class PAYUNiLogistics:
     # 業務 API
     # ------------------------------------------------------------------
 
-    def build_shipment_payload(self, data: ShipmentData) -> Dict[str, Any]:
-        """組出建立物流單的 EncryptInfo 內容（欄位同官方外掛 build_request_args）"""
-        payload = {
-            'MerID': self.mer_id,
-            'Timestamp': int(time.time()),
-            'MerTradeNo': data.mer_trade_no,
-            'GoodsType': data.goods_type,
-            'LgsType': data.lgs_type,
-            'ShipType': data.ship_type,
-            'TradeAmt': data.trade_amt,
-            'ServiceType': data.service_type,
-            'StoreID': data.store_id,
-            'Consignee': data.consignee,
-            'ConsigneeMail': data.consignee_mail,
-            'ConsigneeMobile': data.consignee_mobile,
-            'RefundStoreID': data.refund_store_id,
-            'SenderName': data.sender_name,
-            'SenderMobile': data.sender_mobile,
-            'NotifyURL': data.notify_url,
-        }
-        if data.ship_type == SHIP_TYPE_TCAT:
-            if not (data.consignee_address and data.prod_desc):
-                raise ValueError('黑貓宅配需要 ConsigneeAddress 與 ProdDesc')
-            payload.update({
-                'StoreID': '',
-                'DeliveryTimeTag': data.delivery_time_tag,
-                'ConsigneeAddress': data.consignee_address,
-                'ProdDesc': data.prod_desc[:20],
-            })
-        elif not data.store_id:
-            raise ValueError('7-11 取貨需要 StoreID（由門市地圖取得）')
-        return payload
+    def query_shipment(self, lgs_type: Literal['B2C', 'C2C', 'HOME', 'C2B'], ship_trade_no: str = '',
+                       trade_type: Optional[int] = None, return_odno: str = '') -> Dict[str, Any]:
+        """/logistics/query：ShipTradeNo 與 ReturnOdno（C2B 退貨便，12 碼）二擇一"""
+        if bool(ship_trade_no) == bool(return_odno):
+            raise ValueError('ShipTradeNo 與 ReturnOdno 必須二擇一')
+        data: Dict[str, Any] = {'MerID': self.mer_id, 'Timestamp': int(time.time()), 'LgsType': lgs_type}
+        if ship_trade_no:
+            data['ShipTradeNo'] = ship_trade_no
+        else:
+            data['ReturnOdno'] = return_odno
+        if trade_type:
+            data['TradeType'] = trade_type
+        return self._post('/logistics/query', data)
 
-    def create_shipment(self, data: ShipmentData) -> ShipmentResponse:
-        """建立物流單：7-11 走 /logistics/trade，黑貓走 /home_delivery/trade"""
-        path = '/home_delivery/trade' if data.ship_type == SHIP_TYPE_TCAT else '/logistics/trade'
-        decrypted = self._post(path, self.build_shipment_payload(data))
-        return ShipmentResponse(
-            success=decrypted.get('Status') == 'SUCCESS',
-            status=decrypted.get('Status', ''),
-            message=decrypted.get('Message', ''),
-            ship_trade_no=decrypted.get('ShipTradeNo'),
-            trade_amt=decrypted.get('TradeAmt'),
-            service_type=decrypted.get('ServiceType'),
-            raw=decrypted,
-        )
-
-    def query_shipment(self, lgs_type: str, ship_trade_no: str) -> Dict[str, Any]:
+    def store_map_form(self, lgs_type: Literal['C2C', 'B2C'], mer_key_no: str, map_return_url: str = '',
+                       goods_type: str = GOODS_TYPE_NORMAL, tag: int = 2, include_islands: bool = True,
+                       mobile: bool = False) -> Dict[str, Any]:
         """
-        查詢物流單（/logistics/query，7-11 與黑貓共用）
+        /logistics/ship_map 前景表單。
 
-        回傳欄位包含 ShipTradeNo、Odno（出貨編號 / 託運單號）、PartnerId、ValidationNo（C2C）、
-        ShipStatus、ShipStatusDesc、ShipStatusTime、FileNo（黑貓）等。
+        tag：2 回傳門市、3 更新商店 C2C 退貨門市、4 更新物流單取件門市、5 更新單筆 C2C 退貨門市；
+        tag 為 4、5 時 mer_key_no 帶 UNi 物流序號。冷凍（GoodsType=2）MapType 固定 2。
         """
-        return self._post('/logistics/query', {
-            'MerID': self.mer_id,
-            'Timestamp': int(time.time()),
-            'LgsType': lgs_type,
-            'ShipTradeNo': ship_trade_no,
-        })
-
-    def store_map_form(self, lgs_type: Literal['C2C', 'B2C'], map_return_url: str,
-                       goods_type: str = GOODS_TYPE_NORMAL, mobile: bool = False) -> Dict[str, Any]:
-        """
-        7-11 門市地圖表單（由消費者瀏覽器 POST）
-
-        選完門市後 PAYUNi 會 POST 回 MapReturnURL：外層 Status=SUCCESS，
-        解密 EncryptInfo 後的 MapJson 內含 StoreID / StoreName / Address。
-        """
+        map_type = 2 if include_islands or goods_type == GOODS_TYPE_FROZEN else 1
         return {
             'action': f'{self.base_url}/logistics/ship_map',
             'fields': self._envelope({
-                'MerID': self.mer_id,
-                'Timestamp': int(time.time()),
-                'GoodsType': goods_type,
-                'LgsType': lgs_type,
-                'ShipType': SHIP_TYPE_SEVEN,
-                'MapType': '2',
-                'MapReturnURL': map_return_url,
-                'Tag': '2',
+                'MerID': self.mer_id, 'Timestamp': int(time.time()), 'MerKeyNo': mer_key_no,
+                'GoodsType': goods_type, 'LgsType': lgs_type, 'ShipType': SHIP_TYPE_SEVEN,
+                'MapType': map_type, 'MapReturnURL': map_return_url, 'Tag': tag,
                 'MobileTag': 'Y' if mobile else 'N',
             }, '1.1'),
         }
 
     def parse_store_map_return(self, posted: Dict[str, str]) -> Dict[str, str]:
-        """解析門市地圖回傳"""
-        if posted.get('Status') != 'SUCCESS':
-            raise ValueError(f"門市選擇失敗: {posted.get('Status')}")
-        decrypted = self.decrypt_data(posted.get('EncryptInfo', ''))
-        store = json.loads(decrypted.get('MapJson', '{}'))
-        return {'store_id': store.get('StoreID', ''), 'store_name': store.get('StoreName', ''),
-                'address': store.get('Address', '')}
+        """解析門市地圖回傳的 MapJson（StoreID、StoreName、Address、InsularArea）"""
+        if not self.verify_hash_info(posted.get('EncryptInfo', ''), posted.get('HashInfo', '')):
+            raise ValueError('HashInfo 驗證失敗')
+        decrypted = self.decrypt_data(posted['EncryptInfo'])
+        if decrypted.get('Status') != 'SUCCESS':
+            raise ValueError(f"門市選擇失敗: {decrypted.get('Status')} {decrypted.get('Message', '')}")
+        return json.loads(decrypted.get('MapJson', '{}'))
 
-    def print_label_form(self, ship_trade_nos: str, lgs_type: str, goods_type: str,
-                         ship_date: str, label_mode: str = '1') -> Dict[str, Any]:
-        """
-        列印 7-11 託運單（瀏覽器表單 POST 到 /logistics/print_label）
-
-        ship_trade_nos 可用逗號串接多筆；ship_date 格式 YYYYMMDD（外掛在 B2C 時帶隔天）。
-        """
+    def print_label_form(self, ship_trade_nos: str, lgs_type: Literal['C2C', 'B2C'], ship_date: str,
+                         goods_type: str = GOODS_TYPE_NORMAL, label_mode: int = 1) -> Dict[str, Any]:
+        """/logistics/print_label：最多 50 筆（逗號分隔）；ship_date 為 YYYYMMDD，B2C 不得為當日"""
         return {
             'action': f'{self.base_url}/logistics/print_label',
             'fields': self._envelope({
-                'MerID': self.mer_id,
-                'Timestamp': int(time.time()),
-                'ShipTradeNo': ship_trade_nos,
-                'GoodsType': goods_type,
-                'LgsType': lgs_type,
-                'ShipType': SHIP_TYPE_SEVEN,
-                'ShipDate': ship_date,
-                'LabelMode': label_mode,
+                'MerID': self.mer_id, 'Timestamp': int(time.time()), 'ShipTradeNo': ship_trade_nos,
+                'GoodsType': goods_type, 'LgsType': lgs_type, 'ShipType': SHIP_TYPE_SEVEN,
+                'ShipDate': ship_date, 'LabelMode': label_mode,
+            }, '1.0'),
+        }
+
+    def tcat_label_form(self, ship_trade_nos: str, ship_date: str, delivery_date: str, spec: int,
+                        goods_type: str = GOODS_TYPE_NORMAL, memo: str = '') -> Dict[str, Any]:
+        """/home_delivery/get_obt_number_pdf：spec 1=60、2=90、3=120、4=150（低溫不支援 150）"""
+        return {
+            'action': f'{self.base_url}/home_delivery/get_obt_number_pdf',
+            'fields': self._envelope({
+                'MerID': self.mer_id, 'Timestamp': int(time.time()), 'ShipTradeNo': ship_trade_nos,
+                'GoodsType': goods_type, 'LgsType': 'HOME', 'ShipType': SHIP_TYPE_TCAT,
+                'ShipDate': ship_date, 'DeliveryDate': delivery_date, 'Spec': spec, 'Memo': memo,
             }, '1.0'),
         }
 
     def parse_notify(self, posted: Dict[str, str]) -> Dict[str, Any]:
         """
-        解析 NotifyURL 通知
-
-        解密後依 ApiType 區分：
-        - ShipStatus：貨態更新，含 ShipTradeNo / ShipStatus / ShipStatusDesc / ShipStatusTime
-          （黑貓另含 OBTNumber 託運單號、FileNo）
-        - Print：列印結果（7-11 含 Odno / PartnerId / ValidationNo；黑貓在 JsonData 內）
-
-        官方外掛收通知時沒有檢查 HashInfo；這裡有帶就驗，建議保留。
+        貨態通知（URL 於 PAYUNi 後台物流設定）：先驗 HashInfo 再解密。
+        ApiType=ShipStatus 為貨態，ApiType=Print 為列印結果。
         """
         encrypt_info = posted.get('EncryptInfo', '')
-        hash_info = posted.get('HashInfo')
-        if hash_info is not None and not self.verify_hash_info(encrypt_info, hash_info):
+        if not self.verify_hash_info(encrypt_info, posted.get('HashInfo', '')):
             raise ValueError('HashInfo 驗證失敗')
         return self.decrypt_data(encrypt_info)
 
 
-# Usage Example
 if __name__ == '__main__':
-    print('=' * 60)
-    print('PAYUNi 統一物流 - Python 範例')
-    print('=' * 60)
-
     if not HAS_DEPENDENCIES:
-        print('✗ 需要安裝: pip install pycryptodome requests')
+        print('需要安裝: pip install pycryptodome requests')
         raise SystemExit(1)
 
-    service = PAYUNiLogistics(
-        mer_id='YOUR_MERCHANT_ID',
-        hash_key='YOUR_HASH_KEY_32_BYTES_LONG_XXXX',
-        hash_iv='YOUR_HASH_IV_16B',
-    )
+    service = PAYUNiLogistics('YOUR_MERCHANT_ID', 'YOUR_HASH_KEY_32_BYTES_LONG_XXXX', 'YOUR_HASH_IV_16B')
 
-    # 1. 門市地圖（前端自動送出表單）
-    form = service.store_map_form('C2C', 'https://your-site.com/payuni/store-return')
+    form = service.store_map_form('C2C', mer_key_no=f'MAP{int(time.time())}',
+                                  map_return_url='https://your-site.com/payuni/store-return')
     print(f'[門市地圖] POST {form["action"]}，欄位 {list(form["fields"])}')
 
-    # 2. 建立 7-11 C2C 取貨不付款物流單（StoreID 來自門市地圖回傳）
-    payload = service.build_shipment_payload(ShipmentData(
-        mer_trade_no=f'LOG{int(time.time())}',
-        ship_type=SHIP_TYPE_SEVEN,
-        lgs_type='C2C',
-        goods_type=GOODS_TYPE_NORMAL,
-        trade_amt=500,
-        consignee='王小明',
-        consignee_mobile='0987654321',
-        consignee_mail='buyer@example.com',
-        sender_name='測試商家',
-        sender_mobile='0912345678',
-        notify_url='https://your-site.com/payuni/shipping-notify',
-        store_id='123456',
-    ))
-    print(f'[建立物流單] POST {service.base_url}/logistics/trade，EncryptInfo 內容欄位 {list(payload)}')
+    fields = shipment_fields('C2C', '王小明', '0987654321', backend=True, store_id='916712')
+    print(f'[建立物流] 併入交易 API EncryptInfo 的欄位：{fields}')

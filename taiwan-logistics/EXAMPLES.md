@@ -1267,12 +1267,8 @@ if __name__ == '__main__':
 
 ## PAYUNi Logistics Examples
 
-> 端點、欄位、代碼依 wpbr-payuni-shipping 1.6.4（正式上架外掛）；加解密由 CI 以統一金流官方外掛與
-> 官方 PHP SDK 產生的標準答案驗證。規格細節見 `references/payuni-logistics-api.md`，
-> 完整 Python 版見 `examples/payuni-logistics-cvs-example.py`。
->
-> 舊版範例中的 `/logistics/create`、`LogisticsType`、`GoodsAmount`、`Receiver*`、`LogisticsID`
-> 皆不存在於 PAYUNi 物流 API，請勿沿用。
+> 依 PAYUNi 官方文件（docs.payuni.com.tw/web/#/7）；加解密由 CI 以官方外掛與官方 PHP SDK 的標準答案驗證。
+> 規格見 `references/payuni-logistics-api.md`，Python 版見 `examples/payuni-logistics-cvs-example.py`。
 
 ### 1. Encryption Helper (TypeScript)
 
@@ -1299,48 +1295,46 @@ export function decryptPAYUNi(encryptInfo: string, hashKey: string, hashIV: stri
 }
 ```
 
-### 2. Create Shipment
+### 2. Create Shipment（在交易 API 內建立）
 
 ```typescript
 const BASE = 'https://sandbox-api.payuni.com.tw/api';
 
-async function payuniPost(path: string, info: Record<string, any>, version = '1.1') {
+async function payuniPost(path: string, info: Record<string, any>, version: string) {
   const { EncryptInfo, HashInfo } = encryptPAYUNi(info, HASH_KEY, HASH_IV);
   const res = await fetch(`${BASE}${path}`, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded', 'User-Agent': 'payuni' },
     body: new URLSearchParams({ MerID: MER_ID, Version: version, EncryptInfo, HashInfo }),
   });
   const body = await res.json();
-  if (!body.EncryptInfo) return body;                           // 外層錯誤（例如 API00003）
+  if (!body.EncryptInfo) return body;
   const expected = crypto.createHash('sha256').update(HASH_KEY + body.EncryptInfo + HASH_IV).digest('hex').toUpperCase();
   if (expected !== body.HashInfo) throw new Error('HashInfo 驗證失敗');
   return decryptPAYUNi(body.EncryptInfo, HASH_KEY, HASH_IV);
 }
 
-// 7-11 店到店，取貨不付款（StoreID 來自門市地圖 /logistics/ship_map 的回傳）
-const created = await payuniPost('/logistics/trade', {
+// 超商代碼幕後交易 + 7-11 店到店取貨不付款（StoreID 來自門市地圖）
+const created = await payuniPost('/cvs', {
   MerID: MER_ID,
+  MerTradeNo: `ORD${Date.now()}`,
+  TradeAmt: 500,
   Timestamp: Math.floor(Date.now() / 1000),
-  MerTradeNo: `LOG${Date.now()}`,
-  GoodsType: '1',          // 1=常溫 2=冷凍
-  LgsType: 'C2C',          // C2C / B2C
-  ShipType: '1',           // 1=7-ELEVEN
-  TradeAmt: 500,           // 取貨不付款時為報值金額
-  ServiceType: '3',        // 1=取貨付款 3=取貨不付款
-  StoreID: '123456',
+  ProdDesc: '商品',
+  UsrMail: 'buyer@example.com',  // 有物流時必填，視為收件人信箱
+  ServiceType: '3',              // 幕後 API 只支援取貨不付款
+  LgsType: 'C2C',                // B2C / C2C / HOME
+  ShipType: '1',                 // 1=7-ELEVEN 2=黑貓
+  GoodsType: '1',                // 1=常溫 2=冷凍 3=冷藏(僅黑貓)
   Consignee: '王小明',
-  ConsigneeMail: 'buyer@example.com',
   ConsigneeMobile: '0987654321',
-  RefundStoreID: '',
-  SenderName: '測試商家',
-  SenderMobile: '0912345678',
-  NotifyURL: 'https://your-site.com/payuni/shipping-notify',
-});
-// 黑貓宅配改呼叫 /home_delivery/trade，ShipType='2'、LgsType='HOME'、StoreID=''，
-// 並加上 ConsigneeAddress、ProdDesc（≤20 字）、DeliveryTimeTag（01 / 02 / 04）
+  StoreID: '916712',
+}, '1.3');
+// 黑貓改 LgsType='HOME'、ShipType='2'，並帶 ConsigneeAddress、DeliveryTimeTag（01 / 02 / 04）
 console.log(created.Status, created.ShipTradeNo);   // ShipTradeNo 是後續查詢、列印、通知的鍵
 ```
+
+UPP 則在 EncryptInfo 帶 `ShipTag=1`（取貨付款另帶 `Ship=1`）及 `LgsType`、`ShipType`、`GoodsType`、`Consignee`、`ConsigneeMobile`，門市由消費者在支付頁選。
 
 ### 3. Query Shipment
 
@@ -1350,21 +1344,19 @@ const status = await payuniPost('/logistics/query', {
   Timestamp: Math.floor(Date.now() / 1000),
   LgsType: 'C2C',
   ShipTradeNo: created.ShipTradeNo,
-});
-// status.ShipStatus: 21 待出貨 / 22 物流中心驗收 / 92 寄件門市已收件 / 31 配送中 / 32 待取貨 / 11 已取貨
+}, '1.1');
+// ShipStatus 見官方貨態碼：91 未處理、21 待出貨、31 配送中、32 待取貨、11 已取貨、52 買家未取、81 門市關轉…
 console.log(status.ShipStatus, status.ShipStatusDesc, status.Odno);
 ```
 
 ### 4. Status Notification Callback
 
 ```typescript
+// Notify URL 於 PAYUNi 後台「物流設定」填寫
 app.post('/payuni/shipping-notify', express.urlencoded({ extended: false }), (req, res) => {
   const { EncryptInfo, HashInfo } = req.body;
-  // 先驗 HashInfo（官方外掛沒驗，這是疏漏，不要照抄）
-  if (HashInfo !== undefined) {
-    const expected = crypto.createHash('sha256').update(HASH_KEY + EncryptInfo + HASH_IV).digest('hex').toUpperCase();
-    if (expected !== HashInfo) return res.status(400).end();
-  }
+  const expected = crypto.createHash('sha256').update(HASH_KEY + EncryptInfo + HASH_IV).digest('hex').toUpperCase();
+  if (expected !== HashInfo) return res.status(400).end();
   const info = decryptPAYUNi(EncryptInfo, HASH_KEY, HASH_IV);
   if (info.Status === 'SUCCESS' && info.ApiType === 'ShipStatus') {
     updateShipment(info.ShipTradeNo, info.ShipStatus, info.ShipStatusDesc, info.ShipStatusTime);
