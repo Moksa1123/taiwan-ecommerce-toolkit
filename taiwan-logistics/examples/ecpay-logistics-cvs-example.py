@@ -149,9 +149,9 @@ class ECPayLogistics:
 
 def _test_client():
     return ECPayLogistics(
-        merchant_id="2000132",          # 測試商店代號
-        hash_key="5294y06JbISpM5x9",    # 測試 HashKey
-        hash_iv="v77hoKGq4kWxNNIS",     # 測試 HashIV
+        merchant_id="2000933",          # C2C 測試特店（B2C／宅配為 2000132）
+        hash_key="XBERn1YOvpM9nfZc",
+        hash_iv="h1ONHk4P4yqbl5LK",
         test_mode=True,
     )
 
@@ -197,7 +197,7 @@ def example_verify_callback():
     print("\n=== 範例4: 驗證物流狀態通知 ===\n")
     client = _test_client()
     posted = {
-        "MerchantID": "2000132", "MerchantTradeNo": "ORDER1758600000",
+        "MerchantID": "2000933", "MerchantTradeNo": "ORDER1758600000",
         "RtnCode": "300", "RtnMsg": "訂單處理中(已收到訂單資料)",
         "AllPayLogisticsID": "10001234567", "LogisticsType": "CVS",
         "LogisticsSubType": "UNIMARTC2C", "GoodsAmount": "100",

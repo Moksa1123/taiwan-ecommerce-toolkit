@@ -1,8 +1,7 @@
 import chalk from 'chalk';
 import ora from 'ora';
 import { logger } from '../utils/logger.js';
-
-const VERSION = '2.5.4';
+import { VERSION } from '../version.js';
 
 export async function versionsCommand(): Promise<void> {
   logger.title('Taiwan Invoice Skill - Available Versions');

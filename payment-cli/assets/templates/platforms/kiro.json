@@ -7,10 +7,10 @@
     "skillPath": "skills/taiwan-payment",
     "filename": "SKILL.md"
   },
-  "scriptPath": "steering/taiwan-payment/scripts",
+  "scriptPath": "skills/taiwan-payment/scripts",
   "frontmatter": {
     "name": "taiwan-payment",
-    "description": "Taiwan Payment API integration for ECPay, NewebPay, PAYUNi, SmilePay, PChomePay, ezPay, PayNow, Shopline, LINE Pay, and TapPay.",
+    "description": "Taiwan Payment API integration specialist for ECPay, NewebPay, PAYUNi, SmilePay, PChomePay, ezPay, PayNow, Shopline Payments, LINE Pay v4, TapPay, O'Pay, JKOPAY, SunPay and GoMyPay. Use when developing payment systems, implementing credit card, ATM, CVS, e-wallet, LINE Pay, Apple Pay, Google Pay, TWQR or BNPL payments, or working with Taiwan payment gateway APIs. Handles encryption (SHA256, AES-256-CBC, AES-256-GCM, dynamic AES-256, RSA, JWT, HMAC-SHA256, Basic Auth → token, Prime token), API requests, and service provider differences.",
     "user-invocable": "true"
   },
   "sections": {
@@ -20,6 +20,6 @@
     "quickReference": false
   },
   "title": "Taiwan Payment Skill",
-  "description": "Comprehensive guide for Taiwan Payment Gateway API integration. Supports ECPay, NewebPay, PAYUNi, SmilePay, PChomePay, ezPay, PayNow, Shopline, LINE Pay, and TapPay providers with credit card, ATM, CVS, and e-wallet payment operations.",
+  "description": "Comprehensive guide for Taiwan Payment Gateway API integration. Supports ECPay, NewebPay, PAYUNi, SmilePay, PChomePay, ezPay, PayNow, Shopline Payments, LINE Pay, TapPay, O'Pay, JKOPAY, SunPay and GoMyPay with credit card, ATM, CVS, and e-wallet payment operations.",
   "skillOrWorkflow": "Skill"
 }

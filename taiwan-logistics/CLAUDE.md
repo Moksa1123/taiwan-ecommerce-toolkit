@@ -21,11 +21,11 @@ python3 taiwan-logistics/scripts/search.py "<query>" [--domain <domain>]
 # Recommend logistics provider
 python3 taiwan-logistics/scripts/recommend.py "<requirements>"
 
-# Test API connectivity
-python3 taiwan-logistics/scripts/test_logistics.py [--platform <platform>]
+# 簽章已知答案 + 測試環境連線（ecpay 另可 --create / --query）
+python3 taiwan-logistics/scripts/test_logistics.py [ecpay|newebpay|payuni]
 
-# Generate logistics service code
-python3 taiwan-logistics/scripts/generate-logistics-service.py <Platform> --output <ts|py>
+# 輸出已驗證的服務實作（py：examples/；ts：EXAMPLES.md 的 verify 片段）
+python3 taiwan-logistics/scripts/generate-logistics-service.py <Provider> --output <ts|py>
 ```
 
 ## Architecture
@@ -38,22 +38,26 @@ taiwan-logistics/                   # Source of Truth
 │   ├── ecpay-logistics-api.md
 │   ├── NEWEBPAY_LOGISTICS_REFERENCE.md
 │   ├── payuni-logistics-api.md
-│   ├── smilepay-logistics-api.md   # NEW (Phase 4): Pay_zg matrix
-│   ├── pchomepay-logistics-api.md  # NEW (Phase 4): 金物流二合一
-│   ├── paynow-logistics-api.md     # NEW (Phase 4): 11 product lines, 3DES/ECB
-│   └── hct-logistics-api.md        # NEW (Phase 4): HCT 直連 carrier API
-├── examples/                       # Python examples per provider
+│   ├── smilepay-logistics-api.md   # Pay_zg matrix
+│   ├── pchomepay-logistics-api.md  # 金物流二合一
+│   ├── paynow-logistics-api.md     # Logistic_service 產品線, 3DES/ECB
+│   ├── ezship-logistics-api.md
+│   ├── hct-logistics-api.md        # HCT 直連 carrier API
+│   ├── lalamove-logistics-api.md
+│   ├── ondemand-delivery.md
+│   └── carrier-direct-access.md    # 無公開 API 的物流業者
+├── examples/                       # 可執行範例（CI 以官方測試向量驗證）
 └── data/                           # Data-driven CSVs
-    ├── providers.csv               # 9 可串接 + 10 僅供查詢（含 doc_access 分級）
+    ├── providers.csv               # 11 可串接 + 10 僅供查詢（含 doc_access 分級）
     ├── operations.csv              # cross-provider API operations
-    ├── logistics-types.csv         # CVS/Home/temp variants
+    ├── logistics-types.csv         # 各家實際參數值（子類型／溫層／代收上限）
     ├── status-codes.csv            # vendor-specific status codes
-    └── field-mappings.csv          # 22 欄位 × 11 家 provider 對照（含即時配送）
+    └── field-mappings.csv          # 跨 provider 欄位對照（含即時配送）
 
 logistics-cli/                      # CLI installer (taiwan-logistics-skill on npm)
 ├── src/
 │   ├── commands/init.ts            # Install command with template generation
-│   ├── utils/template.ts           # Template rendering engine
+│   └── utils/template.ts           # Template rendering engine
 └── assets/                         # Bundled assets
     ├── taiwan-logistics/           # Copy of taiwan-logistics/
     └── templates/
@@ -141,6 +145,6 @@ Never push directly to `main`. Always:
 
 ## Related Projects
 
-- **Taiwan Invoice Skill** - E-Invoice integration (ECPay, SmilePay, Amego, ezPay, PayNow)
+- **Taiwan Invoice Skill** - E-Invoice integration (ECPay, SmilePay, Amego, ezPay, PayNow, O'Pay, SunPay)
 - **Taiwan Payment Skill** - Payment integration (14 providers: ECPay, NewebPay, PAYUNi, SmilePay, PChomePay, ezPay, PayNow, Shopline, LINE Pay, TapPay, O'Pay, JKOPAY, SunPay, GoMyPay)
 

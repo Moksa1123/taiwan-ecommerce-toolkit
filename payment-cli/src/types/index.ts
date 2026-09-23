@@ -37,7 +37,7 @@ export interface PlatformConfig {
     examples: boolean;
     references: boolean;
     scripts: boolean;
-    data: boolean;
+    data?: boolean;
   };
 }
 

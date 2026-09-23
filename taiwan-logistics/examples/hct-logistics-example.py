@@ -4,8 +4,7 @@
 
 重要區分:
     - 本範例描述「直連 HCT 自家 API」(申請後使用)
-    - 如僅需透過 ECPay/PayNow/SmilePay 等 aggregator 走 HCT 配送
-      (LogisticsType=HCT)，請參考各 aggregator 的物流文件，無需自行串接 HCT API
+    - 本 skill 收錄的聚合商官方規格都沒有新竹物流選項，要用 HCT 只能直連
 
 加密:
     HCT 採自訂加解密；演算法、金鑰、IV、padding 皆於申請後由 HCT 提供 C# Sample Code。

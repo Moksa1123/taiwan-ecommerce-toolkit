@@ -1,7 +1,6 @@
 import chalk from 'chalk';
 import { logger } from '../utils/logger.js';
-
-const VERSION = '2.0.0';
+import { VERSION } from '../version.js';
 
 export async function infoCommand(): Promise<void> {
   logger.title('Taiwan Invoice Skill');
@@ -10,7 +9,7 @@ export async function infoCommand(): Promise<void> {
   console.log();
   console.log(`  ${chalk.dim('Name:')}        taiwan-invoice`);
   console.log(`  ${chalk.dim('Version:')}     ${VERSION}`);
-  console.log(`  ${chalk.dim('Providers:')}   ECPay, SmilePay, Amego`);
+  console.log(`  ${chalk.dim('Providers:')}   ECPay, SmilePay, Amego, ezPay, PayNow, O'Pay, SunPay（開立）; 財政部大平台（查詢）`);
   console.log(`  ${chalk.dim('Features:')}    Issue, Void, Allowance, Query, Print`);
   console.log(`  ${chalk.dim('Platforms:')}   14 AI assistants (Claude, Cursor, Windsurf, Copilot, etc.)`);
   console.log(`  ${chalk.dim('License:')}     MIT`);

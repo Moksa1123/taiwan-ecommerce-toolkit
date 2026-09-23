@@ -1,12 +1,12 @@
 ---
 name: taiwan-payment
-description: Taiwan Payment API integration specialist for ECPay, NewebPay, PAYUNi, SmilePay, PChomePay, ezPay, PayNow, Shopline Payments, LINE Pay v4, and TapPay payment gateways. Use when developing payment systems, implementing credit card, ATM, CVS, e-wallet, LINE Pay, Apple Pay, Google Pay, or BNPL payments, or working with Taiwan payment gateway APIs. Handles encryption (SHA256, AES-256-CBC, AES-256-GCM, dynamic AES-256, JWT, HMAC-SHA256, Basic Auth → token, Prime token), API requests, and service provider differences.
+description: Taiwan Payment API integration specialist for ECPay, NewebPay, PAYUNi, SmilePay, PChomePay, ezPay, PayNow, Shopline Payments, LINE Pay v4, TapPay, O'Pay, JKOPAY, SunPay and GoMyPay. Use when developing payment systems, implementing credit card, ATM, CVS, e-wallet, LINE Pay, Apple Pay, Google Pay, TWQR or BNPL payments, or working with Taiwan payment gateway APIs. Handles encryption (SHA256, AES-256-CBC, AES-256-GCM, dynamic AES-256, RSA, JWT, HMAC-SHA256, Basic Auth → token, Prime token), API requests, and service provider differences.
 user-invocable: true
 ---
 
 # Taiwan Payment Development Skill
 
-> 此技能涵蓋台灣金流 API 整合開發，包含綠界 (ECPay)、藍新 (NewebPay)、統一 (PAYUNi)、速買配 (SmilePay)、拍錢包 (PChomePay)、ezPay 簡單付、立吉富 (PayNow)、SHOPLINE Payments、LINE Pay v4、TapPay 共十家服務商。
+> 此技能涵蓋台灣金流 API 整合開發，包含綠界 (ECPay)、藍新 (NewebPay)、統一 (PAYUNi)、速買配 (SmilePay)、拍錢包 (PChomePay)、ezPay 簡單付、立吉富 (PayNow)、SHOPLINE Payments、LINE Pay v4、TapPay、歐付寶 (O'Pay)、街口 (JKOPAY)、紅陽 (SunPay)、GoMyPay 共 14 家服務商。
 
 ## 快速導覽
 
@@ -22,12 +22,17 @@ user-invocable: true
 - `references/shopline-payment-api.md` - Shopline Payments API 規格（Redirect + Embedded SDK 雙模式）
 - `references/linepay-payment-api.md` - LINE Pay v4 API 規格（HMAC-SHA256 + Preapproved Pay）
 - `references/tappay-payment-api.md` - TapPay API 規格（Prime 兩段式 / PCI 隔離 / pay-by-token 重複扣款）
+- `references/opay-payment-api.md` - 歐付寶 O'Pay 全方位金流（與 ECPay 同源的 CheckMacValue 架構）
+- `references/jkopay-payment-api.md` - 街口支付 JKOPAY（線上支付 / POS / 授權扣款，三套簽章並存）
+- `references/sunpay-payment-api.md` - 紅陽 SunPay（RSA 分段加密 + SHA256 check_value）
+- `references/gomypay-payment-api.md` - GoMyPay（完整 API 須洽客服，參數待補）
+- `references/twqr-ewallet-landscape.md` - 電子支付／行動支付生態與 TWQR：全支付、悠遊付等要怎麼收
 - [EXAMPLES.md](EXAMPLES.md) - 程式碼範例集
 
 ### 智能工具
 - `scripts/search.py` - BM25 搜索引擎（查詢 API、錯誤碼、欄位映射、付款方式）
 - `scripts/recommend.py` - 金流服務商推薦系統
-- `scripts/test_payment.py` - 付款測試工具
+- `scripts/test_payment.py` - 已知答案測試 + 測試環境連線
 - `data/` - CSV 數據檔（providers, operations, error-codes, field-mappings, payment-methods, troubleshooting, reasoning）
 
 ### 何時使用此技能
@@ -865,9 +870,9 @@ HashIV: 請至後台申請
 ## 參考資料
 
 詳細 API 規格請查看 `references/` 目錄：
-- [綠界 ECPay Payment API 規格](./references/ECPAY_PAYMENT_REFERENCE.md)
-- [藍新 NewebPay Payment API 規格](./references/NEWEBPAY_PAYMENT_REFERENCE.md)
-- [統一 PAYUNi Payment API 規格](./references/PAYUNI_PAYMENT_REFERENCE.md)
+- [綠界 ECPay Payment API 規格](./references/ecpay-payment-api.md)
+- [藍新 NewebPay Payment API 規格](./references/newebpay-payment-api.md)
+- [統一 PAYUNi Payment API 規格](./references/payuni-payment-api.md)
 
 官方文檔：
 - ECPay: https://developers.ecpay.com.tw/

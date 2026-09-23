@@ -80,10 +80,10 @@
 **含意**：它們的目標客群是微型賣家（社群電商、個人賣家），商業模式是「你來我的後台操作」，不是「你來串我的 API」。
 
 **實務路徑**：程式串接 7-11／全家店到店，一律走聚合商：
-- ECPay：`LogisticsSubType=UNIMART` / `FAMI` / `HILIFE` / `OKMART`（C2C 版本另有 `UNIMARTC2C` 等）
+- ECPay：B2C `UNIMART` / `UNIMARTFREEZE` / `FAMI` / `HILIFE`；C2C `UNIMARTC2C` / `FAMIC2C` / `HILIFEC2C` / `OKMARTC2C`
 - ezShip：OK／萊爾富／全家三通路（首家串接三通路者）
 - SmilePay：`Pay_zg` 矩陣 51/52/55/56
-- PayNow：11 條產品線含 7-11／全家
+- PayNow：`Logistic_service` 01–05、10、21–24 涵蓋四大超商（含冷凍）
 - PChomePay：金物流二合一
 
 ## 6. 蝦皮店到店

@@ -11,6 +11,10 @@
 - `references/AMEGO_API_REFERENCE.md` - 光貿 API 規格
 - `references/EZPAY_API_REFERENCE.md` - ezPay 簡單付 API 規格（藍新金流集團）
 - `references/PAYNOW_API_REFERENCE.md` - 立吉富 PayNow API 規格（含 POS 機批次取號流程）
+- `references/OPAY_API_REFERENCE.md` - 歐付寶 O'Pay 發票 API（B2C / B2B / 離線，與綠界同源架構）
+- `references/SUNPAY_API_REFERENCE.md` - 紅陽 SunPay 發票 API（Token 欄位 AES-128-CBC）
+- `references/MOF_EINVOICE_API_REFERENCE.md` - 財政部大平台應用 API（手機條碼／捐贈碼驗證、中獎號碼；不能開立）
+- `references/VAC_LANDSCAPE.md` - 加值中心生態地圖與選型（沒收錄的加值中心怎麼辦）
 - [EXAMPLES.md](EXAMPLES.md) - 程式碼範例集
 
 ### 智能工具
@@ -98,14 +102,14 @@ python scripts/recommend.py "穩定 文檔完整" --format json
 自動生成服務商專用代碼：
 
 ```bash
-# 生成 TypeScript 服務
-python scripts/generate-invoice-service.py ECPay --output ts
+# TypeScript（預設）
+python scripts/generate-invoice-service.py ECPay
 
-# 生成 Python 服務
-python scripts/generate-invoice-service.py SmilePay --output py
+# Python
+python scripts/generate-invoice-service.py SmilePay --lang python
 
-# 輸出到檔案
-python scripts/generate-invoice-service.py Amego --output ts > amego-service.ts
+# 指定輸出目錄
+python scripts/generate-invoice-service.py Amego --output ./lib/services/
 ```
 
 ### 持久化配置 (persist.py)

@@ -44,8 +44,8 @@ CSV_CONFIG = {
     },
     'logistics_type': {
         'file': 'logistics-types.csv',
-        'search_cols': ['code', 'name_zh', 'name_en', 'provider', 'notes'],
-        'output_cols': ['code', 'name_zh', 'provider', 'category', 'size_limit', 'weight_limit', 'notes']
+        'search_cols': ['logistics_type', 'logistics_sub_type', 'name_zh', 'provider', 'type', 'temperature', 'notes'],
+        'output_cols': ['logistics_type', 'logistics_sub_type', 'name_zh', 'provider', 'type', 'collection_available', 'max_amount', 'size_limit', 'temperature', 'notes']
     },
     'field': {
         'file': 'field-mappings.csv',

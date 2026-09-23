@@ -33,6 +33,7 @@ CASES = [
         "expected_frontmatter_name": "taiwan-invoice",
         "must_contain": "Taiwan E-Invoice",
         "must_not_contain": None,
+        "search": ["10000009", "--domain", "error"],
     },
     {
         "cli": "payment-cli",
@@ -40,6 +41,7 @@ CASES = [
         "expected_frontmatter_name": "taiwan-payment",
         "must_contain": "Taiwan Payment",
         "must_not_contain": "Taiwan E-Invoice",
+        "search": ["10100058", "--domain", "error"],
     },
     {
         "cli": "logistics-cli",
@@ -47,6 +49,7 @@ CASES = [
         "expected_frontmatter_name": "taiwan-logistics",
         "must_contain": "Taiwan Logistics",
         "must_not_contain": "Taiwan E-Invoice",
+        "search": ["2067", "--domain", "status"],
     },
 ]
 
@@ -84,6 +87,32 @@ def parse_frontmatter(text: str) -> dict[str, str]:
             k, v = line.split(":", 1)
             fm[k.strip()] = v.strip().strip('"')
     return fm
+
+
+# 只給開發者看的檔案，不隨 skill 安裝
+NOT_INSTALLED = {"CLAUDE.md", "README.md"}
+
+
+def missing_files(source: Path, installed: Path) -> list[str]:
+    """source of truth 裡應安裝卻沒裝到的檔案（examples/、data/ 曾因此漏裝）"""
+    out = []
+    for f in sorted(source.rglob("*")):
+        rel = f.relative_to(source)
+        if f.is_file() and "__pycache__" not in rel.parts and str(rel) not in NOT_INSTALLED:
+            if not (installed / rel).exists():
+                out.append(rel.as_posix())
+    return out
+
+
+def run_search(skill_dir: Path, args: list[str]) -> tuple[bool, str]:
+    """已安裝的 search.py 要讀得到 data/，且查得到結果"""
+    proc = subprocess.run(
+        [sys.executable, "scripts/search.py", *args],
+        cwd=skill_dir, capture_output=True, text=True, encoding="utf-8", errors="replace", timeout=60,
+        env={**__import__("os").environ, "PYTHONIOENCODING": "utf-8"},
+    )
+    out = (proc.stdout or "") + (proc.stderr or "")
+    return proc.returncode == 0 and args[0] in out and "查無結果" not in out, out
 
 
 def main() -> int:
@@ -133,8 +162,24 @@ def main() -> int:
                 failures += 1
                 continue
 
+            skill_dir = installed.parent
+            source = REPO / case["expected_frontmatter_name"]
+            missing = missing_files(source, skill_dir)
+            if missing:
+                print(f"  [FAIL] {len(missing)} files not installed, e.g. {missing[:5]}")
+                failures += 1
+                continue
+
+            ok, out = run_search(skill_dir, case["search"])
+            if not ok:
+                print(f"  [FAIL] installed search.py {' '.join(case['search'])}")
+                print(out[-500:])
+                failures += 1
+                continue
+
             print(f"  [OK] writes to {case['expected_skill_path']}")
             print(f"  [OK] frontmatter name={fm.get('name')}")
+            print("  [OK] all skill files installed; installed search.py works")
 
     if failures:
         print(f"\n{failures} smoke test(s) failed")

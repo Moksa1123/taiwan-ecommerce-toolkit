@@ -1507,7 +1507,7 @@ import axios from 'axios';
 
 interface CreateCVSShipmentRequest {
   merTradeNo: string;
-  logisticsSubType: 'FAMI' | 'UNIMART' | 'UNIMARTFREEZE' | 'HILIFE' | 'OKMART';
+  logisticsSubType: 'FAMIC2C' | 'UNIMARTC2C' | 'HILIFEC2C' | 'OKMARTC2C';
   goodsAmount: number;
   goodsName: string;
   senderName: string;
@@ -1588,9 +1588,9 @@ class ECPayCVSLogistics extends ECPayLogistics {
 
 // Usage Example
 const logistics = new ECPayCVSLogistics({
-  merchantId: '2000132',
-  hashKey: '5294y06JbISpM5x9',
-  hashIV: 'v77hoKGq4kWxNNIS',
+  merchantId: '2000933',  // C2C 測試特店（B2C／宅配為 2000132）
+  hashKey: 'XBERn1YOvpM9nfZc',
+  hashIV: 'h1ONHk4P4yqbl5LK',
   isProduction: false,
 });
 
@@ -1632,7 +1632,7 @@ from dataclasses import dataclass
 class CVSShipmentData:
     """CVS C2C 物流訂單資料"""
     mer_trade_no: str
-    logistics_sub_type: Literal['FAMI', 'UNIMART', 'UNIMARTFREEZE', 'HILIFE', 'OKMART']
+    logistics_sub_type: Literal['FAMIC2C', 'UNIMARTC2C', 'HILIFEC2C', 'OKMARTC2C']
     goods_amount: int
     goods_name: str
     sender_name: str
@@ -1661,12 +1661,11 @@ class ECPayCVSLogistics(ECPayLogistics):
     """
     ECPay CVS 超商物流服務
 
-    支援超商類型:
-    - FAMI: FamilyMart 全家便利商店
-    - UNIMART: 7-ELEVEN 統一超商 (常溫)
-    - UNIMARTFREEZE: 7-ELEVEN 統一超商 (冷凍)
-    - HILIFE: Hi-Life 萊爾富便利商店
-    - OKMART: OK Mart OK 便利商店
+    C2C 店到店子類型（B2C 合約改用 FAMI / UNIMART / UNIMARTFREEZE / HILIFE）:
+    - FAMIC2C: 全家店到店
+    - UNIMARTC2C: 7-11 交貨便
+    - HILIFEC2C: 萊爾富店到店
+    - OKMARTC2C: OK 店到店（OK 只有 C2C）
 
     回傳碼:
     - 300: 訂單建立成功 (尚未寄貨)
@@ -1777,9 +1776,9 @@ class ECPayCVSLogistics(ECPayLogistics):
 if __name__ == '__main__':
     # 初始化物流服務 (使用測試環境)
     logistics = ECPayCVSLogistics(
-        merchant_id='2000132',  # ECPay 測試商店代號
-        hash_key='5294y06JbISpM5x9',  # ECPay 測試 HashKey
-        hash_iv='v77hoKGq4kWxNNIS',  # ECPay 測試 HashIV
+        merchant_id='2000933',  # ECPay C2C 測試特店（B2C／宅配為 2000132）
+        hash_key='XBERn1YOvpM9nfZc',
+        hash_iv='h1ONHk4P4yqbl5LK',
         is_production=False,  # 使用測試環境
     )
 
@@ -1825,7 +1824,7 @@ if __name__ == '__main__':
 ```typescript
 interface CreateHomeShipmentRequest {
   merTradeNo: string;
-  logisticsSubType: 'TCAT' | 'ECAN' | 'POST';
+  logisticsSubType: 'TCAT' | 'POST';
   goodsAmount: number;
   goodsName: string;
   senderName: string;
@@ -2583,8 +2582,8 @@ SmilePay 透過 `Pay_zg` 矩陣編碼涵蓋 7-11/全家 + 黑貓三大配送：
 ## HCT 新竹物流（直連 carrier API）範例
 
 ⚠️ **先確認你需要的是直連還是 aggregator**：
-- **透過 ECPay/PayNow/SmilePay** 走 HCT 配送 → 用 aggregator 的 `LogisticsType=HCT`，不需要本範例
-- **直接打 HCT 自家系統**（大量出貨、自備站所對接）→ 用本範例，需向 HCT 申請
+- 本 skill 收錄的聚合商官方規格都沒有新竹物流選項，要用 HCT 只能直連
+- 直連需向 HCT 申請帳號與金鑰
 
 完整範例見 [`examples/hct-logistics-example.py`](examples/hct-logistics-example.py)。
 

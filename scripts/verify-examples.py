@@ -817,6 +817,38 @@ def test_doc_snippets():
 # 每個 provider 都產得出來、Python 版可載入且未實作的步驟會拋錯、
 # TypeScript 版語法正確、MOF 會被拒絕。
 
+def test_logistics_generator():
+    import shutil
+    import subprocess
+    import tempfile
+    print('\n8. 物流服務產生器 taiwan-logistics/scripts/generate-logistics-service.py')
+    script = os.path.join(ROOT, 'taiwan-logistics', 'scripts', 'generate-logistics-service.py')
+    gen = load_module('taiwan-logistics/scripts/generate-logistics-service.py')
+    env = dict(os.environ, PYTHONIOENCODING='utf-8')
+    node = shutil.which('node')
+
+    def run(provider, lang):
+        return subprocess.run([sys.executable, script, provider, '--output', lang],
+                              capture_output=True, text=True, encoding='utf-8', env=env)
+    for provider, example in gen.PYTHON_EXAMPLES.items():
+        proc = run(provider, 'py')
+        with open(os.path.join(ROOT, 'taiwan-logistics', 'examples', example), encoding='utf-8') as f:
+            expected = f.read()
+        check(f'[{provider}/py] 輸出即已驗證的範例模組', proc.returncode == 0 and proc.stdout == expected)
+    for provider in gen.TS_SNIPPETS:
+        proc = run(provider, 'ts')
+        ok = proc.returncode == 0 and proc.stdout.strip()
+        if ok and node:
+            with tempfile.TemporaryDirectory() as tmp:
+                mts = os.path.join(tmp, f'{provider}.mts')
+                with open(mts, 'w', encoding='utf-8') as f:
+                    f.write(proc.stdout)
+                ok = subprocess.run([node, '--experimental-strip-types', '--no-warnings', mts],
+                                    capture_output=True).returncode == 0
+        check(f'[{provider}/ts] 輸出已驗證的 TypeScript 片段且可執行', ok)
+    check('不支援的組合回報錯誤而不是輸出樣板', run('paynow', 'ts').returncode != 0)
+
+
 def test_invoice_generator():
     import csv as _csv
     import shutil
@@ -888,7 +920,7 @@ def main():
         return 1
 
     test_imports()
-    for section in (test_payuni, test_newebpay, test_ezpay_payment, test_ecpay, test_ezpay_invoice, test_smilepay, test_linepay, test_opay_invoice, test_paynow_logistics, test_sunpay, test_shopline, test_example_self_tests, test_scripts, test_doc_snippets, test_invoice_generator):
+    for section in (test_payuni, test_newebpay, test_ezpay_payment, test_ecpay, test_ezpay_invoice, test_smilepay, test_linepay, test_opay_invoice, test_paynow_logistics, test_sunpay, test_shopline, test_example_self_tests, test_scripts, test_doc_snippets, test_invoice_generator, test_logistics_generator):
         try:
             section()
         except Exception as e:  # noqa: BLE001 - 單一區段炸掉不能讓其餘區段不跑

@@ -28,6 +28,7 @@ async function main() {
     outfile: join(distDir, 'index.js'),
     external: [],
     target: 'node18',
+    define: { __CLI_VERSION__: JSON.stringify(JSON.parse(readFileSync(join(__dirname, '..', 'package.json'), 'utf-8')).version) },
   });
 
   // Read the generated file and prepend shebang

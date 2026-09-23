@@ -13,7 +13,7 @@
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/providers-22-success?style=flat-square" alt="22 Provider Integrations">
+  <img src="https://img.shields.io/badge/providers-34-success?style=flat-square" alt="34 Providers">
   <img src="https://img.shields.io/badge/AI%20platforms-14-blue?style=flat-square" alt="14 AI Platforms">
   <img src="https://img.shields.io/badge/quality-production--ready-green?style=flat-square" alt="Production Ready">
   <a href="LICENSE"><img src="https://img.shields.io/github/license/Moksa1123/taiwan-ecommerce-toolkit?style=flat-square" alt="License"></a>
@@ -27,16 +27,16 @@
 
 ## 專案概覽
 
-Taiwan E-Commerce Toolkit 是專為台灣電商生態系統設計的企業級整合開發工具包，提供完整的電子發票、金流串接、物流整合解決方案。本工具包整合台灣三大領域共 **32 個可串接服務商**（9 家發票 + 14 家金流 + 9 家物流），另收錄 10 家**無公開 API** 的物流業者與其替代路徑，搭配智能開發工具與生產級程式碼範例，協助開發團隊快速完成電商系統整合。
+Taiwan E-Commerce Toolkit 是專為台灣電商生態系統設計的企業級整合開發工具包，提供完整的電子發票、金流串接、物流整合解決方案。本工具包收錄台灣三大領域共 **34 個服務商**（9 家發票 + 14 家金流 + 11 家可串接物流），另收錄 10 家**無法直接串接**的物流業者與其替代路徑，搭配智能開發工具與生產級程式碼範例，協助開發團隊快速完成電商系統整合。
 
 **最新版本（請以 npm 為準）：**
 - `taiwan-invoice-skill@2.9.3+` — 9 家發票（ECPay / SmilePay / Amego / ezPay / PayNow / O'Pay / SunPay / 財政部大平台 / 關貿）
 - `taiwan-payment-skill@1.5.4+` — 14 家金流（ECPay / NewebPay / PAYUNi / SmilePay / PChomePay / ezPay / PayNow / Shopline / LINE Pay / TapPay / O'Pay / 街口 / 紅陽 / GoMyPay）
-- `taiwan-logistics-skill@1.4.3+` — 9 家可串接物流（8 aggregator + HCT 直連 carrier API）＋ 10 家僅供查詢
+- `taiwan-logistics-skill@1.4.3+` — 11 家可串接物流（7 aggregator + HCT 直連 + 3 家即時配送）＋ 10 家僅供查詢
 
 > **發票的兩個例外**：財政部大平台是上游，只做查詢／驗證（手機條碼、載具、捐贈碼），**不能開立發票**；關貿網路已收錄於資料層，但文件需簽約，尚無 reference。
 >
-> **物流的「僅供查詢」是什麼**：黑貓、嘉里大榮、宅配通、中華郵政、7-11 交貨便、全家好賣+、萊爾富、OK、蝦皮店到店都**沒有對外商家 API**，只能經聚合商。這些在 `providers.csv` 標為 `api_available=false` 並附替代路徑，避免誤以為可直連。
+> **物流的「僅供查詢」是什麼**：黑貓、嘉里大榮、宅配通、中華郵政、7-11 交貨便、全家好賣+、萊爾富、OK、蝦皮店到店都**沒有對外商家 API**，只能經聚合商。這些在 `providers.csv` 標為 `api_available=false` 並附替代路徑，避免誤以為可直連；紅陽物流的參數規格尚未公開，同樣標為 `false`。
 
 **狀態:** Production Ready · MIT 授權
 
@@ -50,9 +50,9 @@ Taiwan E-Commerce Toolkit 是專為台灣電商生態系統設計的企業級整
 
 **taiwan-invoice-skill**
 
-整合 5 家加值中心
+整合 7 家加值中心 + 財政部大平台
 
-ECPay · SmilePay · Amego · ezPay · PayNow
+ECPay · SmilePay · Amego · ezPay · PayNow · O'Pay · SunPay
 
 <p align="center">
   <a href="https://www.npmjs.com/package/taiwan-invoice-skill"><img src="https://img.shields.io/npm/v/taiwan-invoice-skill?style=flat-square&color=cb3837&logo=npm" alt="npm version"></a>
@@ -69,9 +69,9 @@ ECPay · SmilePay · Amego · ezPay · PayNow
 
 **taiwan-payment-skill**
 
-整合 10 家金流平台
+整合 14 家金流平台
 
-ECPay · NewebPay · PAYUNi · SmilePay · PChomePay · ezPay · PayNow · Shopline · LINE Pay · TapPay
+ECPay · NewebPay · PAYUNi · SmilePay · PChomePay · ezPay · PayNow · Shopline · LINE Pay · TapPay · O'Pay · 街口 · 紅陽 · GoMyPay
 
 <p align="center">
   <a href="https://www.npmjs.com/package/taiwan-payment-skill"><img src="https://img.shields.io/npm/v/taiwan-payment-skill?style=flat-square&color=cb3837&logo=npm" alt="npm version"></a>
@@ -88,9 +88,9 @@ ECPay · NewebPay · PAYUNi · SmilePay · PChomePay · ezPay · PayNow · Shopl
 
 **taiwan-logistics-skill**
 
-整合 7 家物流（6 aggregator + HCT 直連）
+整合 11 家物流（7 aggregator + HCT 直連 + 3 即時配送）
 
-ECPay · NewebPay · PAYUNi · SmilePay · PChomePay · PayNow · HCT 新竹物流
+ECPay · NewebPay · PAYUNi · SmilePay · PChomePay · PayNow · ezShip · HCT · Lalamove · pandago · Uber Direct
 
 <p align="center">
   <a href="https://www.npmjs.com/package/taiwan-logistics-skill"><img src="https://img.shields.io/npm/v/taiwan-logistics-skill?style=flat-square&color=cb3837&logo=npm" alt="npm version"></a>
@@ -285,10 +285,7 @@ python taiwan-logistics/scripts/recommend.py "超商取貨 溫控配送 冷凍�
 
 ```bash
 # 生成發票服務模組
-python taiwan-invoice/scripts/generate-invoice-service.py ECPay --output ts
-
-# 生成金流服務模組
-python taiwan-payment/scripts/generate-payment-service.py NewebPay --output py
+python taiwan-invoice/scripts/generate-invoice-service.py ECPay --lang typescript --output ./services
 
 # 生成物流服務模組
 python taiwan-logistics/scripts/generate-logistics-service.py PAYUNi --output ts
@@ -370,7 +367,7 @@ taiwan-ecommerce-toolkit/
 
 ## 廠商整合支援
 
-### 電子發票加值中心 (5 家)
+### 電子發票 (7 家加值中心 + 財政部大平台)
 
 | 加值中心 | 加密 / 認證 | 技術特點 | API 風格 |
 |----------|----------|----------|----------|
@@ -379,8 +376,11 @@ taiwan-ecommerce-toolkit/
 | **Amego 光貿** | MD5 簽章 + App Key | MIG 4.0 標準、現代 RESTful | JSON (URL Encoded) |
 | **ezPay 簡單付** | AES-256-CBC + SHA256 (32 碼 HashKey) | 藍新集團小型品牌、字軌管理、批次開立 | Form Post (`MerchantID_` / `PostData_`) |
 | **PayNow 立吉富** | JWT Bearer Token | 金物流發票一站式、POS 機批次取號 | RESTful JSON |
+| **O'Pay 歐付寶** | MerchantID + RqHeader + AES 加密 Data | 與綠界發票 API 同源架構，網域與金鑰不同 | JSON (AES 加密) |
+| **SunPay 紅陽** | Token 欄位 AES-128-CBC | 可與紅陽金流搭配隨交易自動開立 | JSON |
+| **財政部大平台** | AppID + APIKey（HMAC-SHA256 加簽）| 只做查詢／驗證（手機條碼、捐贈碼、中獎號碼），不能開立 | Form POST |
 
-### 金流串接平台 (10 家)
+### 金流串接平台 (14 家)
 
 | 金流平台 | 加密 / 認證 | 支援付款方式 | 技術特點 |
 |----------|----------|--------------|----------|
@@ -394,18 +394,26 @@ taiwan-ecommerce-toolkit/
 | **Shopline Payments** | merchantId + apiKey HTTP Header | 信用卡 / Apple Pay / LINE Pay / 街口 / ATM / 中租 BNPL | RESTful JSON、金額以分為單位、HMAC-SHA256 Webhook |
 | **LINE Pay v4** | Channel ID + Secret + 每次 HMAC-SHA256 + Nonce | LINE Pay 直連、Preapproved Pay 自動扣款 | Request → Confirm 兩段、跨國 |
 | **TapPay** | Partner Key + App Key + Merchant ID | 信用卡 / Apple Pay / Google Pay / LINE Pay / 街口 / Virtual Account | PCI 隔離、Prime 兩段式、Card Token 重複扣款 |
+| **O'Pay 歐付寶** | SHA256 CheckMacValue（同 ECPay）| 信用卡 / ATM / 超商 / AccountLink 銀行快付 / 儲值消費 / 微信 / TWQR | 與 ECPay 同源架構、延遲撥款 |
+| **JKOPAY 街口** | api-key Header + HMAC-SHA256 digest | 線上支付 / POS / 授權扣款 / 街口幣 | 專營電支、官方公開文件站 |
+| **SunPay 紅陽** | RSA 分段加密 + SHA256 check_value | 信用卡 / ATM / 超商代收 | 收錄的金流中唯一使用 RSA |
+| **GoMyPay** | 需申請文件 | 信用卡 / 銀聯 / WEBATM / 虛擬帳號 / 超商條碼 / 定期扣款 | 參數規格待補 |
 
-### 物流串接服務 (7 家：6 aggregator + HCT 直連)
+### 物流串接服務 (11 家：7 aggregator + HCT 直連 + 3 即時配送)
 
 | 物流服務 | 類型 | 加密 / 認證 | 支援物流類型 | 技術特點 |
 |----------|----------|----------|--------------|----------|
-| **ECPay 綠界** | aggregator | MD5 CheckMacValue | 7-11 / 全家 / 萊爾富 / OK / 黑貓 / 宅配通 / HCT | 市佔率最高、SDK 完整 |
-| **NewebPay 藍新** | aggregator | AES-256-CBC + SHA256 | 7-11 / 全家 / 萊爾富 / OK / 黑貓 | 整合流程完整 |
+| **ECPay 綠界** | aggregator | MD5 CheckMacValue | B2C 7-11（含冷凍）/ 全家 / 萊爾富；C2C 四大超商；宅配黑貓 / 中華郵政 | 市佔率最高、SDK 完整 |
+| **NewebPay 藍新** | aggregator | AES-256-CBC + SHA256 | B2C 僅 7-11；C2C 四大超商；無宅配 | 取貨付款／不付款皆 ≤ 20,000 |
 | **PAYUNi 統一** | aggregator | AES-256-GCM + SHA256 | 7-11 (常溫/冷凍) / T-Cat (常溫/冷藏/冷凍) | 溫控配送最完整 |
 | **SmilePay 速買配** | aggregator | Verify_key + Mid_smilepay 加權檢核碼 | 7-11/全家 C2C+B2C / 黑貓 COD+PICKUP+逆物流 | Pay_zg 矩陣 51/52/55/56/81/82/83 |
-| **PChomePay 拍錢包** | aggregator | HTTP Basic Auth → token | 7-11 / 全家 / 萊爾富 / OK | 金物流二合一、Notify IP 113.196.231.190 |
+| **PChomePay 拍錢包** | aggregator | HTTP Basic Auth → token | 7-11 / 全家 / 萊爾富（取貨付款） | 金物流二合一、Notify IP 113.196.231.190 |
 | **PayNow 立吉富** | aggregator | **3DES / ECB / Zero-Padding**（不同於金流端） | 11 條產品線（含海外配送、冷凍） | 雙 API（金流 vs 物流加密不同） |
-| **HCT 新竹物流** | **direct carrier API** | 自訂加密（申請後提供） | 直連 carrier API | 大量出貨企業專用，非 aggregator routing |
+| **ezShip 台灣便利配** | aggregator | 無簽章（`su_id` 帳號綁定）| 全家 / 萊爾富 / OK / 宅配 / 店港澳 | 不含 7-11 |
+| **HCT 新竹物流** | **direct carrier API** | 自訂加密（申請後提供） | 直連 carrier API | 收錄的聚合商都沒有新竹物流選項 |
+| **Lalamove** | 即時配送 | HMAC-SHA256 自簽 | 同城即時配送 | 先報價後下單（報價 5 分鐘效期） |
+| **pandago** | 即時配送 | OAuth 2.0 + RSA 簽 JWT assertion | 同城即時配送 | 費用與時間為兩支獨立端點 |
+| **Uber Direct** | 即時配送 | OAuth 2.0 client_credentials | 同城即時配送 | Token 30 天，台灣可用性未經官方確認 |
 
 ---
 
@@ -419,7 +427,7 @@ taiwan-ecommerce-toolkit/
 | **Cursor** | `/taiwan-*` | **Kiro** | `/taiwan-*` |
 | **Windsurf** | 自動載入 | **Codex** | 自動載入 |
 | **GitHub Copilot** | `/taiwan-*` | **Qoder** | 自動載入 |
-| **RooCode** | `/taiwan-*` | **OpenCode** | 自動載入 |
+| **Cline** | 自動載入 | **OpenCode** | 自動載入 |
 | **Gemini CLI** | 自動載入 | **Continue** | 自動載入 |
 | **Trae** | 自動載入 | **CodeBuddy** | 自動載入 |
 
@@ -511,7 +519,7 @@ python taiwan-invoice/scripts/search.py "10000009" --domain error
 python taiwan-payment/scripts/search.py "CheckMacValue" --domain field
 
 # 物流 API 端點查詢
-python taiwan-logistics/scripts/search.py "查詢物流狀態" --domain api
+python taiwan-logistics/scripts/search.py "查詢物流狀態" --domain operation
 ```
 
 ### 服務商推薦系統
@@ -531,10 +539,7 @@ python taiwan-logistics/scripts/recommend.py "超商取貨 溫控配送"
 
 ```bash
 # 產生發票服務模組
-python taiwan-invoice/scripts/generate-invoice-service.py ECPay --output ts
-
-# 產生金流服務模組
-python taiwan-payment/scripts/generate-payment-service.py NewebPay --output py
+python taiwan-invoice/scripts/generate-invoice-service.py ECPay --lang typescript --output ./services
 
 # 產生物流服務模組
 python taiwan-logistics/scripts/generate-logistics-service.py PAYUNi --output ts
@@ -564,7 +569,7 @@ def issue_invoice(data):
 <details>
 <summary><b>是否需要申請 API 憑證？</b></summary>
 
-是的。需向選定的服務商申請商店代號 (Merchant ID) 與 API 金鑰 (Hash Key/IV)。三個領域共 9 家服務商皆提供測試環境與測試帳號供開發使用。
+是的。需向選定的服務商申請商店代號 (Merchant ID) 與 API 金鑰 (Hash Key/IV)。多數服務商提供測試環境；綠界等有公開測試帳號，其餘需向服務商申請（見各 reference 的測試環境段落）。
 
 </details>
 

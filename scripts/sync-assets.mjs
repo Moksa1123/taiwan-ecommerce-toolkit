@@ -17,6 +17,8 @@
  *      —— 過去這份是手工複製的 SKILL.md，修正常只改到其中一份（例如 PAYUNi 加密
  *      格式在 SKILL.md 修了、模板沒修，使用者安裝到的仍是錯的）；logistics 的模板
  *      甚至把 {{DESCRIPTION}} 蓋在 HCT 註解上。改為自動產生後兩者不可能再分歧。
+ *   3. taiwan-<skill>/README.md 複製為 <cli>/README.md（npm 套件頁）
+ *      —— 兩份曾各自修改而分歧（一份還列著已停止營運的 Roo Code）。
  * assets/templates/ 其餘檔案（platforms/*.json、quick-reference.md）仍為手工維護。
  *
  * 用法:
@@ -84,14 +86,26 @@ export function renderSkillTemplate(skillMd) {
   return lines.join(eol);
 }
 
-function templateTarget({ src, cli }) {
-  const path = join(ROOT, cli, 'assets', 'templates', 'base', 'skill-content.md');
-  const expected = renderSkillTemplate(readFileSync(join(ROOT, src, 'SKILL.md'), 'utf8'));
+// 由來源產生、位於 assets/taiwan-<skill>/ 之外的檔案
+const DERIVED = [
+  {
+    label: 'templates/base/skill-content.md（由 SKILL.md 產生）',
+    path: ({ cli }) => join(ROOT, cli, 'assets', 'templates', 'base', 'skill-content.md'),
+    render: ({ src }) => renderSkillTemplate(readFileSync(join(ROOT, src, 'SKILL.md'), 'utf8')),
+  },
+  {
+    label: 'README.md（npm 套件頁，複製自 SKILL 目錄）',
+    path: ({ cli }) => join(ROOT, cli, 'README.md'),
+    render: ({ src }) => readFileSync(join(ROOT, src, 'README.md'), 'utf8'),
+  },
+];
+
+function derivedTarget(d, pkg) {
+  const path = d.path(pkg);
+  const expected = d.render(pkg);
   const stale = !existsSync(path) || readFileSync(path, 'utf8') !== expected;
   return { path, expected, stale };
 }
-
-const TEMPLATE_LABEL = 'templates/base/skill-content.md（由 SKILL.md 產生）';
 
 function sameContent(a, b) {
   if (!existsSync(b)) return false;
@@ -117,7 +131,9 @@ function diffPackage({ src, cli }) {
   const srcSet = new Set(srcFiles);
   const removed = dstFiles.filter((rel) => !srcSet.has(rel));
 
-  if (templateTarget({ src, cli }).stale) changed.push(TEMPLATE_LABEL);
+  for (const d of DERIVED) {
+    if (derivedTarget(d, { src, cli }).stale) changed.push(d.label);
+  }
 
   return { srcDir, dstDir, added, changed, removed };
 }
@@ -126,8 +142,9 @@ function syncPackage(target) {
   const { srcDir, dstDir, added, changed, removed } = diffPackage(target);
 
   for (const rel of [...added, ...changed]) {
-    if (rel === TEMPLATE_LABEL) {
-      const { path, expected } = templateTarget(target);
+    const d = DERIVED.find((x) => x.label === rel);
+    if (d) {
+      const { path, expected } = derivedTarget(d, target);
       writeFileSync(path, expected);
       continue;
     }

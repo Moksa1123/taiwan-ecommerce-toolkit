@@ -676,7 +676,7 @@ curl_close($ch);
 
 ### 流程
 
-1. 電子地圖選店 (`Logistic_serviceID=22`，注意：建單時改用 `21`)
+1. 電子地圖選店 (`Logistic_serviceID=22`，注意：建單時改用 `21`；官方文件的建單範例誤植為 `22`，以欄位定義「固定為 21」為準)
 2. 建立物流訂單，回傳 `LogisticNumber` + `paymentno` + `validationno`
 3. 列印標籤：`POST /Member/Order/Print711FreezingC2CLabel`
 4. 列印後隔日出貨
@@ -689,7 +689,7 @@ Request：
 {
   "user_account": "28229955",
   "apicode": "12345678",
-  "Logistic_service": "22",
+  "Logistic_service": "21",
   "OrderNo": "211214141817",
   "DeliverMode": "02",
   "TotalAmount": "200",

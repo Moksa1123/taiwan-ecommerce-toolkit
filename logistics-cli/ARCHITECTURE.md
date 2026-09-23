@@ -64,17 +64,17 @@ logistics-cli/
 ## Three NPM Packages
 
 1. **taiwan-logistics-skill** (invoice-cli/)
-   - E-Invoice integration for ECPay, SmilePay, Amego
+   - E-Invoice integration for ECPay, SmilePay, Amego, ezPay, PayNow, O'Pay, SunPay
    - Install: `npm install -g taiwan-logistics-skill`
    - Usage: `taiwan-logistics init --ai claude`
 
 2. **taiwan-payment-skill** (payment-cli/)
-   - Payment gateway integration for ECPay, NewebPay, PAYUNi
+   - Payment gateway integration for 14 providers (see taiwan-payment/README.md)
    - Install: `npm install -g taiwan-payment-skill`
    - Usage: `taiwan-payment init --ai claude`
 
 3. **taiwan-logistics-skill** (logistics-cli/)
-   - Logistics integration for ECPay, NewebPay, PAYUNi
+   - Logistics integration for 7 aggregators, HCT direct and on-demand delivery
    - Install: `npm install -g taiwan-logistics-skill`
    - Usage: `taiwan-logistics init --ai claude`
 
@@ -117,7 +117,7 @@ npm publish
 | Kiro | `.kiro` | `~/.kiro` |
 | Codex | `.codex` | `~/.codex` |
 | Qoder | `.qoder` | `~/.qoder` |
-| Roo Code | `.roo` | `~/.roo` |
+| Cline | `.cline` | `~/.cline` |
 | Gemini | `.gemini` | `~/.gemini` |
 | Trae | `.trae` | `~/.trae` |
 | OpenCode | `.opencode` | `~/.opencode` |

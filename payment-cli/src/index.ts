@@ -6,8 +6,7 @@ import { versionsCommand } from './commands/versions.js';
 import { updateCommand } from './commands/update.js';
 import type { AIType } from './types/index.js';
 import { AI_TYPES } from './types/index.js';
-
-const VERSION = '1.0.0';
+import { VERSION } from './version.js';
 
 const program = new Command();
 

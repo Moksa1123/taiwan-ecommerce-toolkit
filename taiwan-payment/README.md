@@ -3,7 +3,7 @@
 <h3 align="center">台灣金流 AI 開發技能包</h3>
 
 <p align="center">
-  <strong>10 大金流平台一次串接</strong>
+  <strong>14 家金流平台一次串接</strong>
 </p>
 
 <p align="center">
@@ -13,7 +13,7 @@
 <p align="center">
   <a href="https://www.npmjs.com/package/taiwan-payment-skill"><img src="https://img.shields.io/npm/v/taiwan-payment-skill?style=flat-square&logo=npm" alt="npm version"></a>
   <a href="https://www.npmjs.com/package/taiwan-payment-skill"><img src="https://img.shields.io/npm/dm/taiwan-payment-skill?style=flat-square&label=downloads" alt="npm downloads"></a>
-  <img src="https://img.shields.io/badge/providers-10-success?style=flat-square" alt="10 Providers">
+  <img src="https://img.shields.io/badge/providers-14-success?style=flat-square" alt="14 Providers">
   <img src="https://img.shields.io/badge/AI%20platforms-14-blue?style=flat-square" alt="14 AI Platforms">
   <a href="https://github.com/Moksa1123/taiwan-ecommerce-toolkit/blob/main/LICENSE"><img src="https://img.shields.io/github/license/Moksa1123/taiwan-ecommerce-toolkit?style=flat-square" alt="License"></a>
 </p>
@@ -54,7 +54,7 @@ TapPay 用 Prime 一次付清，remember=true 存成 card_token 供下次自動�
 
 ---
 
-## 10 家金流平台
+## 14 家金流平台
 
 | 服務商 | 加密 / 認證 | 特色 |
 |---|---|---|
@@ -68,8 +68,12 @@ TapPay 用 Prime 一次付清，remember=true 存成 card_token 供下次自動�
 | **Shopline Payments** | merchantId + apiKey | 金額以分為單位、HMAC-SHA256 webhook |
 | **LINE Pay v4** | Channel ID/Secret + HMAC-SHA256 + Nonce | Request→Confirm 兩段、Preapproved Pay |
 | **TapPay** | Partner Key (Header) | PCI 隔離、Prime 兩段式、Card Token |
+| **O'Pay 歐付寶** | SHA256 CheckMacValue（同 ECPay） | 與 ECPay 同源架構、AccountLink 銀行快付、延遲撥款 |
+| **JKOPAY 街口** | api-key Header + HMAC-SHA256 digest | 線上支付 / POS / 授權扣款 |
+| **SunPay 紅陽** | RSA 分段加密 + SHA256 check_value | 金流 + 發票 + 超商代收 |
+| **GoMyPay** | 需申請文件 | 參數規格待補 |
 
-每家附完整 Python 範例 + 反推的加密實作 + 錯誤碼對照 + 測試帳號。
+O'Pay、GoMyPay 以外皆附可執行 Python 範例，加解密以官方測試向量驗證；錯誤碼見 `data/error-codes.csv`。
 
 ## 技能包內容
 
@@ -77,23 +81,28 @@ TapPay 用 Prime 一次付清，remember=true 存成 card_token 供下次自動�
 taiwan-payment/
 ├── SKILL.md                              # AI 技能主文檔
 ├── EXAMPLES.md                           # 實戰範例集
-├── references/                           # 10 份 API 規格 (~9,200 行)
+├── references/                           # 各服務商 API 規格
 │   ├── ecpay-payment-api.md
 │   ├── newebpay-payment-api.md
 │   ├── payuni-payment-api.md
-│   ├── smilepay-payment-api.md          # 反推 Mid_smilepay 加權檢核碼
+│   ├── smilepay-payment-api.md          # Mid_smilepay 加權檢核碼
 │   ├── pchomepay-payment-api.md         # 含 8h token 流程
 │   ├── ezpay-payment-api.md             # 電子支付平台 + 跨境（依官方手冊）
 │   ├── paynow-payment-api.md            # 雙 API 並行
 │   ├── shopline-payment-api.md          # Redirect + Embedded
 │   ├── linepay-payment-api.md           # HMAC + Preapproved
-│   └── tappay-payment-api.md            # Prime + Token 重複扣款
-├── examples/                             # 10 個生產級 Python 範例
-└── data/                                 # 7 份 CSV
-    ├── providers.csv                    # 10 服務商完整比較
-    ├── operations.csv                   # 26 個 API 操作
-    ├── payment-methods.csv              # 25+ 支付方式對照
-    ├── error-codes.csv                  # 130+ 錯誤碼
+│   ├── tappay-payment-api.md            # Prime + Token 重複扣款
+│   ├── opay-payment-api.md
+│   ├── jkopay-payment-api.md
+│   ├── sunpay-payment-api.md
+│   ├── gomypay-payment-api.md
+│   └── twqr-ewallet-landscape.md        # 電子支付／TWQR 生態
+├── examples/                             # 可執行 Python 範例
+└── data/                                 # search / recommend 使用的 CSV
+    ├── providers.csv
+    ├── operations.csv
+    ├── payment-methods.csv
+    ├── error-codes.csv                  # 各家官方錯誤碼
     └── ...
 ```
 
@@ -109,14 +118,14 @@ taiwan-payment init --global       # 全域安裝
 
 ## 14 個 AI 平台支援
 
-Claude Code · Cursor · Windsurf · Antigravity · GitHub Copilot · Kiro · Codex · Qoder · Roo Code · Gemini · Trae · OpenCode · Continue · CodeBuddy
+Claude Code · Cursor · Windsurf · Antigravity · GitHub Copilot · Kiro · Codex · Qoder · Cline · Gemini · Trae · OpenCode · Continue · CodeBuddy
 
 ## 相關套件
 
 本套件是 **[Taiwan E-Commerce Toolkit](https://github.com/Moksa1123/taiwan-ecommerce-toolkit)** 的一部分：
 
-- [taiwan-invoice-skill](https://www.npmjs.com/package/taiwan-invoice-skill) — 5 家電子發票
-- [taiwan-logistics-skill](https://www.npmjs.com/package/taiwan-logistics-skill) — 7 家物流（含 HCT 直連）
+- [taiwan-invoice-skill](https://www.npmjs.com/package/taiwan-invoice-skill) — 7 家電子發票加值中心 + 財政部大平台查詢
+- [taiwan-logistics-skill](https://www.npmjs.com/package/taiwan-logistics-skill) — 7 家物流 aggregator + HCT 直連 + 3 家即時配送
 
 ## 授權
 
