@@ -55,7 +55,7 @@ pchomepay,90002,門市不存在,Store Not Found,error,提供的 store_id 在系�
 pchomepay,90004,訂單尚無物流,No Logistic,error,該訂單尚未呼叫過取號 API,呼叫 /v1/logistic/batch 取號
 paynow,1,Success,Success,success,PayNow 物流操作成功,
 paynow,M01,商家代號錯誤,Invalid merID,error,merID 在系統中不存在,確認商家代號
-paynow,A01,加密驗證失敗,Auth Failed,error,3DES 加密或 PassCode 驗證失敗,檢查 24-byte Key + 8-byte IV
+paynow,A01,加密驗證失敗,Auth Failed,error,3DES 加密或 PassCode 驗證失敗,檢查 3DES Key（1234567890 + Password + 123456）與 PassCode 組成
 paynow,B01,訂單金額錯誤,Invalid Amount,error,Amount 超出範圍或格式錯誤,確認金額為正整數
 paynow,C01,訂單編號重複,Duplicate Order,error,paymentNo 已存在,使用唯一訂單編號
 paynow,LS01,7-11 大宗已出貨,7-11 Shipped,in_transit,7-11 大宗 B2C 已出貨,

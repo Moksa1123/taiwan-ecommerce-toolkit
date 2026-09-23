@@ -81,7 +81,8 @@ def decrypt_data(cipher_text: str, hash_key: str, hash_iv: str) -> Dict[str, Any
     padded = dec.update(base64.b64decode(cipher_text)) + dec.finalize()
     unpadder = sympad.PKCS7(128).unpadder()
     encoded = (unpadder.update(padded) + unpadder.finalize()).decode('utf-8')
-    return json.loads(urllib.parse.unquote(encoded))
+    # unquote_plus：伺服器端的 URL encode 以 "+" 表示空白，unquote 不會還原
+    return json.loads(urllib.parse.unquote_plus(encoded))
 
 
 # ============================================================================

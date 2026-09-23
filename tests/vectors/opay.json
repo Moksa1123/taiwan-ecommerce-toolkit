@@ -7,6 +7,17 @@
     },
     "hash_key": "5294y06JbISpM5x9",
     "hash_iv": "v77hoKGq4kWxNNIS",
+    "invoice_aes": {
+        "source": "歐付寶電子發票 B2C 介接技術文件 附錄 3「參數加密方式說明」加解密範例（_studies/opay/opay-invoice-b2c.pdf 第 145 頁）",
+        "hash_key": "ejCk326UnaZWKisg",
+        "hash_iv": "q9jcZX8Ib9LM8wYk",
+        "plain": {
+            "Name": "Test",
+            "ID": "A123456789"
+        },
+        "url_encoded": "%7B%22Name%22%3A%22Test%22%2C%22ID%22%3A%22A123456789%22%7D",
+        "expected": "uvI4yrErM37XNQkXGAgRgJAgHn2t72jahaMZzYhWL1HmvH4WV18VJDP2i9pTbC+tby5nxVExLLFyAkbjbS2Dvg=="
+    },
     "cases": [
         {
             "name": "doc_example",

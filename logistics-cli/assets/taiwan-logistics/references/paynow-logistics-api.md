@@ -224,6 +224,9 @@ $postBody  = 'JsonOrder=' . urlencode($encrypted);
 
 ### Python 範例
 
+> 已以文件附錄一與「建立物流單」範例密文驗證（`tests/vectors/paynow.json`）。
+
+<!-- verify: paynow-3des -->
 ```python
 from Crypto.Cipher import DES3
 import base64
@@ -240,9 +243,8 @@ def triple_des_encrypt(content: str, key: str) -> str:
     encrypted = cipher.encrypt(data)
     return base64.b64encode(encrypted).decode('ascii').replace(' ', '+')
 
-# 使用
-key = '123456789070828783123456'  # 24 bytes
-encrypted = triple_des_encrypt(json_str, key)
+# 使用：Key = "1234567890" + Password + "123456"
+# encrypted = triple_des_encrypt(json_str, '123456789070828783123456')
 ```
 
 ---
@@ -299,6 +301,7 @@ $passCode = generatePassCode([
 
 ### Python 範例
 
+<!-- verify: paynow-passcode -->
 ```python
 import hashlib
 
@@ -306,7 +309,7 @@ def generate_pass_code(*parts: str) -> str:
     raw = ''.join(parts)
     return hashlib.sha1(raw.encode('utf-8')).hexdigest().upper()
 
-pass_code = generate_pass_code(user_account, order_no, str(total_amount), apicode)
+# pass_code = generate_pass_code(user_account, order_no, str(total_amount), apicode)
 ```
 
 ---
@@ -331,17 +334,19 @@ POST /Member/Order/Choselogistics
 
 ### 各物流的 Logistic_serviceID 對照
 
+> 依各產品線 PDF 的 `Logistic_service` 欄位定義整理（2026-09 逐份查核）。
+
 | 服務 | Logistic_serviceID |
 |------|-------------------|
-| 4 大超商常溫 (依輸入導向對應地圖) | `01` / `03` / `05` / `10` |
-| 7-11 大宗物流 | `02` (固定) |
-| 7-11 大宗物流 (冷凍) | `22` |
-| 7-11 交貨便 (冷凍) | `21` 或 `22` |
-| 7-11 海外配送 (店配) | `07` (額外帶 `Country`) |
+| 7-11 交貨便 / 全家店到店 / 萊爾富店到店 / OK 店到店 | `01` / `03` / `05` / `10` |
+| 7-11 大宗物流 | `02` |
 | 全家大宗物流 | `04` |
-| 全家店到店 (冷凍) | `23` |
-| 全家大宗 (冷凍) | `24` (額外帶 `Length`/`Wide`/`High`/`Weight`/`StartDate`/`EndDate`) |
-| 黑貓店到店 | `46` |
+| 黑貓宅急便 | `06` |
+| 7-11 海外配送（店配 / 宅配） | `07` / `08`（額外帶 `Country`） |
+| 7-11 交貨便（冷凍） | `21` |
+| 7-11 大宗物流（冷凍） | `22` |
+| 全家店到店（冷凍） | `23` |
+| 全家大宗（冷凍） | `24`（額外帶 `Length`/`Wide`/`High`/`Weight`/`StartDate`/`EndDate`） |
 
 ### 海外配送專用參數 (Logistic_serviceID=07)
 

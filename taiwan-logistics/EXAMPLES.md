@@ -2585,7 +2585,7 @@ SmilePay 透過 `Pay_zg` 矩陣編碼涵蓋 7-11/全家 + 黑貓三大配送：
 
 ## PayNow 立吉富物流範例
 
-⚠️ **加密用 3DES (TripleDES) / ECB / Zero-Padding**，24-byte Key + 8-byte IV。**不同於金流端的動態 AES-256**。
+⚠️ **加密用 3DES (TripleDES) / ECB / Zero-Padding，輸出 Base64**；Key = `1234567890` + Password + `123456`（24 bytes，ECB 不使用 IV）。**不同於金流端的動態 AES-256**。已以文件範例密文逐位元組驗證。
 
 完整範例見 [`examples/paynow-logistics-cvs-example.py`](examples/paynow-logistics-cvs-example.py)。涵蓋 11 條產品線（7-11 大宗 / 冷凍 / 海外、全家 大宗 / 冷凍、4 大超商常溫 C2C、黑貓宅配 / 店到店）。
 

@@ -19,10 +19,10 @@ pcp_logistic_yet,PChomePay 查詢未出貨,,,,GET,,,/v1/logistic/yet
 pcp_logistic_store_return,PChomePay 查詢未取貨,,,,GET,"date YYYYMMDD",,/v1/logistic/store_return/{date}
 pcp_logistic_accounting,PChomePay 物流手續費對帳,,,,GET,"date YYYYMMDD",,/v1/logistic/accounting/{date} 回應為 NDJSON
 pcp_logistic_compensation,PChomePay 賠款入帳查詢,,,,GET,"date YYYYMM",,/v1/logistic/compensation/{date}
-pn_logistic_create,PayNow 建立物流訂單,,,,POST,"ServiceID,GoodsName,Amount,Receiver*,Sender*",,PayNow /service/sevp_logistic.aspx; 11 條產品線各有不同 ServiceID
-pn_logistic_emap,PayNow 電子地圖選店,,,,GET,"merID,LogisticServiceID,ReturnURL",,PayNow 物流選店頁面導轉
+pn_logistic_create,PayNow 建立物流訂單,,,,POST,JsonOrder（Obj_Order JSON 以 3DES/ECB/Zero-Padding 加密後 Base64）,,PayNow /api/Orderapi/Add_Order；Logistic_service 01/02/03/04/05/06/07/08/10/21-24；PassCode=SHA1(user_account+OrderNo+TotalAmount+apicode)
+pn_logistic_emap,PayNow 電子地圖選店,,,,POST,"user_account,orderno,apicode(3DES),Logistic_serviceID,returnUrl",,PayNow /Member/Order/Choselogistics（瀏覽器表單）
 pn_logistic_print,PayNow 列印託運單,,,,POST,"LogisticTradeNo",,PayNow 列印託運單
-pn_logistic_status,PayNow 查詢貨況,,,,POST,"LogisticTradeNo",,PayNow 查詢物流狀態
+pn_logistic_status,PayNow 查詢貨況,,,,GET,"orderno,user_account,sno=1",,PayNow /api/Orderapi/Get_Order_Info_orderno
 hct_query_url,HCT 查貨網頁串接,,,,GET,"加密字串,v",,HCT 直連 /phone/searchGoods_Main.aspx?no=加密字串&v=xx (URL 嵌入)
 hct_query_xml,HCT 多筆貨號查詢,,,,POST,"加密後XML",,HCT 直連 /phone/searchGoods_Main_Xml.ashx (XML POST)
 hct_transdata,HCT 傳入託運資料,,,,POST,"esdate,epino,epdcl1,epdcl2,..",,HCT 直連 TransData (DataSet/JSON/XML 三種變體)

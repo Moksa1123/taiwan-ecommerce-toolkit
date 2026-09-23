@@ -294,6 +294,48 @@ def test_linepay():
               lambda: svc._sign(c['path'], c['payload'], c['nonce']) == c['expected'])
 
 
+def test_opay_invoice():
+    o = load_vectors('opay')['invoice_aes']
+    print('\n4e. 歐付寶電子發票 AES（標準答案出處：' + o['source'] + '）')
+    mod = load_module('taiwan-invoice/examples/opay-invoice-example.py')
+    check("[O'Pay 發票] 加密結果與官方文件相同",
+          lambda: mod.encrypt_data(o['plain'], o['hash_key'], o['hash_iv']) == o['expected'])
+    check("[O'Pay 發票] 解密官方文件密文", lambda: mod.decrypt_data(o['expected'], o['hash_key'], o['hash_iv']) == o['plain'])
+    inv = load_module('taiwan-invoice/examples/ecpay-invoice-example.py')
+    svc = inv.ECPayInvoiceService('2000132', o['hash_key'], o['hash_iv'])
+    check("[綠界發票] 同源演算法：加密結果與歐付寶官方文件相同", lambda: svc.encrypt_data(o['plain']) == o['expected'])
+
+
+def test_paynow_logistics():
+    v = load_vectors('paynow')
+    print('\n4f. PayNow 物流（標準答案出處：' + v['source']['name'] + '）')
+    mod = load_module('taiwan-logistics/examples/paynow-logistics-cvs-example.py')
+    t = v['tripledes_appendix']
+    svc = mod.PayNowLogisticService('28229955', '12345678', t['password'])
+    check('[PayNow 物流] 3DES 與文件附錄一相同（Base64 輸出）',
+          lambda: svc.encrypt_3des(t['plain']) == t['expected_base64'])
+    sa = v['sha1_appendix']
+    check('[PayNow 物流] SHA-1 與文件附錄二相同', lambda: svc.sha1_upper(sa['input']) == sa['expected'])
+    o = v['order_example']
+    order = json.loads(o['order_json'])
+    check('[PayNow 物流] PassCode 與文件範例訂單相同',
+          lambda: svc.passcode(order['OrderNo'], order['TotalAmount']) == order['PassCode'])
+
+    def _order_roundtrip():
+        oo = mod.LogisticOrder(
+            order_no=order['OrderNo'], logistic_service=order['Logistic_service'], deliver_mode=order['DeliverMode'],
+            total_amount=int(order['TotalAmount']), receiver_storeid=order['receiver_storeid'],
+            receiver_storename=order['receiver_storename'], receiver_name=order['Receiver_Name'],
+            receiver_phone=order['Receiver_Phone'], receiver_email=order['Receiver_Email'],
+            receiver_address=order['Receiver_address'], sender_name=order['Sender_Name'],
+            sender_phone=order['Sender_Phone'], sender_email=order['Sender_Email'],
+            sender_address=order['Sender_address'], return_storeid=order['return_storeid'],
+            remark=order['Remark'], description=order['Description'])
+        return svc.encrypt_3des(svc.build_order_json(oo)) == o['expected_base64']
+    check('[PayNow 物流] 以範例訂單產生的 JsonOrder 與文件密文逐字相同', _order_roundtrip)
+    check('[PayNow 物流] 可解密文件密文', lambda: svc.decrypt_3des(o['expected_base64']) == o['order_json'])
+
+
 # ---------------------------------------------------------------------------
 # 5. 隨 skill 發布的工具腳本
 # ---------------------------------------------------------------------------
@@ -557,7 +599,25 @@ def _check_snippet_linepay(ns):
                for c in v['cases'])
 
 
+def _check_snippet_paynow_3des(ns):
+    v = load_vectors('paynow')
+    t, o = v['tripledes_appendix'], v['order_example']
+    key = '1234567890' + o['password'] + '123456'
+    return (ns['triple_des_encrypt'](t['plain'], t['key']) == t['expected_base64']
+            and ns['triple_des_encrypt'](o['order_json'], key) == o['expected_base64'])
+
+
+def _check_snippet_paynow_passcode(ns):
+    v = load_vectors('paynow')
+    order = json.loads(v['order_example']['order_json'])
+    return (ns['generate_pass_code'](v['sha1_appendix']['input']) == v['sha1_appendix']['expected']
+            and ns['generate_pass_code'](order['user_account'], order['OrderNo'], order['TotalAmount'],
+                                         order['apicode']) == order['PassCode'])
+
+
 SNIPPET_CHECKERS = {
+    'paynow-3des': _check_snippet_paynow_3des,
+    'paynow-passcode': _check_snippet_paynow_passcode,
     'linepay-sign': _check_snippet_linepay,
     'smilepay-mid': _check_snippet_smilepay_mid,
     'newebpay-logistics': _check_snippet_newebpay_logistics,
@@ -684,7 +744,7 @@ def main():
         return 1
 
     test_imports()
-    for section in (test_payuni, test_newebpay, test_ecpay, test_ezpay_invoice, test_smilepay, test_linepay, test_scripts, test_doc_snippets, test_invoice_generator):
+    for section in (test_payuni, test_newebpay, test_ecpay, test_ezpay_invoice, test_smilepay, test_linepay, test_opay_invoice, test_paynow_logistics, test_scripts, test_doc_snippets, test_invoice_generator):
         try:
             section()
         except Exception as e:  # noqa: BLE001 - 單一區段炸掉不能讓其餘區段不跑
