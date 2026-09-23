@@ -61,6 +61,19 @@ PaddingMode = PKCS7
 
 Hash Key 與 Hash IV **各為 16 碼**（手冊範例：`A123456789012345` / `B123456789012345`）。
 
+### ⚠️ 加密前要先 URLEncode（.NET 風格、小寫 %xx）
+
+```
+JSON  →  URLEncode（%7b%22CompanyID%22%3a...，十六進位小寫）  →  AES-128-CBC/PKCS7  →  Base64
+```
+
+手冊第 8 章範例：`{"CompanyID":"12345678","TimeStamp":"12345678"}` 先編成
+`%7b%22CompanyID%22%3a%2212345678%22%2c%22TimeStamp%22%3a%2212345678%22%7d` 再加密，
+結果為 `W4fAhQNA5o+Asgcp21dxov01C+Gn6YvWaaP2tTbGHZutZeVe99PBEQsR+TTNCGBs3LR6hFSyxH7WTRUNw7aTFk1YmOuOgrHNU+4406j8g38=`。
+
+直接加密 JSON、或用大寫 `%7B` 的 URLEncode，都會得到不同的 Token。
+（已驗證：`tests/vectors/sunpay.json` 的 `invoice_token`；舊版範例漏了 URLEncode 這一步。）
+
 ### 加密前的明文
 
 ```json

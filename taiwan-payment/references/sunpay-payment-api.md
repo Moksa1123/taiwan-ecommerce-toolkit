@@ -117,8 +117,17 @@
 解密（§4.2.2，收 callback 時）：
 
 ```
-rsamsg  →  Base64 decode  →  分段解密（每段 128 byte）  →  URLDecode  →  JSON
+rsamsg  →  Base64 decode（URL-safe：- _）  →  以「公鑰」分段解密（每段 128 byte）  →  URLDecode  →  JSON
 ```
+
+> ⚠️ **回傳資料是紅陽用私鑰加密、特店用公鑰還原**（PKCS#1 v1.5 type 1：`m = c^e mod n` 後去掉 `00 01 FF… 00`）。
+> 特店手上只有公鑰；一般 RSA 函式庫的 `decrypt()` 需要私鑰，不能直接套用。
+> 回傳的 rsamsg 是 URL-safe base64（含 `-`、`_`），先換回 `+`、`/` 再解碼。
+>
+> ⚠️ **回傳的 check_value 要對「解密後、尚未 URLDecode」的字串**加上 SHA2 密鑰計算。
+> 不能先 decode 成 JSON 再自己重新排序、URLEncode —— 紅陽的 URL encode 不編碼 `*` 等字元，重組的字串會對不上。
+>
+> 以上皆已用手冊附的回傳範例（rsamsg、check_value、Step 1.4 / 1.5）驗證：`tests/vectors/sunpay.json`。
 
 > 加密分段 **117**、解密分段 **128**，兩者不同——這是 RSA 密文區塊固定 128 byte（1024 bit）而明文區塊需扣掉 11 byte padding 的結果。實作時很容易寫錯成同一個數字。
 

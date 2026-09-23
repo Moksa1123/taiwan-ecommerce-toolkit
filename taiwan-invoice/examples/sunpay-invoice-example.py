@@ -29,6 +29,8 @@ API 文件: 參見 references/SUNPAY_API_REFERENCE.md
 
 import base64
 import json
+import re
+import urllib.parse
 from dataclasses import dataclass
 from datetime import datetime, timedelta, timezone
 from typing import Any, Dict, List, Optional
@@ -75,23 +77,38 @@ def taiwan_epoch(now: Optional[datetime] = None) -> int:
     return int((n.replace(tzinfo=None) + timedelta(hours=8) - datetime(1970, 1, 1)).total_seconds())
 
 
-def build_token(company_id: str, hash_key: str, hash_iv: str,
-                now: Optional[datetime] = None) -> str:
-    """產生 Token 欄位：AES-128-CBC / PKCS7 加密後 Base64。
+def dotnet_url_encode(text: str) -> str:
+    """
+    .NET HttpUtility.UrlEncode 等價：空白為 "+"、百分比編碼用小寫十六進位、
+    不編碼 - _ . ! * ( )。只把 %XX 轉小寫，英數字本身的大小寫不變。
+    """
+    encoded = urllib.parse.quote_plus(text, safe='!*()').replace('~', '%7E')
+    return re.sub(r'%[0-9A-F]{2}', lambda m: m.group(0).lower(), encoded)
 
-    Hash Key 與 Hash IV 各為 16 碼。
+
+def encrypt_token(plain_json: str, hash_key: str, hash_iv: str) -> str:
+    """
+    Token 加密：JSON → .NET 風格 URLEncode（小寫 %xx）→ AES-128-CBC / PKCS7 → Base64
+
+    手冊第 8 章加密範例：{"CompanyID":"12345678","TimeStamp":"12345678"}
+    先編成 %7b%22CompanyID%22%3a... 才加密；直接加密 JSON 會得到錯誤的 Token。
     """
     if Cipher is None:
         raise RuntimeError('需要 cryptography 套件：pip install cryptography')
+    padder = sympad.PKCS7(128).padder()
+    data = padder.update(dotnet_url_encode(plain_json).encode('utf-8')) + padder.finalize()
+    enc = Cipher(algorithms.AES(hash_key.encode()), modes.CBC(hash_iv.encode())).encryptor()
+    return base64.b64encode(enc.update(data) + enc.finalize()).decode('ascii')
 
+
+def build_token(company_id: str, hash_key: str, hash_iv: str,
+                now: Optional[datetime] = None) -> str:
+    """產生 Token 欄位（Hash Key 與 Hash IV 各 16 碼）"""
     plain = json.dumps(
         {'CompanyID': company_id, 'TimeStamp': str(taiwan_epoch(now))},
         separators=(',', ':'),
     )
-    padder = sympad.PKCS7(128).padder()
-    data = padder.update(plain.encode('utf-8')) + padder.finalize()
-    enc = Cipher(algorithms.AES(hash_key.encode()), modes.CBC(hash_iv.encode())).encryptor()
-    return base64.b64encode(enc.update(data) + enc.finalize()).decode('ascii')
+    return encrypt_token(plain, hash_key, hash_iv)
 
 
 # ============================================================================
@@ -310,10 +327,14 @@ def _self_test() -> int:
     print(f'  [{"PASS" if ok else "FAIL"}] 合法手機條碼通過')
 
     if Cipher is not None:
-        token = build_token('12345678', 'A123456789012345', 'B123456789012345', tw)
-        ok = isinstance(token, str) and len(token) > 0
+        # 手冊第 8 章加密範例（已知答案），不只是「有產生字串」
+        token = encrypt_token('{"CompanyID":"12345678","TimeStamp":"12345678"}',
+                              'A123456789012345', 'B123456789012345')
+        expected = ('W4fAhQNA5o+Asgcp21dxov01C+Gn6YvWaaP2tTbGHZutZeVe99PBEQsR+TTNCGBs3LR6h'
+                    'FSyxH7WTRUNw7aTFk1YmOuOgrHNU+4406j8g38=')
+        ok = token == expected
         failed += not ok
-        print(f'  [{"PASS" if ok else "FAIL"}] Token 產生成功（長度 {len(token)}）')
+        print(f'  [{"PASS" if ok else "FAIL"}] Token 加密與手冊範例相同')
     else:
         print('  [SKIP] 未安裝 cryptography，略過 Token 產生')
 

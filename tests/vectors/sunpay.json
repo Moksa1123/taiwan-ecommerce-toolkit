@@ -1,0 +1,58 @@
+{
+    "provider": "sunpay",
+    "source": {
+        "kind": "official-doc-example",
+        "name": "紅陽科技金流服務技術串接手冊 v1.1.0（_studies/sunpay/sunpay-payment-manual-v1.1.0.pdf）4.2.1–4.2.3 與解密步驟",
+        "note": "回傳範例的 rsamsg 以手冊公鑰解密可得 Step 1.5 的明文；回傳的 check_value 是對解密後「尚未 urldecode」的字串（Step 1.4）+ SHA2 密鑰計算"
+    },
+    "public_key_pem": "-----BEGIN PUBLIC KEY-----\nMIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDGvZ1HnY+qEIF7HDwE5T+jO98vvgF8R7CNL0RG72kpO2eG2zNIMLAukEZszX+v9/FFgDwLkUtEeVoTt86cxcHEmi9nR/z7F38aMFJ8NtftaFd53uBga9hdD30G2CyX3RaCRCdt2ev4175z5a4w5dU//Rx7JfsnCHW/P82qvMtBsQIDAQAB\n-----END PUBLIC KEY-----",
+    "sha2_key": "D2AE96E5528531CFCDE90591695F973D23846ABD01A639AB1D3E0322D56E0ED9",
+    "request_check_value": {
+        "payload": {
+            "body": {
+                "country_type": "cht",
+                "mn": "200",
+                "td": "TT1695802894"
+            },
+            "head": {
+                "send_time": "58534211620230927",
+                "web": "MC31793850"
+            }
+        },
+        "expected": "3df3acb3c4c3de1cb352a31bea3df6341e7c24b53aec8c695c32e3aa417cad26"
+    },
+    "callback": {
+        "rsamsg": "Q-DgTOZNp4MmrlUJ7Sfxv5VDNgqSdPrXBTyTlTEZUnTABkfdA1r7moD6ScNsO9u9QlhlxvXwDErEYikaD6sj2rx4wl7F15GuLk5-Up_nmStlMZ8vBGonPKNZcu4p_Fi-76w6VpoNfhdIjsZa7W8TPOW9Svrx3-zmXiQgCGSSBMGc6HG8H6iuw4-VAmLbMKMPQvK14n98W1SHk0BQYdcJI2Lx98FoyudXeE79l1MHx8k4Rvk4JwOYmvRNuqwIzc7bQx6aUts43cLs6aoC_-NjBQi5i-0Bn6-hQbNQGwmmXcvf7uRWIXEKVZzNAYhULLjHUfrrt3-h3znat_k900DtPIrw9PfIv3E9gRnj1r99QX_D-qg1XdN1XInWTKFaTvYxn2HpF2RIpwbq6egP5I_Bvde68tuQqFlsfOaNBXL--1DfMwyaYNSSGETNmPWeP7G4EjDaQGF3DX8RPBIMIBYeGaircjJUJjjmZpeaZDzbNbXOICAoVkPAohKXRZGEtYkUGJ1zizl0VA9B3lQw011JdRVOhfO-fx5bmHnB4-0mkaYa6b60OJ4NnRTcRprkOZUJD6mWkEuQagpatt5-ZiaQNE4m6gBQ0CETDj8a6XLzdjcUH_J_TXufsdueFL_0nSvNNP84cmEDcfsYt8gU9dHTqa1b3LOVANT2KkC6aocAMtqC1aOntIL9LakGQD5Yj45LewU0DKKdZwMNTK_3sjfArKx5ZOQiIzcfw_M9UHIwnA0ejXlHisUFyiuRbSCRwmjvUbJz6DM1Z4FKmg94cv2dqfxSYJpI_7CarKdaNNAGUeUKc3QxJvNT_yhPVIUxt-uTDeG2Fxl7rTm1S3v4Ioidzw",
+        "check_value": "2b7c5df5333bb3dc2e0ea34544b02906efd760b860361ccbd6b4083cff8ed386",
+        "decrypted_encoded": "%7B%22body%22%3A%7B%22approve_code%22%3A%22777777%22%2C%22card_no%22%3A%22493817******8994%22%2C%22cargo_no%22%3A%22%22%2C%22currency%22%3A%22TWD%22%2C%22invoice_no%22%3A%22%22%2C%22mn%22%3A%22200%22%2C%22name%22%3A%22c%E2%97%8Bl%22%2C%22pay_date%22%3A%2220230927%22%2C%22pay_result%22%3A%2210%22%2C%22pay_time%22%3A%2216%3A22%22%2C%22save_card_token_result%22%3A%220%22%2C%22td%22%3A%22TT1695802894%22%2C%22trade_no%22%3A%22C230927162212711424%22%7D%2C%22head%22%3A%7B%22send_time%22%3A%2204541221620230927%22%2C%22web%22%3A%22MC31793850%22%7D%7D",
+        "plain": {
+            "body": {
+                "approve_code": "777777",
+                "card_no": "493817******8994",
+                "cargo_no": "",
+                "currency": "TWD",
+                "invoice_no": "",
+                "mn": "200",
+                "name": "c○l",
+                "pay_date": "20230927",
+                "pay_result": "10",
+                "pay_time": "16:22",
+                "save_card_token_result": "0",
+                "td": "TT1695802894",
+                "trade_no": "C230927162212711424"
+            },
+            "head": {
+                "send_time": "04541221620230927",
+                "web": "MC31793850"
+            }
+        }
+    },
+    "invoice_token": {
+        "source": "紅陽電子發票技術串接手冊 v2.3 第 8 章加密範例（_studies/sunpay/sunpay-einvoice-manual-v2.3.pdf p.69）",
+        "hash_key": "A123456789012345",
+        "hash_iv": "B123456789012345",
+        "plain": "{\"CompanyID\":\"12345678\",\"TimeStamp\":\"12345678\"}",
+        "url_encoded": "%7b%22CompanyID%22%3a%2212345678%22%2c%22TimeStamp%22%3a%2212345678%22%7d",
+        "expected": "W4fAhQNA5o+Asgcp21dxov01C+Gn6YvWaaP2tTbGHZutZeVe99PBEQsR+TTNCGBs3LR6hFSyxH7WTRUNw7aTFk1YmOuOgrHNU+4406j8g38="
+    }
+}

@@ -25,6 +25,7 @@ API 文件: 參見 references/sunpay-payment-api.md
 
 import base64
 import hashlib
+import hmac
 import json
 import urllib.parse
 from dataclasses import dataclass
@@ -103,21 +104,51 @@ def make_rsamsg(payload: Dict[str, Any], public_key_pem: str) -> str:
     return base64.b64encode(bytes(out)).decode('ascii')
 
 
-def parse_rsamsg(rsamsg: str, private_key_pem: str) -> Dict[str, Any]:
-    """解密紅陽回傳的 rsamsg。
+def _rsa_public_decrypt_block(block: bytes, n: int, e: int) -> bytes:
+    """以公鑰還原 PKCS#1 v1.5 type-1（私鑰加密）的區塊：m = c^e mod n，去掉 00 01 FF.. 00 前綴"""
+    k = (n.bit_length() + 7) // 8
+    m = pow(int.from_bytes(block, 'big'), e, n).to_bytes(k, 'big')
+    if m[:2] != b'\x00\x01':
+        raise ValueError('RSA 區塊格式錯誤（公鑰不正確或資料遭竄改）')
+    return m[m.index(b'\x00', 2) + 1:]
 
+
+def decrypt_rsamsg(rsamsg: str, public_key_pem: str) -> str:
+    """
+    解密紅陽回傳的 rsamsg，回傳「尚未 urldecode」的字串。
+
+    紅陽以**它的私鑰**加密回傳資料，特店用紅陽提供的**公鑰**還原（手冊 4.2.2 / 解密步驟）；
+    特店手上沒有私鑰，用 private key 解密的寫法是錯的。
+    回傳的 rsamsg 是 URL-safe base64（- 與 _），兩種 base64 都接受。
     ⚠️ 解密分段是 128 byte，不是加密時的 117。
     """
     if serialization is None:
         raise RuntimeError('需要 cryptography 套件：pip install cryptography')
-
-    key = serialization.load_pem_private_key(private_key_pem.encode('utf-8'), password=None)
-    raw = base64.b64decode(rsamsg)
-
+    numbers = serialization.load_pem_public_key(public_key_pem.encode('utf-8')).public_numbers()
+    b64 = rsamsg.strip().replace('-', '+').replace('_', '/')
+    data = base64.b64decode(b64 + '=' * (-len(b64) % 4))
     out = bytearray()
-    for i in range(0, len(raw), RSA_DECRYPT_CHUNK):
-        out += key.decrypt(raw[i:i + RSA_DECRYPT_CHUNK], padding.PKCS1v15())
-    return json.loads(urllib.parse.unquote(out.decode('utf-8')))
+    for i in range(0, len(data), RSA_DECRYPT_CHUNK):
+        out += _rsa_public_decrypt_block(data[i:i + RSA_DECRYPT_CHUNK], numbers.n, numbers.e)
+    return out.decode('utf-8')
+
+
+def parse_rsamsg(rsamsg: str, public_key_pem: str, sha2_key: Optional[str] = None,
+                 check_value: Optional[str] = None) -> Dict[str, Any]:
+    """
+    解密並（可選）驗證 check_value 的紅陽回傳。
+
+    check_value 要對「解密後、尚未 urldecode」的字串 + SHA2 密鑰做 SHA256。
+    不能先 urldecode 再自己重新 urlencode —— 紅陽不編碼 `*` 等字元，重組的字串會對不上。
+    """
+    encoded = decrypt_rsamsg(rsamsg, public_key_pem)
+    if check_value is not None:
+        if sha2_key is None:
+            raise ValueError('驗證 check_value 需要 SHA2 密鑰')
+        expected = hashlib.sha256((encoded + sha2_key).encode('utf-8')).hexdigest()
+        if not hmac.compare_digest(expected, check_value.lower()):
+            raise ValueError('check_value 驗證失敗')
+    return json.loads(urllib.parse.unquote_plus(encoded))
 
 
 # ============================================================================

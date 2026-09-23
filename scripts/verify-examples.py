@@ -349,6 +349,27 @@ def test_paynow_logistics():
                                                   rs['tran_status'], rs['expected']))
 
 
+def test_sunpay():
+    v = load_vectors('sunpay')
+    print('\n4g. 紅陽 SunPay（標準答案出處：' + v['source']['name'] + '）')
+    mod = load_module('taiwan-payment/examples/sunpay-payment-example.py')
+    r = v['request_check_value']
+    check('[SunPay] 送出的 check_value 與手冊相同', lambda: mod.make_check_value(r['payload'], v['sha2_key']) == r['expected'])
+    cb = v['callback']
+    check('[SunPay] 以公鑰解密手冊的回傳 rsamsg（URL-safe base64）得到未 urldecode 的字串',
+          lambda: mod.decrypt_rsamsg(cb['rsamsg'], v['public_key_pem']) == cb['decrypted_encoded'])
+    check('[SunPay] 回傳 check_value 驗證通過且解析出手冊明文',
+          lambda: mod.parse_rsamsg(cb['rsamsg'], v['public_key_pem'], v['sha2_key'], cb['check_value']) == cb['plain'])
+    check('[SunPay] check_value 錯誤時拒絕',
+          raises(lambda: mod.parse_rsamsg(cb['rsamsg'], v['public_key_pem'], v['sha2_key'], '0' * 64)))
+    t = v['invoice_token']
+    inv = load_module('taiwan-invoice/examples/sunpay-invoice-example.py')
+    check('[SunPay 發票] URLEncode 結果與手冊相同（.NET 小寫 %xx）',
+          lambda: inv.dotnet_url_encode(t['plain']) == t['url_encoded'])
+    check('[SunPay 發票] Token 加密與手冊範例相同',
+          lambda: inv.encrypt_token(t['plain'], t['hash_key'], t['hash_iv']) == t['expected'])
+
+
 # ---------------------------------------------------------------------------
 # 5. 隨 skill 發布的工具腳本
 # ---------------------------------------------------------------------------
@@ -757,7 +778,7 @@ def main():
         return 1
 
     test_imports()
-    for section in (test_payuni, test_newebpay, test_ecpay, test_ezpay_invoice, test_smilepay, test_linepay, test_opay_invoice, test_paynow_logistics, test_scripts, test_doc_snippets, test_invoice_generator):
+    for section in (test_payuni, test_newebpay, test_ecpay, test_ezpay_invoice, test_smilepay, test_linepay, test_opay_invoice, test_paynow_logistics, test_sunpay, test_scripts, test_doc_snippets, test_invoice_generator):
         try:
             section()
         except Exception as e:  # noqa: BLE001 - 單一區段炸掉不能讓其餘區段不跑
