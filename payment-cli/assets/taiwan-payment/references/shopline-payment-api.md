@@ -728,10 +728,10 @@ function verifyShoplineSignature(timestamp, rawBody, sign, signKey) {
     .createHmac('sha256', signKey)
     .update(payload, 'utf8')
     .digest('hex');
-  return crypto.timingSafeEqual(
-    Buffer.from(expected, 'hex'),
-    Buffer.from(sign, 'hex')
-  );
+  const a = Buffer.from(expected, 'hex');
+  const b = Buffer.from(String(sign || ''), 'hex');
+  // 長度不同時 timingSafeEqual 會直接丟例外，先檢查
+  return a.length === b.length && crypto.timingSafeEqual(a, b);
 }
 
 // 必須使用 raw body

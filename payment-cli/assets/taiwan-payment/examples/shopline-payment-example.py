@@ -153,29 +153,28 @@ class ShoplinePaymentService:
 
     # -- Webhook --------------------------------------------------------------
 
-    def verify_webhook(self, payload: bytes, signature_header: str) -> bool:
+    def verify_webhook(self, raw_body: bytes, timestamp: str, sign: str,
+                       tolerance_ms: int = 5 * 60 * 1000, now_ms: Optional[int] = None) -> bool:
         """
-        驗證 Shopline Webhook 簽章 (HMAC-SHA256).
+        驗證 SHOPLINE Payments Webhook 簽章（官方「通知電文 → 簽章演算法」）
 
-        Shopline 通知時會在 header 帶 `x-slp-signature: sha256=<hex>`，
-        其值為 HMAC-SHA256(secret=webhookSecret, message=raw_body) 的 hex 表示。
+        Header 帶 `timestamp`（毫秒）與 `sign`；
+        sign = HMAC-SHA256(key=signKey, msg=f"{timestamp}.{raw_body}") 的 hex。
+
+        必須使用原始 body 位元組（不可 json.loads 後重新序列化），並檢查 timestamp
+        與現在的差距以防重放。
         """
         if not self.webhook_secret:
-            raise ValueError('未設定 webhookSecret，無法驗章')
-
-        # 提取 signature header 中的 hex 值
-        if signature_header.startswith('sha256='):
-            sig_hex = signature_header[7:]
-        else:
-            sig_hex = signature_header
-
-        expected = hmac.new(
-            self.webhook_secret.encode('utf-8'),
-            payload,
-            hashlib.sha256,
-        ).hexdigest()
-
-        return hmac.compare_digest(expected.lower(), sig_hex.lower())
+            raise ValueError('未設定 signKey，無法驗章')
+        message = timestamp.encode('utf-8') + b'.' + raw_body
+        expected = hmac.new(self.webhook_secret.encode('utf-8'), message, hashlib.sha256).hexdigest()
+        if not hmac.compare_digest(expected, sign.lower()):
+            return False
+        if tolerance_ms is not None:
+            current = now_ms if now_ms is not None else int(time.time() * 1000)
+            if abs(current - int(timestamp)) > tolerance_ms:
+                return False
+        return True
 
     # -- HTTP submit ----------------------------------------------------------
 
@@ -269,17 +268,18 @@ def example_verify_webhook():
     svc = ShoplinePaymentService(
         merchant_id='YOUR_MERCHANT_ID',
         api_key='YOUR_API_KEY',
-        webhook_secret='YOUR_WEBHOOK_SECRET',  # 後台取得
+        webhook_secret='YOUR_WEBHOOK_SECRET',  # signKey，申請後由 SLP 提供
         is_test=True,
     )
-    # 模擬收到的 Webhook
-    raw_body = b'{"event":"payment.completed","paymentId":"pay_abc123","amount":{"value":105000,"currency":"TWD"}}'
-    signature_header = 'sha256=abcdef123456'  # 實務上由 Shopline 提供於 x-slp-signature header
+    # 模擬收到的 Webhook（header: timestamp、sign；body 為原始位元組）
+    raw_body = b'{"id":"1000","type":"trade.succeeded","created":1695795621307,"data":{}}'
+    timestamp = str(int(time.time() * 1000))
+    sign = hmac.new(b'YOUR_WEBHOOK_SECRET', timestamp.encode() + b'.' + raw_body, hashlib.sha256).hexdigest()
 
-    is_valid = svc.verify_webhook(raw_body, signature_header)
+    is_valid = svc.verify_webhook(raw_body, timestamp, sign)
     if is_valid:
         evt = json.loads(raw_body)
-        print(f'[OK] Webhook 驗章通過: event={evt["event"]} paymentId={evt["paymentId"]}')
+        print(f'[OK] Webhook 驗章通過: type={evt["type"]} id={evt["id"]}')
     else:
         print('[FAIL] Webhook 簽章無效，可能是仿冒請求')
 

@@ -370,6 +370,40 @@ def test_sunpay():
           lambda: inv.encrypt_token(t['plain'], t['hash_key'], t['hash_iv']) == t['expected'])
 
 
+def test_shopline():
+    v = load_vectors('shopline')
+    print('\n4h. SHOPLINE Payments（' + v['source']['name'] + '）')
+    mod = load_module('taiwan-payment/examples/shopline-payment-example.py')
+    svc = mod.ShoplinePaymentService('m', 'k', webhook_secret=v['sign_key'])
+    for c in v['cases']:
+        check(f'[Shopline] {c["name"]}：webhook sign 驗證通過',
+              lambda: svc.verify_webhook(c['body'].encode('utf-8'), c['timestamp'], c['sign'],
+                                         now_ms=int(c['timestamp'])))
+    c = v['cases'][0]
+    check('[Shopline] 竄改 body 被拒絕', lambda: not svc.verify_webhook(
+        c['body'].replace('SUCCEEDED', 'FAILED').encode(), c['timestamp'], c['sign'], now_ms=int(c['timestamp'])))
+    check('[Shopline] 超過容許時間被拒絕（防重放）', lambda: not svc.verify_webhook(
+        c['body'].encode(), c['timestamp'], c['sign'], now_ms=int(c['timestamp']) + 10 * 60 * 1000))
+
+
+def test_example_self_tests():
+    """範例檔自帶的 _self_test()（多半內嵌官方文件的測試向量）必須全數通過"""
+    import contextlib
+    import io
+    print('\n4i. 範例內建的 _self_test()（官方文件測試向量）')
+    for path in sorted(glob.glob(os.path.join(ROOT, 'taiwan-*', 'examples', '*.py'))):
+        rel = os.path.relpath(path, ROOT).replace(os.sep, '/')
+        with open(path, encoding='utf-8') as f:
+            if 'def _self_test(' not in f.read():
+                continue
+
+        def run(rel=rel):
+            mod = load_module(rel)
+            with contextlib.redirect_stdout(io.StringIO()):
+                return mod._self_test() == 0
+        check(f'{rel} _self_test() 通過', run)
+
+
 # ---------------------------------------------------------------------------
 # 5. 隨 skill 發布的工具腳本
 # ---------------------------------------------------------------------------
@@ -778,7 +812,7 @@ def main():
         return 1
 
     test_imports()
-    for section in (test_payuni, test_newebpay, test_ecpay, test_ezpay_invoice, test_smilepay, test_linepay, test_opay_invoice, test_paynow_logistics, test_sunpay, test_scripts, test_doc_snippets, test_invoice_generator):
+    for section in (test_payuni, test_newebpay, test_ecpay, test_ezpay_invoice, test_smilepay, test_linepay, test_opay_invoice, test_paynow_logistics, test_sunpay, test_shopline, test_example_self_tests, test_scripts, test_doc_snippets, test_invoice_generator):
         try:
             section()
         except Exception as e:  # noqa: BLE001 - 單一區段炸掉不能讓其餘區段不跑
