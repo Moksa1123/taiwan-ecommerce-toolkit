@@ -49,7 +49,7 @@ LINE Pay 是 LINE Corporation 提供的電子支付服務，整合了信用卡�
 3. 自商家後台取得 **Channel ID** 與 **Channel Secret**
 4. 設定支付完成回調網址（`confirmUrl`、`cancelUrl`）
 
-> **注意**：本文件中部分簽章字串組合方式（string-to-sign）為依據 LINE Pay v3 慣例「推論」而來，**正式上線前請務必對照官方 LINE Pay v4 PDF 文件再次驗證**。本節將以 ⚠️ 標示需要驗證的內容。
+> **簽章公式已查證**：與 LINE Pay Developers 文件的公式一致，並與 yidas/line-pay-sdk-php `getAuthSignature()`、wpbr-linepay-tw 1.3.3 `generate_signature()` 實際執行結果逐字比對（`tests/vectors/linepay.json`）；下方 Python / Node.js 範例由 CI 驗證。v3 與 v4 的簽章方式相同，只有路徑前綴不同。
 
 ---
 
@@ -130,9 +130,7 @@ https://{host}/{apiPath}?{queryString}
 | `X-LINE-MerchantDeviceProfileId` | ○ | 裝置序號（多裝置場景） |
 | `X-LINE-MerchantDeviceType` | ○ | 裝置類型代碼 |
 
-### 簽章字串組合（string-to-sign）⚠️
-
-> **以下公式為依據 LINE Pay v3 慣例推論，正式上線前請對照官方 v4 PDF 驗證**。
+### 簽章字串組合（string-to-sign）
 
 **POST 請求**：
 
@@ -161,76 +159,69 @@ signature = Base64( HMAC-SHA256(key=ChannelSecret, message=data) )
 
 ### Python 簽章範例
 
+<!-- verify: linepay-sign -->
 ```python
+import base64
 import hashlib
 import hmac
-import base64
-import uuid
 import json
+import uuid
+
 import requests
 
 CHANNEL_ID = "1234567890"
 CHANNEL_SECRET = "your_channel_secret"
 BASE_URL = "https://sandbox-api-pay.line.me"
 
-def sign_request(api_path: str, body: str, nonce: str, channel_secret: str) -> str:
-    """LINE Pay v4 HMAC-SHA256 簽章（POST）
 
-    ⚠️ string-to-sign 組合方式請對照官方 v4 PDF 驗證
-    """
-    message = (channel_secret + api_path + body + nonce).encode("utf-8")
-    secret = channel_secret.encode("utf-8")
-    digest = hmac.new(secret, message, hashlib.sha256).digest()
+def sign_request(api_path: str, body_or_query: str, nonce: str, channel_secret: str) -> str:
+    """Base64(HMAC-SHA256(ChannelSecret, ChannelSecret + ApiPath + (body | query string) + Nonce))"""
+    message = (channel_secret + api_path + body_or_query + nonce).encode("utf-8")
+    digest = hmac.new(channel_secret.encode("utf-8"), message, hashlib.sha256).digest()
     return base64.b64encode(digest).decode("utf-8")
 
 
 def line_pay_post(api_path: str, payload: dict) -> dict:
+    # 簽章用的字串必須與實際送出的 body 逐字相同，所以只序列化一次
     body = json.dumps(payload, separators=(",", ":"), ensure_ascii=False)
     nonce = str(uuid.uuid4())
-    signature = sign_request(api_path, body, nonce, CHANNEL_SECRET)
-
     headers = {
         "Content-Type": "application/json",
         "X-LINE-ChannelId": CHANNEL_ID,
         "X-LINE-Authorization-Nonce": nonce,
-        "X-LINE-Authorization": signature,
+        "X-LINE-Authorization": sign_request(api_path, body, nonce, CHANNEL_SECRET),
     }
-
     resp = requests.post(BASE_URL + api_path, data=body.encode("utf-8"), headers=headers, timeout=30)
     return resp.json()
 ```
 
 ### Node.js 簽章範例
 
+<!-- verify: linepay-sign -->
 ```javascript
-const crypto = require('crypto');
-const { v4: uuidv4 } = require('uuid');
+import crypto from 'crypto';
 
-function signRequest(apiPath, body, nonce, channelSecret) {
-  // ⚠️ string-to-sign 組合請對照官方 v4 PDF 驗證
-  const message = channelSecret + apiPath + body + nonce;
-  return crypto
-    .createHmac('sha256', channelSecret)
-    .update(message)
-    .digest('base64');
+function signRequest(apiPath, bodyOrQuery, nonce, channelSecret) {
+  const message = channelSecret + apiPath + bodyOrQuery + nonce;
+  return crypto.createHmac('sha256', channelSecret).update(message).digest('base64');
 }
 
 async function linePayPost(apiPath, payload, { channelId, channelSecret, baseUrl }) {
-  const body = JSON.stringify(payload);
-  const nonce = uuidv4();
-  const signature = signRequest(apiPath, body, nonce, channelSecret);
-
+  const body = JSON.stringify(payload);          // 簽章與送出使用同一個字串
+  const nonce = crypto.randomUUID();
   const resp = await fetch(baseUrl + apiPath, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
       'X-LINE-ChannelId': channelId,
       'X-LINE-Authorization-Nonce': nonce,
-      'X-LINE-Authorization': signature,
+      'X-LINE-Authorization': signRequest(apiPath, body, nonce, channelSecret),
     },
     body,
   });
-  return resp.json();
+  // transactionId 為 19 位數，超過 Number.MAX_SAFE_INTEGER；JSON.parse 會失去精度，
+  // 需以字串方式讀取（例如先把數字替換成字串再 parse，或使用支援 BigInt 的 JSON 解析器）
+  return resp.text();
 }
 ```
 

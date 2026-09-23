@@ -169,7 +169,7 @@ invoice-config/
 |------|-----------|-----------------|------------|--------------|----------------|
 | 測試/正式 URL | 不同 URL | 不同 URL | **相同 URL** | 不同 URL (cinv/inv) | 不同 URL (dev/prod) |
 | 認證方式 | AES-128-CBC + HashKey/HashIV | Grvc + Verify_key | MD5 簽章 + App Key | AES-256-CBC + 32 碼 HashKey + 16 碼 HashIV + SHA256 CheckCode | JWT Bearer Token |
-| 列印方式 | POST 表單提交 | GET URL 參數 | API 取得 PDF URL | API 觸發補開立 (`Api_invoice_touch`) | （需向 PayNow 索取） |
+| 列印方式 | POST 表單提交 | GET URL 參數 | API 取得 PDF URL | 無列印 API（`/Api/invoice_touch_issue` 是觸發「待開立」發票，不是列印） | （需向 PayNow 索取） |
 | B2B 金額欄位 | SalesAmount (未稅) | UnitTAX=N | DetailVat=0 | `Category=B2B` + `Amt`/`TaxAmt` 拆分 | `BuyerIdentifier` + `TaxType` 切換 |
 | 傳輸格式 | JSON (AES 加密) | URL Parameters | JSON (URL Encode) | Form Post (`MerchantID_`/`PostData_` 後綴底線) | JSON (Bearer Header) |
 | 與其他系統共用加密 | 獨立 | 獨立 | 獨立 | **與藍新 Newebpay 金流共用** | 與 PayNow 金流不同（金流端用動態 AES-256） |

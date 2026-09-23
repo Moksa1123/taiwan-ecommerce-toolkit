@@ -1,0 +1,36 @@
+{
+    "provider": "linepay",
+    "sources": {
+        "sdk": "yidas/line-pay-sdk-php（MIT）Client::getAuthSignature()；GET 的 query string 以 http_build_query 產生、不含 \"?\"",
+        "plugin": "wpbr-linepay-tw 1.3.3 generate_signature()（POST 與 SDK 交叉比對一致）",
+        "formula": "Base64(HMAC-SHA256(ChannelSecret, ChannelSecret + URL path + (request body | query string) + nonce))，LINE Pay Developers 文件"
+    },
+    "generator": "php 8.2.33",
+    "channel_secret": "a917ab6a2367b536f8e5a6e2977e06f4",
+    "cases": [
+        {
+            "name": "post_request_v3",
+            "method": "POST",
+            "path": "/v3/payments/request",
+            "payload": "{\"amount\":250,\"currency\":\"TWD\",\"orderId\":\"ORD20260923001\",\"packages\":[{\"id\":\"pkg-1\",\"amount\":250,\"name\":\"測試商店\",\"products\":[{\"name\":\"測試商品 A\",\"quantity\":1,\"price\":250}]}],\"redirectUrls\":{\"confirmUrl\":\"https://shop.example.com/linepay/confirm\",\"cancelUrl\":\"https://shop.example.com/linepay/cancel\"}}",
+            "nonce": "0e3c0e4d-1d7c-4b1c-9d0a-7a3c2f1b5e11",
+            "expected": "EagL7+2KQDAA8YmAVq3o9hbPsfujPK4sv3a3HhagquY="
+        },
+        {
+            "name": "post_confirm_v4",
+            "method": "POST",
+            "path": "/v4/payments/2026092300000000001/confirm",
+            "payload": "{\"amount\":250,\"currency\":\"TWD\"}",
+            "nonce": "1758600000000",
+            "expected": "DQ/WsHG9iJfijyAymB+20MeH0pwxl+Jb2GfpZWvPF80="
+        },
+        {
+            "name": "get_details_v3",
+            "method": "GET",
+            "path": "/v3/payments",
+            "payload": "transactionId=2026092300000000001",
+            "nonce": "1758600000001",
+            "expected": "ni4wYQgWobXxBnalj7bSDLoeZ3iK8/CXoHik846pygk="
+        }
+    ]
+}

@@ -13,6 +13,12 @@
 | `payuni.json` | PAYUNi_for_WooCommerce 1.2.8（外掛標頭 Author: 統一金流 PAYUNi）`class-payuni.php` 的 `Encrypt` / `Decrypt` / `HashInfo`；另與 wpbr-payuni-payment 1.7.1、wpbr-payuni-shipping 1.6.4 人工比對一致 |
 | `newebpay.json` | 藍新官方外掛 newebpay-payment 1.0.12 `encProcess.php`；規格書 NDNF-1.2.2 的 PHP 範例（加密、4.1.4 解密、4.1.5 CheckCode、4.1.6 CheckValue）與其附的真實伺服器密文；物流規格書 NDNS 1.0.0 附錄的 HashData 範例結果 |
 | `ecpay.json` | 綠界官方 PHP SDK `ecpay/sdk`（MIT，由官方 WooCommerce 外掛內附）直接載入執行；SDK 本身另與綠界官方 ecpay-api-skill 的 test-vectors 交叉比對一致 |
+| `opay.json` | 歐付寶全方位金流介接技術文件附錄「檢查碼機制」的計算範例（文件印出的預期值，逐字轉錄） |
+| `ezpay-invoice.json` | ezPay 電子發票規格書 EZP_INVI_1.2.2 附件一（執行結果與文件印出的 PostData_ 完全相同）、附件二 CheckCode 印出值；ry-woocommerce-ezpay-invoice 2.1.5 `args_encrypt()` |
+| `smilepay.json` | SmilePay 官方 WooCommerce 外掛 1.1.23 `check_mid()`（含 Smseid 不足 4 碼、非數字等邊界） |
+| `linepay.json` | yidas/line-pay-sdk-php（MIT）`getAuthSignature()` 直接載入執行，POST 另與 wpbr-linepay-tw 1.3.3 `generate_signature()` 比對 |
+
+`payuni.json` 另與統一金流官方 PHP SDK（payuni/PHP_SDK）實際執行比對；`newebpay.json` 另含規格書中藍新伺服器實際產生的 CheckCode。
 
 `ecpay.json` 的 CheckMacValue 情境刻意涵蓋過去出錯的地方：`( ) ! * ~` 等 .NET URL encode 差異字元、
 不分大小寫排序（`CVSStoreID` vs `CustomField1`）、物流用 MD5 而非 SHA256。

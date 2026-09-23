@@ -651,39 +651,40 @@ Content-Type: text/html; charset=utf-8
 
 ## Mid_smilepay 簽章驗證
 
-`Mid_smilepay` 是 SmilePay 防止假通知的數值校驗碼，演算法可從 WooCommerce 模組推導：
+`Mid_smilepay` 是 SmilePay 防止假通知的數值校驗碼。演算法取自 SmilePay 官方 WooCommerce 外掛
+1.1.23 的 `check_mid()`，並以其原始碼產生的標準答案驗證（`tests/vectors/smilepay.json`）。
 
 ### 演算法
 
-1. 取 `Smseid` 末 4 碼 → `r1 r2 r3 r4`，若非數字以 `9` 取代
+1. 取 `Smseid` 末 4 碼（PHP `substr($smseid, -4, 4)`）→ `r1 r2 r3 r4`；
+   非數字、或 `Smseid` 不足 4 碼時**缺少的後段**，都以 `9` 取代
 2. `Amount` 補零至 8 碼 (左補) → `str1`
-3. 串接：`str = mid + str1 + r1 + r2 + r3 + r4` (16 碼)
+3. 串接：`str = mid + str1 + r1 + r2 + r3 + r4` (16 碼，mid 為 4 碼)
 4. 將 16 碼依索引切：偶數位 (0,2,4...14) 加總為 `even`，奇數位 (1,3,5...15) 加總為 `odd`
 5. `Mid_smilepay = even * 9 + odd * 3`
 
 ### Python 實作
 
+<!-- verify: smilepay-mid -->
 ```python
+import hmac
+
+
 def calc_mid_smilepay(mid: str, amount: int, smseid: str) -> int:
-    """計算 SmilePay Mid_smilepay 校驗碼"""
-    r_all = smseid[-4:]
-    r = []
-    for ch in r_all:
-        r.append(ch if ch.isdigit() else "9")
-    r1, r2, r3, r4 = r
-
-    str1 = str(amount).zfill(8)
-    s = f"{mid}{str1}{r1}{r2}{r3}{r4}"
-    assert len(s) == 16, "mid 長度需確保 mid+str1+rcode=16"
-
-    even = sum(int(s[i]) for i in range(16) if i % 2 == 0)
-    odd  = sum(int(s[i]) for i in range(16) if i % 2 == 1)
+    """計算 SmilePay Mid_smilepay 校驗碼（與官方外掛 check_mid() 相同）"""
+    r_all = (smseid or '')[-4:]
+    # 不足 4 碼時是「後面」缺位補 9；只接受 ASCII 數字（PHP is_numeric 不認其他 Unicode 數字）
+    r = [r_all[i] if i < len(r_all) and r_all[i] in '0123456789' else '9' for i in range(4)]
+    s = f"{mid}{str(amount).zfill(8)}{''.join(r)}"
+    if len(s) != 16:
+        raise ValueError('mid 必須為 4 碼')
+    even = sum(int(s[i]) for i in range(0, 16, 2))
+    odd = sum(int(s[i]) for i in range(1, 16, 2))
     return even * 9 + odd * 3
 
 
-# 驗證範例
-def verify_callback(mid, amount, smseid, mid_smilepay_received):
-    return str(calc_mid_smilepay(mid, amount, smseid)) == str(mid_smilepay_received)
+def verify_callback(mid, amount, smseid, mid_smilepay_received) -> bool:
+    return hmac.compare_digest(str(calc_mid_smilepay(mid, amount, smseid)), str(mid_smilepay_received))
 ```
 
 ### 注意

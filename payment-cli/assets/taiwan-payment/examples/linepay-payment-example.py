@@ -85,6 +85,11 @@ class LinePayService:
         - POST /v3/payments/{transactionId}/refund                 退款
         - GET  /v3/payments?transactionId=xxx                     查詢交易
         - POST /v3/payments/preapprovedPay/{regKey}/payment       自動扣款
+
+    v4 路徑（LINE Pay Developers Online API v4）：/v4/payments/request、
+    /v4/payments/{transactionId}/confirm、/v4/payments/authorizations/{transactionId}/capture、
+    /v4/payments/authorizations/{transactionId}/void、/v4/payments/{transactionId}/refund、
+    GET /v4/payments、GET /v4/payments/requests/{transactionId}/check；簽章方式相同。
     """
 
     SANDBOX_BASE = 'https://sandbox-api-pay.line.me'
@@ -104,10 +109,13 @@ class LinePayService:
         """
         HMAC-SHA256 簽章.
 
-        ⚠️ 公式依 v3 慣例推測:
-          - POST: ChannelSecret + ApiPath + RequestBody + Nonce
-          - GET:  ChannelSecret + ApiPath + QueryString + Nonce
-        輸出 base64.
+        Base64( HMAC-SHA256( key=ChannelSecret, msg ) )
+          - POST: msg = ChannelSecret + ApiPath + RequestBody + Nonce
+          - GET:  msg = ChannelSecret + ApiPath + QueryString(不含 "?") + Nonce
+
+        已與 yidas/line-pay-sdk-php 的 getAuthSignature() 及 wpbr-linepay-tw 1.3.3 的
+        generate_signature() 比對一致（tests/vectors/linepay.json）；RequestBody 必須與
+        實際送出的字串逐字相同。
         """
         message = self.channel_secret + api_path + body_or_query + nonce
         digest = hmac.new(

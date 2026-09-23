@@ -635,15 +635,15 @@ const result = await service.printInvoice(userId, invoiceNo)
 ezPay 是藍新金流集團旗下發票服務，與藍新 Newebpay 金流共用同一套加密邏輯（AES-256-CBC + Hex + PKCS7 Padding + SHA256 CheckCode），但發票端與金流端的 HashKey/HashIV 為**獨立**金鑰。
 
 ### 完整 Python 範例
-請見 [`examples/ezpay-invoice-example.py`](examples/ezpay-invoice-example.py) — 涵蓋 B2C / B2B 開立、作廢、折讓、查詢、`Api_invoice_touch` 觸發列印。
+請見 [`examples/ezpay-invoice-example.py`](examples/ezpay-invoice-example.py) — 涵蓋 B2C / B2B 開立、作廢、折讓、查詢，以及回傳 CheckCode 驗證（加密與 CheckCode 皆由 CI 以 RY 外掛與規格書範例驗證）。
 
 ### 五大踩坑
 
 1. **HashKey 是 32 碼**，與 ECPay 16 碼不同。HashIV 仍是 16 碼。
 2. **欄位名稱有 `_`**：`MerchantID_` 與 `PostData_` 後綴底線**不可省略**，否則會被當成缺少參數。
 3. **加密輸出是 Hex 不是 Base64**：與 ECPay 的 Base64 不同。Hex 字串小寫即可。
-4. **作廢折讓端點是 camelCase**：`/Api_allowanceInvalid`（不是 `/Api_allowance_invalid`）。其他端點都是 snake_case，這是 ezPay 唯一的例外。
-5. **沒有 Webhook**：開立成功只能依靠同步回應。如需狀態通知，須自行排程定時呼叫 `/Api_invoice_search`。
+4. **端點是 `/Api/...`（斜線，不是底線）**：例如 `/Api/invoice_issue`；作廢折讓是 camelCase 的 `/Api/allowanceInvalid`。其他端點都是 snake_case，這是 ezPay 唯一的例外。
+5. **沒有 Webhook**：開立成功只能依靠同步回應。如需狀態通知，須自行排程定時呼叫 `/Api/invoice_search`。
 
 ### 開立 B2C 發票（最小範例）
 

@@ -444,7 +444,7 @@ class SmilePayPaymentService:
         """
         計算 Mid_smilepay 通知校驗碼
 
-        演算法 (摘自 WooCommerce 模組推導，見 references/smilepay-payment-api.md)
+        演算法：SmilePay 官方 WooCommerce 外掛 1.1.23 check_mid()（tests/vectors/smilepay.json 以其原始碼產生）
 
         步驟:
             1. 取 Smseid 末 4 碼 r1 r2 r3 r4，非數字以 9 取代
@@ -453,8 +453,10 @@ class SmilePayPaymentService:
             4. even = s 偶數位 (0,2,4...) 加總；odd = 奇數位加總
             5. Mid_smilepay = even * 9 + odd * 3
         """
-        r_all = (smseid or '')[-4:].rjust(4, '9')
-        r = [c if c.isdigit() else '9' for c in r_all]
+        # 與官方外掛 check_mid() 相同：substr(smseid, -4) 不足 4 碼時「後面」缺的位數視為非數字補 9
+        # （不是在前面補 9）；只接受 ASCII 0-9（PHP is_numeric 不認全形或其他 Unicode 數字）
+        r_all = (smseid or '')[-4:]
+        r = [r_all[i] if i < len(r_all) and r_all[i] in '0123456789' else '9' for i in range(4)]
         str1 = str(amount).zfill(8)
         s = f'{mid}{str1}{r[0]}{r[1]}{r[2]}{r[3]}'
         if len(s) != 16:

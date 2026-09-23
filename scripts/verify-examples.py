@@ -245,6 +245,56 @@ def test_ecpay():
 
 
 # ---------------------------------------------------------------------------
+# 4b. ezPay 電子發票
+# ---------------------------------------------------------------------------
+
+def test_ezpay_invoice():
+    v = load_vectors('ezpay-invoice')
+    print(f'\n4b. ezPay 電子發票（標準答案出處：{v["sources"]["plugin"]}；{v["sources"]["spec"]}）')
+    mod = load_module('taiwan-invoice/examples/ezpay-invoice-example.py')
+    svc = mod.EzpayInvoiceService('3622183', v['hash_key'], v['hash_iv'])
+    for c in v['plugin_encrypt']:
+        check(f'[ezPay 發票] {c["name"]}：PostData_ 與 RY 外掛逐位元組相同',
+              lambda: svc._encrypt_post_data(c['params']) == c['PostData_'])
+    check('[ezPay 發票] 規格書附件一的 32-byte padding 密文可還原為同一組參數（伺服器端等價）',
+          lambda: _ezpay_plain(v) == dict(v['spec_encrypt']['params']))
+    cc = v['check_code']
+    check('[ezPay 發票] CheckCode 與規格書附件二印出值相同', lambda: svc._check_code(cc['params']) == cc['expected'])
+    check('[ezPay 發票] verify_check_code 接受正確值、拒絕竄改',
+          lambda: svc.verify_check_code(dict(cc['params'], CheckCode=cc['expected']))
+          and not svc.verify_check_code(dict(cc['params'], TotalAmt='1', CheckCode=cc['expected'])))
+
+
+def _ezpay_plain(v):
+    import urllib.parse
+    from Crypto.Cipher import AES
+    data = AES.new(v['hash_key'].encode(), AES.MODE_CBC, v['hash_iv'].encode()).decrypt(
+        bytes.fromhex(v['spec_encrypt']['PostData_']))
+    return dict(urllib.parse.parse_qsl(data[:-data[-1]].decode(), keep_blank_values=True))
+
+
+def test_smilepay():
+    v = load_vectors('smilepay')
+    print(f'\n4c. SmilePay（標準答案出處：{v["source"]["name"]}）')
+    mod = load_module('taiwan-payment/examples/smilepay-payment-example.py')
+    cls = next(getattr(mod, n) for n in dir(mod) if hasattr(getattr(mod, n), 'calc_mid_smilepay'))
+    for c in v['cases']:
+        check(f'[SmilePay] {c["name"]}：Mid_smilepay 與官方外掛相同',
+              lambda: str(cls.calc_mid_smilepay(c['mid'], int(c['amount']), c['smseid'])) == c['expected'])
+
+
+def test_linepay():
+    v = load_vectors('linepay')
+    print(f'\n4d. LINE Pay（標準答案出處：{v["sources"]["sdk"]}；{v["sources"]["plugin"]}）')
+    mod = load_module('taiwan-payment/examples/linepay-payment-example.py')
+    cls = next(getattr(mod, n) for n in dir(mod) if hasattr(getattr(mod, n), '_sign'))
+    svc = cls('1234567890', v['channel_secret'])
+    for c in v['cases']:
+        check(f'[LINE Pay] {c["name"]}：X-LINE-Authorization 與 SDK / 外掛相同',
+              lambda: svc._sign(c['path'], c['payload'], c['nonce']) == c['expected'])
+
+
+# ---------------------------------------------------------------------------
 # 5. 隨 skill 發布的工具腳本
 # ---------------------------------------------------------------------------
 
@@ -278,6 +328,11 @@ SNIPPET_RE = re.compile(
 # TypeScript / JavaScript 片段交給 Node 執行（Node 22 需 --experimental-strip-types 才能直接跑 TS）。
 # 各驗證名稱約定的函式名稱見下方 driver；片段只要定義出這些函式即可。
 JS_DRIVERS = {
+    'linepay-sign': '''
+const v = VECTORS.linepay
+for (const c of v.cases) {
+  if (signRequest(c.path, c.payload, c.nonce, v.channel_secret) !== c.expected) fail(c.name)
+}''',
     'newebpay-logistics': '''
 const v = VECTORS.newebpay
 const lh = v.logistics_hash_data
@@ -397,7 +452,7 @@ def _run_js_snippet(name, code, label):
     node = shutil.which('node')
     if not node:
         raise RuntimeError('找不到 node，無法驗證 TypeScript / JavaScript 片段')
-    vectors = {n: load_vectors(n) for n in ('payuni', 'newebpay', 'ecpay')}
+    vectors = {n: load_vectors(n) for n in ('payuni', 'newebpay', 'ecpay', 'linepay')}
     prelude = '' if re.search(r"^import crypto\b", code, re.M) else "import crypto from 'crypto'\n"
     program = (prelude + code + '\n'
                + 'const VECTORS = ' + json.dumps(vectors, ensure_ascii=False) + '\n'
@@ -490,7 +545,21 @@ def _check_snippet_newebpay_logistics(ns):
     return all(c.aes_decrypt(x['TradeInfo']) == x['plain'] for x in v['plugin_32byte_padding'])
 
 
+def _check_snippet_smilepay_mid(ns):
+    v = load_vectors('smilepay')
+    return all(str(ns['calc_mid_smilepay'](c['mid'], int(c['amount']), c['smseid'])) == c['expected']
+               for c in v['cases'])
+
+
+def _check_snippet_linepay(ns):
+    v = load_vectors('linepay')
+    return all(ns['sign_request'](c['path'], c['payload'], c['nonce'], v['channel_secret']) == c['expected']
+               for c in v['cases'])
+
+
 SNIPPET_CHECKERS = {
+    'linepay-sign': _check_snippet_linepay,
+    'smilepay-mid': _check_snippet_smilepay_mid,
     'newebpay-logistics': _check_snippet_newebpay_logistics,
     'opay-cmv': _check_snippet_opay_cmv,
     'payuni': _check_snippet_payuni,
@@ -615,7 +684,7 @@ def main():
         return 1
 
     test_imports()
-    for section in (test_payuni, test_newebpay, test_ecpay, test_scripts, test_doc_snippets, test_invoice_generator):
+    for section in (test_payuni, test_newebpay, test_ecpay, test_ezpay_invoice, test_smilepay, test_linepay, test_scripts, test_doc_snippets, test_invoice_generator):
         try:
             section()
         except Exception as e:  # noqa: BLE001 - 單一區段炸掉不能讓其餘區段不跑
