@@ -1,0 +1,24 @@
+{
+    "provider": "shopline",
+    "source": {
+        "kind": "official-formula",
+        "name": "SHOPLINE Payments 通知電文「簽章演算法」：payload = {timestamp}.{bodyString}，HMAC-SHA256(signKey)，hex",
+        "note": "官方範例值（54cd5b82…）未附對應的 signKey / body，無法逐字重現；本檔以 PHP hash_hmac 依公式產生"
+    },
+    "generator": "php 8.2.33",
+    "sign_key": "sk_test_0123456789abcdef",
+    "cases": [
+        {
+            "name": "trade_succeeded",
+            "timestamp": "1629169157000",
+            "body": "{\"id\":\"100012122112289889299928\",\"type\":\"trade.succeeded\",\"created\":1695795621307,\"data\":{\"tradeOrderId\":\"T1\",\"status\":\"SUCCEEDED\"}}",
+            "sign": "55eab963d7ae5190b59ec05d394e1b8459d8d4731bf07461ec6f14a81462c60d"
+        },
+        {
+            "name": "unicode_body",
+            "timestamp": "1758600000123",
+            "body": "{\"type\":\"refund.succeeded\",\"data\":{\"reason\":\"客戶退貨\",\"amount\":{\"value\":105000,\"currency\":\"TWD\"}}}",
+            "sign": "02b0f082fc1f66620ee25436f0be2c01ee7f1fef46690a85a8da4e0480ea9f46"
+        }
+    ]
+}

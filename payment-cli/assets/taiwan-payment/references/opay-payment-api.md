@@ -171,35 +171,43 @@ hashkey%3d5294y06jbispm5x9%26choosepayment%3dall%26encrypttype%3d1%26itemname%3d
 
 ### ⚠️ .NET vs PHP 的 URL encode 差異
 
-官方文件同時列出兩種編碼結果，**空白字元處理不同**：
+官方文件在步驟 (3)(4) 另外列出「若使用 PHP 進行 URL encode」的中間結果（空白為 `%20`），
+但那只是中間值：步驟 (5) 要求**依 URLEncode 轉換表換成「.NET 編碼(O'Pay)」**，最終字串的空白是 `+`，
+且 `%21 %2a %28 %29`（以及 `%2d %5f %2e`）要還原成 `! * ( ) - _ .`。
 
-| 語言 | 空白編碼為 |
-|---|---|
-| .NET（`HttpUtility.UrlEncode`） | `+` |
-| PHP（`urlencode` / `rawurlencode`） | `%20` |
-
-文件對兩者都給了合法範例，代表**兩種都可被接受**，但**同一支程式必須前後一致**。CheckMacValue 對不上時，這是第一個要查的地方。文件附錄另有完整 URLEncode 轉換表。
+**只有 .NET 形式算得出文件的預期值 `96FEF7B0…`**；用 `%20` 計算會得到不同的雜湊。
+這與綠界 CheckMacValue 的規則完全相同（兩家同源）。
 
 ### Python 實作
 
+> 由 CI 以上方官方範例（`tests/vectors/opay.json`）驗證。
+
+<!-- verify: opay-cmv -->
 ```python
 import hashlib
 from urllib.parse import quote_plus
 
+
+def dotnet_url_encode(text: str) -> str:
+    # PHP urlencode 等價（~ 也要編碼）→ 小寫 → 還原 .NET 不編碼的字元
+    encoded = quote_plus(text, safe='').replace('~', '%7E').lower()
+    for src, dst in (('%2d', '-'), ('%5f', '_'), ('%2e', '.'), ('%21', '!'),
+                     ('%2a', '*'), ('%28', '('), ('%29', ')')):
+        encoded = encoded.replace(src, dst)
+    return encoded
+
+
 def gen_check_mac_value(params: dict, hash_key: str, hash_iv: str) -> str:
-    # 1. 排除 CheckMacValue，依 key 升冪排序
-    items = sorted((k, v) for k, v in params.items() if k != 'CheckMacValue')
-    raw = '&'.join(f'{k}={v}' for k, v in items)
+    # 1. 排除 CheckMacValue，依 key 排序（不分大小寫）
+    items = sorted(((k, v) for k, v in params.items() if k != 'CheckMacValue'),
+                   key=lambda kv: kv[0].lower())
     # 2. 前後夾 HashKey / HashIV
-    raw = f'HashKey={hash_key}&{raw}&HashIV={hash_iv}'
-    # 3. URL encode（quote_plus → 空白為 '+'，即 .NET 風格）
-    # 4. 轉小寫
-    encoded = quote_plus(raw).lower()
-    # 5. SHA256 → 6. 轉大寫
-    return hashlib.sha256(encoded.encode('utf-8')).hexdigest().upper()
+    raw = f"HashKey={hash_key}&{'&'.join(f'{k}={v}' for k, v in items)}&HashIV={hash_iv}"
+    # 3–5. .NET 風格 URL encode（含轉小寫）→ 6. SHA256 → 7. 轉大寫
+    return hashlib.sha256(dotnet_url_encode(raw).encode('utf-8')).hexdigest().upper()
 ```
 
-> 與本 skill `taiwan-payment/CLAUDE.md` 的 ECPay 實作**完全相同**，可共用。
+> 與綠界 CheckMacValue 相同，可共用。
 
 ## 5. 其他 API
 

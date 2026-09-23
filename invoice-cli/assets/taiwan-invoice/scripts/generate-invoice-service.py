@@ -144,8 +144,9 @@ export class {class_name}InvoiceService {{
 {issue_fields}
         }}
 
-        // TODO: 實作加密/簽章
-        // {auth_method}
+        // 骨架：加密 / 簽章尚未實作（{auth_method}）。
+        // 完成前一律拋錯，避免呼叫端誤以為開立成功；可參考 examples/ 內已驗證的範例。
+        throw new Error('{class_name}InvoiceService.issueInvoice 尚未實作加密 / 簽章')
 
         const response = await fetch(`${{this.API_BASE_URL}}{issue_endpoint}`, {{
             method: 'POST',
@@ -177,12 +178,8 @@ export class {class_name}InvoiceService {{
             Reason: reason,
         }}
 
-        // TODO: 實作 API 請求
-
-        return {{
-            success: true,
-            msg: '發票作廢成功',
-        }}
+        // 骨架：API 請求尚未實作。不要回傳 success: true —— 發票並沒有被作廢
+        throw new Error('{class_name}InvoiceService.voidInvoice 尚未實作')
     }}
 
     /**
@@ -236,6 +233,7 @@ PY_TEMPLATE = '''#!/usr/bin/env python3
 import hashlib
 import json
 import urllib.parse
+from datetime import datetime
 from typing import Dict, Any, Optional, List
 from dataclasses import dataclass
 
@@ -291,17 +289,9 @@ class {class_name}InvoiceService:
 {issue_fields_py}
         }}
 
-        # TODO: 實作加密/簽章和 API 請求
-        # {auth_method}
-
-        return InvoiceIssueResponse(
-            success=True,
-            code="0",
-            msg="",
-            invoice_number="",
-            random_number="",
-            raw={{}}
-        )
+        # 骨架：加密 / 簽章與 API 請求尚未實作（{auth_method}）。
+        # 完成前一律拋錯，避免呼叫端誤以為開立成功；可參考 examples/ 內已驗證的範例。
+        raise NotImplementedError("{class_name}InvoiceService.issue_invoice 尚未實作")
 
     def void_invoice(self, merchant_id: str, hash_key: str, hash_iv: str,
                      invoice_number: str, reason: str) -> Dict[str, Any]:
@@ -314,9 +304,8 @@ class {class_name}InvoiceService:
             "Reason": reason,
         }}
 
-        # TODO: 實作 API 請求
-
-        return {{"success": True, "msg": "發票作廢成功"}}
+        # 骨架：API 請求尚未實作。不要回傳 success=True —— 發票並沒有被作廢
+        raise NotImplementedError("{class_name}InvoiceService.void_invoice 尚未實作")
 
     def print_invoice(self, merchant_id: str, invoice_number: str,
                       invoice_date: str, random_number: str) -> Dict[str, Any]:
@@ -359,10 +348,11 @@ def get_ecpay_specifics() -> Dict[str, str]:
         'test_credentials_py': '    TEST_HASH_KEY = "ejCk326UnaZWKisg"\n    TEST_HASH_IV = "q9jcZX8Ib9LM8wYk"',
         'issue_endpoint': '/B2CInvoice/Issue',
         'void_endpoint': '/B2CInvoice/Invalid',
-        'print_endpoint': '/Invoice/Print',
+        'print_endpoint': '/B2CInvoice/InvoicePrint',
         'content_type': 'application/json',
-        'request_body': 'JSON.stringify({ MerchantID: merchantId, RqHeader: { Timestamp: Math.floor(Date.now() / 1000) }, Data: encryptedData })',
-        'success_condition': 'result.TransCode === 1 && result.Data?.RtnCode === 1',
+        # RqHeader.Revision 必填（漏填 TransCode != 1）；回應的 Data 是密文，須先解密才看得到 RtnCode
+        'request_body': 'JSON.stringify({ MerchantID: merchantId, RqHeader: { Timestamp: Math.floor(Date.now() / 1000), Revision: \'3.0.0\' }, Data: encryptedData })',
+        'success_condition': 'result.TransCode === 1 && this.decryptData(result.Data, hashKey, hashIV).RtnCode === 1',
         'code_field': 'Data?.RtnCode || result.TransCode',
         'msg_field': 'Data?.RtnMsg || result.TransMsg',
         'invoice_field': 'Data?.InvoiceNo',
@@ -391,7 +381,8 @@ def get_ecpay_specifics() -> Dict[str, str]:
         let decrypted = decipher.update(encryptedData, 'base64', 'utf8')
         decrypted += decipher.final('utf8')
 
-        const urlDecoded = decodeURIComponent(decrypted)
+        // 綠界以 PHP urlencode 編碼，空白是 "+"；decodeURIComponent 不會把 "+" 轉回空白
+        const urlDecoded = decodeURIComponent(decrypted.replace(/\\+/g, ' '))
         return JSON.parse(urlDecoded)
     }''',
         'encryption_method_py': '''    def _encrypt_data(self, data: Dict, hash_key: str, hash_iv: str) -> str:
@@ -583,7 +574,16 @@ def get_amego_specifics() -> Dict[str, str]:
 
 def generate_service(provider: str, lang: str = 'typescript', output_dir: str = '.'):
     """生成服務檔案"""
+    # 財政部大平台只提供查詢 / 驗證（手機條碼、捐贈碼、中獎號碼），不能開立發票；
+    # 產生「開立發票」服務骨架只會誤導
+    if provider.lower() == 'mof':
+        print('MOF（財政部電子發票整合服務平台）只提供查詢 / 驗證，無法開立發票，不產生開立服務。')
+        print('請改用加值中心（ECPay、ezPay、SmilePay、Amego…）開立；MOF 查詢 API 見 references/MOF_EINVOICE_API_REFERENCE.md')
+        sys.exit(1)
+
     provider_info = get_provider_info(provider)
+    if provider_info and provider_info.get('doc_access') == 'apply' and provider.lower() == 'tradevan':
+        print('⚠️ TradeVAN 文件需申請取得，本 skill 未收錄其 reference，產出的骨架欄位未經查證。')
     error_codes = get_error_codes(provider)
 
     # 選擇特定配置

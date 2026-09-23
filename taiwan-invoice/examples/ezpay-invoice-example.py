@@ -17,6 +17,7 @@ API 文件: https://inv.ezpay.com.tw/Invoice_index/download
 
 import binascii
 import hashlib
+import hmac
 import json
 import time
 import urllib.parse
@@ -25,7 +26,7 @@ from typing import Dict, List, Literal, Optional
 
 import requests
 from Crypto.Cipher import AES
-from Crypto.Util.Padding import pad, unpad
+from Crypto.Util.Padding import pad
 
 
 # ============================================================================
@@ -39,7 +40,7 @@ class InvoiceIssueData:
     status: Literal['1', '0', '3'] = '1'  # 1=立即開立, 0=待開立, 3=觸發開立
     category: Literal['B2B', 'B2C'] = 'B2C'  # 字軌類別
     buyer_name: str = ''
-    buyer_ubn: str = ''  # 買方統編 (B2B 必填 8 碼; B2C 留空或填 0000000000)
+    buyer_ubn: str = ''  # 買方統編：B2B 必填 8 碼數字；B2C 非必填（留空）
     buyer_address: str = ''
     buyer_email: str = ''
     carrier_type: Optional[Literal['', '0', '1', '2']] = ''  # 0=ezPay 載具, 1=自然人憑證, 2=手機條碼
@@ -86,14 +87,14 @@ class EzpayInvoiceService:
         - SHA256 產生 CheckCode 驗證回傳合法性
         - HashKey: 32 碼; HashIV: 16 碼 (與 ECPay 16/16 不同)
 
-    端點 (測試 cinv / 正式 inv):
-        - 開立      : /Api_invoice_issue
-        - 觸發開立  : /Api_invoice_touch
-        - 作廢      : /Api_invoice_invalid
-        - 折讓      : /Api_allowance_issue
-        - 折讓觸發  : /Api_allowance_touch
-        - 折讓作廢  : /Api_allowanceInvalid   (注意 camelCase)
-        - 查詢      : /Api_invoice_search
+    端點 (測試 cinv / 正式 inv，依規格書 EZP_INVI_1.2.2；括號內為固定 Version):
+        - 開立      : /Api/invoice_issue          (1.5)
+        - 觸發開立  : /Api/invoice_touch_issue    (1.0)
+        - 作廢      : /Api/invoice_invalid        (1.0)
+        - 折讓      : /Api/allowance_issue        (1.3)
+        - 觸發折讓  : /Api/allowance_touch_issue  (1.0)
+        - 作廢折讓  : /Api/allowanceInvalid       (1.0，注意 camelCase)
+        - 查詢      : /Api/invoice_search         (1.3)
 
     請求格式 (Form Post):
         MerchantID_ = 商店代號 (後綴底線不可省)
@@ -127,35 +128,31 @@ class EzpayInvoiceService:
 
     def _encrypt_post_data(self, post_data: Dict[str, any]) -> str:
         """
-        將欲加密的欄位組成 query string 後以 AES-256-CBC + PKCS7 加密, 輸出 hex.
+        PostData_ = hex( AES-256-CBC( http_build_query(ksort(欄位)) ) )，標準 PKCS#7
 
-        ezPay 與 Newebpay 金流共用此邏輯。
+        與 ry-woocommerce-ezpay-invoice 2.1.5 的 args_encrypt() 逐位元組相同。
+        規格書附件一的範例改用 32 bytes 區塊補齊（同藍新），兩種平台都接受。
         """
-        # 1. 組成 query string (key1=v1&key2=v2)
-        query = urllib.parse.urlencode(post_data)
-        # 2. AES-256-CBC + PKCS7
+        query = urllib.parse.urlencode(sorted(post_data.items()))
         cipher = AES.new(self.hash_key, AES.MODE_CBC, self.hash_iv)
         encrypted = cipher.encrypt(pad(query.encode('utf-8'), AES.block_size))
-        # 3. Hex 字串輸出 (小寫)
         return binascii.hexlify(encrypted).decode('ascii')
-
-    def _decrypt_post_data(self, hex_data: str) -> str:
-        """解密 ezPay 回傳的 hex 字串為原始 query string"""
-        encrypted = binascii.unhexlify(hex_data)
-        cipher = AES.new(self.hash_key, AES.MODE_CBC, self.hash_iv)
-        return unpad(cipher.decrypt(encrypted), AES.block_size).decode('utf-8')
 
     def _check_code(self, payload: Dict[str, any]) -> str:
         """
-        計算 SHA256 CheckCode.
-
-        Spec: HashIV={hash_iv}&{sorted_query}&HashKey={hash_key} 後 SHA256 (大寫).
-        實作上採用 ezPay 官方 PHP sample 之欄位順序 (固定欄位排序)。
+        CheckCode（規格書附件二）：取回傳的 InvoiceTransNo、MerchantID、MerchantOrderNo、
+        RandomNum、TotalAmt 依字母排序組成 query string，
+        SHA256("HashIV={iv}&{query}&HashKey={key}") 轉大寫。
         """
-        # 官方 spec 通常以欄位字母順序排列
-        ordered = '&'.join(f'{k}={v}' for k, v in sorted(payload.items()))
-        raw = f'HashIV={self.hash_iv.decode()}&{ordered}&HashKey={self.hash_key.decode()}'
+        fields = ('InvoiceTransNo', 'MerchantID', 'MerchantOrderNo', 'RandomNum', 'TotalAmt')
+        query = urllib.parse.urlencode([(k, payload[k]) for k in sorted(fields)])
+        raw = f'HashIV={self.hash_iv.decode()}&{query}&HashKey={self.hash_key.decode()}'
         return hashlib.sha256(raw.encode('utf-8')).hexdigest().upper()
+
+    def verify_check_code(self, result: Dict[str, any]) -> bool:
+        """驗證回傳 Result 內的 CheckCode（常數時間比較）"""
+        received = str(result.get('CheckCode', ''))
+        return bool(received) and hmac.compare_digest(self._check_code(result), received.upper())
 
     # -- Amount calculation ---------------------------------------------------
 
@@ -200,7 +197,8 @@ class EzpayInvoiceService:
             'LoveCode': data.love_code,
             'PrintFlag': data.print_flag,
             'TaxType': data.tax_type,
-            'TaxRate': str(data.tax_rate),
+            # 規格書：一般稅率帶 5（不是 5.0）
+            'TaxRate': str(int(data.tax_rate)) if float(data.tax_rate).is_integer() else str(data.tax_rate),
             'Amt': str(data.amt),
             'TaxAmt': str(data.tax_amt),
             'TotalAmt': str(data.total_amt),
@@ -214,7 +212,7 @@ class EzpayInvoiceService:
         if data.tax_type == '9':
             post_data['ItemTaxType'] = data.item_tax_type
 
-        return self._submit('/Api_invoice_issue', post_data)
+        return self._submit('/Api/invoice_issue', post_data)
 
     def void_invoice(self, invoice_number: str, invalid_reason: str) -> InvoiceIssueResponse:
         """作廢發票"""
@@ -225,32 +223,43 @@ class EzpayInvoiceService:
             'InvoiceNumber': invoice_number,
             'InvalidReason': invalid_reason,
         }
-        return self._submit('/Api_invoice_invalid', post_data)
+        return self._submit('/Api/invoice_invalid', post_data)
 
     def issue_allowance(
         self,
         invoice_no: str,
         merchant_order_no: str,
         items: List[Dict[str, any]],
-        tax_type_for_allowance: str = '1',
+        confirm_now: bool = True,
+        tax_type_for_mixed: Optional[str] = None,
+        buyer_email: str = '',
     ) -> InvoiceIssueResponse:
-        """開立折讓 (對應 /Api_allowance_issue)"""
+        """
+        開立折讓（/Api/allowance_issue）
+
+        Status 必填：1=立即確認折讓；0=待買受人確認後再以 allowance_touch_issue 確認。
+        TaxTypeForMixed 只在原發票為混合課稅（TaxType=9）時才帶。
+        """
         post_data = {
             'RespondType': 'JSON',
             'Version': '1.3',
             'TimeStamp': str(int(time.time())),
             'InvoiceNo': invoice_no,
             'MerchantOrderNo': merchant_order_no,
-            'TaxTypeForMixed': tax_type_for_allowance,
+            'Status': '1' if confirm_now else '0',
             'ItemName': '|'.join(str(i.get('name', '')) for i in items),
             'ItemCount': '|'.join(str(i.get('count', 1)) for i in items),
             'ItemUnit': '|'.join(str(i.get('unit', '')) for i in items),
             'ItemPrice': '|'.join(str(i.get('price', 0)) for i in items),
             'ItemAmt': '|'.join(str(i.get('amount', 0)) for i in items),
             'ItemTaxAmt': '|'.join(str(i.get('tax_amt', 0)) for i in items),
-            'TotalAmt': sum(i.get('amount', 0) for i in items),
+            'TotalAmt': sum(i.get('amount', 0) + i.get('tax_amt', 0) for i in items),
         }
-        return self._submit('/Api_allowance_issue', post_data)
+        if tax_type_for_mixed:
+            post_data['TaxTypeForMixed'] = tax_type_for_mixed
+        if buyer_email:
+            post_data['BuyerEmail'] = buyer_email
+        return self._submit('/Api/allowance_issue', post_data)
 
     def void_allowance(self, allowance_no: str, invalid_reason: str) -> InvoiceIssueResponse:
         """作廢折讓 (注意端點為 camelCase)"""
@@ -261,14 +270,15 @@ class EzpayInvoiceService:
             'AllowanceNo': allowance_no,
             'InvalidReason': invalid_reason,
         }
-        return self._submit('/Api_allowanceInvalid', post_data)
+        return self._submit('/Api/allowanceInvalid', post_data)
 
-    def query_invoice(self, search_type: str, merchant_order_no: str = '', invoice_number: str = '') -> InvoiceIssueResponse:
+    def query_invoice(self, search_type: str, merchant_order_no: str = '', total_amt: int = 0,
+                      invoice_number: str = '', random_num: str = '') -> InvoiceIssueResponse:
         """
-        查詢發票.
+        查詢發票（/Api/invoice_search）
 
         Args:
-            search_type: 0=以訂單編號查 (MerchantOrderNo); 1=以發票號碼查 (InvoiceNumber)
+            search_type: '0'=以發票號碼 + 隨機碼查詢；'1'=以訂單編號 + 發票金額查詢（規格書定義）
         """
         post_data = {
             'RespondType': 'JSON',
@@ -276,9 +286,11 @@ class EzpayInvoiceService:
             'TimeStamp': str(int(time.time())),
             'SearchType': search_type,
             'MerchantOrderNo': merchant_order_no,
+            'TotalAmt': str(total_amt),
             'InvoiceNumber': invoice_number,
+            'RandomNum': random_num,
         }
-        return self._submit('/Api_invoice_search', post_data)
+        return self._submit('/Api/invoice_search', post_data)
 
     # -- HTTP submit ----------------------------------------------------------
 
@@ -316,6 +328,11 @@ class EzpayInvoiceService:
             result = result_raw
         else:
             result = {}
+
+        # 開立 / 查詢的 Result 帶有 CheckCode：驗證是否真的由 ezPay 回傳
+        if 'CheckCode' in result and not self.verify_check_code(result):
+            return InvoiceIssueResponse(success=False, status=status,
+                                        message='CheckCode 驗證失敗（回應可能遭竄改）', raw=resp)
 
         return InvoiceIssueResponse(
             success=(status == 'SUCCESS'),

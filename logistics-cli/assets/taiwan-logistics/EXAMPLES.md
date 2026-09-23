@@ -19,9 +19,10 @@ Supporting NewebPay Logistics, ECPay Logistics, and PAYUNi Logistics with compre
    - [Track Shipment](#8-track-shipment)
    - [Status Notification](#9-status-notification-callback)
 
-2. [ECPay Logistics Examples](#ecpay-logistics-examples)
-3. [Real-World Scenarios](#real-world-scenarios)
-4. [Error Handling](#error-handling)
+2. [PAYUNi Logistics Examples](#payuni-logistics-examples)
+3. [ECPay Logistics Examples](#ecpay-logistics-examples)
+4. [Real-World Scenarios](#real-world-scenarios)
+5. [Error Handling](#error-handling)
 
 ---
 
@@ -31,6 +32,9 @@ Supporting NewebPay Logistics, ECPay Logistics, and PAYUNi Logistics with compre
 
 #### TypeScript - Encryption Helper
 
+> 由 CI 以規格書 NDNS 附錄的 HashData 範例與藍新官方外掛密文驗證（`scripts/verify-examples.py`）。
+
+<!-- verify: newebpay-logistics -->
 ```typescript
 import crypto from 'crypto';
 
@@ -57,71 +61,55 @@ class NewebPayLogistics {
   }
 
   /**
-   * AES-256-CBC Encryption
+   * AES-256-CBC Encryption（標準 PKCS#7）
    */
   private aesEncrypt(data: string): string {
-    const cipher = crypto.createCipheriv(
-      'aes-256-cbc',
-      this.config.hashKey,
-      this.config.hashIV
-    );
-
-    let encrypted = cipher.update(data, 'utf8', 'hex');
-    encrypted += cipher.final('hex');
-
-    return encrypted;
+    const cipher = crypto.createCipheriv('aes-256-cbc', this.config.hashKey, this.config.hashIV);
+    return cipher.update(data, 'utf8', 'hex') + cipher.final('hex');
   }
 
   /**
    * AES-256-CBC Decryption
+   * 藍新官方外掛以 32 bytes 補齊，padding 可能是 1–32，須手動移除
    */
   private aesDecrypt(encryptedData: string): string {
-    const decipher = crypto.createDecipheriv(
-      'aes-256-cbc',
-      this.config.hashKey,
-      this.config.hashIV
-    );
-
-    let decrypted = decipher.update(encryptedData, 'hex', 'utf8');
-    decrypted += decipher.final('utf8');
-
-    return decrypted;
+    const decipher = crypto.createDecipheriv('aes-256-cbc', this.config.hashKey, this.config.hashIV);
+    decipher.setAutoPadding(false);
+    const raw = Buffer.concat([decipher.update(encryptedData, 'hex'), decipher.final()]);
+    const n = raw[raw.length - 1];
+    if (n < 1 || n > 32 || !raw.subarray(raw.length - n).every(b => b === n)) {
+      throw new Error('padding 錯誤（HashKey / HashIV 可能不正確）');
+    }
+    return raw.subarray(0, raw.length - n).toString('utf8');
   }
 
   /**
-   * Generate Hash Data (SHA256)
+   * Generate Hash Data（規格書 NDNS 附錄(一)）
+   * SHA256("HashKey={key}&{EncryptData}&HashIV={iv}") 轉大寫
    */
   private generateHashData(encryptData: string): string {
-    const raw = `${this.config.hashKey}${encryptData}${this.config.hashIV}`;
+    const raw = `HashKey=${this.config.hashKey}&${encryptData}&HashIV=${this.config.hashIV}`;
     return crypto.createHash('sha256').update(raw).digest('hex').toUpperCase();
   }
 
   /**
-   * Encrypt request data
+   * Encrypt request data（送出參數名稱後方有底線）
    */
   encryptData(data: Record<string, any>): { EncryptData_: string; HashData_: string } {
-    const jsonStr = JSON.stringify(data);
-    const encryptData = this.aesEncrypt(jsonStr);
-    const hashData = this.generateHashData(encryptData);
-
-    return {
-      EncryptData_: encryptData,
-      HashData_: hashData,
-    };
+    const encryptData = this.aesEncrypt(JSON.stringify(data));
+    return { EncryptData_: encryptData, HashData_: this.generateHashData(encryptData) };
   }
 
   /**
-   * Decrypt response data
+   * Decrypt response data（API 回應欄位為 EncryptData / HashData，沒有底線）
    */
   decryptData(encryptData: string, hashData: string): any {
-    // Verify hash
-    const calculatedHash = this.generateHashData(encryptData);
-    if (calculatedHash !== hashData.toUpperCase()) {
+    const expected = Buffer.from(this.generateHashData(encryptData));
+    const received = Buffer.from(hashData.toUpperCase());
+    if (expected.length !== received.length || !crypto.timingSafeEqual(expected, received)) {
       throw new Error('Hash verification failed');
     }
-
-    const decrypted = this.aesDecrypt(encryptData);
-    return JSON.parse(decrypted);
+    return JSON.parse(this.aesDecrypt(encryptData));
   }
 
   /**
@@ -137,15 +125,17 @@ export { NewebPayLogistics };
 
 #### Python - Encryption Helper
 
+<!-- verify: newebpay-logistics -->
 ```python
 """NewebPay Logistics Encryption Helper - Python"""
 
 import json
 import hashlib
+import hmac
 import time
-from typing import Dict, Any, Tuple
+from typing import Dict, Any
 from Crypto.Cipher import AES
-from Crypto.Util.Padding import pad, unpad
+from Crypto.Util.Padding import pad
 
 
 class NewebPayLogistics:
@@ -169,44 +159,34 @@ class NewebPayLogistics:
         )
 
     def aes_encrypt(self, data: str) -> str:
-        """AES-256-CBC Encryption"""
+        """AES-256-CBC Encryption（標準 PKCS#7）"""
         cipher = AES.new(self.hash_key, AES.MODE_CBC, self.hash_iv)
-        padded_data = pad(data.encode('utf-8'), AES.block_size)
-        encrypted = cipher.encrypt(padded_data)
-        return encrypted.hex()
+        return cipher.encrypt(pad(data.encode('utf-8'), AES.block_size)).hex()
 
     def aes_decrypt(self, encrypted_data: str) -> str:
-        """AES-256-CBC Decryption"""
+        """AES-256-CBC Decryption（padding 可能是 1–32，Crypto.Util.Padding.unpad 無法處理）"""
         cipher = AES.new(self.hash_key, AES.MODE_CBC, self.hash_iv)
-        decrypted = cipher.decrypt(bytes.fromhex(encrypted_data))
-        unpadded = unpad(decrypted, AES.block_size)
-        return unpadded.decode('utf-8')
+        data = cipher.decrypt(bytes.fromhex(encrypted_data))
+        n = data[-1]
+        if not 1 <= n <= 32 or data[-n:] != bytes([n]) * n:
+            raise ValueError('padding 錯誤（HashKey / HashIV 可能不正確）')
+        return data[:-n].decode('utf-8')
 
     def generate_hash_data(self, encrypt_data: str) -> str:
-        """Generate Hash Data (SHA256)"""
-        raw = f"{self.hash_key.decode('utf-8')}{encrypt_data}{self.hash_iv.decode('utf-8')}"
+        """HashData = SHA256("HashKey={key}&{EncryptData}&HashIV={iv}") 轉大寫（規格書 NDNS 附錄(一)）"""
+        raw = f"HashKey={self.hash_key.decode('utf-8')}&{encrypt_data}&HashIV={self.hash_iv.decode('utf-8')}"
         return hashlib.sha256(raw.encode('utf-8')).hexdigest().upper()
 
     def encrypt_data(self, data: Dict[str, Any]) -> Dict[str, str]:
-        """Encrypt request data"""
-        json_str = json.dumps(data, ensure_ascii=False)
-        encrypt_data = self.aes_encrypt(json_str)
-        hash_data = self.generate_hash_data(encrypt_data)
-
-        return {
-            'EncryptData_': encrypt_data,
-            'HashData_': hash_data,
-        }
+        """Encrypt request data（送出參數名稱後方有底線）"""
+        encrypt_data = self.aes_encrypt(json.dumps(data, ensure_ascii=False))
+        return {'EncryptData_': encrypt_data, 'HashData_': self.generate_hash_data(encrypt_data)}
 
     def decrypt_data(self, encrypt_data: str, hash_data: str) -> Dict[str, Any]:
-        """Decrypt response data"""
-        # Verify hash
-        calculated_hash = self.generate_hash_data(encrypt_data)
-        if calculated_hash != hash_data.upper():
+        """Decrypt response data（API 回應欄位為 EncryptData / HashData，沒有底線）"""
+        if not hmac.compare_digest(self.generate_hash_data(encrypt_data), hash_data.upper()):
             raise ValueError('Hash verification failed')
-
-        decrypted = self.aes_decrypt(encrypt_data)
-        return json.loads(decrypted)
+        return json.loads(self.aes_decrypt(encrypt_data))
 
     @staticmethod
     def get_timestamp() -> str:
@@ -237,7 +217,11 @@ class NewebPayStoreMap extends NewebPayLogistics {
   /**
    * Query store map
    */
-  async queryStoreMap(params: StoreMapRequest): Promise<string> {
+  /**
+   * 產生門市地圖表單：門市地圖是給「消費者瀏覽器」操作的頁面，
+   * 必須由前端以表單 POST 過去（伺服器端 axios.post 拿不到可用的選店流程）
+   */
+  queryStoreMap(params: StoreMapRequest): { action: string; fields: Record<string, string> } {
     const data = {
       MerchantOrderNo: params.merchantOrderNo,
       LgsType: params.lgsType,
@@ -257,23 +241,11 @@ class NewebPayStoreMap extends NewebPayLogistics {
       RespondType_: 'JSON',
     };
 
-    const response = await axios.post(
-      `${this.baseUrl}/storeMap`,
-      new URLSearchParams(requestData as any),
-      {
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
-        },
-      }
-    );
-
-    // NewebPay will redirect to store selection page
-    // Return the redirect URL or HTML
-    return response.data;
+    return { action: `${this.baseUrl}/storeMap`, fields: requestData };
   }
 
   /**
-   * Handle store map callback
+   * Handle store map callback（回傳欄位是 EncryptData / HashData，沒有底線）
    */
   handleStoreMapCallback(
     encryptData: string,
@@ -311,8 +283,8 @@ const logistics = new NewebPayStoreMap({
   isProduction: false,
 });
 
-// Open store map
-await logistics.queryStoreMap({
+// 產生表單，由前端自動送出
+const form = logistics.queryStoreMap({
   merchantOrderNo: `ORD${Date.now()}`,
   lgsType: 'C2C',
   shipType: '1', // 7-ELEVEN
@@ -328,7 +300,7 @@ export { NewebPayStoreMap };
 ```python
 """Store Map Query - Python Example"""
 
-import requests
+import time
 from typing import Dict, Optional
 
 
@@ -342,8 +314,8 @@ class NewebPayStoreMap(NewebPayLogistics):
         ship_type: str,  # '1'=7-11, '2'=FamilyMart, '3'=Hi-Life, '4'=OK Mart
         return_url: str,
         extra_data: str = '',
-    ) -> str:
-        """Query store map"""
+    ) -> Dict[str, object]:
+        """產生門市地圖表單（瀏覽器 POST）"""
 
         data = {
             'MerchantOrderNo': merchant_order_no,
@@ -364,12 +336,8 @@ class NewebPayStoreMap(NewebPayLogistics):
             'RespondType_': 'JSON',
         }
 
-        response = requests.post(
-            f'{self.base_url}/storeMap',
-            data=request_data,
-        )
-
-        return response.text
+        # 門市地圖須由消費者瀏覽器以表單 POST，這裡只回傳表單內容
+        return {'action': f'{self.base_url}/storeMap', 'fields': request_data}
 
     def handle_store_map_callback(
         self,
@@ -400,8 +368,8 @@ logistics = NewebPayStoreMap(
     is_production=False,
 )
 
-# Open store map
-html = logistics.query_store_map(
+# 產生表單，由前端自動送出
+form = logistics.query_store_map(
     merchant_order_no=f'ORD{int(time.time())}',
     lgs_type='C2C',
     ship_type='1',  # 7-ELEVEN
@@ -861,7 +829,7 @@ class NewebPayQueryShipment extends NewebPayLogistics {
       storeID: decrypted.StoreID,
       shipType: decrypted.ShipType,
       storeName: decrypted.StoreName,
-      retId: decrypted.Retld,
+      retId: decrypted.RetId ?? decrypted.Retld,  // NDNS 規格書參數表寫 Retld、標題寫 RetId，兩種都接受
       retString: decrypted.RetString,
     };
   }
@@ -1061,7 +1029,7 @@ class NewebPayTrackShipment(NewebPayLogistics):
             'trade_type': decrypted['TradeType'],
             'ship_type': decrypted['ShipType'],
             'history': decrypted.get('History', []),
-            'ret_id': decrypted.get('Retld', ''),
+            'ret_id': decrypted.get('RetId') or decrypted.get('Retld', ''),  # 規格書兩種拼法並存
             'ret_string': decrypted.get('RetString', ''),
         }
 
@@ -1146,7 +1114,7 @@ app.post('/callback/shipment-status', async (req, res) => {
       lgsNo: data.LgsNo,
       tradeType: data.TradeType,
       shipType: data.ShipType,
-      retId: data.Retld,
+      retId: data.RetId ?? data.Retld,
       retString: data.RetString,
       eventTime: data.EventTime,
     });
@@ -1260,7 +1228,7 @@ def process_shipment_status_update(data: Dict[str, any]):
     """Process shipment status update"""
 
     merchant_order_no = data['MerchantOrderNo']
-    ret_id = data.get('Retld')
+    ret_id = data.get('RetId') or data.get('Retld')  # NDNS 規格書兩種拼法並存
     ret_string = data.get('RetString')
 
     app.logger.info(f'Processing status update for order {merchant_order_no}')
@@ -1299,718 +1267,109 @@ if __name__ == '__main__':
 
 ## PAYUNi Logistics Examples
 
-### 1. Basic Integration (PAYUNi)
+> 端點、欄位、代碼依 wpbr-payuni-shipping 1.6.4（正式上架外掛）；加解密由 CI 以統一金流官方外掛與
+> 官方 PHP SDK 產生的標準答案驗證。規格細節見 `references/payuni-logistics-api.md`，
+> 完整 Python 版見 `examples/payuni-logistics-cvs-example.py`。
+>
+> 舊版範例中的 `/logistics/create`、`LogisticsType`、`GoodsAmount`、`Receiver*`、`LogisticsID`
+> 皆不存在於 PAYUNi 物流 API，請勿沿用。
 
-#### TypeScript - AES-256-GCM Encryption Helper
+### 1. Encryption Helper (TypeScript)
 
+<!-- verify: payuni -->
 ```typescript
 import crypto from 'crypto';
 
-interface PAYUNiConfig {
-  merchantId: string;
-  hashKey: string;
-  hashIV: string;
-  isProduction?: boolean;
+// EncryptInfo = hex( base64(AES-256-GCM 密文) + ":::" + base64(tag) )，HashIV 直接當 nonce
+export function encryptPAYUNi(data: Record<string, any>, hashKey: string, hashIV: string) {
+  const cipher = crypto.createCipheriv('aes-256-gcm', hashKey, hashIV);
+  const encrypted = Buffer.concat([cipher.update(new URLSearchParams(data).toString(), 'utf8'), cipher.final()]);
+  const encryptInfo = Buffer.from(`${encrypted.toString('base64')}:::${cipher.getAuthTag().toString('base64')}`).toString('hex');
+  // HashInfo = SHA256(HashKey + EncryptInfo + HashIV)
+  const hashInfo = crypto.createHash('sha256').update(hashKey + encryptInfo + hashIV).digest('hex').toUpperCase();
+  return { EncryptInfo: encryptInfo, HashInfo: hashInfo };
 }
 
-class PAYUNiLogistics {
-  private config: Required<PAYUNiConfig>;
-  private baseUrl: string;
-
-  constructor(config: PAYUNiConfig) {
-    this.config = {
-      ...config,
-      isProduction: config.isProduction ?? false,
-    };
-
-    this.baseUrl = this.config.isProduction
-      ? 'https://api.payuni.com.tw/api'
-      : 'https://sandbox-api.payuni.com.tw/api';
-  }
-
-  /**
-   * AES-256-GCM Encryption
-   */
-  encrypt(data: Record<string, any>): string {
-    // Convert to query string
-    const queryString = new URLSearchParams(data).toString();
-
-    // Create cipher
-    const cipher = crypto.createCipheriv(
-      'aes-256-gcm',
-      this.config.hashKey,
-      this.config.hashIV
-    );
-
-    // Encrypt
-    let encrypted = cipher.update(queryString, 'utf8', 'hex');
-    encrypted += cipher.final('hex');
-
-    // Get auth tag
-    const authTag = cipher.getAuthTag().toString('hex');
-
-    // Combine encrypted + tag
-    return encrypted + authTag;
-  }
-
-  /**
-   * AES-256-GCM Decryption
-   */
-  decrypt(encryptInfo: string): Record<string, any> {
-    // Split encrypted data and tag (tag is last 32 hex chars = 16 bytes)
-    const encrypted = encryptInfo.slice(0, -32);
-    const authTag = encryptInfo.slice(-32);
-
-    // Create decipher
-    const decipher = crypto.createDecipheriv(
-      'aes-256-gcm',
-      this.config.hashKey,
-      this.config.hashIV
-    );
-
-    // Set auth tag
-    decipher.setAuthTag(Buffer.from(authTag, 'hex'));
-
-    // Decrypt
-    let decrypted = decipher.update(encrypted, 'hex', 'utf8');
-    decrypted += decipher.final('utf8');
-
-    // Parse query string
-    const params = new URLSearchParams(decrypted);
-    const result: Record<string, any> = {};
-    params.forEach((value, key) => {
-      result[key] = value;
-    });
-
-    return result;
-  }
-
-  /**
-   * Generate HashInfo (SHA256)
-   */
-  generateHashInfo(encryptInfo: string): string {
-    const raw = encryptInfo + this.config.hashKey + this.config.hashIV;
-    return crypto.createHash('sha256').update(raw).digest('hex').toUpperCase();
-  }
-
-  /**
-   * Get current Unix timestamp
-   */
-  getTimestamp(): number {
-    return Math.floor(Date.now() / 1000);
-  }
+export function decryptPAYUNi(encryptInfo: string, hashKey: string, hashIV: string): Record<string, any> {
+  const [data, tag] = Buffer.from(encryptInfo, 'hex').toString('utf8').split(':::');
+  const decipher = crypto.createDecipheriv('aes-256-gcm', hashKey, hashIV);
+  decipher.setAuthTag(Buffer.from(tag, 'base64'));
+  const text = Buffer.concat([decipher.update(Buffer.from(data, 'base64')), decipher.final()]).toString('utf8');
+  return Object.fromEntries(new URLSearchParams(text));
 }
-
-export { PAYUNiLogistics };
 ```
 
-#### Python - AES-256-GCM Encryption Helper
-
-```python
-"""PAYUNi Logistics Encryption Helper - Python"""
-
-from Crypto.Cipher import AES
-from urllib.parse import urlencode, parse_qs
-import hashlib
-import time
-from typing import Dict, Any
-
-
-class PAYUNiLogistics:
-    """PAYUNi Logistics API Client"""
-
-    def __init__(
-        self,
-        merchant_id: str,
-        hash_key: str,
-        hash_iv: str,
-        is_production: bool = False
-    ):
-        self.merchant_id = merchant_id
-        self.hash_key = hash_key.encode('utf-8')
-        self.hash_iv = hash_iv.encode('utf-8')
-
-        self.base_url = (
-            'https://api.payuni.com.tw/api'
-            if is_production
-            else 'https://sandbox-api.payuni.com.tw/api'
-        )
-
-    def encrypt(self, data: Dict[str, Any]) -> str:
-        """AES-256-GCM Encryption"""
-        # Convert to query string
-        query_string = urlencode(data)
-
-        # Create cipher
-        cipher = AES.new(self.hash_key, AES.MODE_GCM, nonce=self.hash_iv)
-
-        # Encrypt and get tag
-        encrypted, tag = cipher.encrypt_and_digest(query_string.encode('utf-8'))
-
-        # Combine encrypted + tag and convert to hex
-        return (encrypted + tag).hex()
-
-    def decrypt(self, encrypt_info: str) -> Dict[str, Any]:
-        """AES-256-GCM Decryption"""
-        # Convert hex to binary
-        data = bytes.fromhex(encrypt_info)
-
-        # Split encrypted data and tag (last 16 bytes)
-        encrypted = data[:-16]
-        tag = data[-16:]
-
-        # Create cipher
-        cipher = AES.new(self.hash_key, AES.MODE_GCM, nonce=self.hash_iv)
-
-        # Decrypt and verify
-        decrypted = cipher.decrypt_and_verify(encrypted, tag)
-
-        # Parse query string
-        result = dict(parse_qs(decrypted.decode('utf-8')))
-        return {k: v[0] if len(v) == 1 else v for k, v in result.items()}
-
-    def generate_hash_info(self, encrypt_info: str) -> str:
-        """Generate HashInfo (SHA256)"""
-        raw = encrypt_info + self.hash_key.decode('utf-8') + self.hash_iv.decode('utf-8')
-        return hashlib.sha256(raw.encode('utf-8')).hexdigest().upper()
-
-    @staticmethod
-    def get_timestamp() -> int:
-        """Get current Unix timestamp"""
-        return int(time.time())
-```
-
----
-
-### 2. Create 7-11 C2C Shipment
-
-#### TypeScript Example
+### 2. Create Shipment
 
 ```typescript
-import axios from 'axios';
+const BASE = 'https://sandbox-api.payuni.com.tw/api';
 
-interface Create711ShipmentRequest {
-  merTradeNo: string;
-  goodsType: 1 | 2; // 1=Normal, 2=Frozen
-  goodsAmount: number;
-  goodsName: string;
-  senderName: string;
-  senderPhone: string;
-  senderStoreID: string;
-  receiverName: string;
-  receiverPhone: string;
-  receiverStoreID: string;
-  notifyURL: string;
+async function payuniPost(path: string, info: Record<string, any>, version = '1.1') {
+  const { EncryptInfo, HashInfo } = encryptPAYUNi(info, HASH_KEY, HASH_IV);
+  const res = await fetch(`${BASE}${path}`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    body: new URLSearchParams({ MerID: MER_ID, Version: version, EncryptInfo, HashInfo }),
+  });
+  const body = await res.json();
+  if (!body.EncryptInfo) return body;                           // 外層錯誤（例如 API00003）
+  const expected = crypto.createHash('sha256').update(HASH_KEY + body.EncryptInfo + HASH_IV).digest('hex').toUpperCase();
+  if (expected !== body.HashInfo) throw new Error('HashInfo 驗證失敗');
+  return decryptPAYUNi(body.EncryptInfo, HASH_KEY, HASH_IV);
 }
 
-class PAYUNi711Logistics extends PAYUNiLogistics {
-  /**
-   * Create 7-11 C2C shipment
-   */
-  async create711Shipment(params: Create711ShipmentRequest) {
-    const data = {
-      MerID: this.config.merchantId,
-      MerTradeNo: params.merTradeNo,
-      LogisticsType: 'PAYUNi_Logistic_711',
-      GoodsType: params.goodsType,
-      GoodsAmount: params.goodsAmount,
-      GoodsName: params.goodsName,
-      SenderName: params.senderName,
-      SenderPhone: params.senderPhone,
-      SenderStoreID: params.senderStoreID,
-      ReceiverName: params.receiverName,
-      ReceiverPhone: params.receiverPhone,
-      ReceiverStoreID: params.receiverStoreID,
-      NotifyURL: params.notifyURL,
-      Timestamp: this.getTimestamp(),
-    };
-
-    const encryptInfo = this.encrypt(data);
-    const hashInfo = this.generateHashInfo(encryptInfo);
-
-    const response = await axios.post(
-      `${this.baseUrl}/logistics/create`,
-      new URLSearchParams({
-        MerID: this.config.merchantId,
-        Version: '1.0',
-        EncryptInfo: encryptInfo,
-        HashInfo: hashInfo,
-      }),
-      {
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
-        },
-      }
-    );
-
-    const result = response.data;
-
-    if (result.Status !== 'SUCCESS') {
-      throw new Error(`Create shipment failed: ${result.Message}`);
-    }
-
-    // Decrypt response
-    const decrypted = this.decrypt(result.EncryptInfo);
-
-    return {
-      logisticsID: decrypted.LogisticsID,
-      merTradeNo: decrypted.MerTradeNo,
-      cvsPaymentNo: decrypted.CVSPaymentNo,
-      cvsValidationNo: decrypted.CVSValidationNo,
-      expireDate: decrypted.ExpireDate,
-    };
-  }
-}
-
-// Usage Example
-const logistics = new PAYUNi711Logistics({
-  merchantId: 'YOUR_MERCHANT_ID',
-  hashKey: 'YOUR_HASH_KEY',
-  hashIV: 'YOUR_HASH_IV',
-  isProduction: false,
+// 7-11 店到店，取貨不付款（StoreID 來自門市地圖 /logistics/ship_map 的回傳）
+const created = await payuniPost('/logistics/trade', {
+  MerID: MER_ID,
+  Timestamp: Math.floor(Date.now() / 1000),
+  MerTradeNo: `LOG${Date.now()}`,
+  GoodsType: '1',          // 1=常溫 2=冷凍
+  LgsType: 'C2C',          // C2C / B2C
+  ShipType: '1',           // 1=7-ELEVEN
+  TradeAmt: 500,           // 取貨不付款時為報值金額
+  ServiceType: '3',        // 1=取貨付款 3=取貨不付款
+  StoreID: '123456',
+  Consignee: '王小明',
+  ConsigneeMail: 'buyer@example.com',
+  ConsigneeMobile: '0987654321',
+  RefundStoreID: '',
+  SenderName: '測試商家',
+  SenderMobile: '0912345678',
+  NotifyURL: 'https://your-site.com/payuni/shipping-notify',
 });
-
-const result = await logistics.create711Shipment({
-  merTradeNo: `LOG${Date.now()}`,
-  goodsType: 1, // Normal temperature
-  goodsAmount: 500,
-  goodsName: 'T-shirt',
-  senderName: 'John Doe',
-  senderPhone: '0912345678',
-  senderStoreID: '123456', // 7-11 sender store
-  receiverName: 'Jane Doe',
-  receiverPhone: '0987654321',
-  receiverStoreID: '654321', // 7-11 receiver store
-  notifyURL: 'https://your-site.com/callback/payuni-711',
-});
-
-console.log('Logistics ID:', result.logisticsID);
-console.log('Payment Code:', result.cvsPaymentNo);
-
-export { PAYUNi711Logistics };
+// 黑貓宅配改呼叫 /home_delivery/trade，ShipType='2'、LgsType='HOME'、StoreID=''，
+// 並加上 ConsigneeAddress、ProdDesc（≤20 字）、DeliveryTimeTag（01 / 02 / 04）
+console.log(created.Status, created.ShipTradeNo);   // ShipTradeNo 是後續查詢、列印、通知的鍵
 ```
 
-#### Python Example
-
-```python
-"""Create 7-11 C2C Shipment - Python Example"""
-
-import requests
-from typing import Dict
-
-
-class PAYUNi711Logistics(PAYUNiLogistics):
-    """7-11 C2C Logistics Operations"""
-
-    def create_711_shipment(
-        self,
-        mer_trade_no: str,
-        goods_type: int,  # 1=Normal, 2=Frozen
-        goods_amount: int,
-        goods_name: str,
-        sender_name: str,
-        sender_phone: str,
-        sender_store_id: str,
-        receiver_name: str,
-        receiver_phone: str,
-        receiver_store_id: str,
-        notify_url: str,
-    ) -> Dict[str, any]:
-        """Create 7-11 C2C shipment"""
-
-        data = {
-            'MerID': self.merchant_id,
-            'MerTradeNo': mer_trade_no,
-            'LogisticsType': 'PAYUNi_Logistic_711',
-            'GoodsType': goods_type,
-            'GoodsAmount': goods_amount,
-            'GoodsName': goods_name,
-            'SenderName': sender_name,
-            'SenderPhone': sender_phone,
-            'SenderStoreID': sender_store_id,
-            'ReceiverName': receiver_name,
-            'ReceiverPhone': receiver_phone,
-            'ReceiverStoreID': receiver_store_id,
-            'NotifyURL': notify_url,
-            'Timestamp': self.get_timestamp(),
-        }
-
-        encrypt_info = self.encrypt(data)
-        hash_info = self.generate_hash_info(encrypt_info)
-
-        response = requests.post(
-            f'{self.base_url}/logistics/create',
-            data={
-                'MerID': self.merchant_id,
-                'Version': '1.0',
-                'EncryptInfo': encrypt_info,
-                'HashInfo': hash_info,
-            },
-        )
-
-        result = response.json()
-
-        if result['Status'] != 'SUCCESS':
-            raise Exception(f"Create shipment failed: {result['Message']}")
-
-        # Decrypt response
-        decrypted = self.decrypt(result['EncryptInfo'])
-
-        return {
-            'logistics_id': decrypted['LogisticsID'],
-            'mer_trade_no': decrypted['MerTradeNo'],
-            'cvs_payment_no': decrypted['CVSPaymentNo'],
-            'cvs_validation_no': decrypted['CVSValidationNo'],
-            'expire_date': decrypted['ExpireDate'],
-        }
-
-
-# Usage Example
-logistics = PAYUNi711Logistics(
-    merchant_id='YOUR_MERCHANT_ID',
-    hash_key='YOUR_HASH_KEY',
-    hash_iv='YOUR_HASH_IV',
-    is_production=False,
-)
-
-result = logistics.create_711_shipment(
-    mer_trade_no=f'LOG{int(time.time())}',
-    goods_type=1,  # Normal temperature
-    goods_amount=500,
-    goods_name='T-shirt',
-    sender_name='John Doe',
-    sender_phone='0912345678',
-    sender_store_id='123456',
-    receiver_name='Jane Doe',
-    receiver_phone='0987654321',
-    receiver_store_id='654321',
-    notify_url='https://your-site.com/callback/payuni-711',
-)
-
-print(f"Logistics ID: {result['logistics_id']}")
-print(f"Payment Code: {result['cvs_payment_no']}")
-```
-
----
-
-### 3. Create T-Cat Home Delivery
-
-#### TypeScript Example
+### 3. Query Shipment
 
 ```typescript
-interface CreateTCatShipmentRequest {
-  merTradeNo: string;
-  goodsType: 1 | 2 | 3; // 1=Normal, 2=Frozen, 3=Refrigerated
-  goodsAmount: number;
-  goodsName: string;
-  goodsWeight?: number;
-  senderName: string;
-  senderPhone: string;
-  senderZipCode: string;
-  senderAddress: string;
-  receiverName: string;
-  receiverPhone: string;
-  receiverZipCode: string;
-  receiverAddress: string;
-  scheduledDeliveryTime?: '01' | '02' | '03';
-  notifyURL: string;
-}
-
-class PAYUNiTCatLogistics extends PAYUNiLogistics {
-  /**
-   * Create T-Cat home delivery shipment
-   */
-  async createTCatShipment(params: CreateTCatShipmentRequest) {
-    const logisticsType =
-      params.goodsType === 2 ? 'PAYUNi_Logistic_Tcat_Freeze' :
-      params.goodsType === 3 ? 'PAYUNi_Logistic_Tcat_Cold' :
-      'PAYUNi_Logistic_Tcat';
-
-    const data: any = {
-      MerID: this.config.merchantId,
-      MerTradeNo: params.merTradeNo,
-      LogisticsType: logisticsType,
-      GoodsType: params.goodsType,
-      GoodsAmount: params.goodsAmount,
-      GoodsName: params.goodsName,
-      SenderName: params.senderName,
-      SenderPhone: params.senderPhone,
-      SenderZipCode: params.senderZipCode,
-      SenderAddress: params.senderAddress,
-      ReceiverName: params.receiverName,
-      ReceiverPhone: params.receiverPhone,
-      ReceiverZipCode: params.receiverZipCode,
-      ReceiverAddress: params.receiverAddress,
-      NotifyURL: params.notifyURL,
-      Timestamp: this.getTimestamp(),
-    };
-
-    if (params.goodsWeight) data.GoodsWeight = params.goodsWeight;
-    if (params.scheduledDeliveryTime) data.ScheduledDeliveryTime = params.scheduledDeliveryTime;
-
-    const encryptInfo = this.encrypt(data);
-    const hashInfo = this.generateHashInfo(encryptInfo);
-
-    const response = await axios.post(
-      `${this.baseUrl}/logistics/create`,
-      new URLSearchParams({
-        MerID: this.config.merchantId,
-        Version: '1.0',
-        EncryptInfo: encryptInfo,
-        HashInfo: hashInfo,
-      }),
-      {
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
-        },
-      }
-    );
-
-    const result = response.data;
-
-    if (result.Status !== 'SUCCESS') {
-      throw new Error(`Create shipment failed: ${result.Message}`);
-    }
-
-    const decrypted = this.decrypt(result.EncryptInfo);
-
-    return {
-      logisticsID: decrypted.LogisticsID,
-      merTradeNo: decrypted.MerTradeNo,
-      shipmentNo: decrypted.ShipmentNo,
-      bookingNote: decrypted.BookingNote,
-    };
-  }
-}
-
-// Usage Example
-const tcat = new PAYUNiTCatLogistics({
-  merchantId: 'YOUR_MERCHANT_ID',
-  hashKey: 'YOUR_HASH_KEY',
-  hashIV: 'YOUR_HASH_IV',
+const status = await payuniPost('/logistics/query', {
+  MerID: MER_ID,
+  Timestamp: Math.floor(Date.now() / 1000),
+  LgsType: 'C2C',
+  ShipTradeNo: created.ShipTradeNo,
 });
-
-const result = await tcat.createTCatShipment({
-  merTradeNo: `TCAT${Date.now()}`,
-  goodsType: 1, // Normal temperature
-  goodsAmount: 1000,
-  goodsName: 'Electronics',
-  goodsWeight: 500, // 500g
-  senderName: 'Sender Name',
-  senderPhone: '0912345678',
-  senderZipCode: '100',
-  senderAddress: 'Taipei City, Zhongzheng Dist., XXX Road No.1',
-  receiverName: 'Receiver Name',
-  receiverPhone: '0987654321',
-  receiverZipCode: '300',
-  receiverAddress: 'Hsinchu City, East Dist., YYY Road No.2',
-  scheduledDeliveryTime: '02', // 14:00-18:00
-  notifyURL: 'https://your-site.com/callback/payuni-tcat',
-});
-
-console.log('Tracking No:', result.shipmentNo);
-
-export { PAYUNiTCatLogistics };
+// status.ShipStatus: 21 待出貨 / 22 物流中心驗收 / 92 寄件門市已收件 / 31 配送中 / 32 待取貨 / 11 已取貨
+console.log(status.ShipStatus, status.ShipStatusDesc, status.Odno);
 ```
 
----
-
-### 4. Query Shipment Status
-
-#### TypeScript Example
+### 4. Status Notification Callback
 
 ```typescript
-class PAYUNiQueryLogistics extends PAYUNiLogistics {
-  /**
-   * Query shipment status
-   */
-  async queryShipment(merTradeNo: string) {
-    const data = {
-      MerID: this.config.merchantId,
-      MerTradeNo: merTradeNo,
-      Timestamp: this.getTimestamp(),
-    };
-
-    const encryptInfo = this.encrypt(data);
-    const hashInfo = this.generateHashInfo(encryptInfo);
-
-    const response = await axios.post(
-      `${this.baseUrl}/logistics/query`,
-      new URLSearchParams({
-        MerID: this.config.merchantId,
-        Version: '1.0',
-        EncryptInfo: encryptInfo,
-        HashInfo: hashInfo,
-      }),
-      {
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
-        },
-      }
-    );
-
-    const result = response.data;
-
-    if (result.Status !== 'SUCCESS') {
-      throw new Error(`Query shipment failed: ${result.Message}`);
-    }
-
-    const decrypted = this.decrypt(result.EncryptInfo);
-
-    return {
-      logisticsID: decrypted.LogisticsID,
-      merTradeNo: decrypted.MerTradeNo,
-      logisticsType: decrypted.LogisticsType,
-      logisticsStatus: decrypted.LogisticsStatus,
-      logisticsStatusMsg: decrypted.LogisticsStatusMsg,
-      shipmentNo: decrypted.ShipmentNo,
-      receiverStoreID: decrypted.ReceiverStoreID,
-      updateTime: decrypted.UpdateTime,
-    };
+app.post('/payuni/shipping-notify', express.urlencoded({ extended: false }), (req, res) => {
+  const { EncryptInfo, HashInfo } = req.body;
+  // 先驗 HashInfo（官方外掛沒驗，這是疏漏，不要照抄）
+  if (HashInfo !== undefined) {
+    const expected = crypto.createHash('sha256').update(HASH_KEY + EncryptInfo + HASH_IV).digest('hex').toUpperCase();
+    if (expected !== HashInfo) return res.status(400).end();
   }
-
-  /**
-   * Get human-readable status
-   */
-  getStatusDescription(statusCode: string): string {
-    const statusMap: Record<string, string> = {
-      '11': 'Shipped',
-      '21': 'Arrived at store / In delivery',
-      '22': 'Picked up / Delivered',
-      '31': 'Returning',
-      '32': 'Return completed',
-    };
-
-    return statusMap[statusCode] || 'Unknown status';
+  const info = decryptPAYUNi(EncryptInfo, HASH_KEY, HASH_IV);
+  if (info.Status === 'SUCCESS' && info.ApiType === 'ShipStatus') {
+    updateShipment(info.ShipTradeNo, info.ShipStatus, info.ShipStatusDesc, info.ShipStatusTime);
   }
-}
-
-// Usage Example
-const query = new PAYUNiQueryLogistics({
-  merchantId: 'YOUR_MERCHANT_ID',
-  hashKey: 'YOUR_HASH_KEY',
-  hashIV: 'YOUR_HASH_IV',
-});
-
-const status = await query.queryShipment('LOG123456');
-
-console.log(`Order: ${status.merTradeNo}`);
-console.log(`Status: ${status.logisticsStatusMsg} (${status.logisticsStatus})`);
-console.log(`Tracking No: ${status.shipmentNo}`);
-
-export { PAYUNiQueryLogistics };
-```
-
----
-
-### 5. Status Notification Callback
-
-#### Express.js Example
-
-```typescript
-import express from 'express';
-
-const app = express();
-
-app.use(express.urlencoded({ extended: true }));
-app.use(express.json());
-
-const logistics = new PAYUNiLogistics({
-  merchantId: 'YOUR_MERCHANT_ID',
-  hashKey: 'YOUR_HASH_KEY',
-  hashIV: 'YOUR_HASH_IV',
-});
-
-/**
- * Handle PAYUNi logistics status notification
- */
-app.post('/callback/payuni-logistics', async (req, res) => {
-  try {
-    const { MerID, EncryptInfo, HashInfo } = req.body;
-
-    console.log('Received notification from PAYUNi');
-
-    // Verify HashInfo
-    const calculatedHash = logistics.generateHashInfo(EncryptInfo);
-    if (calculatedHash !== HashInfo.toUpperCase()) {
-      console.error('Hash verification failed');
-      return res.send('Hash Error');
-    }
-
-    // Decrypt data
-    const data = logistics.decrypt(EncryptInfo);
-
-    console.log('Notification data:', data);
-
-    // Process the notification
-    await processLogisticsStatusUpdate({
-      merTradeNo: data.MerTradeNo,
-      logisticsID: data.LogisticsID,
-      logisticsType: data.LogisticsType,
-      logisticsStatus: data.LogisticsStatus,
-      logisticsStatusMsg: data.LogisticsStatusMsg,
-      updateTime: data.UpdateTime,
-    });
-
-    // Return SUCCESS
-    res.send('SUCCESS');
-  } catch (error) {
-    console.error('Callback error:', error);
-    res.send('Error');
-  }
-});
-
-/**
- * Process logistics status update
- */
-async function processLogisticsStatusUpdate(data: {
-  merTradeNo: string;
-  logisticsID: string;
-  logisticsType: string;
-  logisticsStatus: string;
-  logisticsStatusMsg: string;
-  updateTime: string;
-}) {
-  console.log(`Processing status update for order ${data.merTradeNo}`);
-
-  // Update database
-  // await db.orders.updateOne(
-  //   { orderNo: data.merTradeNo },
-  //   {
-  //     $set: {
-  //       'logistics.status': data.logisticsStatus,
-  //       'logistics.statusMsg': data.logisticsStatusMsg,
-  //       'logistics.logisticsID': data.logisticsID,
-  //       'logistics.lastUpdate': new Date(data.updateTime),
-  //     },
-  //   }
-  // );
-
-  // Send notification to customer based on status
-  switch (data.logisticsStatus) {
-    case '11':
-      // Shipped
-      console.log('Order shipped');
-      break;
-    case '21':
-      // Arrived
-      console.log('Arrived at destination');
-      break;
-    case '22':
-      // Picked up / Delivered
-      console.log('Delivery completed');
-      // await sendEmail({ ... });
-      break;
-    case '31':
-    case '32':
-      // Return
-      console.log('Order returned');
-      break;
-  }
-}
-
-app.listen(3000, () => {
-  console.log('PAYUNi callback server listening on port 3000');
+  res.status(200).end();
 });
 ```
 
@@ -2022,6 +1381,9 @@ app.listen(3000, () => {
 
 #### TypeScript - MD5 CheckMacValue Helper
 
+> 由 CI 以綠界官方 PHP SDK 產生的標準答案驗證（`tests/vectors/ecpay.json`）。
+
+<!-- verify: ecpay-cmv-md5 -->
 ```typescript
 import crypto from 'crypto';
 
@@ -2048,39 +1410,39 @@ class ECPayLogistics {
   }
 
   /**
-   * Generate CheckMacValue (MD5)
+   * 與綠界官方 SDK UrlService::ecpayUrlEncode 相同：PHP urlencode → 小寫 → .NET 字元還原
+   * （encodeURIComponent 的空白是 %20，綠界要的是 +；! ' ( ) * ~ 也要先依 PHP 規則編碼）
    */
-  generateCheckMacValue(params: Record<string, any>): string {
-    // Sort parameters
-    const sorted = Object.keys(params)
-      .sort()
-      .reduce((acc, key) => {
-        acc[key] = params[key];
-        return acc;
-      }, {} as Record<string, any>);
-
-    // Create query string
-    const paramStr = Object.entries(sorted)
-      .map(([key, value]) => `${key}=${value}`)
-      .join('&');
-
-    // Add HashKey and HashIV
-    const raw = `HashKey=${this.config.hashKey}&${paramStr}&HashIV=${this.config.hashIV}`;
-
-    // URL encode and convert to lowercase
-    const encoded = encodeURIComponent(raw).toLowerCase();
-
-    // MD5 hash and uppercase
-    return crypto.createHash('md5').update(encoded).digest('hex').toUpperCase();
+  private ecpayUrlEncode(text: string): string {
+    return encodeURIComponent(text)
+      .replace(/%20/g, '+')
+      .replace(/[!'()*~]/g, c => '%' + c.charCodeAt(0).toString(16).toUpperCase())
+      .toLowerCase()
+      .replace(/%21/g, '!').replace(/%2a/g, '*').replace(/%28/g, '(').replace(/%29/g, ')');
   }
 
   /**
-   * Verify CheckMacValue from callback
+   * Generate CheckMacValue (MD5，國內物流；金流 AIO 才是 SHA256)
+   */
+  generateCheckMacValue(params: Record<string, any>): string {
+    const { CheckMacValue, ...data } = params;
+    // 不分大小寫排序（SDK 用 strcasecmp）
+    const keys = Object.keys(data).sort((a, b) => {
+      const x = a.toLowerCase(), y = b.toLowerCase();
+      return x < y ? -1 : x > y ? 1 : 0;
+    });
+    const raw = `HashKey=${this.config.hashKey}&${keys.map(k => `${k}=${data[k]}`).join('&')}&HashIV=${this.config.hashIV}`;
+    return crypto.createHash('md5').update(this.ecpayUrlEncode(raw)).digest('hex').toUpperCase();
+  }
+
+  /**
+   * Verify CheckMacValue from callback（成功後回應純文字 1|OK）
    */
   verifyCheckMacValue(params: Record<string, any>): boolean {
-    const { CheckMacValue, ...data } = params;
-    const calculated = this.generateCheckMacValue(data);
-    return calculated === CheckMacValue;
+    if (!params.CheckMacValue) return false;
+    const a = Buffer.from(this.generateCheckMacValue(params));
+    const b = Buffer.from(String(params.CheckMacValue).toUpperCase());
+    return a.length === b.length && crypto.timingSafeEqual(a, b);
   }
 }
 
@@ -2089,10 +1451,12 @@ export { ECPayLogistics };
 
 #### Python - MD5 CheckMacValue Helper
 
+<!-- verify: ecpay-cmv-md5 -->
 ```python
 """ECPay Logistics Encryption Helper - Python"""
 
 import hashlib
+import hmac
 import urllib.parse
 from typing import Dict, Any
 
@@ -2117,31 +1481,27 @@ class ECPayLogistics:
             else 'https://logistics-stage.ecpay.com.tw'
         )
 
+    @staticmethod
+    def ecpay_url_encode(text: str) -> str:
+        """PHP urlencode（~ 也要編碼）→ 小寫 → 還原 .NET 不編碼的 - _ . ! * ( )"""
+        encoded = urllib.parse.quote_plus(text, safe='').replace('~', '%7E').lower()
+        for src, dst in (('%2d', '-'), ('%5f', '_'), ('%2e', '.'), ('%21', '!'),
+                         ('%2a', '*'), ('%28', '('), ('%29', ')')):
+            encoded = encoded.replace(src, dst)
+        return encoded
+
     def generate_check_mac_value(self, params: Dict[str, Any]) -> str:
-        """Generate CheckMacValue (MD5)"""
-        # Sort parameters
-        sorted_params = sorted(params.items())
-
-        # Create query string
-        param_str = '&'.join(f'{k}={v}' for k, v in sorted_params)
-
-        # Add HashKey and HashIV
-        raw = f'HashKey={self.hash_key}&{param_str}&HashIV={self.hash_iv}'
-
-        # URL encode and convert to lowercase
-        encoded = urllib.parse.quote_plus(raw).lower()
-
-        # MD5 hash and uppercase
-        return hashlib.md5(encoded.encode('utf-8')).hexdigest().upper()
+        """Generate CheckMacValue (MD5，國內物流；金流 AIO 才是 SHA256)"""
+        # 排除 CheckMacValue，不分大小寫排序（SDK 用 strcasecmp）
+        items = sorted(((k, v) for k, v in params.items() if k != 'CheckMacValue'),
+                       key=lambda kv: kv[0].lower())
+        raw = f"HashKey={self.hash_key}&{'&'.join(f'{k}={v}' for k, v in items)}&HashIV={self.hash_iv}"
+        return hashlib.md5(self.ecpay_url_encode(raw).encode('utf-8')).hexdigest().upper()
 
     def verify_check_mac_value(self, params: Dict[str, Any]) -> bool:
-        """Verify CheckMacValue from callback"""
-        check_mac = params.pop('CheckMacValue', None)
-        if not check_mac:
-            return False
-
-        calculated = self.generate_check_mac_value(params)
-        return calculated == check_mac
+        """Verify CheckMacValue from callback（不修改傳入的 dict；成功後回應純文字 1|OK）"""
+        received = params.get('CheckMacValue', '')
+        return bool(received) and hmac.compare_digest(self.generate_check_mac_value(params), received.upper())
 ```
 
 ---
@@ -3225,7 +2585,7 @@ SmilePay 透過 `Pay_zg` 矩陣編碼涵蓋 7-11/全家 + 黑貓三大配送：
 
 ## PayNow 立吉富物流範例
 
-⚠️ **加密用 3DES (TripleDES) / ECB / Zero-Padding**，24-byte Key + 8-byte IV。**不同於金流端的動態 AES-256**。
+⚠️ **加密用 3DES (TripleDES) / ECB / Zero-Padding，輸出 Base64**；Key = `1234567890` + Password + `123456`（24 bytes，ECB 不使用 IV）。**不同於金流端的動態 AES-256**。已以文件範例密文逐位元組驗證。
 
 完整範例見 [`examples/paynow-logistics-cvs-example.py`](examples/paynow-logistics-cvs-example.py)。涵蓋 11 條產品線（7-11 大宗 / 冷凍 / 海外、全家 大宗 / 冷凍、4 大超商常溫 C2C、黑貓宅配 / 店到店）。
 

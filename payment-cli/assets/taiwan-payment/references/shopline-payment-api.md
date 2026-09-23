@@ -728,10 +728,10 @@ function verifyShoplineSignature(timestamp, rawBody, sign, signKey) {
     .createHmac('sha256', signKey)
     .update(payload, 'utf8')
     .digest('hex');
-  return crypto.timingSafeEqual(
-    Buffer.from(expected, 'hex'),
-    Buffer.from(sign, 'hex')
-  );
+  const a = Buffer.from(expected, 'hex');
+  const b = Buffer.from(String(sign || ''), 'hex');
+  // 長度不同時 timingSafeEqual 會直接丟例外，先檢查
+  return a.length === b.length && crypto.timingSafeEqual(a, b);
 }
 
 // 必須使用 raw body
@@ -1042,7 +1042,11 @@ POST /api/v1/trade/payment/get
 
 ## 錯誤代碼
 
-SHOPLINE Payments 錯誤碼以「字串」形式回傳，HTTP 狀態通常為 `400` / `429` / `500`：
+> 依官方「Server 錯誤碼」附錄（docs.shoplinepayments.com/appendix/errorCode/，2026-09 擷取）；下表為節錄，
+> 通用、Connect、下單、付款、退款、Onboarding 六個場景共 143 個代碼全部收在 `data/error-codes.csv`。
+> 同一代碼可能出現在多個場景（例如 `1004` 在下單與 Onboarding 意義不同），判讀時要搭配呼叫的 API。
+
+SHOPLINE Payments 錯誤碼以「字串」形式回傳：
 
 ```json
 { "code": "1004", "msg": "Param error" }

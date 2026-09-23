@@ -11,7 +11,13 @@
  *   - build.js 在打包前自動呼叫本腳本（涵蓋手動 npm publish）
  *   - CI 在發布前以 --check 驗證（涵蓋 tag 觸發的自動發布）
  *
- * 只鏡像 assets/taiwan-<skill>/，不動 assets/templates/（後者為手工維護）。
+ * 同步兩類內容：
+ *   1. 鏡像 assets/taiwan-<skill>/（整個 source of truth 目錄）
+ *   2. 由 taiwan-<skill>/SKILL.md 產生 assets/templates/base/skill-content.md
+ *      —— 過去這份是手工複製的 SKILL.md，修正常只改到其中一份（例如 PAYUNi 加密
+ *      格式在 SKILL.md 修了、模板沒修，使用者安裝到的仍是錯的）；logistics 的模板
+ *      甚至把 {{DESCRIPTION}} 蓋在 HCT 註解上。改為自動產生後兩者不可能再分歧。
+ * assets/templates/ 其餘檔案（platforms/*.json、quick-reference.md）仍為手工維護。
  *
  * 用法:
  *   node scripts/sync-assets.mjs                 # 同步全部
@@ -19,7 +25,7 @@
  *   node scripts/sync-assets.mjs --check         # 只檢查，有落差則 exit 1
  */
 
-import { readdirSync, statSync, mkdirSync, copyFileSync, readFileSync, rmSync, existsSync } from 'fs';
+import { readdirSync, statSync, mkdirSync, copyFileSync, readFileSync, rmSync, existsSync, writeFileSync } from 'fs';
 import { join, relative, dirname } from 'path';
 import { fileURLToPath } from 'url';
 
@@ -50,6 +56,43 @@ function walk(dir, base = dir, out = []) {
   return out;
 }
 
+/**
+ * SKILL.md → 模板：去掉 frontmatter，H1 換成 {{TITLE}}，
+ * H1 後的第一段 blockquote 換成 {{DESCRIPTION}}（沒有的話就插入一段）。
+ */
+export function renderSkillTemplate(skillMd) {
+  // 沿用來源的換行字元：Windows 上 autocrlf 會是 CRLF，CI（Linux）則是 LF，
+  // 輸出須與同一份工作目錄內的其他檔案一致，否則 --check 會在某一邊誤報
+  const eol = skillMd.includes('\r\n') ? '\r\n' : '\n';
+  let text = skillMd.replace(/\r\n/g, '\n');
+  if (text.startsWith('---\n')) {
+    const end = text.indexOf('\n---\n', 4);
+    if (end !== -1) text = text.slice(end + 5).replace(/^\n+/, '');
+  }
+  const lines = text.split('\n');
+  const h1 = lines.findIndex((l) => l.startsWith('# '));
+  if (h1 === -1) throw new Error('SKILL.md 缺少 H1 標題');
+  lines[h1] = '# {{TITLE}}';
+
+  let i = h1 + 1;
+  while (i < lines.length && lines[i].trim() === '') i += 1;
+  if (i < lines.length && lines[i].startsWith('> ')) {
+    lines[i] = '> {{DESCRIPTION}}';
+  } else {
+    lines.splice(h1 + 1, 0, '', '> {{DESCRIPTION}}');
+  }
+  return lines.join(eol);
+}
+
+function templateTarget({ src, cli }) {
+  const path = join(ROOT, cli, 'assets', 'templates', 'base', 'skill-content.md');
+  const expected = renderSkillTemplate(readFileSync(join(ROOT, src, 'SKILL.md'), 'utf8'));
+  const stale = !existsSync(path) || readFileSync(path, 'utf8') !== expected;
+  return { path, expected, stale };
+}
+
+const TEMPLATE_LABEL = 'templates/base/skill-content.md（由 SKILL.md 產生）';
+
 function sameContent(a, b) {
   if (!existsSync(b)) return false;
   return readFileSync(a).equals(readFileSync(b));
@@ -74,6 +117,8 @@ function diffPackage({ src, cli }) {
   const srcSet = new Set(srcFiles);
   const removed = dstFiles.filter((rel) => !srcSet.has(rel));
 
+  if (templateTarget({ src, cli }).stale) changed.push(TEMPLATE_LABEL);
+
   return { srcDir, dstDir, added, changed, removed };
 }
 
@@ -81,6 +126,11 @@ function syncPackage(target) {
   const { srcDir, dstDir, added, changed, removed } = diffPackage(target);
 
   for (const rel of [...added, ...changed]) {
+    if (rel === TEMPLATE_LABEL) {
+      const { path, expected } = templateTarget(target);
+      writeFileSync(path, expected);
+      continue;
+    }
     const to = join(dstDir, rel);
     mkdirSync(dirname(to), { recursive: true });
     copyFileSync(join(srcDir, rel), to);

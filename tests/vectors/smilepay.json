@@ -1,0 +1,56 @@
+{
+    "provider": "smilepay",
+    "source": {
+        "kind": "official-plugin",
+        "name": "SmilePay 官方 WooCommerce 外掛 1.1.23（Author: SmilePay）",
+        "file": "SmilePay/admin/class-smilepay-payment.php",
+        "funcs": [
+            "check_mid"
+        ]
+    },
+    "generator": "php 8.2.33",
+    "cases": [
+        {
+            "name": "typical",
+            "mid": "1234",
+            "amount": "1280",
+            "smseid": "09_23_2026_1234567",
+            "expected": "267"
+        },
+        {
+            "name": "letters_in_tail",
+            "mid": "8765",
+            "amount": "99",
+            "smseid": "ABCD12X4",
+            "expected": "378"
+        },
+        {
+            "name": "all_letters_tail",
+            "mid": "0001",
+            "amount": "5",
+            "smseid": "SMSEIDABCD",
+            "expected": "234"
+        },
+        {
+            "name": "short_smseid",
+            "mid": "4321",
+            "amount": "100",
+            "smseid": "12",
+            "expected": "192"
+        },
+        {
+            "name": "short_smseid_3",
+            "mid": "4321",
+            "amount": "100",
+            "smseid": "123",
+            "expected": "138"
+        },
+        {
+            "name": "max_amount",
+            "mid": "9999",
+            "amount": "99999999",
+            "smseid": "000000009999",
+            "expected": "864"
+        }
+    ]
+}

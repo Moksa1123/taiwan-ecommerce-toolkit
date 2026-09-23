@@ -10,6 +10,7 @@ API 文件: https://www.newebpay.com
 
 import json
 import hashlib
+import hmac
 import time
 import urllib.parse
 from datetime import datetime
@@ -18,12 +19,30 @@ from dataclasses import dataclass, field
 
 try:
     from Crypto.Cipher import AES
-    from Crypto.Util.Padding import pad, unpad
+    from Crypto.Util.Padding import pad
     import requests
     HAS_DEPENDENCIES = True
 except ImportError:
     HAS_DEPENDENCIES = False
 
+
+
+def strip_padding(data: bytes) -> bytes:
+    """
+    移除 PKCS#7 padding，容許長度 1–32
+
+    藍新官方 WooCommerce 外掛（newebpay-payment encProcess.php）加密時以 32 bytes
+    為區塊補齊（addpadding 的 blocksize=32），因此 padding 值可能是 17–32；
+    Crypto.Util.Padding.unpad(data, 16) 遇到這種密文會直接拋錯。
+    官方解密端的 strippadding() 以最後一個 byte 為長度移除，此處行為一致，
+    另外檢查尾端每個 byte 都等於 padding 長度，金鑰錯誤時才能及早發現。
+    """
+    if not data:
+        raise ValueError('解密結果為空')
+    pad_len = data[-1]
+    if not 1 <= pad_len <= 32 or pad_len > len(data) or data[-pad_len:] != bytes([pad_len]) * pad_len:
+        raise ValueError('padding 格式錯誤（HashKey / HashIV 可能不正確）')
+    return data[:-pad_len]
 
 @dataclass
 class CVSShipmentData:
@@ -171,7 +190,7 @@ class NewebPayCVSLogistics:
         try:
             cipher = AES.new(self.hash_key, AES.MODE_CBC, self.hash_iv)
             decrypted = cipher.decrypt(bytes.fromhex(encrypted_data))
-            unpadded = unpad(decrypted, AES.block_size)
+            unpadded = strip_padding(decrypted)
             return unpadded.decode('utf-8')
         except Exception as e:
             raise ValueError(f'解密失敗: {str(e)}')
@@ -186,26 +205,30 @@ class NewebPayCVSLogistics:
         Returns:
             str: SHA256 雜湊值 (大寫)
         """
-        raw = f"{self.hash_key.decode('utf-8')}{encrypt_data}{self.hash_iv.decode('utf-8')}"
+        # 規格書 NDNS 6.附錄(一)：HashKey={key}&{EncryptData}&HashIV={iv}
+        raw = f"HashKey={self.hash_key.decode('utf-8')}&{encrypt_data}&HashIV={self.hash_iv.decode('utf-8')}"
         return hashlib.sha256(raw.encode('utf-8')).hexdigest().upper()
 
     def verify_hash_data(self, encrypt_data: str, hash_data: str) -> bool:
         """驗證 HashData"""
-        calculated_hash = self.generate_hash_data(encrypt_data)
-        return calculated_hash == hash_data.upper()
+        return hmac.compare_digest(self.generate_hash_data(encrypt_data), hash_data.upper())
 
     def query_store_map(
         self,
         data: StoreMapData,
-    ) -> str:
+    ) -> Dict[str, any]:
         """
-        查詢電子地圖 (門市選擇)
+        產生電子地圖（門市選擇）表單
+
+        門市地圖是給「消費者瀏覽器」操作的頁面，必須由瀏覽器以表單 POST 過去；
+        伺服器端直接 requests.post 拿不到可用的選店流程。選完門市後，藍新會把
+        結果 POST 回 ReturnURL，交由 parse_store_map_callback() 處理。
 
         Args:
             data: 門市查詢資料 (StoreMapData)
 
         Returns:
-            str: 重導向網址 (用戶選擇門市)
+            Dict: {'action': 送出網址, 'fields': 表單欄位}，前端據此產生自動送出的 <form>
 
         Example:
             >>> store_data = StoreMapData(
@@ -214,7 +237,9 @@ class NewebPayCVSLogistics:
             ...     ship_type='1',
             ...     return_url='https://your-site.com/callback',
             ... )
-            >>> redirect_url = service.query_store_map(store_data)
+            >>> form = service.query_store_map(store_data)
+            >>> form['action']
+            'https://ccore.newebpay.com/API/Logistic/storeMap'
         """
         # 準備加密資料
         encrypt_data_obj = {
@@ -233,28 +258,17 @@ class NewebPayCVSLogistics:
         encrypt_data = self.aes_encrypt(json_str)
         hash_data = self.generate_hash_data(encrypt_data)
 
-        # 準備 API 請求
-        api_data = {
-            'UID_': self.merchant_id,
-            'EncryptData_': encrypt_data,
-            'HashData_': hash_data,
-            'Version_': '1.0',
-            'RespondType_': 'JSON',
+        # 送出參數名稱後方都有底線 "_"（規格書 NPA-B51）
+        return {
+            'action': f'{self.base_url}/storeMap',
+            'fields': {
+                'UID_': self.merchant_id,
+                'EncryptData_': encrypt_data,
+                'HashData_': hash_data,
+                'Version_': '1.0',
+                'RespondType_': 'JSON',
+            },
         }
-
-        # 發送請求 (NewebPay 會重導向到門市選擇頁面)
-        response = requests.post(
-            f'{self.base_url}/storeMap',
-            data=api_data,
-            allow_redirects=False,
-            timeout=30,
-        )
-
-        # 回傳重導向網址
-        if response.status_code in [301, 302, 303]:
-            return response.headers.get('Location', '')
-
-        return response.url
 
     def parse_store_map_callback(
         self,
@@ -276,8 +290,8 @@ class NewebPayCVSLogistics:
 
         Example:
             >>> callback = service.parse_store_map_callback(
-            ...     request.form['EncryptData_'],
-            ...     request.form['HashData_']
+            ...     request.form['EncryptData'],   # 地圖回傳欄位「沒有」底線
+            ...     request.form['HashData']
             ... )
             >>> print(f"選擇門市: {callback.store_name}")
         """
@@ -402,8 +416,9 @@ class NewebPayCVSLogistics:
             )
 
         # 解密回應資料
-        response_encrypt_data = result.get('EncryptData_', '')
-        response_hash_data = result.get('HashData_', '')
+        # 規格書：只有「送出」的參數帶底線，API 回應欄位是 EncryptData / HashData
+        response_encrypt_data = result.get('EncryptData', '')
+        response_hash_data = result.get('HashData', '')
 
         if response_encrypt_data and response_hash_data:
             try:
@@ -474,9 +489,9 @@ if __name__ == '__main__':
     )
 
     try:
-        redirect_url = service.query_store_map(store_data)
-        print(f'✓ 電子地圖網址: {redirect_url}')
-        print('請將使用者導向此網址選擇門市')
+        form = service.query_store_map(store_data)
+        print(f'✓ 電子地圖表單: POST {form["action"]}（欄位 {", ".join(form["fields"])}）')
+        print('前端以此產生自動送出的 <form>，由消費者瀏覽器 POST 到藍新選擇門市')
     except Exception as e:
         print(f'✗ 發生例外: {str(e)}')
 

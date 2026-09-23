@@ -2,262 +2,242 @@
 """
 PayNow 立吉富物流 Python 範例
 
-依 taiwan-logistics-skill 規範撰寫。
+依據：PayNow 物流技術文件（PayNow_Logistic_v2.5_C2C 等各產品線 PDF，本機 _studies 參考資料）
+加密與 PassCode 已以文件附錄與「建立物流單」範例的密文驗證（tests/vectors/paynow.json）。
 
-⚠️ 加密: PayNow 物流使用 3DES (TripleDES) / ECB / Zero-Padding
-   24-byte Key + 8-byte IV，**不同於金流端的動態 AES-256 (GP/GK)**
+⚠️ 加密：3DES (TripleDES) / ECB / Zero-Padding，輸出 **Base64**
+   Key = "1234567890" + Password + "123456"（24 bytes；Password 為 PayNow 核發的加密密碼，
+   與 JSON 內的 apicode 是不同的值）
 
-支援 11 條產品線:
-- 7-11 大宗 (B2C) / 冷凍大宗 (B2C) / 冷凍 C2C / 海外配送
-- 全家 大宗 (B2C) / 冷凍大宗 (B2C) / 冷凍 C2C
-- 4 大超商常溫 C2C (7-11/全家/萊爾富/OK)
-- 黑貓宅配 / 黑貓店到店
+端點（測試 https://testlogistic.paynow.com.tw／正式 https://logistic.paynow.com.tw）：
 
-API 文件: 參見 references/paynow-logistics-api.md
-
-依賴:
-    pip install pycryptodome requests
+| 用途 | 方法 | 路徑 |
+|---|---|---|
+| 選擇取貨門市（瀏覽器表單） | POST | /Member/Order/Choselogistics |
+| 建立物流單 | POST form | /api/Orderapi/Add_Order |
+| 依商家訂單編號查詢 | GET | /api/Orderapi/Get_Order_Info_orderno |
+| 取消物流單 | DELETE form | /api/Orderapi/CancelOrder |
 """
 
+import base64
+import hashlib
 import json
-import time
 from dataclasses import dataclass, field
-from typing import Dict, Literal, Optional
+from typing import Any, Dict
 
-import requests
-from Crypto.Cipher import DES3
-from Crypto.Util.Padding import pad
+try:
+    from Crypto.Cipher import DES3
+    import requests
+    HAS_DEPENDENCIES = True
+except ImportError:
+    HAS_DEPENDENCIES = False
+
+
+# Logistic_service（各產品線文件）
+SERVICE_711_C2C = '01'            # 7-11 交貨便
+SERVICE_711_BULK = '02'           # 7-11 大宗物流
+SERVICE_FAMI_C2C = '03'           # 全家店到店
+SERVICE_FAMI_BULK = '04'          # 全家大宗物流
+SERVICE_HILIFE_C2C = '05'         # 萊爾富店到店
+SERVICE_TCAT = '06'               # 黑貓宅急便
+SERVICE_711_OVERSEAS_STORE = '07'  # 7-11 海外配送（店配）
+SERVICE_711_OVERSEAS_HOME = '08'   # 7-11 海外配送（宅配）
+SERVICE_OK_C2C = '10'             # OK 店到店
+SERVICE_711_C2C_FROZEN = '21'     # 7-11 交貨便（冷凍）
+SERVICE_711_BULK_FROZEN = '22'    # 7-11 大宗物流（冷凍）
+SERVICE_FAMI_C2C_FROZEN = '23'    # 全家店到店（冷凍）
+SERVICE_FAMI_BULK_FROZEN = '24'   # 全家大宗物流（冷凍）
+
+DELIVER_MODE_COD = '01'           # 取貨付款
+DELIVER_MODE_NO_COD = '02'        # 取貨不付款
 
 
 @dataclass
 class LogisticOrder:
-    """PayNow 物流訂單"""
-    service_id: str  # 物流商品線 ID（依產品線不同, 見下方常數）
-    goods_name: str
-    amount: int  # COD 金額
+    """建立物流單的 Obj_Order（欄位名稱與大小寫依文件）"""
+    order_no: str                  # 限英文與數字
+    logistic_service: str          # 見上方 SERVICE_* 常數
+    deliver_mode: str              # 01 取貨付款 / 02 取貨不付款
+    total_amount: int              # 正整數，不可大於 20000
+    receiver_storeid: str
+    receiver_storename: str
+    receiver_name: str             # 勿帶標點；7-11 限 10 字
+    receiver_phone: str
+    receiver_email: str
+    receiver_address: str          # 請輸入取件店址
     sender_name: str
     sender_phone: str
+    sender_email: str
     sender_address: str = ''
-    receiver_name: str = ''
-    receiver_phone: str = ''
-    receiver_address: str = ''
-    receiver_store_id: str = ''  # 取貨門市（CVS）
-    return_url: str = ''  # 通知 URL
-    is_cod: bool = True
+    return_storeid: str = ''
+    remark: str = ''
+    description: str = ''
 
 
 @dataclass
 class PayNowLogisticResponse:
     success: bool
     status: str = ''
-    message: str = ''
-    logistic_trade_no: str = ''
-    raw: Dict[str, any] = field(default_factory=dict)
+    error_msg: str = ''
+    logistic_number: str = ''      # PayNow 物流單號
+    paymentno: str = ''            # 物流商貨運編號
+    validationno: str = ''         # 物流商驗證碼（7-11 店到店）
+    raw: Dict[str, Any] = field(default_factory=dict)
 
 
 class PayNowLogisticService:
-    """
-    PayNow 物流服務.
+    """PayNow 物流服務"""
 
-    認證:
-        - 商家代號 (merID) + 賣場交易密碼 (apicode)
-        - 加密: 3DES / ECB / Zero-Padding
-        - 24-byte Key + 8-byte IV (示範值, 真實值需向 PayNow 申請)
+    TEST_BASE = 'https://testlogistic.paynow.com.tw'
+    PROD_BASE = 'https://logistic.paynow.com.tw'
 
-    11 條產品線 ServiceID（部分代碼）:
-        20 = 7-11 大宗 B2C 常溫
-        21 = 7-11 大宗 B2C 冷凍
-        22 = 7-11 冷凍 C2C
-        23 = 7-11 海外配送
-        30 = 全家 大宗 B2C
-        31 = 全家 冷凍大宗
-        32 = 全家 冷凍 C2C
-        40 = 4 大超商常溫 C2C (7-11/全家/萊爾富/OK)
-        50 = 黑貓宅配
-        51 = 黑貓店到店
-        ...
-    """
-
-    TEST_BASE = 'https://test.paynow.com.tw'
-    PROD_BASE = 'https://www.paynow.com.tw'
-
-    # 官方範例金鑰（僅供加密邏輯測試使用）
-    SAMPLE_KEY = '123456789070828783123456'  # 24 bytes
-    SAMPLE_IV = '12345678'  # 8 bytes
-
-    def __init__(self, mer_id: str, apicode: str, key_3des: str, iv_3des: str, is_test: bool = True):
-        if len(key_3des) != 24:
-            raise ValueError(f'PayNow 物流 3DES Key 必須 24 bytes (收到 {len(key_3des)})')
-        if len(iv_3des) != 8:
-            raise ValueError(f'PayNow 物流 3DES IV 必須 8 bytes (收到 {len(iv_3des)})')
-
-        self.mer_id = mer_id
+    def __init__(self, user_account: str, apicode: str, password: str, is_test: bool = True):
+        """
+        Args:
+            user_account: 商家主帳號
+            apicode:      商家 API 密碼（放在 JSON 內、參與 PassCode）
+            password:     3DES 加密用密碼（Key = "1234567890" + password + "123456"）
+        """
+        if not HAS_DEPENDENCIES:
+            raise ImportError('需要安裝: pip install pycryptodome requests')
+        key = f'1234567890{self.normalize_password(password)}123456'
+        self.user_account = user_account
         self.apicode = apicode
-        self.key = key_3des.encode('utf-8')
-        self.iv = iv_3des.encode('utf-8')
+        self.key = key.encode('utf-8')
         self.base_url = self.TEST_BASE if is_test else self.PROD_BASE
 
-    # -- 3DES 加密 ------------------------------------------------------------
-
-    def _encrypt_3des(self, plaintext: str) -> str:
+    @staticmethod
+    def normalize_password(password: str) -> str:
         """
-        3DES / ECB / Zero-Padding 加密.
+        密碼不足 8 碼時靠右補 0、超過 8 碼取前 8 碼
 
-        ⚠️ ECB 模式不使用 IV; PayNow 文件雖列 IV 但實際邏輯為 ECB。
-        若實際串接時用 CBC, 則替換 mode=DES3.MODE_CBC 並附 IV。
+        規則載於 PayNow 電子發票串接文件 V1.5 附件一（同一套 TripleDESEncoding）；
+        物流文件的範例密碼剛好 8 碼，未另外說明。
         """
-        # Zero-padding (補 \x00 至 8 byte 倍數)
-        block_size = 8
-        pad_len = block_size - (len(plaintext.encode('utf-8')) % block_size)
-        if pad_len == block_size:
-            pad_len = 0
-        padded = plaintext.encode('utf-8') + b'\x00' * pad_len
+        return password[:8].ljust(8, '0')
 
-        cipher = DES3.new(self.key, DES3.MODE_ECB)
-        encrypted = cipher.encrypt(padded)
-        return encrypted.hex().upper()
+    # -- 加密 / 雜湊（文件附錄一、附錄二）--------------------------------------
 
-    # -- Operations -----------------------------------------------------------
+    def encrypt_3des(self, plaintext: str) -> str:
+        """3DES / ECB / Zero-Padding → Base64（文件附錄一）"""
+        data = plaintext.encode('utf-8')
+        data += b'\x00' * (-len(data) % 8)
+        return base64.b64encode(DES3.new(self.key, DES3.MODE_ECB).encrypt(data)).decode('ascii')
 
-    def create_logistic(self, order: LogisticOrder) -> PayNowLogisticResponse:
-        """建立物流訂單"""
-        # 組成欲加密的 query string
-        body_dict = {
-            'merID': self.mer_id,
-            'LogisticServiceID': order.service_id,
-            'GoodsName': order.goods_name,
-            'Amount': str(order.amount) if order.is_cod else '0',
-            'SenderName': order.sender_name,
-            'SenderPhone': order.sender_phone,
-            'SenderAddress': order.sender_address,
-            'ReceiverName': order.receiver_name,
-            'ReceiverPhone': order.receiver_phone,
-            'ReceiverAddress': order.receiver_address,
-            'ReceiverStoreID': order.receiver_store_id,
-            'ReturnURL': order.return_url,
-            'IsCOD': 'Y' if order.is_cod else 'N',
-            'TimeStr': str(int(time.time())),
+    def decrypt_3des(self, b64: str) -> str:
+        data = DES3.new(self.key, DES3.MODE_ECB).decrypt(base64.b64decode(b64))
+        return data.rstrip(b'\x00').decode('utf-8')
+
+    @staticmethod
+    def sha1_upper(text: str) -> str:
+        """文件附錄二：SHA-1 → 十六進位大寫"""
+        return hashlib.sha1(text.encode('utf-8')).hexdigest().upper()
+
+    def passcode(self, order_no: str, total_amount) -> str:
+        """PassCode = SHA1(user_account + OrderNo + TotalAmount + apicode) 大寫"""
+        return self.sha1_upper(f'{self.user_account}{order_no}{total_amount}{self.apicode}')
+
+    # -- 業務 API ---------------------------------------------------------------
+
+    def build_order_json(self, order: LogisticOrder) -> str:
+        """組出 Obj_Order JSON（緊湊格式、中文不跳脫，與文件範例相同）"""
+        total = str(order.total_amount)
+        obj = {
+            'user_account': self.user_account,
+            'apicode': self.apicode,
+            'Logistic_service': order.logistic_service,
+            'OrderNo': order.order_no,
+            'DeliverMode': order.deliver_mode,
+            'TotalAmount': total,
+            'Remark': order.remark,
+            'Description': order.description,
+            'receiver_storeid': order.receiver_storeid,
+            'receiver_storename': order.receiver_storename,
+            'return_storeid': order.return_storeid,
+            'Receiver_Name': order.receiver_name,
+            'Receiver_Phone': order.receiver_phone,
+            'Receiver_Email': order.receiver_email,
+            'Receiver_address': order.receiver_address,
+            'Sender_Name': order.sender_name,
+            'Sender_Phone': order.sender_phone,
+            'Sender_Email': order.sender_email,
+            'Sender_address': order.sender_address,
+            'PassCode': self.passcode(order.order_no, total),
         }
-        query = '&'.join(f'{k}={v}' for k, v in body_dict.items())
-        encrypted = self._encrypt_3des(query)
+        return json.dumps(obj, ensure_ascii=False, separators=(',', ':'))
 
-        # POST 至 PayNow
-        url = self.base_url + '/service/sevp_logistic.aspx'
-        try:
-            r = requests.post(
-                url,
-                data={
-                    'merID': self.mer_id,
-                    'EncStr': encrypted,
-                    'apicode': self.apicode,
-                },
-                timeout=30,
-            )
-            r.raise_for_status()
-        except requests.exceptions.RequestException as e:
-            raise ConnectionError(f'PayNow API 連線失敗: {e}')
-
-        # PayNow 物流回應通常為 form-data string 或簡易 JSON
-        try:
-            resp = r.json() if 'application/json' in r.headers.get('Content-Type', '') else self._parse_form(r.text)
-        except (ValueError, AttributeError):
-            return PayNowLogisticResponse(success=False, message=r.text[:200])
-
-        status = str(resp.get('status', resp.get('Status', '')))
+    def create_order(self, order: LogisticOrder) -> PayNowLogisticResponse:
+        """建立物流單：POST form JsonOrder = 3DES(Obj_Order JSON)（requests 會自動 urlencode）"""
+        if not 0 < order.total_amount <= 20000:
+            raise ValueError('TotalAmount 須為正整數且不可大於 20000')
+        r = requests.post(f'{self.base_url}/api/Orderapi/Add_Order',
+                          data={'JsonOrder': self.encrypt_3des(self.build_order_json(order))}, timeout=30)
+        r.raise_for_status()
+        resp = r.json()
         return PayNowLogisticResponse(
-            success=(status in ('1', 'SUCCESS', '0')),
-            status=status,
-            message=resp.get('message', resp.get('Message', '')),
-            logistic_trade_no=resp.get('LogisticTradeNo', resp.get('logistic_trade_no', '')),
+            success=resp.get('Status') == 'S',
+            status=resp.get('Status', ''),
+            error_msg=resp.get('ErrorMsg') or '',
+            logistic_number=resp.get('LogisticNumber', ''),
+            paymentno=resp.get('paymentno', ''),
+            validationno=resp.get('validationno', ''),
             raw=resp,
         )
 
-    @staticmethod
-    def _parse_form(text: str) -> Dict[str, any]:
-        """簡易 form-data parser"""
-        return {k: v for k, v in (kv.split('=', 1) for kv in text.split('&') if '=' in kv)}
+    def choose_store_form(self, logistic_service_id: str, return_url: str, order_no: str = '') -> Dict[str, Any]:
+        """
+        選擇取貨門市：由消費者瀏覽器以表單 POST（apicode 須 3DES 加密後傳送）
 
-    # -- Emap 選店 URL --------------------------------------------------------
+        選完後 PayNow POST 回 returnUrl：orderno、service、storeid、storename、storeaddress。
+        """
+        return {
+            'action': f'{self.base_url}/Member/Order/Choselogistics',
+            'fields': {
+                'user_account': self.user_account,
+                'orderno': order_no,
+                'apicode': self.encrypt_3des(self.apicode),
+                'Logistic_serviceID': logistic_service_id,
+                'returnUrl': return_url,
+            },
+        }
 
-    def get_emap_url(self, service_id: str, return_url: str) -> str:
-        """取得電子地圖選店頁 URL"""
-        return f'{self.base_url}/service/sevp_estore.aspx?merID={self.mer_id}&LogisticServiceID={service_id}&ReturnURL={return_url}'
+    def query_by_order_no(self, order_no: str) -> Dict[str, Any]:
+        """依商家訂單編號查詢（GET，sno 請帶 1）"""
+        r = requests.get(f'{self.base_url}/api/Orderapi/Get_Order_Info_orderno',
+                         params={'orderno': order_no, 'user_account': self.user_account, 'sno': 1}, timeout=30)
+        r.raise_for_status()
+        return r.json()
 
+    def cancel_order(self, logistic_number: str, order_no: str, total_amount) -> str:
+        """
+        取消物流單（HTTP DELETE，form 編碼；全家店到店無法取消）
 
-# ============================================================================
-# Examples
-# ============================================================================
-
-def example_711_b2c():
-    print('=== PayNow 7-11 大宗 B2C 取貨付款 ===\n')
-    svc = PayNowLogisticService(
-        mer_id='YOUR_MER_ID',
-        apicode='YOUR_APICODE',
-        key_3des=PayNowLogisticService.SAMPLE_KEY,
-        iv_3des=PayNowLogisticService.SAMPLE_IV,
-        is_test=True,
-    )
-    order = LogisticOrder(
-        service_id='20',  # 7-11 大宗 B2C 常溫
-        goods_name='測試商品',
-        amount=1500,
-        sender_name='店家',
-        sender_phone='0227000000',
-        sender_address='台北市信義區信義路五段7號',
-        receiver_name='王小明',
-        receiver_phone='0912345678',
-        receiver_store_id='123456',
-        return_url='https://your-shop.com/api/paynow/notify',
-        is_cod=True,
-    )
-    try:
-        resp = svc.create_logistic(order)
-        if resp.success:
-            print(f'[OK] LogisticTradeNo={resp.logistic_trade_no}')
-        else:
-            print(f'[FAIL] {resp.status}: {resp.message}')
-    except Exception as e:
-        print(f'[ERROR] {e}')
-
-
-def example_tcat_home():
-    print('\n=== PayNow 黑貓宅配 ===\n')
-    svc = PayNowLogisticService('YOUR_MER_ID', 'YOUR_APICODE',
-                                 PayNowLogisticService.SAMPLE_KEY,
-                                 PayNowLogisticService.SAMPLE_IV, is_test=True)
-    order = LogisticOrder(
-        service_id='50',  # 黑貓宅配
-        goods_name='生鮮食品',
-        amount=2000,
-        sender_name='店家',
-        sender_phone='0227000000',
-        sender_address='台北市信義區',
-        receiver_name='王小明',
-        receiver_phone='0912345678',
-        receiver_address='台北市大安區忠孝東路四段1號',
-        return_url='https://your-shop.com/api/paynow/notify',
-        is_cod=True,
-    )
-    try:
-        resp = svc.create_logistic(order)
-        if resp.success:
-            print(f'[OK] LogisticTradeNo={resp.logistic_trade_no}')
-        else:
-            print(f'[FAIL] {resp.message}')
-    except Exception as e:
-        print(f'[ERROR] {e}')
-
-
-def example_emap():
-    print('\n=== PayNow 電子地圖選店 ===\n')
-    svc = PayNowLogisticService('YOUR_MER_ID', 'YOUR_APICODE',
-                                 PayNowLogisticService.SAMPLE_KEY,
-                                 PayNowLogisticService.SAMPLE_IV, is_test=True)
-    url = svc.get_emap_url(service_id='40', return_url='https://your-shop.com/checkout/store-selected')
-    print(f'導轉至: {url}')
+        回傳字串：「S,訂單已取消」或「F,訂單取消失敗 失敗原因: …」
+        """
+        r = requests.delete(f'{self.base_url}/api/Orderapi/CancelOrder',
+                            data={'LogisticNumber': logistic_number, 'sno': 1,
+                                  'PassCode': self.passcode(order_no, total_amount)},
+                            timeout=30)
+        r.raise_for_status()
+        return r.text
 
 
 if __name__ == '__main__':
-    example_711_b2c()
-    example_tcat_home()
-    example_emap()
+    print('=== PayNow 7-11 交貨便（取貨不付款）===\n')
+    if not HAS_DEPENDENCIES:
+        print('需要安裝: pip install pycryptodome requests')
+        raise SystemExit(1)
+
+    svc = PayNowLogisticService('YOUR_ACCOUNT', 'YOUR_APICODE', '12345678', is_test=True)
+    form = svc.choose_store_form(SERVICE_711_C2C, 'https://your-shop.com/paynow/store-selected')
+    print(f'選店：POST {form["action"]}，欄位 {list(form["fields"])}')
+
+    order = LogisticOrder(
+        order_no='ORD20260923001', logistic_service=SERVICE_711_C2C, deliver_mode=DELIVER_MODE_NO_COD,
+        total_amount=200, receiver_storeid='993041', receiver_storename='松高門市',
+        receiver_name='王小明', receiver_phone='0912345678', receiver_email='buyer@example.com',
+        receiver_address='台北市信義區基隆路一段141號1樓', sender_name='寄件人',
+        sender_phone='0900000000', sender_email='shop@example.com', description='test',
+    )
+    print(f'建立物流單：POST {svc.base_url}/api/Orderapi/Add_Order，JsonOrder 長度 '
+          f'{len(svc.encrypt_3des(svc.build_order_json(order)))}')

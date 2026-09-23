@@ -49,7 +49,7 @@ LINE Pay 是 LINE Corporation 提供的電子支付服務，整合了信用卡�
 3. 自商家後台取得 **Channel ID** 與 **Channel Secret**
 4. 設定支付完成回調網址（`confirmUrl`、`cancelUrl`）
 
-> **注意**：本文件中部分簽章字串組合方式（string-to-sign）為依據 LINE Pay v3 慣例「推論」而來，**正式上線前請務必對照官方 LINE Pay v4 PDF 文件再次驗證**。本節將以 ⚠️ 標示需要驗證的內容。
+> **簽章公式已查證**：與 LINE Pay Developers 文件的公式一致，並與 yidas/line-pay-sdk-php `getAuthSignature()`、wpbr-linepay-tw 1.3.3 `generate_signature()` 實際執行結果逐字比對（`tests/vectors/linepay.json`）；下方 Python / Node.js 範例由 CI 驗證。v3 與 v4 的簽章方式相同，只有路徑前綴不同（官方 developers-pay.line.me/online/prerequisites 的 MAC 公式不分版本；API 變更紀錄 2025-11 亦寫 HMAC「same as online API v3, v4」）。
 
 ---
 
@@ -130,9 +130,7 @@ https://{host}/{apiPath}?{queryString}
 | `X-LINE-MerchantDeviceProfileId` | ○ | 裝置序號（多裝置場景） |
 | `X-LINE-MerchantDeviceType` | ○ | 裝置類型代碼 |
 
-### 簽章字串組合（string-to-sign）⚠️
-
-> **以下公式為依據 LINE Pay v3 慣例推論，正式上線前請對照官方 v4 PDF 驗證**。
+### 簽章字串組合（string-to-sign）
 
 **POST 請求**：
 
@@ -161,76 +159,69 @@ signature = Base64( HMAC-SHA256(key=ChannelSecret, message=data) )
 
 ### Python 簽章範例
 
+<!-- verify: linepay-sign -->
 ```python
+import base64
 import hashlib
 import hmac
-import base64
-import uuid
 import json
+import uuid
+
 import requests
 
 CHANNEL_ID = "1234567890"
 CHANNEL_SECRET = "your_channel_secret"
 BASE_URL = "https://sandbox-api-pay.line.me"
 
-def sign_request(api_path: str, body: str, nonce: str, channel_secret: str) -> str:
-    """LINE Pay v4 HMAC-SHA256 簽章（POST）
 
-    ⚠️ string-to-sign 組合方式請對照官方 v4 PDF 驗證
-    """
-    message = (channel_secret + api_path + body + nonce).encode("utf-8")
-    secret = channel_secret.encode("utf-8")
-    digest = hmac.new(secret, message, hashlib.sha256).digest()
+def sign_request(api_path: str, body_or_query: str, nonce: str, channel_secret: str) -> str:
+    """Base64(HMAC-SHA256(ChannelSecret, ChannelSecret + ApiPath + (body | query string) + Nonce))"""
+    message = (channel_secret + api_path + body_or_query + nonce).encode("utf-8")
+    digest = hmac.new(channel_secret.encode("utf-8"), message, hashlib.sha256).digest()
     return base64.b64encode(digest).decode("utf-8")
 
 
 def line_pay_post(api_path: str, payload: dict) -> dict:
+    # 簽章用的字串必須與實際送出的 body 逐字相同，所以只序列化一次
     body = json.dumps(payload, separators=(",", ":"), ensure_ascii=False)
     nonce = str(uuid.uuid4())
-    signature = sign_request(api_path, body, nonce, CHANNEL_SECRET)
-
     headers = {
         "Content-Type": "application/json",
         "X-LINE-ChannelId": CHANNEL_ID,
         "X-LINE-Authorization-Nonce": nonce,
-        "X-LINE-Authorization": signature,
+        "X-LINE-Authorization": sign_request(api_path, body, nonce, CHANNEL_SECRET),
     }
-
     resp = requests.post(BASE_URL + api_path, data=body.encode("utf-8"), headers=headers, timeout=30)
     return resp.json()
 ```
 
 ### Node.js 簽章範例
 
+<!-- verify: linepay-sign -->
 ```javascript
-const crypto = require('crypto');
-const { v4: uuidv4 } = require('uuid');
+import crypto from 'crypto';
 
-function signRequest(apiPath, body, nonce, channelSecret) {
-  // ⚠️ string-to-sign 組合請對照官方 v4 PDF 驗證
-  const message = channelSecret + apiPath + body + nonce;
-  return crypto
-    .createHmac('sha256', channelSecret)
-    .update(message)
-    .digest('base64');
+function signRequest(apiPath, bodyOrQuery, nonce, channelSecret) {
+  const message = channelSecret + apiPath + bodyOrQuery + nonce;
+  return crypto.createHmac('sha256', channelSecret).update(message).digest('base64');
 }
 
 async function linePayPost(apiPath, payload, { channelId, channelSecret, baseUrl }) {
-  const body = JSON.stringify(payload);
-  const nonce = uuidv4();
-  const signature = signRequest(apiPath, body, nonce, channelSecret);
-
+  const body = JSON.stringify(payload);          // 簽章與送出使用同一個字串
+  const nonce = crypto.randomUUID();
   const resp = await fetch(baseUrl + apiPath, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
       'X-LINE-ChannelId': channelId,
       'X-LINE-Authorization-Nonce': nonce,
-      'X-LINE-Authorization': signature,
+      'X-LINE-Authorization': signRequest(apiPath, body, nonce, channelSecret),
     },
     body,
   });
-  return resp.json();
+  // transactionId 為 19 位數，超過 Number.MAX_SAFE_INTEGER；JSON.parse 會失去精度，
+  // 需以字串方式讀取（例如先把數字替換成字串再 parse，或使用支援 BigInt 的 JSON 解析器）
+  return resp.text();
 }
 ```
 
@@ -802,20 +793,23 @@ LINE Pay v4 的回應永遠為 HTTP 200，實際結果在 JSON 的 `returnCode`�
 | `2101` | 參數錯誤 | 檢查必填欄位、長度、格式 |
 | `2102` | JSON 格式錯誤 | 確認 body 為合法 JSON、編碼為 UTF-8 |
 
-### 簽章 / 認證相關（需驗證）⚠️
+### 其他常見代碼（已查證）
 
-> 以下代碼於擷取資料中未明確列出，但實務上常見：
+> 依 LINE Pay Online API v3 官方結果代碼表（developers-pay.line.me/online-api-v3，2026-09 擷取）。
+> 舊版本表格曾以「推測」列出 1102 認證失敗、1133 授權過期、1170 退款金額錯誤等，與官方定義不符，已更正。
+> 簽章錯誤沒有專屬代碼可推論；完整清單見 `data/error-codes.csv`（59 筆）。
 
-| 代碼 | 推測說明 |
+| 代碼 | 官方說明 |
 |------|----------|
-| `1102` | 認證失敗（簽章錯誤） |
-| `1106` | 標頭資訊錯誤 |
-| `1133` | 授權過期 / 已 confirm |
-| `1141` | 帳號驗證失敗 |
+| `1102` | 消費者目前無法以 LINE Pay 交易 |
+| `1106` | Request header 資訊有誤 |
+| `1141` | 帳戶狀態有問題（EPI：商家可能未啟用 EPI；自動扣款：使用者可能已解除 regKey，需重新取得） |
 | `1142` | 餘額不足 |
-| `1170` | 退款金額錯誤 |
-| `1172` | 已退款交易 |
-| `1183` | 授權尚未完成，無法 capture |
+| `1170` | 會員帳戶餘額已變動 |
+| `1172` | 已存在相同 orderId 的交易 |
+| `1183` | 付款金額須高於設定的最低金額 |
+
+`1133` 不在官方代碼表中。
 
 ---
 

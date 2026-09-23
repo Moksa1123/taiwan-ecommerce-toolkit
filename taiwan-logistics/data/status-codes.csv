@@ -1,78 +1,427 @@
 provider,code,status_zh,status_en,category,description,next_action
-ecpay,300,訂單建立成功,Order Created,success,物流訂單已成功建立,等待出貨
-ecpay,310,訂單取消,Order Cancelled,cancelled,訂單已取消,
-ecpay,2030,已交寄,Package Shipped,in_transit,商品已交給物流商,等待配送
-ecpay,2063,配達完成,Delivered,delivered,宅配已送達收件人,
-ecpay,2067,消費者取貨完成,Pickup Completed,completed,消費者已至超商取貨,
-ecpay,2073,退貨中,Return in Progress,returning,退貨流程進行中,
-ecpay,2074,退貨完成,Return Completed,returned,退貨流程已完成,
-ecpay,2030,包裹已到店,Arrived at Store,at_store,包裹已送達指定門市,通知取貨
-ecpay,2031,包裹已取件,Picked Up by Carrier,picked_up,物流商已取件,
-ecpay,2032,轉運中,In Transit,in_transit,包裹配送中,
-ecpay,2061,配達失敗,Delivery Failed,failed,配送失敗,聯繫收件人
-ecpay,2070,包裹已退回,Package Returned,returned,包裹已退回寄件人,
-ecpay,3001,系統錯誤,System Error,error,系統發生錯誤,聯繫客服
-newebpay,300,訂單建立成功,Order Created,success,物流訂單已成功建立,等待出貨
-newebpay,310,訂單取消,Order Cancelled,cancelled,訂單已取消,
-newebpay,2030,已交寄,Package Shipped,in_transit,商品已交給物流商,等待配送
-newebpay,2063,配達完成,Delivered,delivered,宅配已送達收件人,
-newebpay,2067,消費者取貨完成,Pickup Completed,completed,消費者已至超商取貨,
-newebpay,2030,包裹已到店,Arrived at Store,at_store,包裹已送達指定門市,通知取貨
-newebpay,2031,包裹已取件,Picked Up by Carrier,picked_up,物流商已取件,
-newebpay,2032,轉運中,In Transit,in_transit,包裹配送中,
-newebpay,2061,配達失敗,Delivery Failed,failed,配送失敗,聯繫收件人
-newebpay,2070,包裹已退回,Package Returned,returned,包裹已退回寄件人,
-newebpay,3001,系統錯誤,System Error,error,系統發生錯誤,聯繫客服
-payuni,200,訂單建立成功,Order Created,success,物流訂單已成功建立,等待出貨
-payuni,201,訂單處理中,Processing,pending,訂單處理中,等待配送
-payuni,202,已交寄,Shipped,in_transit,商品已交給物流商,等待配送
-payuni,203,配達完成,Delivered,delivered,已送達收件人,
-payuni,204,取貨完成,Pickup Completed,completed,已至超商取貨,
-payuni,205,配達失敗,Delivery Failed,failed,配送失敗,聯繫收件人
-payuni,206,退貨中,Return in Progress,returning,退貨流程進行中,
-payuni,207,退貨完成,Return Completed,returned,退貨已完成,
-payuni,400,訂單錯誤,Order Error,error,訂單資料錯誤,檢查訂單參數
-payuni,500,系統錯誤,System Error,error,系統發生錯誤,聯繫客服
-smilepay,1,Status 1,Success,success,SmilePay 取號或操作成功,
-smilepay,21,待出貨,Awaiting Shipment,pending,商家尚未交件給物流商,商家備貨後交件
-smilepay,22,物流驗收中,Logistics Inspection,in_transit,物流中心收件並驗收,自動轉入配送
-smilepay,31,配送中,In Transit,in_transit,商品配送中（C2C 可能於此階段門市關轉）,
-smilepay,32,待取貨,At Store,at_store,包裹已配達門市，等待消費者取貨,通知消費者
-smilepay,33,異常訂單,Anomaly,error,配送過程發生異常,聯繫物流商
-smilepay,11,已取貨,Picked Up,completed,消費者已至超商取貨,
-smilepay,41,已取消,Cancelled,cancelled,訂單已被商家取消,
-smilepay,43,賠償訂單,Compensation,error,物流中心 / 黑貓宅配確認賠償訂單產生,跟進賠償流程
-smilepay,44,包裹遺失,Lost,error,包裹經 18 天協尋後無法找到,走遺失賠償流程
-smilepay,51,一般退貨,Standard Return,returning,退貨便 / 黑貓退貨,
-smilepay,52,買家未取,Customer Not Picked,returning,買家超過取貨期限未取件,通知商家
-smilepay,53,廠退,Vendor Return,returning,包裹退回物流中心 / 黑貓集貨所,
-smilepay,55,賣家未取,Vendor Not Picked,returning,商店未於期限內至退貨門市領取,
-smilepay,81,門市關轉,Store Closed,error,門市暫歇，需重選其他可配達門市,通知消費者重選
-pchomepay,SSND,出貨成功,Sender Shipped,in_transit,商家已交件並出貨,
-pchomepay,SATB,送達門市,Arrived,at_store,包裹已配達取貨門市,通知取貨
-pchomepay,RATC,已取貨,Received,completed,消費者已取貨完成,
-pchomepay,LINT,配送中,In Transit,in_transit,物流配送中,
-pchomepay,LGNO,出貨單未產生,No Shipment,pending,尚未取得出貨單編號,呼叫 /v1/logistic/batch
-pchomepay,WD,退倉,Returned to Warehouse,returning,包裹未取貨已退倉,
-pchomepay,90001,取號失敗,Get Shipment Failed,error,呼叫 /v1/logistic/batch 失敗,檢查 store_id 與必填欄位
-pchomepay,90002,門市不存在,Store Not Found,error,提供的 store_id 在系統中不存在,使用 PChomePay 提供之門市清單
-pchomepay,90004,訂單尚無物流,No Logistic,error,該訂單尚未呼叫過取號 API,呼叫 /v1/logistic/batch 取號
-paynow,1,Success,Success,success,PayNow 物流操作成功,
-paynow,M01,商家代號錯誤,Invalid merID,error,merID 在系統中不存在,確認商家代號
-paynow,A01,加密驗證失敗,Auth Failed,error,3DES 加密或 PassCode 驗證失敗,檢查 24-byte Key + 8-byte IV
-paynow,B01,訂單金額錯誤,Invalid Amount,error,Amount 超出範圍或格式錯誤,確認金額為正整數
-paynow,C01,訂單編號重複,Duplicate Order,error,paymentNo 已存在,使用唯一訂單編號
-paynow,LS01,7-11 大宗已出貨,7-11 Shipped,in_transit,7-11 大宗 B2C 已出貨,
-paynow,LS02,7-11 已配達門市,7-11 At Store,at_store,7-11 包裹已配達取貨門市,
-paynow,LS03,7-11 已取貨,7-11 Picked,completed,7-11 消費者取貨完成,
-paynow,LS11,全家已出貨,FAMI Shipped,in_transit,全家大宗 B2C 已出貨,
-paynow,LS12,全家已配達門市,FAMI At Store,at_store,全家大宗 B2C 已配達門市,通知取貨
-paynow,LS13,全家已取貨,FAMI Picked,completed,消費者已至全家門市取貨,
-paynow,LS21,黑貓已出貨,TCAT Shipped,in_transit,黑貓宅配已出貨,
-paynow,LS22,黑貓配達中,TCAT In Transit,in_transit,黑貓宅配配送中,
-paynow,LS23,黑貓配達完成,TCAT Delivered,delivered,黑貓宅配已送達,
-paynow,LE01,異常訂單,Anomaly,error,配送異常,聯繫客服
-paynow,LR01,退貨完成,Return Done,returned,退貨流程已完成,
+ecpay,300,訂單處理中(綠界已收到訂單資料),,pending,物流商：UNIMART、UNIMARTC2C、FAMI、FAMIC2C、HILIFE、HILIFEC2C、TCAT,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+ecpay,310,訂單上傳物流中,,pending,物流商：UNIMART、FAMI、FAMIC2C、HILIFE、HILIFEC2C、TCAT,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+ecpay,2000,已申請門市變更,,status,物流商：UNIMART、HILIFE、HILIFEC2C,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+ecpay,2001,訂單傳送超商成功,,status,物流商：UNIMART、HILIFE、HILIFEC2C,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+ecpay,2002,出貨單號不合規則,,error,物流商：UNIMART、HILIFE、HILIFEC2C,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+ecpay,2003,XML檔內出貨單號重複,,error,物流商：UNIMART、HILIFE、HILIFEC2C,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+ecpay,2004,出貨單號重複上傳使用(驗收時發現),,error,物流商：UNIMART、HILIFE、HILIFEC2C,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+ecpay,2005,日期格式不符,,error,物流商：UNIMART、HILIFE、HILIFEC2C,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+ecpay,2006,訂單金額或代收金額錯誤,,error,物流商：UNIMART、HILIFE、HILIFEC2C,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+ecpay,2007,商品類型為空,,status,物流商：UNIMART、HILIFE、HILIFEC2C,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+ecpay,2008,訂單為空,,status,物流商：UNIMART,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+ecpay,2009,門市店號為空,,status,物流商：UNIMART、HILIFE、HILIFEC2C,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+ecpay,2010,出貨日期為空,,status,物流商：UNIMART、HILIFE、HILIFEC2C,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+ecpay,2011,出貨金額為空,,status,物流商：UNIMART、HILIFE、HILIFEC2C,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+ecpay,2012,出貨編號不存在,,status,物流商：UNIMART、HILIFE、HILIFEC2C,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+ecpay,2013,母廠商不存在,,status,物流商：UNIMART、HILIFE、HILIFEC2C,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+ecpay,2014,子廠商不存在,,status,物流商：UNIMART、HILIFE、HILIFEC2C,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+ecpay,2015,出貨編號已存在(單筆),,status,物流商：UNIMART、HILIFE、HILIFEC2C,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+ecpay,2016,門市已關轉店，將進行退貨處理,,returning,物流商：UNIMART、HILIFE、HILIFEC2C,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+ecpay,2017,出貨日期不符合規定,,error,物流商：UNIMART、HILIFE、HILIFEC2C,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+ecpay,2018,服務類型不符規定(如只開取貨付款服務，卻使用純取貨服務),,error,物流商：UNIMART、HILIFE、HILIFEC2C,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+ecpay,2019,商品類型不符規定,,error,物流商：UNIMART、HILIFE、HILIFEC2C,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+ecpay,2020,廠商尚未申請店配服務,,status,物流商：UNIMART、HILIFE、HILIFEC2C,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+ecpay,2021,[UNIMART、HILIFEC2C] 同一批次出貨編號重複(批次) / [HILIFE] 同一批次出貨編號重覆(批次),,error,物流商：UNIMART、HILIFE、HILIFEC2C,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+ecpay,2022,出貨金額不符規定,,error,物流商：UNIMART、HILIFE、HILIFEC2C,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+ecpay,2023,取貨人姓名為空,,status,物流商：UNIMART、HILIFE、HILIFEC2C,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+ecpay,2024,訂單傳送超商成功,,status,物流商：UNIMART、HILIFE、HILIFEC2C,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+ecpay,2025,門市轉店號(舊門市店號已更新),,status,物流商：UNIMART、HILIFE、HILIFEC2C,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+ecpay,2026,無此門市，將進行退貨處理,,returning,物流商：UNIMART、HILIFE、HILIFEC2C,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+ecpay,2027,門市指定時間不配送，後續配送中,,status,物流商：UNIMART、HILIFE、HILIFEC2C,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+ecpay,2028,門市關轉店，3日內未更新SUP(新店號)便至退貨流程,,returning,物流商：UNIMART、HILIFE、HILIFEC2C,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+ecpay,2029,門市尚未開店,,status,物流商：UNIMART、HILIFE、HILIFEC2C,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+ecpay,2030,物流中心驗收成功,,status,物流商：UNIMART、UNIMARTC2C、HILIFE、HILIFEC2C,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+ecpay,2031,等待賣家出貨,,status,物流商：UNIMART、HILIFE、HILIFEC2C,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+ecpay,2032,包裝異常，請洽客服,,error,物流商：UNIMART、HILIFE、HILIFEC2C,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+ecpay,2033,包裹超材，退回賣家,,returning,物流商：UNIMART、HILIFE、HILIFEC2C,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+ecpay,2034,違禁品(退貨及罰款處理),,returning,物流商：UNIMART、HILIFE、HILIFEC2C,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+ecpay,2035,[UNIMART、HILIFEC2C] 訂單資料重複上傳 / [HILIFE] 訂單資料重覆上傳,,error,物流商：UNIMART、HILIFE、HILIFEC2C,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+ecpay,2036,訂單超過驗收期限（賣家未出貨）,,status,物流商：UNIMART、HILIFE、HILIFEC2C,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+ecpay,2037,取件門市關轉，請重選門市,,status,物流商：UNIMART、HILIFE、HILIFEC2C,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+ecpay,2038,標籤錯誤，廠退處理,,error,物流商：UNIMART、HILIFE、HILIFEC2C,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+ecpay,2039,標籤錯誤，廠退處理,,error,物流商：UNIMART、HILIFE、HILIFEC2C,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+ecpay,2040,標籤錯誤，廠退處理,,error,物流商：UNIMART、HILIFE、HILIFEC2C,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+ecpay,2041,物流中心理貨中,,status,物流商：UNIMART、UNIMARTC2C、HILIFE、HILIFEC2C,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+ecpay,2042,包裹遺失，進入賠償程序,,error,物流商：UNIMART、UNIMARTC2C、HILIFE、HILIFEC2C,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+ecpay,2043,門市指定時間不配送，後續配送中,,status,物流商：UNIMART、UNIMARTC2C、HILIFE、HILIFEC2C,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+ecpay,2044,賣家已取退回包裹,,returned,物流商：UNIMART,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+ecpay,2045,不正常到貨(商品提早到物流中心)，廠退處理,,returning,物流商：UNIMART、HILIFE、HILIFEC2C,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+ecpay,2046,貨件未取退回大智通物流中心,,returning,物流商：UNIMART、HILIFE、HILIFEC2C,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+ecpay,2047,正常二退(退貨時間延長，在判賠期限內退回),,returning,物流商：UNIMART、HILIFE、HILIFEC2C,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+ecpay,2048,包裝異常，請洽客服,,error,物流商：UNIMART、UNIMARTC2C、HILIFE、HILIFEC2C,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+ecpay,2049,門市關店，將進行退貨處理,,returning,物流商：UNIMART、HILIFE、HILIFEC2C,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+ecpay,2050,門市轉店，將進行退貨處理,,returning,物流商：UNIMART、HILIFE、HILIFEC2C,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+ecpay,2051,賣家要求提早退貨,,returning,物流商：UNIMART、UNIMARTC2C、HILIFE、HILIFEC2C,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+ecpay,2052,違禁品(退貨及罰款處理),,returning,物流商：UNIMART、HILIFE、HILIFEC2C,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+ecpay,2053,門市誤刷取件，包裹退回中,,returning,物流商：UNIMART、UNIMARTC2C、HILIFE、HILIFEC2C,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+ecpay,2054,賣家要求提早退貨,,returning,物流商：UNIMART、HILIFE、HILIFEC2C,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+ecpay,2055,包裹退至物流中心,,returning,物流商：UNIMART、HILIFE、HILIFEC2C,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+ecpay,2057,車輛故障，後續配送中,,status,物流商：UNIMART、HILIFE、HILIFEC2C,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+ecpay,2058,天候不佳，後續配送中,,status,物流商：UNIMART、UNIMARTC2C、HILIFE、HILIFEC2C,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+ecpay,2059,道路中斷，後續配送中,,status,物流商：UNIMART、HILIFE、HILIFEC2C,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+ecpay,2060,門市停業，廠退處理,,returning,物流商：UNIMART、HILIFE、HILIFEC2C,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+ecpay,2061,包裹異常，請洽客服,,error,物流商：UNIMART、UNIMARTC2C、HILIFE、HILIFEC2C,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+ecpay,2062,包裹門市確認中,,status,物流商：UNIMART、UNIMARTC2C、HILIFE、HILIFEC2C,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+ecpay,2063,包裹配達取件門市,,at_store,物流商：UNIMART、HILIFE、HILIFEC2C,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+ecpay,2065,買家未取包裹，將退回物流中心,,returning,物流商：UNIMART、HILIFE、HILIFEC2C,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+ecpay,2066,包裹確認中，將退回物流中心,,returning,物流商：UNIMART、UNIMARTC2C、HILIFE、HILIFEC2C,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+ecpay,2067,買家已到店取貨,,picked_up,物流商：UNIMART、UNIMARTC2C、HILIFE、HILIFEC2C,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+ecpay,2070,賣家已取退回包裹,,returned,物流商：UNIMART、UNIMARTC2C、HILIFE、HILIFEC2C,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+ecpay,2071,門市代碼格式錯誤,,error,物流商：UNIMART、HILIFE、HILIFEC2C,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+ecpay,2073,包裹配達取件門市,,at_store,物流商：UNIMART、UNIMARTC2C、HILIFE、HILIFEC2C,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+ecpay,2074,買家未取包裹，將退回物流中心,,returning,物流商：UNIMART、UNIMARTC2C、HILIFE、HILIFEC2C,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+ecpay,2072,包裹已退至原寄件門市,,returning,物流商：UNIMART、UNIMARTC2C、HILIFE、HILIFEC2C,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+ecpay,2075,賣家未取包裹，將退回物流中心,,returning,物流商：UNIMART、UNIMARTC2C、HILIFE、HILIFEC2C,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+ecpay,2076,買家未取包裹，已退回物流中心,,returned,物流商：UNIMART、UNIMARTC2C,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+ecpay,2094,包裹異常，請洽客服,,error,物流商：UNIMART、UNIMARTC2C,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+ecpay,2095,天候路況不佳,,status,物流商：UNIMART,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+ecpay,2098,包裹重新配達取件門市,,at_store,物流商：UNIMART、UNIMARTC2C,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+ecpay,4001,買家已到門市寄件,,status,物流商：UNIMART、FAMI、FAMIC2C、HILIFE、HILIFEC2C,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+ecpay,4002,退貨商品已至物流中心,,returning,物流商：UNIMART、FAMI、FAMIC2C、HILIFE、HILIFEC2C,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+ecpay,4003,退件包裹異常，協尋中,,error,物流商：UNIMART,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+ecpay,4004,包裹遺失，進入賠償程序,,error,物流商：UNIMART,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+ecpay,7017,取件包裹異常，協尋中,,error,物流商：UNIMART、UNIMARTC2C,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+ecpay,7018,包裹遺失，進入賠償程序,,error,物流商：UNIMART、UNIMARTC2C,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+ecpay,7021,包裹異常，請洽客服,,error,物流商：UNIMART,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+ecpay,7022,包裹異常，請洽客服,,error,物流商：UNIMART,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+ecpay,7023,包裹異常，請洽客服,,error,物流商：UNIMART,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+ecpay,7038,門市驗收異常，請洽客服,,error,物流商：UNIMART、UNIMARTC2C,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+ecpay,2068,賣家已到門市寄件,,status,物流商：UNIMARTC2C、HILIFE、HILIFEC2C,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+ecpay,2069,退貨便收件(商品退回指定C門市),,returning,物流商：UNIMARTC2C、HILIFE、HILIFEC2C,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+ecpay,2077,賣家未取包裹，待申請退回,,returning,物流商：UNIMARTC2C,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+ecpay,2078,買家未取包裹，已退回物流中心,,returned,物流商：UNIMARTC2C,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+ecpay,2079,買家未取貨退回物流中心-商品瑕疵(進物流中心),,returning,物流商：UNIMARTC2C,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+ecpay,2080,買家未取貨退回物流中心-超材,,returning,物流商：UNIMARTC2C,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+ecpay,2081,買家未取貨退回物流中心-違禁品(退貨及罰款處理),,returning,物流商：UNIMARTC2C,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+ecpay,2082,買家未取貨退回物流中心-訂單資料重複上傳,,error,物流商：UNIMARTC2C,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+ecpay,2083,買家未取貨退回物流中心-已過門市進貨日（未於指定時間內寄至物流中心),,returning,物流商：UNIMARTC2C,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+ecpay,2084,買家未取貨退回物流中心-第一段標籤規格錯誤,,error,物流商：UNIMARTC2C,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+ecpay,2085,買家未取貨退回物流中心-第一段標籤無法判讀,,error,物流商：UNIMARTC2C,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+ecpay,2086,買家未取貨退回物流中心-第一段標籤資料錯誤,,error,物流商：UNIMARTC2C,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+ecpay,2087,買家未取貨退回物流中心-物流中心理貨中,,returning,物流商：UNIMARTC2C,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+ecpay,2088,買家未取貨退回物流中心-商品遺失,,error,物流商：UNIMARTC2C,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+ecpay,2089,買家未取退回物流中心-門市指定不配送(六、日),,returning,物流商：UNIMARTC2C,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+ecpay,2092,買家未取退回物流中心-門市關轉,,returning,物流商：UNIMARTC2C,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+ecpay,2093,買家未取退回物流中心-爆量,,returning,物流商：UNIMARTC2C,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+ecpay,2096,賣家未取包裹，待申請退回,,returning,物流商：UNIMARTC2C,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+ecpay,2097,包裹宅配退回中,,returning,物流商：UNIMARTC2C,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+ecpay,2099,包裹重新配達寄件門市,,at_store,物流商：UNIMARTC2C,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+ecpay,2101,門市關轉店,,status,物流商：UNIMARTC2C、HILIFE、HILIFEC2C,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+ecpay,2102,門市舊店號更新,,status,物流商：UNIMARTC2C、HILIFE、HILIFEC2C,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+ecpay,2103,無取件門市資料,,status,物流商：UNIMARTC2C、HILIFE、HILIFEC2C,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+ecpay,2104,門市關轉，請重選門市,,status,物流商：UNIMARTC2C、HILIFE、HILIFEC2C,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+ecpay,2105,已申請門市變更,,status,物流商：UNIMARTC2C、FAMI、FAMIC2C、HILIFE、HILIFEC2C,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+ecpay,7013,訂單超過驗收期限（賣家未出貨）,,status,物流商：UNIMARTC2C、FAMI、FAMIC2C、HILIFE、HILIFEC2C,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+ecpay,7019,寄件包裹異常，協尋中,,error,物流商：UNIMARTC2C,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+ecpay,7020,包裹遺失，進入賠償程序,,error,物流商：UNIMARTC2C,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+ecpay,9999,訂單取消,,cancelled,物流商：UNIMARTC2C、HILIFE、HILIFEC2C,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+ecpay,3018,包裹配達取件門市,,at_store,物流商：FAMI、FAMIC2C、HILIFE、HILIFEC2C,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+ecpay,3019,包裹已退至原寄件門市,,returning,物流商：FAMI、FAMIC2C、HILIFE、HILIFEC2C,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+ecpay,3020,買家未取包裹，將退回物流中心,,returning,物流商：FAMI、FAMIC2C、HILIFE、HILIFEC2C,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+ecpay,3021,賣家未取包裹，待申請退回,,returning,物流商：FAMI、FAMIC2C、HILIFE、HILIFEC2C,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+ecpay,3022,買家已到店取貨,,picked_up,物流商：FAMI、FAMIC2C、HILIFE、HILIFEC2C,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+ecpay,3023,賣家已取退回包裹,,returned,物流商：FAMI、FAMIC2C、HILIFE、HILIFEC2C,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+ecpay,3024,物流中心驗收成功,,status,物流商：FAMI、FAMIC2C、HILIFE、HILIFEC2C,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+ecpay,3025,買家未取包裹，已退回物流中心,,returned,物流商：FAMI、FAMIC2C、HILIFE、HILIFEC2C,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+ecpay,3029,包裹已配達指定取件門市,,picked_up,物流商：FAMI、FAMIC2C、HILIFE、HILIFEC2C,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+ecpay,3031,包裹已退至指定寄件門市,,returning,物流商：FAMI、FAMIC2C、HILIFE、HILIFEC2C,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+ecpay,3032,賣家已到門市寄件,,status,物流商：FAMI、FAMIC2C、HILIFE、HILIFEC2C,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+ecpay,5009,包裹異常，請洽客服,,error,物流商：FAMI、FAMIC2C、HILIFE、HILIFEC2C,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+ecpay,7006,包裹遺失，進入賠償程序,,error,物流商：FAMI、FAMIC2C、HILIFE、HILIFEC2C,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+ecpay,7007,包裹遺失，進入賠償程序,,error,物流商：FAMI、FAMIC2C、HILIFE、HILIFEC2C,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+ecpay,7008,包裹破損，請洽客服,,error,物流商：FAMI、FAMIC2C、HILIFE、HILIFEC2C,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+ecpay,7009,包裝異常，請洽客服,,error,物流商：FAMI、FAMIC2C、HILIFE、HILIFEC2C,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+ecpay,7010,包裝異常，請洽客服,,error,物流商：FAMI、FAMIC2C、HILIFE、HILIFEC2C,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+ecpay,7011,取件門市關轉，請重選門市,,status,物流商：FAMI、FAMIC2C、HILIFE、HILIFEC2C,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+ecpay,7012,條碼錯誤，廠退處理,,error,物流商：FAMI、FAMIC2C、HILIFE、HILIFEC2C,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+ecpay,7014,等待賣家出貨,,status,物流商：FAMI、FAMIC2C、HILIFE、HILIFEC2C,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+ecpay,7015,條碼重複，請洽客服,,error,物流商：FAMI、FAMIC2C,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+ecpay,7016,包裹超材，退回賣家,,returning,物流商：FAMI、FAMIC2C、HILIFE、HILIFEC2C,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+ecpay,7032,寄件門市關轉，請重選門市,,status,物流商：FAMI、FAMIC2C、HILIFE、HILIFEC2C,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+ecpay,7033,資料異常,,error,物流商：FAMI,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+ecpay,7034,貨物進店發生異常，請洽客服,,error,物流商：FAMI、FAMIC2C,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+ecpay,7035,逾期未領，貨件銷毀,,status,物流商：FAMI、FAMIC2C,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+ecpay,7036,貨件破損，請洽客服,,error,物流商：FAMI、FAMIC2C,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+ecpay,7037,訂單上傳失敗,,error,物流商：FAMI,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+ecpay,311,訂單傳送物流成功,,status,物流商：HILIFE、HILIFEC2C、TCAT,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+ecpay,325,退貨訂單處理中(綠界已收到訂單資料),,returning,物流商：HILIFE、HILIFEC2C、TCAT,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+ecpay,3033,EC客戶要求提早退貨,,returning,物流商：HILIFE、HILIFEC2C,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+ecpay,5001,損壞，站所將協助退貨,,returning,物流商：HILIFE、HILIFEC2C、TCAT,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+ecpay,5002,遺失,,error,物流商：HILIFE、HILIFEC2C、TCAT,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+ecpay,5003,BASE列管(寄件人和收件人聯絡不到),,status,物流商：HILIFE、HILIFEC2C、TCAT,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+ecpay,5004,[HILIFE、HILIFEC2C] 賣家未取包裹，待申請退回 / [TCAT] 一般單退回,,returning,物流商：HILIFE、HILIFEC2C、TCAT,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+ecpay,5005,代收退貨,,returning,物流商：HILIFE、HILIFEC2C、TCAT,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+ecpay,5006,代收毀損,,status,物流商：HILIFE、HILIFEC2C、TCAT,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+ecpay,5007,代收遺失,,error,物流商：HILIFE、HILIFEC2C、TCAT,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+ecpay,5008,退貨配完,,returning,物流商：HILIFE、HILIFEC2C、TCAT,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+ecpay,7001,超大(通常發生於司機取件，不取件),,status,物流商：HILIFE、HILIFEC2C、TCAT,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+ecpay,7002,超重(通常發生於司機取件，不取件),,status,物流商：HILIFE、HILIFEC2C、TCAT,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+ecpay,7003,地址錯誤，聯繫收件人,,error,物流商：HILIFE、HILIFEC2C、TCAT,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+ecpay,7004,航班延誤,,status,物流商：HILIFE、HILIFEC2C、TCAT,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+ecpay,7005,託運單刪除,,status,物流商：HILIFE、HILIFEC2C、TCAT,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+ecpay,9001,退貨已取,,returned,物流商：HILIFE、HILIFEC2C,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+ecpay,9002,退貨已取,,returned,物流商：HILIFE、HILIFEC2C,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+ecpay,3001,轉運中(即集貨),,status,物流商：TCAT,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+ecpay,3002,不在家,,status,物流商：TCAT,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+ecpay,3003,配完,,status,物流商：TCAT,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+ecpay,3004,送錯BASE (送錯營業所),,status,物流商：TCAT,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+ecpay,3005,送錯CENTER(送錯轉運中心),,status,物流商：TCAT,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+ecpay,3006,配送中,,status,物流商：TCAT,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+ecpay,3007,公司行號休息,,status,物流商：TCAT,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+ecpay,3008,地址錯誤，聯繫收件人,,error,物流商：TCAT,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+ecpay,3009,搬家,,status,物流商：TCAT,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+ecpay,3010,轉寄(如原本寄到A，改寄B),,status,物流商：TCAT,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+ecpay,3011,暫置營業所(收件人要求至營業所取貨),,status,物流商：TCAT,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+ecpay,3012,到所(收件人要求到站所取件),,status,物流商：TCAT,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+ecpay,3013,當配下車(當日配送A至B營業所，已抵達B營業所),,status,物流商：TCAT,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+ecpay,3014,當配上車(當日配送從A至B營業所，已抵達A營業所),,status,物流商：TCAT,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+ecpay,3015,空運配送中,,status,物流商：TCAT,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+ecpay,3016,配完狀態刪除,,status,物流商：TCAT,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+ecpay,3017,退回狀態刪除(代收退貨刪除),,returning,物流商：TCAT,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+ecpay,3117,拒收(調查處理中),,error,物流商：TCAT,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+ecpay,3118,暫置營業所,,status,物流商：TCAT,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+ecpay,3119,暫置營業所(假日暫置),,status,物流商：TCAT,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+ecpay,3120,預備配送中,,status,物流商：TCAT,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+ecpay,3121,轉交門市配達,,at_store,物流商：TCAT,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+ecpay,3122,另約時間,,status,物流商：TCAT,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+ecpay,3123,逾期未取，門市刷退,,returning,物流商：TCAT,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+ecpay,3124,退貨包裹待司機取回,,returning,物流商：TCAT,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+ecpay,3125,司機已到門市取回,,status,物流商：TCAT,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+ecpay,7024,另約時間,,status,物流商：TCAT,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+ecpay,7025,電聯不上,,status,物流商：TCAT,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+ecpay,7026,資料有誤,,status,物流商：TCAT,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+ecpay,7027,無件可退,,returning,物流商：TCAT,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+ecpay,7028,超大超重,,status,物流商：TCAT,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+ecpay,7029,已回收,,status,物流商：TCAT,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+ecpay,7030,別家收走,,status,物流商：TCAT,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+ecpay,7031,商品未到,,status,物流商：TCAT,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+ecpay,3301,交寄郵件,,status,物流商：POST,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+ecpay,3302,各區郵局招領中,,status,物流商：POST,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+ecpay,3303,投遞不成功,,status,物流商：POST,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+ecpay,3304,依寄件人指示銷毀,,status,物流商：POST,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+ecpay,3305,拒收,,error,物流商：POST,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+ecpay,3306,退回投遞不成功,,returning,物流商：POST,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+ecpay,3307,i郵箱取件成功,,status,物流商：POST,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+ecpay,3308,投遞成功,,status,物流商：POST,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+ecpay,3309,投遞成功(收受人領取),,status,物流商：POST,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+ecpay,3310,已退回寄件人,,returned,物流商：POST,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+ecpay,3311,退回郵件投遞中,,returning,物流商：POST,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+ecpay,3312,貨件投遞中,,status,物流商：POST,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+ecpay,3313,郵局貨件運轉中,,status,物流商：POST,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+ecpay,3314,到達i郵箱,,status,物流商：POST,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+ecpay,3315,i郵箱逾期退招領,,returning,物流商：POST,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+ecpay,7300,郵局接收資料異常,,error,物流商：POST,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+ecpay,7301,郵件破損 - 無法投遞,,error,物流商：POST,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+ecpay,7302,郵件遺失,,error,物流商：POST,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+ecpay,320,郵局已確認資料，可列印,,status,物流商：POST,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）
+newebpay,SUCCESS,成功,,success,API 回應代碼（NDNS 1.0.0 附錄一）,
+newebpay,1101,新增物流訂單失敗,,error,API 回應代碼（NDNS 1.0.0 附錄一）,
+newebpay,1102,查無合作商店,,error,API 回應代碼（NDNS 1.0.0 附錄一）,
+newebpay,1103,已存在相同的商店訂單編號,,error,API 回應代碼（NDNS 1.0.0 附錄一）,
+newebpay,1104,無啟用對應物流商服務,,error,API 回應代碼（NDNS 1.0.0 附錄一）,
+newebpay,1105,門市資訊有誤或空白,,error,API 回應代碼（NDNS 1.0.0 附錄一）,
+newebpay,1106,不允許 IP,,error,API 回應代碼（NDNS 1.0.0 附錄一）,
+newebpay,1107,查無金流訂單資料,,error,API 回應代碼（NDNS 1.0.0 附錄一）,
+newebpay,1108,系統異常，無法查詢物流訂單資料,,error,API 回應代碼（NDNS 1.0.0 附錄一）,
+newebpay,1109,查無物流訂單資料,,error,API 回應代碼（NDNS 1.0.0 附錄一）,
+newebpay,1110,系統異常，無法修改物流訂單資料,,error,API 回應代碼（NDNS 1.0.0 附錄一）,
+newebpay,1111,該筆物流單狀態已無法修改內容,,error,API 回應代碼（NDNS 1.0.0 附錄一）,
+newebpay,1112,修改物流單失敗,,error,API 回應代碼（NDNS 1.0.0 附錄一）,
+newebpay,1113,系統異常，無法查詢物流貨態歷程資料,,error,API 回應代碼（NDNS 1.0.0 附錄一）,
+newebpay,1114,預付費用餘額不足,,error,API 回應代碼（NDNS 1.0.0 附錄一）,
+newebpay,1115,取寄貨單號失敗,,error,API 回應代碼（NDNS 1.0.0 附錄一）,
+newebpay,1116,該交易已建立寄貨單資訊,,error,API 回應代碼（NDNS 1.0.0 附錄一）,
+newebpay,2100,資料格式錯誤,,error,API 回應代碼（NDNS 1.0.0 附錄一）,
+newebpay,2101,版本錯誤,,error,API 回應代碼（NDNS 1.0.0 附錄一）,
+newebpay,2102,UID_ 不可為空,,error,API 回應代碼（NDNS 1.0.0 附錄一）,
+newebpay,2103,超商取貨付款的金額限 20000 元內,,error,API 回應代碼（NDNS 1.0.0 附錄一）,
+newebpay,2104,超商取貨不付款的金額限 20000 元內,,error,API 回應代碼（NDNS 1.0.0 附錄一）,
+newebpay,2105,一次最多僅能取得 10 筆寄貨單號,,error,API 回應代碼（NDNS 1.0.0 附錄一）,
+newebpay,2106,7-ELEVEN 一次最多僅能列印 18 筆標籤 全家一次最多僅能列印 8 筆標籤 萊爾富一次最多僅能列印 18 筆標籤 OK mart 一次最多僅能列印 18 筆標籤,,error,API 回應代碼（NDNS 1.0.0 附錄一）,
+newebpay,4101,IP 限制使用,,error,API 回應代碼（NDNS 1.0.0 附錄一）,
+newebpay,4103,HashData_資料檢查不符合,,error,API 回應代碼（NDNS 1.0.0 附錄一）,
+newebpay,4104,加密資料有誤，請確認 Hash_Key 與 Hash_IV 是否正確,,error,API 回應代碼（NDNS 1.0.0 附錄一）,
+newebpay,0_1,訂單未處理,,pending,RetId 貨態代碼，官方分類：待處理（NDNS 1.0.0 附錄二）,
+newebpay,0_2,物流單號已過期，請重新取號,,pending,RetId 貨態代碼，官方分類：待處理（NDNS 1.0.0 附錄二）,
+newebpay,0_3,取消出貨,,pending,RetId 貨態代碼，官方分類：待處理（NDNS 1.0.0 附錄二）,
+newebpay,1,訂單處理中,,pending,RetId 貨態代碼，官方分類：處理中（NDNS 1.0.0 附錄二）,
+newebpay,2,超商已收件,,in_transit,RetId 貨態代碼，官方分類：運送中（NDNS 1.0.0 附錄二）,
+newebpay,3,已重選門市，等待物流重新出貨,,in_transit,RetId 貨態代碼，官方分類：運送中（NDNS 1.0.0 附錄二）,
+newebpay,4,商品已進物流中心驗收完成,,in_transit,RetId 貨態代碼，官方分類：運送中（NDNS 1.0.0 附錄二）,
+newebpay,11,取貨門市關店，請重新選取,,in_transit,RetId 貨態代碼，官方分類：運送中（NDNS 1.0.0 附錄二）,
+newebpay,5,商品送達取貨門市,,at_store,RetId 貨態代碼，官方分類：待取貨（NDNS 1.0.0 附錄二）,
+newebpay,6,買家取貨完成,,completed,RetId 貨態代碼，官方分類：已完成（NDNS 1.0.0 附錄二）,
+newebpay,-1,商品已退回廠商,,completed,RetId 貨態代碼，官方分類：已完成（NDNS 1.0.0 附錄二）,
+newebpay,-6,已申請宅配退貨,,completed,RetId 貨態代碼，官方分類：已完成（NDNS 1.0.0 附錄二）,
+newebpay,-9,物流驗收異常等待回覆,,completed,RetId 貨態代碼，官方分類：已完成（NDNS 1.0.0 附錄二）,
+newebpay,-2,商品送達原寄件(指定退貨)門市,,returning,RetId 貨態代碼，官方分類：退貨/賠償（NDNS 1.0.0 附錄二）,
+newebpay,-3,商品退回物流中心驗收完成,,returning,RetId 貨態代碼，官方分類：退貨/賠償（NDNS 1.0.0 附錄二）,
+newebpay,-4,商品退往物流中心(買家未取),,returning,RetId 貨態代碼，官方分類：退貨/賠償（NDNS 1.0.0 附錄二）,
+newebpay,-5,商品即將退回(買家未取),,returning,RetId 貨態代碼，官方分類：退貨/賠償（NDNS 1.0.0 附錄二）,
+newebpay,-7,已同意/申請異常判賠,,returning,RetId 貨態代碼，官方分類：退貨/賠償（NDNS 1.0.0 附錄二）,
+newebpay,-10,商品已銷毀/拋棄,,returning,RetId 貨態代碼，官方分類：退貨/賠償（NDNS 1.0.0 附錄二）,
+newebpay,-11,商品已銷毀/拋棄,,returning,RetId 貨態代碼，官方分類：退貨/賠償（NDNS 1.0.0 附錄二）,
+newebpay,10,商品即將退回,,returning,RetId 貨態代碼，官方分類：退貨/賠償（NDNS 1.0.0 附錄二）,
+newebpay,12,退貨門市關店，請重新選取,,returning,RetId 貨態代碼，官方分類：退貨/賠償（NDNS 1.0.0 附錄二）,
+newebpay,13,商品退往物流中心(賣家未取),,returning,RetId 貨態代碼，官方分類：退貨/賠償（NDNS 1.0.0 附錄二）,
+newebpay,14,請申請宅配退貨,,returning,RetId 貨態代碼，官方分類：退貨/賠償（NDNS 1.0.0 附錄二）,
+newebpay,15,商品已銷毀/拋棄,,returning,RetId 貨態代碼，官方分類：退貨/賠償（NDNS 1.0.0 附錄二）,
+newebpay,16,請確認匯款帳號,,returning,RetId 貨態代碼，官方分類：退貨/賠償（NDNS 1.0.0 附錄二）,
+payuni,21,待出貨，已產宅配單號，等待商店出貨,,status,來源：wpbr-payuni-shipping 1.6.4 ShippingStatus.php（第三方外掛；PAYUNi 未公開物流文件）,
+payuni,22,物流驗收，物流中心驗收中(僅超商物流有此貨態),,status,來源：wpbr-payuni-shipping 1.6.4 ShippingStatus.php（第三方外掛；PAYUNi 未公開物流文件）,
+payuni,92,[PAYUNi] 待出貨，處理中，等待商店寄貨，僅超商物流有此貨態。出貨單編號傳送至上游物流服務廠商確認中 / [PAYUNi] 門市已收件 (C2C),,pending,來源：wpbr-payuni-shipping 1.6.4 ShippingStatus.php（第三方外掛；PAYUNi 未公開物流文件）,
+payuni,31,配送中，安排出貨中,,status,來源：wpbr-payuni-shipping 1.6.4 ShippingStatus.php（第三方外掛；PAYUNi 未公開物流文件）,
+payuni,32,待取貨，取件門市配達,,at_store,來源：wpbr-payuni-shipping 1.6.4 ShippingStatus.php（第三方外掛；PAYUNi 未公開物流文件）,
+payuni,11,已取貨，買家已取件,,picked_up,來源：wpbr-payuni-shipping 1.6.4 ShippingStatus.php（第三方外掛；PAYUNi 未公開物流文件）,
+smilepay,1,[超商 C2C] 已出貨 / [超商 B2C] 大智通配送中 / [黑貓宅配] 配送中,,status,Shipstatus（超商 C2C、超商 B2C、黑貓宅配）；來源：速買配官方 WooCommerce 模組 1.1.23,
+smilepay,2,已達門市,,status,Shipstatus（超商 C2C、超商 B2C）；來源：速買配官方 WooCommerce 模組 1.1.23,
+smilepay,3,[超商 C2C、超商 B2C] 消費者已取貨 / [黑貓宅配] 已配達,,picked_up,Shipstatus（超商 C2C、超商 B2C、黑貓宅配）；來源：速買配官方 WooCommerce 模組 1.1.23,
+smilepay,4,消費者退貨,,returning,Shipstatus（超商 C2C、超商 B2C）；來源：速買配官方 WooCommerce 模組 1.1.23,
+smilepay,5,[超商 C2C、超商 B2C] 已到退貨門市 / [黑貓宅配] 退貨中,,returning,Shipstatus（超商 C2C、超商 B2C、黑貓宅配）；來源：速買配官方 WooCommerce 模組 1.1.23,
+smilepay,6,退貨已取貨,,returned,Shipstatus（超商 C2C、超商 B2C）；來源：速買配官方 WooCommerce 模組 1.1.23,
+smilepay,7,[超商 C2C、超商 B2C] 退貨已至物流中心 / [黑貓宅配] 退完,,returning,Shipstatus（超商 C2C、超商 B2C、黑貓宅配）；來源：速買配官方 WooCommerce 模組 1.1.23,
+smilepay,11,已出貨,,status,Shipstatus（超商 B2C）；來源：速買配官方 WooCommerce 模組 1.1.23,
+smilepay,8,集貨失敗,,error,Shipstatus（黑貓宅配）；來源：速買配官方 WooCommerce 模組 1.1.23,
+smilepay,00002,不在家,,error,黑貓配送異常 DetailStatus；來源：速買配官方 WooCommerce 模組 1.1.23,
+smilepay,00007,損壞,,error,黑貓配送異常 DetailStatus；來源：速買配官方 WooCommerce 模組 1.1.23,
+smilepay,00008,公司行號休息,,error,黑貓配送異常 DetailStatus；來源：速買配官方 WooCommerce 模組 1.1.23,
+smilepay,00009,地址不明,,error,黑貓配送異常 DetailStatus；來源：速買配官方 WooCommerce 模組 1.1.23,
+smilepay,00010,搬家,,error,黑貓配送異常 DetailStatus；來源：速買配官方 WooCommerce 模組 1.1.23,
+smilepay,00011,拒收,,error,黑貓配送異常 DetailStatus；來源：速買配官方 WooCommerce 模組 1.1.23,
+smilepay,00014,遺失,,error,黑貓配送異常 DetailStatus；來源：速買配官方 WooCommerce 模組 1.1.23,
+smilepay,00015,暫置營業所,,error,黑貓配送異常 DetailStatus；來源：速買配官方 WooCommerce 模組 1.1.23,
+smilepay,00016,BASE列管,,error,黑貓配送異常 DetailStatus；來源：速買配官方 WooCommerce 模組 1.1.23,
+smilepay,00021,超大,,error,黑貓配送異常 DetailStatus；來源：速買配官方 WooCommerce 模組 1.1.23,
+smilepay,00022,超重,,error,黑貓配送異常 DetailStatus；來源：速買配官方 WooCommerce 模組 1.1.23,
+smilepay,00023,地址錯誤,,error,黑貓配送異常 DetailStatus；來源：速買配官方 WooCommerce 模組 1.1.23,
+smilepay,00025,航班延誤,,error,黑貓配送異常 DetailStatus；來源：速買配官方 WooCommerce 模組 1.1.23,
+smilepay,00219,暫置營業所,,error,黑貓配送異常 DetailStatus；來源：速買配官方 WooCommerce 模組 1.1.23,
+smilepay,001,自行寄回,,error,黑貓配送異常 DetailStatus；來源：速買配官方 WooCommerce 模組 1.1.23,
+smilepay,002,不退了,,error,黑貓配送異常 DetailStatus；來源：速買配官方 WooCommerce 模組 1.1.23,
+smilepay,003,尚未收到商品,,error,黑貓配送異常 DetailStatus；來源：速買配官方 WooCommerce 模組 1.1.23,
+smilepay,004,另約取件時間,,error,黑貓配送異常 DetailStatus；來源：速買配官方 WooCommerce 模組 1.1.23,
+smilepay,005,電話錯誤,,error,黑貓配送異常 DetailStatus；來源：速買配官方 WooCommerce 模組 1.1.23,
+smilepay,006,電話空號,,error,黑貓配送異常 DetailStatus；來源：速買配官方 WooCommerce 模組 1.1.23,
+smilepay,007,電話未接,,error,黑貓配送異常 DetailStatus；來源：速買配官方 WooCommerce 模組 1.1.23,
+smilepay,008,電話關機,,error,黑貓配送異常 DetailStatus；來源：速買配官方 WooCommerce 模組 1.1.23,
+smilepay,009,超大,,error,黑貓配送異常 DetailStatus；來源：速買配官方 WooCommerce 模組 1.1.23,
+smilepay,010,人不在,,error,黑貓配送異常 DetailStatus；來源：速買配官方 WooCommerce 模組 1.1.23,
+smilepay,011,已收走,,error,黑貓配送異常 DetailStatus；來源：速買配官方 WooCommerce 模組 1.1.23,
+smilepay,012,暫不退,,error,黑貓配送異常 DetailStatus；來源：速買配官方 WooCommerce 模組 1.1.23,
+smilepay,013,電話暫停使用,,error,黑貓配送異常 DetailStatus；來源：速買配官方 WooCommerce 模組 1.1.23,
+smilepay,014,商品送達時已拒收退回,,error,黑貓配送異常 DetailStatus；來源：速買配官方 WooCommerce 模組 1.1.23,
+smilepay,015,地址有誤,,error,黑貓配送異常 DetailStatus；來源：速買配官方 WooCommerce 模組 1.1.23,
+smilepay,016,無件可退,,error,黑貓配送異常 DetailStatus；來源：速買配官方 WooCommerce 模組 1.1.23,
+smilepay,017,PCHOME通知取消,,error,黑貓配送異常 DetailStatus；來源：速買配官方 WooCommerce 模組 1.1.23,
+smilepay,018,不知回收何物，自行與廠商聯絡,,error,黑貓配送異常 DetailStatus；來源：速買配官方 WooCommerce 模組 1.1.23,
+smilepay,019,要換貨，需廠商再聯繫,,error,黑貓配送異常 DetailStatus；來源：速買配官方 WooCommerce 模組 1.1.23,
+smilepay,020,僅需索取說明書，需廠商聯繫,,error,黑貓配送異常 DetailStatus；來源：速買配官方 WooCommerce 模組 1.1.23,
+smilepay,021,多日聯絡不到，需廠商再聯繫,,error,黑貓配送異常 DetailStatus；來源：速買配官方 WooCommerce 模組 1.1.23,
+smilepay,022,改住址,,error,黑貓配送異常 DetailStatus；來源：速買配官方 WooCommerce 模組 1.1.23,
+smilepay,023,區號錯誤,,error,黑貓配送異常 DetailStatus；來源：速買配官方 WooCommerce 模組 1.1.23,
+smilepay,024,其他,,error,黑貓配送異常 DetailStatus；來源：速買配官方 WooCommerce 模組 1.1.23,
+smilepay,025,已集貨,,error,黑貓配送異常 DetailStatus；來源：速買配官方 WooCommerce 模組 1.1.23,
+smilepay,026,廠商通知取消,,error,黑貓配送異常 DetailStatus；來源：速買配官方 WooCommerce 模組 1.1.23,
+smilepay,999,訂單復原,,status,黑貓配送異常 DetailStatus；來源：速買配官方 WooCommerce 模組 1.1.23,
+smilepay,P26,另約時間,,error,黑貓配送異常 DetailStatus；來源：速買配官方 WooCommerce 模組 1.1.23,
+smilepay,P27,電聯不上,,error,黑貓配送異常 DetailStatus；來源：速買配官方 WooCommerce 模組 1.1.23,
+smilepay,P28,資料有誤,,error,黑貓配送異常 DetailStatus；來源：速買配官方 WooCommerce 模組 1.1.23,
+smilepay,P29,無件可退,,error,黑貓配送異常 DetailStatus；來源：速買配官方 WooCommerce 模組 1.1.23,
+smilepay,P30,超大超重,,error,黑貓配送異常 DetailStatus；來源：速買配官方 WooCommerce 模組 1.1.23,
+smilepay,P31,已回收,,error,黑貓配送異常 DetailStatus；來源：速買配官方 WooCommerce 模組 1.1.23,
+smilepay,P32,別家收走,,error,黑貓配送異常 DetailStatus；來源：速買配官方 WooCommerce 模組 1.1.23,
+smilepay,P33,商品未到,,error,黑貓配送異常 DetailStatus；來源：速買配官方 WooCommerce 模組 1.1.23,
+pchomepay,LINT,訂單建立,Order created,pending,查詢物流單 status（PChomePay API 文件）,
+pchomepay,LGNO,已取號,Shipment number issued,pending,查詢物流單 status（PChomePay API 文件）,
+pchomepay,SSND,商品已至「寄件門店」,At sender store,in_transit,物流通知 logistic_status（PChomePay API 文件）,
+pchomepay,SATB,商品已至「取件門店」,At pickup store,at_store,物流通知 logistic_status（PChomePay API 文件）,
+pchomepay,RATC,商品已至「退件門店」,At return store,returning,物流通知 logistic_status（PChomePay API 文件）,
+pchomepay,WD,超商取貨等待商品交寄,Waiting for drop-off (CVS pickup),pending,交易狀態 status（PChomePay API 文件）,
+pchomepay,90001,物流狀態錯誤,invalid status,error,錯誤代碼（PChomePay API 文件）,
+pchomepay,90002,物流狀態歷程不存在,logistic status history not found,error,錯誤代碼（PChomePay API 文件）,
+pchomepay,90004,列印交寄單失敗,Print delivery note fail.,error,錯誤代碼（PChomePay API 文件）,
+paynow,0000,訂單已成立 等待出貨,,pending,C2C 貨態代碼（通用）；PayNow 物流技術文件 v2.5「貨態代碼表」,
+paynow,0101,商品已到寄件門市,,status,C2C 貨態代碼（通用）；PayNow 物流技術文件 v2.5「貨態代碼表」,
+paynow,0102,門市已更新寄件中,,status,C2C 貨態代碼（通用）；PayNow 物流技術文件 v2.5「貨態代碼表」,
+paynow,0103,門市已更新退件中,,returning,C2C 貨態代碼（通用）；PayNow 物流技術文件 v2.5「貨態代碼表」,
+paynow,4000,進驗成功,,status,C2C 貨態代碼（通用）；PayNow 物流技術文件 v2.5「貨態代碼表」,
+paynow,4031,商品破損退貨中,,error,C2C 貨態代碼（通用、OK）；PayNow 物流技術文件 v2.5「貨態代碼表」,
+paynow,4032,商品超才退貨中,,returning,C2C 貨態代碼（通用、OK）；PayNow 物流技術文件 v2.5「貨態代碼表」,
+paynow,4040,條碼資料錯誤,,error,C2C 貨態代碼（通用、OK）；PayNow 物流技術文件 v2.5「貨態代碼表」,
+paynow,5000,取件門市配達,,at_store,C2C 貨態代碼（通用）；PayNow 物流技術文件 v2.5「貨態代碼表」,
+paynow,5001,退件門市配達,,returning,C2C 貨態代碼（通用）；PayNow 物流技術文件 v2.5「貨態代碼表」,
+paynow,7101,取件門市關轉店,,status,C2C 貨態代碼（通用）；PayNow 物流技術文件 v2.5「貨態代碼表」,
+paynow,7201,退件門市關轉店,,returning,C2C 貨態代碼（通用）；PayNow 物流技術文件 v2.5「貨態代碼表」,
+paynow,8000,買家已取件,,picked_up,C2C 貨態代碼（通用）；PayNow 物流技術文件 v2.5「貨態代碼表」,
+paynow,8010,買家已取件-代收金額錯誤,,error,C2C 貨態代碼（通用）；PayNow 物流技術文件 v2.5「貨態代碼表」,
+paynow,8020,買家已取件商品有誤,,picked_up,C2C 貨態代碼（通用）；PayNow 物流技術文件 v2.5「貨態代碼表」,
+paynow,8100,賣家已取件,,picked_up,C2C 貨態代碼（通用）；PayNow 物流技術文件 v2.5「貨態代碼表」,
+paynow,8110,賣家已取件-代收金額錯誤,,error,C2C 貨態代碼（通用）；PayNow 物流技術文件 v2.5「貨態代碼表」,
+paynow,8120,賣家已取件商品有誤,,picked_up,C2C 貨態代碼（通用）；PayNow 物流技術文件 v2.5「貨態代碼表」,
+paynow,9411,貨態停滯,,status,C2C 貨態代碼（通用）；PayNow 物流技術文件 v2.5「貨態代碼表」,
+paynow,4019,物流中心未收到貨,,status,C2C 貨態代碼（7-11、全家）；PayNow 物流技術文件 v2.5「貨態代碼表」,
+paynow,4033,違禁品進行罰款退貨中,,returning,C2C 貨態代碼（7-11）；PayNow 物流技術文件 v2.5「貨態代碼表」,
+paynow,4034,同一個訂單兩包商品資料重複,,error,C2C 貨態代碼（7-11）；PayNow 物流技術文件 v2.5「貨態代碼表」,
+paynow,4035,已過門市進貨日,,status,C2C 貨態代碼（7-11）；PayNow 物流技術文件 v2.5「貨態代碼表」,
+paynow,4036,門市關轉請更新門市,,status,C2C 貨態代碼（7-11）；PayNow 物流技術文件 v2.5「貨態代碼表」,
+paynow,4037,條碼規格錯誤,,error,C2C 貨態代碼（7-11）；PayNow 物流技術文件 v2.5「貨態代碼表」,
+paynow,4038,條碼無法判讀,,error,C2C 貨態代碼（7-11）；PayNow 物流技術文件 v2.5「貨態代碼表」,
+paynow,4060,物流中心理貨中,,status,C2C 貨態代碼（7-11）；PayNow 物流技術文件 v2.5「貨態代碼表」,
+paynow,4061,商品遺失,,error,C2C 貨態代碼（7-11）；PayNow 物流技術文件 v2.5「貨態代碼表」,
+paynow,4062,門市不配送,,status,C2C 貨態代碼（7-11）；PayNow 物流技術文件 v2.5「貨態代碼表」,
+paynow,4063,包裹異常不配送,,error,C2C 貨態代碼（7-11）；PayNow 物流技術文件 v2.5「貨態代碼表」,
+paynow,4064,取消寄件再次寄送(直接轉 C 店),,cancelled,C2C 貨態代碼（7-11）；PayNow 物流技術文件 v2.5「貨態代碼表」,
+paynow,4065,提早轉 C 店-廠商因素(直接轉 C 店),,status,C2C 貨態代碼（7-11）；PayNow 物流技術文件 v2.5「貨態代碼表」,
+paynow,4066,提早轉 C 店-超商因素(直接轉 C 店),,status,C2C 貨態代碼（7-11）；PayNow 物流技術文件 v2.5「貨態代碼表」,
+paynow,5011,作業錯誤,,error,C2C 貨態代碼（7-11）；PayNow 物流技術文件 v2.5「貨態代碼表」,
+paynow,5012,車輛故障,,status,C2C 貨態代碼（7-11）；PayNow 物流技術文件 v2.5「貨態代碼表」,
+paynow,5013,天候不佳,,status,C2C 貨態代碼（7-11）；PayNow 物流技術文件 v2.5「貨態代碼表」,
+paynow,5014,道路中斷,,status,C2C 貨態代碼（7-11）；PayNow 物流技術文件 v2.5「貨態代碼表」,
+paynow,5015,門市停業,,status,C2C 貨態代碼（7-11）；PayNow 物流技術文件 v2.5「貨態代碼表」,
+paynow,5016,缺件,,status,C2C 貨態代碼（7-11）；PayNow 物流技術文件 v2.5「貨態代碼表」,
+paynow,5017,門市報缺,,status,C2C 貨態代碼（7-11）；PayNow 物流技術文件 v2.5「貨態代碼表」,
+paynow,5018,寄件貨態異常協尋中,,error,C2C 貨態代碼（7-11）；PayNow 物流技術文件 v2.5「貨態代碼表」,
+paynow,5019,取件包裹異常協尋中,,error,C2C 貨態代碼（7-11）；PayNow 物流技術文件 v2.5「貨態代碼表」,
+paynow,5102,管制品取件門市配達,,at_store,C2C 貨態代碼（7-11）；PayNow 物流技術文件 v2.5「貨態代碼表」,
+paynow,5103,管制品退件門市配達,,returning,C2C 貨態代碼（7-11）；PayNow 物流技術文件 v2.5「貨態代碼表」,
+paynow,5201,EC 收退,,returning,C2C 貨態代碼（7-11）；PayNow 物流技術文件 v2.5「貨態代碼表」,
+paynow,5202,交貨便收件,,status,C2C 貨態代碼（7-11）；PayNow 物流技術文件 v2.5「貨態代碼表」,
+paynow,5203,退貨便收件,,returning,C2C 貨態代碼（7-11）；PayNow 物流技術文件 v2.5「貨態代碼表」,
+paynow,5204,異常收退,,error,C2C 貨態代碼（7-11）；PayNow 物流技術文件 v2.5「貨態代碼表」,
+paynow,5301,取消寄件,,cancelled,C2C 貨態代碼（7-11）；PayNow 物流技術文件 v2.5「貨態代碼表」,
+paynow,5302,寄件遺失進行賠償程序,,error,C2C 貨態代碼（7-11）；PayNow 物流技術文件 v2.5「貨態代碼表」,
+paynow,5303,取件遺失進行賠償作業,,error,C2C 貨態代碼（7-11）；PayNow 物流技術文件 v2.5「貨態代碼表」,
+paynow,6002,待退貨請盡速取件,,returning,C2C 貨態代碼（7-11、全家）；PayNow 物流技術文件 v2.5「貨態代碼表」,
+paynow,6003,退至 7 總倉,,returning,C2C 貨態代碼（7-11）；PayNow 物流技術文件 v2.5「貨態代碼表」,
+paynow,7001,正常一退,,returning,C2C 貨態代碼（7-11）；PayNow 物流技術文件 v2.5「貨態代碼表」,
+paynow,7011,商品瑕疵,,status,C2C 貨態代碼（7-11）；PayNow 物流技術文件 v2.5「貨態代碼表」,
+paynow,7012,門市關店,,status,C2C 貨態代碼（7-11）；PayNow 物流技術文件 v2.5「貨態代碼表」,
+paynow,7013,門市轉店,,status,C2C 貨態代碼（7-11）；PayNow 物流技術文件 v2.5「貨態代碼表」,
+paynow,7014,廠商要求,,status,C2C 貨態代碼（7-11）；PayNow 物流技術文件 v2.5「貨態代碼表」,
+paynow,7015,商品為違禁品，將進行退貨處理與罰款,,returning,C2C 貨態代碼（7-11）；PayNow 物流技術文件 v2.5「貨態代碼表」,
+paynow,7021,刷 A 給 B,,status,C2C 貨態代碼（7-11）；PayNow 物流技術文件 v2.5「貨態代碼表」,
+paynow,7022,消費者要求,,status,C2C 貨態代碼（7-11）；PayNow 物流技術文件 v2.5「貨態代碼表」,
+paynow,7102,取件門市舊店號更新,,status,C2C 貨態代碼（7-11）；PayNow 物流技術文件 v2.5「貨態代碼表」,
+paynow,7104,取件門市臨時關轉店,,status,C2C 貨態代碼（7-11）；PayNow 物流技術文件 v2.5「貨態代碼表」,
+paynow,7202,退件門市舊店號更新,,returning,C2C 貨態代碼（7-11）；PayNow 物流技術文件 v2.5「貨態代碼表」,
+paynow,7203,退件門市無取件門市資料,,returning,C2C 貨態代碼（7-11）；PayNow 物流技術文件 v2.5「貨態代碼表」,
+paynow,7204,退件門市臨時關轉店,,returning,C2C 貨態代碼（7-11）；PayNow 物流技術文件 v2.5「貨態代碼表」,
+paynow,8077,退至 7 總倉,,returning,C2C 貨態代碼（7-11）；PayNow 物流技術文件 v2.5「貨態代碼表」,
+paynow,4067,小物流遺失,,error,C2C 貨態代碼（全家、萊爾富）；PayNow 物流技術文件 v2.5「貨態代碼表」,
+paynow,4068,門市遺失,,error,C2C 貨態代碼（全家、萊爾富）；PayNow 物流技術文件 v2.5「貨態代碼表」,
+paynow,4069,包裝廠不良 (滲漏 ),,status,C2C 貨態代碼（全家、萊爾富、OK）；PayNow 物流技術文件 v2.5「貨態代碼表」,
+paynow,4070,[全家、萊爾富] 門市反應商品包裝不良(滲漏) / [OK] 門市反應商品包裝不良,,status,C2C 貨態代碼（全家、萊爾富、OK）；PayNow 物流技術文件 v2.5「貨態代碼表」,
+paynow,4071,門市關店,,status,C2C 貨態代碼（全家、萊爾富）；PayNow 物流技術文件 v2.5「貨態代碼表」,
+paynow,4072,條碼資料重複,,error,C2C 貨態代碼（全家）；PayNow 物流技術文件 v2.5「貨態代碼表」,
+paynow,4073,7 日內未寄件單號失效,,status,C2C 貨態代碼（全家、萊爾富）；PayNow 物流技術文件 v2.5「貨態代碼表」,
+paynow,4074,貨物進店後發生異常提早退貨,,error,C2C 貨態代碼（全家、萊爾富、OK）；PayNow 物流技術文件 v2.5「貨態代碼表」,
+paynow,5200,商品運送中,,status,C2C 貨態代碼（全家）；PayNow 物流技術文件 v2.5「貨態代碼表」,
+paynow,6004,商品退回物流中心,,returning,C2C 貨態代碼（全家）；PayNow 物流技術文件 v2.5「貨態代碼表」,
+paynow,8002,退至全家總倉,,returning,C2C 貨態代碼（全家）；PayNow 物流技術文件 v2.5「貨態代碼表」,
+paynow,8079,退至萊爾富總倉,,returning,C2C 貨態代碼（萊爾富）；PayNow 物流技術文件 v2.5「貨態代碼表」,
+paynow,4030,無進貨資料,,status,C2C 貨態代碼（OK）；PayNow 物流技術文件 v2.5「貨態代碼表」,
+paynow,8076,退至 OK 總倉,,returning,C2C 貨態代碼（OK）；PayNow 物流技術文件 v2.5「貨態代碼表」,
 hct,集貨,Picked Up,Picked Up,picked_up,HCT 已收件,
 hct,卸集貨,Unloaded,Unloaded,in_transit,包裹進入轉運站,
 hct,發送,Dispatched,Dispatched,in_transit,包裹從站所發送,

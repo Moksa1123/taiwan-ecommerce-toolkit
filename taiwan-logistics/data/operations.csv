@@ -1,14 +1,14 @@
 operation,operation_zh,ecpay_endpoint,newebpay_endpoint,payuni_endpoint,method,required_fields,optional_fields,notes
-create_cvs,建立超商取貨訂單,/Express/Create,/API/Logistic/createShipment,/logistics/create,POST,"MerchantID,MerchantTradeNo,LogisticsType,LogisticsSubType,GoodsAmount,GoodsName,SenderName,SenderPhone,ReceiverName,ReceiverPhone,ReceiverStoreID,ServerReplyURL","IsCollection,CollectionAmount,ReturnStoreID",LogisticsType=CVS
-create_home,建立宅配訂單,/Express/Create,/API/Logistic/createShipment,/logistics/create,POST,"MerchantID,MerchantTradeNo,LogisticsType,LogisticsSubType,GoodsAmount,GoodsName,SenderName,SenderPhone,SenderAddress,ReceiverName,ReceiverPhone,ReceiverAddress,ServerReplyURL","Temperature,Distance,Specification,ScheduledDeliveryTime",LogisticsType=Home
-map,超商電子地圖,/Express/map,/API/Logistic/storeMap,,POST,"MerchantID,LogisticsType,LogisticsSubType,ServerReplyURL","IsCollection,ExtraData",開啟門市選擇頁面
+create_cvs,建立超商取貨訂單,/Express/Create,/API/Logistic/createShipment,/logistics/trade,POST,"MerchantID,MerchantTradeNo,LogisticsType,LogisticsSubType,GoodsAmount,GoodsName,SenderName,SenderPhone,ReceiverName,ReceiverPhone,ReceiverStoreID,ServerReplyURL","IsCollection,CollectionAmount,ReturnStoreID",LogisticsType=CVS
+create_home,建立宅配訂單,/Express/Create,/API/Logistic/createShipment,/home_delivery/trade,POST,"MerchantID,MerchantTradeNo,LogisticsType,LogisticsSubType,GoodsAmount,GoodsName,SenderName,SenderPhone,SenderAddress,ReceiverName,ReceiverPhone,ReceiverAddress,ServerReplyURL","Temperature,Distance,Specification,ScheduledDeliveryTime",LogisticsType=Home
+map,超商電子地圖,/Express/map,/API/Logistic/storeMap,/logistics/ship_map,POST,"MerchantID,LogisticsType,LogisticsSubType,ServerReplyURL","IsCollection,ExtraData",開啟門市選擇頁面
 query,查詢物流訂單,/Helper/QueryLogisticsTradeInfo/V2,/API/Logistic/queryShipment,/logistics/query,POST,"MerchantID,TimeStamp","AllPayLogisticsID,MerchantTradeNo",二擇一
-print,列印託運單,/helper/printTradeDocument,/API/Logistic/printLabel,,POST,"MerchantID,AllPayLogisticsID","LogisticsType,LogisticsSubType",需先建立訂單
+print,列印託運單,/helper/printTradeDocument,/API/Logistic/printLabel,/logistics/print_label,POST,"MerchantID,AllPayLogisticsID","LogisticsType,LogisticsSubType",需先建立訂單
 return,逆物流訂單,/Express/ReturnHome,/API/Logistic/returnShipment,,POST,"MerchantID,AllPayLogisticsID,ServerReplyURL","GoodsAmount,SenderName",退貨/換貨
 update_store,更新門市,/Express/UpdateStoreInfo,/API/Logistic/modifyShipment,,POST,"MerchantID,AllPayLogisticsID,ReceiverStoreID","CVSPaymentNo,CVSValidationNo",僅限超商取貨
 get_shipment_no,取得託運單號,,/API/Logistic/getShipmentNo,,POST,"MerchantID,LogisticsID",,NewebPay專用
 trace,追蹤物流,,/API/Logistic/trace,,POST,"MerchantID,LogisticsID",,NewebPay專用
-cancel,取消物流訂單,,,/logistics/cancel,POST,"MerID,MerTradeNo",,PAYUNi專用
+cancel,取消物流訂單,,,,POST,"MerID,MerTradeNo",,PAYUNi專用
 sp_cvs_get,SmilePay 超商取號,,,,POST,"Dcvc,Verify_key,Pay_zg,Pay_subzg,Data_id,Amount,Pur_name,Pur_telno,Roturl",,SmilePay /api/C2CPayment.asp 或 /api/B2CPayment.asp
 sp_tcat_get,SmilePay 黑貓取號,,,,POST,"Dcvc,Verify_key,Pay_zg=81/82/83,Data_id,Amount,Pur_name,Address",,"SmilePay /api/ezcatGetTrackNum.asp (Pay_zg=81 COD, =82 PICKUP, =83 逆物流)"
 sp_emap,SmilePay 電子地圖選店,,,,GET,"Dcvc,TypesServer,TypesInterface,RtURL",,SmilePay /api/LogisticsEmap.asp; TypesServer=711C2C/FAMIC2C/711B2C/FAMIB2C × MOBILE/WEB
@@ -19,10 +19,10 @@ pcp_logistic_yet,PChomePay 查詢未出貨,,,,GET,,,/v1/logistic/yet
 pcp_logistic_store_return,PChomePay 查詢未取貨,,,,GET,"date YYYYMMDD",,/v1/logistic/store_return/{date}
 pcp_logistic_accounting,PChomePay 物流手續費對帳,,,,GET,"date YYYYMMDD",,/v1/logistic/accounting/{date} 回應為 NDJSON
 pcp_logistic_compensation,PChomePay 賠款入帳查詢,,,,GET,"date YYYYMM",,/v1/logistic/compensation/{date}
-pn_logistic_create,PayNow 建立物流訂單,,,,POST,"ServiceID,GoodsName,Amount,Receiver*,Sender*",,PayNow /service/sevp_logistic.aspx; 11 條產品線各有不同 ServiceID
-pn_logistic_emap,PayNow 電子地圖選店,,,,GET,"merID,LogisticServiceID,ReturnURL",,PayNow 物流選店頁面導轉
+pn_logistic_create,PayNow 建立物流訂單,,,,POST,JsonOrder（Obj_Order JSON 以 3DES/ECB/Zero-Padding 加密後 Base64）,,PayNow /api/Orderapi/Add_Order；Logistic_service 01/02/03/04/05/06/07/08/10/21-24；PassCode=SHA1(user_account+OrderNo+TotalAmount+apicode)
+pn_logistic_emap,PayNow 電子地圖選店,,,,POST,"user_account,orderno,apicode(3DES),Logistic_serviceID,returnUrl",,PayNow /Member/Order/Choselogistics（瀏覽器表單）
 pn_logistic_print,PayNow 列印託運單,,,,POST,"LogisticTradeNo",,PayNow 列印託運單
-pn_logistic_status,PayNow 查詢貨況,,,,POST,"LogisticTradeNo",,PayNow 查詢物流狀態
+pn_logistic_status,PayNow 查詢貨況,,,,GET,"orderno,user_account,sno=1",,PayNow /api/Orderapi/Get_Order_Info_orderno
 hct_query_url,HCT 查貨網頁串接,,,,GET,"加密字串,v",,HCT 直連 /phone/searchGoods_Main.aspx?no=加密字串&v=xx (URL 嵌入)
 hct_query_xml,HCT 多筆貨號查詢,,,,POST,"加密後XML",,HCT 直連 /phone/searchGoods_Main_Xml.ashx (XML POST)
 hct_transdata,HCT 傳入託運資料,,,,POST,"esdate,epino,epdcl1,epdcl2,..",,HCT 直連 TransData (DataSet/JSON/XML 三種變體)

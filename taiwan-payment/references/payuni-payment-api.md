@@ -30,6 +30,10 @@
 
 ## API 端點總覽
 
+> **端點路徑依據**：統一金流官方 PHP SDK（github.com/payuni/PHP_SDK）`PayuniApi::UniversalTrade()` 的對照表，
+> 並與 wpbr-payuni-payment 1.7.1 實際呼叫的網址一致。SDK 的操作名稱（如 `trade_query`）**不是**網址路徑，
+> 實際路徑是 `trade/query`；舊版本文件曾把兩者混淆。
+
 ### 基礎 API 路徑
 
 | 環境 | 基礎路徑 |
@@ -52,26 +56,26 @@
 
 | 功能 | 端點路徑 | 說明 |
 |------|----------|------|
-| 交易查詢 | `/trade_query` | 查詢交易狀態 |
-| 請退款 | `/trade_close` | 信用卡請款/退款 |
-| 取消授權 | `/trade_cancel` | 取消信用卡授權 |
+| 交易查詢 | `/trade/query` | 查詢交易狀態 |
+| 請退款 | `/trade/close` | 信用卡請款/退款 |
+| 取消授權 | `/trade/cancel` | 取消信用卡授權 |
 | CVS 取消 | `/cancel_cvs` | 取消超商代碼 |
 
 ### 信用卡約定 (Token) 端點
 
 | 功能 | 端點路徑 | 說明 |
 |------|----------|------|
-| Token 查詢 | `/credit_bind_query` | 查詢約定信用卡 |
-| Token 取消 | `/credit_bind_cancel` | 取消約定信用卡 |
+| Token 查詢 | `/credit_bind/query` | 查詢約定信用卡 |
+| Token 取消 | `/credit_bind/cancel` | 取消約定信用卡 |
 
 ### 特殊退款端點
 
 | 功能 | 端點路徑 | 說明 |
 |------|----------|------|
-| 愛金卡退款 | `/trade_refund_icash` | iCash 退款 |
-| AFTEE 退款 | `/trade_refund_aftee` | AFTEE 退款 |
-| AFTEE 確認 | `/trade_confirm_aftee` | AFTEE 確認交易 |
-| LINE Pay 退款 | `/trade_refund_linepay` | LINE Pay 退款 |
+| 愛金卡退款 | `/trade/common/refund/icash` | iCash 退款 |
+| AFTEE 退款 | `/trade/common/refund/aftee` | AFTEE 退款 |
+| AFTEE 確認 | `/trade/common/confirm/aftee` | AFTEE 確認交易 |
+| LINE Pay 退款 | `/trade/common/refund/linepay` | LINE Pay 退款 |
 
 ---
 
@@ -110,159 +114,129 @@ https://sandbox-api.payuni.com.tw/api/{endpoint}
 
 ## 加密機制
 
-PayUni 採用 **AES-256-GCM** 加密與 **SHA256 HMAC** 驗證。
+PayUni 採用 **AES-256-GCM** 加密與 **SHA256** 驗證碼（HashInfo）。
+
+> 以下演算法已與統一金流官方外掛 PAYUNi_for_WooCommerce 1.2.8 `class-payuni.php` 的
+> `Encrypt()` / `Decrypt()` / `HashInfo()` 逐位元組比對（repo 的 `tests/vectors/payuni.json`）。
+
+### 格式
+
+```
+EncryptInfo = hex( base64(AES-256-GCM 密文) + ":::" + base64(tag) )
+HashInfo    = strtoupper( sha256( HashKey + EncryptInfo + HashIV ) )
+```
+
+常見錯誤（皆會被 PAYUNi 拒絕）：
+
+| 錯誤寫法 | 問題 |
+|---|---|
+| `hex(密文 + tag)` | 少了 base64 與 `:::` 分隔 |
+| `base64(密文) + ":::" + base64(tag)`（沒有最外層 hex） | 少了最外層 `bin2hex` |
+| `sha256(EncryptInfo + HashKey + HashIV)` | HashKey 必須在最前面 |
+
+- IV（HashIV）直接當 GCM nonce 使用，長度 16 bytes（官方外掛即如此），不是 12 bytes
+- tag 為 16 bytes，base64 後為 24 字元
 
 ### 加密流程
 
 1. **準備參數** - 組合所有請求參數
-2. **URL Encode** - 將參數轉為 Query String
-3. **AES-256-GCM 加密** - 使用 Hash Key 和 Hash IV 加密
-4. **產生 HashInfo** - 使用 SHA256 計算驗證碼
-5. **發送請求** - 將加密資料 POST 至 API
+2. **http_build_query** - 將參數轉為 Query String
+3. **AES-256-GCM 加密** - 以 HashKey 為金鑰、HashIV 為 nonce
+4. **組合 EncryptInfo** - `bin2hex(base64密文 . ':::' . base64(tag))`
+5. **產生 HashInfo** - `sha256(HashKey . EncryptInfo . HashIV)` 轉大寫
+6. **發送請求** - 將 `MerID`、`Version`、`EncryptInfo`、`HashInfo` POST 至 API
 
 ### PHP 加密範例
 
+與官方外掛相同的寫法（`openssl_encrypt` 的 options 傳 `0`，回傳值即為 base64 密文）：
+
+<!-- verify: payuni -->
 ```php
 <?php
 
 class PayuniEncryption
 {
-    private string $merKey;
-    private string $merIV;
+    public function __construct(private string $hashKey, private string $hashIV) {}
 
-    public function __construct(string $merKey, string $merIV)
-    {
-        $this->merKey = $merKey;
-        $this->merIV = $merIV;
-    }
-
-    /**
-     * AES-256-GCM 加密
-     */
     public function encrypt(array $params): string
     {
-        // 1. 組合 Query String
-        $queryString = http_build_query($params);
-
-        // 2. AES-256-GCM 加密
         $tag = '';
         $encrypted = openssl_encrypt(
-            $queryString,
+            http_build_query($params),
             'aes-256-gcm',
-            $this->merKey,
-            OPENSSL_RAW_DATA,
-            $this->merIV,
-            $tag,
-            '',
-            16
-        );
-
-        // 3. 組合加密結果 (base64(密文) + ":::" + base64(tag))
-        $encryptInfo = base64_encode($encrypted) . ':::' . base64_encode($tag);
-
-        return $encryptInfo;
-    }
-
-    /**
-     * AES-256-GCM 解密
-     */
-    public function decrypt(string $encryptInfo): array
-    {
-        // 1. 分離 base64 編碼的密文和 tag
-        $parts = explode(':::', $encryptInfo);
-        if (count($parts) !== 2) {
-            throw new Exception('格式錯誤: 缺少 ":::" 分隔符');
-        }
-
-        // 2. Base64 解碼
-        $encrypted = base64_decode($parts[0]);
-        $tag = base64_decode($parts[1]);
-
-        // 3. AES-256-GCM 解密
-        $decrypted = openssl_decrypt(
-            $encrypted,
-            'aes-256-gcm',
-            $this->merKey,
-            OPENSSL_RAW_DATA,
-            $this->merIV,
+            trim($this->hashKey),
+            0,                      // 回傳 base64 密文
+            trim($this->hashIV),
             $tag
         );
+        return trim(bin2hex($encrypted . ':::' . base64_encode($tag)));
+    }
 
-        // 4. 解析 Query String
-        parse_str($decrypted, $result);
-
+    public function decrypt(string $encryptInfo): array
+    {
+        [$encryptData, $tag] = explode(':::', hex2bin($encryptInfo), 2);
+        $plain = openssl_decrypt(
+            $encryptData,
+            'aes-256-gcm',
+            trim($this->hashKey),
+            0,
+            trim($this->hashIV),
+            base64_decode($tag)
+        );
+        if ($plain === false) {
+            throw new RuntimeException('解密失敗：tag 驗證不通過（資料遭竄改或金鑰錯誤）');
+        }
+        parse_str($plain, $result);
         return $result;
     }
 
-    /**
-     * 產生 HashInfo (SHA256)
-     * 注意: Key 必須在前面 (HashKey + EncryptInfo + HashIV)
-     */
     public function hashInfo(string $encryptInfo): string
     {
-        $raw = $this->merKey . $encryptInfo . $this->merIV;
-        return strtoupper(hash('sha256', $raw));
+        return strtoupper(hash('sha256', $this->hashKey . $encryptInfo . $this->hashIV));
     }
 }
 ```
 
 ### Python 加密範例
 
+<!-- verify: payuni -->
 ```python
-"""PayUni AES-256-GCM 加密"""
+"""PayUni AES-256-GCM 加密（與官方外掛逐位元組相同）"""
+
+import base64
+import hashlib
+import hmac
+from urllib.parse import urlencode, parse_qs
 
 from Crypto.Cipher import AES
-from urllib.parse import urlencode, parse_qs
-import hashlib
 
 
 class PayuniEncryption:
-    def __init__(self, mer_key: str, mer_iv: str):
-        self.mer_key = mer_key.encode('utf-8')
-        self.mer_iv = mer_iv.encode('utf-8')
+    def __init__(self, hash_key: str, hash_iv: str):
+        self.hash_key = hash_key
+        self.hash_iv = hash_iv
 
     def encrypt(self, params: dict) -> str:
-        """AES-256-GCM 加密"""
-        import base64
-        # 1. 組合 Query String
-        query_string = urlencode(params)
-
-        # 2. AES-256-GCM 加密
-        cipher = AES.new(self.mer_key, AES.MODE_GCM, nonce=self.mer_iv)
-        encrypted, tag = cipher.encrypt_and_digest(query_string.encode('utf-8'))
-
-        # 3. 組合加密結果 (base64(密文) + ":::" + base64(tag))
-        encrypted_b64 = base64.b64encode(encrypted).decode('utf-8')
-        tag_b64 = base64.b64encode(tag).decode('utf-8')
-        encrypt_info = encrypted_b64 + ':::' + tag_b64
-
-        return encrypt_info
+        cipher = AES.new(self.hash_key.encode(), AES.MODE_GCM, nonce=self.hash_iv.encode())
+        encrypted, tag = cipher.encrypt_and_digest(urlencode(params).encode('utf-8'))
+        return (base64.b64encode(encrypted) + b':::' + base64.b64encode(tag)).hex()
 
     def decrypt(self, encrypt_info: str) -> dict:
-        """AES-256-GCM 解密"""
-        import base64
-        # 1. 分離 base64 編碼的密文和 tag
-        parts = encrypt_info.split(':::')
-        if len(parts) != 2:
-            raise ValueError('格式錯誤: 缺少 ":::" 分隔符')
-
-        # 2. Base64 解碼
-        encrypted = base64.b64decode(parts[0])
-        tag = base64.b64decode(parts[1])
-
-        # 3. AES-256-GCM 解密
-        cipher = AES.new(self.mer_key, AES.MODE_GCM, nonce=self.mer_iv)
-        decrypted = cipher.decrypt_and_verify(encrypted, tag)
-
-        # 4. 解析 Query String
-        result = dict(parse_qs(decrypted.decode('utf-8')))
-        return {k: v[0] for k, v in result.items()}
+        encrypted_b64, tag_b64 = bytes.fromhex(encrypt_info).split(b':::', 1)
+        cipher = AES.new(self.hash_key.encode(), AES.MODE_GCM, nonce=self.hash_iv.encode())
+        # tag 不符會拋出 ValueError
+        plain = cipher.decrypt_and_verify(base64.b64decode(encrypted_b64), base64.b64decode(tag_b64))
+        return {k: v[0] for k, v in parse_qs(plain.decode('utf-8'), keep_blank_values=True).items()}
 
     def hash_info(self, encrypt_info: str) -> str:
-        """產生 HashInfo (SHA256) - 注意: Key 必須在前面"""
-        raw = self.mer_key.decode() + encrypt_info + self.mer_iv.decode()
+        raw = self.hash_key + encrypt_info + self.hash_iv   # HashKey 在前
         return hashlib.sha256(raw.encode('utf-8')).hexdigest().upper()
+
+    def verify(self, encrypt_info: str, hash_info: str) -> bool:
+        return hmac.compare_digest(self.hash_info(encrypt_info), hash_info.upper())
 ```
+
+完整可執行版本見 `examples/payuni-payment-example.py`。
 
 ---
 
@@ -333,12 +307,16 @@ POST /api/upp
 | `MerTradeNo` | String | ● | 訂單編號 |
 | `TradeAmt` | Integer | ● | 交易金額 |
 | `Timestamp` | Integer | ● | Unix 時間戳 |
-| `ExpireDate` | Integer | 否 | 繳費期限 (天)，`1`~`180`，預設 `7` |
+| `ExpireDate` | String | 否 | 繳費期限日期 `YYYY-MM-DD`（官方外掛以「今天 + 後台設定天數」計算），不是天數 |
 | `ProdDesc` | String | 否 | 商品描述 |
 | `UsrMail` | String | 否 | 消費者 Email |
 | `ReturnURL` | String | 否 | 前台返回網址 |
 | `NotifyURL` | String | 否 | 背景通知網址 |
 | `Lang` | String | 否 | 語系 `zh-tw` / `en` |
+
+| `Credit` / `ATM` / `CVS` / … | Integer | 否 | 付款方式開關，值為 `1`；欄位名稱見文末「UPP 開關欄位」 |
+
+外層表單欄位為 `MerID`、`Version`（`1.0`）、`EncryptInfo`、`HashInfo`，由**消費者瀏覽器**以表單 POST 送出（官方 SDK 的 `HtmlApi()` 即自動送出的表單），不是伺服器端呼叫。
 
 ### 支援的付款方式
 
@@ -464,230 +442,70 @@ POST /api/atm
 | `BankType` | String | 否 | 指定銀行 (參見下表) |
 | `NotifyURL` | String | 否 | 背景通知網址 |
 
-### BankType 銀行代碼
+### BankType 銀行代碼（回應欄位）
+
+虛擬帳號所屬銀行，以**銀行代碼**回傳（依 wpbr-payuni-payment 1.7.1 `Utils/BankType.php`）：
 
 | 代碼 | 銀行 |
 |------|------|
-| `FIRST` | 第一銀行 |
-| `ESUN` | 玉山銀行 |
-| `TAISHIN` | 台新銀行 |
-| `CATHAY` | 國泰世華 |
-| `CHINATRUST` | 中國信託 |
+| `004` | 臺灣銀行 |
+| `013` | 國泰世華 |
+| `822` | 中國信託 |
 
-### 回應參數 (解密後)
+### Version 與回應格式
 
-| 參數 | 說明 |
-|------|------|
-| `TradeNo` | PayUni 交易編號 |
-| `BankCode` | 銀行代碼 (3 碼) |
-| `vAccount` | 虛擬帳號 (14~16 碼) |
-| `ExpireDate` | 繳費期限 `yyyy/MM/dd` |
+wpbr-payuni-payment 1.7.1 以 `Version: 2.0` 呼叫本端點，解密後交易資料在 **`Result` 陣列**內
+（PHP `parse_str` 解出 `Result[0][MerTradeNo]` 這類巢狀欄位；Python 需自行處理巢狀 key）。
+官方 PHP SDK 預設帶 `Version: 1.0`。
 
----
-
-## 超商代碼
-
-取得超商繳費代碼。
-
-### 端點
-
-```
-POST /api/cvs
-```
-
-### EncryptInfo 參數
-
-| 參數 | 類型 | 必填 | 說明 |
-|------|------|------|------|
-| `MerID` | String | ● | 商店代號 |
-| `MerTradeNo` | String | ● | 訂單編號 |
-| `TradeAmt` | Integer | ● | 交易金額 (`30`~`20000`) |
-| `Timestamp` | Integer | ● | Unix 時間戳 |
-| `ExpireDate` | Integer | 否 | 繳費期限 (天)，預設 `7` |
-| `NotifyURL` | String | 否 | 背景通知網址 |
-
-### 金額限制
-
-| 項目 | 限制 |
-|------|------|
-| 最低金額 | 30 元 |
-| 最高金額 | 20,000 元 |
-
-### 回應參數 (解密後)
+### 回應參數 (解密後，`Result[0]` 內)
 
 | 參數 | 說明 |
 |------|------|
-| `TradeNo` | PayUni 交易編號 |
-| `PayNo` | 繳費代碼 |
-| `ExpireDate` | 繳費期限 |
-
----
-
-## LINE Pay
-
-LINE Pay 支付整合。
-
-### 端點
-
-```
-POST /api/linepay
-```
-
-### 版本
-
-```
-Version: 1.1
-```
-
-### EncryptInfo 參數
-
-| 參數 | 類型 | 必填 | 說明 |
-|------|------|------|------|
-| `MerID` | String | ● | 商店代號 |
-| `MerTradeNo` | String | ● | 訂單編號 |
-| `TradeAmt` | Integer | ● | 交易金額 |
-| `Timestamp` | Integer | ● | Unix 時間戳 |
-| `ProdDesc` | String | ● | 商品描述 |
-| `ReturnURL` | String | ● | 付款完成返回網址 |
-| `NotifyURL` | String | 否 | 背景通知網址 |
-
-### LINE Pay 退款
-
-#### 端點
-
-```
-POST /api/trade_refund_linepay
-```
-
-#### EncryptInfo 參數
-
-| 參數 | 類型 | 必填 | 說明 |
-|------|------|------|------|
-| `MerID` | String | ● | 商店代號 |
-| `TradeNo` | String | ● | PayUni 交易編號 |
-| `TradeAmt` | Integer | ● | 退款金額 |
-| `Timestamp` | Integer | ● | Unix 時間戳 |
-
----
-
-## AFTEE 先享後付
-
-AFTEE 後支付整合。
-
-### 端點
-
-```
-POST /api/aftee_direct
-```
-
-### EncryptInfo 參數
-
-| 參數 | 類型 | 必填 | 說明 |
-|------|------|------|------|
-| `MerID` | String | ● | 商店代號 |
-| `MerTradeNo` | String | ● | 訂單編號 |
-| `TradeAmt` | Integer | ● | 交易金額 |
-| `Timestamp` | Integer | ● | Unix 時間戳 |
-| `ProdDesc` | String | ● | 商品描述 |
-| `UsrMail` | String | ● | 消費者 Email |
-| `UsrName` | String | ● | 消費者姓名 |
-| `UsrPhone` | String | ● | 消費者手機 |
-| `ReturnURL` | String | ● | 付款完成返回網址 |
-| `NotifyURL` | String | 否 | 背景通知網址 |
-
-### AFTEE 確認交易
-
-當 AFTEE 交易需要確認時：
-
-```
-POST /api/trade_confirm_aftee
-```
-
-### AFTEE 退款
-
-```
-POST /api/trade_refund_aftee
-```
-
----
-
-## Apple Pay / Google Pay / Samsung Pay
-
-行動支付整合 (需透過整合式支付頁或前端 SDK)。
-
-### 支援說明
-
-| 支付方式 | 說明 |
-|----------|------|
-| Apple Pay | Safari 瀏覽器、iOS/macOS 裝置 |
-| Google Pay | Chrome 瀏覽器、Android 裝置 |
-| Samsung Pay | Samsung 裝置 |
-
-### 使用方式
-
-透過整合式支付頁 (UPP) 使用，商店需向 PayUni 申請開通。
-
----
-
-## 愛金卡 iCash
-
-愛金卡 (iCash) 支付。
-
-### 退款端點
-
-```
-POST /api/trade_refund_icash
-```
-
-### EncryptInfo 參數
-
-| 參數 | 類型 | 必填 | 說明 |
-|------|------|------|------|
-| `MerID` | String | ● | 商店代號 |
-| `TradeNo` | String | ● | PayUni 交易編號 |
-| `TradeAmt` | Integer | ● | 退款金額 |
-| `Timestamp` | Integer | ● | Unix 時間戳 |
-
----
-
-## 交易查詢
-
-查詢交易狀態。
-
-### 端點
-
-```
-POST /api/trade_query
-```
-
-### EncryptInfo 參數
-
-| 參數 | 類型 | 必填 | 說明 |
-|------|------|------|------|
-| `MerID` | String | ● | 商店代號 |
-| `MerTradeNo` | String | ● | 商店訂單編號 |
-| `Timestamp` | Integer | ● | Unix 時間戳 |
-
-### 回應參數 (解密後)
-
-| 參數 | 說明 |
-|------|------|
-| `TradeNo` | PayUni 交易編號 |
 | `MerTradeNo` | 商店訂單編號 |
-| `TradeAmt` | 交易金額 |
-| `TradeStatus` | 交易狀態 |
-| `PaymentType` | 付款方式 |
-| `CreateTime` | 訂單建立時間 |
-| `PayTime` | 付款時間 |
+| `TradeNo` | UNi 交易序號 |
+| `TradeStatus` | 交易狀態（見下表） |
+| `PaymentType` | 付款方式代碼（見下表） |
+| `CreateDay` | 訂單建立時間 |
+| `PaymentDay` | 付款時間 |
+| `CloseStatus` | 請款狀態（信用卡才有，見下表） |
 
 ### TradeStatus 交易狀態
 
 | 狀態 | 說明 |
 |------|------|
-| `0` | 未付款 / 處理中 |
+| `0` | 取號成功（ATM / 超商代碼）或信用審查正常（AFTEE） |
 | `1` | 已付款 |
 | `2` | 付款失敗 |
-| `3` | 已退款 |
+| `3` | 付款取消 |
+| `4` | 交易逾期（ATM / 超商代碼 / AFTEE） |
+| `8` | 待確認 |
+| `9` | 未付款 |
+
+### PaymentType 付款方式代碼
+
+| 代碼 | 說明 |
+|------|------|
+| `1` | 信用卡 |
+| `2` | ATM 轉帳 |
+| `3` | 超商代碼 |
+| `5` | 超商取貨付款 |
+| `6` | 愛金卡 iCash |
+| `7` | AFTEE |
+| `9` | LINE Pay |
+| `10` | 宅配到付 |
+
+### CloseStatus 請款狀態
+
+| 狀態 | 說明 |
+|------|------|
+| `1` | 請款申請中 |
+| `2` | 請款成功（此時才能以 trade/close + `CloseType=2` 退款） |
+| `3` | 請款取消 |
+| `7` | 請款處理中 |
+| `9` | 未申請 |
+
+> 以上代碼表依 wpbr-payuni-payment 1.7.1 `Utils/TradeStatus.php`、`PayType.php`、`CloseStatus.php`。
 
 ### PHP 範例
 
@@ -705,7 +523,7 @@ $params = [
 $encryptInfo = $encryption->encrypt($params);
 $hashInfo = $encryption->hashInfo($encryptInfo);
 
-$response = file_get_contents('https://api.payuni.com.tw/api/trade_query', false, stream_context_create([
+$response = file_get_contents('https://api.payuni.com.tw/api/trade/query', false, stream_context_create([
     'http' => [
         'method' => 'POST',
         'header' => 'Content-Type: application/x-www-form-urlencoded',
@@ -735,7 +553,7 @@ if ($result['Status'] === 'SUCCESS') {
 ### 端點
 
 ```
-POST /api/trade_close
+POST /api/trade/close
 ```
 
 ### EncryptInfo 參數
@@ -770,7 +588,7 @@ POST /api/trade_close
 ### 端點
 
 ```
-POST /api/trade_cancel
+POST /api/trade/cancel
 ```
 
 ### EncryptInfo 參數
@@ -790,7 +608,7 @@ POST /api/trade_cancel
 #### 端點
 
 ```
-POST /api/credit_bind_query
+POST /api/credit_bind/query
 ```
 
 #### EncryptInfo 參數
@@ -806,7 +624,7 @@ POST /api/credit_bind_query
 #### 端點
 
 ```
-POST /api/credit_bind_cancel
+POST /api/credit_bind/cancel
 ```
 
 #### EncryptInfo 參數
@@ -1008,21 +826,25 @@ composer require payuni/sdk
 
 ---
 
-## PAYUNi 支援的付款方式 (TYPE 對照表)
+## PAYUNi 支援的付款方式（UPP 開關欄位）
 
-從官方文件 docs.payuni.com.tw 確認支援以下付款方式（其他方式請依後台啟用為準）：
+UPP 以「付款方式名稱 = 1」的旗標啟用付款方式（例如 `Credit=1&ATM=1&CVS=1`），**沒有**單一的 `PayType` 參數。
+以下欄位名稱取自統一金流官方外掛 PAYUNi_for_WooCommerce 1.2.8 的 `$paymentArr`，大小寫須完全相同：
 
-| TYPE / API 路徑提示 | 中文名 | 狀態 |
-|---|---|---|
-| `CREDIT` | 信用卡（含一次/分期/紅利/Token 約定/快速結帳） | ✅ 確認 |
-| `VACC` (虛擬帳號) | ATM 虛擬帳號 | ✅ 確認 |
-| `CVS` | 超商代碼 | ✅ 確認 |
-| `ICASH` | 愛金卡 (iCashPay) | ✅ 獨立 API: 交易建立/退款 |
-| `AFTEE` | AFTEE 先享後付 | ✅ 獨立 API: 建立/確認/退款 |
-| `LinePay` | LINE Pay | ✅ 獨立 API: 交易建立 |
-| `JKoPay` | 街口支付（JKO Pay） | ✅ **獨立 API: 交易建立/退款**；同 NewebPay `JKOPAY`，僅命名習慣不同 |
-| TWQR | TWQR / 台灣 Pay | ✅ 啟用後可用 |
+| 欄位 | 說明 |
+|---|---|
+| `Credit` | 信用卡一次付清 |
+| `CreditInst` | 信用卡分期 |
+| `CreditRed` | 信用卡紅利 |
+| `CreditUnionPay` | 銀聯卡 |
+| `ApplePay` / `GooglePay` / `SamsungPay` | 行動支付 |
+| `ATM` | ATM 虛擬帳號（不是 `VACC`） |
+| `CVS` | 超商代碼 |
+| `ICash` | 愛金卡 |
+| `Aftee` | AFTEE 先享後付 |
+| `LinePay` | LINE Pay |
+| `JKoPay` | 街口支付 |
 
-> **注意**：PAYUNi 的「街口支付」TYPE 為 `JKoPay`（駱駝命名），NewebPay 用 `JKOPAY`（全大寫）。**指向同一個街口服務，只是各家命名習慣不同**——程式中需依該家文件正確大小寫傳值，不能跨家複用字面值。
+另有幕後（伺服器對伺服器）建立交易的獨立端點：`/atm`、`/cvs`、`/credit`、`/linepay`（Version `1.1`）、`/aftee_direct`。
 
-最後更新：2026/05/07
+最後更新：2026-09-23

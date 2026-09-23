@@ -1,105 +1,1086 @@
 provider,code,message_zh,message_en,category,severity,solution
 ecpay,1,交易成功,Success,success,info,
-ecpay,10100001,參數格式錯誤,Invalid Parameter,validation,error,檢查參數格式
-ecpay,10100002,商店代號不存在,Merchant Not Found,auth,error,確認 MerchantID
-ecpay,10100003,訂單編號重複,Duplicate Order,validation,error,使用唯一訂單編號
-ecpay,10100050,交易金額錯誤,Invalid Amount,validation,error,確認金額為正整數
-ecpay,10100058,CheckMacValue 錯誤,CheckMacValue Error,auth,error,重新計算檢查碼
-ecpay,10100248,交易被拒絕,Transaction Rejected,payment,error,聯繫發卡銀行
-ecpay,10100251,卡片過期,Card Expired,payment,error,確認卡片效期
-ecpay,10100252,餘額不足,Insufficient Balance,payment,error,確認額度或餘額
-ecpay,10100254,交易受限,Transaction Restricted,payment,error,聯繫發卡銀行
-ecpay,10100255,掛失卡,Lost Card,payment,error,使用其他卡片
-ecpay,10100256,偽卡,Fraudulent Card,payment,error,使用其他卡片
-ecpay,10300066,交易待確認,Pending Confirmation,payment,warning,至後台確認
-newebpay,SUCCESS,交易成功,Success,success,info,
-newebpay,TRA10001,參數錯誤,Parameter Error,validation,error,檢查參數
-newebpay,TRA10014,商店代號錯誤,Invalid Merchant,auth,error,確認商店代號
-newebpay,TRA10027,檢查碼錯誤,CheckValue Error,auth,error,重新計算檢查碼
-newebpay,TRA20001,交易失敗,Transaction Failed,payment,error,稍後重試
-newebpay,TRA20014,交易逾時,Transaction Timeout,payment,error,重新交易
-newebpay,AES-001,AES加密失敗,AES Encryption Failed,encryption,error,檢查HashKey和HashIV是否正確
-newebpay,AES-002,AES解密失敗,AES Decryption Failed,encryption,error,檢查加密資料完整性和IV
-newebpay,TM-999,API逾時,API Timeout,system,error,稍後重試
-newebpay,ORDER-001,訂單狀態衝突,Order Status Conflict,validation,error,檢查訂單當前狀態
-newebpay,REFUND-001,退款失敗,Refund Failed,refund,error,確認訂單可退款且金額正確
-newebpay,AMT-001,金額驗證錯誤,Amount Validation Error,validation,error,檢查金額格式和範圍
-newebpay,MID-001,商店代號錯誤,Invalid Merchant ID,auth,error,確認MerchantID正確
-payuni,SUCCESS,交易成功,Success,success,info,
-payuni,FAILED,交易失敗,Transaction Failed,payment,error,確認交易狀態
-payuni,INVALID_MERID,商店代號不存在,Invalid Merchant ID,auth,error,確認 MerID 正確
-payuni,INVALID_CHECKSUM,CheckSum 驗證失敗,CheckSum Verification Failed,auth,error,重新計算 CheckSum
-payuni,AES_ENCRYPT_ERROR,AES-GCM 加密錯誤,AES-GCM Encryption Error,encryption,error,確認 HashKey/HashIV 格式
-payuni,AES_DECRYPT_ERROR,AES-GCM 解密錯誤,AES-GCM Decryption Error,encryption,error,確認加密資料完整性
-payuni,INVALID_NONCE,Nonce 長度錯誤,Invalid Nonce Length,encryption,error,確保 Nonce 為 12 bytes
-payuni,TAG_VERIFICATION_FAILED,Tag 驗證失敗,Tag Verification Failed,encryption,error,檢查 16 bytes tag 完整性
-payuni,INVALID_AMOUNT,金額驗算錯誤,Invalid Amount,validation,error,確保金額為正整數
-payuni,DUPLICATE_ORDER,訂單編號重複,Duplicate Order,validation,error,使用唯一訂單編號
-payuni,ORDER_NOT_FOUND,訂單不存在,Order Not Found,query,error,檢查訂單編號
-payuni,API_TIMEOUT,API 請求逾時,API Timeout,system,error,重新交易
-payuni,PAYMENT_FAILED,付款失敗,Payment Failed,payment,error,稍後重試或使用其他支付方式
-payuni,INVALID_PAYMENT_TYPE,不支援的支付方式,Unsupported Payment Type,validation,error,使用支援的支付方式
-payuni,JSON_PARSE_ERROR,JSON 解析失敗,JSON Parse Error,system,error,檢查 API 回應格式
-smilepay,1,交易成功,Success,success,info,
-smilepay,-1,參數錯誤,Parameter error,validation,error,檢查必填欄位 Dcvc/Rvg2c/Verify_key
-smilepay,-2,商家驗證失敗,Merchant verification failed,auth,error,確認 Verify_key 與 mid 正確
-smilepay,-3,簽章/檢核碼不正確,Signature mismatch,auth,error,通知時驗證 Mid_smilepay 加權檢核碼
-smilepay,-10,Pay_zg 不支援,Unsupported payment type,validation,error,改用支援的 Pay_zg 值 (1/2/3/4/6/11)
-smilepay,-15,訂單金額異常,Amount invalid,validation,error,Amount 必須為正整數
-smilepay,-20,訂單編號重複,Duplicate Data_id,validation,error,使用唯一 Data_id
-smilepay,-23,逾期訂單/訂單已關閉,Order expired,validation,error,檢查 Deadline_date 設定
-pchomepay,10001,APP ID 或 SECRET 錯誤,Invalid Basic Auth credentials,auth,error,檢查 APP ID 與 SECRET 是否正確 base64 編碼
-pchomepay,10003,Token 已過期,Token expired,auth,error,重新呼叫 POST /v1/token 取得新 token
-pchomepay,10004,Token 不存在,Token not found,auth,error,header 必須帶 pcpay-token
-pchomepay,10005,IP 不在白名單,IP not whitelisted,auth,error,將呼叫端 IP 加入後台白名單
-pchomepay,20001,訂單已存在,Duplicate order_id,validation,error,使用唯一 order_id
-pchomepay,20002,訂單金額錯誤,Invalid amount,validation,error,amount 必須為正整數
-pchomepay,30001,退款金額超過原訂單,Refund exceeds original,refund,error,退款金額 + 退款手續費需小於原訂單
-pchomepay,30002,餘額不足,Insufficient balance,refund,error,商家代收帳戶餘額不足以扣除退款 + 手續費
-pchomepay,40001,卡號驗證失敗,Card validation failed,payment,error,信用卡資料錯誤；於 sandbox 改用測試卡號
-pchomepay,90001,超商取貨建立失敗,CVS COD creation failed,logistics,error,參見 taiwan-logistics 文件確認物流欄位
-ezpay,KEY10001,商店代號錯誤,Invalid MerchantID,auth,error,確認 MerchantID 與後台一致
-ezpay,KEY10002,簽章驗證失敗,TradeSha mismatch,auth,error,SHA256 計算需含 HashKey/HashIV 且大寫
-ezpay,KEY10003,加密資料解密失敗,TradeInfo decrypt failed,auth,error,確認 AES-256-CBC + Hex + PKCS7 與 32-char HashKey 16-char HashIV
-ezpay,MEM10001,商家未啟用該付款方式,Method not enabled,validation,error,於 ezPay 後台啟用該付款方式
-ezpay,MPG10001,訂單編號重複,Duplicate MerchantOrderNo,validation,error,使用唯一訂單編號
-ezpay,VACC10001,虛擬帳號逾期,VACC expired,validation,error,檢查 ExpireDate 設定
-paynow,M001,商家代號錯誤,Invalid Merchant,auth,error,確認商家代號正確
-paynow,A001,加密驗證失敗,Encryption validation failed,auth,error,傳統版檢查 GP/GK 動態金鑰；現代版檢查 JWT Bearer
-paynow,B001,訂單金額錯誤,Invalid Amount,validation,error,"確認 amount 為正整數且小於 1,000,000,000,000"
-paynow,C001,訂單編號重複,Duplicate paymentNo,validation,error,使用唯一 paymentNo (現代版可省略由系統產生)
-paynow,P001,信用卡授權失敗,Card authorization failed,payment,error,改用其他卡或聯繫銀行
-paynow,Q001,Token 過期,JWT expired,auth,error,重新申請 JWT Bearer Token
-paynow,R001,退款超過原訂單,Refund exceeds original,refund,error,確認可退金額
-paynow,T001,信用卡 token 不存在,Card token not found,payment,error,確認 customer 與 card token 仍有效
-shopline,400,參數錯誤,Bad Request,validation,error,檢查 request body 與必填欄位
-shopline,401,認證失敗,Unauthorized,auth,error,檢查 merchantId / apiKey HTTP header
-shopline,403,沒有權限,Forbidden,auth,error,確認 API 權限與 IP 白名單
-shopline,404,資源不存在,Not Found,resource,error,確認 sessionId / paymentId 正確
-shopline,409,重複請求,Conflict,validation,error,使用唯一 referenceNumber
-shopline,422,驗證失敗,Unprocessable Entity,validation,error,檢查欄位格式與業務規則
-shopline,500,伺服器錯誤,Internal Server Error,server,error,稍後重試;持續出現聯繫 SLP support
-linepay,1101,請求超時,Request Timeout,network,error,重試;通常為網路問題
-linepay,1102,認證失敗,Authentication Failed,auth,error,檢查 ChannelId/ChannelSecret 與 HMAC 簽章
-linepay,1104,商戶尚未上線,Merchant not activated,auth,error,於 LINE Pay Merchant Center 啟用商戶
-linepay,1106,Header 錯誤,Header Error,validation,error,檢查 X-LINE-Authorization 與 Nonce
-linepay,1133,認證資訊過期,Authentication Expired,auth,error,Nonce 不可重複;重新產生
-linepay,1141,無效金額,Invalid Amount,validation,error,amount 必須為正整數
-linepay,1142,無效幣別,Invalid Currency,validation,error,Currency 必須為 TWD/USD 等支援值
-linepay,1170,訂單不存在,Order Not Found,resource,error,確認 transactionId
-linepay,1172,訂單已存在,Duplicate Order,validation,error,使用唯一 orderId
-linepay,1183,無效 Confirm,Invalid Confirm,validation,error,Confirm payload amount/currency 須與 Request 完全相同
-linepay,1198,內部錯誤,Internal Error,server,error,聯繫 LINE Pay 技術支援
-tappay,1,付款失敗,Payment Failure,payment,error,檢查 prime 與卡片是否有效
-tappay,2,參數錯誤,Invalid Parameters,validation,error,檢查 partner_key/merchant_id 與 amount 等必填
-tappay,3,prime 錯誤,Invalid Prime,validation,error,Prime 已使用或過期 (60秒);重新取得
-tappay,4,卡片資訊錯誤,Invalid Card,validation,error,卡號/到期/CVC 不正確
-tappay,5,卡片風控,Card Risk,risk,error,銀行風控拒絕;聯繫卡片發行銀行
-tappay,6,系統錯誤,System Error,server,error,聯繫 TapPay 技術支援
-tappay,7,卡片過期,Card Expired,validation,error,使用未過期卡片
-tappay,10003,Partner Key 錯誤,Invalid Partner Key,auth,error,確認 Partner Key 與環境一致 (sandbox/prod)
-tappay,10005,Merchant ID 錯誤,Invalid Merchant ID,auth,error,確認 Merchant ID 設定
-tappay,88001,卡片驗證失敗,Card Verification Failed,validation,error,3DS 驗證失敗;聯繫銀行
+ecpay,2,ATM 取號成功（等待轉帳）,ATM number issued,success,info,不是錯誤；等消費者轉帳後會再收到付款通知
+ecpay,10100073,超商代碼 / 條碼取號成功（等待繳費）,CVS/Barcode number issued,success,info,不是錯誤；等消費者繳費後會再收到付款通知
+ecpay,10100001,超商代碼已失效,CVS code expired,payment,error,重新取號
+ecpay,10100058,ATM 繳費期限已過（電子發票服務中為發票作業逾時）,ATM payment expired,payment,error,重新建立訂單取號；同一代碼在發票服務含意不同，依收到的服務判斷
+ecpay,10100248,帳號錯誤（例如把物流 / 發票帳號用在金流）,Wrong merchant account,auth,error,確認金流、物流、發票各自使用正確的 MerchantID / HashKey / HashIV
+ecpay,10200009,訂單已過期,Order expired,payment,error,檢查 ExpireDate 設定，重新建立訂單
+ecpay,10200043,3D 驗證失敗,3D Secure failed,payment,error,請消費者重新進行 3D 驗證
+ecpay,10200047,MerchantTradeNo 重複,Duplicate MerchantTradeNo,validation,error,使用不同的訂單編號（最長 20 字元，僅英數字）
+ecpay,10200050,TotalAmount 超出範圍（金額不符）,TotalAmount out of range,validation,error,檢查 TotalAmount
+ecpay,10200058,信用卡授權失敗,Card authorization failed,payment,error,請消費者確認卡片資訊或更換信用卡
+ecpay,10200073,CheckMacValue 驗證失敗,CheckMacValue verify fail,auth,error,不分大小寫排序、PHP urlencode 後轉小寫並還原 ( ) ! *、金流 SHA256 / 物流 MD5；確認 HashKey/HashIV
+ecpay,10200095,交易已付款（重複付款）,Already paid,payment,warning,檢查訂單是否已處理
+ecpay,10200105,BNPL 金額未達最低,BNPL amount below minimum,validation,error,"TotalAmount 需 >= 3,000 元"
+ecpay,10200115,信用卡授權逾時,Card authorization timeout,payment,error,請消費者重新付款
+ecpay,10300006,超商繳費期限已過（國內物流中為物流訂單已過期）,CVS payment expired,payment,error,重新建立訂單；同一代碼在物流服務含意不同
+ecpay,10400011,WAF 關鍵字攔截,Blocked by WAF keyword,validation,error,ItemName / TradeDesc 含 echo、python、curl 等系統指令關鍵字，移除即可
+newebpay,SUCCESS,成功,Success,success,info,
+newebpay,MPG01002,時間戳記不可空白,,validation,error,見藍新規格書 NDNF-1.2.2 錯誤代碼表
+newebpay,MPG01005,TokenTerm 不可空白/設定錯誤,,validation,error,見藍新規格書 NDNF-1.2.2 錯誤代碼表
+newebpay,MPG01008,分期參數設定錯誤,,validation,error,見藍新規格書 NDNF-1.2.2 錯誤代碼表
+newebpay,MPG01009,商店代號不可空白,,validation,error,見藍新規格書 NDNF-1.2.2 錯誤代碼表
+newebpay,MPG01010,程式版本設定錯誤,,validation,error,見藍新規格書 NDNF-1.2.2 錯誤代碼表
+newebpay,MPG01011,回傳規格設定錯誤,,validation,error,見藍新規格書 NDNF-1.2.2 錯誤代碼表
+newebpay,MPG01012,商店訂單編號不可空白/設定錯誤,,validation,error,見藍新規格書 NDNF-1.2.2 錯誤代碼表
+newebpay,MPG01013,付款人電子信箱設定錯誤,,validation,error,見藍新規格書 NDNF-1.2.2 錯誤代碼表
+newebpay,MPG01014,網址設定錯誤,,validation,error,見藍新規格書 NDNF-1.2.2 錯誤代碼表
+newebpay,MPG01015,訂單金額不可空白/設定錯誤,,validation,error,見藍新規格書 NDNF-1.2.2 錯誤代碼表
+newebpay,MPG01016,檢查碼不可空白,,validation,error,見藍新規格書 NDNF-1.2.2 錯誤代碼表
+newebpay,MPG01017,商品資訊不可空白,,validation,error,見藍新規格書 NDNF-1.2.2 錯誤代碼表
+newebpay,MPG01018,繳費有效期限設定錯誤,,validation,error,見藍新規格書 NDNF-1.2.2 錯誤代碼表
+newebpay,MPG01023,交易加密資料不可空白,,validation,error,見藍新規格書 NDNF-1.2.2 錯誤代碼表
+newebpay,MPG01024,交易加密SHA 資料不可空白,,validation,error,見藍新規格書 NDNF-1.2.2 錯誤代碼表
+newebpay,MPG01025,金融機構格式錯誤,,validation,error,見藍新規格書 NDNF-1.2.2 錯誤代碼表
+newebpay,MPG01026,金融機構格式錯誤，不接受XXX 參數,,validation,error,見藍新規格書 NDNF-1.2.2 錯誤代碼表
+newebpay,MPG01027,一銀維護中，請選擇其他金融機構,,validation,error,見藍新規格書 NDNF-1.2.2 錯誤代碼表
+newebpay,MPG01028,訂單細項格式錯誤,,validation,error,見藍新規格書 NDNF-1.2.2 錯誤代碼表
+newebpay,MPG01029,訂單金額與訂單細項總金額不相符,,validation,error,Amt 須等於訂單細項總金額
+newebpay,MPG01030,訂單細項品項編號不可重複,,validation,error,見藍新規格書 NDNF-1.2.2 錯誤代碼表
+newebpay,MPG02001,檢查碼錯誤,,auth,error,"TradeSha 錯誤：SHA256(""HashKey={key}&{TradeInfo}&HashIV={iv}"") 轉大寫；確認 HashKey/HashIV"
+newebpay,MPG02002,查無商店開啟任何金流服務,,auth,error,見藍新規格書 NDNF-1.2.2 錯誤代碼表
+newebpay,MPG02003,支付方式未啟用，請洽客服中心,,auth,error,見藍新規格書 NDNF-1.2.2 錯誤代碼表
+newebpay,MPG02004,匯率時間戳記不存在，請確認,,auth,error,見藍新規格書 NDNF-1.2.2 錯誤代碼表
+newebpay,MPG02005,驗證資料錯誤(來源不合法),,auth,error,見藍新規格書 NDNF-1.2.2 錯誤代碼表
+newebpay,MPG02006,信用卡收單機構系統發生異常，請洽客服中心,,auth,error,見藍新規格書 NDNF-1.2.2 錯誤代碼表
+newebpay,MPG02007,本商店強制指定需檢核轉出行，請先啟用智慧,,auth,error,見藍新規格書 NDNF-1.2.2 錯誤代碼表
+newebpay,MPG02008,SourceType 參數錯誤，本商店強制指定需檢核,,auth,error,見藍新規格書 NDNF-1.2.2 錯誤代碼表
+newebpay,MPG02009,不可修改銀行代號與帳號時，須提供指定轉帳,,auth,error,見藍新規格書 NDNF-1.2.2 錯誤代碼表
+newebpay,MPG02010,此版本不支援，請升級至v2.3,,auth,error,見藍新規格書 NDNF-1.2.2 錯誤代碼表
+newebpay,MPG03001,FormPost 加密失敗,,system,error,見藍新規格書 NDNF-1.2.2 錯誤代碼表
+newebpay,MPG03002,拒絕交易 IP,,system,error,見藍新規格書 NDNF-1.2.2 錯誤代碼表
+newebpay,MPG03003,IP 交易次數限制,,system,error,見藍新規格書 NDNF-1.2.2 錯誤代碼表
+newebpay,MPG03004,商店狀態已被暫停或是關閉，無法進行交易,,system,error,見藍新規格書 NDNF-1.2.2 錯誤代碼表
+newebpay,MPG03005,回傳參數資料不存在/解密失敗,,system,error,見藍新規格書 NDNF-1.2.2 錯誤代碼表
+newebpay,MPG03006,回傳參數資料不存在/解密失敗,,system,error,見藍新規格書 NDNF-1.2.2 錯誤代碼表
+newebpay,MPG03007,該筆訂單交易資訊不存在，請重新交易,,system,error,見藍新規格書 NDNF-1.2.2 錯誤代碼表
+newebpay,MPG03008,已存在相同的商店訂單編號,,system,error,MerchantOrderNo 不可重複
+newebpay,MPG03009,交易失敗,,system,error,交易失敗，依 Message 判斷原因
+newebpay,MPG03010,驗證資料不存在或錯誤,,system,error,見藍新規格書 NDNF-1.2.2 錯誤代碼表
+newebpay,MPG03011,訂單資料已不存在，請重新交易,,system,error,見藍新規格書 NDNF-1.2.2 錯誤代碼表
+newebpay,MPG05001,未有信用卡驗證資料,,payment,error,見藍新規格書 NDNF-1.2.2 錯誤代碼表
+newebpay,MPG05002,信用卡卡號長度不足,,payment,error,見藍新規格書 NDNF-1.2.2 錯誤代碼表
+newebpay,MPG05003,此信用卡不支援一次付清，請改用可一次付清,,payment,error,見藍新規格書 NDNF-1.2.2 錯誤代碼表
+newebpay,MPG05004,發卡行暫時無法提供信用卡分期付款服務,,payment,error,見藍新規格書 NDNF-1.2.2 錯誤代碼表
+newebpay,MPG05005,警示交易,,payment,error,見藍新規格書 NDNF-1.2.2 錯誤代碼表
+newebpay,MPG05006,物流設定參數[LgsType]錯誤,,payment,error,見藍新規格書 NDNF-1.2.2 錯誤代碼表
+newebpay,MPG05007,請開啟其他支付方式,,payment,error,見藍新規格書 NDNF-1.2.2 錯誤代碼表
+newebpay,MPG05008,因金額限制關係，無法使用物流服務,,payment,error,見藍新規格書 NDNF-1.2.2 錯誤代碼表
+newebpay,TRA10001,商店資料取得失敗,,request,error,見藍新規格書 NDNF-1.2.2 錯誤代碼表
+newebpay,TRA10003,金額必須為數字,,request,error,見藍新規格書 NDNF-1.2.2 錯誤代碼表
+newebpay,TRA10008,資料加密錯誤,,request,error,見藍新規格書 NDNF-1.2.2 錯誤代碼表
+newebpay,TRA10009,商店代號不可空白,,request,error,見藍新規格書 NDNF-1.2.2 錯誤代碼表
+newebpay,TRA10012,商店代號停用,,request,error,見藍新規格書 NDNF-1.2.2 錯誤代碼表
+newebpay,TRA10013,商店信用卡資格停用,,request,error,見藍新規格書 NDNF-1.2.2 錯誤代碼表
+newebpay,TRA10015,網路連線失敗,,request,error,見藍新規格書 NDNF-1.2.2 錯誤代碼表
+newebpay,TRA10018,資料不足,,request,error,見藍新規格書 NDNF-1.2.2 錯誤代碼表
+newebpay,TRA10021,查無該筆交易或該筆交易不為信用卡交易,,request,error,見藍新規格書 NDNF-1.2.2 錯誤代碼表
+newebpay,TRA10026,此訂單非授權成功狀態，不可請款,,request,error,見藍新規格書 NDNF-1.2.2 錯誤代碼表
+newebpay,TRA10027,此訂單已申請過請款，不可重覆請款,,request,error,見藍新規格書 NDNF-1.2.2 錯誤代碼表
+newebpay,TRA10028,請退款金額超過授權金額，請確認,,request,error,見藍新規格書 NDNF-1.2.2 錯誤代碼表
+newebpay,TRA10029,請款超過授權日N 天，已不得請(退)款,,request,error,見藍新規格書 NDNF-1.2.2 錯誤代碼表
+newebpay,TRA10030,請款/退款資料新增失敗,,request,error,見藍新規格書 NDNF-1.2.2 錯誤代碼表
+newebpay,TRA10031,銀聯卡交易只接受全額請退款,,request,error,見藍新規格書 NDNF-1.2.2 錯誤代碼表
+newebpay,TRA10032,單號類型只能為數字1 或2,,request,error,見藍新規格書 NDNF-1.2.2 錯誤代碼表
+newebpay,TRA10033,選擇使用商店自訂單號不可空白,,request,error,見藍新規格書 NDNF-1.2.2 錯誤代碼表
+newebpay,TRA10035,該交易非授權成功或已請款完成狀態，請確認,,request,error,見藍新規格書 NDNF-1.2.2 錯誤代碼表
+newebpay,TRA10036,RespondType 欄位資料格式錯誤,,request,error,見藍新規格書 NDNF-1.2.2 錯誤代碼表
+newebpay,TRA10037,商家自訂單號錯誤，只允許英數字及_符號,,request,error,見藍新規格書 NDNF-1.2.2 錯誤代碼表
+newebpay,TRA10038,選擇使用系統單號格式錯誤,,request,error,見藍新規格書 NDNF-1.2.2 錯誤代碼表
+newebpay,TRA10039,退款金額已超過請款金額，請確認,,request,error,見藍新規格書 NDNF-1.2.2 錯誤代碼表
+newebpay,TRA10041,網址格式錯誤,,request,error,見藍新規格書 NDNF-1.2.2 錯誤代碼表
+newebpay,TRA10045,該筆交易正在退款中或退款失敗,,request,error,見藍新規格書 NDNF-1.2.2 錯誤代碼表
+newebpay,TRA10046,該筆交易撥款狀態異常，無法執行退款,,request,error,見藍新規格書 NDNF-1.2.2 錯誤代碼表
+newebpay,TRA10047,該交易不為授權成功狀態，不可放棄授權,,request,error,見藍新規格書 NDNF-1.2.2 錯誤代碼表
+newebpay,TRA10048,該交易正在請款狀態,,request,error,見藍新規格書 NDNF-1.2.2 錯誤代碼表
+newebpay,TRA10049,該交易正在退款狀態,,request,error,見藍新規格書 NDNF-1.2.2 錯誤代碼表
+newebpay,TRA10050,金額不符,,request,error,見藍新規格書 NDNF-1.2.2 錯誤代碼表
+newebpay,TRA10051,取消授權失敗,,request,error,見藍新規格書 NDNF-1.2.2 錯誤代碼表
+newebpay,TRA10054,檢查碼CheckValue 有錯誤,,request,error,"CheckValue 錯誤：SHA256(""IV={iv}&Amt=..&MerchantID=..&MerchantOrderNo=..&Key={key}"") 轉大寫"
+newebpay,TRA10058,動態貨幣轉換交易只接授全額請款,,request,error,見藍新規格書 NDNF-1.2.2 錯誤代碼表
+newebpay,TRA10070,銀聯卡交易無需請款,,request,error,見藍新規格書 NDNF-1.2.2 錯誤代碼表
+newebpay,TRA10071,因查無交易資料次數已達上限，已鎖定交易查,,request,error,見藍新規格書 NDNF-1.2.2 錯誤代碼表
+newebpay,TRA10077,只能退未撥金額,,request,error,見藍新規格書 NDNF-1.2.2 錯誤代碼表
+newebpay,TRA10094,資料取消失敗,,request,error,見藍新規格書 NDNF-1.2.2 錯誤代碼表
+newebpay,TRA10095,此筆交易已過關帳時間，不可取消,,request,error,見藍新規格書 NDNF-1.2.2 錯誤代碼表
+newebpay,TRA10678,銀聯卡退款失敗,,request,error,見藍新規格書 NDNF-1.2.2 錯誤代碼表
+newebpay,TRA10675,紅利交易只接授全額請退款,,request,error,見藍新規格書 NDNF-1.2.2 錯誤代碼表
+newebpay,TRA10702,因達到執行請退款筆數上限，您的商店暫時無,,request,error,見藍新規格書 NDNF-1.2.2 錯誤代碼表
+newebpay,TRA11002,因失敗過多您的商店暫時無法使用本功能,,request,error,見藍新規格書 NDNF-1.2.2 錯誤代碼表
+newebpay,TRA20001,金融機構取消授權批次處理中,,request,info,非錯誤：取消授權需由金融機構批次處理，稍後以查詢確認
+newebpay,TRA20002,查無交易資料,,request,error,見藍新規格書 NDNF-1.2.2 錯誤代碼表
+newebpay,TRA20004,商店訂單編號重覆,,request,error,見藍新規格書 NDNF-1.2.2 錯誤代碼表
+newebpay,TRA20011,該筆交易已請款,,request,error,見藍新規格書 NDNF-1.2.2 錯誤代碼表
+newebpay,TRA20027,此訂單已申請過退款，退款中,,request,error,見藍新規格書 NDNF-1.2.2 錯誤代碼表
+newebpay,TRA20028,可退款金額不足，請查看常見問題 https://,,request,error,見藍新規格書 NDNF-1.2.2 錯誤代碼表
+newebpay,TRA40014,TimeStamp 欄位錯誤,,request,error,見藍新規格書 NDNF-1.2.2 錯誤代碼表
+payuni,SUCCESS,交易成功,Success,success,info,業務結果看 EncryptInfo 解密後的 Status 與 TradeStatus
+payuni,OK,AFTEE 審核通過,AFTEE approved,success,info,AFTEE 通知的 Status 可能為 OK
+payuni,ERROR,外層錯誤（回應不含 EncryptInfo）,Outer error,system,error,檢查 MerID、Version 與 EncryptInfo / HashInfo 格式
+payuni,API00003,無 API 版本號,Missing API version,validation,error,外層表單須帶 Version：UPP/退款 1.0、物流/LINE Pay 1.1、查詢 v2 為 2.0
+smilepay,1,取號／建立成功,Success,success,info,只有 1 代表成功；其他值以 Desc 判讀（速買配未公開金流錯誤代碼表）
+pchomepay,10001,APPID 和 Secret 錯誤,invalid user password,auth,error,見 PChomePay API 文件「7. 錯誤代碼」
+pchomepay,10002,不被允許的 IP 位址,Server IP not allow,auth,error,見 PChomePay API 文件「7. 錯誤代碼」
+pchomepay,10003,token 錯誤,invalid token,auth,error,見 PChomePay API 文件「7. 錯誤代碼」
+pchomepay,10004,token 逾期,token expired,auth,error,見 PChomePay API 文件「7. 錯誤代碼」
+pchomepay,10006,未設定 notifyURL 或 returnURL,api client has not set notifyURL or returnURL yet,auth,error,見 PChomePay API 文件「7. 錯誤代碼」
+pchomepay,10007,會員帳號無法使用功能服務,"you are temporarily unable to perform this function, please contact customer service",auth,error,見 PChomePay API 文件「7. 錯誤代碼」
+pchomepay,20001,訂單編號不可重複,order id duplicate,validation,error,見 PChomePay API 文件「7. 錯誤代碼」
+pchomepay,20002,訂單不存在,order not exists,validation,error,見 PChomePay API 文件「7. 錯誤代碼」
+pchomepay,20003,付款類別錯誤,pay type not support,validation,error,見 PChomePay API 文件「7. 錯誤代碼」
+pchomepay,20005,參數錯誤,params is not valid,validation,error,見 PChomePay API 文件「7. 錯誤代碼」
+pchomepay,20006,信用卡分期的商品金額須為 30 元以上,"When the credit card installments, the amount of orders can not be less than 30",validation,error,見 PChomePay API 文件「7. 錯誤代碼」
+pchomepay,20007,目前無法查詢當日資料,It not allow to check today's data,validation,error,見 PChomePay API 文件「7. 錯誤代碼」
+pchomepay,20008,商品名稱超過字數限制,order items string too long,validation,error,見 PChomePay API 文件「7. 錯誤代碼」
+pchomepay,20009,請求格式不是 JSON 格式,Request data is not a json structure data,validation,error,見 PChomePay API 文件「7. 錯誤代碼」
+pchomepay,20011,銀行代號或銀行帳戶不存在,bank code or bank account not exists.,validation,error,見 PChomePay API 文件「7. 錯誤代碼」
+pchomepay,20013,ATM 銀行代碼錯誤,ATM bank code invalid,validation,error,見 PChomePay API 文件「7. 錯誤代碼」
+pchomepay,20014,未設定超商退貨門市,cvs setting error.,validation,error,見 PChomePay API 文件「7. 錯誤代碼」
+pchomepay,20019,建立拍錢包訂單失敗,create pi payment fail.,validation,error,見 PChomePay API 文件「7. 錯誤代碼」
+pchomepay,20020,拍錢包收款尚未啟用,pi payment is disable,validation,error,見 PChomePay API 文件「7. 錯誤代碼」
+pchomepay,20022,拍錢包訂單金額超過上限,order amount is exceeds the pi setting,validation,error,見 PChomePay API 文件「7. 錯誤代碼」
+pchomepay,20023,會員帳號暫時無法使用此收款功能,function lock.,validation,error,見 PChomePay API 文件「7. 錯誤代碼」
+pchomepay,20025,移除記憶信用卡失敗,remove card info fail.,validation,error,見 PChomePay API 文件「7. 錯誤代碼」
+pchomepay,20030,平台代碼錯誤,platform code not accept,validation,error,見 PChomePay API 文件「7. 錯誤代碼」
+pchomepay,20031,暫時無法建立信用卡分期付款訂單,Currently unable to create installment payment orders.,validation,error,見 PChomePay API 文件「7. 錯誤代碼」
+pchomepay,40001,ATM 逾期錯誤,invalid atm expire date,payment,error,見 PChomePay API 文件「7. 錯誤代碼」
+pchomepay,40003,會員帳號暫時無法此功使用,function lock.,payment,error,見 PChomePay API 文件「7. 錯誤代碼」
+pchomepay,40005,餘額不足,member balance not enough.,payment,error,見 PChomePay API 文件「7. 錯誤代碼」
+pchomepay,50001,退款編號不可重複,Refund id is duplicate.,refund,error,見 PChomePay API 文件「7. 錯誤代碼」
+pchomepay,50002,該筆訂單並未成功付款，無法退款,"The order is not confirm yet, refund can't be execute",refund,error,見 PChomePay API 文件「7. 錯誤代碼」
+pchomepay,50003,訂單編號不存在,"The order is not found, order id might invalid",refund,error,見 PChomePay API 文件「7. 錯誤代碼」
+pchomepay,50004,退款金額需大於 0,Refund amount must bigger than 0,refund,error,見 PChomePay API 文件「7. 錯誤代碼」
+pchomepay,50005,帳戶餘額不足以退款,Your balance is not enough to refund,refund,error,見 PChomePay API 文件「7. 錯誤代碼」
+pchomepay,50006,查無此退款編號之資料,Can not find the information of the refund id,refund,error,見 PChomePay API 文件「7. 錯誤代碼」
+pchomepay,50007,信用卡分期之退款只能全額退，不支援部分退款,Order payed by credit card with installment can only refund with full order amount only.,refund,error,見 PChomePay API 文件「7. 錯誤代碼」
+pchomepay,50009,ATM 退款資訊未備齊，請隔日再試,The atm refund data is not ready. Please send the refund request later,refund,error,見 PChomePay API 文件「7. 錯誤代碼」
+pchomepay,50010,訂單已失敗，不可退款,"The order is failed, refund can't be execute",refund,error,見 PChomePay API 文件「7. 錯誤代碼」
+pchomepay,50011,退款金額必須與訂單金額相同,Refund amount must equal to order amount,refund,error,見 PChomePay API 文件「7. 錯誤代碼」
+pchomepay,50012,訂單已退款,The order is already refund,refund,error,見 PChomePay API 文件「7. 錯誤代碼」
+pchomepay,50013,訂單目前不能退款,The order is not allow to refund,refund,error,見 PChomePay API 文件「7. 錯誤代碼」
+pchomepay,50014,訂單不支援此退款方式,The pay type is not allow to refund,refund,error,見 PChomePay API 文件「7. 錯誤代碼」
+pchomepay,50015,建立拍錢包退款失敗,Call Pi refund API error.,refund,error,見 PChomePay API 文件「7. 錯誤代碼」
+pchomepay,50016,原付款行不支援退回原帳戶,Bank code not support atm refund.,refund,error,見 PChomePay API 文件「7. 錯誤代碼」
+pchomepay,70001,本行提領金額需 > 1元,withdraw must be bigger than 10 dollars,system,error,見 PChomePay API 文件「7. 錯誤代碼」
+pchomepay,70003,提領金額超過可提領餘額,withdraw amount is over than available balance,system,error,見 PChomePay API 文件「7. 錯誤代碼」
+pchomepay,70004,提領金額超過本日提領額度上限,withdraw amount is over than withdraw daily limit,system,error,見 PChomePay API 文件「7. 錯誤代碼」
+pchomepay,70005,提領銀行尚未設定,information of bank to withdraw is not set yet,system,error,見 PChomePay API 文件「7. 錯誤代碼」
+pchomepay,70006,會員帳號暫時無法使用提領功能,function lock.,system,error,見 PChomePay API 文件「7. 錯誤代碼」
+pchomepay,90001,物流狀態錯誤,invalid status,logistics,error,見 PChomePay API 文件「7. 錯誤代碼」
+pchomepay,90002,物流狀態歷程不存在,logistic status history not found,logistics,error,見 PChomePay API 文件「7. 錯誤代碼」
+pchomepay,90004,列印交寄單失敗,Print delivery note fail.,logistics,error,見 PChomePay API 文件「7. 錯誤代碼」
+ezpay,SCTE0001,Version 不得為空,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單建立 API）
+ezpay,SCTE0002,Version 錯誤,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單建立 API）
+ezpay,SCTE0003,APIID 不得為空,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單建立 API）
+ezpay,SCTE0004,APIID 錯誤,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單建立 API）
+ezpay,SCTE0005,UID 不得為空,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單建立 API）
+ezpay,SCTE0006,EncryptData 不得為空,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單建立 API）
+ezpay,SCTE0007,HashData 不得為空,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單建立 API）
+ezpay,SCTE0008,UID 錯誤,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單建立 API）
+ezpay,SCTE0009,HashData 錯誤,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單建立 API）
+ezpay,SCTE0010,商店不為啟用狀態,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單建立 API）
+ezpay,SCTE9999,系統異常,,system,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單建立 API）
+ezpay,SCTE0301,TimeStamp 錯誤,,business,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單建立 API）
+ezpay,SCTE0302,Mode 錯誤,,business,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單建立 API）
+ezpay,SCTE0303,Mode 為 1 MerchantOrderNo 不得為空值,,business,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單建立 API）
+ezpay,SCTE0304,Mode 為 3 MerchantOrderNo 不得為空值,,business,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單建立 API）
+ezpay,SCTE0305,Mode 為 2 MerchantOrderNo 必須為空值,,business,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單建立 API）
+ezpay,SCTE0306,Mode 為 4 MerchantOrderNo 必須為空值,,business,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單建立 API）
+ezpay,SCTE0307,Mode 為 1 OrderAmt 不得為空值,,business,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單建立 API）
+ezpay,SCTE0308,Mode 為 2 OrderAmt 不得為空值,,business,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單建立 API）
+ezpay,SCTE0309,Mode 為 3 OrderAmt 必須為空值,,business,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單建立 API）
+ezpay,SCTE0310,Mode 為 4 OrderAmt 必須為空值,,business,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單建立 API）
+ezpay,SCTE0311,Template 錯誤,,business,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單建立 API）
+ezpay,SCTE0312,LangType 錯誤,,business,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單建立 API）
+ezpay,SCTE0313,TWQRLifeTime 錯誤,,business,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單建立 API）
+ezpay,SCTE0314,ExpireTime 錯誤,,business,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單建立 API）
+ezpay,SCTE0315,"ExpireTime 錯誤,不可以使用過去時間",,business,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單建立 API）
+ezpay,SCTE0316,WebToAppEnabled 錯誤,,business,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單建立 API）
+ezpay,SCTE0317,MerchantOrderNo 錯誤,,business,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單建立 API）
+ezpay,SCTE0318,NotifyURL 錯誤,,business,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單建立 API）
+ezpay,SCTE0319,ReturnURL 錯誤,,business,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單建立 API）
+ezpay,SCTE0320,ClientBackURL 錯誤,,business,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單建立 API）
+ezpay,SCTE0321,Currency 錯誤,,business,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單建立 API）
+ezpay,SCTE0322,OrgOrderAmt 錯誤,,business,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單建立 API）
+ezpay,SCTE0323,OrderAmt 錯誤,,business,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單建立 API）
+ezpay,SCTE0324,應付金額不得大於原始訂單金額,,business,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單建立 API）
+ezpay,SCTE0325,ItemDesc 錯誤,,business,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單建立 API）
+ezpay,SCTE0361,TWQRLifeTime 設定超出上限範圍,,business,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單建立 API）
+ezpay,SCTE0362,MerchantOrderNo 長度過長,,business,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單建立 API）
+ezpay,SCTE0363,NotifyURL 長度過長,,business,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單建立 API）
+ezpay,SCTE0364,ReturnURL 長度過長,,business,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單建立 API）
+ezpay,SCTE0365,ClientBackURL 長度過長,,business,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單建立 API）
+ezpay,SCTE0366,OrgOrderAmt 超出設定上限,,business,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單建立 API）
+ezpay,SCTE0367,OrderAmt 超出設定上限,,business,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單建立 API）
+ezpay,SCTE0368,ItemDesc 長度過長,,business,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單建立 API）
+ezpay,SCTE0601,過期時間設定超出上限範圍,,business,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單建立 API）
+ezpay,SCTE0602,商店未啟用簡單付 TWQR 交易,,business,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單建立 API）
+ezpay,SCTE0603,訂單已存在(商店訂單編號重複),,business,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單建立 API）
+ezpay,SCTE0604,交易已存在(商店訂單編號重複),,business,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單建立 API）
+ezpay,SCTE0699,訂單建立異常錯誤,,business,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單建立 API）
+ezpay,SUTR0001,Version 不得為空,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單修改及取消 API）
+ezpay,SUTR0002,Version 錯誤,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單修改及取消 API）
+ezpay,SUTR0003,APIID 不得為空,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單修改及取消 API）
+ezpay,SUTR0004,APIID 錯誤,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單修改及取消 API）
+ezpay,SUTR0005,UID 不得為空,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單修改及取消 API）
+ezpay,SUTR0006,EncryptData 不得為空,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單修改及取消 API）
+ezpay,SUTR0007,HashData 不得為空,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單修改及取消 API）
+ezpay,SUTR0008,UID 錯誤,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單修改及取消 API）
+ezpay,SUTR0009,HashData 錯誤,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單修改及取消 API）
+ezpay,SUTR0010,商店不為啟用狀態,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單修改及取消 API）
+ezpay,SUTR0111,加密資料不得為空,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單修改及取消 API）
+ezpay,SUTR0112,TimeStamp 不得為空,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單修改及取消 API）
+ezpay,SUTR0113,APIID 不得為空,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單修改及取消 API）
+ezpay,SUTR0114,Version 不得為空,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單修改及取消 API）
+ezpay,SUTR0115,UID 不得為空,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單修改及取消 API）
+ezpay,SUTR0116,Ptoken 不得為空,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單修改及取消 API）
+ezpay,SUTR0117,Ptoken 不得超過 64 字元,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單修改及取消 API）
+ezpay,SUTR0118,UpdateAction 不得為空,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單修改及取消 API）
+ezpay,SUTR0119,UpdateAction 錯誤,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單修改及取消 API）
+ezpay,SUTR0120,ExpireTime 錯誤,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單修改及取消 API）
+ezpay,SUTR0121,ExpireTime 不得使用過去時間,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單修改及取消 API）
+ezpay,SUTR0122,NotifyURL 錯誤,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單修改及取消 API）
+ezpay,SUTR0123,ReturnURL 錯誤,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單修改及取消 API）
+ezpay,SUTR0124,ClientBackURL 錯誤,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單修改及取消 API）
+ezpay,SUTR0125,更新項目不得為空,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單修改及取消 API）
+ezpay,SUTR0126,TradeNo 不得為空,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單修改及取消 API）
+ezpay,SUTR0127,TradeNo 不得超過 20 字元,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單修改及取消 API）
+ezpay,SUTR0201,訂單查詢失敗,,business,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單修改及取消 API）
+ezpay,SUTR0202,訂單 Ptoken 不相符,,business,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單修改及取消 API）
+ezpay,SUTR0203,訂單不為待付款狀態,,business,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單修改及取消 API）
+ezpay,SUTR0204,刪除訂單失敗,,business,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單修改及取消 API）
+ezpay,SUTR0205,更新訂單主表失敗,,business,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單修改及取消 API）
+ezpay,SUTR0206,更新訂單副表失敗,,business,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單修改及取消 API）
+ezpay,SUTR0207,更新訂單 cache 失敗,,business,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單修改及取消 API）
+ezpay,SUTR9999,系統異常,,system,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單修改及取消 API）
+ezpay,SPTN0001,Version 不得為空,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（背景通知 API）
+ezpay,SPTN0002,Version 錯誤,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（背景通知 API）
+ezpay,SPTN0003,APIID 不得為空,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（背景通知 API）
+ezpay,SPTN0004,APIID 錯誤,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（背景通知 API）
+ezpay,SPTN0005,UID 不得為空,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（背景通知 API）
+ezpay,SPTN0006,EncryptData 不得為空,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（背景通知 API）
+ezpay,SPTN0007,HashData 不得為空,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（背景通知 API）
+ezpay,SPTN0008,UID 錯誤,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（背景通知 API）
+ezpay,SPTN0009,HashData 錯誤,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（背景通知 API）
+ezpay,SPTN0010,商店不為啟用狀態,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（背景通知 API）
+ezpay,SPTN0111,加密資料不得為空,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（背景通知 API）
+ezpay,SPTN0112,TimeStamp 不得為空,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（背景通知 API）
+ezpay,SPTN0113,APIID 不得為空,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（背景通知 API）
+ezpay,SPTN0114,Version 不得為空,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（背景通知 API）
+ezpay,SPTN0115,UID 不得為空,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（背景通知 API）
+ezpay,SPTN0116,TradeNo 不得為空,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（背景通知 API）
+ezpay,SPTN0117,TradeNo 不得超過 20 字元,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（背景通知 API）
+ezpay,SPTN0120,商店未啟用簡單付 TWQR 交易,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（背景通知 API）
+ezpay,SPTN0201,查詢訂單資訊失敗,,business,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（背景通知 API）
+ezpay,SPTN0202,查詢交易資訊失敗,,business,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（背景通知 API）
+ezpay,SPTN0203,訂單及商店未設定 Notify 網址,,business,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（背景通知 API）
+ezpay,SPTN0204,交易結果查詢失敗,,business,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（背景通知 API）
+ezpay,SPTN0205,跨機構交易詳細資料查詢失敗,,business,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（背景通知 API）
+ezpay,SPTN0206,自機構交易詳細資料查詢失敗,,business,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（背景通知 API）
+ezpay,SPTN0207,信用卡交易資訊查詢失敗,,business,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（背景通知 API）
+ezpay,SPTN0208,信用卡 bin 碼表查詢失敗,,business,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（背景通知 API）
+ezpay,SPTN0209,ACCLINK 交易資訊查詢失敗,,business,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（背景通知 API）
+ezpay,SPTN0210,ACCLINK_LOG 交易資訊查詢失敗,,business,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（背景通知 API）
+ezpay,SPTN9999,系統異常,,system,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（背景通知 API）
+ezpay,STRN0001,Version 不得為空,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（前景通知 API）
+ezpay,STRN0002,Version 錯誤,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（前景通知 API）
+ezpay,STRN0003,APIID 不得為空,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（前景通知 API）
+ezpay,STRN0004,APIID 錯誤,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（前景通知 API）
+ezpay,STRN0005,UID 不得為空,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（前景通知 API）
+ezpay,STRN0006,EncryptData 不得為空,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（前景通知 API）
+ezpay,STRN0007,HashData 不得為空,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（前景通知 API）
+ezpay,STRN0008,UID 錯誤,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（前景通知 API）
+ezpay,STRN0009,HashData 錯誤,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（前景通知 API）
+ezpay,STRN0010,商店不為啟用狀態,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（前景通知 API）
+ezpay,STRN0111,加密資料不得為空,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（前景通知 API）
+ezpay,STRN0112,TimeStamp 不得為空,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（前景通知 API）
+ezpay,STRN0113,APIID 不得為空,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（前景通知 API）
+ezpay,STRN0114,Version 不得為空,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（前景通知 API）
+ezpay,STRN0115,UID 不得為空,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（前景通知 API）
+ezpay,STRN0116,TradeNo 不得為空,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（前景通知 API）
+ezpay,STRN0117,TradeNo 不得超過 20 字元,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（前景通知 API）
+ezpay,STRN0118,Status 不得為空,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（前景通知 API）
+ezpay,STRN0119,Message 不得為空,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（前景通知 API）
+ezpay,STRN0201,訂單查詢失敗,,business,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（前景通知 API）
+ezpay,STRN0202,商店交易設定及 Return_url 查詢失敗,,business,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（前景通知 API）
+ezpay,STRN0203,交易結果查詢失敗,,business,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（前景通知 API）
+ezpay,STRN0204,跨機構交易詳細資料查詢失敗,,business,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（前景通知 API）
+ezpay,STRN0205,自機構交易詳細資料查詢失敗,,business,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（前景通知 API）
+ezpay,STRN0206,信用卡交易資訊查詢失敗,,business,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（前景通知 API）
+ezpay,STRN0207,信用卡 bin 碼表查詢失敗,,business,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（前景通知 API）
+ezpay,STRN0208,ACCLINK 交易資訊查詢失敗,,business,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（前景通知 API）
+ezpay,STRN0209,ACCLINK_LOG 交易資訊查詢失敗,,business,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（前景通知 API）
+ezpay,STRN9999,系統異常,,system,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（前景通知 API）
+ezpay,STRD0001,Version 不得為空,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（交易退款 API）
+ezpay,STRD0002,Version 錯誤,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（交易退款 API）
+ezpay,STRD0003,APIID 不得為空,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（交易退款 API）
+ezpay,STRD0004,APIID 錯誤,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（交易退款 API）
+ezpay,STRD0005,UID 不得為空,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（交易退款 API）
+ezpay,STRD0006,EncryptData 不得為空,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（交易退款 API）
+ezpay,STRD0007,HashData 不得為空,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（交易退款 API）
+ezpay,STRD0008,UID 錯誤,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（交易退款 API）
+ezpay,STRD0009,HashData 錯誤,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（交易退款 API）
+ezpay,STRD0010,商店不為啟用狀態,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（交易退款 API）
+ezpay,STRD0011,加密資料不得為空,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（交易退款 API）
+ezpay,STRD0012,TimeStamp 不得為空,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（交易退款 API）
+ezpay,STRD0013,MerchantRefundNo 不得為空,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（交易退款 API）
+ezpay,STRD0014,RefundType 不得為空,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（交易退款 API）
+ezpay,STRD0015,Currency 不得為空,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（交易退款 API）
+ezpay,STRD0016,RefundAmt 不得為空,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（交易退款 API）
+ezpay,STRD0017,RefundBarCode、MerchantOrderNo、 TradeNo，其中之一不得為空,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（交易退款 API）
+ezpay,STRD0018,RefundBarCode、MerchantOrderNo、 TradeNo，不能同時帶入,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（交易退款 API）
+ezpay,STRD0019,MerchantRefundNo 不得超過 20 字元,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（交易退款 API）
+ezpay,STRD0020,RefundBarCode 不得超過 18 字元,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（交易退款 API）
+ezpay,STRD0021,MerchantOrderNo 不得超過 20 字元,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（交易退款 API）
+ezpay,STRD0022,TradeNo 不得超過 20 字元,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（交易退款 API）
+ezpay,STRD0023,RefundType 錯誤,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（交易退款 API）
+ezpay,STRD0024,Currency 錯誤,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（交易退款 API）
+ezpay,STRD0025,RefundAmt 必須為數字,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（交易退款 API）
+ezpay,STRD0026,RefundAmt 必須大於 0,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（交易退款 API）
+ezpay,STRD0027,商店自定義退款請求序號重複,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（交易退款 API）
+ezpay,STRD0028,此訂單交易不可退款(未付款 or 已全額退款),,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（交易退款 API）
+ezpay,STRD0201,取得訂單/交易資料失敗,,business,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（交易退款 API）
+ezpay,STRD0202,訂單狀態不為已付款狀態,,business,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（交易退款 API）
+ezpay,STRD0203,退款金額超過可退款金額,,business,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（交易退款 API）
+ezpay,STRD0204,訂單退款失敗,,business,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（交易退款 API）
+ezpay,STRD0205,訂單退款處理中,,business,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（交易退款 API）
+ezpay,STRD9999,系統異常,,system,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（交易退款 API）
+ezpay,SGTR0001,Version 不得為空,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單查詢 API）
+ezpay,SGTR0002,Version 錯誤,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單查詢 API）
+ezpay,SGTR0003,APIID 不得為空,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單查詢 API）
+ezpay,SGTR0004,APIID 錯誤,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單查詢 API）
+ezpay,SGTR0005,UID 不得為空,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單查詢 API）
+ezpay,SGTR0006,EncryptData 不得為空,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單查詢 API）
+ezpay,SGTR0007,HashData 不得為空,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單查詢 API）
+ezpay,SGTR0008,UID 錯誤,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單查詢 API）
+ezpay,SGTR0009,HashData 錯誤,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單查詢 API）
+ezpay,SGTR0010,商店不為啟用狀態,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單查詢 API）
+ezpay,SGTR0111,加密資料不得為空,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單查詢 API）
+ezpay,SGTR0112,TimeStamp 不得為空,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單查詢 API）
+ezpay,SGTR0113,APIID 不得為空,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單查詢 API）
+ezpay,SGTR0114,Version 不得為空,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單查詢 API）
+ezpay,SGTR0115,UID 不得為空,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單查詢 API）
+ezpay,SGTR0116,TradeNo、MerchantOrderNo，不能同時帶入,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單查詢 API）
+ezpay,SGTR0117,TradeNo、MerchantOrderNo，其中之一不得為空,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單查詢 API）
+ezpay,SGTR0118,MerchantOrderNo 不得超過 20 字元,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單查詢 API）
+ezpay,SGTR0119,TradeNo 不得超過 20 字元,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單查詢 API）
+ezpay,SGTR0120,商店未啟用簡單付 TWQR 交易,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單查詢 API）
+ezpay,SGTR0201,訂單查詢失敗,,business,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單查詢 API）
+ezpay,SGTR0202,交易結果查詢失敗,,business,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單查詢 API）
+ezpay,SGTR0203,跨機構交易詳細資料查詢失敗,,business,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單查詢 API）
+ezpay,SGTR9999,系統異常,,system,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單查詢 API）
+ezpay,SGRD0001,Version 不得為空,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（退款查詢 API）
+ezpay,SGRD0002,Version 錯誤,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（退款查詢 API）
+ezpay,SGRD0003,APIID 不得為空,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（退款查詢 API）
+ezpay,SGRD0004,APIID 錯誤,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（退款查詢 API）
+ezpay,SGRD0005,UID 不得為空,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（退款查詢 API）
+ezpay,SGRD0006,EncryptData 不得為空,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（退款查詢 API）
+ezpay,SGRD0007,HashData 不得為空,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（退款查詢 API）
+ezpay,SGRD0008,UID 錯誤,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（退款查詢 API）
+ezpay,SGRD0009,HashData 錯誤,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（退款查詢 API）
+ezpay,SGRD0010,商店不為啟用狀態,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（退款查詢 API）
+ezpay,SGRD0111,加密資料不得為空,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（退款查詢 API）
+ezpay,SGRD0112,TimeStamp 不得為空,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（退款查詢 API）
+ezpay,SGRD0113,Rtoken、MerchantRefundNo，其中之一不得為空,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（退款查詢 API）
+ezpay,SGRD0114,Rtoken、MerchantRefundNo，不能同時帶入,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（退款查詢 API）
+ezpay,SGRD0115,Rtoken 不得超過 64 字元,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（退款查詢 API）
+ezpay,SGRD0116,Rtoken 格式錯誤,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（退款查詢 API）
+ezpay,SGRD0117,MerchantRefundNo 不得超過 20 字元,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（退款查詢 API）
+ezpay,SGRD0201,取得訂單/交易資料失敗,,business,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（退款查詢 API）
+ezpay,SGRD9999,系統異常,,system,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（退款查詢 API）
+ezpay,MPG01000,送入參數檢查錯誤,,validation,error,ezPay 跨境網路交易串接手冊 1.0.1「九、錯誤代碼」（支付寶／微信 MPG）
+ezpay,MPG01010,程式版本錯誤,,validation,error,ezPay 跨境網路交易串接手冊 1.0.1「九、錯誤代碼」（支付寶／微信 MPG）
+ezpay,MPG01012,商店訂單編號錯誤,,validation,error,ezPay 跨境網路交易串接手冊 1.0.1「九、錯誤代碼」（支付寶／微信 MPG）
+ezpay,MPG01014,網址設定錯誤,,validation,error,ezPay 跨境網路交易串接手冊 1.0.1「九、錯誤代碼」（支付寶／微信 MPG）
+ezpay,MPG01015,訂單金額錯誤,,validation,error,ezPay 跨境網路交易串接手冊 1.0.1「九、錯誤代碼」（支付寶／微信 MPG）
+ezpay,MPG01016,時間戳記錯誤,,validation,error,ezPay 跨境網路交易串接手冊 1.0.1「九、錯誤代碼」（支付寶／微信 MPG）
+ezpay,MPG01017,商品資訊錯誤,,validation,error,ezPay 跨境網路交易串接手冊 1.0.1「九、錯誤代碼」（支付寶／微信 MPG）
+ezpay,MPG02002,查無商店開啟任何金流服務，請與客服聯繫,,business,error,ezPay 跨境網路交易串接手冊 1.0.1「九、錯誤代碼」（支付寶／微信 MPG）
+ezpay,MPG02003,金流服務未啟用，請洽客服中心,,business,error,ezPay 跨境網路交易串接手冊 1.0.1「九、錯誤代碼」（支付寶／微信 MPG）
+ezpay,MPG02004,送出後檢查，超過交易限制時間,,business,error,ezPay 跨境網路交易串接手冊 1.0.1「九、錯誤代碼」（支付寶／微信 MPG）
+ezpay,MPG02005,送出後檢查，驗證資料錯誤,,business,error,ezPay 跨境網路交易串接手冊 1.0.1「九、錯誤代碼」（支付寶／微信 MPG）
+ezpay,MPG02006,系統發生異常，請洽客服中心,,business,error,ezPay 跨境網路交易串接手冊 1.0.1「九、錯誤代碼」（支付寶／微信 MPG）
+ezpay,MPG03001,訂單資訊解密失敗,,business,error,ezPay 跨境網路交易串接手冊 1.0.1「九、錯誤代碼」（支付寶／微信 MPG）
+ezpay,MPG03004,商店狀態或屬性不符合，無法進行交易,,business,error,ezPay 跨境網路交易串接手冊 1.0.1「九、錯誤代碼」（支付寶／微信 MPG）
+ezpay,MPG03007,查無此商店代號,,business,error,ezPay 跨境網路交易串接手冊 1.0.1「九、錯誤代碼」（支付寶／微信 MPG）
+ezpay,MPG03008,已存在相同的商店訂單編號,,business,error,ezPay 跨境網路交易串接手冊 1.0.1「九、錯誤代碼」（支付寶／微信 MPG）
+ezpay,MPG03009,交易失敗,,business,error,ezPay 跨境網路交易串接手冊 1.0.1「九、錯誤代碼」（支付寶／微信 MPG）
+shopline,1005,校驗錯誤,Check error,api,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：通用）
+shopline,1006,紀錄已存在,Record already exists,api,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：通用）
+shopline,1008,狀態錯誤,Status error,api,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：通用）
+shopline,1016,付款查詢、退款發起請求時，沒有交易紀錄,No transaction record.,api,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：通用）
+shopline,1018,付款失敗/取消/逾期 & 資訊載入失敗 & 未知原因,Business error,api,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：通用）
+shopline,1901,系統連線失敗,System connection failed,api,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：通用）
+shopline,1902,系統內部格式錯誤,System internal format error,api,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：通用）
+shopline,1904,[通用] 請求過於頻繁 / [Onboarding] 請求過於頻繁,Requests are too frequent / Requests too frequent,multi,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：通用、Onboarding）
+shopline,1997,資料庫錯誤,Database error,api,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：通用）
+shopline,1998,系統配置錯誤,System configuration error,api,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：通用）
+shopline,1999,系統異常,Server error,api,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：通用）
+shopline,2001,APPID不存在,APPID does not exist,api,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：通用）
+shopline,2002,簽名錯誤,Signature error,api,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：通用）
+shopline,2003,請求URL錯誤,Request URL error,api,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：通用）
+shopline,2004,系統內部錯誤,Internal System Error,api,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：通用）
+shopline,2005,訪問拒絕,Access denied,api,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：通用）
+shopline,2006,錯誤請求,Bad request,api,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：通用）
+shopline,2007,無法訪問,Not found,api,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：通用）
+shopline,2008,服務無法存取,Service cannot be accessed,api,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：通用）
+shopline,2009,Token逾期,Token expired,api,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：通用）
+shopline,2010,Token被篡改,Token tampered,api,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：通用）
+shopline,2011,付款工具狀態禁止修改,InstrumentStatus forbidden change,api,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：通用）
+shopline,2013,特店未與平台 Connect,Merchants are not connected to the platform,api,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：通用）
+shopline,URL_NOT_FOUND,[Connect] URL不存在 / [Onboarding] URL不存在,The url does not exist,multi,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：Connect、Onboarding）
+shopline,ACCESS_DENIED,apiKey 或 clientKey 不正確/金鑰與商家ID或平台ID不符/金鑰錯誤/商家沒有存取資源權限,Access Denied,auth,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：Connect）
+shopline,MERCHANT_NOT_EXISTS,特店ID不存在,Merchant information does not exist,auth,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：Connect）
+shopline,UNAUTHORIZED_CLIENT,客戶端ID錯誤或授權參數錯誤,The client is not authorized to access the requested resource,auth,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：Connect）
+shopline,SERVER_ERROR,其他系統錯誤,System exception,auth,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：Connect）
+shopline,KEY_INCORRECT,平台 Authorize觸發 connect綁定的時 apiKey錯誤,"The apiKey or clientKey format is incorrect, please check the parameters",auth,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：Connect）
+shopline,INVALID_SCOPE,授權範圍錯誤,The requested range parameter value is invalid or not supported by the authorized server,auth,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：Connect）
+shopline,1001,重複下單，交易已存在,Order exsit,create,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：下單）
+shopline,1003,下單過程中，參數缺失,Param miss,create,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：下單）
+shopline,1004,[下單] 下單請求過程中，因入參錯誤等系統原因導致的下單失敗 / [Onboarding] 因入參錯誤等系統原因導致的失敗,Param error / The request header is invalid,multi,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：下單、Onboarding）
+shopline,1025,下單請求過程中，超過最大付款限額或不足最低付款限額,Create amount error,create,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：下單）
+shopline,4001,通路連線失敗,Channel connection failed,create,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：下單）
+shopline,4002,通路錯誤,Channel error,create,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：下單）
+shopline,4003,通路回應逾時,Channel response timeout,create,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：下單）
+shopline,4101,付款超額，付款金額不在最低和最高限額之間,Wrong amount,create,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：下單）
+shopline,4102,發起請求過程中，因為交易異常情況，下單失敗,Payment declined due to order abnormalities.,create,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：下單）
+shopline,4103,因為列表以外的未知原因導致下單失敗,The payment has been declined for unspecificed reasons.,create,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：下單）
+shopline,4104,因為特店帳戶狀態異常，導致交易下單被拒絕。,Payment declined (issues with merchant account),create,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：下單）
+shopline,4105,由於顧客帳戶狀態異常，導致交易失敗,Payment declined (issues with customer account),create,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：下單）
+shopline,4106,IP位址在通路側未加入白名單,The payment(s) failed due to system issues.,create,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：下單）
+shopline,4107,交易幣種通路不支援,The payment has been declined for unspecificed reasons.,create,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：下單）
+shopline,4108,喚起付款表單失敗,Failed to pull up the form,create,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：下單）
+shopline,4109,網站網域未設定,Invalid store url,create,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：下單）
+shopline,3000,命中 SLP 風控，使用者行為異常,The payment was declined due to payer/card irregularities.,payment,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：付款）
+shopline,3001,命中 SLP 風控，交易卡異常,The payment was declined due to payer/card irregularities.,payment,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：付款）
+shopline,3002,命中 SLP 風控，收貨人資訊異常,The payment was declined due to payer/card irregularities.,payment,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：付款）
+shopline,3003,命中 SLP 風控，高風險交易,The payment was declined due to payer/card irregularities.,payment,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：付款）
+shopline,3004,命中 SLP 風控，交易資訊異常,The payment was declined due to payer/card irregularities.,payment,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：付款）
+shopline,1012,特店 SLP 付款權限已停用,Merchant payment permission is disabled,payment,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：付款）
+shopline,4350,命中通路/銀行風控，交易被拒絕,The payment was rejected by the issuing bank.,payment,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：付款）
+shopline,4400,通路端交易過程中資料傳輸異常、系統異常,The payment failed due to the transaction timed out.,payment,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：付款）
+shopline,4401,通路端交易交易逾期,The payment period has expired.,payment,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：付款）
+shopline,4402,ATM 虛擬帳號場景：客戶實際繳款金額與產生帳號的金額不一致,The payment failed due to the actual amount [xxx幣種] paid by the payer is different from the set amount.,payment,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：付款）
+shopline,4403,系統繁忙,System Busy,payment,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：付款）
+shopline,4404,付款完成後，token內與付款請求內金額錯誤,Payment token amount not match,payment,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：付款）
+shopline,4405,與錢包前端互動後，回應的token非法,Payment token invailid,payment,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：付款）
+shopline,4406,付款公鑰錯誤,Payment public key invailid,payment,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：付款）
+shopline,4407,付款私鑰錯誤,Payment private key invailid,payment,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：付款）
+shopline,4408,付款簽名錯誤,Payment signature invailid,payment,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：付款）
+shopline,4409,與通路前端互動後，回傳的token逾期,Payment token expires,payment,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：付款）
+shopline,4410,與通路互動後，通路提示重複付款,Duplicate payment.,payment,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：付款）
+shopline,4411,通路介面回傳鑑權失敗,Payment failed due to technical issue,payment,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：付款）
+shopline,4412,通路介面回應not found,Payment failed due to technical issue,payment,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：付款）
+shopline,4450,銀行卡付款中，3DS驗證流程逾時,The payer did not complete 3D Secure authentication.,payment,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：付款）
+shopline,4451,發卡行回傳信用卡交易失敗,The payment was rejected by the issuing bank.,payment,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：付款）
+shopline,4452,銀行卡付款中，3DS交驗不透過,The payer's attempt at 3D Secure authentication failed.,payment,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：付款）
+shopline,4453,銀行卡CVV2驗證不透過,The CVC number is incorrect.,payment,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：付款）
+shopline,4454,交易卡餘額不足,The card has insufficient funds to complete the purchase.,payment,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：付款）
+shopline,4455,交易卡卡號驗證不透過（卡號無效）,The card number used is invalid.,payment,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：付款）
+shopline,4456,通路側系統異常,The payment failed due to system issues.,payment,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：付款）
+shopline,4457,發卡行識別出為高風險交易,The payment was declined by the issuing bank due to payer/card abnormalities.,payment,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：付款）
+shopline,4458,交易依然pending在通路側，處理中,The payment is still being processed.,payment,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：付款）
+shopline,4459,發卡銀行識別出銀行卡已過有效期限,The card used has expired.,payment,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：付款）
+shopline,4460,發卡行回傳交易密碼輸入次數超額限額,The payer exceeded the maximum number of PIN attempts.,payment,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：付款）
+shopline,4461,發卡行回傳交易金額超過最大/最小限額,The payer exceeded their available balance/credit limit.,payment,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：付款）
+shopline,4462,發卡行回傳交易密碼檢定不透過,The PIN entered is invalid.,payment,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：付款）
+shopline,4463,發卡銀行識別出交易卡為被竊/遺失卡,The payment was declined after being flagged by the issuing bank.,payment,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：付款）
+shopline,4464,卡被凍結,The selected card application is blocked.,payment,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：付款）
+shopline,4465,輸入PIN,Card/E-Wallet requires online pin,payment,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：付款）
+shopline,4466,金融卡卡受限,Restricted Card or Invalid card in this country,payment,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：付款）
+shopline,4467,已超交易次數,The number of withdrawals permitted for the shopper's card was exceeded,payment,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：付款）
+shopline,4468,付款碼或收款碼已逾期或無效,"Invalid QR Code, or QR Code has expired.",payment,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：付款）
+shopline,4550,客戶自主取消交易,Customer cancellation,payment,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：付款）
+shopline,4551,客戶發起了拒付，交易正在爭議期,Customer dispute,payment,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：付款）
+shopline,4552,顧客付款帳號異常,Customer account error,payment,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：付款）
+shopline,4600,Others-Exception,The payment has been declined for unspecificed reasons.,payment,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：付款）
+shopline,1010,特店SLP退款權限已停用,Merchant refund permission is disabled,refund,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：退款）
+shopline,1013,退款要求已存在，不可重複發起退款,The refund request is existing.,refund,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：退款）
+shopline,1014,交易已完成全部金額退款，無可退款金額,The refund failed due to exceeded the allowable refund amount.,refund,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：退款）
+shopline,1015,特店帳戶未完成高級認證，不可發起退款,Refund decline（issues with customer account）,refund,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：退款）
+shopline,1020,付款交易可以退款的時效為180天，如超過，無法退款,The allowable refund period has expired.,refund,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：退款）
+shopline,1021,請求退款的交易不存在或狀態異常（失敗/逾時）,The refund failed due to the order does not exist or is in exception status.,refund,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：退款）
+shopline,1202,通路不支援線上退款API，只能線下退款,Refund is not support currently,refund,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：退款）
+shopline,1022,由於特店帳戶餘額不足，退款失敗,The refund failed due to the merchant acc does not have enough balance.,refund,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：退款）
+shopline,1023,因為清單以外的未知原因導致退款失敗,The refund request can not be processed at the moment.,refund,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：退款）
+shopline,4502,請求退款的交易不存在或狀態異常（失敗/逾時）,The refund failed due to the order does not exist or is in exception status.,refund,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：退款）
+shopline,4701,退款要求金額超過交易可退款金額,Refund request amount exceeds order refundable amount,refund,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：退款）
+shopline,4702,由於特店帳戶餘額不足，退款失敗,The refund failed due to insufficient merchant account balance,refund,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：退款）
+shopline,4703,付款交易已超過可退款時效,The payment order has exceeded the refundable time limit,refund,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：退款）
+shopline,4704,因為清單以外的未知原因導致退款失敗,The refund failed because of unknown reasons.,refund,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：退款）
+shopline,4705,傳輸金額不正確導致退款失敗,Refund failed because of amount not valid,refund,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：退款）
+shopline,4706,上次的退款交易尚在退款中，無法再新發起退款,The new refund cannot be initiated because the previously refund of the payment is still processing,refund,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：退款）
+shopline,4707,該交易不支援部分退款,Partial refund doesn't support.,refund,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：退款）
+shopline,4700,請求退款的交易不存在或狀態異常（失敗/逾時）,The refund failed because of unknown reasons.,refund,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：退款）
+shopline,1200,暫時不支援綁卡功能,Card binding is not support currently.,api,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：綁卡）
+shopline,1201,系統正在自動處理綁卡後流程，請5分鐘後再試,Card is cloning,api,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：綁卡）
+shopline,4800,未知原因,Binding failed due to unknown reason.,api,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：綁卡）
+shopline,4801,使用者拒絕授權,The merchant rejected the binding.,api,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：綁卡）
+shopline,4802,通路參數錯誤,Bind parameter error.,api,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：綁卡）
+shopline,1203,通路進行卡片驗證，通路回應失敗,Card verification is failed,api,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：綁卡）
+shopline,4900,通路要求該筆交易需要進行3DS，但由於是顧客不在場定期付款，無法完成,Need 3DS,api,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：定期付款）
+shopline,4901,通路要求該筆交易需要進行CVS認證，但由於是顧客不在場定期付款，無法完成,Need cvs,api,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：定期付款）
+shopline,4902,因其它原因，無法完成定期付款,Saved card payment other erorr,api,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：定期付款）
+shopline,6001,交易處理中，交易取消失敗,"Transaction is processing, can not cancel.",api,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：取消授權）
+shopline,6002,交易已請款，無法取消,Can not Cancel the Captured transaction,api,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：取消授權）
+shopline,6003,交易已取消，無法取消,Can not Cancel the Cancelled transaction,api,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：取消授權）
+shopline,6400,交易狀態異常，無法取消,The transaction status is abnormal and cannot be cancelled,api,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：取消授權）
+shopline,6401,通路系統原因導致無法取消,Can not Cancel for system error,api,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：取消授權）
+shopline,7001,請款金額大於可請款金額,The capture amount is bigger than the amount that can be captured,api,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：請款）
+shopline,7002,交易狀態異常，無法請款,The transaction status is abnormal and cannot be captured,api,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：請款）
+shopline,7400,交易狀態異常，無法請款,The transaction status is abnormal and cannot be captured,api,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：請款）
+shopline,7401,通路系統原因導致無法請款,Can not Capture for system error,api,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：請款）
+shopline,7402,請款金額大於可請款金額,The capture amount is bigger than the amount that can be captured,api,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：請款）
+shopline,7403,因授權額度問題請款失敗,Capture fail for bank decline,api,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：請款）
+shopline,1009,特店SLP收款權限已停用,Receive forbidden,api,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：SDK）
+shopline,4200,特店暫未綁定該付款通路,Payment method not activated,api,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：SDK）
+shopline,4201,特店暫無使用權限,The payment failed due to merchant account invalid,api,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：SDK）
+shopline,4202,通路或付款方式暫時不支援該交易幣種,Currency not support,api,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：SDK）
+shopline,4203,特店收款帳戶狀態異常,Merchant payment permission is disabled,api,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：SDK）
+shopline,4204,暫不支援該付款方式,This payment method is not currently supported,api,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：SDK）
+shopline,8100,無法對已經結算的交易執行結算,Transaction already settled.,api,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：結算）
+shopline,8101,無法對已經預約結算的交易執行結算,Transaction already scheduled for settlement.,api,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：結算）
+shopline,1011,提現已停用,Withdraw Forbidden,api,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：轉帳交易）
+shopline,9007,帳戶餘額不足,Account balance not enough,api,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：轉帳交易）
+shopline,1002,可操作餘額不足,Amount not enough,api,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：分帳交易）
+shopline,1040,該付款方式的交易不支援分帳,Transactions using this payment method cannot be split.,api,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：分帳交易）
+shopline,2113,此主體已經存在,entity not unique,onboarding,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：Onboarding）
+shopline,2116,此負責人或最終受益人已經存在,person not unique,onboarding,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：Onboarding）
+shopline,2121,此銀行帳戶已提交，請勿重複提交,"The bank has been submitted, please do not repeat",onboarding,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：Onboarding）
+shopline,2131,此主體正在申請中,entity applying,onboarding,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：Onboarding）
+linepay,0000,,"Returned when the request is successful. If this is the result of a payment request status check, the code indicates that The customer has not yet completed LINE Pay authentication.",success,info,見 LINE Pay Online API v3 結果代碼（developers-pay.line.me/online-api-v3）
+linepay,0110,,"The customer has completed LINE Pay authentication, and you can proceed with payment confirmation.",api,info,見 LINE Pay Online API v3 結果代碼（developers-pay.line.me/online-api-v3）
+linepay,0121,,"The customer canceled the payment, or the LINE Pay authentication waiting time expired.",api,info,見 LINE Pay Online API v3 結果代碼（developers-pay.line.me/online-api-v3）
+linepay,0122,,Payment failed.,api,info,見 LINE Pay Online API v3 結果代碼（developers-pay.line.me/online-api-v3）
+linepay,0123,,Payment completed.,api,info,見 LINE Pay Online API v3 結果代碼（developers-pay.line.me/online-api-v3）
+linepay,1101,,The customer isn't a LINE Pay user.,api,error,見 LINE Pay Online API v3 結果代碼（developers-pay.line.me/online-api-v3）
+linepay,1102,,The customer is currently unable to make transactions with LINE Pay.,api,error,見 LINE Pay Online API v3 結果代碼（developers-pay.line.me/online-api-v3）
+linepay,1104,,The merchant isn't registered on the merchant center. Check if the correct credentials are entered.,api,error,見 LINE Pay Online API v3 結果代碼（developers-pay.line.me/online-api-v3）
+linepay,1105,,LINE Pay is currently unavailable for the merchant.,api,error,見 LINE Pay Online API v3 結果代碼（developers-pay.line.me/online-api-v3）
+linepay,1106,,There is an error in the request header information.,api,error,見 LINE Pay Online API v3 結果代碼（developers-pay.line.me/online-api-v3）
+linepay,1110,,The credit card cannot be used.,api,error,見 LINE Pay Online API v3 結果代碼（developers-pay.line.me/online-api-v3）
+linepay,1124,,There is an error in the amount information.,api,error,見 LINE Pay Online API v3 結果代碼（developers-pay.line.me/online-api-v3）
+linepay,1141,,"There is a problem with the account status. In case of EPI transaction, the merchant may not have enabled the EPI payment method, if pre-approved transaction, user might discarded pre-approved payment key and need to obtain a new key.",api,error,見 LINE Pay Online API v3 結果代碼（developers-pay.line.me/online-api-v3）
+linepay,1142,,The balance is insufficient.,api,error,見 LINE Pay Online API v3 結果代碼（developers-pay.line.me/online-api-v3）
+linepay,1145,,Payment is in progress.,api,error,見 LINE Pay Online API v3 結果代碼（developers-pay.line.me/online-api-v3）
+linepay,1150,,There are no transaction details.,api,error,見 LINE Pay Online API v3 結果代碼（developers-pay.line.me/online-api-v3）
+linepay,1152,,There is a duplicate transaction.,api,error,見 LINE Pay Online API v3 結果代碼（developers-pay.line.me/online-api-v3）
+linepay,1153,,The payment request amount and the capture amount differ.,api,error,見 LINE Pay Online API v3 結果代碼（developers-pay.line.me/online-api-v3）
+linepay,1154,,The selected payment method for pre-approved payment isn't available.,api,error,見 LINE Pay Online API v3 結果代碼（developers-pay.line.me/online-api-v3）
+linepay,1155,,This is an invalid transaction ID.,api,error,見 LINE Pay Online API v3 結果代碼（developers-pay.line.me/online-api-v3）
+linepay,1159,,There is no payment request information.,api,error,見 LINE Pay Online API v3 結果代碼（developers-pay.line.me/online-api-v3）
+linepay,1163,,Refund isn't available (refund period has expired).,api,error,見 LINE Pay Online API v3 結果代碼（developers-pay.line.me/online-api-v3）
+linepay,1164,,Exceeded the refundable amount.,api,error,見 LINE Pay Online API v3 結果代碼（developers-pay.line.me/online-api-v3）
+linepay,1165,,The transaction has already been refunded.,api,error,見 LINE Pay Online API v3 結果代碼（developers-pay.line.me/online-api-v3）
+linepay,1169,,LINE Pay requires payment method selection and password authentication.,api,error,見 LINE Pay Online API v3 結果代碼（developers-pay.line.me/online-api-v3）
+linepay,1170,,The balance in the member's account has changed.,api,error,見 LINE Pay Online API v3 結果代碼（developers-pay.line.me/online-api-v3）
+linepay,1172,,Transaction details with the same order ID already exist.,api,error,見 LINE Pay Online API v3 結果代碼（developers-pay.line.me/online-api-v3）
+linepay,1177,,Exceeded the maximum number of transactions that can be retrieved. (100),api,error,見 LINE Pay Online API v3 結果代碼（developers-pay.line.me/online-api-v3）
+linepay,1178,,The currency isn't supported by the merchant.,api,error,見 LINE Pay Online API v3 結果代碼（developers-pay.line.me/online-api-v3）
+linepay,1179,,Cannot be processed at the moment.,api,error,見 LINE Pay Online API v3 結果代碼（developers-pay.line.me/online-api-v3）
+linepay,1180,,Payment time expired.,api,error,見 LINE Pay Online API v3 結果代碼（developers-pay.line.me/online-api-v3）
+linepay,1183,,Payment amount must exceed the minimum amount set.,api,error,見 LINE Pay Online API v3 結果代碼（developers-pay.line.me/online-api-v3）
+linepay,1184,,Payment amount must not exceed the maximum amount set.,api,error,見 LINE Pay Online API v3 結果代碼（developers-pay.line.me/online-api-v3）
+linepay,1190,,There is no pre-approved payment key.,api,error,見 LINE Pay Online API v3 結果代碼（developers-pay.line.me/online-api-v3）
+linepay,1193,,Pre-approved payment key has expired.,api,error,見 LINE Pay Online API v3 結果代碼（developers-pay.line.me/online-api-v3）
+linepay,1194,,Pre-approved payment isn't available for this merchant.,api,error,見 LINE Pay Online API v3 結果代碼（developers-pay.line.me/online-api-v3）
+linepay,1198,,API request is duplicated.,api,error,見 LINE Pay Online API v3 結果代碼（developers-pay.line.me/online-api-v3）
+linepay,1199,,Internal error occurred during the request.,api,error,見 LINE Pay Online API v3 結果代碼（developers-pay.line.me/online-api-v3）
+linepay,1280,,Temporary error occurred during credit card payment.,api,error,見 LINE Pay Online API v3 結果代碼（developers-pay.line.me/online-api-v3）
+linepay,1281,,Error occurred during credit card payment.,api,error,見 LINE Pay Online API v3 結果代碼（developers-pay.line.me/online-api-v3）
+linepay,1282,,Error occurred during credit card authorization.,api,error,見 LINE Pay Online API v3 結果代碼（developers-pay.line.me/online-api-v3）
+linepay,1283,,Payment was denied due to suspected fraudulent use.,api,error,見 LINE Pay Online API v3 結果代碼（developers-pay.line.me/online-api-v3）
+linepay,1284,,Credit card payment is temporarily suspended.,api,error,見 LINE Pay Online API v3 結果代碼（developers-pay.line.me/online-api-v3）
+linepay,1285,,Credit card payment information is missing.,api,error,見 LINE Pay Online API v3 結果代碼（developers-pay.line.me/online-api-v3）
+linepay,1286,,Credit card payment information is incorrect.,api,error,見 LINE Pay Online API v3 結果代碼（developers-pay.line.me/online-api-v3）
+linepay,1287,,Credit card expiration date has passed.,api,error,見 LINE Pay Online API v3 結果代碼（developers-pay.line.me/online-api-v3）
+linepay,1288,,Insufficient balance in the credit card account,api,error,見 LINE Pay Online API v3 結果代碼（developers-pay.line.me/online-api-v3）
+linepay,1289,,Exceeded the credit card limit.,api,error,見 LINE Pay Online API v3 結果代碼（developers-pay.line.me/online-api-v3）
+linepay,1290,,Exceeded the per-transaction limit for credit card payments.,api,error,見 LINE Pay Online API v3 結果代碼（developers-pay.line.me/online-api-v3）
+linepay,1291,,This card is reported stolen.,api,error,見 LINE Pay Online API v3 結果代碼（developers-pay.line.me/online-api-v3）
+linepay,1292,,Card usage is suspended.,api,error,見 LINE Pay Online API v3 結果代碼（developers-pay.line.me/online-api-v3）
+linepay,1293,,CVN input error occurred.,api,error,見 LINE Pay Online API v3 結果代碼（developers-pay.line.me/online-api-v3）
+linepay,1294,,This card is on the blacklist.,api,error,見 LINE Pay Online API v3 結果代碼（developers-pay.line.me/online-api-v3）
+linepay,1295,,The credit card number is incorrect.,api,error,見 LINE Pay Online API v3 結果代碼（developers-pay.line.me/online-api-v3）
+linepay,1296,,This amount cannot be processed.,api,error,見 LINE Pay Online API v3 結果代碼（developers-pay.line.me/online-api-v3）
+linepay,1298,,Card use was declined.,api,error,見 LINE Pay Online API v3 結果代碼（developers-pay.line.me/online-api-v3）
+linepay,2101,,Parameter error occurred.,api,error,見 LINE Pay Online API v3 結果代碼（developers-pay.line.me/online-api-v3）
+linepay,2102,,JSON data format error occurred.,api,error,見 LINE Pay Online API v3 結果代碼（developers-pay.line.me/online-api-v3）
+linepay,9000,,Internal error occurred.,api,error,見 LINE Pay Online API v3 結果代碼（developers-pay.line.me/online-api-v3）
+tappay,-8,,[LINE Pay] failed to get prime,sdk,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,-7,,[Google Pay] failed to get prime,sdk,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,-6,,[Apple Pay] failed to get prime,sdk,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,-5,,Unknown Error,sdk,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,-3,,failed to get prime / Internet Unavailable,sdk,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,-1,,SDK Loading Error,sdk,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,0,,Success / success,success,info,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,5,,Wrong JSON format,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,11,,App ID not found,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,12,,App name mismatch,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,13,,Unknown app error,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,16,,App key mismatch,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,41,,Wrong Card Format / Wrong card format,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,80,,Invaild x-api-key or app key / x-api-key is invalid.,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,81,,Partner not found,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,84,,Partner unauthorized,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,122,,Card encrypt error,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,401,,"Request Cancel, please see the defail of msg",api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,402,,"Can not obtain payment data, please see the defail of msg",api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,403,,[Apple Pay] Get Session error: {Message from apple},api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,404,,"[Payment Request API] Unexcept Error, for detail please see originalError",api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,421,,Gateway Timeout,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,422,,Authorization Timeout,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,530,,Invalid arguments : app_id,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,531,,Missing arguments : app_key,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,532,,Missing arguments : app_name,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,533,,Missing arguments : card_number,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,534,,Missing arguments : card_expiry_date,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,570,,Out of range : app_key,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,571,,Out of range : app_name,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,572,,Out of range : card_number,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,573,,Out of range : card_expiry_date,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,574,,Out of range : card_ccv,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,589,,Invalid arguments : platform_type,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,590,,Missing arguments : android_merchant_id,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,591,,Missing arguments : pay_token_data,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,592,,Missing arguments : apple_merchant_id,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,594,,Out of range : apple_merchant_id,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,598,,Out of range : android_merchant_id,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,599,,Missing arguments : pay_token_data > ephemeralPublicKey,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,600,,Missing arguments : pay_token_data > encryptedMessage,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,601,,Missing arguments : pay_token_data > tag,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,602,,Out of range : pay_token_data > ephemeralPublicKey,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,603,,Out of range : pay_token_data > encryptedMessage,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,604,,Out of range : pay_token_data > tag,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,605,,Missing arguments : pay_token_data > data,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,606,,Missing arguments : pay_token_data > version,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,607,,Missing arguments : pay_token_data > signature,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,608,,Missing arguments : pay_token_data > header > ephemeralPublicKey,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,609,,Missing arguments : pay_token_data > header > publicKeyHash,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,610,,Missing arguments : pay_token_data > header > transactionId,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,611,,Out of range : pay_token_data > data,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,612,,Out of range : pay_token_data > version,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,613,,Out of range : pay_token_data > header > ephemeralPublicKey,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,614,,Out of range : pay_token_data > header > publicKeyHash,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,615,,Out of range : pay_token_data > header > transactionId,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,616,,Missing arguments : pay_token_data > header,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,617,,Out of range : fraud_id,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,618,,Out of range : pay_token_data > protocolVersion,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,619,,Out of range : pay_token_data > signature,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,626,,Invalid arguments : platform_type,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,634,,Missing arguments : pay_token_data > protocolVersion,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,638,,Missing arguments : merchant_app_launch_uri,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,639,,Out of range : merchant_app_launch_uri,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,655,,Missing arguments : reference_id,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,660,,Out of range : reference_id,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,915,,"System error, please contact TapPay customer service",api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,916,,Signature verification is not proceed,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,917,,Signature verification error,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,930,,Samsung Pay merchant not found,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,2000,,[Direct Pay] Card number is empty,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,2001,,[Direct Pay] Card month/year is empty,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,2012,,[Direct Pay] CCV is wrong format / Card key error,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,2013,,Expired Card / Card expired,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,2200,,"[Google Pay] Unexcept Error, for detail please see originalError",api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,10028,,Samsung Pay error,bank,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,13002,,This apple pay merchant identifier is disabled,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,21001,,Samsung Pay Error (Original Message from Samsung Pay) / Terminal Pay transaction not found,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,21002,,Samsung Pay Error (The Internet is unavailable) / Terminal Pay transaction cannot be partially refunded,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,-4,,Unknown Error,sdk,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,30,,Device not support,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,31,,iOS SDK version is too old,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,32,,Android SDK version is too old,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,33,,SDK version is not sent,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,581,,Invalid arguments : devicetype,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,582,,Invalid arguments : sdkversion,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,583,,Out of range : deviceInfo > deviceIdentifier,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,584,,Out of range : deviceInfo > deviceModel,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,585,,Out of range : deviceInfo > deviceOsVersion,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,586,,Out of range : geoloc,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,656,,Missing arguments : samsung_merchant_id,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,657,,Out of range : samsung_merchant_id,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,658,,Missing arguments : pay_token_data > type,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,659,,Out of range : pay_token_data > type,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,801,,Missing arguments : merchant_app_launch_uri or merchant_universal_link,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,802,,Doesn’t support merchant_app_launch_uri or merchant_universal_links concurrently,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,803,,Out of range : merchant_universal_links,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,1001,,Certificate server connection exception (http status code: {http status code}) / Direct Pay transaction not found,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,1002,,Certificate local connection exception (exception message: {exception message}),api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,1003,,Certificate data error,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,88004,,Parameter Format Error,sdk,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,88007,,Input Form Not Set,sdk,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,88008,,LINE Pay is unavailable,sdk,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,88009,,Can not obtain payment data / Can not obtain Apple Pay payment data,sdk,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,88010,,Invalid data for parsing LINE Pay Result / Please Running on the Device,sdk,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,88011,,Samsung Pay Error,sdk,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,88012,,"Samsung Pay canceled by user / Invalid cart setting . While isAmountPending is false , it should not have pending item.",sdk,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,88001,,SDK Is Not Activate,sdk,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,88003,,Lost Parameter,sdk,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,88013,,isAmountPending and isShowTotalAmount couldn’t be false at the same time.,sdk,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,88014,,Total amount couldn’t be displayed if there is only pending items.,sdk,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,88015,,isAmountPending must be true if the amount of payment item is pending.,sdk,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,88016,,paymentItem amount could’t not be 0.00,sdk,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,2,,End of list,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,4,,IP mismatch,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,43,,Card unauthorized access,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,61,,Merchant not found or removed,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,66,,Not a line pay merchant,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,67,,This merchant does not support this payment method,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,68,,This merchant does not support refund cancel,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,70,,TapPay doesn’t support cardholder verify function (KYC) of this bank,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,71,,This merchant does not support instalment,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,72,,This merchant only support instalment,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,74,,This merchant does not support 3DS2.0,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,75,,This merchant does not support non-3D secure,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,89,,This merchant does not support this currency,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,91,,Expired prime,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,92,,The acquirer doesn’t support void auth date is different from the auth date.,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,121,,Invalid arguments : prime,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,126,,Barcode not found,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,127,,Barcode is expired,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,128,,Barcode has been use,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,129,,Member not found,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,130,,Merchant group not found,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,131,,Merchant group setting error,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,132,,On-us merchant not found,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,141,,This partner does not support amount pending,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,501,,Missing arguments : cardholder,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,502,,Missing arguments : merchant_id,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,503,,Missing arguments : prime,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,504,,Missing arguments : currency,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,505,,Missing arguments : details,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,506,,Missing arguments : partner_key,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,507,,Missing arguments : cardholder > phone_number,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,508,,Missing arguments : cardholder > name,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,509,,Missing arguments : cardholder > email,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,510,,Invalid arguments : amount,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,511,,Invalid arguments : instalment,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,512,,Invalid arguments : delay_capture_in_days,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,513,,Out of range : instalment,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,514,,Out of range : delay_capture_in_days,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,515,,Out of range : details,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,516,,Out of range : currency,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,517,,Out of range : order_number,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,518,,Out of range : bank_transaction_id,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,519,,Out of range : cardholder > phone_number,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,520,,Out of range : cardholder > name,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,521,,Out of range : cardholder > email,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,522,,Out of range : cardholder > addr,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,523,,Out of range : cardholder > zip,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,524,,Out of range : cardholder > national_id,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,525,,Out of range : cardholder > member_id,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,526,,Missing arguments : card_key,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,527,,Missing arguments : card_token,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,528,,Out of range : card_key,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,529,,Out of range : card_token,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,535,,Invalid arguments : records_per_page,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,536,,Invalid arguments : page,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,537,,Invalid arguments : filters > time > start_time,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,538,,Invalid arguments : filters > time > end_time,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,539,,Invalid arguments : filters > rec_trade_id,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,545,,Invalid arguments : filters > amount > upper_limit,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,546,,Invalid arguments : filters > amount > lower_limit,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,547,,Invalid arguments : filters > app_id,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,548,,Invalid arguments : filters > merchant_id,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,549,,Invalid arguments : filters > record_status,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,550,,Invalid arguments : order_by > attribute,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,551,,Invalid arguments : order_by > is_descending,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,559,,Out of range : records_per_page,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,560,,Out of range : page,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,561,,Out of range : filters > time > start_time,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,562,,Out of range : filters > time > end_time,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,563,,filters > time > start_time can’t be later than the end_time,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,564,,Out of range : filters > amount > upper_limit,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,565,,Out of range : filters > amount > lower_limit,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,566,,filters > amount > lower_limit can’t be larger than the upper_limit,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,567,,Out of range : filters > app_id,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,568,,Out of range : order_number,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,569,,Out of range : bank_transaction_id,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,578,,Out of range : additional_data,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,587,,Out of range : partner_key,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,588,,Invalid arguments : delay_capture_in_days,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,593,,Out of range : merchant_id,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,595,,Out of range : delay_capture_in_days,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,596,,Missing arguments : rec_trade_id,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,597,,Out of range : rec_trade_id,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,622,,Missing arguments : member_id,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,627,,Invalid arguments : result_url > backend_notify_url,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,628,,Invalid arguments : result_url > frontend_redirect_url,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,629,,Missing arguments : result_url > backend_notify_url,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,630,,Missing arguments : result_url > frontend_redirect_url,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,631,,Missing arguments : result_url,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,632,,Acquirer doesn’t support 3D Secure.,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,633,,3D Secure get redirect url error,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,635,,Acquirer doesn’t support instalment,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,636,,Acquirer doesn’t support redeem,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,637,,Acquirer doesn’t support instalment and redeem concurrently,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,643,,Invalid arguments : additional_data,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,644,,Invalid arguments : line_pay_product_image_url,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,669,,Out of range : request_id,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,670,,Out of range : refund_id,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,691,,Acquirer doesn’t Support Non-3D Secure.,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,693,,Missing Arguments : barcode,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,694,,Out of range: barcode,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,695,,Out of range: barcode_length,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,696,,Out of range: barcode_update_secs,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,697,,Invalid arguments : barcode_length,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,698,,Invalid arguments : barcode_update_sec,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,699,,Invalid argument : barcode,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,700,,Invalid argument : retry_mode,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,701,,Doesn’t support merchant_id and merchant_group_id concurrently,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,706,,Out of range : bank_refund_id,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,708,,Invalid arguments : bank_refund_id,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,713,,Partner doesn’t support sub_merchant,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,740,,Out of range : cardholder > name_en,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,741,,Invalid arguments : cardholder > name_en,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,742,,Invalid arguments : cardholder > phone_number,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,743,,Invalid arguments : cardholder > phone_number_country_code,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,744,,Invalid arguments : cardholder > email,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,804,,Invalid arguments : no_rebate_amount,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,810,,Invalid arguments : payment_method,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,811,,Out of range : branch_code,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,812,,Out of range : branch_name,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,813,,Out of range : pos_id,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,814,,Missing arguments : easy_wallet_secure_code,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,815,,Invalid arguments : easy_wallet_secure_code,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,816,,Missing arguments : easy_wallet_contract_no,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,817,,Invalid arguments : easy_wallet_contract_no,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,822,,Search time period can not be more than 90 days,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,823,,Missing arguments : easy_wallet_ftps_account,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,824,,Invalid arguments : easy_wallet_ftps_account,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,825,,Missing arguments : easy_wallet_ftps_password,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,826,,Invalid arguments : easy_wallet_ftps_password,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,827,,Ftps connection failed due to wrong easy_wallet_ftps_account or easy_wallet_ftps_password,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,828,,Easy Wallet upload path not found,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,829,,Easy Wallet download path not found,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,835,,easy_wallet_ftps_account mismatch with existed merchant,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,836,,easy_wallet_ftps_password mismatch with existed merchant,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,837,,fubon_sftp_account mismatch with existed merchant,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,838,,fubon_sftp_password mismatch with existed merchant,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,839,,fubon_sftp_upload_path mismatch with existed merchant,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,840,,fubon_sftp_download_path mismatch with existed merchant,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,843,,Invalid arguments > product_image_url,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,844,,Out of range : product_image_url,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,845,,Out of range : event_code,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,846,,Invalid arguments : merchant_unversal_links,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,856,,Does not support merchant_ids and acquirers concurrently,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,857,,Missing arguments : transaction_actions,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,858,,Invalid arguments : transaction_actions,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,860,,Missing arguments : emails,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,861,,Invalid arguments : merchant_ids,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,862,,Out of range : kyc_verification_merchant_id,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,863,,national_id must be verified in identity verification (KYC),api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,864,,kyc_verification_merchant_id is only allowed for identity verification (KYC),api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,865,,Missing arguments : nccc_terminal_id,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,866,,Bank not support identity verification (KYC),api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,867,,Out of range : description,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,868,,You have to update at least one cardholder information,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,889,,Out of range : payment_number,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,890,,Out of range : nccc_terminal_id,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,891,,Cardholder not found,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,892,,Out of range : phone_number,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,893,,Out or range : name,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,894,,Out of range : email,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,895,,Out of range : address,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,896,,Out of range : zip,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,897,,Out of range : national_id,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,898,,Out of range : member_id,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,899,,Invalid arguments : acquirers,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,947,,EasyWallet transaction not found,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,950,,EasyWallet get redirect url error,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,900,,Service suspension due to system upgrade,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,901,,Decrypt payment data error,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,904,,Merchant’s acquirer not found,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,905,,Apple Pay transaction not found,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,906,,Apple Pay order id already exist,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,907,,Android Pay transaction not found,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,908,,Android Pay order id already exist,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,909,,Inconsistent amount,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,910,,Inconsistent currency,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,911,,Apple merchant not found,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,912,,Android merchant not found,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,919,,PaymentMethodToken expired,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,920,,Message decryption is not proceed,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,922,,LINE Pay get redirect url error,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,923,,LINE Pay transaction not found,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,924,,LINE Pay order is canceled,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,925,,Three Domain Secure’s order is canceled,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,926,,Acquirer doesn’t support this currency,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,931,,Samsung Pay order id already exist,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,932,,Samsung Pay transaction not found,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,934,,"Incorrect status [Transaction has been Captured, it could not be canceled]",api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,935,,"Incorrect status [Transaction does not arrange capture, it could not be canceled]",api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,936,,"Incorrect status [Transaction is capturing, it could not be canceled]",api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,937,,This card does not support this function,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,939,,Request processing,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,940,,Invalid transaction status,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,941,,Transaction arguments mismatch,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,942,,Invalid environment,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,943,,JKOPAY get redirect url error,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,944,,JKOPAY transaction not found,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,946,,Do not support refund during bank capturing,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,948,,"Previous process is still accessing, please try again later",api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,949,,"Previous request is still accessing, please try again later",api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,2011,,"Card not found, Invalid token",api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,4002,,Invalid arguments : rec_trade_id,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,4014,,Repeated refund,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,5001,,Kyc verification merchant not found,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,5002,,Identity verification (KYC) failed,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,5003,,Identity verification (KYC) exception happened,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,5004,,national_id can’t be empty in identity verification (KYC),api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,5005,,phone_number can’t be empty if it is in need of identity verification (KYC),api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,5006,,This acquirer not support identity verification (KYC),api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,5007,,Can not recognize card issuer if this acquirer not support off-us card in identity verification (KYC),api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,5008,,This acquirer not support off-us card in identity verification (KYC),api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,5009,,This acquirer not support verify phone number in identity verification (KYC),api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,6001,,Duplicate bank_transaction_id,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,6002,,Duplicate bank_refund_id,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,8001,,Partner doesn’t support TSP,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,8002,,Missing arguments : tsp_enable,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,8003,,Invalid arguments : tsp_enable,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,8004,,Missing arguments : tsp_token,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,8005,,Missing arguments : token_status,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,8006,,Missing arguments : card_expiry_date,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,8007,,Missing arguments : token_card_expiry_date,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,8008,,Invalid arguments : token_status,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,8009,,Invalid arguments : tsp_token,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,8010,,Invalid arguments : width,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,8011,,Invalid arguments : height,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,8012,,Invalid arguments : tsp_notify_url,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,8013,,Missing arguments : start_millis,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,8014,,Missing arguments : end_millis,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,8015,,Invalid arguments : start_millis,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,8016,,Invalid arguments : end_millis,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,8017,,Invalid arguments : end_millis (end_millis is less than start_millis),api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,8019,,Missing arguments : tsp_notify_url,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,9003,,Out of range : rba_merchant_key,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,9017,,Invalid arguments : challenge_lowest_score,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,9018,,Missing arguments : fpan_bincodes or token_bincodes,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,9019,,Invalid arguments : fpan_bincodes,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,9020,,Invalid arguments : token_bincodes,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,9021,,Missing arguments : affiliate_code_names,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,9022,,Invalid arguments : affiliate_code_names,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,9023,,Missing arguments : affiliate_code_group_name,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,9024,,Invalid arguments : affiliate_code_group_name,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,9025,,Invalid arguments : order_number,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,9026,,Out of range : fpan_bincodes,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,9027,,Out of range : token_bincodes,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,9028,,Missing arguments : affiliate_code_name,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,9029,,Invalid arguments : affiliate_code_name,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,9030,,Out of range : prime,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,9031,,Missing arguments : card_token or prime,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,9032,,Missing arguments : bank_member_id,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,9037,,Doesn’t support card_token and prime concurrently,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,9051,,Missing arguments : jko_pay_insurance_policy,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,9052,,Missing arguments : jko_pay_insurance_policy > proposer,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,9053,,Missing arguments : jko_pay_insurance_policy > insured,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,9054,,Missing arguments : jko_pay_insurance_policy > final_price,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,9055,,Missing arguments : jko_pay_insurance_policy > insurance_type,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,9056,,Missing arguments : jko_pay_insurance_policy > policy_id,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,9057,,Missing arguments : jko_pay_insurance_policy > payment_deadline,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,9058,,Missing arguments : jko_pay_insurance_policy > payment_frequency,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,9059,,Out of range : jko_pay_insurance_policy > proposer,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,9060,,Invalid arguments : jko_pay_insurance_policy > final_price,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,9061,,Out of range : jko_pay_insurance_policy > policy_id,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,9062,,Invalid arguments : jko_pay_insurance_policy > payment_frequency,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,9063,,Invalid arguments : jko_pay_insurance_policy > payment_deadline,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,9067,,Missing argument : details[i] > item_id,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,9068,,Out of range : details[i] > item_id,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,9069,,Invalid argument : details[i] > item_id,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,9070,,Missing argument : details[i] > item_name,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,9071,,Out of range : details[i] > item_name,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,9072,,Invalid argument : details[i] > item_name,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,9073,,Missing argument : details[i] > item_quantity,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,9074,,Invalid argument : details[i] > item_quantity,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,9075,,Missing argument : details[i] > item_price,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,9076,,Invalid argument : details[i] > item_price,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,9118,,Missing arguments : tsp_push_token,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,9119,,Out of range : tsp_push_token,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,9158,,Missing argument : details[i] > item_category,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,9159,,Invalid argument : details[i] > item_category,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,10001,,Transaction pending,bank,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,10002,,IP mismatch,bank,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,10003,,"Wrong card, please ask for issuer",bank,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,10004,,Bank timeout,bank,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,10005,,Bank system error,bank,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,10006,,Duplicate transaction,bank,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,10007,,3D validate error,bank,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,10008,,Bank merchant account data error,bank,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,10009,,Amount error,bank,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,10010,,"Transaction pending capture, can not refund",bank,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,10011,,Refund error. Please try again.,bank,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,10012,,Data format error,bank,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,10013,,Bank transaction id duplicate,bank,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,10014,,Invalid bank transaction id,bank,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,10015,,Redeem failed,bank,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,10016,,"Refund denial due to risky reason, please contact TapPay for more information",bank,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,10023,,Bank error or TSP error,bank,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,10024,,Authorized transaction cannot be partially refunded,bank,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,10025,,Auth code mismatch error,bank,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,10026,,Bank transaction id mismatch error,bank,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,10029,,CTBC decrypt data error,bank,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,10030,,CTBC decrypt data invalid eci,bank,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,10031,,CTBC decrypt data missing errorCode,bank,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,10032,,Card CTBC decrypt data missing xid,bank,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,10033,,CTBC decrypt data missing cardNumber,bank,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,10034,,CTBC decrypt data missing expiry,bank,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,10035,,CTBC decrypt data missing eci,bank,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,10036,,Card number mismatch error,bank,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,10037,,Card expiry date mismatch error,bank,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,10038,,Redeem transaction cannot be partially refunded,bank,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,10039,,This merchant does not support this card type,bank,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,10042,,Doesn’t support this card’s country code,bank,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,10043,,This card can’t find issuer’s country code,bank,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,10044,,Instalment fail (invalid instalment periods or card),bank,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,10048,,"The transaction amount is 0, cannot be refunded",bank,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,10049,,"The transaction amount is 0, cannot be captured",bank,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,10050,,Out of range : amount,bank,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,10051,,Out of range : amount (refund amount must be less than or equal to remained amount),bank,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,10052,,Confirm order timeout,bank,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,10055,,Missing arguments : filters > time,bank,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,10056,,Missing arguments : filters,bank,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,10057,,Capture charge authorization expired,bank,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,11000,,Invalid arguments : rec_trade_id,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,12001,,Rba doesn’t support transaction with merchant_id,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,12007,,Merchant Group Setting not match rba recommendation,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,12008,,Payment request not match rba recommendation,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,12009,,"Payment request denial due to risky reason, please contact TapPay for more information",api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,14001,,Affiliate code group not found,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,14002,,Affiliate code not found,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,14003,,Duplicate affiliate code,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,14004,,Duplicate fpan bincode,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,14005,,Duplicate token bincode,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,14006,,Create affiliate code failed,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,14007,,Delete affiliate code failed,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,14008,,Update affiliate code failed,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,14009,,Create bincode failed,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,14010,,Delete bincode failed,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,14011,,Fpan bincode exceeding single affiliate code limit,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,14012,,Token bincode exceeding single affiliate code limit,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,14013,,Partner does not support affiliate code query,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,15001,,Easy Wallet not support duplicate bank_member_id binding,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,15002,,The E-Wallet token already unbind,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,15003,,This merchant does not support binding transaction,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,15004,,Transaction canceled via electronic payment service.,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,15006,,Manual Review Pending,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,19004,,Push-tokenize failed: REQUIRE_ADDITIONAL_AUTHENTICATION,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,24006,,Missing arguments : branch_info > branch_code,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,24007,,Missing arguments : branch_info > pos_id,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,24008,,Missing arguments : pos_millis,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,24009,,Invalid arguments : pos_millis,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,24010,,Merchant not support cross payment institution,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,9999,,"System is under maintenance, please contact TapPay customer service",api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,82,,Partner key mismatch,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,209,,Missing argument : request_type.,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,211,,Invalid argument : request_type.,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,450,,Create affiliate code failed {detail error message},api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,451,,fpan_bincodes length should be less than or equal to 50.,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,452,,token_bincodes length should be less than or equal to 50.,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,453,,Delete affiliate code failed {detail error message},api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,454,,Create affiliate code group failed {detail error message},api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,455,,affiliate_code_names length should be less than 50.,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
+tappay,456,,Delte affiliate code group failed {detail error message},api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同
 jkopay,000,成功,Success,success,info,
 jkopay,101,訂單已付款,Order is paid,duplicate,warning,以 platform_order_id 查詢 Inquiry API 確認狀態後結案勿重複建單
 jkopay,200,參數錯誤,Bad request,validation,error,message 會動態指出錯誤欄位 依訊息修正
@@ -132,20 +1113,31 @@ jkopay,304,金額與授權帳單金額不一致,Order finalPrice is not consiste
 jkopay,305,超過當前週期扣款次數,Authpay payment exceeds current billing cycle times,business,error,週期次數上限 week/month/quarter<=7 year<=12 檢查 billing_cycle.times
 jkopay,306,授權扣款時段無效,Authpay payment transaction time invalid.(Available at 08:00 - 20:00 UTC+8),business,error,授權扣款僅限 08:00-20:00 UTC+8 排程勿排夜間
 jkopay,307,同一授權不可併發扣款,Payment with the same auth_no is allowed one at a time,business,error,同一 auth_no 同時僅允許一筆付款 扣款須序列化
-sunpay,10,交易成功,Transaction Success,success,info,
-sunpay,11,交易失敗,Transaction Failed,payment,error,查 CallBack 內容確認失敗原因 或改用其他支付方式
-sunpay,12-callback,已建立(交易通知),Order Created,payment,warning,交易 CallBack 的 12 代表已建立尚未付款 勿與查詢 API 的 12 混淆
-sunpay,12-query,查無該筆訂單(查詢API),Order Not Found,query,error,查詢 API 的 12 代表查無訂單 與交易通知的 12 意義不同 判斷邏輯須分開
-sunpay,06,交易編號或訂單編號須擇一,Trade No or Order No required,validation,error,查詢時 trade_no 與 td 必須擇一帶入
-sunpay,13,交易未完成,Transaction Incomplete,query,warning,消費者尚未完成付款 可續等或取消
-sunpay,14,訂單退款,Order Refunded,refund,info,該筆訂單已退款 另查 refund_status 取得退款進度
-sunpay,15,交易取消,Transaction Canceled,query,info,交易已取消
-sunpay,RSA-001,RSA 加密失敗,RSA Encryption Failed,encryption,error,加密分段須為 117 byte 且需先 urlencode 再加密
-sunpay,RSA-002,RSA 解密失敗,RSA Decryption Failed,encryption,error,解密分段為 128 byte 非 117 先 base64decode 再分段解密最後 urldecode
-sunpay,SIGN-001,check_value 驗證失敗,Signature Mismatch,auth,error,head 與 body 須 ASCII 升序排序 null 值不參與簽名 SHA2 密鑰接在 urlencode 字串尾端
-sunpay,TIME-001,交易發起時間逾時,Send Time Expired,validation,error,send_time 格式為 fffssmmHHyyyyMMdd 且超過 120 秒視為無效 請校時
-sunpay,LGS-001,物流金額超限,Logistics Amount Exceeded,validation,error,訂單金額大於 2 萬元無法使用物流服務
-sunpay,URL-001,回傳網址含連接埠被擋,Callback URL With Port Blocked,validation,error,回傳網址不可帶 port 紅陽基於資安風控會阻擋
+sunpay,10,交易成功,Transaction Success,success,info,交易通知 status / 查詢 result.status（紅陽金流技術串接手冊 v1.1.0 4.3、4.4.2）
+sunpay,11,交易失敗,Transaction Failed,payment,error,交易通知 status / 查詢 result.status；查 msg 確認原因（紅陽金流技術串接手冊 v1.1.0 4.3、4.4.2）
+sunpay,12-callback,已建立(交易通知),Order Created,payment,warning,交易通知的 12 代表已建立尚未付款，勿與查詢的 12（查無訂單）、退款的 12（無此訂單）混淆（紅陽金流技術串接手冊 v1.1.0 4.3）
+sunpay,12-query,查無該筆訂單(查詢API),Order Not Found,query,error,查詢 API result.status（紅陽金流技術串接手冊 v1.1.0 4.4.2）
+sunpay,06,紅陽交易編號或是特店訂單編號必須擇一,Trade No or Order No required,validation,error,查詢 API result.status；trade_no 與 td 必須擇一帶入（紅陽金流技術串接手冊 v1.1.0 4.4.2）
+sunpay,13-query,交易未完成(查詢API),Transaction Incomplete,query,warning,查詢 API result.status；消費者尚未完成付款（紅陽金流技術串接手冊 v1.1.0 4.4.2）
+sunpay,14,訂單退款,Order Refunded,refund,info,查詢 API result.status；另看 refund_status（紅陽金流技術串接手冊 v1.1.0 4.4.2）
+sunpay,15,交易取消,Transaction Canceled,query,info,查詢 API result.status（紅陽金流技術串接手冊 v1.1.0 4.4.2）
+sunpay,00,請求成功,Request Success,success,info,查詢 / 請款 API 外層 code（紅陽金流技術串接手冊 v1.1.0 4.4.2、4.5.2）；查詢時業務狀態看 result.status
+sunpay,99-query,未知錯誤(查詢/請款API),Unknown Error,system,error,查詢 API 外層 code 99「未知錯誤」、請款 API 99「請求失敗」（紅陽金流技術串接手冊 v1.1.0 4.4.2、4.5.2）
+sunpay,01,特店代碼不正確,Invalid Merchant,auth,error,退款 API code（紅陽金流技術串接手冊 v1.1.0 4.6.2）
+sunpay,02,訂單編號重複,Duplicate Order No,validation,error,退款 API code（紅陽金流技術串接手冊 v1.1.0 4.6.2）
+sunpay,03,參數不正確,Invalid Parameter,validation,error,退款 API code（紅陽金流技術串接手冊 v1.1.0 4.6.2）
+sunpay,04,驗簽失敗,Signature Verification Failed,auth,error,退款 API code（紅陽金流技術串接手冊 v1.1.0 4.6.2）
+sunpay,12-refund,無此訂單(退款API),Order Not Found,refund,error,退款 API code（紅陽金流技術串接手冊 v1.1.0 4.6.2）
+sunpay,13-refund,訂單已申請退款(退款API),Refund Already Requested,refund,error,退款 API code（紅陽金流技術串接手冊 v1.1.0 4.6.2）
+sunpay,20,申請退款成功,Refund Requested,refund,info,退款 API code（紅陽金流技術串接手冊 v1.1.0 4.6.2）
+sunpay,21,申請退款失敗，非信用卡交易不接受退款,Refund Rejected (non-credit),refund,error,退款 API code（紅陽金流技術串接手冊 v1.1.0 4.6.2）
+sunpay,22,超過退款申請期限,Refund Period Expired,refund,error,退款 API code（紅陽金流技術串接手冊 v1.1.0 4.6.2）
+sunpay,23,已退款達兩次,Refund Limit Reached,refund,error,退款 API code（紅陽金流技術串接手冊 v1.1.0 4.6.2）
+sunpay,24,已無餘額可退款,No Refundable Balance,refund,error,退款 API code（紅陽金流技術串接手冊 v1.1.0 4.6.2）
+sunpay,25,當日訂單僅允許全額退款,Same-day Orders Allow Full Refund Only,refund,error,退款 API code（紅陽金流技術串接手冊 v1.1.0 4.6.2）
+sunpay,26,本次退款金額需與可退款金額一致,Refund Amount Must Equal Refundable Amount,refund,error,退款 API code（紅陽金流技術串接手冊 v1.1.0 4.6.2）
+sunpay,97,不接受此 IP 進行授權,IP Not Allowed,auth,error,退款 API code（紅陽金流技術串接手冊 v1.1.0 4.6.2）
+sunpay,99-refund,未知錯誤(退款API),Unknown Error,system,error,退款 API code（紅陽金流技術串接手冊 v1.1.0 4.6.2）
 jkopay,POS-000,交易成功,Success,success,info,
 jkopay,POS-301,交易失敗(網路或系統異常),Transaction failed network or system error,server,error,稍後重試 注意此碼與 Platform API 的 301(Invalid auth_no) 意義不同
 jkopay,POS-601,查無綁定會員,Bound member not found,validation,error,消費者未完成綁定 請其於街口 App 完成設定

@@ -2,18 +2,27 @@
 """
 PAYUNi 統一金流 Python 完整範例
 
-依照 taiwan-payment-skill 最高規範撰寫
-支援: 信用卡、ATM、超商代碼、AFTEE、iCash Pay
+支援: 整合式支付頁 UPP（信用卡、ATM、超商代碼、AFTEE、愛金卡、LINE Pay、街口…）、
+      付款結果通知、交易查詢、信用卡退款
 
-API 文件: https://www.payuni.com.tw
+依據（皆已對照原始碼）:
+- 加解密：統一金流官方外掛 PAYUNi_for_WooCommerce 1.2.8、官方 PHP SDK（github.com/payuni/PHP_SDK），
+  並以 tests/vectors/payuni.json 逐位元組驗證
+- UPP 欄位與付款方式開關：官方外掛 uppOnePointHandler()、$paymentArr
+- 端點路徑：官方 PHP SDK UniversalTrade() 對照表（例如操作名 trade_query → 路徑 trade/query）
+- 通知 / 查詢欄位與代碼：wpbr-payuni-payment 1.7.1
+
+API 文件: https://docs.payuni.com.tw/web/
 """
 
+import base64
 import hashlib
-import urllib.parse
+import hmac
+import re
 import time
-from datetime import datetime
-from typing import Dict, Literal, Optional
+import urllib.parse
 from dataclasses import dataclass, field
+from typing import Any, Dict, List, Optional
 
 try:
     from Crypto.Cipher import AES
@@ -22,381 +31,244 @@ except ImportError:
     HAS_CRYPTO = False
 
 
+# UPP 付款方式開關欄位（官方外掛 $paymentArr，大小寫須完全相同）
+UPP_PAYMENT_FLAGS = (
+    'Credit', 'CreditInst', 'CreditRed', 'CreditUnionPay',
+    'ApplePay', 'GooglePay', 'SamsungPay',
+    'ATM', 'CVS', 'ICash', 'Aftee', 'LinePay', 'JKoPay',
+)
+
+# 交易狀態（wpbr-payuni-payment Utils/TradeStatus.php）
+TRADE_STATUS = {
+    '0': '取號成功 / 信用審查正常', '1': '已付款', '2': '付款失敗', '3': '付款取消',
+    '4': '交易逾期', '8': '待確認', '9': '未付款',
+}
+
+
 @dataclass
 class PaymentOrderData:
-    """PAYUNi 付款訂單資料"""
+    """PAYUNi UPP 訂單資料"""
     mer_trade_no: str
     trade_amt: int
     prod_desc: str
-    return_url: str
-    notify_url: str
-    pay_type: Literal['Credit', 'VACC', 'CVS', 'AFTEE', 'iCashPay']
-    trade_limit_date: Optional[str] = None
-    unified_id: Optional[str] = None
-    buyer_name: Optional[str] = None
-    buyer_tel: Optional[str] = None
-    buyer_email: Optional[str] = None
-
-
-@dataclass
-class PaymentOrderResponse:
-    """PAYUNi 付款訂單回應"""
-    success: bool
-    status: str
-    message: str
-    mer_trade_no: str
-    trade_no: Optional[str] = None
-    payment_url: Optional[str] = None
-    atm_bank_code: Optional[str] = None
-    atm_account: Optional[str] = None
-    atm_expire_date: Optional[str] = None
-    cvs_code: Optional[str] = None
-    cvs_expire_date: Optional[str] = None
-    error_code: Optional[str] = None
-    raw: Dict = field(default_factory=dict)
+    return_url: str                      # 前景：消費者付款後導回
+    notify_url: str                      # 背景：伺服器對伺服器通知
+    payment_methods: List[str] = field(default_factory=lambda: ['Credit'])
+    usr_mail: Optional[str] = None
+    expire_date: Optional[str] = None    # 繳費期限 YYYY-MM-DD（ATM / 超商代碼）
+    lang: Optional[str] = None
 
 
 @dataclass
 class PaymentCallbackData:
-    """PAYUNi 付款回傳資料"""
-    status: str
+    """付款結果通知（EncryptInfo 解密後）"""
+    status: str                          # SUCCESS；AFTEE 審核通過時為 OK
     message: str
-    mer_id: str
     mer_trade_no: str
-    trade_no: str
+    trade_no: str                        # UNi 序號，退款 / 查詢用
     trade_amt: int
-    trade_status: str
-    pay_type: str
-    pay_date: str
-    settle_date: Optional[str] = None
-    checksum: str
-    raw: Dict = field(default_factory=dict)
+    trade_status: str                    # 見 TRADE_STATUS
+    payment_type: str                    # 1=信用卡 2=ATM 3=超商代碼 6=愛金卡 7=AFTEE 9=LINE Pay …
+    raw: Dict[str, Any] = field(default_factory=dict)
+
+    @property
+    def is_paid(self) -> bool:
+        return self.status == 'SUCCESS' and self.trade_status == '1'
 
 
 class PAYUNiPaymentService:
-    """
-    PAYUNi 統一金流服務
+    """PAYUNi 統一金流服務（AES-256-GCM + SHA256）"""
 
-    認證方式: AES-256-GCM + SHA256
-    加密方式: AES-GCM 加密 + SHA256 驗證
+    TEST_BASE_URL = 'https://sandbox-api.payuni.com.tw/api'
+    PROD_BASE_URL = 'https://api.payuni.com.tw/api'
 
-    支援付款方式:
-    - Credit: 信用卡
-    - VACC: ATM 轉帳
-    - CVS: 超商代碼
-    - AFTEE: AFTEE 先享後付
-    - iCashPay: iCash Pay
-
-    測試環境:
-    - API URL: https://sandbox-api.payuni.com.tw/api/upp
-    - 需至 PAYUNi 申請測試帳號
-    """
-
-    # 測試環境
-    TEST_API_URL = 'https://sandbox-api.payuni.com.tw/api/upp'
-    TEST_QUERY_URL = 'https://sandbox-api.payuni.com.tw/api/trade_query'
-
-    # 正式環境
-    PROD_API_URL = 'https://api.payuni.com.tw/api/upp'
-    PROD_QUERY_URL = 'https://api.payuni.com.tw/api/trade_query'
-
-    def __init__(
-        self,
-        mer_id: str,
-        hash_key: str,
-        hash_iv: str,
-        is_production: bool = False
-    ):
-        """
-        初始化 PAYUNi 金流服務
-
-        Args:
-            mer_id: 商店代號
-            hash_key: HashKey
-            hash_iv: HashIV (16 bytes)
-            is_production: 是否為正式環境 (預設 False)
-
-        Raises:
-            ImportError: 缺少 pycryptodome 套件
-        """
+    def __init__(self, mer_id: str, hash_key: str, hash_iv: str, is_production: bool = False):
         if not HAS_CRYPTO:
             raise ImportError('需要安裝 pycryptodome: pip install pycryptodome')
 
         self.mer_id = mer_id
         self.hash_key = hash_key.encode('utf-8')
         self.hash_iv = hash_iv.encode('utf-8')
-        self.api_url = self.PROD_API_URL if is_production else self.TEST_API_URL
-        self.query_url = self.PROD_QUERY_URL if is_production else self.TEST_QUERY_URL
+        self.base_url = self.PROD_BASE_URL if is_production else self.TEST_BASE_URL
 
-    def encrypt_data(self, data: Dict[str, any]) -> str:
+    # ------------------------------------------------------------------
+    # 加解密（與官方外掛 / SDK 逐位元組相同）
+    # ------------------------------------------------------------------
+
+    def encrypt_data(self, data: Dict[str, Any]) -> str:
         """
-        加密資料 (AES-256-GCM)
+        EncryptInfo = hex( base64(AES-256-GCM 密文) + ":::" + base64(tag) )
 
-        Args:
-            data: 交易資料字典
-
-        Returns:
-            str: AES-GCM 加密後的 hex 字串 (base64(密文) + ":::" + base64(tag))
-
-        Example:
-            >>> data = {'MerID': 'MS123', 'TradeAmt': 100}
-            >>> encrypted = service.encrypt_data(data)
-            >>> len(encrypted) > 0
-            True
+        官方以 openssl_encrypt(..., options=0) 取得 base64 密文，再與 base64 tag 以
+        ":::" 串接後整段 bin2hex。只做到 base64 + ":::" 而少了最外層 hex 的版本會被拒絕。
         """
-        import base64
-        # 步驟 1: 轉換為查詢字串
         query_string = urllib.parse.urlencode(data)
-
-        # 步驟 2: AES-256-GCM 加密
-        cipher = AES.new(self.hash_key, AES.MODE_GCM, nonce=self.hash_iv)
+        cipher = AES.new(self.hash_key, AES.MODE_GCM, nonce=self.hash_iv)   # HashIV 即 nonce（16 bytes）
         encrypted, tag = cipher.encrypt_and_digest(query_string.encode('utf-8'))
+        return (base64.b64encode(encrypted) + b':::' + base64.b64encode(tag)).hex()
 
-        # 步驟 3: 分別 base64 編碼，用 ":::" 分隔
-        encrypted_b64 = base64.b64encode(encrypted).decode('utf-8')
-        tag_b64 = base64.b64encode(tag).decode('utf-8')
-        return encrypted_b64 + ':::' + tag_b64
-
-    def decrypt_data(self, encrypted_data: str) -> Dict[str, any]:
-        """
-        解密資料 (AES-256-GCM)
-
-        Args:
-            encrypted_data: AES-GCM 加密的字串 (base64(密文) + ":::" + base64(tag))
-
-        Returns:
-            Dict: 解密後的資料字典
-
-        Raises:
-            ValueError: 解密失敗或驗證失敗
-        """
+    def decrypt_data(self, encrypted_data: str) -> Dict[str, Any]:
+        """解密 EncryptInfo；tag 驗證失敗（資料遭竄改 / 金鑰錯誤）時拋出 ValueError"""
         try:
-            import base64
-            # 步驟 1: 分離 base64 編碼的密文和 tag
-            parts = encrypted_data.split(':::')
-            if len(parts) != 2:
-                raise ValueError('格式錯誤: 缺少 ":::" 分隔符')
+            raw = bytes.fromhex(encrypted_data.strip())
+            if b':::' not in raw:
+                raise ValueError('格式錯誤: hex 解碼後缺少 ":::" 分隔符')
+            encrypted_b64, tag_b64 = raw.split(b':::', 1)
 
-            encrypted_b64, tag_b64 = parts
-
-            # 步驟 2: Base64 解碼
-            encrypted = base64.b64decode(encrypted_b64)
-            tag = base64.b64decode(tag_b64)
-
-            # 步驟 3: AES-256-GCM 解密並驗證
             decipher = AES.new(self.hash_key, AES.MODE_GCM, nonce=self.hash_iv)
-            decrypted = decipher.decrypt_and_verify(encrypted, tag)
+            decrypted = decipher.decrypt_and_verify(
+                base64.b64decode(encrypted_b64), base64.b64decode(tag_b64))
 
-            # 步驟 4: 解析查詢字串
-            query_string = decrypted.decode('utf-8')
-            params = urllib.parse.parse_qs(query_string)
-
-            # 步驟 5: 轉換為單值字典
-            result = {k: v[0] if len(v) == 1 else v for k, v in params.items()}
-            return result
+            params = urllib.parse.parse_qs(decrypted.decode('utf-8'), keep_blank_values=True)
+            return {k: v[0] if len(v) == 1 else v for k, v in params.items()}
         except Exception as e:
             raise ValueError(f'解密失敗: {str(e)}')
 
     def generate_checksum(self, encrypt_info: str) -> str:
-        """
-        產生 Checksum (SHA256)
-
-        Args:
-            encrypt_info: 加密後的資料
-
-        Returns:
-            str: SHA256 雜湊值 (大寫)
-
-        Example:
-            >>> checksum = service.generate_checksum('abcd1234')
-            >>> len(checksum)
-            64
-        """
-        # 組合字串: HashKey + EncryptInfo + HashIV (Key 在前)
+        """HashInfo = SHA256( HashKey + EncryptInfo + HashIV ) 轉大寫（Key 在前）"""
         raw = self.hash_key.decode('utf-8') + encrypt_info + self.hash_iv.decode('utf-8')
-
-        # SHA256 雜湊並轉大寫
         return hashlib.sha256(raw.encode('utf-8')).hexdigest().upper()
 
     def verify_checksum(self, encrypt_info: str, checksum: str) -> bool:
-        """
-        驗證 Checksum
+        """驗證 HashInfo（常數時間比較，避免以回應時間差逐字元猜出正確雜湊）"""
+        return hmac.compare_digest(self.generate_checksum(encrypt_info), checksum.upper())
 
-        Args:
-            encrypt_info: 加密後的資料
-            checksum: 接收到的 Checksum
+    def _envelope(self, data: Dict[str, Any], version: str) -> Dict[str, str]:
+        encrypt_info = self.encrypt_data(data)
+        return {
+            'MerID': self.mer_id,
+            'Version': version,
+            'EncryptInfo': encrypt_info,
+            'HashInfo': self.generate_checksum(encrypt_info),
+        }
+
+    # ------------------------------------------------------------------
+    # UPP 整合式支付頁
+    # ------------------------------------------------------------------
+
+    def build_upp_form(self, data: PaymentOrderData) -> Dict[str, Any]:
+        """
+        產生 UPP 表單
+
+        UPP 是**消費者瀏覽器**以表單 POST 到 /api/upp 的付款頁（官方 SDK 的 HtmlApi()
+        就是輸出一個自動送出的 <form>），不是伺服器端呼叫的 JSON API。
+
+        付款方式以「欄位名 = 1」的旗標啟用，沒有 PayType 參數。
 
         Returns:
-            bool: 驗證是否通過
+            {'action': 送出網址, 'fields': {'MerID', 'Version', 'EncryptInfo', 'HashInfo'}}
         """
-        calculated_checksum = self.generate_checksum(encrypt_info)
-        return calculated_checksum == checksum.upper()
-
-    def create_order(
-        self,
-        data: PaymentOrderData,
-    ) -> PaymentOrderResponse:
-        """
-        建立付款訂單
-
-        Args:
-            data: 付款訂單資料 (PaymentOrderData)
-
-        Returns:
-            PaymentOrderResponse: 付款訂單回應
-
-        Raises:
-            ValueError: 參數驗證失敗
-            Exception: API 請求失敗
-
-        Example:
-            >>> order_data = PaymentOrderData(
-            ...     mer_trade_no=f'UNI{int(time.time())}',
-            ...     trade_amt=3000,
-            ...     prod_desc='測試商品',
-            ...     return_url='https://your-site.com/return',
-            ...     notify_url='https://your-site.com/notify',
-            ...     pay_type='Credit',
-            ... )
-            >>> result = service.create_order(order_data)
-            >>> print(result.payment_url)
-        """
-        # 參數驗證
         if data.trade_amt < 1:
             raise ValueError('金額必須大於 0')
-        if len(data.mer_trade_no) > 30:
-            raise ValueError('訂單編號不可超過 30 字元')
+        unknown = [m for m in data.payment_methods if m not in UPP_PAYMENT_FLAGS]
+        if unknown:
+            raise ValueError(f'未知的付款方式欄位 {unknown}（可用：{", ".join(UPP_PAYMENT_FLAGS)}）')
 
-        # 準備 API 參數
-        trade_data = {
+        encrypt_info: Dict[str, Any] = {
             'MerID': self.mer_id,
             'MerTradeNo': data.mer_trade_no,
             'TradeAmt': data.trade_amt,
             'ProdDesc': data.prod_desc,
             'ReturnURL': data.return_url,
             'NotifyURL': data.notify_url,
-            'PayType': data.pay_type,
             'Timestamp': int(time.time()),
         }
+        if data.usr_mail:
+            encrypt_info['UsrMail'] = data.usr_mail
+        if data.expire_date:
+            encrypt_info['ExpireDate'] = data.expire_date
+        if data.lang:
+            encrypt_info['Lang'] = data.lang
+        for method in data.payment_methods:
+            encrypt_info[method] = 1
 
-        # 可選參數
-        if data.trade_limit_date:
-            trade_data['TradeLimitDate'] = data.trade_limit_date
-        if data.unified_id:
-            trade_data['UnifiedID'] = data.unified_id
-        if data.buyer_name:
-            trade_data['BuyerName'] = data.buyer_name
-        if data.buyer_tel:
-            trade_data['BuyerTel'] = data.buyer_tel
-        if data.buyer_email:
-            trade_data['BuyerEmail'] = data.buyer_email
-
-        # 加密資料
-        encrypt_info = self.encrypt_data(trade_data)
-
-        # 產生 Checksum
-        checksum = self.generate_checksum(encrypt_info)
-
-        # 準備 API 請求
-        api_data = {
-            'MerID': self.mer_id,
-            'Version': '1.0',
-            'EncryptInfo': encrypt_info,
-            'HashInfo': checksum,
-        }
-
-        # 發送 API 請求
-        try:
-            import requests
-            response = requests.post(
-                self.api_url,
-                data=api_data,
-                timeout=30,
-            )
-            response.raise_for_status()
-            result = response.json()
-        except Exception as e:
-            raise Exception(f'API 請求失敗: {str(e)}')
-
-        # 解析回應
-        if result.get('Status') != 'SUCCESS':
-            return PaymentOrderResponse(
-                success=False,
-                status=result.get('Status', 'ERROR'),
-                message=result.get('Message', '未知錯誤'),
-                mer_trade_no=data.mer_trade_no,
-                error_code=result.get('ErrCode'),
-                raw=result,
-            )
-
-        # 解密回應資料
-        response_encrypt_info = result.get('EncryptInfo', '')
-        if response_encrypt_info:
-            try:
-                decrypted = self.decrypt_data(response_encrypt_info)
-            except:
-                decrypted = {}
-        else:
-            decrypted = {}
-
-        return PaymentOrderResponse(
-            success=True,
-            status=result.get('Status', ''),
-            message=result.get('Message', ''),
-            mer_trade_no=data.mer_trade_no,
-            trade_no=decrypted.get('TradeNo'),
-            payment_url=decrypted.get('PaymentURL'),
-            atm_bank_code=decrypted.get('ATMBankCode'),
-            atm_account=decrypted.get('ATMAcct'),
-            atm_expire_date=decrypted.get('ATMExpireDate'),
-            cvs_code=decrypted.get('CVSCode'),
-            cvs_expire_date=decrypted.get('CVSExpireDate'),
-            raw=result,
-        )
+        return {'action': f'{self.base_url}/upp', 'fields': self._envelope(encrypt_info, '1.0')}
 
     def parse_callback(self, callback_data: Dict[str, str]) -> PaymentCallbackData:
         """
-        解析付款回傳資料
+        解析 NotifyURL / ReturnURL 的付款結果（先驗 HashInfo 再解密）
 
-        Args:
-            callback_data: POST 回傳的參數字典
-
-        Returns:
-            PaymentCallbackData: 解析後的回傳資料
-
-        Raises:
-            ValueError: Checksum 驗證失敗或解密失敗
-
-        Example:
-            >>> callback = request.form.to_dict()
-            >>> result = service.parse_callback(callback)
-            >>> if result.status == 'SUCCESS':
-            ...     print(f"付款成功: {result.trade_no}")
+        入帳前務必確認 is_paid（Status=SUCCESS 且 TradeStatus=1），並比對金額與訂單。
+        ATM / 超商代碼在「取號成功」時也會通知，此時 TradeStatus=0，尚未付款。
         """
-        # 驗證 Checksum
         encrypt_info = callback_data.get('EncryptInfo', '')
         hash_info = callback_data.get('HashInfo', '')
-
         if not self.verify_checksum(encrypt_info, hash_info):
-            raise ValueError('Checksum 驗證失敗')
+            raise ValueError('HashInfo 驗證失敗')
 
-        # 解密資料
         decrypted = self.decrypt_data(encrypt_info)
-
         return PaymentCallbackData(
             status=decrypted.get('Status', ''),
             message=decrypted.get('Message', ''),
-            mer_id=decrypted.get('MerID', ''),
             mer_trade_no=decrypted.get('MerTradeNo', ''),
             trade_no=decrypted.get('TradeNo', ''),
-            trade_amt=int(decrypted.get('TradeAmt', 0)),
+            trade_amt=int(decrypted.get('TradeAmt') or 0),
             trade_status=decrypted.get('TradeStatus', ''),
-            pay_type=decrypted.get('PayType', ''),
-            pay_date=decrypted.get('PayDate', ''),
-            settle_date=decrypted.get('SettleDate'),
-            checksum=hash_info,
+            payment_type=decrypted.get('PaymentType', ''),
             raw=decrypted,
         )
+
+    # ------------------------------------------------------------------
+    # 幕後 API（伺服器對伺服器）
+    # ------------------------------------------------------------------
+
+    def _post(self, path: str, data: Dict[str, Any], version: str) -> Dict[str, Any]:
+        import requests
+
+        response = requests.post(f'{self.base_url}/{path}', data=self._envelope(data, version), timeout=30)
+        response.raise_for_status()
+        result = response.json()
+        encrypt_info = result.get('EncryptInfo', '')
+        if not encrypt_info:
+            # 外層錯誤（例如 API00003 無 API 版本號）不帶 EncryptInfo
+            return {'Status': result.get('Status', 'ERROR'), 'raw': result}
+        if not self.verify_checksum(encrypt_info, result.get('HashInfo', '')):
+            raise ValueError('HashInfo 驗證失敗')
+        return self.decrypt_data(encrypt_info)
+
+    @staticmethod
+    def extract_results(decrypted: Dict[str, Any]) -> List[Dict[str, Any]]:
+        """
+        把 parse_qs 攤平的巢狀欄位 Result[0][TradeNo] 還原成 [{'TradeNo': ...}, ...]
+
+        PHP 的 parse_str 會自動組成巢狀陣列，Python 的 parse_qs 不會。
+        """
+        rows: Dict[int, Dict[str, Any]] = {}
+        for key, value in decrypted.items():
+            m = re.fullmatch(r'Result\[(\d+)\]\[(\w+)\]', key)
+            if m:
+                rows.setdefault(int(m.group(1)), {})[m.group(2)] = value
+        return [rows[i] for i in sorted(rows)]
+
+    def query_trade(self, mer_trade_no: str) -> List[Dict[str, Any]]:
+        """
+        交易查詢（POST /api/trade/query）
+
+        以 Version 2.0 呼叫（同 wpbr-payuni-payment），結果在 Result 陣列內，
+        每筆含 MerTradeNo / TradeNo / TradeStatus / PaymentType / CreateDay / PaymentDay /
+        CloseStatus（信用卡）。
+        """
+        decrypted = self._post('trade/query', {
+            'MerID': self.mer_id,
+            'MerTradeNo': mer_trade_no,
+            'Timestamp': int(time.time()),
+        }, version='2.0')
+        return self.extract_results(decrypted)
+
+    def refund_credit(self, trade_no: str, amount: int) -> Dict[str, Any]:
+        """
+        信用卡退款（POST /api/trade/close，CloseType=2）
+
+        只有請款成功（CloseStatus=2）的交易可退款；尚未請款的授權請改用
+        trade/cancel 取消授權。
+        """
+        return self._post('trade/close', {
+            'MerID': self.mer_id,
+            'TradeNo': trade_no,
+            'TradeAmt': amount,
+            'CloseType': 2,
+            'Timestamp': int(time.time()),
+        }, version='1.0')
 
 
 # Usage Example
@@ -404,62 +276,26 @@ if __name__ == '__main__':
     print('=' * 60)
     print('PAYUNi 統一金流 - Python 範例')
     print('=' * 60)
-    print()
 
-    # 檢查是否有 pycryptodome
     if not HAS_CRYPTO:
-        print('✗ 錯誤: 需要安裝 pycryptodome 套件')
-        print('  請執行: pip install pycryptodome')
-        exit(1)
+        print('✗ 需要安裝 pycryptodome: pip install pycryptodome')
+        raise SystemExit(1)
 
-    # 注意: 需要替換為您的測試帳號
-    print('[注意] 請先至 PAYUNi 申請測試帳號')
-    print('並將以下參數替換為您的測試環境資訊')
-    print()
-
-    # 初始化服務 (使用測試環境)
     service = PAYUNiPaymentService(
-        mer_id='YOUR_MERCHANT_ID',  # 請替換為您的商店代號
-        hash_key='YOUR_HASH_KEY',  # 請替換為您的 HashKey
-        hash_iv='YOUR_HASH_IV',  # 請替換為您的 HashIV (16 bytes)
-        is_production=False,
+        mer_id='YOUR_MERCHANT_ID',
+        hash_key='YOUR_HASH_KEY_32_BYTES_LONG_XXXX',   # 32 bytes
+        hash_iv='YOUR_HASH_IV_16B',                     # 16 bytes
     )
 
-    # 範例: 建立信用卡付款訂單
-    print('[範例] 建立信用卡付款訂單')
-    print('-' * 60)
-
-    order_data = PaymentOrderData(
+    form = service.build_upp_form(PaymentOrderData(
         mer_trade_no=f'UNI{int(time.time())}',
         trade_amt=3000,
         prod_desc='測試商品購買',
         return_url='https://your-site.com/payment/return',
         notify_url='https://your-site.com/payment/notify',
-        pay_type='Credit',
-        buyer_name='測試買家',
-        buyer_email='test@example.com',
-    )
-
-    try:
-        result = service.create_order(order_data)
-
-        if result.success:
-            print(f'✓ 訂單建立成功')
-            print(f'  訂單編號: {result.mer_trade_no}')
-            print(f'  交易編號: {result.trade_no}')
-            print(f'  付款網址: {result.payment_url}')
-            print()
-            print('請將買家導向付款網址完成付款')
-        else:
-            print(f'✗ 訂單建立失敗')
-            print(f'  狀態: {result.status}')
-            print(f'  訊息: {result.message}')
-            if result.error_code:
-                print(f'  錯誤碼: {result.error_code}')
-    except Exception as e:
-        print(f'✗ 發生例外: {str(e)}')
-
-    print()
-    print('=' * 60)
-    print('範例執行完成')
-    print('=' * 60)
+        payment_methods=['Credit', 'ATM', 'CVS'],
+        usr_mail='test@example.com',
+    ))
+    print(f'✓ UPP 表單：POST {form["action"]}')
+    print(f'  欄位：{list(form["fields"])}')
+    print('  由前端產生自動送出的 <form>，導向統一金流付款頁')

@@ -1,0 +1,119 @@
+{
+    "provider": "ezpay-invoice",
+    "sources": {
+        "spec": "ezPay 電子發票技術串接手冊 EZP_INVI_1.2.2 附件一、附件二",
+        "plugin": "ry-woocommerce-ezpay-invoice 2.1.5 woocommerce/abstracts/abstract-ezpay.php args_encrypt()"
+    },
+    "generator": "php 8.2.33 / OpenSSL 3.5.6 7 Apr 2026",
+    "hash_key": "abcdefghijklmnopqrstuvwxyzabcdef",
+    "hash_iv": "1234567891234567",
+    "spec_encrypt": {
+        "params": {
+            "RespondType": "JSON",
+            "Version": "1.4",
+            "TimeStamp": "1444963784",
+            "TransNum": "",
+            "MerchantOrderNo": "201409170000001",
+            "BuyerName": "王大品",
+            "BuyerUBN": "54352706",
+            "BuyerAddress": "台北市南港區南港路二段97號8樓",
+            "BuyerEmail": "54352706@pay2go.com",
+            "Category": "B2B",
+            "TaxType": "1",
+            "TaxRate": "5",
+            "Amt": "490",
+            "TaxAmt": "10",
+            "TotalAmt": "500",
+            "CarrierType": "",
+            "CarrierNum": "",
+            "LoveCode": "",
+            "PrintFlag": "Y",
+            "ItemName": "商品一|商品二",
+            "ItemCount": "1|2",
+            "ItemUnit": "個|個",
+            "ItemPrice": "300|100",
+            "ItemAmt": "300|200",
+            "Comment": "備註",
+            "CreateStatusTime": "",
+            "Status": "1"
+        },
+        "PostData_": "70a61189d7dc0f6abefe7643da144af543470ddf87b1de14ae20cf104f730dee3f872d15ec141795895ca901e04b59bd691657557d884265e2c817b8db15b5563c846c88d228bec7d4c9aa57b9d3e5e22c73573e1dc4393c0057185920920fcf17438ec94c82de1b109594283c3df21dfc2e3d10a7748d5c9e2f0272e6ff34df191bb517a973671833c52dd4a67b27a166f371488a3adc973f0277020dd528353ae88ae1dda9f88f0474f48e452d5a2e68f41e5c8033937dbb72607003610095b7c0717250e4c8c3611f699fceaa6fd88a687cc7b3ac5edff3a3a11ac7d040755c7f8c1725011645ea139ceb355e309b4bee95a8c37cf9b2f2027b1b7943bc5a946f5879416b2ddf45dd2f4163fe3d995bd189f3053a391463565d3f1e284056c21d031554f7d28ed2d674ff62c24b0e93943e20ddd6bf79e6d519fc03c590a70f40b2d559ced5a8cd0c1de0d4154112c2fe881c2f352369c23ef2a68cdeacea72d38c4349484793a93dbbf66078ac533a868cb7378c61c47b79a6c756a3aa4845006f97bb97ab43a43e17d512c65d2681ed5dd00ef4e0fe76c50f4c093452ee32bc34dadf31cb1d3c562d8d2149506aaa4f2d764ea8e189635aa61863155bec033a5fbeba58a463f1f3fc29184fbb85012f339fb57fe96a513ea64cb5b96b7989a2ede6a6a9c164bd170652f433688b435e8dcf5246890f2fb9a38fbfe67ed92150d939a690cacb5f3618a7e1234befad329e69e56da113cc2889e8ecc2bee9cd4c31eeb44f35817f4b2580510cf6b24189df119f07f8f6940e5cd24c23d3bc350975a20a51cd8e8a26254cb25a805929b84bc1bf16143ed4fb6c3875607ba7089889e24ab662469997cec4cb7f6cd1502eded8cd9ab50380305b71e1fa57c4",
+        "doc_printed": "70a61189d7dc0f6abefe7643da144af543470ddf87b1de14ae20cf104f730dee3f872d15ec141795895ca901e04b59bd691657557d884265e2c817b8db15b5563c846c88d228bec7d4c9aa57b9d3e5e22c73573e1dc4393c0057185920920fcf17438ec94c82de1b109594283c3df21dfc2e3d10a7748d5c9e2f0272e6ff34df191bb517a973671833c52dd4a67b27a166f371488a3adc973f0277020dd528353ae88ae1dda9f88f0474f48e452d5a2e68f41e5c8033937dbb72607003610095b7c0717250e4c8c3611f699fceaa6fd88a687cc7b3ac5edff3a3a11ac7d040755c7f8c1725011645ea139ceb355e309b4bee95a8c37cf9b2f2027b1b7943bc5a946f5879416b2ddf45dd2f4163fe3d995bd189f3053a391463565d3f1e284056c21d031554f7d28ed2d674ff62c24b0e93943e20ddd6bf79e6d519fc03c590a70f40b2d559ced5a8cd0c1de0d4154112c2fe881c2f352369c23ef2a68cdeacea72d38c4349484793a93dbbf66078ac533a868cb7378c61c47b79a6c756a3aa4845006f97bb97ab43a43e17d512c65d2681ed5dd00ef4e0fe76c50f4c093452ee32bc34dadf31cb1d3c562d8d2149506aaa4f2d764ea8e189635aa61863155bec033a5fbeba58a463f1f3fc29184fbb85012f339fb57fe96a513ea64cb5b96b7989a2ede6a6a9c164bd170652f433688b435e8dcf5246890f2fb9a38fbfe67ed92150d939a690cacb5f3618a7e1234befad329e69e56da113cc2889e8ecc2bee9cd4c31eeb44f35817f4b2580510cf6b24189df119f07f8f6940e5cd24c23d3bc350975a20a51cd8e8a26254cb25a805929b84bc1bf16143ed4fb6c3875607ba7089889e24ab662469997cec4cb7f6cd1502eded8cd9ab50380305b71e1fa57c4"
+    },
+    "plugin_encrypt": [
+        {
+            "name": "spec_params",
+            "params": {
+                "RespondType": "JSON",
+                "Version": "1.4",
+                "TimeStamp": "1444963784",
+                "TransNum": "",
+                "MerchantOrderNo": "201409170000001",
+                "BuyerName": "王大品",
+                "BuyerUBN": "54352706",
+                "BuyerAddress": "台北市南港區南港路二段97號8樓",
+                "BuyerEmail": "54352706@pay2go.com",
+                "Category": "B2B",
+                "TaxType": "1",
+                "TaxRate": "5",
+                "Amt": "490",
+                "TaxAmt": "10",
+                "TotalAmt": "500",
+                "CarrierType": "",
+                "CarrierNum": "",
+                "LoveCode": "",
+                "PrintFlag": "Y",
+                "ItemName": "商品一|商品二",
+                "ItemCount": "1|2",
+                "ItemUnit": "個|個",
+                "ItemPrice": "300|100",
+                "ItemAmt": "300|200",
+                "Comment": "備註",
+                "CreateStatusTime": "",
+                "Status": "1"
+            },
+            "PostData_": "7d935cdb3665e8d82fdf54c7c2b160a2a2b4aa923ca35ef6c458c4956577491d305f40ddc571b83dc33ce9518c8eff9a52fa45aa872cbc04dee2226a6f567ed0df96ab534dbf71d71a71cacf2f8afa0059619c13702ce39e413bb63154ea7ba2c9a44df016d132ab1bc3653d1a3b5a0f056d234ed58178d1babf958c939f53fab8e2ba667fba81aee7a554fc613bce9184070613d06c1d09e8d3c4c2e50ca12fb9b6de18f11f0c16f374fc874941ac4763aff374594e199d9faa020aa2bfda8e4da298e61cdacb6349d13d54bf679171a357c87c34493e1e8bbb04744aa73787f8968d3732887df8c3b4eb5209aa896403697903dab48efe0dfe526a79c2ed3a6db9005b03cdbf97c4c1d02ce4f029e60265ccb3b9b1cba95c7c979bd2da38dc9cdd2d73cb8d49361624137503faaa7fb8cdffe0b39d72d7cf34325b3f024c4898eecf5253490eb007ec5ca4959a5635dbecf983ea6f2f5414faaf7dbd16a388caec8a5ff7106c093e02c580e24f41a263787d4080693b1609033e41ac9246ba52a0c1c73f8b9a7ce8aea0b63db5ba4e3a6ffc6b01673a641142c6e1c3635128954af3c454b4a71baae6de211e0ef5ab6f86bd75590dd3c2e7ffa16963a44cf95082c8a9a4ff8670a3d02493552ea00780e4cdd02cf445a11e8ecabb36a0d1b570328e4cdc32e0c935c086a3cd8c2e550a6aad08c318dfea27f2d99c214956d49ad874ee818ddba2777d703187945cc13a44eedf73a23fb9c07e4c21653ad1e3344c041f7dfaa7c2644c51fb8d73a0cbe77e561a3103b3378f098664f8ba1b26b46be851ef5744842e3dcd24021d9223ea7c19d4be3707e80a0ce0d832ca248030fb531f1757da02a32ac5466c75c25346389ec4d3f1030bc494fdf6aea55ad4"
+        },
+        {
+            "name": "b2c_carrier",
+            "params": {
+                "RespondType": "JSON",
+                "Version": "1.5",
+                "TimeStamp": "1758600000",
+                "MerchantOrderNo": "EZ20260923001",
+                "Status": "1",
+                "Category": "B2C",
+                "BuyerName": "王小明",
+                "BuyerUBN": "",
+                "BuyerEmail": "buyer+tw@example.com",
+                "CarrierType": "0",
+                "CarrierNum": "buyer+tw@example.com",
+                "LoveCode": "",
+                "PrintFlag": "N",
+                "TaxType": "1",
+                "TaxRate": "5",
+                "Amt": "476",
+                "TaxAmt": "24",
+                "TotalAmt": "500",
+                "ItemName": "商品 A|運費",
+                "ItemCount": "1|1",
+                "ItemUnit": "件|式",
+                "ItemPrice": "440|60",
+                "ItemAmt": "440|60",
+                "Comment": ""
+            },
+            "PostData_": "6b53612e0323087184062f105953a9c857f41e19708dad21028be73b13d074a8955935a5ff39b156e514cdddb82aace5a178d3633e6f8b4f38561e31227995b9711b5e20bc9eabbf563ba11c56e6319eaeb658497a5bb2c66f7564e0af724682c08b5d1cb1f9bb39e1a8797a20c54bcba03390c683f25eeb6e95359778af30ba1938b0fee6d506b27a4ec669253f2cfc936570229c07e0094429e03a86eb4afc8a6d74e4f37104ce483afe3703dfbec1190c5f0847303ac5c5520448f898740c2f809a8443c15f9bc65cc481dc8981af312b46624e7308a048e0bcb04bcbdf4e43590e9b586fd88b31726c3f8a8122dd4c776d125f16c108c20daf0b68fcabc49a983dff7b55bbf5ae6bd6ee835e9a390be8c46554e690121ec46af0aeb51003e27543fd4a7970c048c10b6a5331c82186fe2deddeaef61e60f32ae723edca0e98e0fe1716c97a397ddcbed990a33a37e1b09f8db93b93d37f0d87bddd43360f3af08733d07d6614f1faf881ff7dc93ee314f2cb49fee1abb5cafd91da7371b89795edd2906ccd7f2b350ad3589cb08e24e4f99392b0cbc93a5d63ec6f568299eaa7c5a0a4a766bbb18b3abd2351845514495ff6f19a1eb09173a6c1b67c856061bd73230865b389ce0ddf817983e7c8"
+        }
+    ],
+    "check_code": {
+        "params": {
+            "InvoiceTransNo": "14061313541640927",
+            "MerchantID": "3622183",
+            "MerchantOrderNo": "201409170000001",
+            "RandomNum": "0142",
+            "TotalAmt": "500"
+        },
+        "expected": "303AB800650B724733B5D91CBCE075D9EA09E4CDE9CD33461D45F07D5EC7EECB",
+        "expected_source": "EZP_INVI_1.2.2 附件二文件印出值"
+    }
+}

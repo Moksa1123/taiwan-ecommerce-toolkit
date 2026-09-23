@@ -63,7 +63,7 @@ TapPay 用 Prime 一次付清，remember=true 存成 card_token 供下次自動�
 | **PAYUNi 統一** | AES-256-GCM + SHA256 | RESTful JSON、AFTEE、iCash |
 | **SmilePay 速買配** | Verify_key + 加權檢核碼 | 無 AES、ibon / FamiPort 直接打單 |
 | **PChomePay 拍錢包** | Basic Auth → 8h pcpay-token | PChome 生態、5% P 幣回饋、金物流二合一 |
-| **ezPay 簡單付** | 同 NewebPay (AES-256-CBC) | 藍新小型商家品牌、低門檻 |
+| **ezPay 簡單付** | AES-256-CBC（32-byte padding）+ SHA256 | 電子支付機構；境內 TWQR / ezPay 錢包，跨境支付寶 / 微信 |
 | **PayNow 立吉富** | JWT Bearer (現代) / 動態 AES-256 (傳統) | 雙 API、Stripe-like、Apple Pay 完整 |
 | **Shopline Payments** | merchantId + apiKey | 金額以分為單位、HMAC-SHA256 webhook |
 | **LINE Pay v4** | Channel ID/Secret + HMAC-SHA256 + Nonce | Request→Confirm 兩段、Preapproved Pay |
@@ -83,7 +83,7 @@ taiwan-payment/
 │   ├── payuni-payment-api.md
 │   ├── smilepay-payment-api.md          # 反推 Mid_smilepay 加權檢核碼
 │   ├── pchomepay-payment-api.md         # 含 8h token 流程
-│   ├── ezpay-payment-api.md             # diff vs Newebpay
+│   ├── ezpay-payment-api.md             # 電子支付平台 + 跨境（依官方手冊）
 │   ├── paynow-payment-api.md            # 雙 API 並行
 │   ├── shopline-payment-api.md          # Redirect + Embedded
 │   ├── linepay-payment-api.md           # HMAC + Preapproved

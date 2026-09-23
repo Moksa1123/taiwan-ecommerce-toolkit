@@ -1,72 +1,276 @@
 provider,code,message_zh,message_en,category,solution
-ECPay,10000001,參數錯誤,Parameter error,通用,檢查必填欄位是否完整
-ECPay,10000002,發票號碼重複,Duplicate invoice number,開立,使用不同的 RelateNumber
-ECPay,10000003,特店編號錯誤,Invalid merchant ID,認證,確認 MerchantID 正確
-ECPay,10000004,加密驗證失敗,Encryption verification failed,認證,檢查 HashKey/HashIV 和加密流程
-ECPay,10000005,時間戳記逾時,Timestamp expired,認證,確保時間戳在 10 分鐘內
-ECPay,10000006,RelateNumber 重複,Duplicate RelateNumber,開立,使用唯一的訂單編號
-ECPay,10000007,發票不存在,Invoice not found,查詢,確認發票號碼正確
-ECPay,10000008,發票已作廢,Invoice already voided,作廢,發票已被作廢無法重複操作
-ECPay,10000009,發票已折讓,Invoice has allowance,作廢,需先作廢折讓才能作廢發票
-ECPay,10000010,折讓金額超過發票金額,Allowance exceeds invoice amount,折讓,調整折讓金額
-ECPay,10000011,買方統編格式錯誤,Invalid buyer identifier,開立,統編需為 8 碼數字
-ECPay,10000016,金額計算錯誤,Amount calculation error,開立,檢查 SalesAmount + TaxAmount = TotalAmount
-ECPay,10000018,載具與捐贈不可同時存在,Carrier and donation conflict,開立,二擇一
-ECPay,10000019,打統編不可使用載具,B2B cannot use carrier,開立,移除載具設定
-ECPay,10000020,打統編不可捐贈,B2B cannot donate,開立,設定 Donation=0
-ECPay,6000015,買方識別碼資料不存在,Buyer identifier not found,開立,測試環境 B2B 需預先註冊統編
-SmilePay,0,開立成功,Success,成功,無需處理
-SmilePay,-1001,商家帳號缺少參數,Missing merchant parameters,認證,檢查 Grvc 和 Verify_key
-SmilePay,-10011,查無商家帳號,Merchant not found,認證,確認帳號正確
-SmilePay,-10012,尚未開放B2B功能,B2B not enabled,權限,聯繫速買配開通
-SmilePay,-10013,尚未開放B2C功能,B2C not enabled,權限,確認使用測試環境 URL
-SmilePay,-10033,B2C開立需再48hr內,B2C must issue within 48hr,開立,調整 InvoiceDate
-SmilePay,-10034,B2B開立需再168hr內,B2B must issue within 168hr,開立,調整 InvoiceDate
-SmilePay,-10066,商品總金額驗算錯誤,Amount calculation error,開立,確認 AllAmount = Sum(Amount)
-SmilePay,-10071,無可用字軌,No available track,開立,聯繫速買配配置字軌
-SmilePay,-10072,自訂發票編號重複,Duplicate data_id,開立,使用唯一的 data_id
-SmilePay,-10084,自訂號碼格式錯誤,Invalid orderid format,開立,orderid 限 30 字元
-SmilePay,-2008,發票目前狀態不允許執行該動作,Invalid invoice status,作廢,檢查發票狀態
-SmilePay,-10085,商品數量驗算錯誤,Item quantity calculation error,開立,確認 Quantity 為正整數
-SmilePay,-10086,單價驗算錯誤,Unit price calculation error,開立,確認 UnitPrice 為正數
-SmilePay,-10090,載具格式錯誤,Invalid carrier format,開立,手機條碼需為/開頭8碼
-SmilePay,-2009,折讓金額超過剩餘金額,Allowance exceeds remaining,折讓,確認折讓金額小於發票剩餘金額
-Amego,0,成功,Success,成功,無需處理
-Amego,1,參數錯誤,Parameter error,通用,檢查必填欄位
-Amego,2,簽章驗證失敗,Signature verification failed,認證,檢查 MD5 簽章計算
-Amego,3,時間戳記誤差過大,Timestamp error,認證,確保時間戳誤差在 ±60 秒內
-Amego,4,統一編號不存在,Tax ID not found,認證,確認統編正確
-Amego,5,訂單編號重複,Duplicate order ID,開立,使用唯一的 OrderId
-Amego,100,發票號碼不存在,Invoice not found,查詢,確認發票號碼正確
-Amego,101,發票已作廢,Invoice already voided,作廢,發票已被作廢
-Amego,1002,OrderId 已存在,OrderId exists,開立,使用不同的訂單編號
-Amego,1004,BuyerName 不可為空或無效值,Invalid BuyerName,開立,不可填 0/00/000/0000
-Amego,1007,金額計算錯誤,Amount calculation error,開立,檢查金額計算邏輯
-Amego,1012,打統編發票不可使用載具或捐贈,B2B cannot use carrier or donate,開立,移除載具和捐贈設定
-Amego,1005,商品明細不可為空,Item details required,開立,至少提供一項商品明細
-Amego,1008,載具與捐贈不可同時存在,Carrier and donation conflict,開立,二擇一
-Amego,1009,打統編不可使用載具,B2B cannot use carrier,開立,移除 CarrierId1
-Amego,1010,打統編不可捐贈,B2B cannot donate,開立,設定 NPOBAN 為空
-Amego,102,折讓單號不存在,Allowance not found,作廢折讓,確認折讓單號正確
-ezPay,KEY10001,商店代號錯誤,Invalid MerchantID,認證,確認 MerchantID_ 正確且後方有底線
-ezPay,KEY10002,加密驗證失敗,CheckCode mismatch,認證,SHA256 計算需含 HashIV={HashIV} 且大寫
-ezPay,KEY10003,加密資料解密失敗,PostData_ decrypt failed,認證,確認 AES-256-CBC + Hex + PKCS7 與 32-char HashKey 16-char HashIV
-ezPay,KEY10004,版本不符,Invalid Version,通用,Version 需為 1.5
-ezPay,KEY10005,時間戳記逾時,Timestamp expired,認證,TimeStamp 與 server 時間誤差需在 60 秒內
-ezPay,INV10001,發票號碼重複,Duplicate MerchantOrderNo,開立,使用唯一訂單編號
-ezPay,INV10002,發票字軌不足,Track number exhausted,開立,於後台「發票字軌號碼設定」新增字軌
-ezPay,INV10003,金額計算錯誤,Amount calculation error,開立,Amt + TaxAmt = TotalAmt
-ezPay,INV10004,商品明細不可為空,Item details required,開立,至少提供一項商品
-ezPay,INV10005,字軌類別錯誤,Invalid Category,開立,Category 須為 B2C 或 B2B
-ezPay,LIB10001,愛心碼驗證失敗,Invalid LoveCode,開立,呼叫 Api_loveCodeCheck 驗證
-ezPay,LIB10002,手機條碼驗證失敗,Invalid CarrierNum,開立,/開頭8碼大寫英數
-ezPay,IAI10001,折讓金額超過原發票,Allowance exceeds invoice,折讓,折讓金額需小於剩餘金額
-ezPay,IAI10002,折讓單號重複,Duplicate AllowanceNo,折讓,使用唯一折讓單號
-ezPay,API10001,API 端點不存在,API not found,通用,確認端點 URL 與大小寫(camelCase 注意 allowanceInvalid)
-PayNow,I0001,JWT-Token 驗證失敗,Invalid JWT Bearer Token,認證,Authorization Header 須為 Bearer <token>
-PayNow,I0002,商家停權,Merchant disabled,認證,聯繫 einvoice@paynow.com.tw
-PayNow,I1001,字軌不足,Track exhausted,開立,聯繫 PayNow 配置字軌
-PayNow,I1002,POS 取號超限,POS quota exceeded,開立,POS 批次取號有商家配額限制
-PayNow,I2001,發票不存在,Invoice not found,查詢,確認 InvoiceNo 與 RandomNumber
-PayNow,I2002,發票已作廢,Invoice already invalidated,作廢,發票已被作廢無法重複操作
-PayNow,I3001,折讓金額超過原發票,Allowance exceeds invoice,折讓,折讓金額需小於剩餘金額
+ECPay,1,成功,Success,success,其他代碼一律視為失敗，並記錄 RtnMsg
+ECPay,4000003,延後開立成功,Delayed issue accepted,延後開立,僅表示已排程；實際開立結果需等通知或以查詢 API 確認（developers.ecpay.com.tw/15371）
+ECPay,10000002,必填欄位遺漏（如 Phone/Email 皆未填，或 Items 格式錯誤）,Required field missing,開立,綠界官方 ecpay-api-skill guides/04-invoice-b2c
+ECPay,10000009,RelateNumber 重複（同一帳號不可重用）,Duplicate RelateNumber,開立,改用新的 RelateNumber；綠界官方 ecpay-api-skill guides/04-invoice-b2c
+ECPay,1500047,字軌問題：當期字軌未新增、未啟用或號碼已用罄,Invoice track unavailable,開立,廠商後台→電子發票系統→資料管理與維護→字軌與配號設定；官方附錄「錯誤代碼一覽表」（developers.ecpay.com.tw/7954）
+ECPay,5070350,字軌問題：當期字軌未新增、未啟用或號碼已用罄,Invoice track unavailable,開立,廠商後台→電子發票系統→資料管理與維護→字軌與配號設定；官方附錄「錯誤代碼一覽表」（developers.ecpay.com.tw/7954）
+ECPay,1200125,統一編號檢查碼驗證失敗,Tax ID checksum failed,檢查統一編號,停止開立並確認統編；官方文件「檢查統一編號」回應代碼表（developers.ecpay.com.tw/32089）
+ECPay,2027000,統一編號格式錯誤（長度非 8 碼）,Tax ID format error,檢查統一編號,停止開立並確認統編長度；官方文件「檢查統一編號」回應代碼表（developers.ecpay.com.tw/32089）
+ECPay,9000001,呼叫財政部 API 失敗,MOF API call failed,檢查統一編號,財政部檢核當下異常，不影響發票開立；官方文件「檢查統一編號」回應代碼表（developers.ecpay.com.tw/32089）
+SmilePay,0,開立成功,,success,見 references/SMILEPAY_API_REFERENCE.md「回應代號說明」（速買配官方文件，原始 PDF 未存檔）
+SmilePay,-1001,[開立發票] 商家帳號缺少參數 / [開立折讓單] 商家帳號缺少參數 / [作廢/註銷] 查無商家帳號,,多個 API,見 references/SMILEPAY_API_REFERENCE.md「回應代號說明」（速買配官方文件，原始 PDF 未存檔）
+SmilePay,-10011,[開立發票] 查無商家帳號 / [開立折讓單] 查無商家帳號,,多個 API,見 references/SMILEPAY_API_REFERENCE.md「回應代號說明」（速買配官方文件，原始 PDF 未存檔）
+SmilePay,-10012,尚未開放B2B功能,,開立發票,見 references/SMILEPAY_API_REFERENCE.md「回應代號說明」（速買配官方文件，原始 PDF 未存檔）
+SmilePay,-10013,尚未開放B2C功能,,開立發票,見 references/SMILEPAY_API_REFERENCE.md「回應代號說明」（速買配官方文件，原始 PDF 未存檔）
+SmilePay,-10021,[開立發票] 統一編號(Buyer_id)格式錯誤 / [開立折讓單] 商品不可空白,,多個 API,見 references/SMILEPAY_API_REFERENCE.md「回應代號說明」（速買配官方文件，原始 PDF 未存檔）
+SmilePay,-10022,[開立發票] 統一編號不可捐贈(DonateMark)必須為0 / [開立折讓單] 商品各項目數量不符,,多個 API,見 references/SMILEPAY_API_REFERENCE.md「回應代號說明」（速買配官方文件，原始 PDF 未存檔）
+SmilePay,-10023,[開立發票] 統一編號(Buyer_id)內容錯誤 / [開立折讓單] 商品明細(Description)參數異常,,多個 API,見 references/SMILEPAY_API_REFERENCE.md「回應代號說明」（速買配官方文件，原始 PDF 未存檔）
+SmilePay,-10024,[開立發票] 統一編號(Buyer_id)不可使用其他載具(CarrierType) / [開立折讓單] 數量明細(Quantity)參數異常,,多個 API,見 references/SMILEPAY_API_REFERENCE.md「回應代號說明」（速買配官方文件，原始 PDF 未存檔）
+SmilePay,-10025,[開立發票] 缺少公司名稱(CompanyName) / [開立折讓單] 單價明細(UnitPrice)金額異常,,多個 API,見 references/SMILEPAY_API_REFERENCE.md「回應代號說明」（速買配官方文件，原始 PDF 未存檔）
+SmilePay,-10031,[開立發票] 缺少開立日期(InvoiceDate、InvoiceTime) / [開立折讓單] 超過可折讓金額,,多個 API,見 references/SMILEPAY_API_REFERENCE.md「回應代號說明」（速買配官方文件，原始 PDF 未存檔）
+SmilePay,-10032,[開立發票] 日期格式(InvoiceDate、InvoiceTime)錯誤 / [開立折讓單] 折讓單號碼(AllowanceNumber)不可重複,,多個 API,見 references/SMILEPAY_API_REFERENCE.md「回應代號說明」（速買配官方文件，原始 PDF 未存檔）
+SmilePay,-10033,B2C開立需再48hr內,,開立發票,見 references/SMILEPAY_API_REFERENCE.md「回應代號說明」（速買配官方文件，原始 PDF 未存檔）
+SmilePay,-10034,B2B開立需再168hr內,,開立發票,見 references/SMILEPAY_API_REFERENCE.md「回應代號說明」（速買配官方文件，原始 PDF 未存檔）
+SmilePay,-10041,發票類別(Intype)錯誤,,開立發票,見 references/SMILEPAY_API_REFERENCE.md「回應代號說明」（速買配官方文件，原始 PDF 未存檔）
+SmilePay,-10042,買受人註記欄(BuyerRemark)錯誤,,開立發票,見 references/SMILEPAY_API_REFERENCE.md「回應代號說明」（速買配官方文件，原始 PDF 未存檔）
+SmilePay,-10043,通關方式註記(CustomsClearanceMark),,開立發票,見 references/SMILEPAY_API_REFERENCE.md「回應代號說明」（速買配官方文件，原始 PDF 未存檔）
+SmilePay,-10044,捐贈註記(DonateMark)錯誤,,開立發票,見 references/SMILEPAY_API_REFERENCE.md「回應代號說明」（速買配官方文件，原始 PDF 未存檔）
+SmilePay,-10045,愛心碼(LoveKey)空白,,開立發票,見 references/SMILEPAY_API_REFERENCE.md「回應代號說明」（速買配官方文件，原始 PDF 未存檔）
+SmilePay,-10046,愛心碼伺服器異常,,開立發票,見 references/SMILEPAY_API_REFERENCE.md「回應代號說明」（速買配官方文件，原始 PDF 未存檔）
+SmilePay,-10047,查無此愛心碼(LoveKey),,開立發票,見 references/SMILEPAY_API_REFERENCE.md「回應代號說明」（速買配官方文件，原始 PDF 未存檔）
+SmilePay,-10048,課稅別(TaxType)錯誤,,開立發票,見 references/SMILEPAY_API_REFERENCE.md「回應代號說明」（速買配官方文件，原始 PDF 未存檔）
+SmilePay,-10049,買受人簽署適用零稅率註記(BondedAreaConfirm)錯誤,,開立發票,見 references/SMILEPAY_API_REFERENCE.md「回應代號說明」（速買配官方文件，原始 PDF 未存檔）
+SmilePay,-100410,總備註(MainRemark)錯誤,,開立發票,見 references/SMILEPAY_API_REFERENCE.md「回應代號說明」（速買配官方文件，原始 PDF 未存檔）
+SmilePay,-100411,相關號碼(RelateNumber)錯誤,,開立發票,見 references/SMILEPAY_API_REFERENCE.md「回應代號說明」（速買配官方文件，原始 PDF 未存檔）
+SmilePay,-100412,零稅率原因(ZeroTaxRateReason)錯誤,,開立發票,見 references/SMILEPAY_API_REFERENCE.md「回應代號說明」（速買配官方文件，原始 PDF 未存檔）
+SmilePay,-10051,手機號碼(Phone)格式錯誤,,開立發票,見 references/SMILEPAY_API_REFERENCE.md「回應代號說明」（速買配官方文件，原始 PDF 未存檔）
+SmilePay,-10052,載具號碼(CarrierID)錯誤,,開立發票,見 references/SMILEPAY_API_REFERENCE.md「回應代號說明」（速買配官方文件，原始 PDF 未存檔）
+SmilePay,-10053,查無載具號碼(CarrierID),,開立發票,見 references/SMILEPAY_API_REFERENCE.md「回應代號說明」（速買配官方文件，原始 PDF 未存檔）
+SmilePay,-10054,"缺少建立載具參數,Email/Phone參數",,開立發票,見 references/SMILEPAY_API_REFERENCE.md「回應代號說明」（速買配官方文件，原始 PDF 未存檔）
+SmilePay,-10055,建立載具失敗,,開立發票,見 references/SMILEPAY_API_REFERENCE.md「回應代號說明」（速買配官方文件，原始 PDF 未存檔）
+SmilePay,-10056,查無手機條碼(CarrierID),,開立發票,見 references/SMILEPAY_API_REFERENCE.md「回應代號說明」（速買配官方文件，原始 PDF 未存檔）
+SmilePay,-10057,自然人憑證(CarrierID)格式錯誤,,開立發票,見 references/SMILEPAY_API_REFERENCE.md「回應代號說明」（速買配官方文件，原始 PDF 未存檔）
+SmilePay,-10058,載具類型(CarrierType)非允許使用的,,開立發票,見 references/SMILEPAY_API_REFERENCE.md「回應代號說明」（速買配官方文件，原始 PDF 未存檔）
+SmilePay,-10061,商品各項目數量不符,,開立發票,見 references/SMILEPAY_API_REFERENCE.md「回應代號說明」（速買配官方文件，原始 PDF 未存檔）
+SmilePay,-10062,"內容長度不正確(單一品項)；品名(Description)：256個字,不可空白；單位(Unit)：6個字,可空白；商品備註(Remark)：40個字,可空白",,開立發票,見 references/SMILEPAY_API_REFERENCE.md「回應代號說明」（速買配官方文件，原始 PDF 未存檔）
+SmilePay,-10063,商品數量(Quantity)內容錯誤,,開立發票,見 references/SMILEPAY_API_REFERENCE.md「回應代號說明」（速買配官方文件，原始 PDF 未存檔）
+SmilePay,-10064,商品金額(UnitPrice、Amount)內容錯誤,,開立發票,見 references/SMILEPAY_API_REFERENCE.md「回應代號說明」（速買配官方文件，原始 PDF 未存檔）
+SmilePay,-10065,商品小計(UnitPrice、Amount)驗算錯誤,,開立發票,見 references/SMILEPAY_API_REFERENCE.md「回應代號說明」（速買配官方文件，原始 PDF 未存檔）
+SmilePay,-10066,商品總金額(AllAmount)驗算錯誤,,開立發票,見 references/SMILEPAY_API_REFERENCE.md「回應代號說明」（速買配官方文件，原始 PDF 未存檔）
+SmilePay,-10067,商品與總金額(ALLAmount)不符合規定,,開立發票,見 references/SMILEPAY_API_REFERENCE.md「回應代號說明」（速買配官方文件，原始 PDF 未存檔）
+SmilePay,-10068,混合稅率銷售額明細(SalesAmount、FreeTaxSalesAmount)內容錯誤,,開立發票,見 references/SMILEPAY_API_REFERENCE.md「回應代號說明」（速買配官方文件，原始 PDF 未存檔）
+SmilePay,-10069,稅金(TaxAmount)與未稅銷售額(SalesAmount)驗算錯誤,,開立發票,見 references/SMILEPAY_API_REFERENCE.md「回應代號說明」（速買配官方文件，原始 PDF 未存檔）
+SmilePay,-100610,稅率(TaxRate)內容錯誤,,開立發票,見 references/SMILEPAY_API_REFERENCE.md「回應代號說明」（速買配官方文件，原始 PDF 未存檔）
+SmilePay,-100611,產品稅率(ProductTaxType)內容誤,,開立發票,見 references/SMILEPAY_API_REFERENCE.md「回應代號說明」（速買配官方文件，原始 PDF 未存檔）
+SmilePay,-10071,無可用字軌,,開立發票,見 references/SMILEPAY_API_REFERENCE.md「回應代號說明」（速買配官方文件，原始 PDF 未存檔）
+SmilePay,-10072,自訂發票編號 (data_id)重複,,開立發票,見 references/SMILEPAY_API_REFERENCE.md「回應代號說明」（速買配官方文件，原始 PDF 未存檔）
+SmilePay,-10073,營業人自定義系統代號(PosSystemID)格式錯誤,,開立發票,見 references/SMILEPAY_API_REFERENCE.md「回應代號說明」（速買配官方文件，原始 PDF 未存檔）
+SmilePay,-10081,信用卡末四碼(Visa_Last4)格式錯誤,,開立發票,見 references/SMILEPAY_API_REFERENCE.md「回應代號說明」（速買配官方文件，原始 PDF 未存檔）
+SmilePay,-10082,發票證明聯備註(Certificate_Remark)格式錯誤,,開立發票,見 references/SMILEPAY_API_REFERENCE.md「回應代號說明」（速買配官方文件，原始 PDF 未存檔）
+SmilePay,-10083,自訂發票編號(data_id)格式錯誤,,開立發票,見 references/SMILEPAY_API_REFERENCE.md「回應代號說明」（速買配官方文件，原始 PDF 未存檔）
+SmilePay,-10084,自訂號碼(orderid)格式錯誤,,開立發票,見 references/SMILEPAY_API_REFERENCE.md「回應代號說明」（速買配官方文件，原始 PDF 未存檔）
+SmilePay,-2001,[開立發票] (InvoiceNumber)格式錯誤 / [作廢/註銷] 缺少發票號碼(InvoiceNumber)或作廢原因(CancelReason),,多個 API,見 references/SMILEPAY_API_REFERENCE.md「回應代號說明」（速買配官方文件，原始 PDF 未存檔）
+SmilePay,-2002,[開立發票] (RandomNumber)格式錯誤 / [作廢/註銷] 作廢原因(CancelReason)超過字數,,多個 API,見 references/SMILEPAY_API_REFERENCE.md「回應代號說明」（速買配官方文件，原始 PDF 未存檔）
+SmilePay,-2003,[開立發票] (InvoiceNumber)不可重複 / [作廢/註銷] 專案作廢核准文號(ReturnTaxDocumentNumber)超過字數,,多個 API,見 references/SMILEPAY_API_REFERENCE.md「回應代號說明」（速買配官方文件，原始 PDF 未存檔）
+SmilePay,-1002,[開立折讓單] 發票號碼(InvoiceNumber)錯誤 / [作廢/註銷] 服務類型錯誤,,多個 API,見 references/SMILEPAY_API_REFERENCE.md「回應代號說明」（速買配官方文件，原始 PDF 未存檔）
+SmilePay,-10026,稅金明細(TaxType)參數異常,,開立折讓單,見 references/SMILEPAY_API_REFERENCE.md「回應代號說明」（速買配官方文件，原始 PDF 未存檔）
+SmilePay,-10027,稅率明細(Tax)參數異常,,開立折讓單,見 references/SMILEPAY_API_REFERENCE.md「回應代號說明」（速買配官方文件，原始 PDF 未存檔）
+SmilePay,-10028,折讓日期(AllowanceDate)參數異常,,開立折讓單,見 references/SMILEPAY_API_REFERENCE.md「回應代號說明」（速買配官方文件，原始 PDF 未存檔）
+SmilePay,-1003,查無此筆發票,,開立折讓單,見 references/SMILEPAY_API_REFERENCE.md「回應代號說明」（速買配官方文件，原始 PDF 未存檔）
+SmilePay,-1000,商家帳號缺少參數,,作廢/註銷,見 references/SMILEPAY_API_REFERENCE.md「回應代號說明」（速買配官方文件，原始 PDF 未存檔）
+SmilePay,-2004,備註(Remark)超過字數,,作廢/註銷,見 references/SMILEPAY_API_REFERENCE.md「回應代號說明」（速買配官方文件，原始 PDF 未存檔）
+SmilePay,-2005,缺少發票號碼(InvoiceNumber)或註銷原因(VoidReason),,作廢/註銷,見 references/SMILEPAY_API_REFERENCE.md「回應代號說明」（速買配官方文件，原始 PDF 未存檔）
+SmilePay,-2006,註銷原因(VoidReason)超過字數,,作廢/註銷,見 references/SMILEPAY_API_REFERENCE.md「回應代號說明」（速買配官方文件，原始 PDF 未存檔）
+SmilePay,-2007,缺少折讓單號碼(AllowanceNumber)或作廢原因(CancelReason),,作廢/註銷,見 references/SMILEPAY_API_REFERENCE.md「回應代號說明」（速買配官方文件，原始 PDF 未存檔）
+SmilePay,-2008,發票目前狀態不允許執行該動作,,作廢/註銷,見 references/SMILEPAY_API_REFERENCE.md「回應代號說明」（速買配官方文件，原始 PDF 未存檔）
+SmilePay,-2009,發票有折讓紀錄不允許執行該動作,,作廢/註銷,見 references/SMILEPAY_API_REFERENCE.md「回應代號說明」（速買配官方文件，原始 PDF 未存檔）
+SmilePay,-2010,查無該筆發票/折讓單,,作廢/註銷,見 references/SMILEPAY_API_REFERENCE.md「回應代號說明」（速買配官方文件，原始 PDF 未存檔）
+Amego,0,成功,,success,見光貿 API 錯誤代碼（invoice.amego.tw/info_detail?mid=71）
+Amego,10,系統停機維護中,,通用,見光貿 API 錯誤代碼（invoice.amego.tw/info_detail?mid=71）
+Amego,11,invoice(統編)不可為空,,通用,見光貿 API 錯誤代碼（invoice.amego.tw/info_detail?mid=71）
+Amego,12,invoice(統編)錯誤,,通用,見光貿 API 錯誤代碼（invoice.amego.tw/info_detail?mid=71）
+Amego,13,status 未啟用,,通用,見光貿 API 錯誤代碼（invoice.amego.tw/info_detail?mid=71）
+Amego,14,IP 錯誤,,通用,見光貿 API 錯誤代碼（invoice.amego.tw/info_detail?mid=71）
+Amego,15,Time 錯誤,,通用,見光貿 API 錯誤代碼（invoice.amego.tw/info_detail?mid=71）
+Amego,16,簽名驗證錯誤,,通用,見光貿 API 錯誤代碼（invoice.amego.tw/info_detail?mid=71）
+Amego,17,資料不可為空,,通用,見光貿 API 錯誤代碼（invoice.amego.tw/info_detail?mid=71）
+Amego,18,無法建立資料庫連線,,通用,見光貿 API 錯誤代碼（invoice.amego.tw/info_detail?mid=71）
+Amego,19,公司停權，無法使用 API 開立發票,,通用,見光貿 API 錯誤代碼（invoice.amego.tw/info_detail?mid=71）
+Amego,20,data 非 JSON 字串格式,,通用,見光貿 API 錯誤代碼（invoice.amego.tw/info_detail?mid=71）
+Amego,21,人數過多，請稍後,,通用,見光貿 API 錯誤代碼（invoice.amego.tw/info_detail?mid=71）
+Amego,22,尚未申請 API 串接,,通用,見光貿 API 錯誤代碼（invoice.amego.tw/info_detail?mid=71）
+Amego,23,此 API 支援傳輸多筆資料，data 欄位資料應為陣列字串,,通用,見光貿 API 錯誤代碼（invoice.amego.tw/info_detail?mid=71）
+Amego,3040111,字軌不足,,發票-開立發票(自動配號),見光貿 API 錯誤代碼（invoice.amego.tw/info_detail?mid=71）
+Amego,3040112,此 API 只支援傳輸單張發票，data 欄位資料應為物件字串,,發票-開立發票(自動配號),見光貿 API 錯誤代碼（invoice.amego.tw/info_detail?mid=71）
+Amego,3040121,BuyerIdentifier 字數錯誤,,發票-開立發票(自動配號),見光貿 API 錯誤代碼（invoice.amego.tw/info_detail?mid=71）
+Amego,3040122,BuyerIdentifier 格式錯誤,,發票-開立發票(自動配號),見光貿 API 錯誤代碼（invoice.amego.tw/info_detail?mid=71）
+Amego,3040123,BuyerName 不可為空或過長,,發票-開立發票(自動配號),見光貿 API 錯誤代碼（invoice.amego.tw/info_detail?mid=71）
+Amego,3040124,BuyerAddress 過長,,發票-開立發票(自動配號),見光貿 API 錯誤代碼（invoice.amego.tw/info_detail?mid=71）
+Amego,3040125,BuyerTelephoneNumber 過長,,發票-開立發票(自動配號),見光貿 API 錯誤代碼（invoice.amego.tw/info_detail?mid=71）
+Amego,3040126,BuyerEmailAddress 過長,,發票-開立發票(自動配號),見光貿 API 錯誤代碼（invoice.amego.tw/info_detail?mid=71）
+Amego,3040127,MainRemark 過長,,發票-開立發票(自動配號),見光貿 API 錯誤代碼（invoice.amego.tw/info_detail?mid=71）
+Amego,3040128,CarrierType 過長,,發票-開立發票(自動配號),見光貿 API 錯誤代碼（invoice.amego.tw/info_detail?mid=71）
+Amego,3040129,CarrierId1 過長,,發票-開立發票(自動配號),見光貿 API 錯誤代碼（invoice.amego.tw/info_detail?mid=71）
+Amego,3040130,CarrierId2 過長,,發票-開立發票(自動配號),見光貿 API 錯誤代碼（invoice.amego.tw/info_detail?mid=71）
+Amego,3040131,載具顯碼、隱碼不相符,,發票-開立發票(自動配號),見光貿 API 錯誤代碼（invoice.amego.tw/info_detail?mid=71）
+Amego,3040132,載具號碼不存在,,發票-開立發票(自動配號),見光貿 API 錯誤代碼（invoice.amego.tw/info_detail?mid=71）
+Amego,3040133,載具顯碼、隱碼不相符,,發票-開立發票(自動配號),見光貿 API 錯誤代碼（invoice.amego.tw/info_detail?mid=71）
+Amego,3040134,CarrierId1 載具顯碼錯誤,,發票-開立發票(自動配號),見光貿 API 錯誤代碼（invoice.amego.tw/info_detail?mid=71）
+Amego,3040135,載具顯碼或隱碼不可為空,,發票-開立發票(自動配號),見光貿 API 錯誤代碼（invoice.amego.tw/info_detail?mid=71）
+Amego,3040136,NPOBAN 格式錯誤,,發票-開立發票(自動配號),見光貿 API 錯誤代碼（invoice.amego.tw/info_detail?mid=71）
+Amego,3040137,NPOBAN 不存在,,發票-開立發票(自動配號),見光貿 API 錯誤代碼（invoice.amego.tw/info_detail?mid=71）
+Amego,3040138,ProductItem 不可為空或過多,,發票-開立發票(自動配號),見光貿 API 錯誤代碼（invoice.amego.tw/info_detail?mid=71）
+Amego,3040139,第n品項 Description 不可為空或過長,,發票-開立發票(自動配號),見光貿 API 錯誤代碼（invoice.amego.tw/info_detail?mid=71）
+Amego,3040140,第n品項 Quantity 格式錯誤,,發票-開立發票(自動配號),見光貿 API 錯誤代碼（invoice.amego.tw/info_detail?mid=71）
+Amego,3040141,第n品項 UnitPrice 格式錯誤,,發票-開立發票(自動配號),見光貿 API 錯誤代碼（invoice.amego.tw/info_detail?mid=71）
+Amego,3040142,第n品項 Amount 格式錯誤,,發票-開立發票(自動配號),見光貿 API 錯誤代碼（invoice.amego.tw/info_detail?mid=71）
+Amego,3040143,第n品項 Remark 過長,,發票-開立發票(自動配號),見光貿 API 錯誤代碼（invoice.amego.tw/info_detail?mid=71）
+Amego,3040144,第n品項 TaxType 錯誤,,發票-開立發票(自動配號),見光貿 API 錯誤代碼（invoice.amego.tw/info_detail?mid=71）
+Amego,3040145,SalesAmount 格式錯誤,,發票-開立發票(自動配號),見光貿 API 錯誤代碼（invoice.amego.tw/info_detail?mid=71）
+Amego,3040146,FreeTaxSalesAmount 格式錯誤,,發票-開立發票(自動配號),見光貿 API 錯誤代碼（invoice.amego.tw/info_detail?mid=71）
+Amego,3040147,ZeroTaxSalesAmount 格式錯誤,,發票-開立發票(自動配號),見光貿 API 錯誤代碼（invoice.amego.tw/info_detail?mid=71）
+Amego,3040148,TaxType 格式錯誤,,發票-開立發票(自動配號),見光貿 API 錯誤代碼（invoice.amego.tw/info_detail?mid=71）
+Amego,3040149,TaxRate 格式錯誤,,發票-開立發票(自動配號),見光貿 API 錯誤代碼（invoice.amego.tw/info_detail?mid=71）
+Amego,3040150,TaxAmount 格式錯誤,,發票-開立發票(自動配號),見光貿 API 錯誤代碼（invoice.amego.tw/info_detail?mid=71）
+Amego,3040151,TotalAmount 格式錯誤,,發票-開立發票(自動配號),見光貿 API 錯誤代碼（invoice.amego.tw/info_detail?mid=71）
+Amego,3040152,TotalAmount 不可為負數,,發票-開立發票(自動配號),見光貿 API 錯誤代碼（invoice.amego.tw/info_detail?mid=71）
+Amego,3040153,OrderId 不可為空或過長,,發票-開立發票(自動配號),見光貿 API 錯誤代碼（invoice.amego.tw/info_detail?mid=71）
+Amego,3040154,載具類別不可為空,,發票-開立發票(自動配號),見光貿 API 錯誤代碼（invoice.amego.tw/info_detail?mid=71）
+Amego,3040155,載具類別應為6碼,,發票-開立發票(自動配號),見光貿 API 錯誤代碼（invoice.amego.tw/info_detail?mid=71）
+Amego,3040160,BrandName 不可為空或過長,,發票-開立發票(自動配號),見光貿 API 錯誤代碼（invoice.amego.tw/info_detail?mid=71）
+Amego,3040161,DetailVat 格式錯誤,,發票-開立發票(自動配號),見光貿 API 錯誤代碼（invoice.amego.tw/info_detail?mid=71）
+Amego,3040162,只有打統編發票， 才可以用未稅單價及小計,,發票-開立發票(自動配號),見光貿 API 錯誤代碼（invoice.amego.tw/info_detail?mid=71）
+Amego,3040163,DetailAmountRound 格式錯誤,,發票-開立發票(自動配號),見光貿 API 錯誤代碼（invoice.amego.tw/info_detail?mid=71）
+Amego,3040171,OrderId 重複 / OrderId 重複，該訂單編號正在註銷重開中,,發票-開立發票(自動配號),見光貿 API 錯誤代碼（invoice.amego.tw/info_detail?mid=71）
+Amego,3040172,第n品項 Amount 金額錯誤,,發票-開立發票(自動配號),見光貿 API 錯誤代碼（invoice.amego.tw/info_detail?mid=71）
+Amego,3040173,TaxType 設定錯誤,,發票-開立發票(自動配號),見光貿 API 錯誤代碼（invoice.amego.tw/info_detail?mid=71）
+Amego,3040174,SalesAmount 計算錯誤,,發票-開立發票(自動配號),見光貿 API 錯誤代碼（invoice.amego.tw/info_detail?mid=71）
+Amego,3040175,ZeroTaxSalesAmount 計算錯誤,,發票-開立發票(自動配號),見光貿 API 錯誤代碼（invoice.amego.tw/info_detail?mid=71）
+Amego,3040176,FreeTaxSalesAmount 計算錯誤,,發票-開立發票(自動配號),見光貿 API 錯誤代碼（invoice.amego.tw/info_detail?mid=71）
+Amego,3040177,TaxAmount 計算錯誤,,發票-開立發票(自動配號),見光貿 API 錯誤代碼（invoice.amego.tw/info_detail?mid=71）
+Amego,3040178,TotalAmount 計算錯誤,,發票-開立發票(自動配號),見光貿 API 錯誤代碼（invoice.amego.tw/info_detail?mid=71）
+Amego,3040179,若為零稅率發票，通關方式註記必填,,發票-開立發票(自動配號),見光貿 API 錯誤代碼（invoice.amego.tw/info_detail?mid=71）
+Amego,3040180,通關方式註記錯誤,,發票-開立發票(自動配號),見光貿 API 錯誤代碼（invoice.amego.tw/info_detail?mid=71）
+Amego,3040181,SalesAmount 不應該為負數,,發票-開立發票(自動配號),見光貿 API 錯誤代碼（invoice.amego.tw/info_detail?mid=71）
+Amego,3040182,ZeroTaxSalesAmount 不應該為負數,,發票-開立發票(自動配號),見光貿 API 錯誤代碼（invoice.amego.tw/info_detail?mid=71）
+Amego,3040183,FreeTaxSalesAmount 不應該為負數,,發票-開立發票(自動配號),見光貿 API 錯誤代碼（invoice.amego.tw/info_detail?mid=71）
+Amego,3040184,TotalAmount 不應該為負數,,發票-開立發票(自動配號),見光貿 API 錯誤代碼（invoice.amego.tw/info_detail?mid=71）
+Amego,3040191,無法取得下一張發票,,發票-開立發票(自動配號),見光貿 API 錯誤代碼（invoice.amego.tw/info_detail?mid=71）
+Amego,3040192,取得發票列印格式錯誤,,發票-開立發票(自動配號),見光貿 API 錯誤代碼（invoice.amego.tw/info_detail?mid=71）
+Amego,3040193,TaxAdjustment 格式錯誤,,發票-開立發票(自動配號),見光貿 API 錯誤代碼（invoice.amego.tw/info_detail?mid=71）
+Amego,3050111,第n筆 CancelInvoiceNumber 錯誤,,發票-作廢發票,見光貿 API 錯誤代碼（invoice.amego.tw/info_detail?mid=71）
+Amego,3050112,此 API 支援傳輸多張發票，data 欄位資料應為陣列字串,,發票-作廢發票,見光貿 API 錯誤代碼（invoice.amego.tw/info_detail?mid=71）
+Amego,3050113,第n筆 CancelReason 超過 20 字,,發票-作廢發票,見光貿 API 錯誤代碼（invoice.amego.tw/info_detail?mid=71）
+Amego,3050121,指定發票號碼 開立中,,發票-作廢發票,見光貿 API 錯誤代碼（invoice.amego.tw/info_detail?mid=71）
+Amego,3050122,指定發票號碼 已存在開立作廢,,發票-作廢發票,見光貿 API 錯誤代碼（invoice.amego.tw/info_detail?mid=71）
+Amego,3050123,指定發票號碼 已存在註銷,,發票-作廢發票,見光貿 API 錯誤代碼（invoice.amego.tw/info_detail?mid=71）
+Amego,3050124,指定發票號碼 發票類型錯誤,,發票-作廢發票,見光貿 API 錯誤代碼（invoice.amego.tw/info_detail?mid=71）
+Amego,3050125,指定發票號碼 發票不存在,,發票-作廢發票,見光貿 API 錯誤代碼（invoice.amego.tw/info_detail?mid=71）
+Amego,3050126,指定發票號碼 已超過修改期限,,發票-作廢發票,見光貿 API 錯誤代碼（invoice.amego.tw/info_detail?mid=71）
+Amego,3050131,指定發票號碼 等待 開立/作廢/註銷,,發票-作廢發票,見光貿 API 錯誤代碼（invoice.amego.tw/info_detail?mid=71）
+Amego,3050141,指定發票號碼 已存在折讓單,,發票-作廢發票,見光貿 API 錯誤代碼（invoice.amego.tw/info_detail?mid=71）
+Amego,99,[發票-發票狀態] 第n筆 InvoiceNumber 錯誤 / [折讓-折讓狀態] 第n筆 AllowanceNumber 錯誤 / [其他-公司名稱查詢] 第 n 筆 統一編號長度錯誤 / [其他-公司名稱查詢] 第 n 筆 統一編號格式錯誤 / [其他-所有字軌資料] Period 錯誤 / [自行配號專用-字軌取號] Period 錯誤 / [自行配號專用-字軌取號] Book 錯誤 / [自行配號專用-字軌取號] 無字軌可取 / [自行配號專用-字軌取號] 剩餘字軌本數不足 / [自行配號專用-字軌取號] 字軌取號錯誤，請聯絡客服人員 / [自行配號專用-字軌取號] 字軌取號的訖號錯誤，請聯絡客服人員 / [自行配號專用-字軌取號] 資料庫更新資料錯誤，請稍後重試 / [自行配號專用-開立發票(API配號)] 此 API 支援傳輸多張發票，data 欄位資料應為陣列字串 / [自行配號專用-開立發票(API配號)] 有指定熱感應機型號代碼，只能一次傳輸一張 / [自行配號專用-開立發票(API配號)] 第n筆 InvoiceNumber 錯誤 / [自行配號專用-開立發票(API配號)] 第n筆 InvoiceDate 錯誤 / [自行配號專用-開立發票(API配號)] 第n筆 InvoiceTime 錯誤 / [自行配號專用-開立發票(API配號)] 第n筆 InvoiceNumber 非當期字軌 / [自行配號專用-開立發票(API配號)] 第n筆 InvoiceNumber 超過開立期限 / [自行配號專用-開立發票(API配號)] 第n筆 InvoiceNumber 號碼不在字軌起訖內 / [自行配號專用-開立發票(API配號)] 第n筆 InvoiceNumber 字軌類別設定錯誤 / [自行配號專用-開立發票(API配號)] 第n筆 InvoiceNumber 字軌類型設定錯誤 / [自行配號專用-開立發票(API配號)] 第n筆 BuyerIdentifier 錯誤 / [自行配號專用-開立發票(API配號)] 第n筆 BuyerName 錯誤 / [自行配號專用-開立發票(API配號)] 第n筆 BuyerAddress 錯誤 / [自行配號專用-開立發票(API配號)] 第n筆 BuyerTelephoneNumber 錯誤 / [自行配號專用-開立發票(API配號)] 第n筆 BuyerEmailAddress 錯誤 / [自行配號專用-開立發票(API配號)] 第n筆 MainRemark 錯誤 / [自行配號專用-開立發票(API配號)] 第n筆 CarrierType 錯誤 / [自行配號專用-開立發票(API配號)] 第n筆 CarrierId1 錯誤 / [自行配號專用-開立發票(API配號)] 第n筆 CarrierId2 錯誤 / [自行配號專用-開立發票(API配號)] 第n筆 PrintMark 錯誤 / [自行配號專用-開立發票(API配號)] 第n筆 載具顯碼、隱碼不相符 / [自行配號專用-開立發票(API配號)] 第n筆 載具號碼不存在 / [自行配號專用-開立發票(API配號)] 第n筆 CarrierId1 載具顯碼錯誤 / [自行配號專用-開立發票(API配號)] 第n筆 NPOBAN 錯誤 / [自行配號專用-開立發票(API配號)] 第n筆 RandomNumber 錯誤 / [自行配號專用-開立發票(API配號)] 第n筆 ProductItem 錯誤 / [自行配號專用-開立發票(API配號)] 第n筆 第n品項 Description 錯誤 / [自行配號專用-開立發票(API配號)] 第n筆 第n品項 Quantity 錯誤 / [自行配號專用-開立發票(API配號)] 第n筆 第n品項 UnitPrice 錯誤 / [自行配號專用-開立發票(API配號)] 第n筆 第n品項 Amount 錯誤 / [自行配號專用-開立發票(API配號)] 第n筆 第n品項 Remark 錯誤 / [自行配號專用-開立發票(API配號)] 第n筆 第n品項 TaxType 錯誤 / [自行配號專用-開立發票(API配號)] 第n筆 若為零稅率發票，通關方式註記必填 / [自行配號專用-開立發票(API配號)] 第n筆 通關方式註記錯誤 / [自行配號專用-開立發票(API配號)] 第n筆 SalesAmount 錯誤 / [自行配號專用-開立發票(API配號)] 第n筆 FreeTaxSalesAmount 錯誤 / [自行配號專用-開立發票(API配號)] 第n筆 ZeroTaxSalesAmount 錯誤 / [自行配號專用-開立發票(API配號)] 第n筆 TaxType 錯誤 / [自行配號專用-開立發票(API配號)] 第n筆 TaxRate 錯誤 / [自行配號專用-開立發票(API配號)] 第n筆 TaxAmount 錯誤 / [自行配號專用-開立發票(API配號)] 第n筆 TotalAmount 錯誤 / [自行配號專用-開立發票(API配號)] 第n筆 order_id 錯誤 / [自行配號專用-開立發票(API配號)] 第n筆 列印發票不可設定載具 / [自行配號專用-開立發票(API配號)] 第n筆 列印發票不可設定捐贈碼 / [自行配號專用-開立發票(API配號)] 第n筆 捐贈發票不可設定載具 / [自行配號專用-開立發票(API配號)] 第n筆 載具類型錯誤 / [自行配號專用-開立發票(API配號)] 第n筆 載具顯碼錯誤 / [自行配號專用-開立發票(API配號)] 第n筆 載具隱碼錯誤 / [自行配號專用-開立發票(API配號)] 指定發票號碼 已存在開立 / [自行配號專用-開立發票(API配號)] 指定發票號碼 已存在開立作廢 / [自行配號專用-開立發票(API配號)] 指定發票號碼 註銷中 / [自行配號專用-開立發票(API配號)] 指定發票號碼 發票類型錯誤,,多個 API,見光貿 API 錯誤代碼（invoice.amego.tw/info_detail?mid=71）
+Amego,31,[發票-發票查詢] type 查詢類型不存在 / [發票-發票列表] date_select 參數錯誤 / [發票-發票檔案] type 查詢類型不存在 / [發票-發票列印] type 查詢類型不存在,,多個 API,見光貿 API 錯誤代碼（invoice.amego.tw/info_detail?mid=71）
+Amego,32,[發票-發票查詢] order_id 不可為空或過長 / [發票-發票列表] date_start 不是 YYYYMMDD 格式 / [發票-發票檔案] order_id 不可為空或過長 / [發票-發票列印] order_id 不可為空或過長,,多個 API,見光貿 API 錯誤代碼（invoice.amego.tw/info_detail?mid=71）
+Amego,33,[發票-發票查詢] invoice_number 不可為空或格式錯誤 / [發票-發票列表] date_end 不是 YYYYMMDD 格式 / [發票-發票檔案] invoice_number 不可為空或格式錯誤 / [發票-發票列印] invoice_number 不可為空或格式錯誤 / [折讓-折讓檔案] allowance_number 不可為空,,多個 API,見光貿 API 錯誤代碼（invoice.amego.tw/info_detail?mid=71）
+Amego,34,[發票-發票查詢] type 查詢類型錯誤 / [發票-發票列表] limit 只能帶入 20 ~ 500 / [發票-發票檔案] type 查詢類型錯誤 / [發票-發票列印] type 查詢類型錯誤 / [折讓-折讓檔案] download_style 參數錯誤,,多個 API,見光貿 API 錯誤代碼（invoice.amego.tw/info_detail?mid=71）
+Amego,51,[發票-發票查詢] 該發票超過查詢期限 / [發票-發票檔案] 該發票超過查詢期限 / [發票-發票列印] 該發票超過查詢期限,,多個 API,見光貿 API 錯誤代碼（invoice.amego.tw/info_detail?mid=71）
+Amego,71,[發票-發票查詢] 查無資料 / [發票-發票檔案] 查無資料 / [發票-發票列印] 查無資料 / [折讓-折讓檔案] 查無資料,,多個 API,見光貿 API 錯誤代碼（invoice.amego.tw/info_detail?mid=71）
+Amego,35,[發票-發票列表] page 必須 >= 1 / [發票-發票列印] printer_type 熱感應機型號代碼錯誤,,多個 API,見光貿 API 錯誤代碼（invoice.amego.tw/info_detail?mid=71）
+Amego,36,[發票-發票列表] date_start 不可大於 date_end / [發票-發票列印] Star mC-Print3 不支援單印明細,,多個 API,見光貿 API 錯誤代碼（invoice.amego.tw/info_detail?mid=71）
+Amego,52,[發票-發票檔案] 該發票有等待異動的排程 / [發票-發票列印] 該發票有等待異動的排程 / [折讓-折讓檔案] 該折讓單有等待異動的排程,,多個 API,見光貿 API 錯誤代碼（invoice.amego.tw/info_detail?mid=71）
+Amego,53,[發票-發票檔案] 載具發票，中獎後才可以下載 / [發票-發票檔案] 該發票類型不可下載 / [發票-發票列印] 載具發票，中獎後才可以列印 / [發票-發票列印] 該發票類型不可列印 / [折讓-折讓檔案] 該折讓單類型不可下載,,多個 API,見光貿 API 錯誤代碼（invoice.amego.tw/info_detail?mid=71）
+Amego,55,[發票-發票檔案] 該發票不符合下載條件 / [發票-發票列印] 該發票不符合列印條件,,多個 API,見光貿 API 錯誤代碼（invoice.amego.tw/info_detail?mid=71）
+Amego,56,0元發票，無法列印發票正本及發票補印,,發票-發票列印,見光貿 API 錯誤代碼（invoice.amego.tw/info_detail?mid=71）
+Amego,72,取得發票列印格式錯誤,,發票-發票列印,見光貿 API 錯誤代碼（invoice.amego.tw/info_detail?mid=71）
+Amego,4040112,此 API 支援傳輸多張發票，data 欄位資料應為陣列字串,,折讓-開立折讓,見光貿 API 錯誤代碼（invoice.amego.tw/info_detail?mid=71）
+Amego,4040113,第n筆 ProductItem 資料應為陣列,,折讓-開立折讓,見光貿 API 錯誤代碼（invoice.amego.tw/info_detail?mid=71）
+Amego,4040121,第n筆 AllowanceNumber 不可為空值或超過16字,,折讓-開立折讓,見光貿 API 錯誤代碼（invoice.amego.tw/info_detail?mid=71）
+Amego,4040122,第n筆 AllowanceDate 錯誤,,折讓-開立折讓,見光貿 API 錯誤代碼（invoice.amego.tw/info_detail?mid=71）
+Amego,4040123,第n筆 AllowanceType 錯誤,,折讓-開立折讓,見光貿 API 錯誤代碼（invoice.amego.tw/info_detail?mid=71）
+Amego,4040124,第n筆 OriginalInvoiceNumber 錯誤,,折讓-開立折讓,見光貿 API 錯誤代碼（invoice.amego.tw/info_detail?mid=71）
+Amego,4040125,第n筆 OriginalInvoiceDate 錯誤,,折讓-開立折讓,見光貿 API 錯誤代碼（invoice.amego.tw/info_detail?mid=71）
+Amego,4040126,第n筆 BuyerIdentifier 錯誤,,折讓-開立折讓,見光貿 API 錯誤代碼（invoice.amego.tw/info_detail?mid=71）
+Amego,4040127,第n筆 BuyerName 錯誤,,折讓-開立折讓,見光貿 API 錯誤代碼（invoice.amego.tw/info_detail?mid=71）
+Amego,4040128,第n筆 BuyerAddress 錯誤,,折讓-開立折讓,見光貿 API 錯誤代碼（invoice.amego.tw/info_detail?mid=71）
+Amego,4040129,第n筆 BuyerTelephoneNumber 錯誤,,折讓-開立折讓,見光貿 API 錯誤代碼（invoice.amego.tw/info_detail?mid=71）
+Amego,4040130,第n筆 BuyerEmailAddress 錯誤,,折讓-開立折讓,見光貿 API 錯誤代碼（invoice.amego.tw/info_detail?mid=71）
+Amego,4040131,第n筆 ProductItem 錯誤,,折讓-開立折讓,見光貿 API 錯誤代碼（invoice.amego.tw/info_detail?mid=71）
+Amego,4040132,第n筆 第n品項 目前僅支援一張折讓單折讓同一張發票,,折讓-開立折讓,見光貿 API 錯誤代碼（invoice.amego.tw/info_detail?mid=71）
+Amego,4040133,第n筆 第n品項 目前僅支援一張折讓單折讓同一張發票,,折讓-開立折讓,見光貿 API 錯誤代碼（invoice.amego.tw/info_detail?mid=71）
+Amego,4040134,第n筆 第n品項 OriginalDescription 錯誤,,折讓-開立折讓,見光貿 API 錯誤代碼（invoice.amego.tw/info_detail?mid=71）
+Amego,4040135,第n筆 第n品項 Quantity 錯誤,,折讓-開立折讓,見光貿 API 錯誤代碼（invoice.amego.tw/info_detail?mid=71）
+Amego,4040136,第n筆 第n品項 UnitPrice 錯誤,,折讓-開立折讓,見光貿 API 錯誤代碼（invoice.amego.tw/info_detail?mid=71）
+Amego,4040137,第n筆 第n品項 Amount 錯誤,,折讓-開立折讓,見光貿 API 錯誤代碼（invoice.amego.tw/info_detail?mid=71）
+Amego,4040138,第n筆 第n品項 Tax 錯誤,,折讓-開立折讓,見光貿 API 錯誤代碼（invoice.amego.tw/info_detail?mid=71）
+Amego,4040139,第n筆 第n品項 Tax 必須為整數,,折讓-開立折讓,見光貿 API 錯誤代碼（invoice.amego.tw/info_detail?mid=71）
+Amego,4040140,第n筆 TaxType 錯誤,,折讓-開立折讓,見光貿 API 錯誤代碼（invoice.amego.tw/info_detail?mid=71）
+Amego,4040141,第n筆 TaxAmount 錯誤,,折讓-開立折讓,見光貿 API 錯誤代碼（invoice.amego.tw/info_detail?mid=71）
+Amego,4040142,第n筆 TotalAmount 錯誤,,折讓-開立折讓,見光貿 API 錯誤代碼（invoice.amego.tw/info_detail?mid=71）
+Amego,4040145,第n筆 自114年1月1日起，AllowanceType 不可為 1 買方開立折讓證明單,,折讓-開立折讓,見光貿 API 錯誤代碼（invoice.amego.tw/info_detail?mid=71）
+Amego,4040151,指定發票號碼 原發票日期錯誤,,折讓-開立折讓,見光貿 API 錯誤代碼（invoice.amego.tw/info_detail?mid=71）
+Amego,4040152,指定發票號碼 開立中,,折讓-開立折讓,見光貿 API 錯誤代碼（invoice.amego.tw/info_detail?mid=71）
+Amego,4040153,指定發票號碼 已存在開立作廢,,折讓-開立折讓,見光貿 API 錯誤代碼（invoice.amego.tw/info_detail?mid=71）
+Amego,4040154,指定發票號碼 已註銷,,折讓-開立折讓,見光貿 API 錯誤代碼（invoice.amego.tw/info_detail?mid=71）
+Amego,4040155,指定發票號碼 原發票類型錯誤,,折讓-開立折讓,見光貿 API 錯誤代碼（invoice.amego.tw/info_detail?mid=71）
+Amego,4040156,指定發票號碼 原發票不存在,,折讓-開立折讓,見光貿 API 錯誤代碼（invoice.amego.tw/info_detail?mid=71）
+Amego,4040157,指定發票號碼 與原發票買方統編不一致,,折讓-開立折讓,見光貿 API 錯誤代碼（invoice.amego.tw/info_detail?mid=71）
+Amego,4040158,指定發票號碼 原發票有未處理的排程,,折讓-開立折讓,見光貿 API 錯誤代碼（invoice.amego.tw/info_detail?mid=71）
+Amego,4040159,指定發票號碼 原發票無權限折讓,,折讓-開立折讓,見光貿 API 錯誤代碼（invoice.amego.tw/info_detail?mid=71）
+Amego,4040161,指定折讓單號 已存在折讓開立,,折讓-開立折讓,見光貿 API 錯誤代碼（invoice.amego.tw/info_detail?mid=71）
+Amego,4040162,指定折讓單號 已存在作廢折讓,,折讓-開立折讓,見光貿 API 錯誤代碼（invoice.amego.tw/info_detail?mid=71）
+Amego,4040163,指定折讓單號 折讓類型錯誤,,折讓-開立折讓,見光貿 API 錯誤代碼（invoice.amego.tw/info_detail?mid=71）
+Amego,4040171,第n筆 此折讓單折讓金額已大於原發票的開立金額,,折讓-開立折讓,見光貿 API 錯誤代碼（invoice.amego.tw/info_detail?mid=71）
+Amego,4040173,第n筆 此折讓單加上其他同發票折讓單的折讓金額已大於原發票的開立金額,,折讓-開立折讓,見光貿 API 錯誤代碼（invoice.amego.tw/info_detail?mid=71）
+Amego,4050112,此 API 支援傳輸多張發票，data 欄位資料應為陣列字串,,折讓-作廢折讓,見光貿 API 錯誤代碼（invoice.amego.tw/info_detail?mid=71）
+Amego,4050121,第n筆 CancelAllowanceNumber 錯誤,,折讓-作廢折讓,見光貿 API 錯誤代碼（invoice.amego.tw/info_detail?mid=71）
+Amego,4050131,指定折讓單號 折讓開立中,,折讓-作廢折讓,見光貿 API 錯誤代碼（invoice.amego.tw/info_detail?mid=71）
+Amego,4050132,指定折讓單號 已存在已存在作廢折讓,,折讓-作廢折讓,見光貿 API 錯誤代碼（invoice.amego.tw/info_detail?mid=71）
+Amego,4050133,指定折讓單號 折讓類型錯誤,,折讓-作廢折讓,見光貿 API 錯誤代碼（invoice.amego.tw/info_detail?mid=71）
+Amego,4050134,指定折讓單號 折讓單不存在,,折讓-作廢折讓,見光貿 API 錯誤代碼（invoice.amego.tw/info_detail?mid=71）
+Amego,4050135,指定折讓單號 已超過修改期限,,折讓-作廢折讓,見光貿 API 錯誤代碼（invoice.amego.tw/info_detail?mid=71）
+Amego,4050141,指定折讓單號 等待 折讓開立/作廢折讓,,折讓-作廢折讓,見光貿 API 錯誤代碼（invoice.amego.tw/info_detail?mid=71）
+Amego,9000111,手機條碼不可為空,,其他-手機條碼查詢,見光貿 API 錯誤代碼（invoice.amego.tw/info_detail?mid=71）
+Amego,9000112,手機條碼格式錯誤,,其他-手機條碼查詢,見光貿 API 錯誤代碼（invoice.amego.tw/info_detail?mid=71）
+Amego,9000113,手機條碼不存在,,其他-手機條碼查詢,見光貿 API 錯誤代碼（invoice.amego.tw/info_detail?mid=71）
+ezPay,KEY10002,資料解密錯誤,,發票,確認 HashKey/HashIV、Padding、加密演算法（AES-256-CBC）
+ezPay,KEY10004,資料不齊全,,發票,確認 `PostData_` 解密後欄位是否完整
+ezPay,KEY10006,商店未申請啟用電子發票,,發票,後台確認電子發票服務狀態
+ezPay,KEY10007,頁面停留超過 30 分鐘,,發票,重新整理頁面後再送
+ezPay,KEY10010,商店代號空白,,發票,確認 `MerchantID_`（含底線）已填
+ezPay,KEY10011,PostData_欄位空白,,發票,確認 `PostData_`（含底線）已填
+ezPay,KEY10012,資料傳遞錯誤,,發票,檢查 Form Post 格式、Content-Type
+ezPay,KEY10013,資料空白,,發票,檢查必填欄位
+ezPay,KEY10014,TimeOut,,發票,檢查 `TimeStamp` 是否在合理區間（建議 ±10 分鐘）
+ezPay,KEY10015,發票金額格式錯誤,,發票,`Amt`、`TaxAmt`、`TotalAmt` 必須為純數字
+ezPay,INV10003,商品資訊格式錯誤或缺少資料,,發票,檢查 `ItemName`/`ItemCount`/`ItemPrice`/`ItemAmt` 是否齊全且 `|` 分隔正確
+ezPay,INV10004,商品資訊的商品小計計算錯誤,,發票,確認 `ItemAmt = ItemCount × ItemPrice`
+ezPay,INV10006,稅率格式錯誤,,發票,`TaxRate` 應為純數字（一般稅率帶 `5`，零/免稅帶 `0`）
+ezPay,INV10012,發票金額、課稅別驗證錯誤,,發票,確認 `Amt + TaxAmt = TotalAmt`，課稅別欄位一致
+ezPay,INV10013,發票欄位資料不齊全或格式錯誤,,發票,對照必填欄位逐項檢查
+ezPay,INV10014,自訂編號格式錯誤,,發票,`MerchantOrderNo` 限英、數字、底線 `_`
+ezPay,INV10015,無未稅金額,,發票,`Amt` 為空或 `0`
+ezPay,INV10016,無稅金,,發票,`TaxAmt` 為空或 `0`（應稅時）
+ezPay,INV10017,輸入的版本不支援混合稅率功能,,發票,`Version` 應使用 `1.5` 才支援 `TaxType=9`
+ezPay,INV10019,資料含有控制碼,,發票,移除特殊控制字元
+ezPay,INV10020,暫停使用,,發票,該服務／字軌已暫停
+ezPay,INV10021,異常終止,,發票,重試；若持續發生請聯繫客服
+ezPay,INV20006,查無發票資料,,發票,確認 `InvoiceNumber`+`RandomNum` 或 `MerchantOrderNo`+`TotalAmt` 組合
+ezPay,INV70001,欄位資料格式錯誤,,發票,對照型態長度檢查
+ezPay,INV70002,上傳失敗之發票不得作廢,,發票,該發票尚未成功上傳財政部，無法作廢；可聯繫客服協助
+ezPay,INV90005,未簽定合約或合約已到期,,發票,聯繫 ezPay 業務
+ezPay,INV90006,可開立張數已用罄,,發票,至後台新增字軌或購買額度
+ezPay,NOR10001,網路連線異常,,發票,重試；確認網路與防火牆
+ezPay,LIB10003,商店自訂編號重覆,,發票,`MerchantOrderNo` 同店不可重複，請改用新編號
+ezPay,LIB10005,發票已作廢過,,發票,該發票已是作廢狀態
+ezPay,LIB10007,無法作廢,,發票,該發票已執行折讓，不可作廢；應改用「作廢折讓」
+ezPay,LIB10008,超過可作廢期限,,發票,已超過奇數月 14 日前的作廢時點，無法作廢
+ezPay,LIB10009,發票已開立，但未上傳至財政部，無法作廢,,發票,須等開立資料上傳財政部完成（次日 06:00 後）才可作廢
+ezPay,IAI10001,缺少參數,,作廢折讓,檢查必填欄位
+ezPay,IAI10002,查詢失敗,,作廢折讓,確認 `AllowanceNo` 正確
+ezPay,IAI10003,更新失敗,,作廢折讓,重試；若持續發生請聯繫客服
+ezPay,IAI10004,參數錯誤,,作廢折讓,對照欄位格式
+ezPay,IAI10005,新增失敗,,作廢折讓,重試
+ezPay,IAI10006,異常終止,,作廢折讓,聯繫客服
+ezPay,API10001,[手機條碼驗證] 缺少參數 / [捐贈碼] 缺少參數,,多個 API,見 ezPay 手機條碼／捐贈碼驗證手冊 BDV 1.0.0 第六章
+ezPay,API10002,[手機條碼驗證] 查詢失敗 / [捐贈碼] 查詢失敗,,多個 API,見 ezPay 手機條碼／捐贈碼驗證手冊 BDV 1.0.0 第六章
+ezPay,API10004,[手機條碼驗證] 參數錯誤 / [捐贈碼] 參數錯誤,,多個 API,見 ezPay 手機條碼／捐贈碼驗證手冊 BDV 1.0.0 第六章
+ezPay,CBC10001,欄位資料空白,,手機條碼驗證,見 ezPay 手機條碼／捐贈碼驗證手冊 BDV 1.0.0 第六章
+ezPay,CBC10002,欄位資料格式錯誤,,手機條碼驗證,見 ezPay 手機條碼／捐贈碼驗證手冊 BDV 1.0.0 第六章
+ezPay,CBC10003,異常終止,,手機條碼驗證,見 ezPay 手機條碼／捐贈碼驗證手冊 BDV 1.0.0 第六章
+ezPay,CBC10004,財政部大平台網路連線異常,,手機條碼驗證,見 ezPay 手機條碼／捐贈碼驗證手冊 BDV 1.0.0 第六章
+ezPay,CLC10001,欄位資料空白,,捐贈碼,見 ezPay 手機條碼／捐贈碼驗證手冊 BDV 1.0.0 第六章
+ezPay,CLC10002,欄位資料格式錯誤,,捐贈碼,見 ezPay 手機條碼／捐贈碼驗證手冊 BDV 1.0.0 第六章
+ezPay,CLC10003,異常終止,,捐贈碼,見 ezPay 手機條碼／捐贈碼驗證手冊 BDV 1.0.0 第六章
+ezPay,CLC10004,財政部大平台網路連線異常,,捐贈碼,見 ezPay 手機條碼／捐贈碼驗證手冊 BDV 1.0.0 第六章

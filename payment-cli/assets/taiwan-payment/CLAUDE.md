@@ -151,13 +151,14 @@ Never push directly to `main`. Always:
 ### Common Pitfalls
 
 1. **CheckMacValue calculation errors**:
-   - Must sort parameters alphabetically
-   - Must use lowercase URL encoding
+   - Sort parameters alphabetically, case-insensitive
+   - URL encode 後轉小寫，並把 `( ) ! * - _ .` 還原（.NET 規則；直接用 quote_plus 遇到括號就會錯）
    - Must exclude CheckMacValue itself from calculation
+   - 物流 API 用 MD5，金流 AIO 用 SHA256
 
 2. **AES encryption errors**:
-   - NewebPay: Ensure Key=32 bytes, IV=16 bytes, use PKCS7 padding
-   - PAYUNi: Must append 16-byte auth tag after encryption
+   - NewebPay: Key=32 bytes, IV=16 bytes；解密須容許 1–32 bytes 的 padding，且 RespondType=JSON 時明文是 JSON
+   - PAYUNi: EncryptInfo = hex(base64(密文) + ":::" + base64(tag))；HashInfo 為 HashKey + EncryptInfo + HashIV
 
 3. **Payment notification handling**:
    - Always verify CheckMacValue before processing
@@ -226,25 +227,45 @@ To add new data, edit CSV files directly. No code changes needed.
 
 ## Encryption Methods
 
-### ECPay - SHA256
+> 以下三段皆與業者官方實作逐位元組比對過（`tests/vectors/`，CI 執行 `scripts/verify-examples.py`）。
+> 修改前請先跑該腳本；不要憑印象改演算法。
 
+### ECPay - SHA256 CheckMacValue（物流用 MD5）
+
+<!-- verify: ecpay-cmv-sha256 -->
 ```python
+def ecpay_url_encode(text):
+    # PHP urlencode → 小寫 → .NET 不編碼的 - _ . ! * ( ) 還原
+    encoded = urllib.parse.quote_plus(text, safe='').replace('~', '%7E').lower()
+    for src, dst in (('%2d', '-'), ('%5f', '_'), ('%2e', '.'), ('%21', '!'),
+                     ('%2a', '*'), ('%28', '('), ('%29', ')')):
+        encoded = encoded.replace(src, dst)
+    return encoded
+
 def generate_check_mac_value(params, hash_key, hash_iv):
-    sorted_params = sorted(params.items())
-    param_str = '&'.join(f'{k}={v}' for k, v in sorted_params)
-    raw = f'HashKey={hash_key}&{param_str}&HashIV={hash_iv}'
-    encoded = urllib.parse.quote_plus(raw).lower()
-    return hashlib.sha256(encoded.encode('utf-8')).hexdigest().upper()
+    items = sorted(((k, v) for k, v in params.items() if k != 'CheckMacValue'),
+                   key=lambda kv: kv[0].lower())          # 不分大小寫排序（SDK 用 strcasecmp）
+    raw = f"HashKey={hash_key}&{'&'.join(f'{k}={v}' for k, v in items)}&HashIV={hash_iv}"
+    return hashlib.sha256(ecpay_url_encode(raw).encode('utf-8')).hexdigest().upper()
 ```
 
 ### NewebPay - AES-256-CBC + SHA256
 
+<!-- verify: newebpay -->
 ```python
 def generate_trade_info(params, hash_key, hash_iv):
-    query_string = urllib.parse.urlencode(params)
     cipher = AES.new(hash_key.encode(), AES.MODE_CBC, hash_iv.encode())
-    padded = pad(query_string.encode(), AES.block_size)
-    return cipher.encrypt(padded).hex()
+    return cipher.encrypt(pad(urllib.parse.urlencode(params).encode(), 16)).hex()
+
+def decrypt_trade_info(trade_info, hash_key, hash_iv):
+    data = AES.new(hash_key.encode(), AES.MODE_CBC, hash_iv.encode()).decrypt(bytes.fromhex(trade_info))
+    # 官方外掛以 32 bytes 區塊補齊，padding 可能是 1–32；unpad(data, 16) 會失敗
+    n = data[-1]
+    if not 1 <= n <= 32 or data[-n:] != bytes([n]) * n:
+        raise ValueError('padding 錯誤（金鑰或 IV 不正確）')
+    text = data[:-n].decode()
+    # RespondType=JSON 時明文是 JSON，不是 query string
+    return json.loads(text) if text.startswith('{') else dict(urllib.parse.parse_qsl(text, keep_blank_values=True))
 
 def generate_trade_sha(trade_info, hash_key, hash_iv):
     raw = f'HashKey={hash_key}&{trade_info}&HashIV={hash_iv}'
@@ -253,15 +274,16 @@ def generate_trade_sha(trade_info, hash_key, hash_iv):
 
 ### PAYUNi - AES-256-GCM + SHA256
 
+<!-- verify: payuni -->
 ```python
 def generate_encrypt_info(params, hash_key, hash_iv):
-    query_string = urllib.parse.urlencode(params)
     cipher = AES.new(hash_key.encode(), AES.MODE_GCM, nonce=hash_iv.encode())
-    encrypted, tag = cipher.encrypt_and_digest(query_string.encode())
-    return (encrypted + tag).hex()  # Must append tag!
+    encrypted, tag = cipher.encrypt_and_digest(urllib.parse.urlencode(params).encode())
+    # hex( base64(密文) + ":::" + base64(tag) ) —— 最外層的 hex 不可省略
+    return (base64.b64encode(encrypted) + b':::' + base64.b64encode(tag)).hex()
 
 def generate_hash_info(encrypt_info, hash_key, hash_iv):
-    raw = encrypt_info + hash_key + hash_iv
+    raw = hash_key + encrypt_info + hash_iv   # HashKey 在前
     return hashlib.sha256(raw.encode()).hexdigest().upper()
 ```
 

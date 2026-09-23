@@ -1041,21 +1041,23 @@ TapPay 錯誤訊息分為兩類：
 1. **TapPay `status`**：TapPay 平台層級狀態碼
 2. **`bank_result_code`**：來自收單行 / 發卡行的轉發碼
 
-### 一般 status（節錄）⚠️
+### 一般 status（節錄，已查證）
 
-| 代碼 | 說明 | 處理建議 |
-|------|------|----------|
-| `0` | 成功 | - |
-| `1` | 請求參數錯誤 | 檢查欄位 |
-| `2` | Partner Key 錯誤 | 確認 Header 與 Body 的 `partner_key` |
-| `3` | Prime 已被使用 | 重新取 Prime（用過即作廢） |
-| `4` | Prime 已過期 | 重新取 Prime（90 秒效期） |
-| `5` | Merchant ID 錯誤 | 確認該支付方式對應的 ID |
-| `6` | 金額錯誤 | 檢查整數、最低 / 最高限制 |
-| `7` | 幣別錯誤 | 檢查 `currency` |
-| `10003` | 銀行授權失敗 | 詳見 `bank_result_code` |
-| `10005` | 信用卡資料不正確 | 引導使用者重新輸入 |
-| `88001` | 系統錯誤 | 稍後重試或聯繫 TapPay |
+> 依 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html，2026-09 擷取）。
+> 舊版本表格的 1、3、6、7 在官方表中不存在，2 / 4 / 5 / 10003 / 10005 / 88001 的說明也與官方不符，已更正。
+> 同一代碼在不同 API 可能有不同意義；完整清單見 `data/error-codes.csv`（473 筆）。
+
+| 代碼 | 官方說明 |
+|------|----------|
+| `0` | Success |
+| `2` | End of list（查詢類 API） |
+| `4` | IP mismatch |
+| `5` | Wrong JSON format |
+| `121` | Invalid arguments : prime |
+| `421` | Gateway Timeout |
+| `10003` | Wrong card, please ask for issuer |
+| `10005` | Bank system error |
+| `88001` | SDK Is Not Activate（前端 SDK） |
 
 > 正式錯誤碼以 [TapPay 官方文件](https://docs.tappaysdk.com) 為準。本表為實務最常見項目。
 

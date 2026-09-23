@@ -39,15 +39,15 @@ Reference these guidelines when:
 
 ### 3. Signature Verification (CRITICAL)
 
-- `ecpay-checkmacvalue` - ECPay: SHA256 CheckMacValue, alphabetical sort + lowercase URL encode
-- `newebpay-tradesha` - NewebPay: AES-256-CBC TradeInfo + SHA256 TradeSha
-- `payuni-hashinfo` - PAYUNi: AES-256-GCM EncryptInfo + 16-byte tag + SHA256 HashInfo
+- `ecpay-checkmacvalue` - ECPay logistics: **MD5** CheckMacValue (payment is SHA256); case-insensitive sort, PHP urlencode (space = `+`), lowercase, restore `( ) ! * - _ .`
+- `newebpay-hashdata` - NewebPay logistics: HashData = SHA256(`HashKey={key}&{EncryptData}&HashIV={iv}`) UPPER; request fields end with `_`, responses do not
+- `payuni-hashinfo` - PAYUNi: EncryptInfo = hex( base64(ciphertext) + `:::` + base64(tag) ); HashInfo = SHA256(HashKey + EncryptInfo + HashIV)
 - `verify-on-notify` - ALWAYS verify before updating order state
 
 ### 4. Status Callbacks (HIGH)
 
 - `numeric-status-codes` - Status uses numeric codes (e.g., 21 待出貨, 31 配送中, 11 已取貨)
-- `payuni-status-codes` - PAYUNi status codes 91/92/98/21/22/31/32/33/11/41/43/44/46/51/52/53/55/56/81/82
+- `payuni-status-codes` - PAYUNi ShipStatus codes defined by the production plugin: 21/22/92/31/32/11 (others: read ShipStatusDesc)
 - `idempotent-callback` - Treat duplicate notify as no-op
 - `cvs-store-relocation` - Code 81 門市關轉: pickup store closed, customer must re-pick
 
@@ -65,7 +65,7 @@ Reference these guidelines when:
 |----------|----------|
 | ECPay | MerchantID `2000132`, sandbox `logistics-stage.ecpay.com.tw` |
 | NewebPay | Apply via merchant backend (sandbox: `ccore.newebpay.com/API/Logistic`) |
-| PAYUNi | Apply via merchant backend (sandbox: `sandbox-api.payuni.com.tw/api/logistics`) |
+| PAYUNi | Apply via merchant backend (sandbox: `sandbox-api.payuni.com.tw/api/logistics/trade`, T-Cat `/api/home_delivery/trade`, Version 1.1) |
 
 ## How to Use
 

@@ -651,39 +651,40 @@ Content-Type: text/html; charset=utf-8
 
 ## Mid_smilepay 簽章驗證
 
-`Mid_smilepay` 是 SmilePay 防止假通知的數值校驗碼，演算法可從 WooCommerce 模組推導：
+`Mid_smilepay` 是 SmilePay 防止假通知的數值校驗碼。演算法取自 SmilePay 官方 WooCommerce 外掛
+1.1.23 的 `check_mid()`，並以其原始碼產生的標準答案驗證（`tests/vectors/smilepay.json`）。
 
 ### 演算法
 
-1. 取 `Smseid` 末 4 碼 → `r1 r2 r3 r4`，若非數字以 `9` 取代
+1. 取 `Smseid` 末 4 碼（PHP `substr($smseid, -4, 4)`）→ `r1 r2 r3 r4`；
+   非數字、或 `Smseid` 不足 4 碼時**缺少的後段**，都以 `9` 取代
 2. `Amount` 補零至 8 碼 (左補) → `str1`
-3. 串接：`str = mid + str1 + r1 + r2 + r3 + r4` (16 碼)
+3. 串接：`str = mid + str1 + r1 + r2 + r3 + r4` (16 碼，mid 為 4 碼)
 4. 將 16 碼依索引切：偶數位 (0,2,4...14) 加總為 `even`，奇數位 (1,3,5...15) 加總為 `odd`
 5. `Mid_smilepay = even * 9 + odd * 3`
 
 ### Python 實作
 
+<!-- verify: smilepay-mid -->
 ```python
+import hmac
+
+
 def calc_mid_smilepay(mid: str, amount: int, smseid: str) -> int:
-    """計算 SmilePay Mid_smilepay 校驗碼"""
-    r_all = smseid[-4:]
-    r = []
-    for ch in r_all:
-        r.append(ch if ch.isdigit() else "9")
-    r1, r2, r3, r4 = r
-
-    str1 = str(amount).zfill(8)
-    s = f"{mid}{str1}{r1}{r2}{r3}{r4}"
-    assert len(s) == 16, "mid 長度需確保 mid+str1+rcode=16"
-
-    even = sum(int(s[i]) for i in range(16) if i % 2 == 0)
-    odd  = sum(int(s[i]) for i in range(16) if i % 2 == 1)
+    """計算 SmilePay Mid_smilepay 校驗碼（與官方外掛 check_mid() 相同）"""
+    r_all = (smseid or '')[-4:]
+    # 不足 4 碼時是「後面」缺位補 9；只接受 ASCII 數字（PHP is_numeric 不認其他 Unicode 數字）
+    r = [r_all[i] if i < len(r_all) and r_all[i] in '0123456789' else '9' for i in range(4)]
+    s = f"{mid}{str(amount).zfill(8)}{''.join(r)}"
+    if len(s) != 16:
+        raise ValueError('mid 必須為 4 碼')
+    even = sum(int(s[i]) for i in range(0, 16, 2))
+    odd = sum(int(s[i]) for i in range(1, 16, 2))
     return even * 9 + odd * 3
 
 
-# 驗證範例
-def verify_callback(mid, amount, smseid, mid_smilepay_received):
-    return str(calc_mid_smilepay(mid, amount, smseid)) == str(mid_smilepay_received)
+def verify_callback(mid, amount, smseid, mid_smilepay_received) -> bool:
+    return hmac.compare_digest(str(calc_mid_smilepay(mid, amount, smseid)), str(mid_smilepay_received))
 ```
 
 ### 注意
@@ -737,45 +738,18 @@ Content-Type: application/x-www-form-urlencoded
 
 ## 錯誤代碼
 
-XML 回應的 `Status` 欄位常見值：
+XML 回應的 `Status`：**只有 `1` 代表成功**（官方 WooCommerce 模組 1.1.23 即以 `Status == "1"` 判斷取號成功，失敗時顯示 `Status` 與 `Desc`）。
 
-### 成功
-
-| 代碼 | 說明 |
-|------|------|
-| `1` | 取號 / 建立成功 |
-
-### 帳號 / 驗章類
-
-| 代碼 | 說明 | 處理方式 |
-|------|------|----------|
-| `-1` | 必要參數缺漏 | 檢查 Dcvc / Verify_key / Pay_zg / Data_id / Amount |
-| `-2` | 帳號驗證失敗 | 確認 Dcvc / Rvg2c / Verify_key 是否一致 |
-| `-3` | 商店狀態異常 | 聯繫 SmilePay 客服啟用商店 |
-| `-4` | 路由 / 收款銀行錯誤 | 確認 Rvg2c |
-
-### 訂單 / 金額類
-
-| 代碼 | 說明 | 處理方式 |
-|------|------|----------|
-| `-10` | Data_id 重複 | 換新訂單編號 |
-| `-11` | Data_id 格式錯誤 | 僅英數 20 碼內 |
-| `-12` | 金額錯誤 | 整數 + 在限額內 |
-| `-13` | 商品名稱 (`od_sob`) 過長 | 取號類 ≤ 45 字、結帳頁 ≤ 49 字 |
-| `-14` | 繳費期限格式錯誤 | `YYYY/MM/DD` |
-
-### 付款方式類
-
-| 代碼 | 說明 |
-|------|------|
-| `-20` | Pay_zg 不支援 |
-| `-21` | 該付款方式商店未開通 |
-| `-22` | 分期 (Stage) 未開通或金額不符 |
-| `-23` | 銀聯卡未開通 |
-
-> 上述代碼依 SmilePay 官方規格書整理；實際以最新規格書為準，若收到未列代碼，以 `Desc` 為主。
+> ⚠️ 速買配沒有公開金流錯誤代碼表，手邊的官方模組也只判斷 `1`。舊版本這裡列了 `-1`～`-4`、`-10`～`-14`、`-20`～`-23`
+> 並宣稱「依官方規格書整理」，但查不到出處，而且與 `data/error-codes.csv` 舊資料互相矛盾（例如 `-3` 一處寫「商店狀態異常」、
+> 一處寫「簽章不正確」；`-23` 一處寫「銀聯卡未開通」、一處寫「逾期訂單」），已刪除。
+> 收到非 `1` 時請以 `Desc` 文字判斷並完整記錄；需要代碼表請向速買配技術窗口索取。
 
 ### Roturl 自訂錯誤訊息 (商家回給 SmilePay)
+
+### Roturl 自訂錯誤訊息 (商家回給 SmilePay)
+
+以下為官方模組 `class-smilepay-payment.php` 在 Roturl 驗證失敗時回給速買配的訊息：
 
 | 訊息 | 觸發條件 |
 |------|----------|
@@ -840,14 +814,14 @@ ATM 虛擬帳號的 `AtmBankNo` 為 3 碼財金代碼，常見：
 
 ## 常見問題排解
 
-### 1. 取號回 `Status=-2` 帳號驗證失敗
+### 1. 取號失敗，`Desc` 指出帳號／驗證碼錯誤
 
 **檢查**：
 - `Dcvc` / `Rvg2c` / `Verify_key` 是否與後台核發一致
 - 是否誤用測試 / 正式環境參數
 - `Verify_key` 是否大寫 hex (32 碼)
 
-### 2. 取號回 `Status=-10` Data_id 重複
+### 2. 取號失敗，`Desc` 指出訂單編號重複
 
 **檢查**：
 - 同一商店是否曾經以該 `Data_id` 成功取號

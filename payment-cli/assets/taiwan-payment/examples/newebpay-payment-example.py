@@ -9,6 +9,7 @@ API 文件: https://www.newebpay.com
 """
 
 import hashlib
+import hmac
 import urllib.parse
 import json
 from datetime import datetime
@@ -17,11 +18,58 @@ from dataclasses import dataclass, field
 
 try:
     from Crypto.Cipher import AES
-    from Crypto.Util.Padding import pad, unpad
+    from Crypto.Util.Padding import pad
     HAS_CRYPTO = True
 except ImportError:
     HAS_CRYPTO = False
 
+
+
+def strip_padding(data: bytes) -> bytes:
+    """
+    移除 PKCS#7 padding，容許長度 1–32
+
+    藍新官方 WooCommerce 外掛（newebpay-payment encProcess.php）加密時以 32 bytes
+    為區塊補齊（addpadding 的 blocksize=32），因此 padding 值可能是 17–32；
+    Crypto.Util.Padding.unpad(data, 16) 遇到這種密文會直接拋錯。
+    官方解密端的 strippadding() 以最後一個 byte 為長度移除，此處行為一致，
+    另外檢查尾端每個 byte 都等於 padding 長度，金鑰錯誤時才能及早發現。
+    """
+    if not data:
+        raise ValueError('解密結果為空')
+    pad_len = data[-1]
+    if not 1 <= pad_len <= 32 or pad_len > len(data) or data[-pad_len:] != bytes([pad_len]) * pad_len:
+        raise ValueError('padding 格式錯誤（HashKey / HashIV 可能不正確）')
+    return data[:-pad_len]
+
+
+def parse_trade_info_plaintext(text: str) -> Dict:
+    """
+    解析解密後的 TradeInfo 明文
+
+    明文格式取決於送出時的 RespondType：
+    - JSON   → {"Status": ..., "Message": ..., "Result": {...}}
+    - String → Status=...&Message=...&MerchantID=...（欄位攤平，無 Result）
+
+    與藍新官方外掛 create_aes_decrypt() 相同，先試 JSON 再退回 query string。
+    若一律用 parse_qs，JSON 明文會被解析成空 dict（沒有 "=" 的片段會被丟棄），
+    導致所有回傳都被誤判為失敗。
+    """
+    text = text.strip()
+    if text.startswith('{'):
+        return json.loads(text)
+    params = urllib.parse.parse_qs(text, keep_blank_values=True)
+    return {k: v[0] if len(v) == 1 else v for k, v in params.items()}
+
+
+def extract_result(decrypted: Dict) -> Dict:
+    """取出交易明細：JSON 模式在 Result 內，String 模式則是攤平在最外層"""
+    result = decrypted.get('Result')
+    if isinstance(result, dict):
+        return result
+    if isinstance(result, str) and result.strip().startswith('{'):
+        return json.loads(result)
+    return decrypted
 
 @dataclass
 class MPGOrderData:
@@ -71,7 +119,8 @@ class MPGCallbackData:
     payment_type: str
     pay_time: str
     ip: str
-    esc_row_bank_acount: Optional[str] = None
+    check_code_valid: bool = False  # CheckCode 驗證結果（防金額竄改）
+    escrow_bank: Optional[str] = None
     code_no: Optional[str] = None
     barcode_1: Optional[str] = None
     barcode_2: Optional[str] = None
@@ -156,6 +205,9 @@ class NewebPayMPGService:
         query_string = urllib.parse.urlencode(data)
 
         # 步驟 2: AES-256-CBC 加密
+        # 標準 PKCS#7（16 bytes 區塊），與規格書 NDNF 範例 openssl_encrypt(..., OPENSSL_RAW_DATA)
+        # 一致。官方外掛改用 32 bytes 區塊補齊，兩者藍新伺服器都接受；
+        # 但「解密」必須兩種都能處理，見 strip_padding()。
         cipher = AES.new(self.hash_key, AES.MODE_CBC, self.hash_iv)
         padded = pad(query_string.encode('utf-8'), AES.block_size)
         encrypted = cipher.encrypt(padded)
@@ -183,15 +235,10 @@ class NewebPayMPGService:
             # 步驟 2: AES-256-CBC 解密
             decipher = AES.new(self.hash_key, AES.MODE_CBC, self.hash_iv)
             decrypted = decipher.decrypt(encrypted_bytes)
-            unpadded = unpad(decrypted, AES.block_size)
+            unpadded = strip_padding(decrypted)
 
-            # 步驟 3: 解析查詢字串
-            query_string = unpadded.decode('utf-8')
-            params = urllib.parse.parse_qs(query_string)
-
-            # 步驟 4: 轉換為單值字典
-            result = {k: v[0] if len(v) == 1 else v for k, v in params.items()}
-            return result
+            # 步驟 3: 依 RespondType 解析（JSON 或 query string）
+            return parse_trade_info_plaintext(unpadded.decode('utf-8'))
         except Exception as e:
             raise ValueError(f'解密失敗: {str(e)}')
 
@@ -228,7 +275,38 @@ class NewebPayMPGService:
             bool: 驗證是否通過
         """
         calculated_sha = self.generate_trade_sha(trade_info)
-        return calculated_sha == trade_sha.upper()
+        # 常數時間比較，避免以回應時間差逐字元猜出正確雜湊
+        return hmac.compare_digest(calculated_sha, trade_sha.upper())
+
+    def generate_check_code(self, amt, merchant_id: str, merchant_order_no: str, trade_no: str) -> str:
+        """
+        產生 CheckCode（規格書 NDNF 4.1.5，用於驗證回傳結果）
+
+        SHA256("HashIV={iv}&Amt=..&MerchantID=..&MerchantOrderNo=..&TradeNo=..&HashKey={key}").upper()
+        四個欄位依字母排序後以 http_build_query 串接。注意 HashIV 在前、HashKey 在後，
+        與 TradeSha 相反。
+        """
+        params = {
+            'Amt': amt,
+            'MerchantID': merchant_id,
+            'MerchantOrderNo': merchant_order_no,
+            'TradeNo': trade_no,
+        }
+        query = urllib.parse.urlencode(sorted(params.items()))
+        raw = f"HashIV={self.hash_iv.decode('utf-8')}&{query}&HashKey={self.hash_key.decode('utf-8')}"
+        return hashlib.sha256(raw.encode('utf-8')).hexdigest().upper()
+
+    def generate_check_value(self, amt, merchant_order_no: str) -> str:
+        """
+        產生 CheckValue（規格書 NDNF 4.1.6，單筆交易查詢 QueryTradeInfo 用）
+
+        SHA256("IV={iv}&Amt=..&MerchantID=..&MerchantOrderNo=..&Key={key}").upper()
+        前後綴是 IV= / Key=，不是 HashIV= / HashKey=。
+        """
+        params = {'Amt': amt, 'MerchantID': self.merchant_id, 'MerchantOrderNo': merchant_order_no}
+        query = urllib.parse.urlencode(sorted(params.items()))
+        raw = f"IV={self.hash_iv.decode('utf-8')}&{query}&Key={self.hash_key.decode('utf-8')}"
+        return hashlib.sha256(raw.encode('utf-8')).hexdigest().upper()
 
     def create_order(
         self,
@@ -352,15 +430,21 @@ class NewebPayMPGService:
         # 解密 TradeInfo
         decrypted = self.decrypt_trade_info(trade_info)
 
-        # 解析回傳資料
-        result_data = decrypted.get('Result', '')
-        if isinstance(result_data, str):
-            try:
-                result_dict = json.loads(result_data)
-            except:
-                result_dict = {}
-        else:
-            result_dict = result_data
+        # 解析回傳資料（JSON 模式在 Result 內；String 模式攤平在最外層）
+        result_dict = extract_result(decrypted)
+
+        # 驗證 CheckCode（規格書 4.1.5）。TradeSha 只證明資料來自持有金鑰的一方，
+        # CheckCode 另外綁定金額與訂單編號，建議入帳前一併確認。
+        check_code_valid = False
+        received_check_code = result_dict.get('CheckCode', '')
+        if received_check_code and result_dict.get('TradeNo'):
+            expected = self.generate_check_code(
+                amt=result_dict.get('Amt', ''),
+                merchant_id=result_dict.get('MerchantID', ''),
+                merchant_order_no=result_dict.get('MerchantOrderNo', ''),
+                trade_no=result_dict.get('TradeNo', ''),
+            )
+            check_code_valid = hmac.compare_digest(expected, str(received_check_code).upper())
 
         return MPGCallbackData(
             status=decrypted.get('Status', ''),
@@ -372,7 +456,8 @@ class NewebPayMPGService:
             payment_type=result_dict.get('PaymentType', ''),
             pay_time=result_dict.get('PayTime', ''),
             ip=result_dict.get('IP', ''),
-            esc_row_bank_acount=result_dict.get('EscrowBankAcount'),
+            check_code_valid=check_code_valid,
+            escrow_bank=result_dict.get('EscrowBank'),
             code_no=result_dict.get('CodeNo'),
             barcode_1=result_dict.get('Barcode_1'),
             barcode_2=result_dict.get('Barcode_2'),

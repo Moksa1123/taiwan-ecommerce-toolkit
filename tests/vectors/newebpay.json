@@ -1,0 +1,350 @@
+{
+    "provider": "newebpay",
+    "algorithm": "TradeInfo = hex(AES-256-CBC(query)); TradeSha = upper(sha256(\"HashKey={key}&{TradeInfo}&HashIV={iv}\"))",
+    "sources": {
+        "plugin": "newebpay-payment 1.0.12 (Neweb Technologies Co., Ltd.) includes/nwpenc/encProcess.php",
+        "spec": "線上交易─幕前支付技術串接手冊 NDNF-1.2.2（Step 2、4.1.4、4.1.5、4.1.6）",
+        "logistics_spec": "物流服務技術串接手冊 NDNS 1.0.0（6.附錄(一) Hash Data 處理方式）"
+    },
+    "generator": "php 8.2.33 / OpenSSL 3.5.6 7 Apr 2026",
+    "hash_key": "12345678901234567890123456789012",
+    "hash_iv": "1234567890123456",
+    "plugin_32byte_padding": [
+        {
+            "name": "itemdesc_len_0",
+            "plain": "Amt=100&ItemDesc=&MerchantID=MS12345678",
+            "pad": 25,
+            "TradeInfo": "e9316a506b9ac51d23b17e1323f742b7f66e491ae9df3f0c1909d09c34ec7d08e71c09db9542f5a9554c5e7c1e512962adcea1d5d32df9ddc5c8a37204cf3558",
+            "TradeSha": "ED48B85E498DA57D83FCE2DC42E52CA4EF6885EAD71F695A698DC34999DA0265"
+        },
+        {
+            "name": "itemdesc_len_1",
+            "plain": "Amt=100&ItemDesc=a&MerchantID=MS12345678",
+            "pad": 24,
+            "TradeInfo": "e9316a506b9ac51d23b17e1323f742b776e5aac5b71292943902fe87ab7a5f3d8e92d67f56a67a9d326fb2595fc0de83cc351d23768c533518c2de6fa3d0dc7f",
+            "TradeSha": "39133085B9A11C9638F05C74141D676D10EDB06F316EA93A5F3A798E12DAFE59"
+        },
+        {
+            "name": "itemdesc_len_2",
+            "plain": "Amt=100&ItemDesc=aa&MerchantID=MS12345678",
+            "pad": 23,
+            "TradeInfo": "e9316a506b9ac51d23b17e1323f742b745166b4c8b55b60d53144f3c9b440ce7b57ccdbb7e7a8f2f7a9b8f0f4b59a6ff477146294f1ce123657c607c3378dd5e",
+            "TradeSha": "B15C4433F623CAC136BC072C7CEE1E5F2BA874B2A3C1B640A373DDD2424AB478"
+        },
+        {
+            "name": "itemdesc_len_3",
+            "plain": "Amt=100&ItemDesc=aaa&MerchantID=MS12345678",
+            "pad": 22,
+            "TradeInfo": "e9316a506b9ac51d23b17e1323f742b76f606ce29a1d813c63387342d9dbbf81af6aee09335a8eaf0218bd38673b351833283a3c78e2b2bf4e4bdcc94c6469fa",
+            "TradeSha": "F46E5251FE2C35D864194D237BAFDC8AF471677A92E47A675E53750DF9AF1AFE"
+        },
+        {
+            "name": "itemdesc_len_4",
+            "plain": "Amt=100&ItemDesc=aaaa&MerchantID=MS12345678",
+            "pad": 21,
+            "TradeInfo": "e9316a506b9ac51d23b17e1323f742b76664817b2c112e8f79971cde9ce9347f80cc5dc00f3ad2d7b737b1074c58ee0c706bdc83f4443e3b3b41360d357dc70a",
+            "TradeSha": "192E8D87ED33591872737A73AF090EC5AAAC647716C7D24C461F61DB5CF14539"
+        },
+        {
+            "name": "itemdesc_len_5",
+            "plain": "Amt=100&ItemDesc=aaaaa&MerchantID=MS12345678",
+            "pad": 20,
+            "TradeInfo": "e9316a506b9ac51d23b17e1323f742b71d6269ab4f0823746281eb0e9b35a0a9e21ef5724548d025800593e48e060eb5866e4accd1e0dfedc06561b4b020c400",
+            "TradeSha": "A48A981F591A762F34A5A423068DAE680EDD5617DC1D00405F7C6DF08997EB49"
+        },
+        {
+            "name": "itemdesc_len_6",
+            "plain": "Amt=100&ItemDesc=aaaaaa&MerchantID=MS12345678",
+            "pad": 19,
+            "TradeInfo": "e9316a506b9ac51d23b17e1323f742b7f5c66b67d0728e88a4d97cce710cc2d01714a89d4efd923ad65cb84007f7951e3a5291043f97aeeaf64a2b5fe1770358",
+            "TradeSha": "C0A08C1F81A062E5859FDA828C802E03673CBF45DF5EBEFB773C617C9868816E"
+        },
+        {
+            "name": "itemdesc_len_7",
+            "plain": "Amt=100&ItemDesc=aaaaaaa&MerchantID=MS12345678",
+            "pad": 18,
+            "TradeInfo": "e9316a506b9ac51d23b17e1323f742b75ca41897e458095a41a6c7b3807ab6e6f22e43e003ab861829647b38d39cef606b29ec02402d7c05078d5b124b2422d8",
+            "TradeSha": "1EDF6D20C3987F9002A030071D9487B55FB8CAD35B33EAF9475BB65423B50080"
+        },
+        {
+            "name": "itemdesc_len_8",
+            "plain": "Amt=100&ItemDesc=aaaaaaaa&MerchantID=MS12345678",
+            "pad": 17,
+            "TradeInfo": "e9316a506b9ac51d23b17e1323f742b70fd9274e141ff73b604cc96facbaf391d64e3362c26a399db171798004a5cce999504f050bdf5021085cf0bc5afafb7a",
+            "TradeSha": "BC442C61D1200E3BF79D0BBC3EDA160807AA82AA12451C831D90FD630D597A45"
+        },
+        {
+            "name": "itemdesc_len_9",
+            "plain": "Amt=100&ItemDesc=aaaaaaaaa&MerchantID=MS12345678",
+            "pad": 16,
+            "TradeInfo": "e9316a506b9ac51d23b17e1323f742b7ff72938c6b43ee4807db85c132d0da5c69f4e394ae840aef008220b1596a6927f0b29f1599b7d8c59e1d65863560c253",
+            "TradeSha": "145E30EC51C29730E22DDE9239AD0CFB620BAE90B699ED7DA3FF82415568EE8B"
+        },
+        {
+            "name": "itemdesc_len_10",
+            "plain": "Amt=100&ItemDesc=aaaaaaaaaa&MerchantID=MS12345678",
+            "pad": 15,
+            "TradeInfo": "e9316a506b9ac51d23b17e1323f742b78804dc4e7cbf5d120d367f0e14d95a4c616b61341dcfb8169f1c66b1fad884f6fa9c35221cd87a4c298138569518932b",
+            "TradeSha": "A260F75D457FC8384B55A2F34CC2A3ADDB4F3B291DD9CBCF26F6FC8F38030CC6"
+        },
+        {
+            "name": "itemdesc_len_11",
+            "plain": "Amt=100&ItemDesc=aaaaaaaaaaa&MerchantID=MS12345678",
+            "pad": 14,
+            "TradeInfo": "e9316a506b9ac51d23b17e1323f742b72045399c3657f0283b88576b6f98415a56a2c4add2f99b8fbd1a3956cf351ca0c1a8cf901b186eb17e019e711eb50068",
+            "TradeSha": "F13D4DDFCAC6CC7C51BA7D9ED5948A30A9B8531798E09FF46543FA9A87B99871"
+        },
+        {
+            "name": "itemdesc_len_12",
+            "plain": "Amt=100&ItemDesc=aaaaaaaaaaaa&MerchantID=MS12345678",
+            "pad": 13,
+            "TradeInfo": "e9316a506b9ac51d23b17e1323f742b71cde0661b6659a700b2a494d0ee1b9ee2fa95b0d091ef3a87b41246dfb36f7f2a42240f22a93d88f96955cbd8fe68be8",
+            "TradeSha": "B18196D92CD8FAB2D2E6663CAB88347A85BBF421DA02986E5EA8F8E181395BCF"
+        },
+        {
+            "name": "itemdesc_len_13",
+            "plain": "Amt=100&ItemDesc=aaaaaaaaaaaaa&MerchantID=MS12345678",
+            "pad": 12,
+            "TradeInfo": "e9316a506b9ac51d23b17e1323f742b7c999fd92871e76fc8f68ab15e3d06c400b23c16c2ff63c36bc5707ab4ad60f910ab4918aab36ff2e113820d8ff5983fd",
+            "TradeSha": "BE786256496F93097264811891CE2D268DFE127738C34BEC748F01A5BB680768"
+        },
+        {
+            "name": "itemdesc_len_14",
+            "plain": "Amt=100&ItemDesc=aaaaaaaaaaaaaa&MerchantID=MS12345678",
+            "pad": 11,
+            "TradeInfo": "e9316a506b9ac51d23b17e1323f742b7a99d82a750834e798b7d85fb0ec9012419bce0b52310d095191cbb074513a9c52d3c6e7d62356d63220c6cb9a0ceb9da",
+            "TradeSha": "891F93DFFAF9B53CC17B7BC235AD15941A32A5C2AD26CC617E610B4A098D85D9"
+        },
+        {
+            "name": "itemdesc_len_15",
+            "plain": "Amt=100&ItemDesc=aaaaaaaaaaaaaaa&MerchantID=MS12345678",
+            "pad": 10,
+            "TradeInfo": "e9316a506b9ac51d23b17e1323f742b7e05fab91dce9067fdcc2a07429c96ed040a5f64b52335eeffbc49b1c2dccabc616e4fca9097cf20737dc3fb63de38e66",
+            "TradeSha": "652ED23DC72A2C15A2BC04F271F94FEE2F3358EAE391354850E2F52EFF77C2F0"
+        },
+        {
+            "name": "itemdesc_len_16",
+            "plain": "Amt=100&ItemDesc=aaaaaaaaaaaaaaaa&MerchantID=MS12345678",
+            "pad": 9,
+            "TradeInfo": "e9316a506b9ac51d23b17e1323f742b7e05fab91dce9067fdcc2a07429c96ed0b62241a7848cf409e16835426548b5d30cac984bafc16d8bb943bbe92660a2c7",
+            "TradeSha": "95C4889A49EC085F6F6FAC538E19A45BA2E5FAF23158D8CF8CD2A5F542855921"
+        },
+        {
+            "name": "itemdesc_len_17",
+            "plain": "Amt=100&ItemDesc=aaaaaaaaaaaaaaaaa&MerchantID=MS12345678",
+            "pad": 8,
+            "TradeInfo": "e9316a506b9ac51d23b17e1323f742b7e05fab91dce9067fdcc2a07429c96ed0b107a178354bb420d22ecca3e094b7eac98c4ded286e73553be27d3806d0fbf6",
+            "TradeSha": "827B7768AD9445EC4483DAC073980A02DE351D7E1FE3EE215773931BCCF1E11E"
+        },
+        {
+            "name": "itemdesc_len_18",
+            "plain": "Amt=100&ItemDesc=aaaaaaaaaaaaaaaaaa&MerchantID=MS12345678",
+            "pad": 7,
+            "TradeInfo": "e9316a506b9ac51d23b17e1323f742b7e05fab91dce9067fdcc2a07429c96ed0d43fb2a79fb906de10db2eebcec877b1a6ab6abd8ce07cf78f5411c489fa52c3",
+            "TradeSha": "1BEB866B8FDEEA2681F2FBE90D621D1330D423ADA90A12D69674201E04CA4A74"
+        },
+        {
+            "name": "itemdesc_len_19",
+            "plain": "Amt=100&ItemDesc=aaaaaaaaaaaaaaaaaaa&MerchantID=MS12345678",
+            "pad": 6,
+            "TradeInfo": "e9316a506b9ac51d23b17e1323f742b7e05fab91dce9067fdcc2a07429c96ed011cb822fa8ce632ad8298efe945185562cb67e0fa562b9f6f1d4fa30ddc560af",
+            "TradeSha": "EBA6C84D2E3BB5896668984617DC1DC0FE1CAA199950FD41D95BC26DB8C20F40"
+        },
+        {
+            "name": "itemdesc_len_20",
+            "plain": "Amt=100&ItemDesc=aaaaaaaaaaaaaaaaaaaa&MerchantID=MS12345678",
+            "pad": 5,
+            "TradeInfo": "e9316a506b9ac51d23b17e1323f742b7e05fab91dce9067fdcc2a07429c96ed0824c099713cdbf9619a0cd5dd745bc71f196a12d435d08454be5edf85421ac48",
+            "TradeSha": "C539053653963F3B81AF8B824F9B499EA86CFB71112E300C37B07087EA7B7691"
+        },
+        {
+            "name": "itemdesc_len_21",
+            "plain": "Amt=100&ItemDesc=aaaaaaaaaaaaaaaaaaaaa&MerchantID=MS12345678",
+            "pad": 4,
+            "TradeInfo": "e9316a506b9ac51d23b17e1323f742b7e05fab91dce9067fdcc2a07429c96ed037d3e199cd28b8f8a8e57f9856d2d4fd98743b38be5c890b1eea702b7eb23d7b",
+            "TradeSha": "9A02FE44AC715FE0C682279D95E44B8FC835CC2478484841F6DDEC9EE3C7DC12"
+        },
+        {
+            "name": "itemdesc_len_22",
+            "plain": "Amt=100&ItemDesc=aaaaaaaaaaaaaaaaaaaaaa&MerchantID=MS12345678",
+            "pad": 3,
+            "TradeInfo": "e9316a506b9ac51d23b17e1323f742b7e05fab91dce9067fdcc2a07429c96ed0e0a075618a0a62d3f13a6d27c234d393937efaf1798ea884b5f71595f34989ab",
+            "TradeSha": "6FCEDEC26555701CA3AC83773BE90403A3546223BAEB8AA9DEFE0AE2E0F6CAEC"
+        },
+        {
+            "name": "itemdesc_len_23",
+            "plain": "Amt=100&ItemDesc=aaaaaaaaaaaaaaaaaaaaaaa&MerchantID=MS12345678",
+            "pad": 2,
+            "TradeInfo": "e9316a506b9ac51d23b17e1323f742b7e05fab91dce9067fdcc2a07429c96ed005868d87e3f5ccdba5cb74be9e1a2942e12a14ff645bf9a39959ae3039c39558",
+            "TradeSha": "DF690F6FB757B0ABBA6546D4E8F4ACB86417ABBA43B6C85A0E77F2CCD36B4C58"
+        },
+        {
+            "name": "itemdesc_len_24",
+            "plain": "Amt=100&ItemDesc=aaaaaaaaaaaaaaaaaaaaaaaa&MerchantID=MS12345678",
+            "pad": 1,
+            "TradeInfo": "e9316a506b9ac51d23b17e1323f742b7e05fab91dce9067fdcc2a07429c96ed057d5859b4d815bfb7329c3958165a5d8e6017c085bf8fb75eb91766753eb4029",
+            "TradeSha": "FFB98654C882467A95B026AE60235194F8534686048A80B87B3FEC19F799C553"
+        },
+        {
+            "name": "itemdesc_len_25",
+            "plain": "Amt=100&ItemDesc=aaaaaaaaaaaaaaaaaaaaaaaaa&MerchantID=MS12345678",
+            "pad": 32,
+            "TradeInfo": "e9316a506b9ac51d23b17e1323f742b7e05fab91dce9067fdcc2a07429c96ed0b181c6cdba44743a464da912be54aa2116fb4d8a16ddb31ce3690401512739b527e2fb39db8af8875bf834a5cfb62c0ddcb60004afb95dfa1aba50f9d52e5388",
+            "TradeSha": "3B594BDF3D91FECC36CF2796E7AB2646C963418E7DE9BC39842D532BA21FBB66"
+        },
+        {
+            "name": "itemdesc_len_26",
+            "plain": "Amt=100&ItemDesc=aaaaaaaaaaaaaaaaaaaaaaaaaa&MerchantID=MS12345678",
+            "pad": 31,
+            "TradeInfo": "e9316a506b9ac51d23b17e1323f742b7e05fab91dce9067fdcc2a07429c96ed09f2a78f9947f40021b81ca1fb8a601d3bfbb5f32fa6570bdef4a20f9b44e7af1706e04126fc6d254003c1ec3c982747e3358a7d5e139eb8c63700570deeb2192",
+            "TradeSha": "9F96D58890BFB23CAF45EEEE402644728F1A38DBD2D6C7309944873A4D1642D9"
+        },
+        {
+            "name": "itemdesc_len_27",
+            "plain": "Amt=100&ItemDesc=aaaaaaaaaaaaaaaaaaaaaaaaaaa&MerchantID=MS12345678",
+            "pad": 30,
+            "TradeInfo": "e9316a506b9ac51d23b17e1323f742b7e05fab91dce9067fdcc2a07429c96ed05a7f9d3aa45fc92a3c966899b3b2a00577b08e019950d7363370fd6686af6769aecff9e35ece666348825e4eb9d8e31984f04c0f951e452531a88544d42551fe",
+            "TradeSha": "C28AB258CF984B993D1D212493482B94C266151B29E4ABB7403E11A3B6247048"
+        },
+        {
+            "name": "itemdesc_len_28",
+            "plain": "Amt=100&ItemDesc=aaaaaaaaaaaaaaaaaaaaaaaaaaaa&MerchantID=MS12345678",
+            "pad": 29,
+            "TradeInfo": "e9316a506b9ac51d23b17e1323f742b7e05fab91dce9067fdcc2a07429c96ed0f3b2166fd3d2d10dac456d58f99c0b1b6635e8d647c74e9f716f9e04b2a7438104ecc41fe29c572fc1f7b50f36e986f9f828596c093fd08a80a243d863e0643e",
+            "TradeSha": "8406FE1088AF3D805E1DB7A139951772C5FDD976846F04F184ABDB5253A921F1"
+        },
+        {
+            "name": "itemdesc_len_29",
+            "plain": "Amt=100&ItemDesc=aaaaaaaaaaaaaaaaaaaaaaaaaaaaa&MerchantID=MS12345678",
+            "pad": 28,
+            "TradeInfo": "e9316a506b9ac51d23b17e1323f742b7e05fab91dce9067fdcc2a07429c96ed0f4da41d63159843a07324f602f50076a1e64060626835635c7b5b8089ec732b38cdec43a56ecf708946a45316f6a442e5e6d8245f19c20540fe51baf28310e58",
+            "TradeSha": "84971E3677DB928573748CC1E34386CA0BD71A623609FB3F3E5CAEA3D6A61A5E"
+        },
+        {
+            "name": "itemdesc_len_30",
+            "plain": "Amt=100&ItemDesc=aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa&MerchantID=MS12345678",
+            "pad": 27,
+            "TradeInfo": "e9316a506b9ac51d23b17e1323f742b7e05fab91dce9067fdcc2a07429c96ed04718b314dc0b0d32131758b25e317311d5ffcbd5d20b0d41d2188f0b9a97f41a5f4290483cde77a6f6b762ccf12f3be5a6089c62173b665a55b4c3541fbc1095",
+            "TradeSha": "EFBB0EF34FDF305F9CACDFCEDDE4D7841CAC7C387CFF472E321AE4162A8E4BEF"
+        },
+        {
+            "name": "itemdesc_len_31",
+            "plain": "Amt=100&ItemDesc=aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa&MerchantID=MS12345678",
+            "pad": 26,
+            "TradeInfo": "e9316a506b9ac51d23b17e1323f742b7e05fab91dce9067fdcc2a07429c96ed054908e5f576c23cc93b30570b65b99ecbc686217779a341192979811cea65fd926a1c0f07e8744f802c9732dbb5523dfa1d6cca3eb734ea9ac2043b9aa00750e",
+            "TradeSha": "82A8080AB30CC763E8B0EE33D125D44823A59D7AD1C1FA8DACFC173A05A12498"
+        }
+    ],
+    "server_callbacks": [
+        {
+            "name": "json",
+            "plain": "{\"Status\":\"SUCCESS\",\"Message\":\"授權成功\",\"Result\":{\"MerchantID\":\"MS12345678\",\"Amt\":100,\"TradeNo\":\"26092312000012345\",\"MerchantOrderNo\":\"ORD20260923001\",\"PaymentType\":\"CREDIT\",\"PayTime\":\"2026-09-23 12:00:00\",\"IP\":\"203.0.113.5\",\"EscrowBank\":\"HNCB\"}}",
+            "TradeInfo": "dbd10642b6db8f107ed6a138b288456d8f330f2e21b81e934d76f8e6a0c401bd1e413dd5f0789d5696a43499dc9affda13df83c21f369faaf5573945884186405a47d7a49ad9ff886b49719ac9161878b02ce51a6940049f33ff6134d89eac6996733b1d2aa1251cd3ef10afe10bc2b74d595bb34a44f146703b701b425cf9673a807e3d5ee733c83d19b57a3eae9d69fed5ed673ea5d66c67c6c3f8e8819506c690f6f73bac9ef4c3829bf69a2345fc48c843b5c0a9ca8fd29ccec80b6b50d0a787f55115d0041b3111f41441a1b34aaf0c98887126a1ec177cee5076e255486bf8ce85c9f3a101255f6d2c6156b21c24b76c1a77e1de89a9e9e10df8cdd6e3",
+            "TradeSha": "49AF996BCEFBB479A1D52944419F0B89079D21301E26E3E31D1CF882F39E1A80"
+        },
+        {
+            "name": "string",
+            "plain": "Status=SUCCESS&Message=%E6%8E%88%E6%AC%8A%E6%88%90%E5%8A%9F&MerchantID=MS12345678&Amt=100&TradeNo=26092312000012345&MerchantOrderNo=ORD20260923001&PaymentType=CREDIT&PayTime=2026-09-23+12%3A00%3A00&IP=203.0.113.5&EscrowBank=HNCB",
+            "TradeInfo": "69d621feb46df2b5d45624f594d5f4038fd60346ed2cd8f7b77888ed88a044af7e586ea481162add4e01a6b4975c203d04840c6bf8aceb96787960d74fb60bbdb09e4445ebaa5a46f874e9e993eaeac3283001c202e1e30b6b907a3d57b9f689711f22a91bf26ffea1b7b01e7676dce6d7b6e939c75fcfdc9584fa3232f51f13b8c78db5c78e4a44e0b4668e856eb7fc9b1eff4dc4e31b6dff50cc1ad39666a642831572012bd5a01ff1296e686590c9b24534420bda2446b3de7f202d0d6c5764098bde8fb4fe08298f3abb22738eef30aaeace1dc7fff74fc0a2f2bb4e34f9dbc9d7e32968b4fd71a9b6e617c871f8e5b9fc2c292f217b4369767a8d58f36b",
+            "TradeSha": "C0D87FBFF63BB7F5C5857709A59DED4E4D9B37022D3A477D786A7EC0E88587B0"
+        }
+    ],
+    "spec_pkcs7_encrypt": [
+        {
+            "name": "spec_step1",
+            "params": {
+                "MerchantID": "MS127874575",
+                "RespondType": "String",
+                "TimeStamp": "1695795410",
+                "Version": "2.0",
+                "MerchantOrderNo": "Vanespl_ec_1695795410",
+                "Amt": "30",
+                "ItemDesc": "test",
+                "NotifyURL": "https://webhook.site/d4db5ad1-2278-466a-9d66-78585c0dbadb"
+            },
+            "plain": "MerchantID=MS127874575&RespondType=String&TimeStamp=1695795410&Version=2.0&MerchantOrderNo=Vanespl_ec_1695795410&Amt=30&ItemDesc=test&NotifyURL=https%3A%2F%2Fwebhook.site%2Fd4db5ad1-2278-466a-9d66-78585c0dbadb",
+            "TradeInfo": "a1b9692381930e1c2a4e303005a586811f100378d5be1e71fdf38d5ac60334e0af186f38b1403bb17feb8472cdfd6cd746972ea99eb094f41770e334462f4dc88556c04561cea7e573bc3cbb67e1e1dcc3eca25d8fc1300bd2fedbfb69b5e2450d4735cbc2fad98e6e51c245491a4b3d302a2b994d290536a50f95e369280f8dc01f41e65845912a473240735f4113ee75301514b4c481f56d619d4edf5f83fb193caa9152d4a38c40d79c61bbf768685793d98c14d2073df57200cc0b5d2dac3d756b2f6a27fbbcf02b4e92e5b732c27aab993efb856c891ab051f3efa77622",
+            "TradeSha": "3F5FB9FEB317B630BCA27E167FA79AF2DF510C837B1579353D2A8DD511CCAC6E"
+        },
+        {
+            "name": "chinese",
+            "params": {
+                "MerchantID": "MS12345678",
+                "RespondType": "JSON",
+                "TimeStamp": "1758600000",
+                "Version": "2.0",
+                "MerchantOrderNo": "ORD20260923001",
+                "Amt": "1280",
+                "ItemDesc": "測試商品 A & B",
+                "Email": "buyer+tw@example.com"
+            },
+            "plain": "MerchantID=MS12345678&RespondType=JSON&TimeStamp=1758600000&Version=2.0&MerchantOrderNo=ORD20260923001&Amt=1280&ItemDesc=%E6%B8%AC%E8%A9%A6%E5%95%86%E5%93%81+A+%26+B&Email=buyer%2Btw%40example.com",
+            "TradeInfo": "54c8fc7758308c8843119bed4e51c61fb9bd1a1f85a943d31a5ef8be2cb2cf339b65cddda49e735dec2af9419662dacba3095dd552f86b99b9431af42f5ce671ab88da283aed35ed75006813e9d9ad116ea82d66937403f10887b91c6006b629f341cdbb8c661ef9aeac4201517112bc5d7fe620af1136772aefdbcf9c9144871f9b7876a6cfa168e41debee9e7ce69f8bfc7d200554649f654899877defeae896d04b8cd2cc6066fb34f31dde26aa874e90bddc67be2d93383d63e8efab16ffa6e5cfedbec5fbe454603533d7ebc885",
+            "TradeSha": "67426922975581A2D8367FC990C3DB637B5D17A986CC87D560FE8BF1BD9FFAAE"
+        }
+    ],
+    "spec_server_sample": {
+        "hash_key": "Fs5cX1TGqYM2PpdbE14a9H83YQSQF5jn",
+        "hash_iv": "C6AcmfqJILwgnhIP",
+        "TradeInfo": "ee11d1501e6dc8433c75988258f2343d11f4d0a423be672e8e02aaf373c53c2363aeffdb4992579693277359b3e449ebe644d2075fdfbc10150b1c40e7d24cb215febefdb85b16a5cde449f6b06c58a5510d31e8d34c95284d459ae4b52afc1509c2800976a5c0b99ef24cfd28a2dfc8004215a0c98a1d3c77707773c2f2132f9a9a4ce3475cb888c2ad372485971876f8e2fec0589927544c3463d30c785c2d3bd947c06c8c33cf43e131f57939e1f7e3b3d8c3f08a84f34ef1a67a08efe177f1e663ecc6bedc7f82640a1ced807b548633cfa72d060864271ec79854ee2f5a170aa902000e7c61d1269165de330fce7d10663d1668c711571776365bfdcd7ddc915dcb90d31a9f27af9b79a443ca8302e508b0dbaac817d44cfc44247ae613075dde4ac960f1bdff4173b915e4344bc4567bd32e86be7d796e6d9b9cf20476e4996e98ccc315f1ed03a34139f936797d971f2a3f90bc18f8a155a290bcbcf04f4277171c305bf554f5cba243154b30082748a81f2e5aa432ef9950cc9668cd4330ef7c37537a6dcb5e6ef01b4eca9705e4b097cf6913ee96e81d0389e5f775",
+        "fields": {
+            "Status": "SUCCESS",
+            "Message": "授權成功",
+            "MerchantID": "MS127874575",
+            "Amt": "30",
+            "TradeNo": "23092714215835071",
+            "MerchantOrderNo": "Vanespl_ec_1695795668",
+            "RespondType": "String",
+            "IP": "123.51.237.115",
+            "EscrowBank": "HNCB",
+            "PaymentType": "CREDIT",
+            "RespondCode": "00",
+            "Auth": "115468",
+            "Card6No": "400022",
+            "Card4No": "1111",
+            "Exp": "2609",
+            "AuthBank": "KGI",
+            "TokenUseStatus": "0",
+            "InstFirst": "0",
+            "InstEach": "0",
+            "Inst": "0",
+            "ECI": "",
+            "PayTime": "2023-09-27 14:21:59",
+            "PaymentMethod": "CREDIT"
+        }
+    },
+    "check_code": {
+        "params": {
+            "Amt": "10",
+            "MerchantID": "MS12345678",
+            "MerchantOrderNo": "MyCompanyOrder_1638423361",
+            "TradeNo": "21120214151152468"
+        },
+        "expected": "650238295AC4DDBF233BA70F5479F3D15FE5839EF5115E754D9D1CE3AEF2CB71"
+    },
+    "server_check_code": {
+        "hash_key": "Fs5cX1TGqYM2PpdbE14a9H83YQSQF5jn",
+        "hash_iv": "C6AcmfqJILwgnhIP",
+        "params": {
+            "Amt": "30",
+            "MerchantID": "MS127874575",
+            "MerchantOrderNo": "Vanespl_ec_1695795668",
+            "TradeNo": "23092714215835071"
+        },
+        "expected": "79C5227AF869AE4F25FDF4E22B928D5B52E415D9905EC6912D7807E18C3FFACA",
+        "expected_source": "NDNF-1.2.2 單筆交易查詢回應範例中藍新伺服器產生的 CheckCode"
+    },
+    "check_value": {
+        "MerchantID": "MS127874575",
+        "MerchantOrderNo": "Vanespl_ec_1695795668",
+        "Amt": "30",
+        "expected": "AEB81EE7F3ACF88F9E47AE5BB95468EA5995B3214A3B5BB976003A351230D7CD"
+    },
+    "logistics_hash_data": {
+        "hash_key": "12345678901234567890123456789012",
+        "hash_iv": "12345678",
+        "EncryptData": "AAAABBBBCCCCDDDD",
+        "expected": "5C6C504A2F2B2E3EB5CA80998F626307ACD327AC6DCE4FF84F86B021988B2576",
+        "expected_source": "NDNS 1.0.0 規格書原文"
+    }
+}

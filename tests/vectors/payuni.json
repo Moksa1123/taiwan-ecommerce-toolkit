@@ -1,0 +1,72 @@
+{
+    "provider": "payuni",
+    "algorithm": "EncryptInfo = hex(base64(AES-256-GCM(http_build_query(params))) + \":::\" + base64(tag)); HashInfo = upper(sha256(HashKey + EncryptInfo + HashIV))",
+    "source": {
+        "kind": "official-plugin",
+        "name": "PAYUNi_for_WooCommerce 1.2.8（外掛標頭 Author: 統一金流 PAYUNi）",
+        "file": "class-payuni.php",
+        "funcs": [
+            "Encrypt",
+            "Decrypt",
+            "HashInfo"
+        ],
+        "cross_checked": [
+            "wpbr-payuni-payment 1.7.1 src/PayuniPayment.php（人工比對）",
+            "wpbr-payuni-shipping 1.6.4 src/PayuniShipping.php（人工比對）",
+            "統一金流官方 PHP SDK payuni/PHP_SDK PayuniApi::Encrypt/HashInfo 實際執行比對 4/4 一致"
+        ]
+    },
+    "generator": "php 8.2.33 / OpenSSL OpenSSL 3.5.6 7 Apr 2026",
+    "hash_key": "12345678901234567890123456789012",
+    "hash_iv": "1234567890123456",
+    "cases": [
+        {
+            "name": "minimal",
+            "params": {
+                "MerID": "S01234567",
+                "MerTradeNo": "T20260923001",
+                "TradeAmt": "100",
+                "Timestamp": "1758600000"
+            },
+            "EncryptInfo": "47396636346f6673543158466c366251703465327163476b337454587662635a36535561415a4b70316c50676b4d63586a646247566846727837516e446a52794a4c5759554c69767347452f3967695a4f5232346e75596474586f536b54724771673d3d3a3a3a395361425a51376c34784b7a537446474671516d75673d3d",
+            "HashInfo": "6563710212EB74701B34AB4D510DC05AC0775CFCEEB1FBE44CFD031F01760BA9"
+        },
+        {
+            "name": "chinese_desc",
+            "params": {
+                "MerID": "S01234567",
+                "MerTradeNo": "T20260923002",
+                "TradeAmt": "1280",
+                "Timestamp": "1758600000",
+                "ProdDesc": "測試商品 A & B"
+            },
+            "EncryptInfo": "47396636346f6673543158466c366251703465327163476b337454587662635a36535561415a4b70316c50676b4d63586a646246566846727837516e446a52794a4c5761574b37646a57553334412b4d4e5144316b754166754851556b54724771744c5a6371476757614f5942632f70717441345330657979344953585a494964576f4c744a544d7336347079396a6e36525477355447506e767068756a624568764a35635046425436513d3a3a3a356b46494d656b47336474484463774b6a62327264773d3d",
+            "HashInfo": "B1EA028236FC4D6B5D768E1EAB57EC60465265EF19AEED500F0ECBB79C4DB63D"
+        },
+        {
+            "name": "reserved",
+            "params": {
+                "MerID": "S01234567",
+                "MerTradeNo": "T20260923003",
+                "TradeAmt": "5",
+                "Timestamp": "1758600000",
+                "ReturnURL": "https://shop.example.com/cb?a=1&b=2",
+                "UsrMail": "buyer+tw@example.com"
+            },
+            "EncryptInfo": "47396636346f6673543158466c366251703465327163476b337454587662635a36535561415a4b70316c50676b4d63586a646245566846727837516e446a52794a4c474f4e5065577648387535424749615679796d756b65765877536b5472517949654c56364768614c5778533853672b2b5639537a624c792f45585865563249304e6434667566376f70786e6f3233346b2b70725647492f614177756a327a7a4a5a6845664a535674427032382f7936537350696d61537461466f754e4f4264474f7847346735514a30634f70494d32506c673057696b746b72626b513d3d3a3a3a637631316b4d374362787975576b6e4d456a68654f673d3d",
+            "HashInfo": "C7F875DBB266E70074E69BE9211E05B7491BCCCB2EC491BAA61313CD17D1C920"
+        },
+        {
+            "name": "empty_value",
+            "params": {
+                "MerID": "S01234567",
+                "MerTradeNo": "T20260923004",
+                "TradeAmt": "100",
+                "Timestamp": "1758600000",
+                "Remark": ""
+            },
+            "EncryptInfo": "47396636346f6673543158466c366251703465327163476b337454587662635a36535561415a4b70316c50676b4d63586a646244566846727837516e446a52794a4c5759554c69767347452f3967695a4f5232346e75596474586f536b547247717353745237367554347a413a3a3a334d377136416a5369664f326b7a4770536f2f7344513d3d",
+            "HashInfo": "0447524482686EA405F5A142E4A5CFEB4409EE3646DC653E4D9542859FA869A0"
+        }
+    ]
+}

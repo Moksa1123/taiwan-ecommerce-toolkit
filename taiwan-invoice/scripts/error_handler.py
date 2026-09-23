@@ -65,63 +65,11 @@ class InvoiceErrorHandler:
     提供系統化的錯誤分類、建議與重試策略
     """
 
-    # ECPay 錯誤碼對照表
-    ERROR_CODES: Dict[str, ErrorInfo] = {
-        # 成功
-        '1': ErrorInfo(
-            code='1',
-            message='成功',
-            category=ErrorCategory.VALIDATION,
-            retry_strategy=RetryStrategy.NO_RETRY,
-            suggestion='發票開立成功',
-            is_retryable=False
-        ),
+    # 只收官方文件查得到的代碼（完整清單見 data/error-codes.csv 與 _studies/harness/import_invoice_error_codes.py）。
+    # 查不到的代碼一律回「未知錯誤、不重試」，由呼叫端記錄原始訊息，不猜意義。
 
-        # 驗證錯誤 (不可重試)
-        '10000006': ErrorInfo(
-            code='10000006',
-            message='RelateNumber 重複',
-            category=ErrorCategory.VALIDATION,
-            retry_strategy=RetryStrategy.NO_RETRY,
-            suggestion='訂單編號已使用，請使用新的 RelateNumber',
-            is_retryable=False
-        ),
-        '10000016': ErrorInfo(
-            code='10000016',
-            message='金額計算錯誤',
-            category=ErrorCategory.VALIDATION,
-            retry_strategy=RetryStrategy.NO_RETRY,
-            suggestion='檢查 B2C/B2B 金額計算，B2C 使用含稅價，B2B 需分拆未稅金額與稅額',
-            is_retryable=False
-        ),
-        '10000019': ErrorInfo(
-            code='10000019',
-            message='打統編不可使用載具',
-            category=ErrorCategory.BUSINESS_LOGIC,
-            retry_strategy=RetryStrategy.NO_RETRY,
-            suggestion='B2B 發票請移除 CarrierType 和 LoveCode',
-            is_retryable=False
-        ),
-        '10000005': ErrorInfo(
-            code='10000005',
-            message='TimeStamp 逾時',
-            category=ErrorCategory.VALIDATION,
-            retry_strategy=RetryStrategy.IMMEDIATE,
-            suggestion='時間戳記超過 10 分鐘，請重新產生當前時間戳',
-            is_retryable=True
-        ),
-
-        # 認證錯誤 (可重試)
-        '10000002': ErrorInfo(
-            code='10000002',
-            message='加密驗證錯誤',
-            category=ErrorCategory.AUTHENTICATION,
-            retry_strategy=RetryStrategy.NO_RETRY,
-            suggestion='檢查 HashKey 和 HashIV 是否正確',
-            is_retryable=False
-        ),
-
-        # 網路/伺服器錯誤 (可重試)
+    # 與服務商無關的傳輸層錯誤
+    TRANSPORT_ERRORS: Dict[str, ErrorInfo] = {
         'NETWORK_ERROR': ErrorInfo(
             code='NETWORK_ERROR',
             message='網路連線錯誤',
@@ -143,16 +91,61 @@ class InvoiceErrorHandler:
             message='請求逾時',
             category=ErrorCategory.NETWORK,
             retry_strategy=RetryStrategy.LINEAR_BACKOFF,
-            suggestion='請求逾時，系統將自動重試',
+            suggestion='請求逾時，系統將自動重試；重試前先以查詢 API 確認是否已開立，避免重複開立',
             is_retryable=True
         ),
     }
 
-    # SmilePay 錯誤碼
+    # ECPay：綠界未公開完整代碼表（附錄 developers.ecpay.com.tw/7954 要求到廠商後台查詢），
+    # 以 RtnCode == 1 判斷成功，其他代碼務必記錄 RtnMsg。
+    ECPAY_ERRORS: Dict[str, ErrorInfo] = {
+        '1': ErrorInfo(
+            code='1',
+            message='成功',
+            category=ErrorCategory.VALIDATION,
+            retry_strategy=RetryStrategy.NO_RETRY,
+            suggestion='發票開立成功',
+            is_retryable=False
+        ),
+        '10000009': ErrorInfo(
+            code='10000009',
+            message='RelateNumber 重複',
+            category=ErrorCategory.VALIDATION,
+            retry_strategy=RetryStrategy.NO_RETRY,
+            suggestion='同一帳號不可重用 RelateNumber，請改用新的訂單編號',
+            is_retryable=False
+        ),
+        '10000002': ErrorInfo(
+            code='10000002',
+            message='必填欄位遺漏',
+            category=ErrorCategory.VALIDATION,
+            retry_strategy=RetryStrategy.NO_RETRY,
+            suggestion='Phone/Email 至少填一個，並檢查 Items 格式',
+            is_retryable=False
+        ),
+        '1500047': ErrorInfo(
+            code='1500047',
+            message='字軌未新增、未啟用或號碼已用罄',
+            category=ErrorCategory.BUSINESS_LOGIC,
+            retry_strategy=RetryStrategy.NO_RETRY,
+            suggestion='廠商後台 → 電子發票系統 → 資料管理與維護 → 字軌與配號設定',
+            is_retryable=False
+        ),
+        '5070350': ErrorInfo(
+            code='5070350',
+            message='字軌未新增、未啟用或號碼已用罄',
+            category=ErrorCategory.BUSINESS_LOGIC,
+            retry_strategy=RetryStrategy.NO_RETRY,
+            suggestion='廠商後台 → 電子發票系統 → 資料管理與維護 → 字軌與配號設定',
+            is_retryable=False
+        ),
+    }
+
+    # SmilePay：references/SMILEPAY_API_REFERENCE.md「回應代號說明」（開立發票 API）
     SMILEPAY_ERRORS: Dict[str, ErrorInfo] = {
         '-10066': ErrorInfo(
             code='-10066',
-            message='AllAmount 驗算錯誤',
+            message='商品總金額(AllAmount)驗算錯誤',
             category=ErrorCategory.VALIDATION,
             retry_strategy=RetryStrategy.NO_RETRY,
             suggestion='檢查是否傳入 TotalAmount，商品金額總和需等於訂單金額',
@@ -160,48 +153,86 @@ class InvoiceErrorHandler:
         ),
         '-10084': ErrorInfo(
             code='-10084',
-            message='orderid 格式錯誤',
+            message='自訂號碼(orderid)格式錯誤',
             category=ErrorCategory.VALIDATION,
             retry_strategy=RetryStrategy.NO_RETRY,
             suggestion='訂單編號限制 30 字元以內',
             is_retryable=False
         ),
-        '-10053': ErrorInfo(
-            code='-10053',
-            message='載具號碼錯誤',
+        '-10052': ErrorInfo(
+            code='-10052',
+            message='載具號碼(CarrierID)錯誤',
             category=ErrorCategory.VALIDATION,
             retry_strategy=RetryStrategy.NO_RETRY,
             suggestion='驗證手機條碼格式 (/ 開頭 8 碼)',
             is_retryable=False
         ),
-    }
-
-    # Amego 錯誤碼
-    AMEGO_ERRORS: Dict[str, ErrorInfo] = {
-        '1002': ErrorInfo(
-            code='1002',
-            message='OrderId 已存在',
-            category=ErrorCategory.VALIDATION,
-            retry_strategy=RetryStrategy.NO_RETRY,
-            suggestion='使用唯一訂單編號',
-            is_retryable=False
-        ),
-        '1007': ErrorInfo(
-            code='1007',
-            message='金額計算錯誤',
-            category=ErrorCategory.VALIDATION,
-            retry_strategy=RetryStrategy.NO_RETRY,
-            suggestion='檢查 DetailVat 設定，B2B 需設為 0',
-            is_retryable=False
-        ),
-        '1012': ErrorInfo(
-            code='1012',
-            message='打統編發票不可使用載具或捐贈',
+        '-10071': ErrorInfo(
+            code='-10071',
+            message='無可用字軌',
             category=ErrorCategory.BUSINESS_LOGIC,
             retry_strategy=RetryStrategy.NO_RETRY,
-            suggestion='B2B 發票請移除載具與捐贈設定',
+            suggestion='聯繫速買配配置字軌',
             is_retryable=False
         ),
+    }
+
+    # Amego：光貿官方 API 錯誤代碼頁（invoice.amego.tw/info_detail?mid=71）
+    AMEGO_ERRORS: Dict[str, ErrorInfo] = {
+        '10': ErrorInfo(
+            code='10',
+            message='系統停機維護中',
+            category=ErrorCategory.SERVER,
+            retry_strategy=RetryStrategy.EXPONENTIAL_BACKOFF,
+            suggestion='稍後重試',
+            is_retryable=True
+        ),
+        '15': ErrorInfo(
+            code='15',
+            message='Time 錯誤',
+            category=ErrorCategory.VALIDATION,
+            retry_strategy=RetryStrategy.IMMEDIATE,
+            suggestion='time 需為當前 Unix 時間戳，重新產生後再送',
+            is_retryable=True
+        ),
+        '16': ErrorInfo(
+            code='16',
+            message='簽名驗證錯誤',
+            category=ErrorCategory.AUTHENTICATION,
+            retry_strategy=RetryStrategy.NO_RETRY,
+            suggestion='檢查 MD5 簽章：data + time + App Key',
+            is_retryable=False
+        ),
+        '21': ErrorInfo(
+            code='21',
+            message='人數過多，請稍後',
+            category=ErrorCategory.SERVER,
+            retry_strategy=RetryStrategy.LINEAR_BACKOFF,
+            suggestion='稍後重試',
+            is_retryable=True
+        ),
+        '3040171': ErrorInfo(
+            code='3040171',
+            message='OrderId 重複',
+            category=ErrorCategory.VALIDATION,
+            retry_strategy=RetryStrategy.NO_RETRY,
+            suggestion='使用唯一訂單編號（或該訂單編號正在註銷重開中）',
+            is_retryable=False
+        ),
+        '3040178': ErrorInfo(
+            code='3040178',
+            message='TotalAmount 計算錯誤',
+            category=ErrorCategory.VALIDATION,
+            retry_strategy=RetryStrategy.NO_RETRY,
+            suggestion='檢查 DetailVat 設定與各金額欄位加總',
+            is_retryable=False
+        ),
+    }
+
+    PROVIDER_ERRORS: Dict[str, Dict[str, ErrorInfo]] = {
+        'ecpay': ECPAY_ERRORS,
+        'smilepay': SMILEPAY_ERRORS,
+        'amego': AMEGO_ERRORS,
     }
 
     def __init__(self, provider: str = 'ecpay', logger: Optional[logging.Logger] = None):
@@ -215,11 +246,10 @@ class InvoiceErrorHandler:
         self.provider = provider.lower()
         self.logger = logger or self._setup_logger()
 
-        # 合併錯誤碼對照表
+        # 只用該服務商的代碼表：各家代碼會撞號（例如 Amego 的 15 與其他家的 15 意義不同）
         self.all_errors = {
-            **self.ERROR_CODES,
-            **self.SMILEPAY_ERRORS,
-            **self.AMEGO_ERRORS
+            **self.TRANSPORT_ERRORS,
+            **self.PROVIDER_ERRORS.get(self.provider, {}),
         }
 
     def _setup_logger(self) -> logging.Logger:
@@ -249,9 +279,9 @@ class InvoiceErrorHandler:
 
         Example:
             >>> handler = InvoiceErrorHandler()
-            >>> info = handler.get_error_info('10000016')
+            >>> info = handler.get_error_info('10000009')
             >>> print(info.suggestion)
-            檢查 B2C/B2B 金額計算
+            同一帳號不可重用 RelateNumber，請改用新的訂單編號
         """
         return self.all_errors.get(
             error_code,
@@ -328,7 +358,7 @@ def retry_on_error(
         ...     pass
     """
     if retryable_errors is None:
-        retryable_errors = ['10000005', 'NETWORK_ERROR', 'SERVER_ERROR', 'TIMEOUT_ERROR']
+        retryable_errors = ['NETWORK_ERROR', 'SERVER_ERROR', 'TIMEOUT_ERROR']
 
     if logger is None:
         logger = logging.getLogger('retry_decorator')
@@ -385,7 +415,7 @@ if __name__ == '__main__':
 
     handler = InvoiceErrorHandler(provider='ecpay')
 
-    error_codes = ['10000006', '10000016', '10000019', 'NETWORK_ERROR']
+    error_codes = ['10000009', '1500047', '99999999', 'NETWORK_ERROR']
 
     for code in error_codes:
         info = handler.get_error_info(code)
@@ -399,7 +429,7 @@ if __name__ == '__main__':
     # 範例 2: 記錄錯誤
     print("=== 範例 2: 記錄錯誤 ===\n")
 
-    handler.log_error('10000016', context={'relate_number': 'ORD123', 'amount': 1050})
+    handler.log_error('10000009', context={'relate_number': 'ORD123', 'amount': 1050})
     handler.log_error('NETWORK_ERROR', context={'url': 'https://einvoice-stage.ecpay.com.tw'})
 
     # 範例 3: 自動重試
@@ -410,7 +440,7 @@ if __name__ == '__main__':
     @retry_on_error(max_retries=3, backoff_factor=1.5)
     def flaky_api_call():
         """模擬不穩定的 API 呼叫"""
-        nonlocal attempt
+        global attempt
         attempt += 1
 
         print(f"第 {attempt} 次呼叫...")
