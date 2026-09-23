@@ -197,7 +197,7 @@ def main():
 Examples:
   python search.py "ecpay B2C"                    # Auto-detect domain
   python search.py "開立發票" --domain operation  # Search operations
-  python search.py "10000016" --domain error      # Search error codes
+  python search.py "10000009" --domain error      # Search error codes
   python search.py "統編" --domain field          # Search field mappings
   python search.py "B2B 稅額" --domain tax        # Search tax rules
   python search.py "列印空白" --domain troubleshoot  # Search troubleshooting

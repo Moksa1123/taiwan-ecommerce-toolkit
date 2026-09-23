@@ -80,6 +80,14 @@ def test_imports():
             check(rel, True)
         except BaseException as e:  # noqa: BLE001 - 任何載入錯誤都要回報
             check(rel, False, f'{type(e).__name__}: {e}')
+    # 隨 skill 發布的工具腳本至少要能編譯：error_handler.py 曾因 SyntaxError 整支無法 import 卻沒人發現
+    for path in sorted(glob.glob(os.path.join(ROOT, 'taiwan-*', 'scripts', '*.py'))):
+        rel = os.path.relpath(path, ROOT).replace(os.sep, '/')
+        try:
+            compile(open(path, encoding='utf-8').read(), rel, 'exec')
+            check(f'{rel}（可編譯）', True)
+        except SyntaxError as e:
+            check(f'{rel}（可編譯）', False, f'SyntaxError: {e}')
 
 
 # ---------------------------------------------------------------------------

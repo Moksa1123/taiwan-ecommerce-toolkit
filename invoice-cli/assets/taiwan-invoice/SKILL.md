@@ -45,7 +45,7 @@ user-invocable: true
 python scripts/search.py "ecpay" --domain provider
 
 # 搜索錯誤碼
-python scripts/search.py "10000016" --domain error
+python scripts/search.py "10000009" --domain error
 
 # 搜索欄位映射
 python scripts/search.py "MerchantID" --domain field
@@ -331,20 +331,20 @@ if (result.type === 'html') {
 2. 確認環境變數（測試/正式）是否正確
 3. 驗證必填欄位是否完整
 
-**綠界常見錯誤：**
-- `10000006`: RelateNumber 重複 → 訂單編號已使用
-- `10000016`: 金額計算錯誤 → 檢查 B2C/B2B 金額計算
-- `10000019`: 打統編不可使用載具 → 移除 CarrierType
+**綠界常見錯誤：**（綠界未公開完整代碼表，一律記錄 `RtnMsg`；完整說明見 references）
+- `10000009`: RelateNumber 重複 → 訂單編號已使用
+- `10000002`: 必填欄位遺漏 → Phone/Email 至少填一個、檢查 Items 格式
+- `1500047` / `5070350`: 字軌未新增、未啟用或已用罄 → 後台「字軌與配號設定」
 
 **速買配常見錯誤：**
-- `-10066`: AllAmount 驗算錯誤 → 檢查是否傳入 TotalAmount
+- `-10066`: 商品總金額(AllAmount)驗算錯誤 → 檢查是否傳入 TotalAmount
 - `-10084`: orderid 格式錯誤 → 限制 30 字元
-- `-10053`: 載具號碼錯誤 → 驗證手機條碼格式
+- `-10052`: 載具號碼(CarrierID)錯誤 → 驗證手機條碼格式（`-10053` 是查無載具號碼）
 
 **光貿常見錯誤：**
-- `1002`: OrderId 已存在 → 使用唯一訂單編號
-- `1007`: 金額計算錯誤 → 檢查 DetailVat 設定
-- `1012`: 打統編發票不可使用載具或捐贈
+- `3040171`: OrderId 重複 → 使用唯一訂單編號
+- `3040174` / `3040177` / `3040178`: SalesAmount / TaxAmount / TotalAmount 計算錯誤 → 檢查 DetailVat 設定
+- `16`: 簽名驗證錯誤 → 檢查 MD5 簽章組字串
 
 ### 問題 2: 列印時顯示「查詢不到該發票」
 
@@ -416,7 +416,7 @@ return { type: 'form', url: printData.url, params: printData.params }
 
 ### 問題 5: 時間戳記逾時
 
-**綠界錯誤 10000005：** 時間戳記超過 10 分鐘
+**綠界：** Timestamp 與綠界時間相差超過 10 分鐘即無法建立（官方未公開對應代碼，以 RtnMsg 判讀）；光貿則回 `15`（Time 錯誤）
 
 **解決：**
 ```typescript

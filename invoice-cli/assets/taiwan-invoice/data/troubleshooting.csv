@@ -1,5 +1,5 @@
 issue,symptom,cause,solution,provider,category,severity
-B2B發票開立失敗,回傳錯誤代碼 6000015,ecpay測試環境B2B需預先註冊統編,使用B2C API加統編 或在正式環境測試,ecpay,開立,HIGH
+B2B發票開立失敗,回傳錯誤代碼 6000015（官方文件未列此代碼 無法查證）,ecpay測試環境B2B需預先註冊統編,使用B2C API加統編 或在正式環境測試,ecpay,開立,HIGH
 金額驗算錯誤,AllAmount與商品小計不符,AllAmount使用了錯誤的來源欄位,B2C用SalesAmount B2B用TotalAmount: AllAmount=TotalAmount||SalesAmount,smilepay,開立,HIGH
 orderid格式錯誤,回傳-10084錯誤,訂單編號超過30字元限制,orderid限30字元 data_id可50字元防重複,smilepay,開立,MEDIUM
 列印發票空白,彈窗開啟但內容空白,smilepay用GET但系統用POST提交,判斷method 若為GET則用redirect開啟URL,smilepay,列印,MEDIUM
@@ -15,7 +15,7 @@ B2B不可使用載具,統編發票不可用載具,打統編發票設定了載具
 B2B不可捐贈,統編發票不可捐贈,打統編發票設定了捐贈,B2B發票設定Donation=0,All,開立,MEDIUM
 發票已作廢,無法重複作廢,發票狀態已是作廢,檢查發票狀態後再操作,All,作廢,LOW
 折讓超過發票金額,折讓金額大於原發票,折讓總額累計超過發票金額,計算剩餘可折讓金額,All,折讓,MEDIUM
-AES 加密失敗,加密驗證失敗 | 10000004,HashKey/HashIV錯誤 | AES-128-CBC模式錯誤,確認使用AES-128-CBC | 檢查PKCS7 padding | 驗證Base64編碼,ecpay,認證,HIGH
+AES 加密失敗,加密驗證失敗（綠界未公開對應代碼 以 RtnMsg 判讀）,HashKey/HashIV錯誤 | AES-128-CBC模式錯誤,確認使用AES-128-CBC | 檢查PKCS7 padding | 驗證Base64編碼,ecpay,認證,HIGH
 B2B 統編未註冊,6000015錯誤 | 買方識別碼不存在,測試環境B2B需預先註冊統編,至測試環境預先註冊買方統編 | 或使用已註冊的測試統編,ecpay,開立,HIGH
 RelateNumber 重複,10000006錯誤,同一訂單編號重複開立,使用timestamp生成唯一RelateNumber | 格式: ORDER{timestamp},ecpay,開立,MEDIUM
 金額計算不符,10000016錯誤,SalesAmount + TaxAmount ≠ TotalAmount,確認B2C: TaxAmount=0 | B2B: 正確計算稅額 | 檢查四捨五入,ecpay,開立,MEDIUM

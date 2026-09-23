@@ -255,7 +255,7 @@ taiwan-logistics init --force            # 覆蓋安裝
 
 ```bash
 # 錯誤碼查詢
-python scripts/search.py "10000016" --domain error
+python scripts/search.py "10000009" --domain error
 
 # 欄位映射搜尋
 python scripts/search.py "CheckMacValue" --domain field
@@ -505,7 +505,7 @@ taiwan-logistics init --force
 
 ```bash
 # 電子發票錯誤碼查詢
-python taiwan-invoice/scripts/search.py "10000016" --domain error
+python taiwan-invoice/scripts/search.py "10000009" --domain error
 
 # 金流欄位映射查詢
 python taiwan-payment/scripts/search.py "CheckMacValue" --domain field
@@ -547,7 +547,7 @@ from error_handler import InvoiceErrorHandler, retry_on_error
 
 # 查詢錯誤資訊
 handler = InvoiceErrorHandler(provider='ecpay')
-info = handler.get_error_info('10000016')
+info = handler.get_error_info('10000009')
 print(info.suggestion)
 
 # 自動重試裝飾器
