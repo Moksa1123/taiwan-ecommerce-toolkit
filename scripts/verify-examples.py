@@ -334,6 +334,19 @@ def test_paynow_logistics():
         return svc.encrypt_3des(svc.build_order_json(oo)) == o['expected_base64']
     check('[PayNow 物流] 以範例訂單產生的 JsonOrder 與文件密文逐字相同', _order_roundtrip)
     check('[PayNow 物流] 可解密文件密文', lambda: svc.decrypt_3des(o['expected_base64']) == o['order_json'])
+    iv = v['invoice_tripledes']
+    svc2 = mod.PayNowLogisticService('x', 'x', iv['trade_password'])
+    check('[PayNow] 密碼補位規則（發票文件附件一：1234 → 12340000）與 3DES 結果相同',
+          lambda: svc2.encrypt_3des(iv['plain']) == iv['expected_base64'])
+    pv = load_vectors('paynow')['payment_passcode']
+    pay = load_module('taiwan-payment/examples/paynow-payment-example.py')
+    legacy = next(getattr(pay, n) for n in dir(pay) if hasattr(getattr(pay, n), 'generate_passcode_request'))
+    rq, rs = pv['request'], pv['response']
+    check('[PayNow 金流] 送出 PassCode 與技術文件 V1.7.1.1 範例相同',
+          lambda: legacy.generate_passcode_request(rq['web_no'], rq['order_no'], rq['total_price'], rq['trade_code']) == rq['expected'])
+    check('[PayNow 金流] 回傳 PassCode 驗證與技術文件範例相同',
+          lambda: legacy.verify_passcode_response(rs['web_no'], rs['order_no'], rs['total_price'], rs['trade_code'],
+                                                  rs['tran_status'], rs['expected']))
 
 
 # ---------------------------------------------------------------------------

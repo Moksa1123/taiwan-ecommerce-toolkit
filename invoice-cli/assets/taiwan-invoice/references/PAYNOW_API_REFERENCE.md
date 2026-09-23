@@ -8,6 +8,20 @@
 
 ---
 
+> ### ⚠️ PayNow 有兩套發票 API
+>
+> | | 本文件主體（REST） | 舊版（SOAP） |
+> |---|---|---|
+> | 來源 | docs.paynow.com.tw 公開頁面（欄位多為 TODO，需索取 PDF） | 本機《PayNow_EInvoice 串接文件 V1.5》（2022/04/06） |
+> | 端點 | `invoiceapi-dev/prod.paynow.com.tw` | `testinvoice/invoice.paynow.com.tw/PayNowEInvoice.asmx` |
+> | 認證 | JWT Bearer Token | 資料以 TripleDES 加密（見下） |
+> | 查證狀態 | 端點與欄位**未查證** | 3DES 規則已以文件附件一範例驗證（`tests/vectors/paynow.json`） |
+>
+> 舊版 TripleDES：3DES / ECB / Zero-Padding → Base64；Key = `1234567890` + Password + `123456`，
+> Password 為交易密碼「不足 8 碼靠右補 0、超過 8 碼取前 8 碼」。
+> 例：交易密碼 `1234` → Password `12340000`，`402595001111222299912/12` → `PTKLMe29fUC33H8drlRUJhYkLRp9vXy6`。
+> 此規則與 PayNow 物流 API 相同。
+
 ## 目錄
 1. [基本說明](#基本說明)
 2. [加密方式](#加密方式)

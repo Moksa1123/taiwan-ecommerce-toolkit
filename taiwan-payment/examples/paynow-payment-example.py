@@ -549,7 +549,8 @@ class PayNowLegacyService:
         import hashlib as _hashlib
         raw = f'{web_no}{order_no}{total_price}{merchant_password}{tran_status}'
         expected = _hashlib.sha1(raw.encode('utf-8')).hexdigest().upper()
-        return expected == received.upper()
+        import hmac as _hmac
+        return _hmac.compare_digest(expected, received.upper())
 
     @staticmethod
     def generate_timestr(now=None) -> str:

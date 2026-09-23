@@ -100,13 +100,21 @@ class PayNowLogisticService:
         """
         if not HAS_DEPENDENCIES:
             raise ImportError('需要安裝: pip install pycryptodome requests')
-        key = f'1234567890{password}123456'
-        if len(key.encode('utf-8')) != 24:
-            raise ValueError('3DES Key 須為 24 bytes（password 應為 8 碼）')
+        key = f'1234567890{self.normalize_password(password)}123456'
         self.user_account = user_account
         self.apicode = apicode
         self.key = key.encode('utf-8')
         self.base_url = self.TEST_BASE if is_test else self.PROD_BASE
+
+    @staticmethod
+    def normalize_password(password: str) -> str:
+        """
+        密碼不足 8 碼時靠右補 0、超過 8 碼取前 8 碼
+
+        規則載於 PayNow 電子發票串接文件 V1.5 附件一（同一套 TripleDESEncoding）；
+        物流文件的範例密碼剛好 8 碼，未另外說明。
+        """
+        return password[:8].ljust(8, '0')
 
     # -- 加密 / 雜湊（文件附錄一、附錄二）--------------------------------------
 
