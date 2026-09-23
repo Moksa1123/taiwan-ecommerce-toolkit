@@ -1670,6 +1670,3 @@ PayNow 物流貨態代碼為 4 位數字，依物流商有不同涵義；以下�
   - 測試：`https://testlogistic.paynow.com.tw`
 - **客服信箱**：service@paynow.com.tw
 
----
-
-最後更新：2026/05/07

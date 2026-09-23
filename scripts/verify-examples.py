@@ -2,12 +2,6 @@
 """
 範例程式的差分驗證（differential testing）
 
-過去只用 `python -m py_compile` 檢查範例，那只驗語法：dataclass 欄位順序錯誤、
-加密格式與官方不符這類問題完全抓不到，結果兩支範例連 import 都會失敗、
-PAYUNi / 藍新的加解密也與官方實作不一致，卻一直顯示「通過」。
-
-本腳本做兩件事：
-
 1. **實際 import 每一支範例**（執行 class 定義），確保至少載入得了。
 2. **以官方實作產生的標準答案比對**：tests/vectors/*.json 由官方外掛原始碼或
    規格書附的 PHP 範例「原封不動」在 php:8.2-cli 執行產生（出處記在每個 JSON 的
@@ -80,7 +74,7 @@ def test_imports():
             check(rel, True)
         except BaseException as e:  # noqa: BLE001 - 任何載入錯誤都要回報
             check(rel, False, f'{type(e).__name__}: {e}')
-    # 隨 skill 發布的工具腳本至少要能編譯：error_handler.py 曾因 SyntaxError 整支無法 import 卻沒人發現
+    # 隨 skill 發布的工具腳本至少要能編譯
     for path in sorted(glob.glob(os.path.join(ROOT, 'taiwan-*', 'scripts', '*.py'))):
         rel = os.path.relpath(path, ROOT).replace(os.sep, '/')
         try:
@@ -491,9 +485,8 @@ def test_scripts():
 # 6. 文件中的程式碼片段
 # ---------------------------------------------------------------------------
 #
-# 文件裡的片段才是 AI 助理最常直接照抄的東西，過去卻完全沒被驗證（範例修好了、
-# 文件仍是錯的）。在 ```python 區塊前加上 <!-- verify: <名稱> --> 即納入檢查：
-# 片段會在已匯入常用模組的環境執行，再以同一份官方標準答案比對。
+# 在程式碼區塊前加上 <!-- verify: <名稱> --> 即納入檢查：片段在已匯入常用模組的
+# 環境執行，再以官方標準答案比對。
 
 import re  # noqa: E402
 
@@ -821,9 +814,8 @@ def test_doc_snippets():
 # 7. 發票服務產生器（generate-invoice-service.py）
 # ---------------------------------------------------------------------------
 #
-# 產生器輸出的是骨架。過去骨架的 issue / void 會「什麼都沒做就回傳成功」，
-# 照抄的人會以為發票已開立 / 作廢。這裡確認：每個 provider 都產得出來、
-# Python 版可載入且未實作的步驟會拋錯、TypeScript 版語法正確、MOF 會被拒絕。
+# 每個 provider 都產得出來、Python 版可載入且未實作的步驟會拋錯、
+# TypeScript 版語法正確、MOF 會被拒絕。
 
 def test_invoice_generator():
     import csv as _csv

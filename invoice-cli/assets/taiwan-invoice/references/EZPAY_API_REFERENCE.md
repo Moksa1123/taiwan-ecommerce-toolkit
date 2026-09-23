@@ -1078,7 +1078,3 @@ ezPay：`0`=手機條碼、`1`=自然人憑證、`2`=ezPay 會員載具
 - **官方文件下載**：https://inv.ezpay.com.tw/Invoice_index/download
 - **客服信箱**：請至官網查詢
 
----
-
-最後更新：2026/05/07
-文件版本：基於 EZP_INVI v1.2.2、EZP_Track v1.0.0、EZP_BDV v1.0.0、批次開立 v1.0.3 之官方文件整理 + 實作筆記

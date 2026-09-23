@@ -2,9 +2,7 @@
 """
 街口支付 JKOPAY Python 範例
 
-依照 taiwan-payment-skill 規範撰寫。
-
-⚠️ 街口有三套互不相容的簽章機制，本檔涵蓋的是「線上支付 OnlinePay」與
+街口有三套互不相容的簽章機制，本檔涵蓋的是「線上支付 OnlinePay」與
 「授權扣款」共用的那一套（HMAC-SHA256 簽 payload 原文）。
 線下 POS 與 inApp OAuth 是另外兩套，不可共用本檔的 sign()。
 詳見 references/jkopay-payment-api.md §7。
@@ -40,13 +38,13 @@ import requests
 def sign(payload: str, secret_key: str) -> str:
     """產生 digest。
 
-    ⚠️ 簽的是 **payload 原始字串本身**——不排序、不做 URL encode。
+    簽的是 payload 原始字串本身——不排序、不做 URL encode。
     這與 ECPay 的 CheckMacValue（排序 + urlencode + SHA256）完全不同路數，
     從綠界遷移過來最容易在這裡卡住。
 
-    ⚠️ 連空白都算數。官方範例的 `"currency": "TWD"` 冒號後有一個空格，
-    把它拿掉 digest 就完全不同。因此**送出的 bytes 必須與簽章的 bytes
-    逐字元相同**——先組好字串、簽它、然後原封不動送出，
+    連空白都算數。官方範例的 `"currency": "TWD"` 冒號後有一個空格，
+    把它拿掉 digest 就完全不同。因此送出的 bytes 必須與簽章的 bytes
+    逐字元相同——先組好字串、簽它、然後原封不動送出，
     不要簽完再用另一次 json.dumps() 產生 body。
     """
     return hmac.new(
@@ -125,9 +123,9 @@ class JkopayClient:
         冪等：同一個 platform_order_id 在付款完成前重複呼叫，
         會回同一個付款網址，不會產生第二筆訂單。
 
-        ⚠️ result_object.payment_url 與 qr_img 的長度會超過 255，
+        result_object.payment_url 與 qr_img 的長度會超過 255，
         資料庫欄位不要開 VARCHAR(255)。
-        ⚠️ 付款網址僅 20 分鐘有效；只要還在 valid_time 內，
+        付款網址僅 20 分鐘有效；只要還在 valid_time 內，
         可用同一單號再呼叫本方法展延另一個 20 分鐘。
         """
         body: Dict[str, Any] = {
@@ -150,9 +148,9 @@ class JkopayClient:
     def refund(self, platform_order_id: str, refund_order_id: str, refund_amount: int) -> Dict[str, Any]:
         """退款。支援全額與多次部分退款，累積不可超過實際消費金額。
 
-        ⚠️ refund_order_id 一筆只能退一次。重送同一個號碼**不是重試**，
+        refund_order_id 一筆只能退一次。重送同一個號碼不是重試，
         會被視為已使用。網路逾時後要確認結果請改用 inquiry() 查，
-        **不要換號重送**——換號會變成第二筆退款。
+        不要換號重送——換號會變成第二筆退款。
         """
         return self._post('/platform/refund', {
             'platform_order_id': platform_order_id,
@@ -163,7 +161,7 @@ class JkopayClient:
     def inquiry(self, platform_order_ids: List[str]) -> Dict[str, Any]:
         """查詢訂單與退款歷程。一次最多 20 筆。
 
-        ⚠️ 查無訂單時 result 仍為 '000'，實際結果在
+        查無訂單時 result 仍為 '000'，實際結果在
         transactions[].status（102 = 訂單編號不存在）。
         只判斷 result 會把不存在的訂單當成功。
         """
@@ -189,7 +187,7 @@ class JkopayClient:
         regular=True  定期定額（需帶 billing_cycle）
         regular=False 不定期不定額（授權範圍內隨時扣款）
 
-        ⚠️ times 上限：week / month / quarter 皆為 7，year 為 12。
+        times 上限：week / month / quarter 皆為 7，year 為 12。
         「每月多次小額扣款」很容易撞上 month <= 7 這個限制。
         """
         if period in ('week', 'month', 'quarter') and times > 7:
@@ -222,7 +220,7 @@ class JkopayClient:
     ) -> Dict[str, Any]:
         """以既有授權發動扣款。
 
-        ⚠️ 六個硬限制，設計排程前務必知道（回應碼見 reference §6.6）：
+        六個硬限制，設計排程前務必知道（回應碼見 reference §6.6）：
           306  扣款只能在 08:00–20:00 (UTC+8) 發動 —— 夜間 batch 必失敗
           307  同一 auth_no 同時只允許一筆付款 —— 扣款必須序列化
           303  金額超過「消費者自己在 App 設定的額度」，商家不可控
@@ -256,7 +254,7 @@ class JkopayClient:
 def settled_amount(transaction: Dict[str, Any]) -> int:
     """取得實際會進撥款的金額。
 
-    ⚠️ 對帳要用 debit_amount 而不是 final_price。
+    對帳要用 debit_amount 而不是 final_price。
     街口幣與券折抵的部分（redeem_amount）不會進你的撥款帳，
     直接用 final_price 對帳會長期短差。
 

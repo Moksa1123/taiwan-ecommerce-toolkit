@@ -2,7 +2,6 @@
 """
 PayNow 立吉富 Python 完整範例 (現代版 PaymentIntent API)
 
-依照 taiwan-payment-skill 最高規範撰寫
 聚焦現代版 PaymentIntent / Customer / Refund REST API；
 傳統版 (cashflow) 提供 stub 供既有商家對照。
 
@@ -14,14 +13,14 @@ API 文件: https://docs.paynow.com.tw/
     僅以 "依場景變化" 描述，並未列出完整鍵名。本檔 dataclass / 解析邏輯
     中的 result_xxx 欄位係依文件示意推導 (例如 auth_code / last4 /
     payment_code / virtual_account / redirect_url / tokenized_card_id /
-    deferred_payment_id 等)，**正式上線前請以 PayNow 業務窗口提供之
-    完整回應規格為準，並依需要調整本範例的欄位名稱。**
+    deferred_payment_id 等)，正式上線前請以 PayNow 業務窗口提供之
+    完整回應規格為準，並依需要調整本範例的欄位名稱。
 
 API Base URL:
     PayNow 現代版的實際 API 主機由 PayNow 業務窗口提供 (常見候選網域:
     https://api.paynow.com.tw 或 https://gateway.paynow.com.tw)；
     PayNow 文件範例顯示為 docs.paynow.com.tw，那是文件站，非實際 API host。
-    本範例採用 https://api.paynow.com.tw 作為預設，**請依實際開通信件確認**。
+    本範例採用 https://api.paynow.com.tw 作為預設，請依實際開通信件確認。
 
 依賴:
     pip install requests

@@ -3,8 +3,7 @@
 > 開發者專區: https://www.sunpay.com.tw/developers/
 > 教學手冊站: https://doc.esafe.com.tw/
 > 電子發票平台: https://inv.sunpay.com.tw/
-> Captured: 2026-08-08 · doc_access: **public**（手冊免登入公開下載）
-> Status: **金流參數層已完整** — 加解密（RSA+SHA256）、4 支端點、交易全欄位、代碼表皆已擷取自手冊 v1.1.0；電子發票側待補
+> 文件公開程度：public（手冊免登入公開下載）
 > Source: 金流技術串接手冊 v1.1.0（2026-05-25，51 頁），原始 PDF 存於 `_studies/sunpay/`
 
 ## 0. 為什麼收錄——含一個競品訊號

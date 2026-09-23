@@ -1248,7 +1248,7 @@ ezPay 簡單付是**電子支付機構**，官方提供兩組 API（演算法相
 
 1. **AES 以 32 bytes 補齊**：`EncryptData = hex(AES-256-CBC(urlencode(參數)))`，PKCS#7 區塊大小 32；用 16 bytes 補齊會與官方範例不符。
 2. **回應是 urlencoded，不是 JSON**：電子支付平台的 EncryptData 解密後是 `Status=SUCCESS&...&Result%5BTradeNo%5D=...`，要自行把 `Result[...]` 還原成巢狀；跨境才是 JSON。
-3. **不是藍新 NewebPay**：網域、外層欄位、Version、支付工具都不同。舊版本文件說「與 NewebPay MPG 完全相同」並指向 `spgateway.com`，是錯的。
+3. **不是藍新 NewebPay**：網域、外層欄位、Version、支付工具都不同。
 
 ---
 
@@ -1390,7 +1390,3 @@ https://payment-stage.opay.tw/Cashier/AioCheckOut/V5
 ## GoMyPay 範例
 
 尚無範例——目前只取得服務層資訊，參數層需洽客服取得完整 API 文件。見 [reference](references/gomypay-payment-api.md)。
-
----
-
-**更多範例持續更新中...**

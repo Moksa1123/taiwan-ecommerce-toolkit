@@ -5,7 +5,7 @@ PayNow 立吉富物流 Python 範例
 依據：PayNow 物流技術文件（PayNow_Logistic_v2.5_C2C 等各產品線 PDF，本機 _studies 參考資料）
 加密與 PassCode 已以文件附錄與「建立物流單」範例的密文驗證（tests/vectors/paynow.json）。
 
-⚠️ 加密：3DES (TripleDES) / ECB / Zero-Padding，輸出 **Base64**
+加密：3DES (TripleDES) / ECB / Zero-Padding，輸出 Base64
    Key = "1234567890" + Password + "123456"（24 bytes；Password 為 PayNow 核發的加密密碼，
    與 JSON 內的 apicode 是不同的值）
 

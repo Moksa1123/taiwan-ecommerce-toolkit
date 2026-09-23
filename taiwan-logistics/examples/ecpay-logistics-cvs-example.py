@@ -10,7 +10,7 @@ ECPay 超商取貨範例
 - 參數與端點：同外掛 ecpay-logistic-helper.php / class-wooecpay-order.php，
   以及綠界官方 ecpay-api-skill guides/06-logistics-domestic.md
 
-⚠️ 國內物流的 CheckMacValue 是 **MD5**，金流 AIO 才是 SHA256。
+國內物流的 CheckMacValue 是 MD5，金流 AIO 才是 SHA256。
 """
 
 import hashlib
@@ -62,7 +62,7 @@ class ECPayLogistics:
         產生 CheckMacValue（MD5，與官方 SDK CheckMacValueService 相同）
 
         1. 排除 CheckMacValue 本身
-        2. 依參數名稱排序，**不分大小寫**（SDK 用 strcasecmp；Python 預設 sorted 會區分大小寫，
+        2. 依參數名稱排序，不分大小寫（SDK 用 strcasecmp；Python 預設 sorted 會區分大小寫，
            例如 CVSPaymentNo 與 CollectionAmount 的先後就會不同）
         3. 組成 HashKey=...&k=v&...&HashIV=...
         4. ecpay_url_encode

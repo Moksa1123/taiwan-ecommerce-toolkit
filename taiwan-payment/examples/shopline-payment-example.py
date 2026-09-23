@@ -2,7 +2,6 @@
 """
 Shopline Payments Python 範例
 
-依照 taiwan-payment-skill 規範撰寫。
 SHOPLINE Payments (SLP) 是 SHOPLINE 集團旗下的金流服務，採 RESTful POST + JSON。
 
 支援:

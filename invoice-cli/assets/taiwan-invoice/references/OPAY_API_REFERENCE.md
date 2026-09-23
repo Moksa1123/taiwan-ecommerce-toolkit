@@ -2,8 +2,7 @@
 
 > Source:《歐付寶電子發票 B2C API》(opay_i100.pdf, 145 頁)、《B2B API》(opay_i200.pdf, 130 頁)、《離線電子發票 API》(opay_i301.pdf, 52 頁)
 > 文件總覽: https://developers.opay.tw/download/document
-> Captured: 2026-08-08 · doc_access: **public**（PDF 免登入直連下載）
-> 涵蓋層級: 信封 ✅ / 加密 ✅（含官方範例）/ B2C `Issue` 逐欄 ✅ / B2B 模式與 `Issue` 逐欄 ✅ / 離線取號 ✅ / 錯誤碼 ⚠️ 官方不公開（見 §8）
+> 文件公開程度：public（PDF 免登入直連下載）
 
 ## 0. 與 ECPay 綠界發票的關係
 

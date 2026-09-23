@@ -2,7 +2,6 @@
 """
 ezPay 簡單付電子發票 Python 完整範例
 
-依照 taiwan-invoice-skill 規範撰寫。
 ezPay 屬藍新金流集團，發票端與藍新 Newebpay 金流共用同一套加密邏輯
 (AES-256-CBC + Hex + PKCS7 + SHA256 CheckCode)，但金鑰各自獨立。
 

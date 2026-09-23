@@ -39,3 +39,5 @@ _studies/
 *.pdf
 *-private.md
 *-internal.md
+
+.playwright-mcp/

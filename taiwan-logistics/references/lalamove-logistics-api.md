@@ -3,7 +3,7 @@
 > Source: https://developers.lalamove.com/ (v3)
 > 範例程式: https://github.com/lalamove/api-examples
 > 台灣服務: https://www.lalamove.com/en-tw/business/api-solutions
-> Captured: 2026-08-08 · doc_access: **public**
+> 文件公開程度：public
 
 ## 0. 為什麼要有這一類
 

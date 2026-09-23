@@ -462,9 +462,6 @@ function decryptData(encryptedData, hashKey, hashIV) {
 > **綠界沒有公開完整的發票錯誤碼表。** 官方附錄「錯誤代碼一覽表」（developers.ecpay.com.tw/7954）只寫：
 > 錯誤代碼持續新增，請到「廠商後台 → 電子發票 → 系統設定 → 錯誤代碼查詢」查詢。
 > 因此程式應以 `RtnCode == 1` 判斷成功，其他一律視為失敗並完整記錄 `RtnMsg`，不要依代碼寫死分支。
->
-> 舊版本這裡列了 `10000001`～`10000033` 的對照表，官方文件查無出處（例如把 `10000009` 寫成「發票已折讓」，
-> 綠界官方 ecpay-api-skill 的說明是 RelateNumber 重複），已刪除。
 
 ### 官方文件中出現過的代碼
 
@@ -618,7 +615,3 @@ const endpoint = isB2B ? '/B2BInvoice/Issue' : '/B2CInvoice/Issue'
 - **開發者文件**：https://developers.ecpay.com.tw/
 - **技術支援**：請至官網查詢
 
----
-
-最後更新：2026/01/28
-文件版本：基於綠界官方文件整理 + 實作筆記

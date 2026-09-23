@@ -2,7 +2,6 @@
 """
 LINE Pay v4 Online API Python 範例
 
-依照 taiwan-payment-skill 規範撰寫。
 LINE Pay 兩段式流程: Request -> Confirm。
 
 支援:
@@ -11,10 +10,8 @@ LINE Pay 兩段式流程: Request -> Confirm。
 - Refund
 - Preapproved Pay (自動扣款)
 
-⚠️ HMAC string-to-sign 公式為依 v3 慣例推測
-   (POST: ChannelSecret + ApiPath + Body + Nonce
-    GET:  ChannelSecret + ApiPath + QueryString + Nonce)
-   串接前請以官方 v4 PDF 驗證。
+簽章：Base64(HMAC-SHA256(ChannelSecret, ChannelSecret + ApiPath + (Body | QueryString) + Nonce))，
+v3、v4 相同（developers-pay.line.me/online/prerequisites）。
 
 API 文件: 參見 references/linepay-payment-api.md
 

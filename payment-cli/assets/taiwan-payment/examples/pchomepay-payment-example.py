@@ -2,7 +2,6 @@
 """
 PChomePay 拍錢包 Python 完整範例
 
-依照 taiwan-payment-skill 最高規範撰寫
 支援: 信用卡 (一次付清 / 分期)、ATM 虛擬帳號、超商代碼繳費、訂單查詢、退款
 
 API 文件: https://web.pchomepay.com.tw/api-setting/environment-setting

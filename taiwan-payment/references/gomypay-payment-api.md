@@ -2,8 +2,7 @@
 
 > 文件下載: https://n.gomypay.asia/MDocuments_downloads.aspx
 > 電子發票加值中心: https://einvoice.gomypay.asia/
-> Captured: 2026-08-08 · doc_access: **apply**（部分文件公開，完整 API 須洽客服）
-> Status: **partial** — 服務範圍已確認，參數層待補
+> 文件公開程度：apply（部分文件公開，完整 API 須洽客服）
 
 ## 0. 定位
 

@@ -2,15 +2,13 @@
 """
 新竹物流 (HCT) 直連 carrier API Python 範例
 
-依 taiwan-logistics-skill 規範撰寫。
-
-⚠️ 重要區分:
+重要區分:
     - 本範例描述「直連 HCT 自家 API」(申請後使用)
     - 如僅需透過 ECPay/PayNow/SmilePay 等 aggregator 走 HCT 配送
       (LogisticsType=HCT)，請參考各 aggregator 的物流文件，無需自行串接 HCT API
 
-⚠️ 加密:
-    HCT 採自訂加解密；演算法、金鑰、IV、padding **皆於申請後由 HCT 提供 C# Sample Code**。
+加密:
+    HCT 採自訂加解密；演算法、金鑰、IV、padding 皆於申請後由 HCT 提供 C# Sample Code。
     本範例的 _encrypt() 為 placeholder，實際串接時須以 HCT 提供之演算法替換。
 
 支援:
@@ -95,7 +93,7 @@ class HCTDirectLogisticService:
         """
         HCT 自訂加密.
 
-        ⚠️ Placeholder: 申請後請依 HCT 提供之 C# Sample Code 替換。
+        Placeholder: 申請後請依 HCT 提供之 C# Sample Code 替換。
         通常為 DES/3DES + 自訂 padding + Hex 編碼。
         """
         if not self.encryption_key:
@@ -206,7 +204,7 @@ class HCTDirectLogisticService:
         """
         TransReport: 列印託運單總表.
 
-        ⚠️ 必須於出貨日當日 18:00 前呼叫，否則包裹無法配送。
+        必須於出貨日當日 18:00 前呼叫，否則包裹無法配送。
         """
         return HCTResponse(success=False, error_message='HCT TransReport endpoint 申請後提供')
 

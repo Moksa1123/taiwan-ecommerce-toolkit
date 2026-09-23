@@ -929,5 +929,3 @@ ECPay AIO 支援的所有 `ChoosePayment` 參數值：
 | 微信支付 | `WeiXin` 直連 | `EZPWECHAT` |
 
 > NewebPay / PAYUNi 通常以個別 channel/method 參數開放每種方式；ECPay 採 umbrella 設計，整合較簡單但選擇權交給消費者。
-
-最後更新：2026/05/07

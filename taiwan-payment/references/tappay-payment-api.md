@@ -1041,10 +1041,9 @@ TapPay 錯誤訊息分為兩類：
 1. **TapPay `status`**：TapPay 平台層級狀態碼
 2. **`bank_result_code`**：來自收單行 / 發卡行的轉發碼
 
-### 一般 status（節錄，已查證）
+### 一般 status（節錄）
 
 > 依 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html，2026-09 擷取）。
-> 舊版本表格的 1、3、6、7 在官方表中不存在，2 / 4 / 5 / 10003 / 10005 / 88001 的說明也與官方不符，已更正。
 > 同一代碼在不同 API 可能有不同意義；完整清單見 `data/error-codes.csv`（473 筆）。
 
 | 代碼 | 官方說明 |
@@ -1242,6 +1241,3 @@ TapPay 錯誤訊息分為兩類：
 - **iOS / Android SDK**：https://github.com/TapPay
 - **技術支援**：support@cherri.tech ⚠️（請以 Portal 公告為準）
 
----
-
-最後更新：2026/05/07

@@ -20,8 +20,6 @@ ezPay 簡單付是持有電子支付執照的機構（簡單行動支付股份�
    MPG 形式：MerchantID、Version、TradeInfo、TradeSha → https://(c)payment.ezpay.com.tw/MPG/mpg_gateway
    查詢 QueryInfo/QuerySha（Version 1.0）、退款 RefundInfo/RefundSha（Version 2.1），回應解密後是 JSON。
 
-舊版本把 ezPay 當成藍新 MPG（spgateway 網域、Version 2.0、信用卡/ATM/超商…），與 ezPay 官方文件不符，已改寫。
-
 依賴：pip install pycryptodome requests
 """
 

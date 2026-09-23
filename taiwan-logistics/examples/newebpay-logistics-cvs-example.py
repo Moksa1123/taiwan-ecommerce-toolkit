@@ -2,7 +2,6 @@
 """
 NewebPay 藍新物流 CVS 超商物流 Python 完整範例
 
-依照 taiwan-logistics-skill 最高規範撰寫
 支援: C2C 店到店 (7-11, 全家, 萊爾富, OK)、B2C 大宗寄倉
 
 API 文件: https://www.newebpay.com

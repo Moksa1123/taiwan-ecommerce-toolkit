@@ -2,7 +2,6 @@
 """
 SmilePay 速買配物流 Python 範例
 
-依 taiwan-logistics-skill 規範撰寫。
 SmilePay 物流以 Pay_zg + Pay_subzg 編碼涵蓋:
   C2C_COD=51, C2C_PICKUP=52, B2C_COD=55, B2C_PICKUP=56
   TCAT_COD=81, TCAT_PICKUP=82, RETCAT=83

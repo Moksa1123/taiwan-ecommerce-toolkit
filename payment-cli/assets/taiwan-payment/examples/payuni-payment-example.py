@@ -150,7 +150,7 @@ class PAYUNiPaymentService:
         """
         產生 UPP 表單
 
-        UPP 是**消費者瀏覽器**以表單 POST 到 /api/upp 的付款頁（官方 SDK 的 HtmlApi()
+        UPP 是消費者瀏覽器以表單 POST 到 /api/upp 的付款頁（官方 SDK 的 HtmlApi()
         就是輸出一個自動送出的 <form>），不是伺服器端呼叫的 JSON API。
 
         付款方式以「欄位名 = 1」的旗標啟用，沒有 PayType 參數。
@@ -220,7 +220,7 @@ class PAYUNiPaymentService:
         result = response.json()
         encrypt_info = result.get('EncryptInfo', '')
         if not encrypt_info:
-            # 外層錯誤（例如 API00003 無 API 版本號）不帶 EncryptInfo
+            # 外層錯誤不帶 EncryptInfo
             return {'Status': result.get('Status', 'ERROR'), 'raw': result}
         if not self.verify_checksum(encrypt_info, result.get('HashInfo', '')):
             raise ValueError('HashInfo 驗證失敗')

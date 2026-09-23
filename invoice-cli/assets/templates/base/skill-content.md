@@ -163,10 +163,10 @@ invoice-config/
 |------|-----------|-----------------|------------|--------------|----------------|
 | 測試/正式 URL | 不同 URL | 不同 URL | **相同 URL** | 不同 URL (cinv/inv) | 不同 URL (dev/prod) |
 | 認證方式 | AES-128-CBC + HashKey/HashIV | Grvc + Verify_key | MD5 簽章 + App Key | AES-256-CBC + 32 碼 HashKey + 16 碼 HashIV + SHA256 CheckCode | JWT Bearer Token |
-| 列印方式 | POST 表單提交 | GET URL 參數 | API 取得 PDF URL | 無列印 API（`/Api/invoice_touch_issue` 是觸發「待開立」發票，不是列印） | （需向 PayNow 索取） |
+| 列印方式 | POST 表單提交 | GET URL 參數 | API 取得 PDF URL | 無列印 API（`/Api/invoice_touch_issue` 是觸發「待開立」發票，不是列印） | REST 無列印 API；SOAP 用 `Get_InvoiceURL_I` 取得發票連結 |
 | B2B 金額欄位 | SalesAmount (未稅) | UnitTAX=N | DetailVat=0 | `Category=B2B` + `Amt`/`TaxAmt` 拆分 | `BuyerIdentifier` + `TaxType` 切換 |
 | 傳輸格式 | JSON (AES 加密) | URL Parameters | JSON (URL Encode) | Form Post (`MerchantID_`/`PostData_` 後綴底線) | JSON (Bearer Header) |
-| 與其他系統共用加密 | 獨立 | 獨立 | 獨立 | **與藍新 Newebpay 金流共用** | 與 PayNow 金流不同（金流端用動態 AES-256） |
+| 與其他系統共用加密 | 獨立 | 獨立 | 獨立 | AES-256-CBC（與藍新同演算法、金鑰獨立） | 與 PayNow 金流不同（金流端用動態 AES-256） |
 | 文件成熟度 | 高 | 高 | 中 | 中（5 本 PDF） | **低**（公開頁面僅約 70 行，多項 API 須索取 PDF） |
 
 ## 開發實作步驟
@@ -458,17 +458,17 @@ App Key: sHeq7t8G1wiQvhAuIM27
 ```
 
 > **重要**：ezPay HashKey 為 **32 碼**、HashIV **16 碼**（與 ECPay 16/16 不同）。
-> ezPay 與藍新 Newebpay 金流共用同一套加密邏輯（TradeInfo / TradeSha 機制），但發票端與金流端的金鑰各自獨立。
+> 加密：`PostData_ = hex(AES-256-CBC(http_build_query(參數)))`，以 32 bytes 補齊；回應以 `CheckCode` 驗證。
 
 ### PayNow 立吉富測試環境
 ```
 測試環境 URL: https://invoiceapi-dev.paynow.com.tw/
 正式環境 URL: https://invoiceapi-prod.paynow.com.tw/
 認證方式: JWT Bearer Token (向 einvoice@paynow.com.tw 申請)
-主站: https://gateway.paynow.com.tw/
 ```
 
-> **注意**：PayNow 公開技術文件較稀疏，多數請求／回應 schema 與錯誤碼需向 PayNow 索取官方 Invoice Management v1.5 PDF 才能取得完整規格。POS 機流程有「未使用發票號碼於次期單數月 5 號自動上傳空白發票」的特殊規則，務必注意。
+> 端點：`POST /api/invoices/issue`、`/cancel`、`/allowance`、`/cancel-allowance`、`GET /api/invoices`、POS `/api/invoices/pos/invoice-numbers` 與 `/pos/issue`。
+> 官方未公開錯誤代碼表。POS 取得的號碼未使用時於次期單數月 5 號上傳空白發票。
 
 ## 開發檢查清單
 
@@ -502,6 +502,3 @@ App Key: sHeq7t8G1wiQvhAuIM27
 - [速買配 SmilePay API 規格](./references/SMILEPAY_API_REFERENCE.md)
 - [光貿 Amego API 規格](./references/AMEGO_API_REFERENCE.md)
 
----
-
-最後更新：2026/01/29

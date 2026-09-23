@@ -2,7 +2,7 @@
 
 > Source:《歐付寶全方位金流介接技術文件》(O_Pay_011.pdf, 56 頁)
 > 文件總覽: https://developers.opay.tw/download/document
-> Captured: 2026-08-08 · doc_access: **public**（PDF 免登入直連下載）
+> 文件公開程度：public（PDF 免登入直連下載）
 
 ## 0. 與 ECPay 綠界的關係——先讀這段
 

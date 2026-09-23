@@ -1327,6 +1327,3 @@ A：可以打 API 取號（會回正常的 `<SmilePay>` XML），
 - **技術客服**：customerservice@smilepay.net
 - **服務電話**：(07)559-1828
 
----
-
-最後更新：2026/05/07

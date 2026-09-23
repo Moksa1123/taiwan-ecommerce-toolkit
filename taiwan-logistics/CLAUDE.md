@@ -144,6 +144,3 @@ Never push directly to `main`. Always:
 - **Taiwan Invoice Skill** - E-Invoice integration (ECPay, SmilePay, Amego, ezPay, PayNow)
 - **Taiwan Payment Skill** - Payment integration (14 providers: ECPay, NewebPay, PAYUNi, SmilePay, PChomePay, ezPay, PayNow, Shopline, LINE Pay, TapPay, O'Pay, JKOPAY, SunPay, GoMyPay)
 
----
-
-**Last Updated**: 2026-05-07 (Phase 4: +4 logistics providers — SmilePay, PChomePay, PayNow, HCT direct)

@@ -1097,6 +1097,3 @@ string R_TransData_Json(string Company, string password, string json)
 - **官方文件**：申請後由 HCT 站所電腦負責人提供 PDF (`API服務說明_V1.pdf`，27 頁)
 - **加密 Sample Code**：申請後由 HCT 提供 (C# 版本)
 
----
-
-最後更新：2026/05/07

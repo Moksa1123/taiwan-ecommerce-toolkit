@@ -49,7 +49,7 @@ LINE Pay 是 LINE Corporation 提供的電子支付服務，整合了信用卡�
 3. 自商家後台取得 **Channel ID** 與 **Channel Secret**
 4. 設定支付完成回調網址（`confirmUrl`、`cancelUrl`）
 
-> **簽章公式已查證**：與 LINE Pay Developers 文件的公式一致，並與 yidas/line-pay-sdk-php `getAuthSignature()`、wpbr-linepay-tw 1.3.3 `generate_signature()` 實際執行結果逐字比對（`tests/vectors/linepay.json`）；下方 Python / Node.js 範例由 CI 驗證。v3 與 v4 的簽章方式相同，只有路徑前綴不同（官方 developers-pay.line.me/online/prerequisites 的 MAC 公式不分版本；API 變更紀錄 2025-11 亦寫 HMAC「same as online API v3, v4」）。
+> 簽章公式與 LINE Pay 官方 developers-pay.line.me/online/prerequisites 相同（v3、v4 一致，只有路徑前綴不同），並與 yidas/line-pay-sdk-php、wpbr-linepay-tw 1.3.3 的實際輸出逐字比對（`tests/vectors/linepay.json`）。
 
 ---
 
@@ -793,10 +793,9 @@ LINE Pay v4 的回應永遠為 HTTP 200，實際結果在 JSON 的 `returnCode`�
 | `2101` | 參數錯誤 | 檢查必填欄位、長度、格式 |
 | `2102` | JSON 格式錯誤 | 確認 body 為合法 JSON、編碼為 UTF-8 |
 
-### 其他常見代碼（已查證）
+### 其他常見代碼
 
 > 依 LINE Pay Online API v3 官方結果代碼表（developers-pay.line.me/online-api-v3，2026-09 擷取）。
-> 舊版本表格曾以「推測」列出 1102 認證失敗、1133 授權過期、1170 退款金額錯誤等，與官方定義不符，已更正。
 > 簽章錯誤沒有專屬代碼可推論；完整清單見 `data/error-codes.csv`（59 筆）。
 
 | 代碼 | 官方說明 |
@@ -929,6 +928,3 @@ const data = JSON.parse(text.replace(
 - LINE Pay 商家後台：https://pay.line.me/portal/global/auth/login
 - 客服信箱：依各市場為準（台灣為 LINE Pay Taiwan）
 
----
-
-最後更新：2026/05/07
