@@ -594,6 +594,9 @@ Date fields use `yyyy-MM-dd` format:
 
 ### RetId & RetString
 
+> 依 NDNS 1.0.0「6. 附錄 (二)」，與 `data/status-codes.csv` 相同（該檔另收附錄 (一) 的 API 回應代碼）。
+> 規格書的參數表把欄位寫成 `Retld`（小寫 L），附錄標題寫 `RetId`；PDF 無法判斷實際鍵名，程式請兩種都讀。
+
 | RetId | RetString | Category | Description |
 |-------|-----------|----------|-------------|
 | 0_1 | 訂單未處理 | Pending | Order not processed |

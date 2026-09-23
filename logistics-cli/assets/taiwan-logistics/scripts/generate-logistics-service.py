@@ -381,7 +381,7 @@ export class {class_name}LogisticsService {{
                 const decrypted = this.decrypt(result.Data)
 
                 return {{
-                    status: decrypted.RetId,
+                    status: decrypted.RetId ?? decrypted.Retld,  // NDNS 規格書兩種拼法並存
                     statusDescription: decrypted.RetString,
                     updateTime: decrypted.EventTime,
                     history: decrypted.History || []
@@ -911,7 +911,7 @@ class {class_name}LogisticsService:
                 decrypted = self._decrypt(result['Data'])
 
                 return TrackingInfo(
-                    status=decrypted.get('RetId', ''),
+                    status=decrypted.get('RetId') or decrypted.get('Retld', ''),  # NDNS 規格書兩種拼法並存
                     status_description=decrypted.get('RetString', ''),
                     update_time=decrypted.get('EventTime', ''),
                     history=decrypted.get('History', [])

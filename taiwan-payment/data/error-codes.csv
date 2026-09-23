@@ -119,14 +119,7 @@ payuni,SUCCESS,交易成功,Success,success,info,業務結果看 EncryptInfo 解
 payuni,OK,AFTEE 審核通過,AFTEE approved,success,info,AFTEE 通知的 Status 可能為 OK
 payuni,ERROR,外層錯誤（回應不含 EncryptInfo）,Outer error,system,error,檢查 MerID、Version 與 EncryptInfo / HashInfo 格式
 payuni,API00003,無 API 版本號,Missing API version,validation,error,外層表單須帶 Version：UPP/退款 1.0、物流/LINE Pay 1.1、查詢 v2 為 2.0
-smilepay,1,交易成功,Success,success,info,
-smilepay,-1,參數錯誤,Parameter error,validation,error,檢查必填欄位 Dcvc/Rvg2c/Verify_key
-smilepay,-2,商家驗證失敗,Merchant verification failed,auth,error,確認 Verify_key 與 mid 正確
-smilepay,-3,簽章/檢核碼不正確,Signature mismatch,auth,error,通知時驗證 Mid_smilepay 加權檢核碼
-smilepay,-10,Pay_zg 不支援,Unsupported payment type,validation,error,改用支援的 Pay_zg 值 (1/2/3/4/6/11)
-smilepay,-15,訂單金額異常,Amount invalid,validation,error,Amount 必須為正整數
-smilepay,-20,訂單編號重複,Duplicate Data_id,validation,error,使用唯一 Data_id
-smilepay,-23,逾期訂單/訂單已關閉,Order expired,validation,error,檢查 Deadline_date 設定
+smilepay,1,取號／建立成功,Success,success,info,只有 1 代表成功；其他值以 Desc 判讀（速買配未公開金流錯誤代碼表）
 pchomepay,10001,APPID 和 Secret 錯誤,invalid user password,auth,error,見 PChomePay API 文件「7. 錯誤代碼」
 pchomepay,10002,不被允許的 IP 位址,Server IP not allow,auth,error,見 PChomePay API 文件「7. 錯誤代碼」
 pchomepay,10003,token 錯誤,invalid token,auth,error,見 PChomePay API 文件「7. 錯誤代碼」
@@ -413,13 +406,149 @@ ezpay,MPG03004,商店狀態或屬性不符合，無法進行交易,,business,err
 ezpay,MPG03007,查無此商店代號,,business,error,ezPay 跨境網路交易串接手冊 1.0.1「九、錯誤代碼」（支付寶／微信 MPG）
 ezpay,MPG03008,已存在相同的商店訂單編號,,business,error,ezPay 跨境網路交易串接手冊 1.0.1「九、錯誤代碼」（支付寶／微信 MPG）
 ezpay,MPG03009,交易失敗,,business,error,ezPay 跨境網路交易串接手冊 1.0.1「九、錯誤代碼」（支付寶／微信 MPG）
-shopline,400,參數錯誤,Bad Request,validation,error,檢查 request body 與必填欄位
-shopline,401,認證失敗,Unauthorized,auth,error,檢查 merchantId / apiKey HTTP header
-shopline,403,沒有權限,Forbidden,auth,error,確認 API 權限與 IP 白名單
-shopline,404,資源不存在,Not Found,resource,error,確認 sessionId / paymentId 正確
-shopline,409,重複請求,Conflict,validation,error,使用唯一 referenceNumber
-shopline,422,驗證失敗,Unprocessable Entity,validation,error,檢查欄位格式與業務規則
-shopline,500,伺服器錯誤,Internal Server Error,server,error,稍後重試;持續出現聯繫 SLP support
+shopline,1005,校驗錯誤,Check error,api,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：通用）
+shopline,1006,紀錄已存在,Record already exists,api,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：通用）
+shopline,1008,狀態錯誤,Status error,api,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：通用）
+shopline,1016,付款查詢、退款發起請求時，沒有交易紀錄,No transaction record.,api,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：通用）
+shopline,1018,付款失敗/取消/逾期 & 資訊載入失敗 & 未知原因,Business error,api,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：通用）
+shopline,1901,系統連線失敗,System connection failed,api,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：通用）
+shopline,1902,系統內部格式錯誤,System internal format error,api,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：通用）
+shopline,1904,[通用] 請求過於頻繁 / [Onboarding] 請求過於頻繁,Requests are too frequent / Requests too frequent,multi,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：通用、Onboarding）
+shopline,1997,資料庫錯誤,Database error,api,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：通用）
+shopline,1998,系統配置錯誤,System configuration error,api,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：通用）
+shopline,1999,系統異常,Server error,api,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：通用）
+shopline,2001,APPID不存在,APPID does not exist,api,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：通用）
+shopline,2002,簽名錯誤,Signature error,api,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：通用）
+shopline,2003,請求URL錯誤,Request URL error,api,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：通用）
+shopline,2004,系統內部錯誤,Internal System Error,api,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：通用）
+shopline,2005,訪問拒絕,Access denied,api,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：通用）
+shopline,2006,錯誤請求,Bad request,api,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：通用）
+shopline,2007,無法訪問,Not found,api,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：通用）
+shopline,2008,服務無法存取,Service cannot be accessed,api,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：通用）
+shopline,2009,Token逾期,Token expired,api,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：通用）
+shopline,2010,Token被篡改,Token tampered,api,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：通用）
+shopline,2011,付款工具狀態禁止修改,InstrumentStatus forbidden change,api,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：通用）
+shopline,2013,特店未與平台 Connect,Merchants are not connected to the platform,api,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：通用）
+shopline,URL_NOT_FOUND,[Connect] URL不存在 / [Onboarding] URL不存在,The url does not exist,multi,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：Connect、Onboarding）
+shopline,ACCESS_DENIED,apiKey 或 clientKey 不正確/金鑰與商家ID或平台ID不符/金鑰錯誤/商家沒有存取資源權限,Access Denied,auth,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：Connect）
+shopline,MERCHANT_NOT_EXISTS,特店ID不存在,Merchant information does not exist,auth,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：Connect）
+shopline,UNAUTHORIZED_CLIENT,客戶端ID錯誤或授權參數錯誤,The client is not authorized to access the requested resource,auth,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：Connect）
+shopline,SERVER_ERROR,其他系統錯誤,System exception,auth,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：Connect）
+shopline,KEY_INCORRECT,平台 Authorize觸發 connect綁定的時 apiKey錯誤,"The apiKey or clientKey format is incorrect, please check the parameters",auth,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：Connect）
+shopline,INVALID_SCOPE,授權範圍錯誤,The requested range parameter value is invalid or not supported by the authorized server,auth,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：Connect）
+shopline,1001,重複下單，交易已存在,Order exsit,create,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：下單）
+shopline,1003,下單過程中，參數缺失,Param miss,create,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：下單）
+shopline,1004,[下單] 下單請求過程中，因入參錯誤等系統原因導致的下單失敗 / [Onboarding] 因入參錯誤等系統原因導致的失敗,Param error / The request header is invalid,multi,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：下單、Onboarding）
+shopline,1025,下單請求過程中，超過最大付款限額或不足最低付款限額,Create amount error,create,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：下單）
+shopline,4001,通路連線失敗,Channel connection failed,create,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：下單）
+shopline,4002,通路錯誤,Channel error,create,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：下單）
+shopline,4003,通路回應逾時,Channel response timeout,create,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：下單）
+shopline,4101,付款超額，付款金額不在最低和最高限額之間,Wrong amount,create,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：下單）
+shopline,4102,發起請求過程中，因為交易異常情況，下單失敗,Payment declined due to order abnormalities.,create,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：下單）
+shopline,4103,因為列表以外的未知原因導致下單失敗,The payment has been declined for unspecificed reasons.,create,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：下單）
+shopline,4104,因為特店帳戶狀態異常，導致交易下單被拒絕。,Payment declined (issues with merchant account),create,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：下單）
+shopline,4105,由於顧客帳戶狀態異常，導致交易失敗,Payment declined (issues with customer account),create,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：下單）
+shopline,4106,IP位址在通路側未加入白名單,The payment(s) failed due to system issues.,create,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：下單）
+shopline,4107,交易幣種通路不支援,The payment has been declined for unspecificed reasons.,create,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：下單）
+shopline,4108,喚起付款表單失敗,Failed to pull up the form,create,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：下單）
+shopline,4109,網站網域未設定,Invalid store url,create,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：下單）
+shopline,3000,命中 SLP 風控，使用者行為異常,The payment was declined due to payer/card irregularities.,payment,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：付款）
+shopline,3001,命中 SLP 風控，交易卡異常,The payment was declined due to payer/card irregularities.,payment,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：付款）
+shopline,3002,命中 SLP 風控，收貨人資訊異常,The payment was declined due to payer/card irregularities.,payment,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：付款）
+shopline,3003,命中 SLP 風控，高風險交易,The payment was declined due to payer/card irregularities.,payment,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：付款）
+shopline,3004,命中 SLP 風控，交易資訊異常,The payment was declined due to payer/card irregularities.,payment,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：付款）
+shopline,1012,特店 SLP 付款權限已停用,Merchant payment permission is disabled,payment,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：付款）
+shopline,4350,命中通路/銀行風控，交易被拒絕,The payment was rejected by the issuing bank.,payment,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：付款）
+shopline,4400,通路端交易過程中資料傳輸異常、系統異常,The payment failed due to the transaction timed out.,payment,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：付款）
+shopline,4401,通路端交易交易逾期,The payment period has expired.,payment,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：付款）
+shopline,4402,ATM 虛擬帳號場景：客戶實際繳款金額與產生帳號的金額不一致,The payment failed due to the actual amount [xxx幣種] paid by the payer is different from the set amount.,payment,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：付款）
+shopline,4403,系統繁忙,System Busy,payment,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：付款）
+shopline,4404,付款完成後，token內與付款請求內金額錯誤,Payment token amount not match,payment,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：付款）
+shopline,4405,與錢包前端互動後，回應的token非法,Payment token invailid,payment,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：付款）
+shopline,4406,付款公鑰錯誤,Payment public key invailid,payment,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：付款）
+shopline,4407,付款私鑰錯誤,Payment private key invailid,payment,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：付款）
+shopline,4408,付款簽名錯誤,Payment signature invailid,payment,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：付款）
+shopline,4409,與通路前端互動後，回傳的token逾期,Payment token expires,payment,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：付款）
+shopline,4410,與通路互動後，通路提示重複付款,Duplicate payment.,payment,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：付款）
+shopline,4411,通路介面回傳鑑權失敗,Payment failed due to technical issue,payment,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：付款）
+shopline,4412,通路介面回應not found,Payment failed due to technical issue,payment,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：付款）
+shopline,4450,銀行卡付款中，3DS驗證流程逾時,The payer did not complete 3D Secure authentication.,payment,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：付款）
+shopline,4451,發卡行回傳信用卡交易失敗,The payment was rejected by the issuing bank.,payment,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：付款）
+shopline,4452,銀行卡付款中，3DS交驗不透過,The payer's attempt at 3D Secure authentication failed.,payment,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：付款）
+shopline,4453,銀行卡CVV2驗證不透過,The CVC number is incorrect.,payment,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：付款）
+shopline,4454,交易卡餘額不足,The card has insufficient funds to complete the purchase.,payment,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：付款）
+shopline,4455,交易卡卡號驗證不透過（卡號無效）,The card number used is invalid.,payment,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：付款）
+shopline,4456,通路側系統異常,The payment failed due to system issues.,payment,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：付款）
+shopline,4457,發卡行識別出為高風險交易,The payment was declined by the issuing bank due to payer/card abnormalities.,payment,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：付款）
+shopline,4458,交易依然pending在通路側，處理中,The payment is still being processed.,payment,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：付款）
+shopline,4459,發卡銀行識別出銀行卡已過有效期限,The card used has expired.,payment,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：付款）
+shopline,4460,發卡行回傳交易密碼輸入次數超額限額,The payer exceeded the maximum number of PIN attempts.,payment,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：付款）
+shopline,4461,發卡行回傳交易金額超過最大/最小限額,The payer exceeded their available balance/credit limit.,payment,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：付款）
+shopline,4462,發卡行回傳交易密碼檢定不透過,The PIN entered is invalid.,payment,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：付款）
+shopline,4463,發卡銀行識別出交易卡為被竊/遺失卡,The payment was declined after being flagged by the issuing bank.,payment,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：付款）
+shopline,4464,卡被凍結,The selected card application is blocked.,payment,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：付款）
+shopline,4465,輸入PIN,Card/E-Wallet requires online pin,payment,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：付款）
+shopline,4466,金融卡卡受限,Restricted Card or Invalid card in this country,payment,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：付款）
+shopline,4467,已超交易次數,The number of withdrawals permitted for the shopper's card was exceeded,payment,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：付款）
+shopline,4468,付款碼或收款碼已逾期或無效,"Invalid QR Code, or QR Code has expired.",payment,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：付款）
+shopline,4550,客戶自主取消交易,Customer cancellation,payment,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：付款）
+shopline,4551,客戶發起了拒付，交易正在爭議期,Customer dispute,payment,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：付款）
+shopline,4552,顧客付款帳號異常,Customer account error,payment,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：付款）
+shopline,4600,Others-Exception,The payment has been declined for unspecificed reasons.,payment,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：付款）
+shopline,1010,特店SLP退款權限已停用,Merchant refund permission is disabled,refund,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：退款）
+shopline,1013,退款要求已存在，不可重複發起退款,The refund request is existing.,refund,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：退款）
+shopline,1014,交易已完成全部金額退款，無可退款金額,The refund failed due to exceeded the allowable refund amount.,refund,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：退款）
+shopline,1015,特店帳戶未完成高級認證，不可發起退款,Refund decline（issues with customer account）,refund,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：退款）
+shopline,1020,付款交易可以退款的時效為180天，如超過，無法退款,The allowable refund period has expired.,refund,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：退款）
+shopline,1021,請求退款的交易不存在或狀態異常（失敗/逾時）,The refund failed due to the order does not exist or is in exception status.,refund,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：退款）
+shopline,1202,通路不支援線上退款API，只能線下退款,Refund is not support currently,refund,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：退款）
+shopline,1022,由於特店帳戶餘額不足，退款失敗,The refund failed due to the merchant acc does not have enough balance.,refund,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：退款）
+shopline,1023,因為清單以外的未知原因導致退款失敗,The refund request can not be processed at the moment.,refund,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：退款）
+shopline,4502,請求退款的交易不存在或狀態異常（失敗/逾時）,The refund failed due to the order does not exist or is in exception status.,refund,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：退款）
+shopline,4701,退款要求金額超過交易可退款金額,Refund request amount exceeds order refundable amount,refund,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：退款）
+shopline,4702,由於特店帳戶餘額不足，退款失敗,The refund failed due to insufficient merchant account balance,refund,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：退款）
+shopline,4703,付款交易已超過可退款時效,The payment order has exceeded the refundable time limit,refund,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：退款）
+shopline,4704,因為清單以外的未知原因導致退款失敗,The refund failed because of unknown reasons.,refund,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：退款）
+shopline,4705,傳輸金額不正確導致退款失敗,Refund failed because of amount not valid,refund,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：退款）
+shopline,4706,上次的退款交易尚在退款中，無法再新發起退款,The new refund cannot be initiated because the previously refund of the payment is still processing,refund,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：退款）
+shopline,4707,該交易不支援部分退款,Partial refund doesn't support.,refund,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：退款）
+shopline,4700,請求退款的交易不存在或狀態異常（失敗/逾時）,The refund failed because of unknown reasons.,refund,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：退款）
+shopline,1200,暫時不支援綁卡功能,Card binding is not support currently.,api,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：綁卡）
+shopline,1201,系統正在自動處理綁卡後流程，請5分鐘後再試,Card is cloning,api,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：綁卡）
+shopline,4800,未知原因,Binding failed due to unknown reason.,api,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：綁卡）
+shopline,4801,使用者拒絕授權,The merchant rejected the binding.,api,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：綁卡）
+shopline,4802,通路參數錯誤,Bind parameter error.,api,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：綁卡）
+shopline,1203,通路進行卡片驗證，通路回應失敗,Card verification is failed,api,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：綁卡）
+shopline,4900,通路要求該筆交易需要進行3DS，但由於是顧客不在場定期付款，無法完成,Need 3DS,api,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：定期付款）
+shopline,4901,通路要求該筆交易需要進行CVS認證，但由於是顧客不在場定期付款，無法完成,Need cvs,api,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：定期付款）
+shopline,4902,因其它原因，無法完成定期付款,Saved card payment other erorr,api,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：定期付款）
+shopline,6001,交易處理中，交易取消失敗,"Transaction is processing, can not cancel.",api,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：取消授權）
+shopline,6002,交易已請款，無法取消,Can not Cancel the Captured transaction,api,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：取消授權）
+shopline,6003,交易已取消，無法取消,Can not Cancel the Cancelled transaction,api,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：取消授權）
+shopline,6400,交易狀態異常，無法取消,The transaction status is abnormal and cannot be cancelled,api,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：取消授權）
+shopline,6401,通路系統原因導致無法取消,Can not Cancel for system error,api,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：取消授權）
+shopline,7001,請款金額大於可請款金額,The capture amount is bigger than the amount that can be captured,api,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：請款）
+shopline,7002,交易狀態異常，無法請款,The transaction status is abnormal and cannot be captured,api,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：請款）
+shopline,7400,交易狀態異常，無法請款,The transaction status is abnormal and cannot be captured,api,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：請款）
+shopline,7401,通路系統原因導致無法請款,Can not Capture for system error,api,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：請款）
+shopline,7402,請款金額大於可請款金額,The capture amount is bigger than the amount that can be captured,api,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：請款）
+shopline,7403,因授權額度問題請款失敗,Capture fail for bank decline,api,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：請款）
+shopline,1009,特店SLP收款權限已停用,Receive forbidden,api,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：SDK）
+shopline,4200,特店暫未綁定該付款通路,Payment method not activated,api,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：SDK）
+shopline,4201,特店暫無使用權限,The payment failed due to merchant account invalid,api,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：SDK）
+shopline,4202,通路或付款方式暫時不支援該交易幣種,Currency not support,api,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：SDK）
+shopline,4203,特店收款帳戶狀態異常,Merchant payment permission is disabled,api,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：SDK）
+shopline,4204,暫不支援該付款方式,This payment method is not currently supported,api,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：SDK）
+shopline,8100,無法對已經結算的交易執行結算,Transaction already settled.,api,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：結算）
+shopline,8101,無法對已經預約結算的交易執行結算,Transaction already scheduled for settlement.,api,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：結算）
+shopline,1011,提現已停用,Withdraw Forbidden,api,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：轉帳交易）
+shopline,9007,帳戶餘額不足,Account balance not enough,api,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：轉帳交易）
+shopline,1002,可操作餘額不足,Amount not enough,api,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：分帳交易）
+shopline,1040,該付款方式的交易不支援分帳,Transactions using this payment method cannot be split.,api,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：分帳交易）
+shopline,2113,此主體已經存在,entity not unique,onboarding,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：Onboarding）
+shopline,2116,此負責人或最終受益人已經存在,person not unique,onboarding,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：Onboarding）
+shopline,2121,此銀行帳戶已提交，請勿重複提交,"The bank has been submitted, please do not repeat",onboarding,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：Onboarding）
+shopline,2131,此主體正在申請中,entity applying,onboarding,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：Onboarding）
 linepay,0000,,"Returned when the request is successful. If this is the result of a payment request status check, the code indicates that The customer has not yet completed LINE Pay authentication.",success,info,見 LINE Pay Online API v3 結果代碼（developers-pay.line.me/online-api-v3）
 linepay,0110,,"The customer has completed LINE Pay authentication, and you can proceed with payment confirmation.",api,info,見 LINE Pay Online API v3 結果代碼（developers-pay.line.me/online-api-v3）
 linepay,0121,,"The customer canceled the payment, or the LINE Pay authentication waiting time expired.",api,info,見 LINE Pay Online API v3 結果代碼（developers-pay.line.me/online-api-v3）
@@ -984,14 +1113,31 @@ jkopay,304,金額與授權帳單金額不一致,Order finalPrice is not consiste
 jkopay,305,超過當前週期扣款次數,Authpay payment exceeds current billing cycle times,business,error,週期次數上限 week/month/quarter<=7 year<=12 檢查 billing_cycle.times
 jkopay,306,授權扣款時段無效,Authpay payment transaction time invalid.(Available at 08:00 - 20:00 UTC+8),business,error,授權扣款僅限 08:00-20:00 UTC+8 排程勿排夜間
 jkopay,307,同一授權不可併發扣款,Payment with the same auth_no is allowed one at a time,business,error,同一 auth_no 同時僅允許一筆付款 扣款須序列化
-sunpay,10,交易成功,Transaction Success,success,info,
-sunpay,11,交易失敗,Transaction Failed,payment,error,查 CallBack 內容確認失敗原因 或改用其他支付方式
-sunpay,12-callback,已建立(交易通知),Order Created,payment,warning,交易 CallBack 的 12 代表已建立尚未付款 勿與查詢 API 的 12 混淆
-sunpay,12-query,查無該筆訂單(查詢API),Order Not Found,query,error,查詢 API 的 12 代表查無訂單 與交易通知的 12 意義不同 判斷邏輯須分開
-sunpay,06,交易編號或訂單編號須擇一,Trade No or Order No required,validation,error,查詢時 trade_no 與 td 必須擇一帶入
-sunpay,13,交易未完成,Transaction Incomplete,query,warning,消費者尚未完成付款 可續等或取消
-sunpay,14,訂單退款,Order Refunded,refund,info,該筆訂單已退款 另查 refund_status 取得退款進度
-sunpay,15,交易取消,Transaction Canceled,query,info,交易已取消
+sunpay,10,交易成功,Transaction Success,success,info,交易通知 status / 查詢 result.status（紅陽金流技術串接手冊 v1.1.0 4.3、4.4.2）
+sunpay,11,交易失敗,Transaction Failed,payment,error,交易通知 status / 查詢 result.status；查 msg 確認原因（紅陽金流技術串接手冊 v1.1.0 4.3、4.4.2）
+sunpay,12-callback,已建立(交易通知),Order Created,payment,warning,交易通知的 12 代表已建立尚未付款，勿與查詢的 12（查無訂單）、退款的 12（無此訂單）混淆（紅陽金流技術串接手冊 v1.1.0 4.3）
+sunpay,12-query,查無該筆訂單(查詢API),Order Not Found,query,error,查詢 API result.status（紅陽金流技術串接手冊 v1.1.0 4.4.2）
+sunpay,06,紅陽交易編號或是特店訂單編號必須擇一,Trade No or Order No required,validation,error,查詢 API result.status；trade_no 與 td 必須擇一帶入（紅陽金流技術串接手冊 v1.1.0 4.4.2）
+sunpay,13-query,交易未完成(查詢API),Transaction Incomplete,query,warning,查詢 API result.status；消費者尚未完成付款（紅陽金流技術串接手冊 v1.1.0 4.4.2）
+sunpay,14,訂單退款,Order Refunded,refund,info,查詢 API result.status；另看 refund_status（紅陽金流技術串接手冊 v1.1.0 4.4.2）
+sunpay,15,交易取消,Transaction Canceled,query,info,查詢 API result.status（紅陽金流技術串接手冊 v1.1.0 4.4.2）
+sunpay,00,請求成功,Request Success,success,info,查詢 / 請款 API 外層 code（紅陽金流技術串接手冊 v1.1.0 4.4.2、4.5.2）；查詢時業務狀態看 result.status
+sunpay,99-query,未知錯誤(查詢/請款API),Unknown Error,system,error,查詢 API 外層 code 99「未知錯誤」、請款 API 99「請求失敗」（紅陽金流技術串接手冊 v1.1.0 4.4.2、4.5.2）
+sunpay,01,特店代碼不正確,Invalid Merchant,auth,error,退款 API code（紅陽金流技術串接手冊 v1.1.0 4.6.2）
+sunpay,02,訂單編號重複,Duplicate Order No,validation,error,退款 API code（紅陽金流技術串接手冊 v1.1.0 4.6.2）
+sunpay,03,參數不正確,Invalid Parameter,validation,error,退款 API code（紅陽金流技術串接手冊 v1.1.0 4.6.2）
+sunpay,04,驗簽失敗,Signature Verification Failed,auth,error,退款 API code（紅陽金流技術串接手冊 v1.1.0 4.6.2）
+sunpay,12-refund,無此訂單(退款API),Order Not Found,refund,error,退款 API code（紅陽金流技術串接手冊 v1.1.0 4.6.2）
+sunpay,13-refund,訂單已申請退款(退款API),Refund Already Requested,refund,error,退款 API code（紅陽金流技術串接手冊 v1.1.0 4.6.2）
+sunpay,20,申請退款成功,Refund Requested,refund,info,退款 API code（紅陽金流技術串接手冊 v1.1.0 4.6.2）
+sunpay,21,申請退款失敗，非信用卡交易不接受退款,Refund Rejected (non-credit),refund,error,退款 API code（紅陽金流技術串接手冊 v1.1.0 4.6.2）
+sunpay,22,超過退款申請期限,Refund Period Expired,refund,error,退款 API code（紅陽金流技術串接手冊 v1.1.0 4.6.2）
+sunpay,23,已退款達兩次,Refund Limit Reached,refund,error,退款 API code（紅陽金流技術串接手冊 v1.1.0 4.6.2）
+sunpay,24,已無餘額可退款,No Refundable Balance,refund,error,退款 API code（紅陽金流技術串接手冊 v1.1.0 4.6.2）
+sunpay,25,當日訂單僅允許全額退款,Same-day Orders Allow Full Refund Only,refund,error,退款 API code（紅陽金流技術串接手冊 v1.1.0 4.6.2）
+sunpay,26,本次退款金額需與可退款金額一致,Refund Amount Must Equal Refundable Amount,refund,error,退款 API code（紅陽金流技術串接手冊 v1.1.0 4.6.2）
+sunpay,97,不接受此 IP 進行授權,IP Not Allowed,auth,error,退款 API code（紅陽金流技術串接手冊 v1.1.0 4.6.2）
+sunpay,99-refund,未知錯誤(退款API),Unknown Error,system,error,退款 API code（紅陽金流技術串接手冊 v1.1.0 4.6.2）
 jkopay,POS-000,交易成功,Success,success,info,
 jkopay,POS-301,交易失敗(網路或系統異常),Transaction failed network or system error,server,error,稍後重試 注意此碼與 Platform API 的 301(Invalid auth_no) 意義不同
 jkopay,POS-601,查無綁定會員,Bound member not found,validation,error,消費者未完成綁定 請其於街口 App 完成設定

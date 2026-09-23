@@ -829,7 +829,7 @@ class NewebPayQueryShipment extends NewebPayLogistics {
       storeID: decrypted.StoreID,
       shipType: decrypted.ShipType,
       storeName: decrypted.StoreName,
-      retId: decrypted.Retld,
+      retId: decrypted.RetId ?? decrypted.Retld,  // NDNS 規格書參數表寫 Retld、標題寫 RetId，兩種都接受
       retString: decrypted.RetString,
     };
   }
@@ -1029,7 +1029,7 @@ class NewebPayTrackShipment(NewebPayLogistics):
             'trade_type': decrypted['TradeType'],
             'ship_type': decrypted['ShipType'],
             'history': decrypted.get('History', []),
-            'ret_id': decrypted.get('Retld', ''),
+            'ret_id': decrypted.get('RetId') or decrypted.get('Retld', ''),  # 規格書兩種拼法並存
             'ret_string': decrypted.get('RetString', ''),
         }
 
@@ -1114,7 +1114,7 @@ app.post('/callback/shipment-status', async (req, res) => {
       lgsNo: data.LgsNo,
       tradeType: data.TradeType,
       shipType: data.ShipType,
-      retId: data.Retld,
+      retId: data.RetId ?? data.Retld,
       retString: data.RetString,
       eventTime: data.EventTime,
     });
@@ -1228,7 +1228,7 @@ def process_shipment_status_update(data: Dict[str, any]):
     """Process shipment status update"""
 
     merchant_order_no = data['MerchantOrderNo']
-    ret_id = data.get('Retld')
+    ret_id = data.get('RetId') or data.get('Retld')  # NDNS 規格書兩種拼法並存
     ret_string = data.get('RetString')
 
     app.logger.info(f'Processing status update for order {merchant_order_no}')
