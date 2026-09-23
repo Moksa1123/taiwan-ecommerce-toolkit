@@ -40,3 +40,9 @@ RESTful 端點錯誤,404 Not Found | 405 Method Not Allowed,端點路徑錯誤 |
 街口 POS 退款單號用錯欄位,退款失敗或退到錯的訂單,POS 退款的 MerchantTradeNo 是退款流水號不是原付款流水號 原交易須用 TradeNo 指定,MerchantTradeNo 帶新的唯一退款單號 TradeNo 帶原街口端交易序號,jkopay,high
 街口線上支付退款單號重送無效,重送退款請求沒有反應或被拒,refund_order_id 一筆只能退一次 重送同號不會重試而是視為已使用,逾時後改用 Inquiry API 查詢結果 勿換號重送否則會變成第二筆退款,jkopay,high
 街口幣回應欄位解析失敗,取不到 Result 或 ResultObject,街口幣發放的回應欄位為 PascalCase(Result/Message/ResultObject) 與線上支付的小寫(result/message/result_object)不同,依模組分別定義回應模型 勿共用同一個 DTO,jkopay,medium
+SunPay RSA 加密失敗,RSA Encryption Failed,RSA 加密失敗,加密分段須為 117 byte 且需先 urlencode 再加密,sunpay,high
+SunPay RSA 解密失敗,RSA Decryption Failed,RSA 解密失敗,回傳 rsamsg 是紅陽以私鑰加密，須用紅陽「公鑰」還原（m=c^e mod n，PKCS#1 v1.5 type 1）；先把 URL-safe base64 的 - _ 換回 + / 再解碼，分段 128 byte，最後 urldecode,sunpay,high
+SunPay check_value 驗證失敗,Signature Mismatch,check_value 驗證失敗,送出：head 與 body 依 ASCII 排序、null 不參與、JSON urlencode 後尾接 SHA2 密鑰再 SHA256；回傳：對解密後「尚未 urldecode」的字串 + SHA2 密鑰計算，不可自行重新編碼,sunpay,high
+SunPay 交易發起時間逾時,Send Time Expired,交易發起時間逾時,send_time 格式為 fffssmmHHyyyyMMdd 且超過 120 秒視為無效 請校時,sunpay,high
+SunPay 物流金額超限,Logistics Amount Exceeded,物流金額超限,訂單金額大於 2 萬元無法使用物流服務,sunpay,high
+SunPay 回傳網址含連接埠被擋,Callback URL With Port Blocked,回傳網址含連接埠被擋,回傳網址不可帶 port 紅陽基於資安風控會阻擋,sunpay,high
