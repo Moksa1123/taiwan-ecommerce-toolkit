@@ -177,12 +177,242 @@ pchomepay,70006,會員帳號暫時無法使用提領功能,function lock.,system
 pchomepay,90001,物流狀態錯誤,invalid status,logistics,error,見 PChomePay API 文件「7. 錯誤代碼」
 pchomepay,90002,物流狀態歷程不存在,logistic status history not found,logistics,error,見 PChomePay API 文件「7. 錯誤代碼」
 pchomepay,90004,列印交寄單失敗,Print delivery note fail.,logistics,error,見 PChomePay API 文件「7. 錯誤代碼」
-ezpay,KEY10001,商店代號錯誤,Invalid MerchantID,auth,error,確認 MerchantID 與後台一致
-ezpay,KEY10002,簽章驗證失敗,TradeSha mismatch,auth,error,SHA256 計算需含 HashKey/HashIV 且大寫
-ezpay,KEY10003,加密資料解密失敗,TradeInfo decrypt failed,auth,error,確認 AES-256-CBC + Hex + PKCS7 與 32-char HashKey 16-char HashIV
-ezpay,MEM10001,商家未啟用該付款方式,Method not enabled,validation,error,於 ezPay 後台啟用該付款方式
-ezpay,MPG10001,訂單編號重複,Duplicate MerchantOrderNo,validation,error,使用唯一訂單編號
-ezpay,VACC10001,虛擬帳號逾期,VACC expired,validation,error,檢查 ExpireDate 設定
+ezpay,SCTE0001,Version 不得為空,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單建立 API）
+ezpay,SCTE0002,Version 錯誤,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單建立 API）
+ezpay,SCTE0003,APIID 不得為空,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單建立 API）
+ezpay,SCTE0004,APIID 錯誤,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單建立 API）
+ezpay,SCTE0005,UID 不得為空,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單建立 API）
+ezpay,SCTE0006,EncryptData 不得為空,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單建立 API）
+ezpay,SCTE0007,HashData 不得為空,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單建立 API）
+ezpay,SCTE0008,UID 錯誤,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單建立 API）
+ezpay,SCTE0009,HashData 錯誤,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單建立 API）
+ezpay,SCTE0010,商店不為啟用狀態,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單建立 API）
+ezpay,SCTE9999,系統異常,,system,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單建立 API）
+ezpay,SCTE0301,TimeStamp 錯誤,,business,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單建立 API）
+ezpay,SCTE0302,Mode 錯誤,,business,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單建立 API）
+ezpay,SCTE0303,Mode 為 1 MerchantOrderNo 不得為空值,,business,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單建立 API）
+ezpay,SCTE0304,Mode 為 3 MerchantOrderNo 不得為空值,,business,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單建立 API）
+ezpay,SCTE0305,Mode 為 2 MerchantOrderNo 必須為空值,,business,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單建立 API）
+ezpay,SCTE0306,Mode 為 4 MerchantOrderNo 必須為空值,,business,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單建立 API）
+ezpay,SCTE0307,Mode 為 1 OrderAmt 不得為空值,,business,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單建立 API）
+ezpay,SCTE0308,Mode 為 2 OrderAmt 不得為空值,,business,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單建立 API）
+ezpay,SCTE0309,Mode 為 3 OrderAmt 必須為空值,,business,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單建立 API）
+ezpay,SCTE0310,Mode 為 4 OrderAmt 必須為空值,,business,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單建立 API）
+ezpay,SCTE0311,Template 錯誤,,business,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單建立 API）
+ezpay,SCTE0312,LangType 錯誤,,business,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單建立 API）
+ezpay,SCTE0313,TWQRLifeTime 錯誤,,business,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單建立 API）
+ezpay,SCTE0314,ExpireTime 錯誤,,business,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單建立 API）
+ezpay,SCTE0315,"ExpireTime 錯誤,不可以使用過去時間",,business,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單建立 API）
+ezpay,SCTE0316,WebToAppEnabled 錯誤,,business,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單建立 API）
+ezpay,SCTE0317,MerchantOrderNo 錯誤,,business,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單建立 API）
+ezpay,SCTE0318,NotifyURL 錯誤,,business,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單建立 API）
+ezpay,SCTE0319,ReturnURL 錯誤,,business,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單建立 API）
+ezpay,SCTE0320,ClientBackURL 錯誤,,business,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單建立 API）
+ezpay,SCTE0321,Currency 錯誤,,business,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單建立 API）
+ezpay,SCTE0322,OrgOrderAmt 錯誤,,business,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單建立 API）
+ezpay,SCTE0323,OrderAmt 錯誤,,business,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單建立 API）
+ezpay,SCTE0324,應付金額不得大於原始訂單金額,,business,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單建立 API）
+ezpay,SCTE0325,ItemDesc 錯誤,,business,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單建立 API）
+ezpay,SCTE0361,TWQRLifeTime 設定超出上限範圍,,business,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單建立 API）
+ezpay,SCTE0362,MerchantOrderNo 長度過長,,business,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單建立 API）
+ezpay,SCTE0363,NotifyURL 長度過長,,business,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單建立 API）
+ezpay,SCTE0364,ReturnURL 長度過長,,business,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單建立 API）
+ezpay,SCTE0365,ClientBackURL 長度過長,,business,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單建立 API）
+ezpay,SCTE0366,OrgOrderAmt 超出設定上限,,business,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單建立 API）
+ezpay,SCTE0367,OrderAmt 超出設定上限,,business,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單建立 API）
+ezpay,SCTE0368,ItemDesc 長度過長,,business,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單建立 API）
+ezpay,SCTE0601,過期時間設定超出上限範圍,,business,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單建立 API）
+ezpay,SCTE0602,商店未啟用簡單付 TWQR 交易,,business,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單建立 API）
+ezpay,SCTE0603,訂單已存在(商店訂單編號重複),,business,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單建立 API）
+ezpay,SCTE0604,交易已存在(商店訂單編號重複),,business,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單建立 API）
+ezpay,SCTE0699,訂單建立異常錯誤,,business,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單建立 API）
+ezpay,SUTR0001,Version 不得為空,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單修改及取消 API）
+ezpay,SUTR0002,Version 錯誤,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單修改及取消 API）
+ezpay,SUTR0003,APIID 不得為空,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單修改及取消 API）
+ezpay,SUTR0004,APIID 錯誤,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單修改及取消 API）
+ezpay,SUTR0005,UID 不得為空,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單修改及取消 API）
+ezpay,SUTR0006,EncryptData 不得為空,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單修改及取消 API）
+ezpay,SUTR0007,HashData 不得為空,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單修改及取消 API）
+ezpay,SUTR0008,UID 錯誤,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單修改及取消 API）
+ezpay,SUTR0009,HashData 錯誤,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單修改及取消 API）
+ezpay,SUTR0010,商店不為啟用狀態,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單修改及取消 API）
+ezpay,SUTR0111,加密資料不得為空,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單修改及取消 API）
+ezpay,SUTR0112,TimeStamp 不得為空,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單修改及取消 API）
+ezpay,SUTR0113,APIID 不得為空,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單修改及取消 API）
+ezpay,SUTR0114,Version 不得為空,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單修改及取消 API）
+ezpay,SUTR0115,UID 不得為空,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單修改及取消 API）
+ezpay,SUTR0116,Ptoken 不得為空,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單修改及取消 API）
+ezpay,SUTR0117,Ptoken 不得超過 64 字元,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單修改及取消 API）
+ezpay,SUTR0118,UpdateAction 不得為空,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單修改及取消 API）
+ezpay,SUTR0119,UpdateAction 錯誤,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單修改及取消 API）
+ezpay,SUTR0120,ExpireTime 錯誤,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單修改及取消 API）
+ezpay,SUTR0121,ExpireTime 不得使用過去時間,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單修改及取消 API）
+ezpay,SUTR0122,NotifyURL 錯誤,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單修改及取消 API）
+ezpay,SUTR0123,ReturnURL 錯誤,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單修改及取消 API）
+ezpay,SUTR0124,ClientBackURL 錯誤,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單修改及取消 API）
+ezpay,SUTR0125,更新項目不得為空,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單修改及取消 API）
+ezpay,SUTR0126,TradeNo 不得為空,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單修改及取消 API）
+ezpay,SUTR0127,TradeNo 不得超過 20 字元,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單修改及取消 API）
+ezpay,SUTR0201,訂單查詢失敗,,business,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單修改及取消 API）
+ezpay,SUTR0202,訂單 Ptoken 不相符,,business,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單修改及取消 API）
+ezpay,SUTR0203,訂單不為待付款狀態,,business,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單修改及取消 API）
+ezpay,SUTR0204,刪除訂單失敗,,business,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單修改及取消 API）
+ezpay,SUTR0205,更新訂單主表失敗,,business,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單修改及取消 API）
+ezpay,SUTR0206,更新訂單副表失敗,,business,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單修改及取消 API）
+ezpay,SUTR0207,更新訂單 cache 失敗,,business,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單修改及取消 API）
+ezpay,SUTR9999,系統異常,,system,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單修改及取消 API）
+ezpay,SPTN0001,Version 不得為空,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（背景通知 API）
+ezpay,SPTN0002,Version 錯誤,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（背景通知 API）
+ezpay,SPTN0003,APIID 不得為空,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（背景通知 API）
+ezpay,SPTN0004,APIID 錯誤,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（背景通知 API）
+ezpay,SPTN0005,UID 不得為空,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（背景通知 API）
+ezpay,SPTN0006,EncryptData 不得為空,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（背景通知 API）
+ezpay,SPTN0007,HashData 不得為空,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（背景通知 API）
+ezpay,SPTN0008,UID 錯誤,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（背景通知 API）
+ezpay,SPTN0009,HashData 錯誤,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（背景通知 API）
+ezpay,SPTN0010,商店不為啟用狀態,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（背景通知 API）
+ezpay,SPTN0111,加密資料不得為空,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（背景通知 API）
+ezpay,SPTN0112,TimeStamp 不得為空,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（背景通知 API）
+ezpay,SPTN0113,APIID 不得為空,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（背景通知 API）
+ezpay,SPTN0114,Version 不得為空,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（背景通知 API）
+ezpay,SPTN0115,UID 不得為空,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（背景通知 API）
+ezpay,SPTN0116,TradeNo 不得為空,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（背景通知 API）
+ezpay,SPTN0117,TradeNo 不得超過 20 字元,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（背景通知 API）
+ezpay,SPTN0120,商店未啟用簡單付 TWQR 交易,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（背景通知 API）
+ezpay,SPTN0201,查詢訂單資訊失敗,,business,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（背景通知 API）
+ezpay,SPTN0202,查詢交易資訊失敗,,business,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（背景通知 API）
+ezpay,SPTN0203,訂單及商店未設定 Notify 網址,,business,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（背景通知 API）
+ezpay,SPTN0204,交易結果查詢失敗,,business,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（背景通知 API）
+ezpay,SPTN0205,跨機構交易詳細資料查詢失敗,,business,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（背景通知 API）
+ezpay,SPTN0206,自機構交易詳細資料查詢失敗,,business,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（背景通知 API）
+ezpay,SPTN0207,信用卡交易資訊查詢失敗,,business,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（背景通知 API）
+ezpay,SPTN0208,信用卡 bin 碼表查詢失敗,,business,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（背景通知 API）
+ezpay,SPTN0209,ACCLINK 交易資訊查詢失敗,,business,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（背景通知 API）
+ezpay,SPTN0210,ACCLINK_LOG 交易資訊查詢失敗,,business,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（背景通知 API）
+ezpay,SPTN9999,系統異常,,system,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（背景通知 API）
+ezpay,STRN0001,Version 不得為空,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（前景通知 API）
+ezpay,STRN0002,Version 錯誤,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（前景通知 API）
+ezpay,STRN0003,APIID 不得為空,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（前景通知 API）
+ezpay,STRN0004,APIID 錯誤,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（前景通知 API）
+ezpay,STRN0005,UID 不得為空,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（前景通知 API）
+ezpay,STRN0006,EncryptData 不得為空,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（前景通知 API）
+ezpay,STRN0007,HashData 不得為空,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（前景通知 API）
+ezpay,STRN0008,UID 錯誤,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（前景通知 API）
+ezpay,STRN0009,HashData 錯誤,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（前景通知 API）
+ezpay,STRN0010,商店不為啟用狀態,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（前景通知 API）
+ezpay,STRN0111,加密資料不得為空,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（前景通知 API）
+ezpay,STRN0112,TimeStamp 不得為空,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（前景通知 API）
+ezpay,STRN0113,APIID 不得為空,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（前景通知 API）
+ezpay,STRN0114,Version 不得為空,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（前景通知 API）
+ezpay,STRN0115,UID 不得為空,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（前景通知 API）
+ezpay,STRN0116,TradeNo 不得為空,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（前景通知 API）
+ezpay,STRN0117,TradeNo 不得超過 20 字元,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（前景通知 API）
+ezpay,STRN0118,Status 不得為空,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（前景通知 API）
+ezpay,STRN0119,Message 不得為空,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（前景通知 API）
+ezpay,STRN0201,訂單查詢失敗,,business,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（前景通知 API）
+ezpay,STRN0202,商店交易設定及 Return_url 查詢失敗,,business,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（前景通知 API）
+ezpay,STRN0203,交易結果查詢失敗,,business,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（前景通知 API）
+ezpay,STRN0204,跨機構交易詳細資料查詢失敗,,business,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（前景通知 API）
+ezpay,STRN0205,自機構交易詳細資料查詢失敗,,business,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（前景通知 API）
+ezpay,STRN0206,信用卡交易資訊查詢失敗,,business,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（前景通知 API）
+ezpay,STRN0207,信用卡 bin 碼表查詢失敗,,business,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（前景通知 API）
+ezpay,STRN0208,ACCLINK 交易資訊查詢失敗,,business,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（前景通知 API）
+ezpay,STRN0209,ACCLINK_LOG 交易資訊查詢失敗,,business,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（前景通知 API）
+ezpay,STRN9999,系統異常,,system,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（前景通知 API）
+ezpay,STRD0001,Version 不得為空,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（交易退款 API）
+ezpay,STRD0002,Version 錯誤,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（交易退款 API）
+ezpay,STRD0003,APIID 不得為空,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（交易退款 API）
+ezpay,STRD0004,APIID 錯誤,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（交易退款 API）
+ezpay,STRD0005,UID 不得為空,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（交易退款 API）
+ezpay,STRD0006,EncryptData 不得為空,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（交易退款 API）
+ezpay,STRD0007,HashData 不得為空,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（交易退款 API）
+ezpay,STRD0008,UID 錯誤,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（交易退款 API）
+ezpay,STRD0009,HashData 錯誤,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（交易退款 API）
+ezpay,STRD0010,商店不為啟用狀態,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（交易退款 API）
+ezpay,STRD0011,加密資料不得為空,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（交易退款 API）
+ezpay,STRD0012,TimeStamp 不得為空,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（交易退款 API）
+ezpay,STRD0013,MerchantRefundNo 不得為空,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（交易退款 API）
+ezpay,STRD0014,RefundType 不得為空,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（交易退款 API）
+ezpay,STRD0015,Currency 不得為空,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（交易退款 API）
+ezpay,STRD0016,RefundAmt 不得為空,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（交易退款 API）
+ezpay,STRD0017,RefundBarCode、MerchantOrderNo、 TradeNo，其中之一不得為空,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（交易退款 API）
+ezpay,STRD0018,RefundBarCode、MerchantOrderNo、 TradeNo，不能同時帶入,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（交易退款 API）
+ezpay,STRD0019,MerchantRefundNo 不得超過 20 字元,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（交易退款 API）
+ezpay,STRD0020,RefundBarCode 不得超過 18 字元,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（交易退款 API）
+ezpay,STRD0021,MerchantOrderNo 不得超過 20 字元,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（交易退款 API）
+ezpay,STRD0022,TradeNo 不得超過 20 字元,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（交易退款 API）
+ezpay,STRD0023,RefundType 錯誤,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（交易退款 API）
+ezpay,STRD0024,Currency 錯誤,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（交易退款 API）
+ezpay,STRD0025,RefundAmt 必須為數字,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（交易退款 API）
+ezpay,STRD0026,RefundAmt 必須大於 0,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（交易退款 API）
+ezpay,STRD0027,商店自定義退款請求序號重複,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（交易退款 API）
+ezpay,STRD0028,此訂單交易不可退款(未付款 or 已全額退款),,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（交易退款 API）
+ezpay,STRD0201,取得訂單/交易資料失敗,,business,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（交易退款 API）
+ezpay,STRD0202,訂單狀態不為已付款狀態,,business,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（交易退款 API）
+ezpay,STRD0203,退款金額超過可退款金額,,business,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（交易退款 API）
+ezpay,STRD0204,訂單退款失敗,,business,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（交易退款 API）
+ezpay,STRD0205,訂單退款處理中,,business,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（交易退款 API）
+ezpay,STRD9999,系統異常,,system,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（交易退款 API）
+ezpay,SGTR0001,Version 不得為空,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單查詢 API）
+ezpay,SGTR0002,Version 錯誤,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單查詢 API）
+ezpay,SGTR0003,APIID 不得為空,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單查詢 API）
+ezpay,SGTR0004,APIID 錯誤,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單查詢 API）
+ezpay,SGTR0005,UID 不得為空,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單查詢 API）
+ezpay,SGTR0006,EncryptData 不得為空,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單查詢 API）
+ezpay,SGTR0007,HashData 不得為空,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單查詢 API）
+ezpay,SGTR0008,UID 錯誤,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單查詢 API）
+ezpay,SGTR0009,HashData 錯誤,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單查詢 API）
+ezpay,SGTR0010,商店不為啟用狀態,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單查詢 API）
+ezpay,SGTR0111,加密資料不得為空,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單查詢 API）
+ezpay,SGTR0112,TimeStamp 不得為空,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單查詢 API）
+ezpay,SGTR0113,APIID 不得為空,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單查詢 API）
+ezpay,SGTR0114,Version 不得為空,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單查詢 API）
+ezpay,SGTR0115,UID 不得為空,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單查詢 API）
+ezpay,SGTR0116,TradeNo、MerchantOrderNo，不能同時帶入,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單查詢 API）
+ezpay,SGTR0117,TradeNo、MerchantOrderNo，其中之一不得為空,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單查詢 API）
+ezpay,SGTR0118,MerchantOrderNo 不得超過 20 字元,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單查詢 API）
+ezpay,SGTR0119,TradeNo 不得超過 20 字元,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單查詢 API）
+ezpay,SGTR0120,商店未啟用簡單付 TWQR 交易,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單查詢 API）
+ezpay,SGTR0201,訂單查詢失敗,,business,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單查詢 API）
+ezpay,SGTR0202,交易結果查詢失敗,,business,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單查詢 API）
+ezpay,SGTR0203,跨機構交易詳細資料查詢失敗,,business,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單查詢 API）
+ezpay,SGTR9999,系統異常,,system,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單查詢 API）
+ezpay,SGRD0001,Version 不得為空,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（退款查詢 API）
+ezpay,SGRD0002,Version 錯誤,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（退款查詢 API）
+ezpay,SGRD0003,APIID 不得為空,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（退款查詢 API）
+ezpay,SGRD0004,APIID 錯誤,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（退款查詢 API）
+ezpay,SGRD0005,UID 不得為空,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（退款查詢 API）
+ezpay,SGRD0006,EncryptData 不得為空,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（退款查詢 API）
+ezpay,SGRD0007,HashData 不得為空,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（退款查詢 API）
+ezpay,SGRD0008,UID 錯誤,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（退款查詢 API）
+ezpay,SGRD0009,HashData 錯誤,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（退款查詢 API）
+ezpay,SGRD0010,商店不為啟用狀態,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（退款查詢 API）
+ezpay,SGRD0111,加密資料不得為空,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（退款查詢 API）
+ezpay,SGRD0112,TimeStamp 不得為空,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（退款查詢 API）
+ezpay,SGRD0113,Rtoken、MerchantRefundNo，其中之一不得為空,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（退款查詢 API）
+ezpay,SGRD0114,Rtoken、MerchantRefundNo，不能同時帶入,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（退款查詢 API）
+ezpay,SGRD0115,Rtoken 不得超過 64 字元,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（退款查詢 API）
+ezpay,SGRD0116,Rtoken 格式錯誤,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（退款查詢 API）
+ezpay,SGRD0117,MerchantRefundNo 不得超過 20 字元,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（退款查詢 API）
+ezpay,SGRD0201,取得訂單/交易資料失敗,,business,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（退款查詢 API）
+ezpay,SGRD9999,系統異常,,system,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（退款查詢 API）
+ezpay,MPG01000,送入參數檢查錯誤,,validation,error,ezPay 跨境網路交易串接手冊 1.0.1「九、錯誤代碼」（支付寶／微信 MPG）
+ezpay,MPG01010,程式版本錯誤,,validation,error,ezPay 跨境網路交易串接手冊 1.0.1「九、錯誤代碼」（支付寶／微信 MPG）
+ezpay,MPG01012,商店訂單編號錯誤,,validation,error,ezPay 跨境網路交易串接手冊 1.0.1「九、錯誤代碼」（支付寶／微信 MPG）
+ezpay,MPG01014,網址設定錯誤,,validation,error,ezPay 跨境網路交易串接手冊 1.0.1「九、錯誤代碼」（支付寶／微信 MPG）
+ezpay,MPG01015,訂單金額錯誤,,validation,error,ezPay 跨境網路交易串接手冊 1.0.1「九、錯誤代碼」（支付寶／微信 MPG）
+ezpay,MPG01016,時間戳記錯誤,,validation,error,ezPay 跨境網路交易串接手冊 1.0.1「九、錯誤代碼」（支付寶／微信 MPG）
+ezpay,MPG01017,商品資訊錯誤,,validation,error,ezPay 跨境網路交易串接手冊 1.0.1「九、錯誤代碼」（支付寶／微信 MPG）
+ezpay,MPG02002,查無商店開啟任何金流服務，請與客服聯繫,,business,error,ezPay 跨境網路交易串接手冊 1.0.1「九、錯誤代碼」（支付寶／微信 MPG）
+ezpay,MPG02003,金流服務未啟用，請洽客服中心,,business,error,ezPay 跨境網路交易串接手冊 1.0.1「九、錯誤代碼」（支付寶／微信 MPG）
+ezpay,MPG02004,送出後檢查，超過交易限制時間,,business,error,ezPay 跨境網路交易串接手冊 1.0.1「九、錯誤代碼」（支付寶／微信 MPG）
+ezpay,MPG02005,送出後檢查，驗證資料錯誤,,business,error,ezPay 跨境網路交易串接手冊 1.0.1「九、錯誤代碼」（支付寶／微信 MPG）
+ezpay,MPG02006,系統發生異常，請洽客服中心,,business,error,ezPay 跨境網路交易串接手冊 1.0.1「九、錯誤代碼」（支付寶／微信 MPG）
+ezpay,MPG03001,訂單資訊解密失敗,,business,error,ezPay 跨境網路交易串接手冊 1.0.1「九、錯誤代碼」（支付寶／微信 MPG）
+ezpay,MPG03004,商店狀態或屬性不符合，無法進行交易,,business,error,ezPay 跨境網路交易串接手冊 1.0.1「九、錯誤代碼」（支付寶／微信 MPG）
+ezpay,MPG03007,查無此商店代號,,business,error,ezPay 跨境網路交易串接手冊 1.0.1「九、錯誤代碼」（支付寶／微信 MPG）
+ezpay,MPG03008,已存在相同的商店訂單編號,,business,error,ezPay 跨境網路交易串接手冊 1.0.1「九、錯誤代碼」（支付寶／微信 MPG）
+ezpay,MPG03009,交易失敗,,business,error,ezPay 跨境網路交易串接手冊 1.0.1「九、錯誤代碼」（支付寶／微信 MPG）
 shopline,400,參數錯誤,Bad Request,validation,error,檢查 request body 與必填欄位
 shopline,401,認證失敗,Unauthorized,auth,error,檢查 merchantId / apiKey HTTP header
 shopline,403,沒有權限,Forbidden,auth,error,確認 API 權限與 IP 白名單

@@ -1,0 +1,159 @@
+{
+  "provider": "ezpay-payment",
+  "generator": "_studies/harness/ezpay_payment_vectors.py（值取自官方 PDF，並以 pycryptodome 核對自洽）",
+  "ewallet": {
+    "source": {
+      "file": "API_E_wallet_ezPay_1.0.0.pdf",
+      "doc_version": "W1.0.2 (2026-04-20)",
+      "url": "https://www.ezpay.com.tw/dw_files/api_files/API_E_wallet_ezPay_1.0.0.pdf"
+    },
+    "hash_key": "Ffp0r8VUgQYr8gwI4h87sDgF7xoJqvT5",
+    "hash_iv": "C5z8QsHpnJ6JH9bP",
+    "create_order": {
+      "note": "附件一 Step1–5：訂單建立請求",
+      "params": [
+        [
+          "TimeStamp",
+          "1761731065"
+        ],
+        [
+          "APIID",
+          "SCreateTWQR"
+        ],
+        [
+          "Version",
+          "1.0"
+        ],
+        [
+          "UID",
+          "PG300000725648"
+        ],
+        [
+          "Mode",
+          "1"
+        ],
+        [
+          "Template",
+          "STANDARD01"
+        ],
+        [
+          "LangType",
+          "1"
+        ],
+        [
+          "MerchantOrderNo",
+          "chris_1761731065"
+        ],
+        [
+          "NotifyURL",
+          "https://www.infotensor.com/newebmmpnotifyurl/"
+        ],
+        [
+          "ReturnURL",
+          "https://www.hashemian.com/tools/form-post-tester.php/54352706"
+        ],
+        [
+          "ClientBackURL",
+          "https://www.infotensor.com/"
+        ],
+        [
+          "Currency",
+          "TWD"
+        ],
+        [
+          "OrderAmt",
+          "5"
+        ],
+        [
+          "ItemDesc",
+          "測試環境交易1761731065"
+        ]
+      ],
+      "EncryptData": "7db234bfb394267d6e9c104ed6924f7f3af74b8f34948f89483f10fac7dec4eda3673902ded448fe1992bbcd5bb216f07a083fecb4a7304ff421520cb0587422af7f7f5c109235348275368070e5ac35551ff83914b11f875c89e377e825760b25288a74d8523ee848e9640b33e52ecda435818d0eb7b1ac5c1640a35552f3435adee2e64e145078f54873e91934ff7a58342f72d222a945c31910c93f7afb9b8c5800a4d9870698d4e11c912be194f76f1922070499a8a6f2d91c22cf6235ac8e1b471a9dd4461c0c8f04256782665fdc3f6869ec7fc6289226810c54fc11b16ccd96a865ce6adf32e4816b1a2fd7af7b33f0724b6f256a1fbf8bfdacabdea060e60fc6d617390c182cd077b2551f9dde3c5bef556d5c9ebb9b44e9fa523c0fed0e73e22b5a89262f4405a21c14c8b8829eb23e0d72e5e4ee27b8089b417c626754bd559f28025a0643a2435a3a0354ab5b3d457cc929bb1b91ae56de6d72943bbe5aef8c2543a3ab7909043590a9c8bfff774b3f9f440bf01fbe6f51ceabd057358de5fac0979687f61e3080640a70f086167d4014ceb3a0aa8ef0deea5f6270e0fd3e6ac79689db05b23b33373e5be54883694baa2e17a3f42810af3cacdb",
+      "HashData": "9172FC10722F45316601BD11257CF6CA506E77142332BD98E13EEC5A7EFC948C"
+    },
+    "create_order_response": {
+      "note": "附件一 Step6–8：伺服器回傳，解密後為 urlencoded 字串，Result 以 Result[Key] 攤平",
+      "EncryptData": "7db234bfb394267d6e9c104ed6924f7f07e694120f0ca883eb4bf8ba90ea786a59fc3593e06ee801cd7be3fdaaf9a7e464d03cde166b04f1ffca02c4840fd348dd7bcbf53eea240a8a9466c453766e3353f3980f71cd54a24ed0e7dbf722662f71228b0764831f09edf72828160defd6669fd8195426dd4ba7e30777c598984ce6c7f00f4c6dac3e8d4469515f57b36b8ab8ffe216a8d2090308122cc48b34ea64285a1ba1e75ff5721f002d66384c7f7874c7c838e8043bb37d43836ea7ef030c6db8bf4243e0fd95d563c8b622e516c4a0bdf5d7001fc50376db93981f1fad512f7310d3d4162498db9af40a7512bf872204153c62a85ce03d7979d940da7c96201c1373cb2dac94119d2430e4b442ed139de6b9cf195f3d16920f2706702b9ad5aa14e5eedf2d7a754bfa5dffaafffc15d6b7b6ba300bc30e547daa7d1d8341b52881e2342bfb8829a14fefcf347d7a68c77089d53a2d3d8c373355c213dcf3c234a1c9f5e17e3362fcd7446643f7d6ca1578abacca17d984aa81c114372e1cb9ebcffdb97701e613bf8094fc76183346e081373a8574f55d9b2257b05245db1b27cb10bb76ef248fb8a25e5eb757ce0e95681251b75276466d383284e00de5c92f362dd22837e5d45f55533963a07533e50f1fd8eec77b4c89d891e7f98c0276c7f30ac2d156e04997bd1b5e30abe52faa3e93abafedcaa6518c2011fe36064ac1d90da84fbf67aec1ad5476e29e54da7ae8fc65b23a609dc33c39eabdc3a2bf1e7c4579e1129d851a07aea6599ac02b1d8dcefefec8f54c965a936beae0d5541dee680310ec5d805acc895e248a6ec75c740dac2c44f5e94560933912e6942720b15dec6d1bf7b0b5040da7c0ce62369cf7269a5461db80eb648e1955e1a71e5fdcb5fdcc39d7121cb57ba9de58831a05c207e4aecab51932e6363e8df478ea864f38e962a76d037eaffa10c3886fcb6343bd991629842bf0facb7a844ede5c4f1adc9db69b72e2eae7eec8181f6bfcdc1cb8eb93209e8a98fcf97c57ac5c7d1895af71f2d072cde0e8918602008579c59ab78639436875d1de712ce562e9fc9c3b02bf71658c432e8fcf1728b3f6f610db623d28d5e473e1860d728aaaafe0d38ffc3c559f28a95cf0d03bdd124d6ea418690858a0ba786bf3b183c355723785bab73f4ebdc424b624ee6d5c62f048480afcaddbdb47024b1dca522212f8c8c6224b80c340330284d4e36ba47ccea2f832a6544f999c27bc00accfed970cf5205f0593e420e1cc3c60a20262ce9bed14f581bb8770bab3dd5c05f3ee4dd412b2bfad770bc7ad91c5f3cb2a0823ae57ed1fde53a3efb5a41a69148c795a85574e35212634a3012785e471cdc26fe5c5ebd48875fdea94d935ae0b4b85fcc52256644f39a4be96d735ec3e2b9b2c304d3ca53b0fe9f5ee8de12f2384799d854ea5eff503d4ccb2c6ddd962e58290db693a6f8b1262342a665d4c8ccb8d30954cba2325308bb752cabdfa110cd1d862e0a2983c5c6bc1181edbe5d7adeaaf235c023ff58aef6b89fe3a078d2be9c0f5c1e3b781b1275bc1baf2f7038c6cab2100ded3ddfacda5ce54058c2dfbeb75e6b4020e1ff910fb489357625ccd605f7924b0aa2398d9fb8822d069ea88a63e93877af189b5af931c8122ca3e22060cf488b343cb86679877438c89e37aef1b063d2ad854853baef7ebc42563fcb9c8af46e72f4497cb3e19d08a41b10fe21888947406b9c7abaf49b7cdc7f976c497b890cc760a14637845840688df48d8506b02af7d485e443d67c2624ce4b80e98d9fa0b3650df2aaeac605e0baa63e020abcf08d92768f0560a76a4d0a61bcb22cebb80db2447e76e6677b1440bc6939a8672a6c612202b4c86cc3edd884727c9",
+      "HashData": "587EA93F669DAC030215AC1C14228A19ACE2DF6037315AA425784A9C8B85ABFC",
+      "fields": {
+        "Status": "SUCCESS",
+        "Message": "訂單建立成功",
+        "APIID": "SCreateTWQR",
+        "Result[Ptoken]": "20ebac5db2342becee5fee0118db1a35fab2c8626c3cb87daa5b5a15f9d48140",
+        "Result[OrderStatus]": "1",
+        "Result[MerchantOrderNo]": "chris_1761731065",
+        "Result[TradeNo]": "EP2510291744259ND",
+        "Result[OrderAmt]": "5",
+        "Result[PaymentPageURL]": "https://cpayment.ezpay.com.tw/API/Twqr/WebPayment/9ca3b57ab59e406ebe889d7d13031782826c05b910073ab73669cd5d3c2ce59e",
+        "Result[TWQRCode]": "TWQRP%3A%2F%2FTEST1%2F158%2F01%2FV1%3FD3%3DTESTok6Me3Z8%26D11%3D00%2C3983980E0B2CC0Q001EP000001%3B01%2C3983980E0B2CC0Q001EP000001%26D1%3D500%26D2%3DEP2510291744259ND%26D12%3D20251029174925",
+        "ResponseType": "R1"
+      }
+    },
+    "aes_appendix2": {
+      "note": "附件二：AES256 範例（32-byte PKCS#7）",
+      "plain": "TimeStamp=1400137200&APIID=SGetTWQRRefund&Version=1.0&UID=300000000066&RscNo=12345678901234567890&MerchantRefundNo=12345678901234567890",
+      "EncryptData": "1eaab8a6e7614649770ba4888956af8ab3acc7e3775685c912bf5cb24eca1ee7fd310b29ce8b36f0e5f3ac55136c86b3345a51f86707de37b06119a45f3a3253c495177bfb324c5d1e2b0f814f8b17b1f2bf938c9f93df022b45343a125f3f2265c5127c483f974086672ab19450da1bd22bf790bf08aa37ce55d7b37a0460b53d795c5e048ed1458d36cb8d652ce6a8bcd6d532b01918903e6840860f1537c3"
+    },
+    "sha_appendix3": {
+      "note": "附件三：SHA256 範例（密文與附件二不同，但雜湊與其自身密文一致）",
+      "EncryptData": "1eaab8a6e7614649770ba4888956af8ab3acc7e3775685c912bf5cb24eca1ee7fd310b29ce8b36f0e5f3ac55136c86b3345a51f86707de37b06119a45f3a3253c495177bfb324c5d1e2b0f814f8b17b1f2bf938c9f93df022b45343a125f3f2265c5127c483f974086672ab19450da1bf7a3258f307b6da9140f4d3970070d9b165ecbb4ebab3a9e7253b1b94fbd333744591bd24c72c111db2b7c2fe171f918",
+      "HashData": "6EA74B4E5F8581059E634B881B21AAB1D9D0803CDDA115AC91E26643B2D6F303"
+    }
+  },
+  "cross_border": {
+    "source": {
+      "files": [
+        "API_Cross_Trans_ezPay_1.0.1.pdf",
+        "API_Cross_Trans_search_ezPay_1.0.1.pdf",
+        "API_Cross_Trans_refund_ezPay_1.0.3.pdf"
+      ]
+    },
+    "hash_key": "12345678901234567890123456789012",
+    "hash_iv": "1234567890123456",
+    "mpg": {
+      "note": "跨境網路交易 七、AES 範例；TradeSha 用公式重算（手冊印的值多算了一個空白，見 printed_TradeSha）",
+      "params": [
+        [
+          "MerchantID",
+          "PG100000004839"
+        ],
+        [
+          "TimeStamp",
+          "1537926805"
+        ],
+        [
+          "Version",
+          "1.0"
+        ],
+        [
+          "MerchantOrderNo",
+          "L_1537926805"
+        ],
+        [
+          "Amt",
+          "300"
+        ],
+        [
+          "ItemDesc",
+          "協助測試Test"
+        ]
+      ],
+      "TradeInfo": "1aa5a2068482a0bf4875cab87db3298a3de297950e77d1833ed157fb2d615b0021bdf1f23c9f623e0f010f05c35efe6e3cb0a9c3e74ef034c5878a728bd02ae6f6bc1abcbcd046d606f43931643088747af94538d2f5e86b27762e0b0d2267da8e3a317c40bdf6b3ff148772b34fd172bad997ad07ddbc185bfd4bb53c0e87b0bb9e98fc8abbe5d0a70f85015124a04e08efb211b523a3085160f1bb6d08f92a",
+      "TradeSha": "8A5386F93D4423DFE8EB231DC7FD3AA04D0D628B6B7F993FE9236FCF5FA41173",
+      "printed_TradeSha": "B5C41ADB811774488D0625CC18877C44AF4DD8A3B7BDCDE10A067BE864B7A2E3"
+    },
+    "query": {
+      "note": "跨境交易單筆查詢 六、七；手冊只印出 QuerySha 前 63 位",
+      "plain": "MerchantID=PG300000000055&TimeStamp=1490151807&Version=1.0&TradeNo=17032119492025163",
+      "QueryInfo": "89931dedfbc62460c637791dde28cfa465d13c5141dca0e7c5ab75bc66c9d459c49013fed7c8faeb22e6f3dd74df3de4af7b561b840c9f5dfcb85f733bb494113223f90283a2940d9b8b76cd78435776dbfea6482fddfb69c7ceb4426c1e73e9",
+      "QuerySha_prefix": "C3E070B85382AC933B8903AE0937A30237B183B67238F85A11167DADC586F92"
+    },
+    "refund": {
+      "note": "跨境交易退款 七、八；範例明文的 Version=1.0、RefundAmt 空白與規格表（2.1、必填）不一致，僅作演算法向量",
+      "plain": "MerchantID=PG300000000055&TimeStamp=1490151807&Version=1.0&RefundAmt=&TradeNo=17032119492025163",
+      "RefundInfo": "89931dedfbc62460c637791dde28cfa465d13c5141dca0e7c5ab75bc66c9d459c49013fed7c8faeb22e6f3dd74df3de4fa65814d4bfe3957c785b277013eda75fa874af40d52298a396eb415db5192031ee54574a1f7fccbec788fedb689b183",
+      "RefundSha": "D2A8955B812C6F7020C416EC51949232EA1D850BEA6804A269FF1AEB5A99CB9C"
+    }
+  }
+}

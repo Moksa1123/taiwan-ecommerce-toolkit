@@ -31,7 +31,7 @@
 | 6 | 愛金卡股份有限公司 | icash Pay | `icash_pay` / `icash` | ❌ 需簽約 |
 | 7 | 橘子支行動支付股份有限公司 | 橘子支付 GAMA PAY | *（尚未收錄）* | ❌ 需簽約 |
 | 8 | 歐付寶電子支付股份有限公司 | 歐付寶 O'Pay | — | ✅ [developers.opay.tw](https://developers.opay.tw/download/document)（見 [opay-payment-api.md](opay-payment-api.md)） |
-| 9 | 簡單行動支付股份有限公司 | ezPay 簡單付 | — | ⚠️ 需帳號（已收錄 [ezpay-payment-api.md](ezpay-payment-api.md)） |
+| 9 | 簡單行動支付股份有限公司 | ezPay 簡單付 | `twqr`（PaymentType=TWQR） | ✅ 官方 PDF 公開下載（已收錄 [ezpay-payment-api.md](ezpay-payment-api.md)） |
 | 10 | 連加電子支付股份有限公司 | LINE Pay Money | `linepay` 相關 | ✅ LINE Pay v4（已收錄 [linepay-payment-api.md](linepay-payment-api.md)） |
 
 **注意**：
@@ -49,9 +49,11 @@
 
 ## 2. 各聚合商的電支代碼對照
 
+> ezPay 簡單付不在本表：它是電支機構，街口、全支付、全盈+PAY、一卡通、悠遊付、icash Pay 等都以 **TWQR 跨機構交易**收款（`PaymentType=TWQR`），不分錢包代碼（ezPay 電子支付平台手冊 W1.0.2「規格介紹」）。
+
 ⚠️ **本表部分代碼標為推測，尚未由官方文件驗證**——已在 `data/payment-methods.csv` 用 `?` 標記。串接前務必以該聚合商的官方 PDF 確認。
 
-| 錢包 | ECPay | PAYUNi | NewebPay / ezPay | PayNow | TapPay |
+| 錢包 | ECPay | PAYUNi | NewebPay | PayNow | TapPay |
 |---|---|---|---|---|---|
 | 街口 | `DigitalPayment` umbrella | `JKoPay` ✅ | `JKOPAY?` 未驗證 | `JKOPAY?` 未驗證 | ✅ 有專屬文件 |
 | 全支付 | `DigitalPayment` umbrella ✅ | — | `PXPAY?` 未驗證 | — | ✅ 支援 |
@@ -142,7 +144,7 @@ BNPL 同理：ECPay 用 `BNPL` umbrella 承接 `BNPL_URICH`（裕富無卡分期
 
 | 項目 | 內容 |
 |---|---|
-| NewebPay / ezPay 電支代碼 | `JKOPAY?` `PXPAY?` `PLUSPAY?` `IPASSPAY?` `EASYCARD?` `ICASHPAY?` 皆為推測，不在已知 MPG channel-key 表中，須以官方 PDF 確認 |
+| NewebPay 電支代碼 | `JKOPAY?` `PXPAY?` `PLUSPAY?` `IPASSPAY?` `EASYCARD?` `ICASHPAY?` 皆為推測，不在已知 MPG channel-key 表中，須以官方 PDF 確認 |
 | 悠遊付代碼 | 悠遊付（wallet 產品）vs 悠遊卡（實體卡）可能是不同代碼，實際值可能為 `EASYWALLET` |
 | 橘子支付 GAMA PAY | 尚未加入 `payment-methods.csv`，需確認各聚合商是否支援及代碼 |
 | TapPay 錢包文件清單 | `docs.tappaysdk.com` 下各錢包子站（`/jko-pay/`、`/plus-pay/` 已確認存在）的完整列表 |

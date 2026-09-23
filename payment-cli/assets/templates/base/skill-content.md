@@ -11,7 +11,7 @@
 - `references/payuni-payment-api.md` - 統一金流 API 規格
 - `references/smilepay-payment-api.md` - 速買配 API 規格（PHP plugin 反推）
 - `references/pchomepay-payment-api.md` - 拍錢包 API 規格（含 Basic Auth → Token 兩階段認證）
-- `references/ezpay-payment-api.md` - ezPay 簡單付 API 規格（與藍新 Newebpay 同集團、同加密）
+- `references/ezpay-payment-api.md` - ezPay 簡單付 API 規格（電子支付平台 + 跨境；與藍新不同 API）
 - `references/paynow-payment-api.md` - 立吉富 API 規格（傳統版 cashflow + 現代版 PaymentIntent 雙 API）
 - `references/shopline-payment-api.md` - Shopline Payments API 規格（Redirect + Embedded SDK 雙模式）
 - `references/linepay-payment-api.md` - LINE Pay v4 API 規格（HMAC-SHA256 + Preapproved Pay）
@@ -109,7 +109,7 @@ python scripts/recommend.py "會員制 定期扣款" --format simple
 - **PAYUNi**: API、JSON、RESTful、統一、新創、AFTEE、iCash
 - **SmilePay**: 速買配、簡單、便宜、台灣老牌、PHP、ibon、FamiPort、聯合信用卡
 - **PChomePay**: 拍錢包、PChome、P 幣、Basic Auth、Token、虛擬帳號、超商代碼條碼、物流二合一
-- **ezPay**: 簡單付、藍新小型、低門檻、跨境、智冠、支付寶、微信
+- **ezPay**: 簡單付、電子支付、ezPay 錢包、約定連結帳戶、TWQR、跨機構、跨境、支付寶、微信
 - **PayNow**: 立吉富、Apple Pay、PaymentIntent、Stripe-like、JWT、票券、mPOS、現代+傳統雙 API
 - **Shopline**: SHOPLINE 商店、Redirect、Embedded SDK、街口、中租 BNPL、cents、HMAC-SHA256
 - **LINE Pay**: LINE、自動扣款、Preapproved、Capture、Void、跨國、Channel Secret、Nonce
@@ -122,7 +122,7 @@ python scripts/recommend.py "會員制 定期扣款" --format simple
 - PAYUNi: 大型專案、完整文檔
 - SmilePay: 多元電子錢包、現代 RESTful、跨境
 - PChomePay: 不在 PChome 生態系
-- ezPay: 大型商家、需要分期、需要完整支付方式
+- ezPay: 需要 ATM / 超商代碼 / 分期等收單型金流（ezPay 是電子支付平台，境內只收 ezPay 帳戶、約定帳戶、約定信用卡與 TWQR）
 - PayNow: 簡單需求（雙 API 學習成本高）
 - Shopline: 不在 SHOPLINE 商店生態
 - LINE Pay: 主要客戶不用 LINE
@@ -133,29 +133,13 @@ python scripts/recommend.py "會員制 定期扣款" --format simple
 快速測試金流服務商連線：
 
 ```bash
-# 測試 ECPay 連線
-python scripts/test_payment.py ecpay
+# 以官方測試向量驗證加解密實作，並檢查連線（僅支援下列三家）
+python scripts/test_payment.py --platform ecpay
+python scripts/test_payment.py --platform newebpay
+python scripts/test_payment.py --platform payuni
 
-# 測試 NewebPay 連線
-python scripts/test_payment.py newebpay
-
-# 測試 PAYUNi 連線
-python scripts/test_payment.py payuni
-
-# 測試 SmilePay 連線
-python scripts/test_payment.py smilepay
-
-# 測試 PChomePay 連線
-python scripts/test_payment.py pchomepay
-
-# 測試 ezPay 連線
-python scripts/test_payment.py ezpay
-
-# 測試 PayNow 連線
-python scripts/test_payment.py paynow
-
-# 測試所有服務商
-python scripts/test_payment.py all
+# 列出支援的平台
+python scripts/test_payment.py --list
 ```
 
 ---
@@ -197,13 +181,13 @@ python scripts/test_payment.py all
 
 | 特性 | ECPay | NewebPay | PAYUNi | SmilePay | PChomePay | ezPay | PayNow |
 |------|-------|----------|--------|----------|-----------|-------|--------|
-| 加密方式 | SHA256 | AES-256-CBC + SHA256 | AES-256-GCM + SHA256 | Verify_key + Mid_smilepay 加權 | HTTP Basic Auth → pcpay-token | 同 NewebPay (AES-256-CBC + SHA256) | 傳統: 動態 AES-256 (GP/GK 鑰); 現代: JWT Bearer |
-| API 風格 | Form POST | Form POST + AES | RESTful JSON | Form POST (回 XML) | RESTful JSON | Form POST + AES (相容 NewebPay) | 傳統: Form POST; 現代: RESTful JSON |
+| 加密方式 | SHA256 | AES-256-CBC + SHA256 | AES-256-GCM + SHA256 | Verify_key + Mid_smilepay 加權 | HTTP Basic Auth → pcpay-token | AES-256-CBC（32-byte padding）+ SHA256 HashData | 傳統: 動態 AES-256 (GP/GK 鑰); 現代: JWT Bearer |
+| API 風格 | Form POST | Form POST + AES | RESTful JSON | Form POST (回 XML) | RESTful JSON | Server POST（APIID + UID + EncryptData + HashData）；跨境為 MPG Form POST | 傳統: Form POST; 現代: RESTful JSON |
 | 測試/正式 URL | 不同 URL | 不同 URL | 不同 URL | 同 URL | 不同 URL | 不同 URL | 不同 URL |
-| 市佔率 | 最高 | 高 | 中等 | 中（老牌） | 中（PChome 生態） | 中（小型商家） | 中小（多角化） |
-| 支付方式 | 11 種 | 13 種 | 8 種 | 7 種（無多數行動支付） | 5 種（信用卡 + ATM + CVS + 拍錢包 + 取貨付款） | 同 NewebPay 但部分受限 | 傳統 7 種 / 現代 8 種（含 LINE Pay 線上+線下、Apple Pay 含延遲扣款） |
-| 特色 | 金流發票物流三合一 | MPG 整合、信用卡記憶 | RESTful、AFTEE、iCash | 簡單便宜、ibon、FamiPort | P 幣回饋、超商取貨付款、自帶物流 | 小型商家門檻低、跨境 | 雙 API、Stripe-like 現代設計、Apple Pay 完整、票券系統 |
-| 適用 | 高交易量電商 | 多元支付會員制 | 新創、Node.js | 預算有限、傳統 | PChome 生態 / 物流整合 | 個人賣家、月結金額不大 | 新創、Apple Pay、未來導向 |
+| 市佔率 | 最高 | 高 | 中等 | 中（老牌） | 中（PChome 生態） | 電子支付機構 | 中小（多角化） |
+| 支付方式 | 11 種 | 13 種 | 8 種 | 7 種（無多數行動支付） | 5 種（信用卡 + ATM + CVS + 拍錢包 + 取貨付款） | 境內 EPACC / ACCLINK / CREDIT / TWQR；跨境 ALIPAY / WECHAT | 傳統 7 種 / 現代 8 種（含 LINE Pay 線上+線下、Apple Pay 含延遲扣款） |
+| 特色 | 金流發票物流三合一 | MPG 整合、信用卡記憶 | RESTful、AFTEE、iCash | 簡單便宜、ibon、FamiPort | P 幣回饋、超商取貨付款、自帶物流 | TWQR 跨機構收款（台灣 Pay、街口、全支付…）、價金保管 | 雙 API、Stripe-like 現代設計、Apple Pay 完整、票券系統 |
+| 適用 | 高交易量電商 | 多元支付會員制 | 新創、Node.js | 預算有限、傳統 | PChome 生態 / 物流整合 | 要收 ezPay 錢包與 TWQR 的 ezPay 會員商店 | 新創、Apple Pay、未來導向 |
 
 ### ECPay 特性
 - **優勢**: 市佔率最高、穩定性最佳、文檔完整、社群資源豐富、測試帳號可用
@@ -236,10 +220,11 @@ python scripts/test_payment.py all
 - **特色**: 自帶 7-Eleven 取貨付款物流，notify IP 為 `113.196.231.190`（白名單必加）；測試環境用「金額尾數」觸發各種訂單情境
 
 ### ezPay 特性
-- **優勢**: 藍新金流小型商家品牌、上手門檻低、與 NewebPay MPG 完全相容
-- **加密**: 與 NewebPay 完全相同（AES-256-CBC + SHA256，TradeInfo / TradeSha）
-- **傳輸**: 與 NewebPay 完全相同（Form POST + AES）
-- **特色**: 同集團共用底層；MerchantID 與 HashKey 為 ezPay 獨立簽發；分期與部分電子錢包受限。**新串接通常直接走 NewebPay**，ezPay 只用於符合小型商家門檻的場景
+- **定位**: 電子支付機構（簡單行動支付，藍新金融科技集團）；收款方須為 ezPay 會員並開啟商店
+- **境內 API**: 電子支付平台 7 支 API（`/API/Twqr/SCreateTWQR` 等），外層 `APIID` + `UID` + `EncryptData` + `HashData`，回應解密後為 urlencoded（`Result[...]`）
+- **跨境 API**: 支付寶 / 微信走 MPG（`payment.ezpay.com.tw/MPG/mpg_gateway`，TradeInfo / TradeSha，Version 1.0）
+- **加密**: AES-256-CBC，**PKCS#7 以 32 bytes 補齊**（16 bytes 會與官方範例不符）＋ SHA256（`HashKey=..&密文&HashIV=..`）
+- **注意**: 與藍新 NewebPay **不是同一套 API**（網域、欄位、Version、支付工具都不同）；要 ATM、超商代碼、分期請用 NewebPay
 
 ### PayNow 特性
 - **優勢**: 雙 API 並行（傳統 + 現代）、現代版 PaymentIntent 設計接近 Stripe、Apple Pay 完整支援（含延遲扣款）、自帶票券系統

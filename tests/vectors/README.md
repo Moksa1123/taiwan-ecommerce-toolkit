@@ -17,6 +17,10 @@
 | `ezpay-invoice.json` | ezPay 電子發票規格書 EZP_INVI_1.2.2 附件一（執行結果與文件印出的 PostData_ 完全相同）、附件二 CheckCode 印出值；ry-woocommerce-ezpay-invoice 2.1.5 `args_encrypt()` |
 | `smilepay.json` | SmilePay 官方 WooCommerce 外掛 1.1.23 `check_mid()`（含 Smseid 不足 4 碼、非數字等邊界） |
 | `linepay.json` | yidas/line-pay-sdk-php（MIT）`getAuthSignature()` 直接載入執行，POST 另與 wpbr-linepay-tw 1.3.3 `generate_signature()` 比對 |
+| `ezpay-payment.json` | ezPay 簡單付官方 PDF（www.ezpay.com.tw/dw_files/api_files/）：電子支付平台手冊 W1.0.2 附件一（訂單建立請求與伺服器回傳）、附件二、附件三；跨境網路交易 1.0.1、單筆查詢 1.0.1、退款 1.0.3 的 AES / SHA256 範例。產生器 `_studies/harness/ezpay_payment_vectors.py` 先以 pycryptodome 確認手冊數值自洽才寫檔；跨境 MPG 範例印出的 TradeSha 是多算一個空白的結果，向量同時記錄印出值與正確值 |
+| `paynow.json` | PayNow 物流技術文件 v2.5（C2C）附錄一、附錄二與「建立物流單」範例（以文件密碼解密後重新加密可逐字還原）；PayNow_EInvoice V1.5 附件一；串接技術文件 V1.7.1.1 第 1.3、2.3 節 PassCode 範例 |
+| `sunpay.json` | 紅陽金流技術串接手冊 v1.1.0 4.2.1–4.2.3（回傳 rsamsg 以手冊公鑰解密、check_value 對未 urldecode 字串計算）；紅陽電子發票手冊 v2.3 第 8 章 Token 加密範例 |
+| `shopline.json` | **公式層級**：SHOPLINE Payments「簽章演算法」只給公式、官方範例值未附 signKey / body，無法逐字重現；以 PHP `hash_hmac` 依公式產生 |
 
 `payuni.json` 另與統一金流官方 PHP SDK（payuni/PHP_SDK）實際執行比對；`newebpay.json` 另含規格書中藍新伺服器實際產生的 CheckCode。
 

@@ -389,7 +389,7 @@ taiwan-ecommerce-toolkit/
 | **PAYUNi 統一** | AES-256-GCM + SHA256 | 信用卡 (Token) / ATM / CVS / **JKoPay** (街口) / **ICASH** (愛金卡) / **AFTEE** / LinePay | RESTful JSON、AFTEE 獨家 |
 | **SmilePay 速買配** | Verify_key + Mid_smilepay 加權檢核碼 | ATM / Barcode / ibon / FamiPort / 信用卡 / 分期 / 聯合信用卡 (Pay_zg=1/2/3/4/6/11) | XML 回應、Pay_zg 編碼 |
 | **PChomePay 拍錢包** | HTTP Basic Auth → 8h pcpay-token | 信用卡 (CARD) / ATM / 超商代碼 (BCODE) / **拍錢包 (PI, 5% P 幣回饋)** / 超商取貨 (IPL7/IPLFM/IPLHL) | 金物流二合一、PChome 生態 |
-| **ezPay 簡單付** | 同 NewebPay (AES-256-CBC) | 同 NewebPay（部分方案受限） | 藍新小型商家品牌 |
+| **ezPay 簡單付** | AES-256-CBC（32-byte padding）+ SHA256 HashData | ezPay 帳戶 / 約定連結帳戶 / 約定信用卡 / **TWQR 跨機構**；跨境支付寶 / 微信 | 電子支付機構、`/API/Twqr/*` |
 | **PayNow 立吉富** | JWT Bearer (現代) / 動態 AES-256 (傳統) | CreditCard / Installment / ATM / CVS / **LINE Pay 線上+線下** / **Apple Pay + ApplePayDeferred 延遲扣款** | 雙 API、Stripe-like PaymentIntent |
 | **Shopline Payments** | merchantId + apiKey HTTP Header | 信用卡 / Apple Pay / LINE Pay / 街口 / ATM / 中租 BNPL | RESTful JSON、金額以分為單位、HMAC-SHA256 Webhook |
 | **LINE Pay v4** | Channel ID + Secret + 每次 HMAC-SHA256 + Nonce | LINE Pay 直連、Preapproved Pay 自動扣款 | Request → Confirm 兩段、跨國 |
@@ -639,7 +639,7 @@ pip install pycryptodome requests
 | 演算法 | 應用 |
 |---|---|
 | **AES-128-CBC** | ECPay 電子發票 |
-| **AES-256-CBC** | NewebPay / ezPay 金流（共用 MPG）、ezPay 發票、NewebPay 物流 |
+| **AES-256-CBC** | NewebPay 金流、ezPay 金流（電子支付平台 / 跨境 MPG，32-byte padding）、ezPay 發票、NewebPay 物流 |
 | **AES-256-GCM** | PAYUNi 金流 / 物流（EncryptInfo = hex(base64(密文) + `:::` + base64(tag))） |
 | **動態 AES-256 (GP/GK)** | PayNow 傳統 cashflow（每次以 GP/GK 檢核碼取 Key/IV） |
 | **3DES / ECB / Zero-Padding** | **PayNow 物流**（24-byte Key + 8-byte IV，不同於金流端 AES-256） |
@@ -649,7 +649,7 @@ pip install pycryptodome requests
 | **HMAC-SHA256 + Nonce** | LINE Pay v4 |
 | **HMAC-SHA256 (Webhook)** | Shopline Payments |
 | **Partner Key + Prime 兩段式** | TapPay（PCI 隔離） |
-| **SHA256** | ECPay/NewebPay/PAYUNi/ezPay 多家用作 CheckMacValue / TradeSha / HashInfo / CheckCode |
+| **SHA256** | ECPay/NewebPay/PAYUNi/ezPay 多家用作 CheckMacValue / TradeSha / HashInfo / HashData / CheckCode |
 | **MD5** | Amego 發票、ECPay 物流 |
 
 ---

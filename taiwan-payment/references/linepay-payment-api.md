@@ -49,7 +49,7 @@ LINE Pay 是 LINE Corporation 提供的電子支付服務，整合了信用卡�
 3. 自商家後台取得 **Channel ID** 與 **Channel Secret**
 4. 設定支付完成回調網址（`confirmUrl`、`cancelUrl`）
 
-> **簽章公式已查證**：與 LINE Pay Developers 文件的公式一致，並與 yidas/line-pay-sdk-php `getAuthSignature()`、wpbr-linepay-tw 1.3.3 `generate_signature()` 實際執行結果逐字比對（`tests/vectors/linepay.json`）；下方 Python / Node.js 範例由 CI 驗證。v3 與 v4 的簽章方式相同，只有路徑前綴不同。
+> **簽章公式已查證**：與 LINE Pay Developers 文件的公式一致，並與 yidas/line-pay-sdk-php `getAuthSignature()`、wpbr-linepay-tw 1.3.3 `generate_signature()` 實際執行結果逐字比對（`tests/vectors/linepay.json`）；下方 Python / Node.js 範例由 CI 驗證。v3 與 v4 的簽章方式相同，只有路徑前綴不同（官方 developers-pay.line.me/online/prerequisites 的 MAC 公式不分版本；API 變更紀錄 2025-11 亦寫 HMAC「same as online API v3, v4」）。
 
 ---
 

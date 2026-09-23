@@ -1234,16 +1234,21 @@ PChomePay 採用 **HTTP Basic Auth → pcpay-token** 兩階段認證：先用 AP
 
 ## ezPay 簡單付範例
 
-ezPay 是藍新 NewebPay 集團的小型商家品牌，金流 API **與 NewebPay MPG 完全相同**（TradeInfo / TradeSha / AES-256-CBC + SHA256），只在 MerchantID、HashKey、URL 與部分付款方式上有差異。
+ezPay 簡單付是**電子支付機構**，官方提供兩組 API（演算法相同、欄位與網址不同）：
+
+- **電子支付平台（境內）**：`https://(c)payment.ezpay.com.tw/API/Twqr/{APIID}`，外層 `APIID` + `Version=1.0` + `UID` + `EncryptData` + `HashData`；
+  收 ezPay 帳戶、約定連結存款帳戶、ezPay 約定信用卡與 **TWQR**（台灣 Pay、街口、全支付…掃碼）。
+- **跨境（支付寶 / 微信）**：`https://(c)payment.ezpay.com.tw/MPG/mpg_gateway`，`TradeInfo` / `TradeSha`，Version 1.0。
 
 ### 完整 Python 範例
-請見 [`examples/ezpay-payment-example.py`](examples/ezpay-payment-example.py) — 由 `newebpay-payment-example.py` 衍生，凸顯差異點。
+請見 [`examples/ezpay-payment-example.py`](examples/ezpay-payment-example.py)：`EzPayWalletService`（7 支境內 API）與
+`EzPayCrossBorderService`（跨境 MPG、查詢、退款），內建官方手冊的已知答案測試。
 
 ### 三大要點
 
-1. **加密邏輯完全照抄 NewebPay**：可直接複用同一份加解密 helper。
-2. **URL 不同**：ezPay 沙箱 `https://ccore.spgateway.com/MPG/mpg_gateway`（spgateway.com 是舊網域，仍可用）。
-3. **付款方式受限**：分期、部分電子錢包在 ezPay 計劃下不可用；以後台啟用為準。
+1. **AES 以 32 bytes 補齊**：`EncryptData = hex(AES-256-CBC(urlencode(參數)))`，PKCS#7 區塊大小 32；用 16 bytes 補齊會與官方範例不符。
+2. **回應是 urlencoded，不是 JSON**：電子支付平台的 EncryptData 解密後是 `Status=SUCCESS&...&Result%5BTradeNo%5D=...`，要自行把 `Result[...]` 還原成巢狀；跨境才是 JSON。
+3. **不是藍新 NewebPay**：網域、外層欄位、Version、支付工具都不同。舊版本文件說「與 NewebPay MPG 完全相同」並指向 `spgateway.com`，是錯的。
 
 ---
 
@@ -1279,7 +1284,7 @@ Shopline Payments (SLP) 採 **HTTP Header `merchantId` + `apiKey`** 認證，所
 
 1. **金額是分（cents）**：NT$1,050 要傳 `value: 105000`，弄錯會差 100 倍。
 2. **僅支援 TWD**：`currency` 固定為 `TWD`；其他幣別不支援。
-3. **Webhook 驗章**：`x-slp-signature: sha256=<hex>` header，HMAC-SHA256 用 `webhookSecret` 對 raw body 簽。**用 raw bytes，不要 parse JSON 後再 stringify**（會差換行/空白）。
+3. **Webhook 驗章**：header 帶 `timestamp`（毫秒）與 `sign`；`sign = HMAC-SHA256(signKey, f"{timestamp}.{rawBody}")` 的 hex。**用原始 body，不要 parse JSON 後再 stringify**（會差換行/空白），並檢查 timestamp 防重放。
 
 ---
 
@@ -1292,9 +1297,9 @@ LINE Pay 採 **兩段式流程**：`Request → Confirm`。每次請求需產生
 
 ### 五大要點
 
-1. **HMAC string-to-sign 公式（v3 慣例）**：`ChannelSecret + ApiPath + Body + Nonce` (POST) / `ChannelSecret + ApiPath + QueryString + Nonce` (GET)。⚠️ v4 公式與 v3 是否完全一致需以官方 PDF 驗證。
+1. **HMAC string-to-sign 公式**：`ChannelSecret + ApiPath + Body + Nonce` (POST) / `ChannelSecret + ApiPath + QueryString + Nonce` (GET)，結果 Base64。v3、v4 相同（官方 developers-pay.line.me/online/prerequisites；API 變更紀錄亦寫「same as online API v3, v4」）。
 2. **transactionId 是 19 位數字**：在 JS 直接用 number 會被 IEEE-754 截斷，**永遠用字串處理**。
-3. **Confirm 的 amount/currency 必須與 Request 完全一致**：差一塊錢就 1183 錯誤。
+3. **Confirm 的 amount/currency 必須與 Request 完全一致**：官方 v4 Confirm 的相關錯誤碼含 `1124`（金額資訊錯誤）；`1183` 是「低於最低金額」，不在 Confirm 的錯誤清單。
 4. **Capture 兩階段授權**：建立時 `options.payment.capture=false` 只授權；之後手動呼叫 `/capture` 請款，可分批請款多次。
 5. **Preapproved Pay 自動扣款**：建立時帶 `payType=PREAPPROVED` 取得 `regKey`，之後用 `/preapprovedPay/{regKey}/payment` 直接扣款，免使用者再次確認。
 

@@ -123,18 +123,16 @@ def test_payuni():
 
 
 # ---------------------------------------------------------------------------
-# 3. 藍新 NewebPay / ezPay（ezPay 金流與藍新共用同一套 MPG 加密）
+# 3. 藍新 NewebPay
 # ---------------------------------------------------------------------------
 
 def test_newebpay():
     v = load_vectors('newebpay')
-    print(f'\n3. 藍新 / ezPay 金流（標準答案出處：{v["sources"]["plugin"]}；{v["sources"]["spec"]}）')
+    print(f'\n3. 藍新金流（標準答案出處：{v["sources"]["plugin"]}；{v["sources"]["spec"]}）')
 
     neweb = load_module('taiwan-payment/examples/newebpay-payment-example.py')
-    ezpay = load_module('taiwan-payment/examples/ezpay-payment-example.py')
     services = {
         'newebpay': neweb.NewebPayMPGService('MS12345678', v['hash_key'], v['hash_iv']),
-        'ezpay': ezpay.EzPayPaymentService('MS12345678', v['hash_key'], v['hash_iv']),
     }
 
     for label, svc in services.items():
@@ -250,6 +248,65 @@ def test_ecpay():
           lambda: isvc.decrypt_data(a['response_encrypted']) == a['response_data'])
     req = isvc.build_request({'MerchantID': '2000132'}, timestamp=1758600000)
     check('[發票] 請求帶 RqHeader.Revision=3.0.0', req['RqHeader'].get('Revision') == '3.0.0')
+
+
+# ---------------------------------------------------------------------------
+# 3b. ezPay 簡單付 金流（電子支付平台 + 跨境）
+# ---------------------------------------------------------------------------
+
+def test_ezpay_payment():
+    v = load_vectors('ezpay-payment')
+    w, x = v['ewallet'], v['cross_border']
+    print(f'\n3b. ezPay 簡單付 金流（標準答案出處：{w["source"]["file"]} {w["source"]["doc_version"]}；'
+          f'{"、".join(x["source"]["files"])}）')
+    mod = load_module('taiwan-payment/examples/ezpay-payment-example.py')
+    key, iv = w['hash_key'], w['hash_iv']
+
+    c = w['create_order']
+    params = [tuple(p) for p in c['params']]
+    head = {'TimeStamp', 'APIID', 'Version', 'UID'}
+    svc = mod.EzPayWalletService(dict(params)['UID'], key, iv)
+    form = svc.build_request('SCreateTWQR', [p for p in params if p[0] not in head],
+                             timestamp=int(dict(params)['TimeStamp']))
+    check('[ezPay 電支] 附件一 訂單建立 EncryptData 逐位元組相同', form['EncryptData'] == c['EncryptData'])
+    check('[ezPay 電支] 附件一 HashData 相同', form['HashData'] == c['HashData'])
+    check('[ezPay 電支] 外層欄位為 APIID/Version/UID/EncryptData/HashData',
+          sorted(form) == ['APIID', 'EncryptData', 'HashData', 'UID', 'Version'])
+
+    r = w['create_order_response']
+
+    def _resp():
+        parsed = svc.parse_response({'Status': 'SUCCESS', 'EncryptData': r['EncryptData'], 'HashData': r['HashData']})
+        flat = {k: val for k, val in parsed.items() if k != 'Result'}
+        flat.update({f'Result[{k}]': val for k, val in parsed['Result'].items()})
+        return all(flat.get(k) == val for k, val in r['fields'].items())
+    check('[ezPay 電支] 附件一 伺服器回傳：驗 HashData、解密、Result[...] 還原', _resp)
+    check('[ezPay 電支] 回傳 HashData 竄改會被拒絕', raises(lambda: svc.parse_response(
+        {'EncryptData': r['EncryptData'], 'HashData': '0' * 64})))
+    a2 = w['aes_appendix2']
+    check('[ezPay 電支] 附件二 AES（32-byte PKCS#7）逐位元組相同',
+          lambda: mod.encrypt(a2['plain'], key, iv) == a2['EncryptData'])
+    check('[ezPay 電支] 附件二 解密還原', lambda: mod.decrypt(a2['EncryptData'], key, iv) == a2['plain'])
+    a3 = w['sha_appendix3']
+    check('[ezPay 電支] 附件三 SHA256 相同', lambda: mod.hash_data(a3['EncryptData'], key, iv) == a3['HashData'])
+    check('[ezPay 電支] 金鑰錯誤時解密失敗', raises(lambda: mod.decrypt(a2['EncryptData'], 'x' * 32, iv)))
+
+    k2, iv2 = x['hash_key'], x['hash_iv']
+    m = x['mpg']
+    mp = dict(m['params'])
+    cross = mod.EzPayCrossBorderService(mp['MerchantID'], k2, iv2)
+    mpg = cross.build_mpg_form(mp['MerchantOrderNo'], mp['Amt'], mp['ItemDesc'], timestamp=int(mp['TimeStamp']))
+    check('[ezPay 跨境] MPG TradeInfo 與手冊逐位元組相同', mpg['fields']['TradeInfo'] == m['TradeInfo'])
+    check('[ezPay 跨境] TradeSha 依公式（手冊印的值多算了一個空白，見向量說明）',
+          mpg['fields']['TradeSha'] == m['TradeSha'] and m['TradeSha'] != m['printed_TradeSha'])
+    check('[ezPay 跨境] MPG 網址為 ezPay 網域', mpg['action'] == 'https://cpayment.ezpay.com.tw/MPG/mpg_gateway')
+    q = x['query']
+    check('[ezPay 跨境] 查詢 QueryInfo 逐位元組相同', lambda: mod.encrypt(q['plain'], k2, iv2) == q['QueryInfo'])
+    check('[ezPay 跨境] QuerySha 與手冊印出的 63 位相符',
+          lambda: mod.hash_data(q['QueryInfo'], k2, iv2).startswith(q['QuerySha_prefix']))
+    rf = x['refund']
+    check('[ezPay 跨境] 退款 RefundInfo 逐位元組相同', lambda: mod.encrypt(rf['plain'], k2, iv2) == rf['RefundInfo'])
+    check('[ezPay 跨境] RefundSha 相同', lambda: mod.hash_data(rf['RefundInfo'], k2, iv2) == rf['RefundSha'])
 
 
 # ---------------------------------------------------------------------------
@@ -691,7 +748,26 @@ def _check_snippet_paynow_passcode(ns):
                                          order['apicode']) == order['PassCode'])
 
 
+def _check_snippet_ezpay(ns):
+    import urllib.parse
+    v = load_vectors('ezpay-payment')
+    w, x = v['ewallet'], v['cross_border']
+    c, r = w['create_order'], w['create_order_response']
+    key, iv = w['hash_key'], w['hash_iv']
+    params = [tuple(p) for p in c['params']]
+    ok = (ns['encrypt_data'](params, key, iv) == c['EncryptData']
+          and ns['hash_data'](c['EncryptData'], key, iv) == c['HashData']
+          and ns['hash_data'](r['EncryptData'], key, iv) == r['HashData']
+          and 'Result%5BTradeNo%5D=' + r['fields']['Result[TradeNo]'] in ns['decrypt_data'](r['EncryptData'], key, iv))
+    # 附件二的明文長度 mod 32 < 16：只有 32-byte padding 能重現，用來抓 pad(data, 16) 的寫法
+    a2 = w['aes_appendix2']
+    ok = ok and ns['encrypt_data'](urllib.parse.parse_qsl(a2['plain']), key, iv) == a2['EncryptData']
+    m = x['mpg']
+    return ok and ns['encrypt_data']([tuple(p) for p in m['params']], x['hash_key'], x['hash_iv']) == m['TradeInfo']
+
+
 SNIPPET_CHECKERS = {
+    'ezpay': _check_snippet_ezpay,
     'paynow-3des': _check_snippet_paynow_3des,
     'paynow-passcode': _check_snippet_paynow_passcode,
     'linepay-sign': _check_snippet_linepay,
@@ -820,7 +896,7 @@ def main():
         return 1
 
     test_imports()
-    for section in (test_payuni, test_newebpay, test_ecpay, test_ezpay_invoice, test_smilepay, test_linepay, test_opay_invoice, test_paynow_logistics, test_sunpay, test_shopline, test_example_self_tests, test_scripts, test_doc_snippets, test_invoice_generator):
+    for section in (test_payuni, test_newebpay, test_ezpay_payment, test_ecpay, test_ezpay_invoice, test_smilepay, test_linepay, test_opay_invoice, test_paynow_logistics, test_sunpay, test_shopline, test_example_self_tests, test_scripts, test_doc_snippets, test_invoice_generator):
         try:
             section()
         except Exception as e:  # noqa: BLE001 - 單一區段炸掉不能讓其餘區段不跑

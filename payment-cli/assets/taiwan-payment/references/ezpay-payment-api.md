@@ -1,692 +1,334 @@
-# ezPay 簡單付 Payment API Reference
+# ezPay 簡單付 金流 API Reference
 
-ezPay 簡單付 (簡單行動支付股份有限公司) 金流 API 完整參考文件。
-
-> **重要說明**
+> **依官方技術串接手冊撰寫，加解密已與手冊範例逐位元組比對**（`tests/vectors/ezpay-payment.json`，
+> CI 執行 `scripts/verify-examples.py`）。
 >
-> ezPay 簡單付為藍新金流 Newebpay 集團旗下小型商家品牌，金流端 API 與 Newebpay MPG 完全相同（TradeInfo / TradeSha 加密、相同欄位、相同流程），差異主要在商家身份、URL 與部分付款方式限制。本文件聚焦 ezPay 特有差異；金流主流程請參考 [`newebpay-payment-api.md`](./newebpay-payment-api.md)。
+> 官方 API 文件頁：<https://www.ezpay.com.tw/info/Service_intro/api_document/member>（2026-09 擷取）
+>
+> | 手冊 | 版本 | 內容 |
+> |------|------|------|
+> | `API_E_wallet_ezPay_1.0.0.pdf` 電子支付平台技術串接手冊（標準版） | 程式 1.0.0／文件 W1.0.2（2026-04-20） | 境內收款：7 支 API |
+> | `API_Cross_Trans_ezPay_1.0.1.pdf` 跨境網路交易串接手冊 | 1.0.1 | 支付寶／微信 MPG |
+> | `API_Cross_Trans_search_ezPay_1.0.1.pdf` 跨境交易單筆查詢 | 1.0.1 | QueryInfo |
+> | `API_Cross_Trans_refund_ezPay_1.0.3.pdf` 跨境交易退款 | 1.0.3 | RefundInfo |
+
+> ⚠️ **舊版本的本文件是錯的。** 它把 ezPay 寫成「與藍新 NewebPay MPG 完全相同」，網址用藍新舊網域
+> `ccore.spgateway.com`、Version 2.0、付款方式列信用卡/ATM/超商…。ezPay 官方手冊實際上是：
+> 境內走全新的**電子支付平台 API**（`/API/Twqr/*`、APIID + UID + EncryptData + HashData），
+> 只有**跨境（支付寶/微信）**才是 MPG 形式，且網域是 `payment.ezpay.com.tw`、Version 1.0。
 
 ---
 
 ## 目錄
 
-1. [基本說明](#基本說明)
-2. [環境資訊](#環境資訊)
-3. [認證方式](#認證方式)
-4. [訂單建立](#訂單建立)
-5. [付款通知](#付款通知)
-6. [退款](#退款)
-7. [訂單查詢](#訂單查詢)
-8. [錯誤代碼](#錯誤代碼)
-9. [支付方式對照表](#支付方式對照表)
-10. [與 Newebpay 差異總表](#與-newebpay-差異總表)
+1. [ezPay 是什麼](#ezpay-是什麼)
+2. [加解密（兩組 API 共用）](#加解密兩組-api-共用)
+3. [電子支付平台 API（境內）](#電子支付平台-api境內)
+4. [跨境網路交易 API](#跨境網路交易-api)
+5. [錯誤代碼](#錯誤代碼)
+6. [手冊中的不一致之處](#手冊中的不一致之處)
+7. [與藍新 NewebPay 的差異](#與藍新-newebpay-的差異)
 
 ---
 
-## 基本說明
+## ezPay 是什麼
 
-### 品牌定位
+簡單行動支付股份有限公司（藍新金融科技集團）經營的**電子支付機構**。收款方必須是 ezPay 會員並開啟商店；
+交易皆為實名、並有價金保管。電子支付平台支援的支付工具（手冊「規格介紹」）：
 
-| 項目 | 說明 |
+| PaymentType | 說明 |
+|-------------|------|
+| `EPACC` | ezPay 電子支付帳戶餘額付款（先扣儲值帳戶，不足再扣收款帳戶） |
+| `ACCLINK` | 約定連結存款帳戶付款 |
+| `CREDIT` | ezPay 約定本人信用卡付款 |
+| `TWQR` | TWQR 整合支付（跨機構：台灣 Pay、街口、全支付、悠遊付、一卡通、icash Pay、全盈+PAY、歐付寶、橘子支付、玉山 Wallet…） |
+
+EPACC / ACCLINK / CREDIT 是**自機構交易**（付款方用 ezPay）；TWQR 是**跨機構交易**（付款方用其他電子錢包掃碼）。
+
+---
+
+## 加解密（兩組 API 共用）
+
+| 步驟 | 內容 |
 |------|------|
-| **品牌名稱** | ezPay 簡單付 |
-| **公司** | 簡單行動支付股份有限公司 |
-| **集團母品牌** | 藍新金流 Newebpay (智冠科技集團) |
-| **歷史品牌** | Pay2Go（早期 spgateway 域名沿用至今） |
-| **服務對象** | 中小型商家、個人賣家、小規模 e-commerce |
-| **金流主管機關** | 金管會核准之第三方支付機構 |
+| 1 | 參數以 `urlencode`（`http_build_query`）組成字串 |
+| 2 | AES-256-CBC，Key = HashKey（32 字元）、IV = HashIV（16 字元），**PKCS#7 以 32 bytes 為區塊**（手冊：BlockSize=32） |
+| 3 | 密文轉小寫十六進位 → `EncryptData`（跨境為 `TradeInfo` / `QueryInfo` / `RefundInfo`） |
+| 4 | `SHA256("HashKey={HashKey}&{密文}&HashIV={HashIV}")` 轉大寫 → `HashData`（跨境為 `TradeSha` / `QuerySha` / `RefundSha`） |
 
-### 與 Newebpay 的關係
+> **32-byte padding 是必要的。** 電子支付平台手冊附件二的範例只有用 32 bytes 補齊才能重現；
+> 用 AES 標準的 16 bytes（例如 `Crypto.Util.Padding.pad(data, 16)`）加密出來的密文不同。
 
-ezPay 與 Newebpay **後端為同一套金流系統**，故：
-
-- **API 演算法 100% 相同** — 同樣使用 `TradeInfo` (AES-256-CBC + Hex) + `TradeSha` (SHA256)
-- **欄位名稱 100% 相同** — `MerchantID` / `MerchantOrderNo` / `Amt` / `ItemDesc` / `RespondType` / `Version` / `TimeStamp` / `NotifyURL` / `ReturnURL` 等全部相同
-- **回傳格式 100% 相同** — Notify/Return 的 TradeInfo 解密後 JSON 結構一致
-- **錯誤碼前綴相同** — 共用 `MPG*`, `TRA*`, `VACC*`, `CVS*` 等錯誤碼體系
-
-主要差異：
-
-1. **商家申請門檻** — ezPay 主打小型商家、無需公司行號即可申請
-2. **API 域名** — 沿用早期 Pay2Go 的 `spgateway.com` 域名（部分老商家），新版可能使用 `ezpay.com.tw` 域名
-3. **MerchantID 命名** — ezPay 開立的 MerchantID 通常以 `EZ` 系列前綴開頭（與 Newebpay 的 `MS` 系列區隔）
-4. **支付方式限制** — 部分付款方式（例如分期付款、特定電子錢包）對小型商家有額外限制
-5. **手續費結構** — 費率與商家方案綁定（屬於商務面議題，本文不展開）
-
-### 適用情境
-
-選擇 ezPay 的常見原因：
-
-- 個人賣家或無公司行號商家
-- 月交易量低（< 一定門檻）
-- 需要快速開通（審核時間較短）
-- 想要使用 LINE Pay / 街口 / 簡單付錢包等電子錢包但月流水未達 Newebpay 標準
-
-> **如果你已經有 Newebpay 帳號**：直接用 Newebpay，不需要再開 ezPay。兩者 API 同源，但 Newebpay 商家方案費率與功能更完整。
-
----
-
-## 環境資訊
-
-### API 端點（核心差異）
-
-| 環境 | Newebpay | ezPay 簡單付 |
-|------|----------|--------------|
-| **正式環境 (Production)** | `https://core.newebpay.com` | `https://core.spgateway.com` 或 `https://www.ezpay.com.tw` |
-| **測試環境 (Sandbox)** | `https://ccore.newebpay.com` | `https://ccore.spgateway.com` 或 `https://cwww.ezpay.com.tw` |
-
-> **域名歷史脈絡**：
-> - `spgateway.com` = 早期 Pay2Go 時代的域名，目前 ezPay 與 Newebpay 後端都仍可解析此域名（向下相容）
-> - `ezpay.com.tw` = 簡單付主品牌域名
-> - `newebpay.com` = 藍新金流主品牌域名
->
-> 三組域名指向**同一套底層金流系統**，路徑與參數完全相同。實際整合時請以 ezPay 後台「商店資料設定」中提供的 URL 為準。
-
-### 端點列表
-
-| 功能 | 路徑 | 說明 |
-|------|------|------|
-| MPG 交易 | `/MPG/mpg_gateway` | 幕前支付頁面（form POST） |
-| 單筆查詢 | `/API/QueryTradeInfo` | 查詢交易狀態 |
-| 取消授權 | `/API/CreditCard/Cancel` | 取消信用卡授權 |
-| 請款/退款 | `/API/CreditCard/Close` | 信用卡請款 / 退款 |
-| 電子錢包退款 | `/API/EWallet/refund` | 錢包類退款 |
-
-### 後台與帳號開通
-
-```
-官方網站: https://www.ezpay.com.tw/
-後台路徑: 會員中心 > 商店管理 > 商店資料設定 > 串接設定
-```
-
-需取得：
-
-- **商店代號 (MerchantID)** — ezPay 發行
-- **Hash Key** — 32 字元
-- **Hash IV** — 16 字元
-
-> 沙箱測試帳號需自行於 ezPay 後台申請，無公開共用測試 Merchant。
-
-### 測試信用卡
-
-| 卡號 | 備註 |
-|------|------|
-| `4000-2211-1111-1111` | 一般測試卡（與 Newebpay 共用） |
-
-- **有效期限**：任意未過期日期 (MMYY)
-- **CVV**：任意 3 碼
-
----
-
-## 認證方式
-
-> **與 Newebpay 完全相同**：AES-256-CBC + SHA256。詳細演算法請參考 [`newebpay-payment-api.md`](./newebpay-payment-api.md#加解密機制)。
-
-### TradeInfo 產生流程
-
-```
-1. 組合所有交易參數為 query string (key=value&key=value)
-2. 以 HashKey 為 key、HashIV 為 IV，AES-256-CBC + PKCS#7 padding 加密
-3. 加密結果轉小寫 Hex 字串 → TradeInfo
-```
-
-### TradeSha 產生流程
-
-```
-TradeSha = SHA256("HashKey={HashKey}&{TradeInfo}&HashIV={HashIV}")
-         .toUpperCase()
-```
-
-### PHP 範例（與 Newebpay 完全相同）
-
-<!-- verify: newebpay -->
-```php
-<?php
-
-class EzPayEncryption
-{
-    public function __construct(
-        private string $hashKey,
-        private string $hashIV
-    ) {}
-
-    public function encrypt(array $params): string
-    {
-        $queryString = http_build_query($params);
-        $encrypted = openssl_encrypt(
-            $queryString,
-            'AES-256-CBC',
-            $this->hashKey,
-            OPENSSL_RAW_DATA,
-            $this->hashIV
-        );
-        return bin2hex($encrypted);
-    }
-
-    /**
-     * AES-256-CBC 解密（與藍新官方外掛 create_aes_decrypt() 相同）
-     *
-     * 官方外掛加密時以 32 bytes 區塊補齊，padding 可能是 17–32；
-     * 直接用 OPENSSL_RAW_DATA（預設 PKCS#7，只接受 1–16）會解密失敗回傳 false。
-     */
-    public function decrypt(string $encryptedData): array
-    {
-        $decrypted = openssl_decrypt(
-            hex2bin($encryptedData),
-            'AES-256-CBC',
-            $this->hashKey,
-            OPENSSL_RAW_DATA | OPENSSL_ZERO_PADDING,
-            $this->hashIV
-        );
-
-        // 以最後一個 byte 為 padding 長度移除，並確認尾端一致
-        $pad = ord(substr($decrypted, -1));
-        if ($pad < 1 || $pad > 32 || substr($decrypted, -$pad) !== str_repeat(chr($pad), $pad)) {
-            throw new RuntimeException('解密失敗：HashKey / HashIV 可能不正確');
-        }
-        $plain = substr($decrypted, 0, -$pad);
-
-        // RespondType=JSON 時明文是 JSON（交易明細在 Result 內）；String 時是 query string
-        $json = json_decode($plain, true);
-        if (is_array($json)) {
-            return $json;
-        }
-        parse_str($plain, $result);
-        return $result;
-    }
-
-    public function tradeSha(string $tradeInfo): string
-    {
-        $raw = "HashKey={$this->hashKey}&{$tradeInfo}&HashIV={$this->hashIV}";
-        return strtoupper(hash('sha256', $raw));
-    }
-}
-```
-
-### Python 範例
-
-> ezPay 金流與藍新共用同一套演算法；此類別由 CI 以藍新官方外掛與規格書產生的標準答案驗證。
-
-<!-- verify: newebpay -->
+<!-- verify: ezpay -->
 ```python
-"""ezPay 簡單付 AES-256-CBC 加密（與藍新共用演算法）"""
-
 import hashlib
-import hmac
-import json
-from urllib.parse import urlencode, parse_qsl
-
+import urllib.parse
 from Crypto.Cipher import AES
-from Crypto.Util.Padding import pad
 
 
-class EzPayEncryption:
-    def __init__(self, hash_key: str, hash_iv: str):
-        self.hash_key = hash_key
-        self.hash_iv = hash_iv
+def encrypt_data(params, hash_key, hash_iv):
+    """params：dict 或 (key, value) list；回傳 hex 密文"""
+    data = urllib.parse.urlencode(params).encode('utf-8')
+    n = 32 - len(data) % 32                      # 32-byte PKCS#7
+    data += bytes([n]) * n
+    return AES.new(hash_key.encode(), AES.MODE_CBC, hash_iv.encode()).encrypt(data).hex()
 
-    def _cipher(self):
-        return AES.new(self.hash_key.encode(), AES.MODE_CBC, self.hash_iv.encode())
 
-    def encrypt(self, params: dict) -> str:
-        """標準 PKCS#7（與規格書 NDNF 的 PHP 範例相同）→ hex"""
-        return self._cipher().encrypt(pad(urlencode(params).encode('utf-8'), 16)).hex()
+def decrypt_data(cipher_hex, hash_key, hash_iv):
+    data = AES.new(hash_key.encode(), AES.MODE_CBC, hash_iv.encode()).decrypt(bytes.fromhex(cipher_hex))
+    n = data[-1]
+    if not 1 <= n <= 32 or data[-n:] != bytes([n]) * n:
+        raise ValueError('padding 錯誤（金鑰或 IV 不正確）')
+    return data[:-n].decode('utf-8')
 
-    def decrypt(self, trade_info: str) -> dict:
-        data = self._cipher().decrypt(bytes.fromhex(trade_info))
-        # 官方外掛以 32 bytes 補齊，padding 可能是 1–32；Crypto.Util.Padding.unpad(data, 16) 會失敗
-        n = data[-1]
-        if not 1 <= n <= 32 or data[-n:] != bytes([n]) * n:
-            raise ValueError('padding 錯誤（HashKey / HashIV 可能不正確）')
-        text = data[:-n].decode('utf-8')
-        # RespondType=JSON 時明文是 JSON；用 parse_qs 會得到空 dict
-        return json.loads(text) if text.startswith('{') else dict(parse_qsl(text, keep_blank_values=True))
 
-    def trade_sha(self, trade_info: str) -> str:
-        raw = f"HashKey={self.hash_key}&{trade_info}&HashIV={self.hash_iv}"
-        return hashlib.sha256(raw.encode('utf-8')).hexdigest().upper()
-
-    def verify_trade_sha(self, trade_info: str, trade_sha: str) -> bool:
-        return hmac.compare_digest(self.trade_sha(trade_info), trade_sha.upper())
+def hash_data(cipher_hex, hash_key, hash_iv):
+    raw = f'HashKey={hash_key}&{cipher_hex}&HashIV={hash_iv}'
+    return hashlib.sha256(raw.encode('utf-8')).hexdigest().upper()
 ```
 
-### CheckCode 驗證
+解密後的格式：
 
-回傳結果中的 `CheckCode` 用於驗證金額/訂單編號未被竄改。**規則與 Newebpay 完全相同**：
+- 電子支付平台：**urlencoded 字串**，巢狀欄位攤平成 `Result[TradeNo]=...`（`parse_qsl` 後自行還原成巢狀）
+- 跨境：**JSON**（`{"Status":..., "Message":..., "Result":{...}}`）
 
-```php
-<?php
-
-function generateCheckCode(array $params, string $hashKey, string $hashIV): string
-{
-    $checkParams = [
-        'Amt' => $params['Amt'],
-        'MerchantID' => $params['MerchantID'],
-        'MerchantOrderNo' => $params['MerchantOrderNo'],
-        'TradeNo' => $params['TradeNo'],
-    ];
-    ksort($checkParams);
-    $paramStr = http_build_query($checkParams);
-    $raw = "HashIV={$hashIV}&{$paramStr}&HashKey={$hashKey}";
-    return strtoupper(hash('sha256', $raw));
-}
-```
+完整實作（含 Result 還原、驗章、各 API 包裝）見 `examples/ezpay-payment-example.py`。
 
 ---
 
-## 訂單建立
+## 電子支付平台 API（境內）
 
-### 端點
+### 環境
 
-```
-POST {base_url}/MPG/mpg_gateway
-```
+| | 測試 | 正式 |
+|---|------|------|
+| 平台（註冊、取得 Hash Key/IV） | `https://cwww.ezpay.com.tw/` | `https://www.ezpay.com.tw/` |
+| API | `https://cpayment.ezpay.com.tw/API/Twqr/{APIID}` | `https://payment.ezpay.com.tw/API/Twqr/{APIID}` |
 
-例：
+測試商店建立後自動審核開通；預設只啟用電子帳戶，信用卡需在【管理商店/商店資料設定】→【詳細資料】點「申請啟用」。
+正式商店審核約 3–5 個工作天。Hash Key / IV 在【銷售中心】→【管理商店/商店資料設定】→【詳細資料】。
 
-```
-測試: https://ccore.spgateway.com/MPG/mpg_gateway
-正式: https://core.spgateway.com/MPG/mpg_gateway
-```
+所有請求：`POST`、`Content-Type: application/x-www-form-urlencoded`、UTF-8。回應 `Content-Type: text/html`，內容為 JSON。
 
-### Form 欄位（與 Newebpay 相同）
+### 7 支 API
 
-| 參數 | 必填 | 說明 |
+| # | API | APIID | 方向 |
+|---|-----|-------|------|
+| 1 | 訂單建立 | `SCreateTWQR` | 商店 → ezPay |
+| 2 | 訂單修改及取消 | `SUpdateTWQR` | 商店 → ezPay |
+| 3 | 交易結果背景異步通知 | `SPayTWQRNotify` | ezPay → NotifyURL |
+| 4 | 交易結果轉導暨前景通知 | `STWQRReturn` | ezPay → ReturnURL（瀏覽器） |
+| 5 | 交易退款 | `STWQRRefund` | 商店 → ezPay |
+| 6 | 訂單暨交易結果查詢 | `SGetTWQR` | 商店 → ezPay |
+| 7 | 退款查詢 | `SGetTWQRRefund` | 商店 → ezPay |
+
+### 外層欄位（每支 API 相同）
+
+| 欄位 | 必填 | 說明 |
 |------|------|------|
-| `MerchantID` | ● | ezPay 商店代號 |
-| `TradeInfo` | ● | AES 加密後的交易資料 |
-| `TradeSha` | ● | SHA256 驗證碼 |
-| `Version` | ● | 串接版本，建議 `2.0`（ezPay 沿用較早版本，Newebpay 已升 `2.3`） |
-| `EncryptType` | 否 | `0` = AES-256-CBC（預設） |
+| `APIID` | V | 如 `SCreateTWQR` |
+| `Version` | V | `1.0` |
+| `UID` | V | 商店代號（手冊範例 `PG300000725648`） |
+| `EncryptData` | V | 加密資料 |
+| `HashData` | V | 雜湊資料 |
 
-> **版本差異**：Newebpay 主推 `Version=2.3`（含 GCM 加密選項），ezPay 老商家可能仍維持 `2.0`。實作時請以後台「串接版本」設定為準。
+EncryptData 內**一律**含 `TimeStamp`（Unix 秒）、`APIID`、`Version`、`UID`，再加上各 API 自己的參數。
 
-### TradeInfo 內含欄位
+回應／通知外層：`Status`（`SUCCESS` 或錯誤代碼）、`Message`、`APIID`、`Version`、`UID`、`EncryptData`、`HashData`；
+EncryptData 解密後含 `TimeStamp`、`Status`、`Message`、`APIID`、`Version`、`UID`、`Result[...]`、`ResponseType`（如 `R1`）。
 
-完整欄位請參考 [`newebpay-payment-api.md`](./newebpay-payment-api.md#tradeinfo-參數)。以下列出必填核心：
+> **收到回應或通知一定要先驗 HashData 再解密。** 背景通知（NotifyURL）才是可信的結果來源；
+> ReturnURL 是瀏覽器導回，只能用來顯示頁面。
 
-| 參數 | 類型 | 必填 | 說明 |
+### 1. 訂單建立 `SCreateTWQR`
+
+| 參數 | 必填 | 型態 | 說明 |
 |------|------|------|------|
-| `MerchantID` | String(15) | ● | ezPay 商店代號 |
-| `RespondType` | String(6) | ● | `JSON` 或 `String` |
-| `TimeStamp` | String(50) | ● | Unix 時間戳（容許誤差 120 秒） |
-| `Version` | String(5) | ● | `2.0` |
-| `MerchantOrderNo` | String(30) | ● | 訂單編號（唯一） |
-| `Amt` | Int(10) | ● | 訂單金額（新台幣整數） |
-| `ItemDesc` | String(50) | ● | 商品資訊 |
-| `Email` | String(50) | ● | 付款人 Email（ezPay 強制必填） |
-| `LoginType` | Int(1) | ● | `0` = 不需登入會員 |
-| `NotifyURL` | String(200) | 否 | 背景通知網址 |
-| `ReturnURL` | String(200) | 否 | 付款完成返回網址 |
-| `ClientBackURL` | String(200) | 否 | 返回商店按鈕網址 |
-| `ExpireDate` | String(8) | 否 | ATM/CVS 繳費期限 `Ymd` |
+| `Mode` | V | int(1) | 1=商店指定金額＋商店訂單編號；2=商店指定金額、ezPay 產訂單號；3=消費者輸入金額＋商店訂單編號；4=消費者輸入金額、ezPay 產訂單號 |
+| `Template` | | String(10) | 支付頁模板，預設 `STANDARD01` |
+| `LangType` | | String(5) | 1=中文（預設）、2=英文 |
+| `TWQRLifeTime` | | int(7) | QR Code 有效秒數，預設 300；上限 31 天（2678400） |
+| `ExpireTime` | | String(19) | `YYYY-MM-DD HH:MM:SS`，有值時優先於 TWQRLifeTime |
+| `WebToAppEnabled` | | int(1) | 1=開啟中轉頁（預設）、2=關閉、3=關閉並以 API 回應中轉頁參數（回傳 `WebtoApp`） |
+| `MerchantOrderNo` | Mode 1/3 必填；2/4 必須空白 | String(20) | 英數與底線，同商店不可重複 |
+| `NotifyURL` / `ReturnURL` / `ClientBackURL` | | String | 背景通知／前景轉導／支付頁「返回商店」 |
+| `Currency` | V | String(3) | `TWD` |
+| `OrgOrderAmt` | | int(8) | 原始訂單金額，未帶時等於 OrderAmt |
+| `OrderAmt` | Mode 1/2 必填；3/4 必須空白 | int(8) | 應付金額，≤ OrgOrderAmt、不得為 0 |
+| `ItemDesc` | V | String(50) | 商品資訊 |
 
-> **ezPay 特別注意**：`Email` 在 ezPay 為強制必填（Newebpay 部分版本可選填）；`LoginType` 通常固定 `0`，因為 ezPay 簡單付商家很少串接會員系統。
+成功回應 `Result`：`Ptoken`（訂單 Token，後續修改/取消要用）、`OrderStatus`（1=待付款）、`MerchantID`、
+`MerchantOrderNo`、`TradeNo`（亦為 TWQR 訂單編號）、`Currency`、`OrgOrderAmt`、`OrderAmt`、`ItemDesc`、
+`RequestTime`、**`PaymentPageURL`**（導向消費者付款）、**`TWQRCode`**（給其他錢包掃描）、`ExpireTime`、
+`NotifyURL`、`ReturnURL`、`ClientBackURL`、`WebtoApp`。
 
-### PHP 範例
-
-```php
-<?php
-
-$encryption = new EzPayEncryption($hashKey, $hashIV);
-
-$params = [
-    'MerchantID'      => 'EZxxxxxxxx',           // ezPay 發行的 MerchantID
-    'RespondType'     => 'JSON',
-    'TimeStamp'       => time(),
-    'Version'         => '2.0',                  // ezPay 常用版本
-    'MerchantOrderNo' => 'ORDER' . time(),
-    'Amt'             => 1000,
-    'ItemDesc'        => '測試商品',
-    'Email'           => 'buyer@example.com',
-    'LoginType'       => 0,
-    'NotifyURL'       => 'https://your-site.com/ezpay/notify',
-    'ReturnURL'       => 'https://your-site.com/ezpay/return',
-    'ClientBackURL'   => 'https://your-site.com/cart',
-    'CREDIT'          => 1,
-    'VACC'            => 1,
-    'CVS'             => 1,
-];
-
-$tradeInfo = $encryption->encrypt($params);
-$tradeSha  = $encryption->tradeSha($tradeInfo);
-
-$action = 'https://ccore.spgateway.com/MPG/mpg_gateway'; // 測試環境
-
-echo <<<HTML
-<form id="ezpay" method="post" action="{$action}">
-    <input type="hidden" name="MerchantID" value="{$params['MerchantID']}">
-    <input type="hidden" name="TradeInfo"  value="{$tradeInfo}">
-    <input type="hidden" name="TradeSha"   value="{$tradeSha}">
-    <input type="hidden" name="Version"    value="2.0">
-    <button type="submit">前往 ezPay 付款</button>
-</form>
-HTML;
-```
-
----
-
-## 付款通知
-
-> 通知流程、加密驗證、欄位結構**與 Newebpay 完全相同**。詳情請參考 [`newebpay-payment-api.md`](./newebpay-payment-api.md#付款結果通知)。
-
-### 通知流程概覽
-
-1. 付款人完成付款 → ezPay POST 加密資料到 `NotifyURL`（背景）與 `ReturnURL`（前景）
-2. 商家收到 `Status` / `MerchantID` / `TradeInfo` / `TradeSha` / `Version`
-3. 商家**先驗證 `TradeSha`**，再 AES 解密 `TradeInfo`，取得 `Result` JSON
-4. 比對 `MerchantOrderNo` 與資料庫訂單，更新付款狀態
-5. **再次驗證 `Result.CheckCode`**（金額竄改防護）
-6. 回應 `1|OK` 或任意 200 回應（ezPay 不強制特定字串）
-
-### TradeInfo 解密後 (`Result`) 重點欄位
-
-| 欄位 | 說明 |
-|------|------|
-| `Status` | `SUCCESS` 表示成功 |
-| `MerchantID` | ezPay 商店代號 |
-| `Amt` | 交易金額 |
-| `TradeNo` | ezPay 交易序號（系統發號） |
-| `MerchantOrderNo` | 商家訂單編號 |
-| `PaymentType` | 付款方式（CREDIT / VACC / WEBATM / CVS / BARCODE / LINEPAY 等） |
-| `PayTime` | 付款時間 |
-| `IP` | 付款人 IP |
-| `EscrowBank` | 款項保管銀行 |
-| `CheckCode` | 金額/訂單防竄改檢核碼（必驗） |
-
-### 處理範例
-
-```php
-<?php
-
-$status    = $_POST['Status']    ?? '';
-$tradeInfo = $_POST['TradeInfo'] ?? '';
-$tradeSha  = $_POST['TradeSha']  ?? '';
-
-$encryption = new EzPayEncryption($hashKey, $hashIV);
-
-// 1. 驗證 TradeSha
-if ($tradeSha !== $encryption->tradeSha($tradeInfo)) {
-    http_response_code(400);
-    echo 'TradeSha mismatch';
-    exit;
-}
-
-// 2. 解密
-$payload = $encryption->decrypt($tradeInfo);
-$result  = json_decode($payload['Result'] ?? '{}', true);
-
-// 3. 驗證 CheckCode（防金額竄改）
-$expectedCheckCode = generateCheckCode($result, $hashKey, $hashIV);
-if (($result['CheckCode'] ?? '') !== $expectedCheckCode) {
-    http_response_code(400);
-    echo 'CheckCode mismatch';
-    exit;
-}
-
-// 4. 更新訂單
-if (($payload['Status'] ?? '') === 'SUCCESS') {
-    updateOrder($result['MerchantOrderNo'], 'paid', $result);
-}
-
-echo '1|OK';
-```
-
----
-
-## 退款
-
-> 規則與 Newebpay 完全相同：信用卡走 `/API/CreditCard/Close`，電子錢包走 `/API/EWallet/refund`。完整參數請參考 [`newebpay-payment-api.md`](./newebpay-payment-api.md#請退款取消請退款)。
-
-### 信用卡請款 / 退款
-
-```
-POST {base_url}/API/CreditCard/Close
-```
-
-| 功能 | CloseType | Cancel |
-|------|-----------|--------|
-| 請款 | `1` | `-` |
-| 退款 | `2` | `-` |
-| 取消請款 | `1` | `1` |
-| 取消退款 | `2` | `1` |
-
-請求欄位（`PostData_` 內含，AES 加密）：
+### 2. 訂單修改及取消 `SUpdateTWQR`
 
 | 參數 | 必填 | 說明 |
 |------|------|------|
-| `RespondType` | ● | `JSON` 或 `String` |
-| `Version` | ● | `1.1` |
-| `Amt` | ● | 請退款金額 |
-| `MerchantOrderNo` | ● | 商店訂單編號 |
-| `TimeStamp` | ● | Unix 時間戳 |
-| `IndexType` | ● | `1`=訂單編號 `2`=交易序號 |
-| `TradeNo` | ● | ezPay 交易序號 |
-| `CloseType` | ● | `1`=請款 `2`=退款 |
-| `Cancel` | 否 | `1`=取消 |
+| `TradeNo` | V | 交易序號 |
+| `Ptoken` | V | 建立訂單時取得 |
+| `UpdateAction` | V | 1=刪除訂單；2=更新訂單資訊 |
+| `ExpireTime` / `NotifyURL` / `ReturnURL` / `ClientBackURL` | UpdateAction=2 時至少一個 | |
 
-### 退款限制
+只能修改**待付款**狀態的訂單（否則 `SUTR0203`）。
 
-| 交易類型 | 請款 | 退款 |
-|----------|------|------|
-| 一次付清 | 整筆 / 部分 | 整筆 / 部分 |
-| 分期付款 | 整筆 | 整筆 |
-| 紅利折抵 | 整筆 | 整筆 |
-| 銀聯卡 | 整筆 | 整筆 / 部分 |
+### 3–4. 交易結果通知 `SPayTWQRNotify`（背景）／`STWQRReturn`（前景）
 
-> **ezPay 特別注意**：分期付款在 ezPay 通常受限（許多 ezPay 小型商家方案不支援分期），實際是否可用以後台啟用狀態為準。
+`Result` 主要欄位：`Ptoken`、`OrderStatus`、`UID`、`MerchantOrderNo`、`TradeNo`、`Currency`、`OrgOrderAmt`、
+`OrderAmt`、`AmtPaid`（扣除紅利/折抵後的實付金額）、`PaymentType`、`RequestTime`、`PaymentTime`（待確認時為 `-`）。
+依支付工具另有：
 
-### 電子錢包退款
+- 自機構：`BuyerMemNo`、`BuyerEPANo`
+- 信用卡：`RespondCode`、`Auth`、`AuthDate`、`AuthTime`、`AuthBank`、`Card6No`、`Card4No`、`ECI`、`CardIssuer`、`CardBrand`、`CardType`
+- 約定連結帳戶：`AccLinkMSGNo`、`AccLinkRTNCode`、`AccLinkRTNMsg`、`AccLinkBank`、`AccLinkNo`
+- TWQR：`BuyAccNo`、`BankCode`、`BankName`、`CarrierID`（手機條碼）、`FeeType`、`BusDate`、`FiscSTAN`、`FiscRC`、`QrRefNo`
 
-```
-POST {base_url}/API/EWallet/refund
-```
-
-各錢包退款規則（與 Newebpay 共用）：
-
-| 錢包 | 退款期限 | 部分退款 |
-|------|----------|----------|
-| 玉山 Wallet | 89 天 | ● |
-| 台灣 Pay | 29 天 | ✗（僅全額） |
-| LINE Pay | 60 天 | ● |
-| TWQR | 89 天 | ● |
-| 支付寶 / 微信（簡單付） | 89 天 | ● |
-
----
-
-## 訂單查詢
-
-> 規則與 Newebpay 完全相同。
-
-### 端點
-
-```
-POST {base_url}/API/QueryTradeInfo
-```
-
-### 請求欄位
+### 5. 交易退款 `STWQRRefund`
 
 | 參數 | 必填 | 說明 |
 |------|------|------|
-| `MerchantID` | ● | ezPay 商店代號 |
-| `Version` | ● | `1.3` |
-| `RespondType` | ● | `JSON` 或 `String` |
-| `CheckValue` | ● | 檢查碼（SHA256） |
-| `TimeStamp` | ● | Unix 時間戳 |
-| `MerchantOrderNo` | ● | 商店訂單編號 |
-| `Amt` | ● | 訂單金額 |
+| `MerchantRefundNo` | V | 商店自訂退款序號，不可重複 |
+| `RefundBarCode` / `MerchantOrderNo` / `TradeNo` | 三擇一 | **不可同時帶入**（`STRD0018`） |
+| `RefundType` | V | `1`（退款） |
+| `Currency` | V | `TWD` |
+| `RefundAmt` | V | 當次退款金額 |
 
-### CheckValue 產生
+回應 `Result`：`OrderStatus`、`RefundStatus`、`RefundType`、`RefundBarCode`、`MerchantOrderNo`、`TradeNo`、
+`Currency`、`RefundAmt`、`RefundLimit`（剩餘可退）、`RefundTime`、`MerchantRefundNo`、`Rtoken`（退款 Token）。
 
-```php
-<?php
+### 6. 訂單暨交易結果查詢 `SGetTWQR`
 
-function generateCheckValue(
-    string $amt,
-    string $merchantID,
-    string $merchantOrderNo,
-    string $hashKey,
-    string $hashIV
-): string {
-    $paramStr = "Amt={$amt}&MerchantID={$merchantID}&MerchantOrderNo={$merchantOrderNo}";
-    $raw      = "IV={$hashIV}&{$paramStr}&Key={$hashKey}";
-    return strtoupper(hash('sha256', $raw));
-}
-```
+`MerchantOrderNo` 與 `TradeNo` **擇一**（同時帶入回 `SGTR0116`）。回應除交易欄位外另含 `TotalRefundAmt`、
+`RefundLimit`、`Mode`（查詢結果多一個 5=立牌模式）、`PaymentPageURL`、`TWQRCode` 等。
 
-### Result 重點欄位
+### 7. 退款查詢 `SGetTWQRRefund`
 
-| 欄位 | 說明 |
-|------|------|
-| `TradeStatus` | `0`=未付款 `1`=成功 `2`=失敗 `3`=取消 `6`=退款 `9`=付款中 |
-| `PaymentType` | 支付方式 |
-| `CreateTime` / `PayTime` | 建立 / 付款時間 |
-| `FundTime` | 預計撥款日 |
-| `RespondCode` | 信用卡：`00`=授權成功 |
-| `Auth` | 信用卡授權碼 |
-| `Card6No` / `Card4No` | 卡號前六碼 / 後四碼 |
-| `CloseAmt` / `CloseStatus` | 請款金額 / 狀態 |
-| `BackBalance` / `BackStatus` | 可退款餘額 / 退款狀態 |
+`Rtoken` 與 `MerchantRefundNo` 擇一。回應 `Result`：`RefundStatus`、`MerchantOrderNo`、`TradeNo`、
+`MerchantRefundNo`、`Rtoken`、`RefundType`、`Currency`、`RefundAmt`、`RefundTime`、`RefundCompleteTime`。
+
+### 狀態代碼
+
+`OrderStatus`（查詢 API 的完整列表）：
+
+| 值 | 說明 |
+|----|------|
+| 1 | 待付款 |
+| 2 | 已付款 |
+| 3 | 部分退款 |
+| 4、5 | 全額退款（手冊註明兩者皆為全額退款） |
+| 6 | 付款失敗 |
+| 7 | 等候付款結果中 |
+| 8 | 訂單逾時未付款 |
+| 9 | 刪除訂單 |
+| 10 | 暫時無法確定訂單付款狀態 |
+
+`RefundStatus`：1=退款成功、2=退款失敗、3=退款處理中、9=無法確認退款請求狀態。
+
+> 7、10 不是最終狀態，應以查詢 API 或後續通知確認，不要當成失敗。
+
+---
+
+## 跨境網路交易 API
+
+支付工具只有 **`ALIPAY`（支付寶）** 與 **`WECHAT`（微信支付）**，皆為即時交易；商店屬性需選「跨境網路商店」。
+測試交易：支付寶會立刻完成，微信會顯示模擬 QR Code、30 秒後完成。
+
+### 環境
+
+| API | 測試 | 正式 | Version |
+|-----|------|------|---------|
+| 交易（前景 Form Post） | `https://cpayment.ezpay.com.tw/MPG/mpg_gateway` | `https://payment.ezpay.com.tw/MPG/mpg_gateway` | `1.0` |
+| 單筆查詢 | `https://cpayment.ezpay.com.tw/API/merchant_trade/query_trade_info` | `https://payment.ezpay.com.tw/API/merchant_trade/query_trade_info` | `1.0` |
+| 退款 | `https://cpayment.ezpay.com.tw/API/merchant_trade/trade_refund` | `https://payment.ezpay.com.tw/API/merchant_trade/trade_refund` | `2.1` |
+
+### 交易
+
+外層：`MerchantID`、`Version`、`TradeInfo`、`TradeSha`。TradeInfo 內：
+
+| 參數 | 必填 | 說明 |
+|------|------|------|
+| `TimeStamp` | V | Unix 秒 |
+| `MerchantID` | V | 商店代號 |
+| `Version` | V | `1.0` |
+| `MerchantOrderNo` | V | 英數與底線，最長 40，不可重複 |
+| `Amt` | V | 新台幣整數 |
+| `ItemDesc` | V | 最長 50 |
+| `CrossMobile` | | 0=Web（預設）、1=Wap（手機 RWD） |
+| `TradeLimit` | | 交易限制秒數 60–900 |
+| `ClientBackURL` | | 取消時的返回網址 |
+
+NotifyURL / ReturnURL **在 ezPay 後台設定**（手冊「交易支付系統回傳參數說明」），不是交易參數。
+
+通知：外層 `Status`、`Version`、`MerchantID`、`TradeInfo`、`TradeSha`；TradeInfo 解密為 JSON，
+`Result` 含 `MerchantID`、`Amt`、`TradeNo`、`MerchantOrderNo`、`PaymentType`、`PayTime`、`IP`、
+`EscrowBank`（價金保管信託銀行，如 `HNCB` 華南銀行）、`CrossID`、`USDAmt`、`CNYAmt`。
+
+### 單筆查詢
+
+外層 `MerchantID`、`Version`、`QueryInfo`、`QuerySha`；QueryInfo 內 `TimeStamp`、`MerchantID`、`Version`、
+`TradeNo` 或 `MerchantOrderNo`（擇一，建議 TradeNo）。回應 QueryInfo 為 JSON，含 `LastAmt`（剩餘金額）、
+`FeeAmt`、`PaymentStatus`（1=付款成功、2=未付款）、`CreateDT`、`PayDT`、`CloseDT`（實際撥款日）等。
+
+### 退款
+
+外層 `MerchantID`、`Version`（`2.1`）、`RefundInfo`、`RefundSha`；RefundInfo 內 `TimeStamp`、`MerchantID`、
+`Version`、`TradeNo` 或 `MerchantOrderNo`、`RefundAmt`、`RefundType`（`1`）、`Currency`（`TWD`）。
+回應 JSON 的 `Result` 含 `OrderStatus`（3=部分退款、4=全額退款）、`RefundAmt`、`RefundLimit`、`RefundTime`、`RscNo`（退款單號）。
 
 ---
 
 ## 錯誤代碼
 
-> ezPay 與 Newebpay **共用同一套錯誤碼系統**（`MPG*` / `TRA*` / `VACC*` / `CVS*` / `KEY*` 等）。
+電子支付平台每支 API 有自己的前綴，219 個代碼全部收在 `data/error-codes.csv`：
 
-### 常見錯誤碼
+| API | 前綴 | 常見 |
+|-----|------|------|
+| 訂單建立 | `SCTE` | `SCTE0009` HashData 錯誤、`SCTE0301` TimeStamp 錯誤、`SCTE0602` 商店未啟用簡單付 TWQR 交易、`SCTE0603` 訂單已存在（商店訂單編號重複） |
+| 訂單修改及取消 | `SUTR` | `SUTR0202` 訂單 Ptoken 不相符、`SUTR0203` 訂單不為待付款狀態 |
+| 背景通知 | `SPTN` | `SPTN0203` 訂單及商店未設定 Notify 網址 |
+| 前景通知 | `STRN` | |
+| 交易退款 | `STRD` | `STRD0018` 三種單號不能同時帶入、`STRD0027` 退款序號重複、`STRD0203` 退款金額超過可退款金額 |
+| 訂單查詢 | `SGTR` | `SGTR0116` TradeNo、MerchantOrderNo 不能同時帶入 |
+| 退款查詢 | `SGRD` | |
 
-| 錯誤碼 | 說明 |
-|--------|------|
-| `MPG01002` | TimeStamp 不可空白 |
-| `MPG01009` | MerchantID 不可空白 |
-| `MPG01012` | 訂單編號錯誤（限英數字底線、最長 30 字） |
-| `MPG01015` | 金額錯誤 |
-| `MPG01023` | TradeInfo 不可空白 |
-| `MPG01024` | TradeSha 不可空白 |
-| `MPG02001` | 檢查碼錯誤（CheckValue） |
-| `MPG02002` | 未啟用金流服務 |
-| `MPG02003` | 支付方式未啟用 |
-| `MPG03004` | 商店已暫停 |
-| `MPG03008` | 訂單編號重複 |
-| `MPG03009` | 交易失敗（SHA256 驗證失敗） |
-| `TRA10003` | MerchantID 錯誤 |
-| `TRA10039` | TradeSha 簽章錯誤 |
-| `MPG01007` | 訂單已存在 |
-| `VACC10003` | 虛擬帳號逾期 |
-| `MPG05002` | 信用卡卡號錯誤 |
-| `MPG05005` | 警示交易（疑似盜刷） |
+每個前綴的 `0001`–`0010` 都是外層欄位檢查（Version/APIID/UID/EncryptData/HashData 空白或錯誤、商店未啟用），
+`9999` 是系統異常。
 
-### 交易狀態 (TradeStatus)
-
-| 狀態 | 說明 |
-|------|------|
-| `0` | 未付款 |
-| `1` | 付款成功 |
-| `2` | 付款失敗 |
-| `3` | 取消付款 |
-| `6` | 已退款 |
-| `9` | 付款中（待銀行確認） |
-
-### ezPay 後台錯誤碼差異
-
-ezPay 後台額外可能出現的錯誤碼前綴（部分為 ezPay 簡單付電子發票體系沿用）：
-
-| 前綴 | 範圍 |
-|------|------|
-| `KEY*` | 加密 / 金鑰相關（例：`KEY10011` PostData 欄位空白） |
-| `MEM*` | 商店帳號 / 會員相關 |
-
-> 完整錯誤碼以 ezPay 後台「技術串接手冊 PDF」為準。
+跨境 MPG 的錯誤代碼：`MPG01000` 送入參數檢查錯誤、`MPG01010` 程式版本錯誤、`MPG01012` 商店訂單編號錯誤、
+`MPG01015` 訂單金額錯誤、`MPG01016` 時間戳記錯誤、`MPG02004` 超過交易限制時間、`MPG03001` 訂單資訊解密失敗、
+`MPG03007` 查無此商店代號、`MPG03008` 已存在相同的商店訂單編號、`MPG03009` 交易失敗（完整見 CSV）。
 
 ---
 
-## 支付方式對照表
+## 手冊中的不一致之處
 
-| 支付方式 | 參數 | ezPay 限制 / 備註 |
-|----------|------|-------------------|
-| 信用卡一次付清 | `CREDIT=1` | 標準支援 |
-| 信用卡分期 | `InstFlag=3,6,12` | **ezPay 多數方案不支援**，需另申請 |
-| 紅利折抵 | `CreditRed=1` | 視收單行支援度 |
-| 銀聯卡 | `UNIONPAY=1` | 標準支援 |
-| 美國運通 | `CREDITAE=1` | 視商家方案 |
-| Apple Pay | `APPLEPAY=1` | 標準支援 |
-| Google Pay | `ANDROIDPAY=1` | 標準支援 |
-| Samsung Pay | `SAMSUNGPAY=1` | 視商家方案 |
-| WebATM | `WEBATM=1` | 限 49,999 元以下 |
-| ATM 轉帳 | `VACC=1` | 限 49,999 元以下 |
-| 超商代碼 | `CVS=1` | 30 ~ 20,000 元 |
-| 超商條碼 | `BARCODE=1` | 20 ~ 40,000 元 |
-| LINE Pay | `LINEPAY=1` | 標準支援 |
-| 玉山 Wallet | `ESUNWALLET=1` | 標準支援 |
-| 台灣 Pay | `TAIWANPAY=1` | 限 49,999 元以下 |
-| TWQR / 簡單付錢包 | `TWQR=1` | **ezPay 主打方式之一** |
-| 微信支付（跨境） | `EZPWECHAT=1` | 跨境交易 |
-| 支付寶（跨境） | `EZPALIPAY=1` | 跨境交易 |
+照抄手冊會踩到的地方，均已在 `tests/vectors/ezpay-payment.json` 以實際計算確認：
 
-> **跨境交易**：ezPay 的 `EZPWECHAT` / `EZPALIPAY` 走「跨境網路交易」獨立 API，請求欄位與境內 MPG 相似但有額外幣別 / 匯率欄位，完整規格請參考 ezPay 後台下載的「跨境網路交易串接手冊」PDF（程式版本 1.0.1）。
+| 位置 | 手冊寫法 | 實際 |
+|------|---------|------|
+| 電支 附件一 Step5 | 送出欄位寫成 `EncryptData_`、`HashData_` | 各 API 參數表與回應都是 `EncryptData`、`HashData`；錯誤代碼（`SCTE0006 EncryptData 不得為空`）也用無底線名稱。本範例依參數表 |
+| 電支 附件三 | 雜湊範例的密文與附件二不同 | 兩者明文不同；附件三的雜湊與它自己的密文一致，公式無誤 |
+| 電支 `OrderStatus` 5 | 背景通知（SPayTWQRNotify）的表寫 5=取消付款 | 前景通知、查詢、退款 API 的表都寫 5=全額退款（查詢註明 4、5 皆為全額退款）；以查詢 API 確認 |
+| 跨境 八、SHA256 範例 | TradeSha `B5C41ADB…` | 這個值是在 `HashKey=…&` 後**多一個空白**算出來的（PDF 斷行處）；正確公式不含空白 |
+| 跨境查詢 七 | QuerySha 只印 63 位 | 前 63 位與正確計算相符 |
+| 跨境退款 七 | 範例明文 `Version=1.0`、`RefundAmt=` 空白 | 參數表規定 Version `2.1`、RefundAmt 必填；範例只能當演算法向量 |
 
 ---
 
-## 與 Newebpay 差異總表
+## 與藍新 NewebPay 的差異
 
-| 構面 | Newebpay 藍新金流 | ezPay 簡單付 |
-|------|-------------------|--------------|
-| **公司** | 藍新金流（智冠科技集團） | 簡單行動支付（同集團子品牌） |
-| **目標客群** | 中大型商家 | 小型 / 個人商家 |
-| **MerchantID 前綴** | `MS` 系列 | `EZ` 系列（依後台簽發為準） |
-| **正式環境域名** | `core.newebpay.com` | `core.spgateway.com` 或 `www.ezpay.com.tw` |
-| **沙箱域名** | `ccore.newebpay.com` | `ccore.spgateway.com` 或 `cwww.ezpay.com.tw` |
-| **API 路徑** | 完全相同 | 完全相同 |
-| **加密演算法** | AES-256-CBC + SHA256 | **完全相同** |
-| **欄位名稱** | `MerchantID` / `TradeInfo` / `TradeSha` … | **完全相同** |
-| **回傳格式** | JSON / String 雙模式 | **完全相同** |
-| **錯誤碼** | `MPG*` / `TRA*` / `VACC*` … | **共用同一套** |
-| **建議 Version** | `2.3`（含 GCM 選項） | `2.0`（多數老商家） |
-| **常見不支援** | – | 分期、部分電子錢包受方案限制 |
-| **手續費** | 較低，需簽約 | 較高，但開通快（細節屬商務面，本文不展開） |
-| **撥款週期** | 商家自選（最快 T+1） | 通常較長，依方案 |
-| **跨境支付** | 完整支援 | 支援，部分功能需另申請 |
+同集團，但**不是同一套 API**：
 
-### 程式碼遷移指南
+| 項目 | ezPay 電子支付平台 | ezPay 跨境 | 藍新 NewebPay MPG |
+|------|-------------------|-----------|-------------------|
+| 網域 | `(c)payment.ezpay.com.tw` | `(c)payment.ezpay.com.tw` | `(c)core.newebpay.com` |
+| 路徑 | `/API/Twqr/{APIID}` | `/MPG/mpg_gateway` | `/MPG/mpg_gateway` |
+| 外層欄位 | APIID、Version、UID、EncryptData、HashData | MerchantID、Version、TradeInfo、TradeSha | MerchantID、Version、TradeInfo、TradeSha |
+| Version | 1.0 | 1.0（退款 2.1） | 2.0／2.3 |
+| 加密時 padding | 32 bytes | 32 bytes | 規格書範例為 16 bytes（解密須容許 1–32） |
+| 回應明文 | urlencoded（`Result[...]`） | JSON | JSON 或 query string（依 RespondType） |
+| 支付工具 | EPACC、ACCLINK、CREDIT、TWQR | ALIPAY、WECHAT | 信用卡、ATM、超商、各電子錢包… |
+| 收款方 | ezPay 會員商店（電子支付機構） | 同左 | 藍新特約商店 |
 
-**從 Newebpay → ezPay**：通常只需修改三個地方：
-
-```diff
-- $merchantID = 'MS12345678';
-+ $merchantID = 'EZxxxxxxxx';
-
-- $hashKey = '<newebpay_key>';
-- $hashIV  = '<newebpay_iv>';
-+ $hashKey = '<ezpay_key>';
-+ $hashIV  = '<ezpay_iv>';
-
-- $action = 'https://ccore.newebpay.com/MPG/mpg_gateway';
-+ $action = 'https://ccore.spgateway.com/MPG/mpg_gateway';
-
-- $params['Version'] = '2.3';
-+ $params['Version'] = '2.0';
-```
-
-**從 ezPay → Newebpay**：反向修改三處同樣可運作（前提是已申請對應商家帳號）。
-
-> 共用程式碼建議：將 `BaseURL` / `MerchantID` / `HashKey` / `HashIV` / `Version` 抽成設定檔，只需切換 profile 即可同時支援兩家。
-
----
-
-## 官方資源
-
-- **官方網站**：https://www.ezpay.com.tw/
-- **API 文件下載**：https://www.ezpay.com.tw/info/Service_intro/api_document/member
-  - 技術串接手冊 (`ezPay_1.0.2`, 2018-09-25)
-  - 交易狀態查詢 (`ezPay_1.0.0`, 2018-09-25)
-  - 跨境網路交易串接手冊 (`ezPay_1.0.1`, 2025-05-28)
-  - 跨境交易單筆查詢串接手冊 (`ezPay_1.0.1`, 2025-05-28)
-  - 跨境交易退款串接手冊 (`ezPay_1.0.3`, 2025-05-28)
-  > 下載按鈕為 JS 渲染，需登入後台或於瀏覽器手動點擊「下載」。
-- **集團母品牌（金流主流程文件）**：https://www.newebpay.com/
-- **公司全名**：簡單行動支付股份有限公司
-
----
-
-最後更新：2026/05/07
+需要信用卡收單、ATM、超商代碼等完整金流時用藍新 NewebPay；ezPay 適合要收 ezPay 錢包與 TWQR 的商店。
