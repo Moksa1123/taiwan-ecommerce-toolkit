@@ -2,7 +2,8 @@
 
 Reference these guidelines when:
 - Developing Taiwan E-Invoice issuance functionality
-- Integrating ECPay, SmilePay, or Amego APIs
+- Integrating ECPay, SmilePay, Amego, ezPay, PayNow, O'Pay or SunPay invoice APIs
+- Querying the MOF E-Invoice platform (mobile barcode / donation code / winning numbers)
 - Implementing B2C or B2B invoice logic
 - Handling invoice printing, void, and allowance
 - Troubleshooting invoice API integration issues
@@ -14,7 +15,7 @@ Reference these guidelines when:
 | 1 | Amount Calculation | CRITICAL | All |
 | 2 | Encryption/Signature | CRITICAL | All |
 | 3 | B2B vs B2C Logic | HIGH | All |
-| 4 | Print Response Handling | HIGH | All |
+| 4 | Print Handling | HIGH | All |
 | 5 | Provider Binding | MEDIUM | All |
 | 6 | Error Handling | MEDIUM | All |
 | 7 | Carrier/Donation | LOW | B2C only |
@@ -26,28 +27,27 @@ Reference these guidelines when:
 - `b2c-tax-inclusive` - B2C uses tax-inclusive total
 - `b2b-split-tax` - B2B requires pre-tax + tax split
 - `round-tax` - Round tax: `Math.round(total - (total / 1.05))`
-- `salesamount` - ECPay/Amego: Use SalesAmount for pre-tax
+- `ecpay-salesamount` - ECPay：B2C `SalesAmount` 是**含稅**總額；B2B `SalesAmount` 是**未稅**，`TotalAmount = SalesAmount + TaxAmount`
 
 ### 2. Encryption/Signature (CRITICAL)
 
-- `ecpay-aes` - ECPay: AES-128-CBC with HashKey/HashIV
-- `smilepay-verify` - SmilePay: Grvc + Verify_key params
-- `amego-md5` - Amego: MD5(data + time + appKey)
-- `url-encode` - Always URL encode before encryption
+- `ecpay-aes` - ECPay: JSON → URL Encode → AES-128-CBC（HashKey/HashIV）→ Base64
+- `smilepay-verify` - SmilePay: Grvc + Verify_key params（無加密）
+- `amego-md5` - Amego: `md5(data 的 JSON 字串 + time + APP_KEY)`
+- `ezpay-aes` - ezPay: AES-256-CBC（32 碼 HashKey）
 
 ### 3. B2B vs B2C Logic (HIGH)
 
-- `buyer-id-b2c` - B2C: BuyerIdentifier = "0000000000"
-- `buyer-id-b2b` - B2B: BuyerIdentifier = actual 8-digit tax ID
+- `ecpay-buyer-id` - ECPay B2C：`CustomerIdentifier` 空字串或 8 碼統編，**不是** `0000000000`；B2B 必填
+- `amego-buyer-id` - Amego：`BuyerIdentifier` 無統編填 `0000000000`
 - `no-carrier-b2b` - B2B: Cannot use carrier or donation
 - `validate-taxid` - Validate 8-digit tax ID format
 
-### 4. Print Response Handling (HIGH)
+### 4. Print Handling (HIGH)
 
-- `ecpay-html` - ECPay: Returns HTML, use window.document.write
-- `smilepay-redirect` - SmilePay: Returns URL, use window.open
-- `amego-pdf` - Amego: Returns PDF URL, use window.open
-- `form-submit` - Some APIs require form POST submission
+- `ecpay-form` - ECPay: `POST /Invoice/Print` 表單跳轉開啟列印頁（`target="_blank"`）
+- `smilepay-page` - SmilePay: 以 POST／GET 開啟列印頁（網頁模式或 EPSON IP 列印）
+- `amego-pdf` - Amego: 回傳 `file_url`（PDF）
 
 ### 5. Provider Binding (MEDIUM)
 
@@ -59,8 +59,9 @@ Reference these guidelines when:
 
 - `log-raw-response` - Log complete raw response for debugging
 - `ecpay-codes` - ECPay: Check RtnCode and RtnMsg
-- `smilepay-codes` - SmilePay: Check Status field
-- `amego-codes` - Amego: Check Code and Message
+- `smilepay-codes` - SmilePay: Check `Status`
+- `amego-codes` - Amego: Check `code` and `msg`
+- 錯誤碼對照：`python scripts/search.py "<代碼>" --domain error`
 
 ### 7. Carrier/Donation (B2C only)
 
@@ -82,4 +83,3 @@ Reference these guidelines when:
 See the full skill documentation for detailed API references and code examples.
 
 ---
-

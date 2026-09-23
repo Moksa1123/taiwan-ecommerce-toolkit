@@ -38,14 +38,31 @@ ORDER_URL = 'https://www.ezship.com.tw/emap/ezship_request_order_api_ex.jsp'
 STATUS_BY_SN_URL = 'https://www.ezship.com.tw/emap/ezship_request_order_status_api.jsp'
 STATUS_BY_ORDER_URL = 'https://www.ezship.com.tw/emap/ezship_request_order_status_api_byorder.jsp'
 
-# 建單失敗的唯一訊號 —— 沒有獨立的錯誤碼欄位
+# 建單失敗時 sn_id 回八個零，原因看 order_status（ezship_WebOrder_HttpRequest_v15.pdf）
 SN_ID_FAILED = '00000000'
+ORDER_OK = 'S01'
+ORDER_ERRORS = {
+    'E00': '參數傳遞內容有誤或欄位短缺',
+    'E01': 'su_id 帳號不存在',
+    'E02': '帳號無取貨付款／網站串接／宅配／店港澳權限',
+    'E03': '帳號無可用之輕鬆袋或迷你袋',
+    'E04': 'st_code 取件門市有誤',
+    'E05': 'order_amount 金額有誤',
+    'E06': 'rv_email 格式有誤',
+    'E07': 'rv_mobile 格式有誤',
+    'E08': 'order_status 內容有誤或為空值',
+    'E09': 'order_type 內容有誤或為空值',
+    'E10': 'rv_name 內容有誤或為空值',
+    'E11': 'rv_addr 內容有誤或為空值',
+    'E13': '店港澳無法使用',
+}
 
 # 電子地圖回傳的通路代號
 STORE_CHANNELS = {
     'TOK': 'OK 便利商店',
     'TLF': '萊爾富',
     'TFM': '全家',
+    'TSF': '店港澳',
 }
 
 # order_status 分組
@@ -162,14 +179,14 @@ def build_order_form(
     """組出建單表單。
 
     order_status: A01-A04 超商取貨 / A05-A06 宅配 / A11-A12 店港澳
-    order_type:   1 代收（取貨付款/貨到付款）/ 3 一般配送
+    order_type:   1 取貨付款（代收：店配 10–10,000、宅配 10–8,000）/ 3 取貨不付款
 
     代收服務需 ezShip 商務會員資格且在合約期間內，
     一般會員只能做「取貨不付款／純配送」。
     """
     validate_order(order_status, st_code, rv_addr, rv_zip, rv_name)
     if order_type not in ('1', '3'):
-        raise ValueError('order_type 只能是 1（代收）或 3（一般配送）')
+        raise ValueError('order_type 只能是 1（取貨付款）或 3（取貨不付款）')
     if web_para:
         check_no_special_chars(web_para, 'web_para')
 
@@ -212,17 +229,19 @@ def validate_order(order_status: str, st_code: str, rv_addr: str, rv_zip: str, r
 def parse_order_result(query: Dict[str, str]) -> Dict[str, str]:
     """解析建單導回的參數。
 
-    sn_id 回傳八個零代表建單失敗——這是唯一的失敗訊號，
-    沒有獨立的錯誤碼欄位。非八個零即成功，
-    且必須把 sn_id 存起來，後續寄件與追蹤貨況都靠它。
+    成功時 order_status=S01；失敗時 sn_id 為八個零、order_status 為 E 代碼。
+    A03／A04（輕鬆袋、迷你袋）成功也不回 sn_id。
+    成功後必須把 sn_id 存起來，後續寄件與追蹤貨況都靠它。
     """
     sn_id = query.get('sn_id', '')
+    status = query.get('order_status', '')
     return {
         'order_id': query.get('order_id', ''),
         'sn_id': sn_id,
-        'order_status': query.get('order_status', ''),
+        'order_status': status,
+        'error': ORDER_ERRORS.get(status, ''),
         'web_para': query.get('webPara', ''),
-        'success': sn_id != '' and sn_id != SN_ID_FAILED,
+        'success': status == ORDER_OK and sn_id != SN_ID_FAILED,
     }
 
 
@@ -289,14 +308,19 @@ def _self_test() -> int:
     print(f'         BIG5 {big5}')
     print(f'         UTF8 {utf8}')
 
-    # 建單失敗訊號
-    ok = parse_order_result({'sn_id': SN_ID_FAILED})['success'] is False
+    # 建單結果
+    r = parse_order_result({'sn_id': SN_ID_FAILED, 'order_status': 'E04'})
+    ok = r['success'] is False and r['error'] == ORDER_ERRORS['E04']
     failed += not ok
-    print(f'  [{"PASS" if ok else "FAIL"}] sn_id 八個零判定為建單失敗')
+    print(f'  [{"PASS" if ok else "FAIL"}] sn_id 八個零 + E04 判定為失敗並帶出原因')
 
-    ok = parse_order_result({'sn_id': 'SN12345678'})['success'] is True
+    ok = parse_order_result({'sn_id': '12345678', 'order_status': 'S01'})['success'] is True
     failed += not ok
-    print(f'  [{"PASS" if ok else "FAIL"}] sn_id 非八個零判定為成功')
+    print(f'  [{"PASS" if ok else "FAIL"}] S01 判定為成功')
+
+    ok = parse_order_result({'sn_id': '', 'order_status': 'S01'})['success'] is True
+    failed += not ok
+    print(f'  [{"PASS" if ok else "FAIL"}] 輕鬆袋（A03）成功時 sn_id 為空仍判定為成功')
 
     # 必填欄位規則
     cases = [

@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-Taiwan Payment Skill is an AI-powered toolkit for Taiwan Payment Gateway integration, providing API documentation, code examples, and scripts for major payment platforms (ECPay, NewebPay, PAYUNi, SmilePay, PChomePay, ezPay, PayNow). It works as a skill/workflow for AI coding assistants (Claude Code, Windsurf, Cursor, etc.).
+Taiwan Payment Skill is an AI-powered toolkit for Taiwan Payment Gateway integration, providing API documentation, code examples, and scripts for Taiwan payment platforms (ECPay, NewebPay, PAYUNi, SmilePay, PChomePay, ezPay, PayNow, Shopline Payments, LINE Pay, TapPay, O'Pay, JKOPAY, SunPay, GoMyPay). It works as a skill/workflow for AI coding assistants (Claude Code, Windsurf, Cursor, etc.).
 
 ## Available Scripts
 
@@ -41,22 +41,28 @@ taiwan-payment/                     # Source of Truth
 │   ├── paynow-payment-api.md
 │   ├── shopline-payment-api.md
 │   ├── linepay-payment-api.md
-│   └── tappay-payment-api.md
+│   ├── tappay-payment-api.md
+│   ├── opay-payment-api.md
+│   ├── jkopay-payment-api.md
+│   ├── sunpay-payment-api.md
+│   ├── gomypay-payment-api.md
+│   └── twqr-ewallet-landscape.md
 ├── scripts/                        # Utility scripts
 │   ├── core.py                     # BM25 search engine
 │   ├── recommend.py                # Recommendation system
-│   ├── search.py                   # Search CLI (150+ lines)
-│   └── test_payment.py             # Connection testing
-└── data/                           # Data-driven architecture (7 CSVs)
-    ├── providers.csv               # 14 providers（含 doc_access 文件公開程度分級）
-    ├── operations.csv              # 8 API operations
-    ├── error-codes.csv             # 1190 error codes（11 家，依各家官方文件重建）
-    ├── field-mappings.csv          # 19 欄位 × 14 家 provider 對照
-    ├── payment-methods.csv         # 40 payment methods
-    ├── reasoning.csv               # 30+ recommendation rules
-    └── troubleshooting.csv         # 16 troubleshooting cases
+│   ├── search.py                   # Search CLI
+│   └── test_payment.py             # 已知答案測試 + 測試環境連線
+├── examples/                       # 可執行範例（CI 以官方測試向量驗證）
+└── data/                           # search / recommend 使用的 CSV
+    ├── providers.csv               # 14 家（含 doc_access 文件公開程度分級）
+    ├── operations.csv
+    ├── error-codes.csv             # 依各家官方文件重建
+    ├── field-mappings.csv
+    ├── payment-methods.csv
+    ├── reasoning.csv
+    └── troubleshooting.csv
 
-cli/                                # CLI installer (taiwan-payment-skill on npm)
+payment-cli/                        # CLI installer (taiwan-payment-skill on npm)
 ├── src/
 │   ├── commands/init.ts            # Install command with template generation
 │   ├── utils/template.ts           # Template rendering engine
@@ -84,7 +90,7 @@ When modifying files:
    - `scripts/*.py` - Utility scripts
    - `data/*.csv` - Data files
 
-2. **Templates** - Edit in `cli/assets/templates/`:
+2. **Templates** - Edit in `payment-cli/assets/templates/`:
    - `base/skill-content.md` - Common skill content
    - `base/quick-reference.md` - Quick reference (Claude only)
    - `platforms/*.json` - Platform-specific configs (14 platforms)
@@ -220,7 +226,7 @@ All core logic is in CSV files:
 - **error-codes.csv** - Error code lookup table
 - **field-mappings.csv** - Field name mappings across providers
 - **payment-methods.csv** - Payment method details
-- **reasoning.csv** - Recommendation rules (30+ scenarios)
+- **reasoning.csv** - Recommendation rules
 - **troubleshooting.csv** - Common issues and solutions
 
 To add new data, edit CSV files directly. No code changes needed.
@@ -320,14 +326,14 @@ HashIV:   請至後台申請
 
 Before publishing to npm:
 
-1. Update version in `cli/package.json`
+1. Update version in `payment-cli/package.json`
 2. Sync assets: 由 `npm run build` 自動處理（`scripts/sync-assets.mjs`）
-3. Build CLI: `cd cli && npm run build`
+3. Build CLI: `cd payment-cli && npm run build`
 4. Test locally: `npm test`
 5. Publish: `npm publish`
 
 ## Related Projects
 
-- **Taiwan Invoice Skill** - E-Invoice integration (ECPay, SmilePay, Amego)
-- **Taiwan Logistics Skill** - Logistics integration (ECPay, NewebPay, PAYUNi)
+- **Taiwan Invoice Skill** - E-Invoice integration (ECPay, SmilePay, Amego, ezPay, PayNow, O'Pay, SunPay)
+- **Taiwan Logistics Skill** - Logistics integration (ECPay, NewebPay, PAYUNi, SmilePay, PChomePay, PayNow, ezShip, HCT, on-demand delivery)
 

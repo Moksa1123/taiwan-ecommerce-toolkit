@@ -2,13 +2,13 @@
 
 > {{DESCRIPTION}}
 
-**Comprehensive guide for Taiwan Logistics integration (ECPay, NewebPay, PAYUNi, SmilePay, PChomePay, PayNow + HCT direct API)**
+**Comprehensive guide for Taiwan Logistics integration (ECPay, NewebPay, PAYUNi, SmilePay, PChomePay, PayNow, ezShip + HCT direct API + on-demand delivery)**
 
 ---
 
 ## Supported Providers
 
-This skill covers **6 logistics aggregators** + **1 direct carrier API**:
+This skill covers **7 logistics aggregators** + **1 direct carrier API** + **3 on-demand delivery services**:
 
 | Provider | 類型 | Reference |
 |---|---|---|
@@ -17,10 +17,16 @@ This skill covers **6 logistics aggregators** + **1 direct carrier API**:
 | **PAYUNi 統一** | aggregator | `references/payuni-logistics-api.md` |
 | **SmilePay 速買配** | aggregator (含 7-11/全家 + 黑貓 Pay_zg 矩陣) | `references/smilepay-logistics-api.md` |
 | **PChomePay 拍錢包** | aggregator (金物流二合一) | `references/pchomepay-logistics-api.md` |
-| **PayNow 立吉富** | aggregator (11 條產品線, 3DES/ECB/Zero-Padding) | `references/paynow-logistics-api.md` |
+| **PayNow 立吉富** | aggregator (Logistic_service 產品線, 3DES/ECB/Zero-Padding) | `references/paynow-logistics-api.md` |
+| **ezShip 台灣便利配** | aggregator (全家/萊爾富/OK、宅配、店港澳；不含 7-11) | `references/ezship-logistics-api.md` |
 | **HCT 新竹物流** | **直連 carrier API** | `references/hct-logistics-api.md` |
+| **Lalamove** | 即時／同城配送 | `references/lalamove-logistics-api.md` |
+| **pandago / Uber Direct** | 即時／同城配送 | `references/ondemand-delivery.md` |
 
-> 註：選用 `HCT 直連 API` 適合大量出貨企業；一般電商透過 aggregator (`LogisticsType=HCT`) 走 HCT 配送即可，不需自行串接。
+黑貓、宅配通、中華郵政、超商賣家平台等沒有對外商家 API，替代路徑見 `references/carrier-direct-access.md`。
+各家實際參數值（子類型、溫層、代收上限）見 `data/logistics-types.csv`。
+
+> 註：本 skill 收錄的聚合商（ECPay、NewebPay、PAYUNi、SmilePay、PChomePay、PayNow、ezShip）官方規格都沒有新竹物流選項，要用 HCT 只能直連（需向 HCT 申請）。
 
 ---
 
@@ -87,9 +93,9 @@ This skill covers **6 logistics aggregators** + **1 direct carrier API**:
 **API Style**: Form POST with URL-encoded parameters
 
 **Supported Services:**
-- C2C Store-to-Store: 4 convenience stores (7-11, FamilyMart, Hi-Life, OK Mart)
-- C2C Frozen: 7-ELEVEN frozen goods
-- Home Delivery: T-Cat, HCT, Pelican Express
+- B2C 超商取貨：7-11（常溫／冷凍）、全家、萊爾富
+- C2C 店到店：7-11 交貨便、全家、萊爾富、OK
+- 宅配：黑貓（常溫／冷藏／冷凍）、中華郵政（僅常溫）
 
 **Test Environment:**
 - Base URL: `https://logistics-stage.ecpay.com.tw`
@@ -101,19 +107,16 @@ This skill covers **6 logistics aggregators** + **1 direct carrier API**:
 **Production Environment:**
 - Base URL: `https://logistics.ecpay.com.tw`
 
-**Logistics SubTypes (CVS):**
-- `FAMI` - FamilyMart (全家)
-- `UNIMART` - 7-ELEVEN (常溫)
-- `UNIMARTFREEZE` - 7-ELEVEN (冷凍)
-- `HILIFE` - Hi-Life (萊爾富)
-- `OKMART` - OK Mart
+**Logistics SubTypes (`LogisticsType=CVS`):**
+- B2C：`FAMI` 全家、`UNIMART` 7-11、`UNIMARTFREEZE` 7-11 冷凍店取、`HILIFE` 萊爾富
+- C2C：`FAMIC2C` 全家、`UNIMARTC2C` 7-11 交貨便、`HILIFEC2C` 萊爾富、`OKMARTC2C` OK
+- B2C 合約只能用 B2C 代碼，C2C 合約只能用 C2C 代碼；OK 只有 C2C
 
-**Logistics SubTypes (Home Delivery):**
-- `TCAT` - T-Cat (黑貓宅急便)
-- `ECAN` - HCT (新竹物流)
-- `POST` - Pelican Express (宅配通)
+**Logistics SubTypes (`LogisticsType=HOME`):**
+- `TCAT` - 黑貓宅急便（代收貨款時商品金額上限 20,000）
+- `POST` - 中華郵政（`Temperature` 只能 `0001`，不可代收）
 
-**Temperature Control (Home Delivery):**
+**Temperature Control (Home Delivery, TCAT):**
 - `0001` - Normal temperature (常溫)
 - `0002` - Refrigerated (冷藏)
 - `0003` - Frozen (冷凍)
@@ -131,9 +134,8 @@ This skill covers **6 logistics aggregators** + **1 direct carrier API**:
 - `03` - Outlying islands
 
 **Test Credentials:**
-- MerchantID: `2000132`
-- HashKey: `5294y06JbISpM5x9`
-- HashIV: `v77hoKGq4kWxNNIS`
+- B2C 及宅配：MerchantID `2000132`、HashKey `5294y06JbISpM5x9`、HashIV `v77hoKGq4kWxNNIS`
+- C2C：MerchantID `2000933`、HashKey `XBERn1YOvpM9nfZc`、HashIV `h1ONHk4P4yqbl5LK`
 
 ---
 

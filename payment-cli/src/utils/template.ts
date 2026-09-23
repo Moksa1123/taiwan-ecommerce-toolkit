@@ -97,6 +97,14 @@ async function copyTaiwanPaymentAssets(targetSkillDir: string, sections: Platfor
     await cp(join(sourceDir, 'EXAMPLES.md'), join(targetSkillDir, 'EXAMPLES.md'));
   }
 
+  // 可執行範例（EXAMPLES.md 與 SKILL.md 會連到 examples/*.py）
+  if (sections.examples && await exists(join(sourceDir, 'examples'))) {
+    await cp(join(sourceDir, 'examples'), join(targetSkillDir, 'examples'), {
+      recursive: true,
+      filter: (src) => !src.includes('__pycache__'),
+    });
+  }
+
   // Copy references if enabled
   if (sections.references && await exists(join(sourceDir, 'references'))) {
     const refsTarget = join(targetSkillDir, 'references');
@@ -111,8 +119,8 @@ async function copyTaiwanPaymentAssets(targetSkillDir: string, sections: Platfor
     await cp(join(sourceDir, 'scripts'), scriptsTarget, { recursive: true });
   }
 
-  // Copy data if enabled (CSV data files)
-  if (sections.data && await exists(join(sourceDir, 'data'))) {
+  // 腳本（search / recommend）讀 data/*.csv，裝腳本就一併複製
+  if ((sections.scripts || sections.data) && await exists(join(sourceDir, 'data'))) {
     const dataTarget = join(targetSkillDir, 'data');
     await mkdir(dataTarget, { recursive: true });
     await cp(join(sourceDir, 'data'), dataTarget, { recursive: true });

@@ -90,6 +90,34 @@ def check_file(path):
     return problems
 
 
+def check_search_config():
+    """各 skill scripts/core.py 的 CSV_CONFIG 引用的欄位必須存在於對應 CSV，否則該搜尋域永遠查無結果"""
+    import importlib.util
+    problems = []
+    for core in sorted(glob.glob(os.path.join(ROOT, 'taiwan-*', 'scripts', 'core.py'))):
+        skill_dir = os.path.dirname(os.path.dirname(core))
+        spec = importlib.util.spec_from_file_location('core_' + os.path.basename(skill_dir), core)
+        mod = importlib.util.module_from_spec(spec)
+        sys.path.insert(0, os.path.dirname(core))
+        try:
+            spec.loader.exec_module(mod)
+        finally:
+            sys.path.pop(0)
+        for domain, cfg in getattr(mod, 'CSV_CONFIG', {}).items():
+            csv_path = os.path.join(skill_dir, 'data', cfg['file'])
+            rel = os.path.relpath(core, ROOT).replace('\\', '/')
+            if not os.path.exists(csv_path):
+                problems.append(f'{rel}: {domain} 的檔案 {cfg["file"]} 不存在')
+                continue
+            with open(csv_path, encoding='utf-8') as f:
+                header = next(csv.reader(f))
+            for key in ('search_cols', 'output_cols'):
+                missing = [c for c in cfg.get(key, []) if c not in header]
+                if missing:
+                    problems.append(f'{rel}: {domain}.{key} 欄位不存在於 {cfg["file"]}：{missing}')
+    return problems
+
+
 def main():
     paths = sorted(glob.glob(os.path.join(ROOT, 'taiwan-*', 'data', '*.csv')))
     if not paths:
@@ -103,6 +131,10 @@ def main():
         status = 'OK' if not problems else f'{len(problems)} 個問題'
         print(f'  {rel:<48} {status}')
         all_problems.extend(problems)
+
+    config_problems = check_search_config()
+    print(f'  {"scripts/core.py 搜尋欄位設定":<48} {"OK" if not config_problems else f"{len(config_problems)} 個問題"}')
+    all_problems.extend(config_problems)
 
     print()
     if all_problems:

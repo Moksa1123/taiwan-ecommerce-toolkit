@@ -1,8 +1,7 @@
 import chalk from 'chalk';
 import ora from 'ora';
 import { logger } from '../utils/logger.js';
-
-const VERSION = '1.0.0';
+import { VERSION } from '../version.js';
 
 export async function updateCommand(): Promise<void> {
   logger.title('Taiwan Payment Skill - Update');

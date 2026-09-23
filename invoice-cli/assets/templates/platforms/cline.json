@@ -8,10 +8,10 @@
     "filename": "SKILL.md",
     "globalRoot": "~/.cline"
   },
-  "scriptPath": "commands/taiwan-invoice/scripts",
+  "scriptPath": "skills/taiwan-invoice/scripts",
   "frontmatter": {
     "name": "taiwan-invoice",
-    "description": "Taiwan E-Invoice API integration for ECPay, SmilePay, Amego, ezPay, and PayNow.",
+    "description": "Taiwan E-Invoice API integration specialist for ECPay, SmilePay, Amego, ezPay, PayNow, O'Pay and SunPay, plus MOF E-Invoice platform queries. Use when developing invoice systems, implementing B2C/B2B invoice issuance, void, allowance, invoice printing, carrier/donation code validation, or working with Taiwan E-Invoice APIs. Handles encryption (AES-128-CBC, AES-256-CBC, MD5, JWT), API requests, and service provider differences.",
     "user-invocable": "true"
   },
   "sections": {
@@ -21,6 +21,6 @@
     "quickReference": false
   },
   "title": "Taiwan E-Invoice Skill",
-  "description": "Comprehensive guide for Taiwan E-Invoice API integration. Supports ECPay, SmilePay, Amego, ezPay, and PayNow providers with B2C/B2B invoice operations.",
+  "description": "Comprehensive guide for Taiwan E-Invoice API integration. Supports ECPay, SmilePay, Amego, ezPay, PayNow, O'Pay and SunPay (plus MOF platform queries) with B2C/B2B invoice operations.",
   "skillOrWorkflow": "Skill"
 }

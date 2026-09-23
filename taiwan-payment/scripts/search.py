@@ -114,8 +114,10 @@ def format_all_results_ascii(all_results: Dict[str, List]) -> str:
                 output.append(f'      錯誤碼: {result.get("code", "")} - {result.get("message_zh", "")}')
                 output.append(f'      解決: {result.get("solution", "")}')
             elif domain == 'payment_method':
-                output.append(f'      方式: {result.get("name_zh", "")}')
-                output.append(f'      說明: {result.get("description", "")}')
+                output.append(f'      方式: {result.get("method_zh", "")}（{result.get("method_code", "")}）')
+                codes = [f'{k[:-5]}={v}' for k, v in result.items() if k.endswith('_code') and k != 'method_code' and v]
+                output.append(f'      代碼: {", ".join(codes)}')
+                output.append(f'      說明: {result.get("notes", "")}')
             else:
                 # 顯示前 3 個欄位
                 for key, value in list(result.items())[:3]:

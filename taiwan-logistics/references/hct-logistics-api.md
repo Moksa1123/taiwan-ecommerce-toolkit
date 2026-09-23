@@ -3,7 +3,7 @@
 新竹物流 (HCT, Hsinchu Transportation) **直連 API** 完整參考文件。
 
 > **重要說明**
-> 本文件描述**直連 HCT 自家 API** 的整合方式 (申請後使用)。如僅需透過 ECPay/PayNow/SmilePay 等 aggregator 打 HCT 配送 (`LogisticsType=HCT` / `LogisticsSubType=TCAT`)，請參考各 aggregator 的物流文件。
+> 本文件描述**直連 HCT 自家 API** 的整合方式 (申請後使用)。本 skill 收錄的聚合商（ECPay、NewebPay、PAYUNi、SmilePay、PChomePay、PayNow、ezShip）官方規格都沒有新竹物流選項，要用 HCT 只能直連。
 >
 > HCT 與本工具包中的其他物流業者不同 — 它**本身就是配送公司 (carrier)**，並非 aggregator。本參考適用於需要直接對接新竹物流系統的中大型出貨企業。
 

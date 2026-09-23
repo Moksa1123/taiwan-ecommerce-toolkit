@@ -2,7 +2,7 @@
 
 Reference these guidelines when:
 - Developing Taiwan Payment Gateway integration
-- Integrating ECPay, NewebPay, or PAYUNi payment APIs
+- Integrating ECPay, NewebPay, PAYUNi, SmilePay, PChomePay, ezPay, PayNow, Shopline Payments, LINE Pay, TapPay, O'Pay, JKOPAY, SunPay or GoMyPay
 - Implementing credit card, ATM virtual account, CVS code, or e-wallet payments
 - Verifying CheckMacValue / TradeSha / EncryptInfo signatures
 - Troubleshooting payment callbacks, refund flows, or 3D Secure
@@ -44,8 +44,7 @@ Reference these guidelines when:
 
 ### 4. Refund Flow (MEDIUM)
 
-- `partial-refund` - Most providers support partial refund (within original amount)
-- `refund-window` - Each provider has a refund window (e.g., 180 days for credit card)
+- `refund-rules` - 部分退款與退款期限各家不同（例：街口退款限 180 天內，用券訂單只能全額退），查該家 reference
 - `refund-status-poll` - Refunds may be async; poll status or wait for callback
 
 ### 5. Common Pitfalls

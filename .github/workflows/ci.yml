@@ -47,8 +47,7 @@ jobs:
       - name: 搜尋引擎回歸測試
         run: python taiwan-invoice/scripts/test_search.py
 
-      # 範例程式曾只用 py_compile 檢查，連 import 失敗、加密格式與官方不符都抓不到。
-      # 這裡實際載入每支範例，並以官方外掛 / SDK / 規格書產生的標準答案逐位元組比對。
+      # 實際載入每支範例，並以官方外掛 / SDK / 規格書產生的標準答案逐位元組比對
       - name: 安裝範例程式相依套件
         run: pip install -r requirements-dev.txt
 
@@ -96,12 +95,34 @@ jobs:
         working-directory: ${{ matrix.dir }}
         run: npm pack --dry-run
 
+  # 三個 CLI 都建置後實際安裝一次：檢查所有 skill 檔案都有裝到、裝好的 search.py 能讀到 data/
+  install:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: 建置三個 CLI
+        run: |
+          set -euo pipefail
+          for d in invoice-cli payment-cli logistics-cli; do (cd "$d" && npm ci && npm run build); done
+
+      - name: 安裝煙霧測試
+        run: python scripts/smoke_test_install.py
+
   # 分支保護只需要求這一個 check。
   # 若改為逐一列出上面的 job，matrix 內容變動（例如新增第四個套件）時
   # 保護規則不會跟著更新，新 job 會變成「沒有被要求」而靜默失效。
   ci-passed:
     if: always()
-    needs: [verify, build]
+    needs: [verify, build, install]
     runs-on: ubuntu-latest
     steps:
       - name: 確認前置 job 全數成功

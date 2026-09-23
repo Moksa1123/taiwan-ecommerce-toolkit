@@ -604,7 +604,6 @@ const endpoint = isB2B ? '/B2BInvoice/Issue' : '/B2CInvoice/Issue'
 
 - [速買配 API 規格](./SMILEPAY_API_REFERENCE.md)
 - [光貿 Amego API 規格](./AMEGO_API_REFERENCE.md)
-- [發票開立流程](./INVOICE_FLOW.md)
 
 ---
 

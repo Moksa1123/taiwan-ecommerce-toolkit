@@ -3,13 +3,13 @@
 <h3 align="center">台灣電子發票 AI 開發技能包</h3>
 
 <p align="center">
-  <strong>支援 ECPay 綠界 · SmilePay 速買配 · Amego 光貿 · ezPay 簡單付 · PayNow 立吉富</strong>
+  <strong>支援 ECPay 綠界 · SmilePay 速買配 · Amego 光貿 · ezPay 簡單付 · PayNow 立吉富 · O'Pay 歐付寶 · SunPay 紅陽 · 財政部大平台</strong>
 </p>
 
 <p align="center">
   <a href="https://www.npmjs.com/package/taiwan-invoice-skill"><img src="https://img.shields.io/npm/v/taiwan-invoice-skill?style=flat-square&logo=npm" alt="npm version"></a>
   <a href="https://www.npmjs.com/package/taiwan-invoice-skill"><img src="https://img.shields.io/npm/dm/taiwan-invoice-skill?style=flat-square&label=downloads" alt="npm downloads"></a>
-  <img src="https://img.shields.io/badge/providers-5-success?style=flat-square" alt="5 Providers">
+  <img src="https://img.shields.io/badge/providers-9-success?style=flat-square" alt="9 Providers">
   <img src="https://img.shields.io/badge/AI%20platforms-14-blue?style=flat-square" alt="14 AI Platforms">
   <a href="https://github.com/Moksa1123/taiwan-ecommerce-toolkit/blob/main/LICENSE"><img src="https://img.shields.io/github/license/Moksa1123/taiwan-ecommerce-toolkit?style=flat-square" alt="License"></a>
 </p>
@@ -48,7 +48,7 @@ taiwan-invoice init --ai all           # 全部安裝
 
 ---
 
-## 5 家發票服務商
+## 發票服務商
 
 | 服務商 | 加密 / 認證 | 適用場景 |
 |---|---|---|
@@ -57,8 +57,13 @@ taiwan-invoice init --ai all           # 全部安裝
 | **Amego 光貿** | MD5 簽章 + App Key | MIG 4.0 標準、現代 RESTful |
 | **ezPay 簡單付** | AES-256-CBC + 32 碼 HashKey + SHA256 | 藍新金流集團小型品牌、字軌管理、批次開立 |
 | **PayNow 立吉富** | JWT Bearer Token | 金物流發票一站式、POS 機批次取號流程 |
+| **O'Pay 歐付寶** | MerchantID + RqHeader + AES 加密 Data | 與綠界發票 API 同源架構 |
+| **SunPay 紅陽** | Token 欄位 AES-128-CBC | 可與紅陽金流搭配隨交易自動開立 |
+| **財政部大平台** | AppID + APIKey（HMAC-SHA256 加簽）| 只做查詢／驗證（手機條碼、捐贈碼、中獎號碼），不能開立 |
 
-每家附完整 Python 範例（B2C / B2B / 作廢 / 折讓）+ 反推的加密實作 + 測試帳號。
+另列關貿（TradeVAN）於 `data/providers.csv`，尚未收錄 reference。
+
+ECPay、ezPay、O'Pay、PayNow、SunPay 附可執行 Python 範例，加解密以官方測試向量驗證；SmilePay、Amego 見 EXAMPLES.md 與 references。
 
 ## 技能包內容
 
@@ -66,17 +71,21 @@ taiwan-invoice init --ai all           # 全部安裝
 taiwan-invoice/
 ├── SKILL.md                          # AI 技能主文檔
 ├── EXAMPLES.md                       # 完整範例集
-├── references/                       # 5 份 API 規格
+├── references/                       # 各服務商 API 規格
 │   ├── ECPAY_API_REFERENCE.md
 │   ├── SMILEPAY_API_REFERENCE.md
 │   ├── AMEGO_API_REFERENCE.md
-│   ├── EZPAY_API_REFERENCE.md       # ezPay 5 本 PDF 蒸餾 1,084 行
-│   └── PAYNOW_API_REFERENCE.md      # PayNow JWT + POS 流程
-├── examples/                         # 5 個生產級 Python 範例
-└── data/                             # 7 份 CSV 資料
-    ├── providers.csv                # 5 服務商
-    ├── operations.csv               # 11 個 API 操作
-    ├── error-codes.csv              # 80+ 錯誤碼
+│   ├── EZPAY_API_REFERENCE.md
+│   ├── PAYNOW_API_REFERENCE.md
+│   ├── OPAY_API_REFERENCE.md
+│   ├── SUNPAY_API_REFERENCE.md
+│   ├── MOF_EINVOICE_API_REFERENCE.md # 財政部大平台（查詢）
+│   └── VAC_LANDSCAPE.md             # 加值中心生態
+├── examples/                         # 可執行 Python 範例
+└── data/                             # search / recommend 使用的 CSV
+    ├── providers.csv
+    ├── operations.csv
+    ├── error-codes.csv              # 各家官方錯誤碼
     └── ...
 ```
 
@@ -92,14 +101,14 @@ taiwan-invoice init --global       # 全域安裝
 
 ## 14 個 AI 平台支援
 
-Claude Code · Cursor · Windsurf · Antigravity · GitHub Copilot · Kiro · Codex · Qoder · Roo Code · Gemini · Trae · OpenCode · Continue · CodeBuddy
+Claude Code · Cursor · Windsurf · Antigravity · GitHub Copilot · Kiro · Codex · Qoder · Cline · Gemini · Trae · OpenCode · Continue · CodeBuddy
 
 ## 相關套件
 
 本套件是 **[Taiwan E-Commerce Toolkit](https://github.com/Moksa1123/taiwan-ecommerce-toolkit)** 的一部分：
 
-- [taiwan-payment-skill](https://www.npmjs.com/package/taiwan-payment-skill) — 10 家金流（ECPay / NewebPay / PAYUNi / SmilePay / PChomePay / ezPay / PayNow / Shopline / LINE Pay / TapPay）
-- [taiwan-logistics-skill](https://www.npmjs.com/package/taiwan-logistics-skill) — 7 家物流（含 HCT 新竹物流直連）
+- [taiwan-payment-skill](https://www.npmjs.com/package/taiwan-payment-skill) — 14 家金流
+- [taiwan-logistics-skill](https://www.npmjs.com/package/taiwan-logistics-skill) — 7 家物流 aggregator + HCT 直連 + 3 家即時配送
 
 ## 授權
 

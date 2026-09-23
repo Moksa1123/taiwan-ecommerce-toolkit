@@ -4,19 +4,23 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-Taiwan Invoice Skill is an AI-powered toolkit for Taiwan E-Invoice integration, providing API documentation, code examples, and scripts for major invoice platforms (ECPay, SmilePay, Amego). It works as a skill/workflow for AI coding assistants (Claude Code, Windsurf, Cursor, etc.).
+Taiwan Invoice Skill is an AI-powered toolkit for Taiwan E-Invoice integration, providing API documentation, code examples, and scripts for Taiwan invoice platforms (ECPay, SmilePay, Amego, ezPay, PayNow, O'Pay, SunPay; MOF platform for queries). It works as a skill/workflow for AI coding assistants (Claude Code, Windsurf, Cursor, etc.).
 
 ## Available Scripts
 
 ```bash
-# Test API connectivity
-python3 taiwan-invoice/scripts/test_connection.py <platform>
+# 搜尋（provider / operation / error / field / tax / troubleshoot / reasoning）
+python3 taiwan-invoice/scripts/search.py "<query>" --domain error
 
-# Validate invoice data
-python3 taiwan-invoice/scripts/validate_invoice.py <json_file>
+# 推薦加值中心
+python3 taiwan-invoice/scripts/recommend.py "<需求>"
 
-# Generate invoice code
-python3 taiwan-invoice/scripts/generate_code.py <platform> <language>
+# 產生服務骨架（未實作的步驟會拋 NotImplementedError）
+python3 taiwan-invoice/scripts/generate-invoice-service.py <Provider> --lang python|typescript --output <dir>
+
+# 驗證（repo 根目錄）
+python3 scripts/validate-data.py
+python3 scripts/verify-examples.py
 ```
 
 **Supported Platforms:** `ecpay`, `smilepay`, `amego`, `ezpay`, `paynow`, `opay`, `mof`（財政部大平台）, `tradevan`（未收錄 reference）
@@ -29,21 +33,17 @@ python3 taiwan-invoice/scripts/generate_code.py <platform> <language>
 taiwan-invoice/                     # Source of Truth
 ├── SKILL.md                        # Main skill documentation
 ├── EXAMPLES.md                     # Code examples and patterns
-├── references/                     # API documentation
-│   ├── ecpay-api.md
-│   ├── smilepay-api.md
-│   └── amego-api.md
-└── scripts/                        # Utility scripts
-    ├── test_connection.py
-    ├── validate_invoice.py
-    └── generate_code.py
+├── references/                     # API documentation（各服務商 *_API_REFERENCE.md）
+├── examples/                       # 可執行範例（CI 以官方測試向量驗證）
+├── data/                           # search / recommend 使用的 CSV
+└── scripts/                        # search.py、recommend.py、generate-invoice-service.py、persist.py、error_handler.py
 
-cli/                                # CLI installer (taiwan-invoice-skill on npm)
+invoice-cli/                        # CLI installer (taiwan-invoice-skill on npm)
 ├── src/
 │   ├── commands/init.ts            # Install command with template generation
 │   ├── utils/template.ts           # Template rendering engine
-│   ├── utils/github.ts             # GitHub release downloads
-│   └── utils/extract.ts            # ZIP extraction utilities
+│   ├── utils/detect.ts             # AI type detection
+│   └── utils/logger.ts             # Logging utilities
 └── assets/                         # Bundled assets
     ├── taiwan-invoice/             # Copy of taiwan-invoice/
     └── templates/
@@ -65,7 +65,7 @@ When modifying files:
    - `references/*.md` - API documentation
    - `scripts/*.py` - Utility scripts
 
-2. **Templates** - Edit in `cli/assets/templates/`:
+2. **Templates** - Edit in `invoice-cli/assets/templates/`:
    - `base/skill-content.md` - Common skill content
    - `platforms/*.json` - Platform-specific configs (14 platforms)
 

@@ -891,7 +891,6 @@ TotalAmount = SalesAmount + FreeTaxSalesAmount + ZeroTaxSalesAmount + TaxAmount
 
 - [速買配 API 規格](./SMILEPAY_API_REFERENCE.md)
 - [綠界 API 規格](./ECPAY_API_REFERENCE.md)
-- [發票開立流程](./INVOICE_FLOW.md)
 
 ---
 

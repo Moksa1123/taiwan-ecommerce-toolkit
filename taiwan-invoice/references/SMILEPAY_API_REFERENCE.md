@@ -485,5 +485,4 @@ if (printData.method === 'GET' && printData.url) {
 
 - [綠界 API 規格](./ECPAY_API_REFERENCE.md)
 - [光貿 Amego API 規格](./AMEGO_API_REFERENCE.md)
-- [發票開立流程](./INVOICE_FLOW.md)
 

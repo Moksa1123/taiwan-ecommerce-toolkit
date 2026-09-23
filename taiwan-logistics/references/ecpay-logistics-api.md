@@ -43,12 +43,14 @@
 
 ### 測試帳號
 
-```
-測試網址: https://logistics-stage.ecpay.com.tw
-商店代號: 2000132
-HashKey:  5294y06JbISpM5x9
-HashIV:   v77hoKGq4kWxNNIS
-```
+測試網址：`https://logistics-stage.ecpay.com.tw`（developers.ecpay.com.tw/7398）
+
+| 用途 | MerchantID | HashKey | HashIV |
+|------|-----------|---------|--------|
+| B2C 及宅配 | `2000132` | `5294y06JbISpM5x9` | `v77hoKGq4kWxNNIS` |
+| C2C | `2000933` | `XBERn1YOvpM9nfZc` | `h1ONHk4P4yqbl5LK` |
+
+用錯特店建單會回 `0|找不到加密金鑰，請確認是否有申請開通此物流方式!`。
 
 ### 測試用超商門市
 
@@ -68,27 +70,30 @@ HashIV:   v77hoKGq4kWxNNIS
 | 類型 | 代碼 | 說明 |
 |------|------|------|
 | 7-11 超商取貨 | `UNIMART` | 統一超商 B2C |
+| 7-11 冷凍店取 | `UNIMARTFREEZE` | 統一超商 B2C 冷凍 |
 | 7-11 交貨便 | `UNIMARTC2C` | C2C 店到店 |
 | 全家超商取貨 | `FAMI` | 全家便利商店 B2C |
 | 全家店到店 | `FAMIC2C` | C2C 店到店 |
 | 萊爾富超商取貨 | `HILIFE` | 萊爾富 B2C |
 | 萊爾富店到店 | `HILIFEC2C` | C2C 店到店 |
-| OK 超商取貨 | `OKMART` | OK 便利商店 B2C |
-| OK 店到店 | `OKMARTC2C` | C2C 店到店 |
+| OK 店到店 | `OKMARTC2C` | C2C 店到店（OK 沒有 B2C） |
+
+B2C 合約只能用 `FAMI`、`UNIMART`、`HILIFE`、`UNIMARTFREEZE`；C2C 合約只能用 `FAMIC2C`、`UNIMARTC2C`、`HILIFEC2C`、`OKMARTC2C`。
+`GoodsAmount` 範圍 1–20,000，超出回 `10500040`。
 
 ### 宅配類型
 
 | 類型 | 代碼 | 說明 |
 |------|------|------|
-| 黑貓宅急便 | `TCAT` | 宅配到府 |
-| 宅配通 | `ECAN` | 常溫宅配 |
+| 黑貓宅急便 | `TCAT` | `Temperature` 0001 常溫／0002 冷藏／0003 冷凍；代收貨款時商品金額上限 20,000 |
+| 中華郵政 | `POST` | `Temperature` 只能 0001；不可代收；忽略 `Specification`、`ScheduledPickupTime` |
 
 ### LogisticsType 對照
 
 | 值 | 說明 |
 |------|------|
 | `CVS` | 超商取貨 |
-| `Home` | 宅配 |
+| `HOME` | 宅配 |
 
 ---
 
@@ -180,7 +185,7 @@ POST /Express/Create
 | `MerchantID` | String(10) | ● | 商店代號 |
 | `MerchantTradeNo` | String(20) | ● | 訂單編號 (唯一) |
 | `MerchantTradeDate` | String(20) | ● | 訂單日期 `yyyy/MM/dd HH:mm:ss` |
-| `LogisticsType` | String(20) | ● | 物流類型 `CVS`/`Home` |
+| `LogisticsType` | String(20) | ● | 物流類型 `CVS`/`HOME` |
 | `LogisticsSubType` | String(20) | ● | 物流子類型 |
 | `GoodsAmount` | Integer | ● | 商品金額 |
 | `GoodsName` | String(50) | ● | 商品名稱 |

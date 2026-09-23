@@ -10,7 +10,7 @@
   "scriptPath": "skills/taiwan-logistics/scripts",
   "frontmatter": {
     "name": "taiwan-logistics",
-    "description": "Taiwan Logistics API integration specialist for ECPay, NewebPay, PAYUNi, SmilePay, PChomePay, PayNow, HCT, SmilePay, PChomePay, PayNow, and HCT direct logistics aggregators. Use when developing shipping flows, implementing CVS pickup (7-11/全家/萊爾富/OK), home delivery (黑貓/宅配通), store-map selectors, COD orders, or shipment tracking. Handles encryption, store-map iframes, and provider field mappings.",
+    "description": "Taiwan Logistics API integration specialist for ECPay, NewebPay, PAYUNi, SmilePay, PChomePay, PayNow and ezShip aggregators, HCT direct carrier API, and on-demand delivery (Lalamove, pandago, Uber Direct). Use when developing shipping flows, implementing CVS pickup (7-11/全家/萊爾富/OK), home delivery (黑貓/中華郵政), cold-chain, store-map selectors, COD orders, or shipment tracking. Handles encryption (MD5, AES-256-CBC, AES-256-GCM, 3DES), store maps, and provider field mappings.",
     "user-invocable": "true"
   },
   "sections": {
@@ -20,6 +20,6 @@
     "quickReference": false
   },
   "title": "Taiwan Logistics Skill",
-  "description": "Comprehensive guide for Taiwan Logistics API integration. Supports ECPay, NewebPay, PAYUNi, SmilePay, PChomePay, PayNow, HCT, SmilePay, PChomePay, PayNow, and HCT direct providers covering CVS store-to-store, B2C bulk pickup, home delivery, and shipment tracking.",
+  "description": "Comprehensive guide for Taiwan Logistics API integration. Supports ECPay, NewebPay, PAYUNi, SmilePay, PChomePay, PayNow and ezShip aggregators, HCT direct, and on-demand delivery (Lalamove, pandago, Uber Direct) covering CVS store-to-store, B2C bulk, home delivery, cold-chain, and tracking.",
   "skillOrWorkflow": "Skill"
 }

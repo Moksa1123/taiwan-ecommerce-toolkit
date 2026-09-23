@@ -1066,7 +1066,6 @@ ezPay：`0`=手機條碼、`1`=自然人憑證、`2`=ezPay 會員載具
 - [綠界 ECPay API 規格](./ECPAY_API_REFERENCE.md)
 - [速買配 SmilePay API 規格](./SMILEPAY_API_REFERENCE.md)
 - [光貿 Amego API 規格](./AMEGO_API_REFERENCE.md)
-- [發票開立流程](./INVOICE_FLOW.md)
 
 ---
 

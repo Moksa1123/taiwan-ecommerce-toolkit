@@ -55,8 +55,8 @@ CSV_CONFIG = {
     },
     'payment_method': {
         'file': 'payment-methods.csv',
-        'search_cols': ['method_id', 'name_zh', 'name_en', 'ecpay_code', 'newebpay_code', 'payuni_code', 'description', 'features'],
-        'output_cols': ['method_id', 'name_zh', 'ecpay_code', 'newebpay_code', 'payuni_code', 'category', 'description', 'features']
+        'search_cols': ['method_code', 'method_zh', 'method_en', 'ecpay_code', 'newebpay_code', 'payuni_code', 'opay_code', 'smilepay_code', 'pchomepay_code', 'ezpay_code', 'paynow_code', 'sunpay_code', 'notes'],
+        'output_cols': ['method_code', 'method_zh', 'ecpay_code', 'newebpay_code', 'payuni_code', 'opay_code', 'smilepay_code', 'pchomepay_code', 'ezpay_code', 'paynow_code', 'sunpay_code', 'min_amount', 'max_amount', 'settlement_days', 'notes']
     },
     'troubleshoot': {
         'file': 'troubleshooting.csv',
