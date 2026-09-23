@@ -640,7 +640,7 @@ pip install pycryptodome requests
 |---|---|
 | **AES-128-CBC** | ECPay 電子發票 |
 | **AES-256-CBC** | NewebPay / ezPay 金流（共用 MPG）、ezPay 發票、NewebPay 物流 |
-| **AES-256-GCM** | PAYUNi 金流 / 物流（含 16-byte auth tag） |
+| **AES-256-GCM** | PAYUNi 金流 / 物流（EncryptInfo = hex(base64(密文) + `:::` + base64(tag))） |
 | **動態 AES-256 (GP/GK)** | PayNow 傳統 cashflow（每次以 GP/GK 檢核碼取 Key/IV） |
 | **3DES / ECB / Zero-Padding** | **PayNow 物流**（24-byte Key + 8-byte IV，不同於金流端 AES-256） |
 | **JWT Bearer Token** | PayNow 現代 PaymentIntent、PayNow 發票 |

@@ -139,41 +139,34 @@ This skill covers **6 logistics aggregators** + **1 direct carrier API**:
 
 ### PAYUNi Logistics (統一物流)
 
-**Encryption**: AES-256-GCM + SHA256 (same as PAYUNi payment)
+**Encryption**: AES-256-GCM + SHA256 (same as PAYUNi payment):
+`EncryptInfo = hex(base64(ciphertext) + ":::" + base64(tag))`, `HashInfo = SHA256(HashKey + EncryptInfo + HashIV)`
 
-**API Style**: RESTful JSON with AES-GCM encryption
+**API Style**: form POST (`MerID`, `Version`, `EncryptInfo`, `HashInfo`), JSON response with an encrypted `EncryptInfo`
+
+> Endpoints, fields and codes below follow the production plugin wpbr-payuni-shipping 1.6.4;
+> crypto is verified byte-for-byte against the official PAYUNi plugin and PHP SDK.
+> Full details: `references/payuni-logistics-api.md`.
 
 **Supported Services:**
 - C2C Store-to-Store: 7-ELEVEN (normal temperature + frozen)
 - B2C Bulk Warehouse: 7-ELEVEN only
 - Home Delivery: T-Cat (normal temperature, frozen, refrigerated)
 
-**Test Environment:**
-- Base URL: `https://sandbox-api.payuni.com.tw/api/`
-- Create Shipment: `POST /logistics/create`
-- Query Shipment: `POST /logistics/query`
-- Cancel Shipment: `POST /logistics/cancel`
+**Endpoints** (base `https://sandbox-api.payuni.com.tw/api` / `https://api.payuni.com.tw/api`):
 
-**Production Environment:**
-- Base URL: `https://api.payuni.com.tw/api/`
+| Purpose | Path | Version |
+|---|---|---|
+| 7-11 store map (browser form) | `/logistics/ship_map` | 1.1 |
+| Create 7-11 shipment | `/logistics/trade` | 1.1 |
+| Create T-Cat shipment | `/home_delivery/trade` | 1.1 |
+| Query shipment | `/logistics/query` | 1.1 |
+| Print 7-11 label (browser form) | `/logistics/print_label` | 1.0 |
 
-**Logistics Types:**
-- `PAYUNi_Logistic_711` - 7-11 C2C (normal temperature)
-- `PAYUNi_Logistic_711_Freeze` - 7-11 C2C (frozen)
-- `PAYUNi_Logistic_711_B2C` - 7-11 B2C (bulk warehouse)
-- `PAYUNi_Logistic_Tcat` - T-Cat home delivery (normal)
-- `PAYUNi_Logistic_Tcat_Freeze` - T-Cat frozen
-- `PAYUNi_Logistic_Tcat_Cold` - T-Cat refrigerated
+**Codes:** `ShipType` 1=7-ELEVEN 2=T-Cat · `LgsType` C2C / B2C / HOME · `GoodsType` 1=normal 2=frozen 3=refrigerated ·
+`ServiceType` 1=COD 3=no COD · `DeliveryTimeTag` 01 / 02 / 04(not set)
 
-**Temperature Codes:**
-- `1` - Normal temperature
-- `2` - Frozen
-- `3` - Refrigerated (T-Cat only)
-
-**Size & Weight Limits:**
-- Normal temperature: 150cm material volume, 20kg
-- Frozen/Refrigerated: 120cm material volume, 15kg
-- Material volume calculation: Length + Width + Height ≤ Limit
+> Strings like `PAYUNi_Logistic_711` are WooCommerce shipping-method IDs of the official plugin, **not** API values.
 
 ---
 
@@ -502,13 +495,21 @@ Real-time notification when shipment status changes.
 NewebPay Logistics uses the same encryption method as NewebPay Payment:
 
 1. **AES-256-CBC Encryption**: Encrypt data using merchant's HashKey and HashIV
-2. **SHA256 Hash**: Add HashKey + AES result + HashIV, then SHA256 hash and uppercase
+2. **SHA256 Hash**: `HashKey=` + key + `&` + AES result + `&HashIV=` + iv, then SHA256 and uppercase
 
 **Process:**
 ```
-EncryptData = AES-256-CBC(data, HashKey, HashIV)
-HashData = SHA256(HashKey + EncryptData + HashIV).toUpperCase()
+EncryptData = hex(AES-256-CBC(JSON, HashKey, HashIV))
+HashData    = SHA256("HashKey={HashKey}&{EncryptData}&HashIV={HashIV}").toUpperCase()
 ```
+
+Spec NDNS 1.0.0 appendix (1) gives a worked example:
+`SHA256("HashKey=12345678901234567890123456789012&AAAABBBBCCCCDDDD&HashIV=12345678")`
+= `5C6C504A2F2B2E3EB5CA80998F626307ACD327AC6DCE4FF84F86B021988B2576`.
+
+Field names: requests use a trailing underscore (`UID_`, `EncryptData_`, `HashData_`, `Version_`, `RespondType_`);
+API responses and the store-map callback use `EncryptData` / `HashData` **without** underscore;
+the status push (NPA-B58) uses the underscored names.
 
 ---
 
@@ -610,177 +611,50 @@ HashData = SHA256(HashKey + EncryptData + HashIV).toUpperCase()
 
 ## PAYUNi API Operations
 
-### 1. Create 7-11 C2C Shipment
+All requests: form POST `MerID`, `Version`, `EncryptInfo`, `HashInfo`. Verify `HashInfo` on every
+response and notification before decrypting.
 
-Create store-to-store logistics order.
+### 1. Create shipment
 
-**Endpoint:** `POST /api/logistics/create`
+`POST /api/logistics/trade` (7-11) or `POST /api/home_delivery/trade` (T-Cat), Version `1.1`.
 
-**Request Body:**
+| EncryptInfo field | 7-11 | T-Cat | Notes |
+|---|:-:|:-:|---|
+| MerID, Timestamp | ● | ● | |
+| MerTradeNo | ● | ● | |
+| GoodsType / LgsType / ShipType | ● | ● | see codes above |
+| TradeAmt | ● | ● | COD amount, or declared value when not COD |
+| ServiceType | ● | ● | 1 = COD, 3 = no COD |
+| StoreID | ● | empty | from the store map |
+| Consignee / ConsigneeMail / ConsigneeMobile | ● | ● | |
+| SenderName / SenderMobile | ● | ● | |
+| NotifyURL | ● | ● | status / print notifications |
+| ConsigneeAddress / ProdDesc / DeliveryTimeTag | | ● | ProdDesc ≤ 20 chars |
 
-| Field | Type | Required | Description |
-|-------|------|----------|-------------|
-| MerID | String | ● | Merchant ID |
-| Version | String | ● | API version (1.0) |
-| EncryptInfo | String | ● | AES-256-GCM encrypted data |
-| HashInfo | String | ● | SHA256 hash |
+Response (decrypted): `Status`, `Message`, **`ShipTradeNo`** (used for query / print / notifications), `TradeAmt`, `ServiceType`.
 
-**EncryptInfo Parameters:**
+### 2. Query shipment
 
-| Field | Type | Required | Description |
-|-------|------|----------|-------------|
-| MerID | String(20) | ● | Merchant ID |
-| MerTradeNo | String(50) | ● | Unique order number |
-| LogisticsType | String(50) | ● | PAYUNi_Logistic_711 |
-| GoodsType | Integer | ● | 1=Normal, 2=Frozen |
-| GoodsAmount | Integer | ● | Product amount |
-| GoodsName | String(50) | ● | Product name |
-| SenderName | String(10) | ● | Sender name |
-| SenderPhone | String(20) | ● | Sender phone |
-| SenderStoreID | String(10) | ● | Sender store code (C2C only) |
-| ReceiverName | String(10) | ● | Receiver name |
-| ReceiverPhone | String(20) | ● | Receiver phone |
-| ReceiverStoreID | String(10) | ● | Receiver store code |
-| NotifyURL | String(500) | ● | Status notification URL |
-| Timestamp | Integer | ● | Unix timestamp |
+`POST /api/logistics/query`, Version `1.1`, EncryptInfo: `MerID`, `Timestamp`, `LgsType`, `ShipTradeNo`.
+Response includes `Odno`, `PartnerId`, `ValidationNo` (C2C), `FileNo` (T-Cat), `ShipStatus`,
+`ShipStatusDesc`, `ShipStatusTime` (`-` = not yet available).
 
-**Response (Decrypted EncryptInfo):**
+**ShipStatus codes** (plugin `Utils/ShippingStatus.php`):
 
-| Field | Description |
-|-------|-------------|
-| LogisticsID | PAYUNi logistics ID |
-| MerTradeNo | Merchant order number |
-| CVSPaymentNo | Store payment code |
-| CVSValidationNo | Store validation code |
-| ExpireDate | Pickup deadline |
+| Code | Meaning |
+|---|---|
+| 21 | Waiting for shipment |
+| 22 | Checked in at logistics center (CVS only) |
+| 92 | Processing / received at sender store (C2C) |
+| 31 | In delivery |
+| 32 | Arrived at pickup store |
+| 11 | Picked up |
 
----
+### 3. Notifications
 
-### 2. Create T-Cat Home Delivery
-
-Create home delivery shipment.
-
-**Endpoint:** `POST /api/logistics/create`
-
-**Additional EncryptInfo Parameters:**
-
-| Field | Type | Required | Description |
-|-------|------|----------|-------------|
-| LogisticsType | String(50) | ● | PAYUNi_Logistic_Tcat |
-| GoodsType | Integer | ● | 1=Normal, 2=Frozen, 3=Refrigerated |
-| GoodsWeight | Integer | - | Weight in grams |
-| SenderZipCode | String(5) | ● | Sender postal code |
-| SenderAddress | String(200) | ● | Sender address |
-| ReceiverZipCode | String(5) | ● | Receiver postal code |
-| ReceiverAddress | String(200) | ● | Receiver address |
-| ScheduledPickupDate | String(10) | - | Pickup date (yyyy/MM/dd) |
-| ScheduledDeliveryDate | String(10) | - | Delivery date (yyyy/MM/dd) |
-| ScheduledDeliveryTime | String(2) | - | 01/02/03 (time slot) |
-
-**Delivery Time Slots:**
-- `01` - Before 13:00
-- `02` - 14:00 - 18:00
-- `03` - Not specified
-
-**Response (Decrypted EncryptInfo):**
-
-| Field | Description |
-|-------|-------------|
-| LogisticsID | PAYUNi logistics ID |
-| MerTradeNo | Merchant order number |
-| ShipmentNo | T-Cat tracking number |
-| BookingNote | Pickup number |
-
----
-
-### 3. Query Shipment Status
-
-Query logistics order status.
-
-**Endpoint:** `POST /api/logistics/query`
-
-**EncryptInfo Parameters:**
-
-| Field | Type | Required | Description |
-|-------|------|----------|-------------|
-| MerID | String | ● | Merchant ID |
-| MerTradeNo | String | ● | Order number |
-| Timestamp | Integer | ● | Unix timestamp |
-
-**Response (Decrypted EncryptInfo):**
-
-| Field | Description |
-|-------|-------------|
-| LogisticsID | PAYUNi logistics ID |
-| MerTradeNo | Merchant order number |
-| LogisticsType | Logistics type |
-| LogisticsStatus | Status code (11/21/22/31/32) |
-| LogisticsStatusMsg | Status message |
-| ShipmentNo | Tracking number |
-| ReceiverStoreID | Receiver store code |
-| UpdateTime | Last update time |
-
-**Logistics Status Codes:**
-
-| Code | Description | Category |
-|------|-------------|----------|
-| 11 | Shipped | In Transit |
-| 21 | Arrived at store / In delivery | In Transit |
-| 22 | Picked up / Delivered | Completed |
-| 31 | Returning | Return |
-| 32 | Return completed | Return |
-
----
-
-### 4. Status Notification Callback
-
-Handle real-time status updates from PAYUNi.
-
-**Callback Request (POST to NotifyURL):**
-
-| Field | Type | Description |
-|-------|------|-------------|
-| MerID | String | Merchant ID |
-| EncryptInfo | String | Encrypted status data |
-| HashInfo | String | SHA256 hash |
-
-**Decrypted EncryptInfo:**
-
-| Field | Description |
-|-------|-------------|
-| MerID | Merchant ID |
-| MerTradeNo | Merchant order number |
-| LogisticsID | PAYUNi logistics ID |
-| LogisticsType | Logistics type |
-| LogisticsStatus | Status code |
-| LogisticsStatusMsg | Status message |
-| UpdateTime | Update timestamp |
-
-**Response Required:**
-- Success: `SUCCESS`
-- Error: Any other response
-
----
-
-## PAYUNi Encryption (AES-256-GCM)
-
-### Encryption Process
-
-```
-1. Create Query String from parameters
-2. AES-256-GCM encrypt (with 16-byte tag)
-3. Convert to hex: EncryptInfo = hex(encrypted + tag)
-4. Generate HashInfo: SHA256(EncryptInfo + HashKey + HashIV)
-```
-
-### Decryption Process
-
-```
-1. Convert hex to binary
-2. Split: encrypted = data[:-16], tag = data[-16:]
-3. AES-256-GCM decrypt and verify tag
-4. Parse query string to get parameters
-```
+PAYUNi POSTs `EncryptInfo` (+ `HashInfo`) to `NotifyURL`. Decrypted `ApiType` is `ShipStatus`
+(status update: `ShipTradeNo`, `ShipStatus`, `ShipStatusDesc`, `ShipStatusTime`; T-Cat adds `OBTNumber`, `FileNo`)
+or `Print` (label result). Match orders by `ShipTradeNo`.
 
 ---
 

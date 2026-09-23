@@ -23,16 +23,12 @@ newebpay,2032,轉運中,In Transit,in_transit,包裹配送中,
 newebpay,2061,配達失敗,Delivery Failed,failed,配送失敗,聯繫收件人
 newebpay,2070,包裹已退回,Package Returned,returned,包裹已退回寄件人,
 newebpay,3001,系統錯誤,System Error,error,系統發生錯誤,聯繫客服
-payuni,200,訂單建立成功,Order Created,success,物流訂單已成功建立,等待出貨
-payuni,201,訂單處理中,Processing,pending,訂單處理中,等待配送
-payuni,202,已交寄,Shipped,in_transit,商品已交給物流商,等待配送
-payuni,203,配達完成,Delivered,delivered,已送達收件人,
-payuni,204,取貨完成,Pickup Completed,completed,已至超商取貨,
-payuni,205,配達失敗,Delivery Failed,failed,配送失敗,聯繫收件人
-payuni,206,退貨中,Return in Progress,returning,退貨流程進行中,
-payuni,207,退貨完成,Return Completed,returned,退貨已完成,
-payuni,400,訂單錯誤,Order Error,error,訂單資料錯誤,檢查訂單參數
-payuni,500,系統錯誤,System Error,error,系統發生錯誤,聯繫客服
+payuni,21,待出貨,Awaiting shipment,pending,已產生單號，等待商店出貨,出貨
+payuni,22,物流中心驗收,At logistics center,in_transit,物流中心驗收中（僅超商物流）,
+payuni,92,寄件門市已收件 / 處理中,Received at sender store,in_transit,僅超商物流（C2C）,
+payuni,31,配送中,In delivery,in_transit,安排出貨中,
+payuni,32,待取貨,Arrived at pickup store,in_transit,已配達取件門市,通知收件人取貨
+payuni,11,已取貨,Picked up,completed,買家已取件,
 smilepay,1,Status 1,Success,success,SmilePay 取號或操作成功,
 smilepay,21,待出貨,Awaiting Shipment,pending,商家尚未交件給物流商,商家備貨後交件
 smilepay,22,物流驗收中,Logistics Inspection,in_transit,物流中心收件並驗收,自動轉入配送

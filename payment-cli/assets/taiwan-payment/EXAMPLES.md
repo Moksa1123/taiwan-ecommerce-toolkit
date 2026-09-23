@@ -247,151 +247,104 @@ async function createNewebPayMPG() {
 
 ---
 
-### 範例 3: PAYUNi RESTful API
+### 範例 3: PAYUNi 整合支付頁（UPP）
 
-**場景：** 使用統一金流 RESTful JSON API 建立付款
+**場景：** 使用統一金流 UPP 建立信用卡付款
 
 **Claude 提示詞：**
 ```
-使用 PAYUNi RESTful API 建立信用卡付款
+使用 PAYUNi UPP 建立信用卡付款
 - 金額: 3000 元
-- JSON 格式
 - AES-256-GCM 加密
 ```
 
 **生成的程式碼：**
 
+> 欄位與流程對照統一金流官方外掛 PAYUNi_for_WooCommerce 1.2.8 的 `uppOnePointHandler()`；
+> 加密演算法見 SKILL.md「2. 加密實作」（已由 CI 以官方外掛產生的標準答案驗證）。
+
 ```typescript
 import crypto from 'crypto'
-import axios from 'axios'
 
 class PAYUNiService {
-    private merchantID: string
+    private merID: string
     private hashKey: string
     private hashIV: string
-    private apiUrl: string
+    private uppUrl: string
 
     constructor(isProd: boolean = false) {
-        this.merchantID = isProd
-            ? process.env.PAYUNI_MERCHANT_ID_PROD!
-            : process.env.PAYUNI_MERCHANT_ID_TEST!
-        this.hashKey = isProd
-            ? process.env.PAYUNI_HASH_KEY_PROD!
-            : process.env.PAYUNI_HASH_KEY_TEST!
-        this.hashIV = isProd
-            ? process.env.PAYUNI_HASH_IV_PROD!
-            : process.env.PAYUNI_HASH_IV_TEST!
-        this.apiUrl = isProd
+        this.merID = process.env.PAYUNI_MER_ID!
+        this.hashKey = process.env.PAYUNI_HASH_KEY!
+        this.hashIV = process.env.PAYUNI_HASH_IV!
+        this.uppUrl = isProd
             ? 'https://api.payuni.com.tw/api/upp'
             : 'https://sandbox-api.payuni.com.tw/api/upp'
     }
 
-    private encrypt(data: Record<string, any>): { EncryptInfo: string, HashInfo: string } {
-        // 1. JSON 字串化
-        const jsonString = JSON.stringify(data)
-
-        // 2. AES-256-GCM 加密
+    // EncryptInfo = hex( base64(密文) + ":::" + base64(tag) )
+    private encrypt(data: Record<string, any>): string {
         const cipher = crypto.createCipheriv('aes-256-gcm', this.hashKey, this.hashIV)
-        let encrypted = cipher.update(jsonString, 'utf8', 'hex')
-        encrypted += cipher.final('hex')
-
-        // 3. 取得 Auth Tag
-        const authTag = cipher.getAuthTag().toString('hex')
-
-        // 4. 組合加密資料
-        const encryptInfo = encrypted + authTag
-
-        // 5. SHA256 簽章
-        const hashInfo = crypto
-            .createHash('sha256')
-            .update(`HashKey=${this.hashKey}&${encryptInfo}&HashIV=${this.hashIV}`)
-            .digest('hex')
-            .toUpperCase()
-
-        return {
-            EncryptInfo: encryptInfo,
-            HashInfo: hashInfo
-        }
+        const encrypted = Buffer.concat([cipher.update(new URLSearchParams(data).toString(), 'utf8'), cipher.final()])
+        const tag = cipher.getAuthTag()
+        return Buffer.from(`${encrypted.toString('base64')}:::${tag.toString('base64')}`).toString('hex')
     }
 
-    async createOrder(userId: string, orderData: any) {
-        const merchantOrderNo = `UNI${Date.now()}`
+    // HashInfo = SHA256( HashKey + EncryptInfo + HashIV )
+    private hashInfo(encryptInfo: string): string {
+        return crypto.createHash('sha256').update(this.hashKey + encryptInfo + this.hashIV).digest('hex').toUpperCase()
+    }
 
-        const tradeData = {
-            MerchantID: this.merchantID,
-            MerchantOrderNo: merchantOrderNo,
-            Amount: orderData.amount,
-            ItemDescription: orderData.itemDesc || '商品購買',
-            ReturnURL: orderData.returnURL,
-            NotifyURL: orderData.notifyURL,
-            Email: orderData.email,
-            PaymentMethod: 'CREDIT',  // 信用卡
-            TimeStamp: Math.floor(Date.now() / 1000)
-        }
+    /**
+     * UPP 是「瀏覽器表單 POST」到 /api/upp，由統一金流顯示付款頁；
+     * 不是伺服器端呼叫的 JSON API。回傳表單內容給前端自動送出。
+     */
+    buildUppForm(order: { merTradeNo: string, amount: number, prodDesc: string, email: string,
+                          returnURL: string, notifyURL: string }) {
+        const encryptInfo = this.encrypt({
+            MerID: this.merID,
+            MerTradeNo: order.merTradeNo,
+            TradeAmt: order.amount,
+            ProdDesc: order.prodDesc,
+            UsrMail: order.email,
+            ReturnURL: order.returnURL,     // 前景（消費者瀏覽器）
+            NotifyURL: order.notifyURL,     // 背景（伺服器對伺服器）
+            Timestamp: Math.floor(Date.now() / 1000),
+            Credit: 1,                      // 啟用信用卡；可再加 ATM、CVS 等
+        })
 
-        // 加密
-        const { EncryptInfo, HashInfo } = this.encrypt(tradeData)
-
-        try {
-            // RESTful POST 請求
-            const response = await axios.post(this.apiUrl, {
-                MerchantID: this.merchantID,
-                EncryptInfo: EncryptInfo,
-                HashInfo: HashInfo
-            }, {
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            })
-
-            console.log('[OK] PAYUNi 訂單建立')
-            console.log('訂單編號:', merchantOrderNo)
-            console.log('回應狀態:', response.data.Status)
-
-            return {
-                success: response.data.Status === 'SUCCESS',
-                merchantTradeNo: merchantOrderNo,
-                paymentUrl: response.data.Data?.PaymentURL,
-                message: response.data.Message
-            }
-        } catch (error) {
-            console.error('[ERROR] PAYUNi 請求失敗:', error)
-            throw error
+        return {
+            action: this.uppUrl,
+            method: 'POST',
+            fields: {
+                MerID: this.merID,
+                Version: '1.0',
+                EncryptInfo: encryptInfo,
+                HashInfo: this.hashInfo(encryptInfo),
+            },
         }
     }
 }
 
 // 使用範例
-async function createPAYUNiOrder() {
-    const service = new PAYUNiService(false)
-
-    const result = await service.createOrder('user-123', {
-        amount: 3000,
-        itemDesc: '會員升級方案',
-        returnURL: 'https://yourdomain.com/payment/return',
-        notifyURL: 'https://yourdomain.com/api/payment/callback',
-        email: 'test@example.com'
-    })
-
-    if (result.success) {
-        console.log('請導向:', result.paymentUrl)
-    }
-
-    return result
-}
+const form = new PAYUNiService(false).buildUppForm({
+    merTradeNo: `UNI${Date.now()}`,
+    amount: 3000,
+    prodDesc: '會員升級方案',
+    email: 'test@example.com',
+    returnURL: 'https://yourdomain.com/payment/return',
+    notifyURL: 'https://yourdomain.com/api/payment/callback',
+})
+console.log('[OK] PAYUNi UPP 表單', form.action, Object.keys(form.fields))
 ```
 
 **重要說明：**
-- PAYUNi 使用 RESTful JSON API（與 ECPay/NewebPay 的 Form POST 不同）
-- AES-256-GCM 加密需要附加 Auth Tag（最後 32 字元）
-- 回應為 JSON 格式，包含 PaymentURL 導向連結
+- UPP 以瀏覽器表單 POST 送出（外層只有 `MerID`、`Version`、`EncryptInfo`、`HashInfo` 四個欄位）
+- 交易欄位名稱是 `MerID` / `MerTradeNo` / `TradeAmt` / `ProdDesc`，不是藍新的 `MerchantID` / `MerchantOrderNo` / `Amt`
+- 付款結果以同樣的 `EncryptInfo` + `HashInfo` 回傳到 NotifyURL：先驗 HashInfo，再解密
 
 **預期輸出：**
 ```
-[OK] PAYUNi 訂單建立
-訂單編號: UNI1738123456789
-回應狀態: SUCCESS
-請導向: https://sandbox-api.payuni.com.tw/trade/payment?token=xxx
+[OK] PAYUNi UPP 表單 https://sandbox-api.payuni.com.tw/api/upp [ 'MerID', 'Version', 'EncryptInfo', 'HashInfo' ]
 ```
 
 ---
@@ -570,168 +523,98 @@ export async function POST(request: Request) {
 
 **生成的程式碼：**
 
+> 此模組由 CI 以三家業者官方實作產生的標準答案驗證（`scripts/verify-examples.py`、`tests/vectors/`）。
+
+<!-- verify: ecpay-cmv-sha256 newebpay payuni -->
 ```typescript
 // lib/utils/payment-encryption.ts
 
 import crypto from 'crypto'
 
-/**
- * ECPay CheckMacValue 計算（SHA256）
- */
-export function generateECPayCheckMacValue(
-    params: Record<string, any>,
-    hashKey: string,
-    hashIV: string
-): string {
-    // 1. 移除 CheckMacValue 本身
-    const { CheckMacValue, ...cleanParams } = params
+const sha256Upper = (s: string) => crypto.createHash('sha256').update(s).digest('hex').toUpperCase()
 
-    // 2. 依照 key 排序（字母順序）
-    const sortedKeys = Object.keys(cleanParams).sort()
-
-    // 3. 組合參數字串
-    const paramString = sortedKeys
-        .map(key => `${key}=${cleanParams[key]}`)
-        .join('&')
-
-    // 4. 前後加上 HashKey 和 HashIV
-    const rawString = `HashKey=${hashKey}&${paramString}&HashIV=${hashIV}`
-
-    // 5. URL Encode (lowercase)
-    const encoded = encodeURIComponent(rawString).toLowerCase()
-
-    // 6. SHA256 雜湊
-    const hash = crypto.createHash('sha256').update(encoded).digest('hex')
-
-    // 7. 轉大寫
-    return hash.toUpperCase()
+/** 常數時間比較（避免以回應時間差逐字元猜出正確雜湊） */
+function safeEqual(a: string, b: string): boolean {
+    const x = Buffer.from(a.toUpperCase()), y = Buffer.from(b.toUpperCase())
+    return x.length === y.length && crypto.timingSafeEqual(x, y)
 }
 
-/**
- * NewebPay AES-256-CBC 加密
- */
-export function encryptNewebPay(
-    data: Record<string, any>,
-    hashKey: string,
-    hashIV: string
-): { TradeInfo: string; TradeSha: string } {
-    // 1. 轉換為查詢字串
-    const queryString = new URLSearchParams(data).toString()
+// ---------------------------------------------------------------------------
+// ECPay CheckMacValue（金流 SHA256；國內物流改用 md5）
+// ---------------------------------------------------------------------------
 
-    // 2. AES-256-CBC 加密
-    const cipher = crypto.createCipheriv('aes-256-cbc', hashKey, hashIV)
-    cipher.setAutoPadding(true)
-    let encrypted = cipher.update(queryString, 'utf8', 'hex')
-    encrypted += cipher.final('hex')
-
-    // 3. 計算 SHA256
-    const tradeSha = crypto
-        .createHash('sha256')
-        .update(`HashKey=${hashKey}&${encrypted}&HashIV=${hashIV}`)
-        .digest('hex')
-        .toUpperCase()
-
-    return {
-        TradeInfo: encrypted,
-        TradeSha: tradeSha,
-    }
+/** 與綠界官方 SDK UrlService::ecpayUrlEncode 相同：PHP urlencode → 小寫 → .NET 字元還原 */
+function ecpayUrlEncode(text: string): string {
+    return encodeURIComponent(text)
+        .replace(/%20/g, '+')
+        .replace(/[!'()*~]/g, c => '%' + c.charCodeAt(0).toString(16).toUpperCase())
+        .toLowerCase()
+        .replace(/%21/g, '!').replace(/%2a/g, '*').replace(/%28/g, '(').replace(/%29/g, ')')
 }
 
-/**
- * NewebPay AES-256-CBC 解密
- */
-export function decryptNewebPay(
-    encryptedData: string,
-    hashKey: string,
-    hashIV: string
-): Record<string, any> {
+export function generateECPayCheckMacValue(params: Record<string, any>, hashKey: string, hashIV: string): string {
+    const { CheckMacValue, ...clean } = params
+    const keys = Object.keys(clean).sort((a, b) => {
+        const x = a.toLowerCase(), y = b.toLowerCase()
+        return x < y ? -1 : x > y ? 1 : 0
+    })
+    const raw = `HashKey=${hashKey}&${keys.map(k => `${k}=${clean[k]}`).join('&')}&HashIV=${hashIV}`
+    return sha256Upper(ecpayUrlEncode(raw))
+}
+
+export function verifyECPayCallback(posted: Record<string, string>, hashKey: string, hashIV: string): boolean {
+    return !!posted.CheckMacValue && safeEqual(generateECPayCheckMacValue(posted, hashKey, hashIV), posted.CheckMacValue)
+}
+
+// ---------------------------------------------------------------------------
+// NewebPay AES-256-CBC + SHA256
+// ---------------------------------------------------------------------------
+
+export function encryptNewebPay(data: Record<string, any>, hashKey: string, hashIV: string) {
+    const cipher = crypto.createCipheriv('aes-256-cbc', hashKey, hashIV)   // 標準 PKCS#7
+    const tradeInfo = cipher.update(new URLSearchParams(data).toString(), 'utf8', 'hex') + cipher.final('hex')
+    return { TradeInfo: tradeInfo, TradeSha: sha256Upper(`HashKey=${hashKey}&${tradeInfo}&HashIV=${hashIV}`) }
+}
+
+export function decryptNewebPay(tradeInfo: string, hashKey: string, hashIV: string): Record<string, any> {
     const decipher = crypto.createDecipheriv('aes-256-cbc', hashKey, hashIV)
-    decipher.setAutoPadding(true)
-    let decrypted = decipher.update(encryptedData, 'hex', 'utf8')
-    decrypted += decipher.final('utf8')
-
-    return Object.fromEntries(new URLSearchParams(decrypted))
-}
-
-/**
- * PAYUNi AES-256-GCM 加密
- */
-export function encryptPAYUNi(
-    data: Record<string, any>,
-    hashKey: string,
-    hashIV: string
-): { EncryptInfo: string; HashInfo: string } {
-    // 1. JSON 字串化
-    const jsonString = JSON.stringify(data)
-
-    // 2. AES-256-GCM 加密
-    const cipher = crypto.createCipheriv('aes-256-gcm', hashKey, hashIV)
-    let encrypted = cipher.update(jsonString, 'utf8', 'hex')
-    encrypted += cipher.final('hex')
-
-    // 3. 取得 Auth Tag (16 bytes)
-    const authTag = cipher.getAuthTag().toString('hex')
-
-    // 4. 組合加密資料
-    const encryptInfo = encrypted + authTag
-
-    // 5. SHA256 簽章
-    const hashInfo = crypto
-        .createHash('sha256')
-        .update(`HashKey=${hashKey}&${encryptInfo}&HashIV=${hashIV}`)
-        .digest('hex')
-        .toUpperCase()
-
-    return {
-        EncryptInfo: encryptInfo,
-        HashInfo: hashInfo,
+    decipher.setAutoPadding(false)                  // 官方外掛以 32 bytes 補齊，padding 可能 1–32
+    const raw = Buffer.concat([decipher.update(tradeInfo, 'hex'), decipher.final()])
+    const n = raw[raw.length - 1]
+    if (n < 1 || n > 32 || !raw.subarray(raw.length - n).every(b => b === n)) {
+        throw new Error('padding 錯誤（HashKey / HashIV 可能不正確）')
     }
+    const text = raw.subarray(0, raw.length - n).toString('utf8')
+    return text.startsWith('{') ? JSON.parse(text) : Object.fromEntries(new URLSearchParams(text))
 }
 
-/**
- * PAYUNi AES-256-GCM 解密
- */
-export function decryptPAYUNi(
-    encryptedData: string,
-    hashKey: string,
-    hashIV: string
-): Record<string, any> {
-    // 1. 分離加密內容和 Auth Tag（最後 32 個字元）
-    const encryptedContent = encryptedData.slice(0, -32)
-    const authTag = Buffer.from(encryptedData.slice(-32), 'hex')
+/** 驗證回呼：比對收到的 TradeInfo 的雜湊，不是把參數重新加密 */
+export function verifyNewebPayCallback(tradeInfo: string, tradeSha: string, hashKey: string, hashIV: string): boolean {
+    return safeEqual(sha256Upper(`HashKey=${hashKey}&${tradeInfo}&HashIV=${hashIV}`), tradeSha)
+}
 
-    // 2. AES-256-GCM 解密
+// ---------------------------------------------------------------------------
+// PAYUNi AES-256-GCM + SHA256
+// ---------------------------------------------------------------------------
+
+export function encryptPAYUNi(data: Record<string, any>, hashKey: string, hashIV: string) {
+    const cipher = crypto.createCipheriv('aes-256-gcm', hashKey, hashIV)   // HashIV 直接當 nonce（16 bytes）
+    const encrypted = Buffer.concat([cipher.update(new URLSearchParams(data).toString(), 'utf8'), cipher.final()])
+    const encryptInfo = Buffer.from(`${encrypted.toString('base64')}:::${cipher.getAuthTag().toString('base64')}`).toString('hex')
+    return { EncryptInfo: encryptInfo, HashInfo: sha256Upper(hashKey + encryptInfo + hashIV) }
+}
+
+export function decryptPAYUNi(encryptInfo: string, hashKey: string, hashIV: string): Record<string, any> {
+    const [data, tag] = Buffer.from(encryptInfo, 'hex').toString('utf8').split(':::')
     const decipher = crypto.createDecipheriv('aes-256-gcm', hashKey, hashIV)
-    decipher.setAuthTag(authTag)
-    let decrypted = decipher.update(encryptedContent, 'hex', 'utf8')
-    decrypted += decipher.final('utf8')
-
-    return JSON.parse(decrypted)
+    decipher.setAuthTag(Buffer.from(tag, 'base64'))
+    const text = Buffer.concat([decipher.update(Buffer.from(data, 'base64')), decipher.final()]).toString('utf8')
+    return Object.fromEntries(new URLSearchParams(text))
 }
 
-/**
- * 驗證簽章
- */
-export function verifySignature(
-    params: Record<string, any>,
-    signature: string,
-    hashKey: string,
-    hashIV: string,
-    provider: 'ECPAY' | 'NEWEBPAY' | 'PAYUNI'
-): boolean {
-    switch (provider) {
-        case 'ECPAY':
-            const calculatedECPay = generateECPayCheckMacValue(params, hashKey, hashIV)
-            return calculatedECPay === signature
-        case 'NEWEBPAY':
-            const { TradeSha } = encryptNewebPay(params, hashKey, hashIV)
-            return TradeSha === signature
-        case 'PAYUNI':
-            const { HashInfo } = encryptPAYUNi(params, hashKey, hashIV)
-            return HashInfo === signature
-        default:
-            return false
-    }
+/** 驗證回呼：比對收到的 EncryptInfo 的雜湊 */
+export function verifyPAYUNiCallback(encryptInfo: string, hashInfo: string, hashKey: string, hashIV: string): boolean {
+    return safeEqual(sha256Upper(hashKey + encryptInfo + hashIV), hashInfo)
 }
 ```
 
@@ -761,22 +644,23 @@ const newebpayData = {
 }
 const { TradeInfo, TradeSha } = encryptNewebPay(
     newebpayData,
-    'your32BytesHashKeyHere123456',
-    'your16BytesIV123'
+    'ABCDEFGHIJKLMNOPQRSTUVWXYZ012345',   // HashKey 必須 32 bytes
+    'ABCDEFGHIJKLMNOP'                     // HashIV 必須 16 bytes
 )
 console.log('NewebPay TradeInfo:', TradeInfo.substring(0, 50) + '...')
 console.log('NewebPay TradeSha:', TradeSha)
 
-// PAYUNi 加密
+// PAYUNi 加密（欄位名稱是 MerID / MerTradeNo / TradeAmt，不是藍新的 MerchantID / Amt）
 const payuniData = {
-    MerchantID: 'UNI12345',
-    MerchantOrderNo: 'UNI123456',
-    Amount: 3000,
+    MerID: 'S01234567',
+    MerTradeNo: 'UNI123456',
+    TradeAmt: 3000,
+    Timestamp: Math.floor(Date.now() / 1000),
 }
 const { EncryptInfo, HashInfo } = encryptPAYUNi(
     payuniData,
-    'your32BytesHashKey',
-    'your16BytesIV'
+    'ABCDEFGHIJKLMNOPQRSTUVWXYZ012345',   // HashKey 必須 32 bytes
+    'ABCDEFGHIJKLMNOP'                     // HashIV 必須 16 bytes
 )
 console.log('PAYUNi EncryptInfo:', EncryptInfo.substring(0, 50) + '...')
 console.log('PAYUNi HashInfo:', HashInfo)
@@ -1236,188 +1120,81 @@ export async function POST(request: Request) {
 
 ## 常見錯誤與修正
 
+以下錯誤的正確寫法皆為「範例 5: 加密輔助函數」的模組（已由 CI 以官方實作產生的標準答案驗證）。
+
 ### 錯誤 1: CheckMacValue 計算錯誤
 
-**錯誤訊息：** ECPay 回傳 `10100058: 請確認檢查碼是否正確`
+**錯誤訊息：** ECPay 回傳 `10200073`（CheckMacValue 驗證失敗）
 
-**原因：** 參數排序錯誤或 URL Encode 不正確
+> `10100058` 是「ATM 繳費期限已過」，不是檢查碼錯誤。
 
-**修正前：**
+**常見的錯誤寫法：**
+
 ```typescript
-// * 錯誤：未排序參數
-function generateCheckMacValue(params: Record<string, any>, hashKey: string, hashIV: string) {
-    const paramString = Object.entries(params)
-        .map(([k, v]) => `${k}=${v}`)
-        .join('&')
+// * 錯誤 1：區分大小寫排序（綠界 SDK 用 strcasecmp，不分大小寫）
+Object.keys(params).sort()
 
-    const rawString = `HashKey=${hashKey}&${paramString}&HashIV=${hashIV}`
-    const hash = crypto.createHash('sha256').update(rawString).digest('hex')
-    return hash.toUpperCase()
-}
+// * 錯誤 2：encodeURIComponent 把空白編成 %20，綠界要的是 +；
+//          MerchantTradeDate 一定含空白，所以這個寫法「每一筆」都會失敗
+encodeURIComponent(rawString).toLowerCase()
+
+// * 錯誤 3：物流 API 用了 SHA256（國內物流是 MD5）
 ```
 
-**修正後：**
+**用已知答案自我檢查：** 以下輸入與預期值由綠界官方 PHP SDK 算出（`tests/vectors/ecpay.json` 的 `aio_basic`），
+你的實作算出的值必須完全相同：
+
 ```typescript
-// *! 正確：排序 + URL Encode (lowercase)
-function generateCheckMacValue(params: Record<string, any>, hashKey: string, hashIV: string) {
-    // 1. 移除 CheckMacValue 本身
-    const { CheckMacValue, ...cleanParams } = params
-
-    // 2. 排序 keys
-    const sortedKeys = Object.keys(cleanParams).sort()
-
-    // 3. 組合參數字串
-    const paramString = sortedKeys
-        .map(key => `${key}=${cleanParams[key]}`)
-        .join('&')
-
-    // 4. 前後加上 HashKey/HashIV
-    const rawString = `HashKey=${hashKey}&${paramString}&HashIV=${hashIV}`
-
-    // 5. URL Encode (lowercase)
-    const encoded = encodeURIComponent(rawString).toLowerCase()
-
-    // 6. SHA256 + 大寫
-    const hash = crypto.createHash('sha256').update(encoded).digest('hex')
-    return hash.toUpperCase()
-}
-```
-
-**驗證方法：**
-```typescript
-// 測試範例
 const params = {
     MerchantID: '3002607',
-    MerchantTradeNo: 'ORD123456',
-    MerchantTradeDate: '2024/01/29 12:00:00',
-    TotalAmount: 1050,
+    MerchantTradeNo: 'ORD20260923001',
+    MerchantTradeDate: '2026/09/23 12:00:00',
+    PaymentType: 'aio',
+    TotalAmount: '1280',
+    TradeDesc: '測試交易',
+    ItemName: '測試商品',
+    ReturnURL: 'https://shop.example.com/ecpay/notify',
+    ChoosePayment: 'ALL',
+    EncryptType: '1',
 }
-
-const checkMacValue = generateCheckMacValue(
-    params,
-    'pwFHCqoQZGmho4w6',
-    'EkRm7iFT261dpevs'
-)
-
-console.log('計算結果:', checkMacValue)
-// 應該與 ECPay 要求的值一致
+const got = generateECPayCheckMacValue(params, 'pwFHCqoQZGmho4w6', 'EkRm7iFT261dpevs')
+console.assert(got === 'D5499ADD6F1D331B09D196D56C672A3A6E0D4FE31C1B19E10378B67AD1249DC8', got)
 ```
 
 ---
 
-### 錯誤 2: AES 加密錯誤
+### 錯誤 2: AES 加解密錯誤
 
-**錯誤訊息：** NewebPay 回傳 `TradeSha 錯誤` 或 PAYUNi 回傳 `HashInfo 錯誤`
+**錯誤訊息：** NewebPay 回傳 `MPG02001`（檢查碼錯誤）；PAYUNi 解密失敗或 HashInfo 不符
 
-**原因：** Key/IV 長度錯誤或未附加 Auth Tag
+**NewebPay 常見錯誤：**
 
-**修正前 (NewebPay)：**
+- HashKey 不是 32 bytes、HashIV 不是 16 bytes
+- 解密時用 `setAutoPadding(true)`：官方外掛以 32 bytes 補齊，padding 17–32 的密文會直接拋錯
+- `RespondType=JSON` 時解出來是 JSON，用 `URLSearchParams` 解析會得到錯誤結果
+
+**PAYUNi 常見錯誤：**
+
 ```typescript
-// * 錯誤：Key/IV 長度不正確
-function encryptNewebPay(data: Record<string, any>, hashKey: string, hashIV: string) {
-    const queryString = new URLSearchParams(data).toString()
+// * 錯誤：加密內容用 JSON（應為 query string）
+cipher.update(JSON.stringify(data), 'utf8', 'hex')
 
-    // 錯誤：未檢查 Key/IV 長度
-    const cipher = crypto.createCipheriv('aes-256-cbc', hashKey, hashIV)
-    let encrypted = cipher.update(queryString, 'utf8', 'hex')
-    encrypted += cipher.final('hex')
+// * 錯誤：hex(密文 + tag)（應為 hex( base64(密文) + ":::" + base64(tag) )）
+const encryptInfo = encrypted + authTag
 
-    return encrypted
-}
+// * 錯誤：HashInfo 加了 "HashKey=" 前綴（應為 sha256(HashKey + EncryptInfo + HashIV)）
+`HashKey=${hashKey}&${encryptInfo}&HashIV=${hashIV}`
 ```
 
-**修正後 (NewebPay)：**
+**用已知答案自我檢查：** 以下由統一金流官方外掛與官方 PHP SDK 算出（`tests/vectors/payuni.json` 的 `minimal`）：
+
 ```typescript
-// *! 正確：確認 Key/IV 長度 + 計算 TradeSha
-function encryptNewebPay(data: Record<string, any>, hashKey: string, hashIV: string) {
-    // 確認長度
-    if (hashKey.length !== 32) throw new Error('HashKey 必須 32 bytes')
-    if (hashIV.length !== 16) throw new Error('HashIV 必須 16 bytes')
-
-    const queryString = new URLSearchParams(data).toString()
-
-    // AES-256-CBC 加密
-    const cipher = crypto.createCipheriv('aes-256-cbc', hashKey, hashIV)
-    cipher.setAutoPadding(true)
-    let encrypted = cipher.update(queryString, 'utf8', 'hex')
-    encrypted += cipher.final('hex')
-
-    // 計算 TradeSha
-    const tradeSha = crypto
-        .createHash('sha256')
-        .update(`HashKey=${hashKey}&${encrypted}&HashIV=${hashIV}`)
-        .digest('hex')
-        .toUpperCase()
-
-    return {
-        TradeInfo: encrypted,
-        TradeSha: tradeSha
-    }
-}
-```
-
-**修正前 (PAYUNi)：**
-```typescript
-// * 錯誤：忘記附加 Auth Tag
-function encryptPAYUNi(data: Record<string, any>, hashKey: string, hashIV: string) {
-    const jsonString = JSON.stringify(data)
-
-    const cipher = crypto.createCipheriv('aes-256-gcm', hashKey, hashIV)
-    let encrypted = cipher.update(jsonString, 'utf8', 'hex')
-    encrypted += cipher.final('hex')
-
-    // 錯誤：忘記取得 Auth Tag
-    return encrypted
-}
-```
-
-**修正後 (PAYUNi)：**
-```typescript
-// *! 正確：附加 Auth Tag
-function encryptPAYUNi(data: Record<string, any>, hashKey: string, hashIV: string) {
-    const jsonString = JSON.stringify(data)
-
-    // AES-256-GCM 加密
-    const cipher = crypto.createCipheriv('aes-256-gcm', hashKey, hashIV)
-    let encrypted = cipher.update(jsonString, 'utf8', 'hex')
-    encrypted += cipher.final('hex')
-
-    // 取得 Auth Tag（16 bytes = 32 hex chars）
-    const authTag = cipher.getAuthTag().toString('hex')
-
-    // 組合：encrypted + authTag
-    const encryptInfo = encrypted + authTag
-
-    // 計算 HashInfo
-    const hashInfo = crypto
-        .createHash('sha256')
-        .update(`HashKey=${hashKey}&${encryptInfo}&HashIV=${hashIV}`)
-        .digest('hex')
-        .toUpperCase()
-
-    return {
-        EncryptInfo: encryptInfo,
-        HashInfo: hashInfo
-    }
-}
-```
-
-**測試工具：**
-```typescript
-// 測試 NewebPay 加密/解密
-const testData = { test: 'hello', amount: 1000 }
-const { TradeInfo, TradeSha } = encryptNewebPay(testData, hashKey, hashIV)
-const decrypted = decryptNewebPay(TradeInfo, hashKey, hashIV)
-console.log('原始:', testData)
-console.log('解密:', decrypted)
-console.log('一致:', JSON.stringify(testData) === JSON.stringify(decrypted))
-
-// 測試 PAYUNi 加密/解密
-const { EncryptInfo, HashInfo } = encryptPAYUNi(testData, hashKey, hashIV)
-const decryptedPAYUNi = decryptPAYUNi(EncryptInfo, hashKey, hashIV)
-console.log('原始:', testData)
-console.log('解密:', decryptedPAYUNi)
-console.log('一致:', JSON.stringify(testData) === JSON.stringify(decryptedPAYUNi))
+const { HashInfo } = encryptPAYUNi(
+    { MerID: 'S01234567', MerTradeNo: 'T20260923001', TradeAmt: '100', Timestamp: '1758600000' },
+    '12345678901234567890123456789012',
+    '1234567890123456',
+)
+console.assert(HashInfo === '6563710212EB74701B34AB4D510DC05AC0775CFCEEB1FBE44CFD031F01760BA9', HashInfo)
 ```
 
 ---

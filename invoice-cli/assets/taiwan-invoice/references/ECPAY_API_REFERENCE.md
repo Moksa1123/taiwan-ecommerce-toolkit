@@ -138,6 +138,7 @@ function decryptData(encryptedData, hashKey, hashIV) {
 | `MerchantID` | String(10) | Y | 特店編號 |
 | `RqHeader` | Object | Y | 傳輸資料容器 |
 | `RqHeader.Timestamp` | Number(10) | Y | Unix 時間戳（驗證區間 10 分鐘） |
+| `RqHeader.Revision` | String | Y | 固定 `3.0.0`；漏填會導致 `TransCode ≠ 1`（綠界官方 SDK 與外掛皆帶此值） |
 | `Data` | String | Y | AES 加密後的 JSON 字串 |
 
 #### Data 欄位內容（加密前）
@@ -147,7 +148,7 @@ function decryptData(encryptedData, hashKey, hashIV) {
 | `MerchantID` | String(10) | Y | 特店編號 |
 | `RelateNumber` | String(50) | Y | 廠商自訂編號（唯一值，不可重複） |
 | `CustomerID` | String(50) | N | 客戶編號 |
-| `CustomerIdentifier` | String(8) | N | 買方統編（有值=B2B，空值=B2C） |
+| `CustomerIdentifier` | String(8) | N | 買方統編：空字串（一般消費者）或 8 碼數字；**不是** `0000000000`。打統編仍走 B2C 平台，金額依 `vat` 決定是否含稅 |
 | `CustomerName` | String(60) | N | 買方名稱 |
 | `CustomerAddr` | String(100) | N | 買方地址 |
 | `CustomerPhone` | String(20) | N | 買方電話 |
@@ -208,7 +209,8 @@ function decryptData(encryptedData, hashKey, hashIV) {
 {
     "MerchantID": "2000132",
     "RqHeader": {
-        "Timestamp": 1640000000
+        "Timestamp": 1640000000,
+        "Revision": "3.0.0"
     },
     "Data": "uvI4yrErM37XNQkXGAgRgJAgHn2t72jahaMZzYhWL1HmvH4WV18VJDP2i9pTbC+t..."
 }

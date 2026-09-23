@@ -123,8 +123,8 @@ When modifying files:
 | Provider | Encryption | Notes |
 |---|---|---|
 | ECPay 綠界 | MD5 CheckMacValue | Sort params + HashKey/HashIV |
-| NewebPay 藍新 | AES-256-CBC + SHA256 | Same as MPG payment |
-| PAYUNi 統一 | AES-256-GCM + SHA256 | Append 16-byte tag |
+| NewebPay 藍新 | AES-256-CBC + SHA256 | HashData = SHA256(`HashKey=..&EncryptData&HashIV=..`)；送出欄位帶 `_`，回應不帶 |
+| PAYUNi 統一 | AES-256-GCM + SHA256 | EncryptInfo = hex(base64(密文) + `:::` + base64(tag))；HashInfo = SHA256(HashKey + EncryptInfo + HashIV) |
 | SmilePay 速買配 | Verify_key + Mid_smilepay 加權檢核碼 | No AES; shared secret |
 | PChomePay 拍錢包 | HTTP Basic Auth → 8h pcpay-token | Same as payment side |
 | PayNow 立吉富 | **3DES (TripleDES) / ECB / Zero-Padding** | 24-byte Key + 8-byte IV; **不同於金流端的動態 AES-256** |

@@ -23,16 +23,16 @@ Reference these guidelines when:
 
 ### 1. Signature Verification (CRITICAL)
 
-- `ecpay-checkmacvalue` - ECPay: alphabetical-sort + lowercase URL encode + SHA256, then UPPER
-- `newebpay-tradesha` - NewebPay: HashKey + TradeInfo + HashIV, then SHA256 UPPER
-- `payuni-hashinfo` - PAYUNi: EncryptInfo + HashKey + HashIV, then SHA256 UPPER
+- `ecpay-checkmacvalue` - ECPay: case-insensitive sort, `HashKey=..&k=v..&HashIV=..`, PHP urlencode (space = `+`), lowercase, restore `( ) ! * - _ .`, SHA256 UPPER (logistics uses MD5)
+- `newebpay-tradesha` - NewebPay: SHA256(`HashKey={key}&{TradeInfo}&HashIV={iv}`) UPPER; CheckCode is `HashIV=..&..&HashKey=..` (reversed)
+- `payuni-hashinfo` - PAYUNi: SHA256(HashKey + EncryptInfo + HashIV) UPPER — HashKey first, no `HashKey=` prefix
 - `verify-on-callback` - ALWAYS verify signature before processing notify
 
 ### 2. Encryption (CRITICAL)
 
-- `ecpay-aes` - ECPay: AES-128-CBC for some endpoints + SHA256 for CheckMacValue
-- `newebpay-aes-cbc` - NewebPay: AES-256-CBC + PKCS7 padding, hex output
-- `payuni-aes-gcm` - PAYUNi: AES-256-GCM + 16-byte auth tag MUST be appended
+- `ecpay-aes` - ECPay invoice: base64(AES-128-CBC(urlencode(json))), JSON body with `RqHeader.Revision=3.0.0`; decrypt with urldecode (`+` = space)
+- `newebpay-aes-cbc` - NewebPay: AES-256-CBC, hex output; RespondType=JSON callbacks decrypt to JSON, not a query string
+- `payuni-aes-gcm` - PAYUNi: EncryptInfo = hex( base64(ciphertext) + `:::` + base64(tag) ), HashIV used as the 16-byte nonce
 - `keep-keys-server-side` - HashKey/HashIV NEVER exposed to frontend
 
 ### 3. Order Lifecycle (HIGH)
@@ -51,10 +51,10 @@ Reference these guidelines when:
 ### 5. Common Pitfalls
 
 - `merchanttradeno-len` - ECPay MerchantTradeNo limited to 20 chars
-- `tradeinfo-padding` - NewebPay TradeInfo MUST use PKCS7 padding
-- `payuni-gcm-tag` - PAYUNi MUST append 16-byte GCM auth tag after ciphertext
+- `tradeinfo-padding` - NewebPay decrypt must accept padding 1–32 (official plugin pads to 32-byte blocks)
+- `payuni-encryptinfo` - PAYUNi EncryptInfo is NOT hex(ciphertext + tag); UPP enables methods with flags (`Credit=1`, `ATM=1`), there is no PayType
 - `https-callback` - All ReturnURL / NotifyURL must use HTTPS
-- `lowercase-encode` - ECPay CheckMacValue uses .NET-style lowercase URL encode
+- `lowercase-encode` - ECPay CheckMacValue: `encodeURIComponent` gives `%20` for spaces and fails every request with MerchantTradeDate
 
 ## Test Credentials
 

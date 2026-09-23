@@ -1,0 +1,28 @@
+{
+    "provider": "opay",
+    "source": {
+        "kind": "official-doc-example",
+        "name": "歐付寶全方位金流介接技術文件 附錄「檢查碼機制」計算範例（_studies/opay/opay-aio-payment.pdf 第 35–36 頁）",
+        "note": "expected 為文件印出的步驟 (7) 結果；步驟 (5) 的最終字串空白為 \"+\""
+    },
+    "hash_key": "5294y06JbISpM5x9",
+    "hash_iv": "v77hoKGq4kWxNNIS",
+    "cases": [
+        {
+            "name": "doc_example",
+            "params": {
+                "TradeDesc": "促銷方案",
+                "PaymentType": "aio",
+                "MerchantTradeDate": "2013/03/12 15:30:23",
+                "MerchantTradeNo": "allpay20130312153023",
+                "MerchantID": "2000132",
+                "ReturnURL": "https://www.allpay.com.tw/receive.php",
+                "ItemName": "Apple iphone 7 手機殼",
+                "TotalAmount": "1000",
+                "ChoosePayment": "ALL",
+                "EncryptType": "1"
+            },
+            "expected": "96FEF7B076F58DDF5717E236F70923A3DBF0DDC33FD42E82FDD8CECCC9D10787"
+        }
+    ]
+}

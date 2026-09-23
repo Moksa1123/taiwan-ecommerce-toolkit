@@ -227,6 +227,12 @@ def test_ecpay():
     sc = next(c for c in l['cases'] if c['name'] == 'status_callback')
     check('[物流] 驗證狀態通知', lambda: client.verify_check_mac_value(dict(sc['params'], CheckMacValue=sc['expected'])))
 
+    o = load_vectors('opay')
+    oc = o['cases'][0]
+    check('[金流] 歐付寶官方文件的 CheckMacValue 計算範例（同源演算法）',
+          lambda: pay.ECPayPaymentService('2000132', o['hash_key'], o['hash_iv'])
+          .generate_check_mac_value(oc['params']) == oc['expected'])
+
     a = v['invoice_aes']
     isvc = inv.ECPayInvoiceService('2000132', a['hash_key'], a['hash_iv'])
     check('[發票 AES] 加密結果與官方 SDK 逐位元組相同',
@@ -267,11 +273,20 @@ def test_scripts():
 import re  # noqa: E402
 
 SNIPPET_RE = re.compile(
-    r'<!-- verify: ([\w-]+) -->\r?\n```(python|typescript|ts|javascript|js|php)\r?\n(.*?)```', re.S)
+    r'<!-- verify: ([\w -]+?) -->\r?\n```(python|typescript|ts|javascript|js|php)\r?\n(.*?)```', re.S)
 
 # TypeScript / JavaScript 片段交給 Node 執行（Node 22 需 --experimental-strip-types 才能直接跑 TS）。
 # 各驗證名稱約定的函式名稱見下方 driver；片段只要定義出這些函式即可。
 JS_DRIVERS = {
+    'newebpay-logistics': '''
+const v = VECTORS.newebpay
+const lh = v.logistics_hash_data
+const a: any = new NewebPayLogistics({ merchantId: 'MS12345678', hashKey: lh.hash_key, hashIV: lh.hash_iv })
+if (a.generateHashData(lh.EncryptData) !== lh.expected) fail('HashData')
+const b: any = new NewebPayLogistics({ merchantId: 'MS12345678', hashKey: v.hash_key, hashIV: v.hash_iv })
+for (const c of v.plugin_32byte_padding) {
+  if (b.aesDecrypt(c.TradeInfo) !== c.plain) fail(`${c.name} decrypt`)
+}''',
     'payuni': '''
 const v = VECTORS.payuni
 for (const c of v.cases) {
@@ -301,8 +316,11 @@ for (const c of v.cases) {
 }''',
     'ecpay-cmv-md5': '''
 const v = VECTORS.ecpay.logistics_checkmacvalue_md5
+const gen = typeof ECPayLogistics !== 'undefined'
+  ? ((p: any) => new ECPayLogistics({ merchantId: '2000132', hashKey: v.hash_key, hashIV: v.hash_iv }).generateCheckMacValue(p))
+  : ((p: any) => generateECPayCheckMacValue(p, v.hash_key, v.hash_iv))
 for (const c of v.cases) {
-  if (generateECPayCheckMacValue(c.params, v.hash_key, v.hash_iv) !== c.expected) fail(c.name)
+  if (gen(c.params) !== c.expected) fail(c.name)
 }''',
 }
 
@@ -320,7 +338,8 @@ foreach ($v['cases'] as $c) {
 }''',
     'newebpay': r'''
 $v = $VECTORS['newebpay'];
-$e = new NewebPayEncryption($v['hash_key'], $v['hash_iv']);
+$cls = class_exists('NewebPayEncryption') ? 'NewebPayEncryption' : 'EzPayEncryption';
+$e = new $cls($v['hash_key'], $v['hash_iv']);
 foreach ($v['spec_pkcs7_encrypt'] as $c) {
     if ($e->encrypt($c['params']) !== $c['TradeInfo']) fail("{$c['name']} TradeInfo");
     if ($e->tradeSha($c['TradeInfo']) !== $c['TradeSha']) fail("{$c['name']} TradeSha");
@@ -421,9 +440,10 @@ def _check_snippet_payuni(ns):
 def _check_snippet_newebpay(ns):
     v = load_vectors('newebpay')
     key, iv = v['hash_key'], v['hash_iv']
-    if 'NewebPayEncryption' in ns:
-        # 類別寫法：NewebPayEncryption(key, iv).encrypt / decrypt / trade_sha
-        e = ns['NewebPayEncryption'](key, iv)
+    cls = ns.get('NewebPayEncryption') or ns.get('EzPayEncryption')
+    if cls:
+        # 類別寫法：NewebPayEncryption / EzPayEncryption(key, iv).encrypt / decrypt / trade_sha
+        e = cls(key, iv)
         ns = dict(ns,
                   generate_trade_info=lambda p, k, i: e.encrypt(p),
                   generate_trade_sha=lambda t, k, i: e.trade_sha(t),
@@ -445,12 +465,34 @@ def _check_snippet_newebpay(ns):
 def _check_snippet_ecpay_cmv(section):
     def run(ns):
         p = load_vectors('ecpay')[section]
-        return all(ns['generate_check_mac_value'](c['params'], p['hash_key'], p['hash_iv']) == c['expected']
-                   for c in p['cases'])
+        if 'ECPayLogistics' in ns:   # 類別寫法
+            client = ns['ECPayLogistics']('2000132', p['hash_key'], p['hash_iv'])
+            fn = lambda params, k, i: client.generate_check_mac_value(params)  # noqa: E731
+        else:
+            fn = ns['generate_check_mac_value']
+        return all(fn(c['params'], p['hash_key'], p['hash_iv']) == c['expected'] for c in p['cases'])
     return run
 
 
+def _check_snippet_opay_cmv(ns):
+    v = load_vectors('opay')
+    fn = ns.get('gen_check_mac_value') or ns['generate_check_mac_value']
+    return all(fn(c['params'], v['hash_key'], v['hash_iv']) == c['expected'] for c in v['cases'])
+
+
+def _check_snippet_newebpay_logistics(ns):
+    v = load_vectors('newebpay')
+    lh = v['logistics_hash_data']
+    c = ns['NewebPayLogistics']('MS12345678', lh['hash_key'], lh['hash_iv'])
+    if c.generate_hash_data(lh['EncryptData']) != lh['expected']:
+        return False
+    c = ns['NewebPayLogistics']('MS12345678', v['hash_key'], v['hash_iv'])
+    return all(c.aes_decrypt(x['TradeInfo']) == x['plain'] for x in v['plugin_32byte_padding'])
+
+
 SNIPPET_CHECKERS = {
+    'newebpay-logistics': _check_snippet_newebpay_logistics,
+    'opay-cmv': _check_snippet_opay_cmv,
     'payuni': _check_snippet_payuni,
     'newebpay': _check_snippet_newebpay,
     'ecpay-cmv-sha256': _check_snippet_ecpay_cmv('payment_checkmacvalue_sha256'),
@@ -467,29 +509,88 @@ def test_doc_snippets():
             text = f.read()
         for m in SNIPPET_RE.finditer(text):
             found += 1
-            name, lang, code = m.group(1), m.group(2), m.group(3)
+            names, lang, code = m.group(1).split(), m.group(2), m.group(3)
             line = text[:m.start()].count('\n') + 1
-            label = f'{rel}:{line} [{name}/{lang}]'
             is_js = lang in ('typescript', 'ts', 'javascript', 'js')
             is_php = lang == 'php'
             registry = JS_DRIVERS if is_js else PHP_DRIVERS if is_php else SNIPPET_CHECKERS
-            if name not in registry:
-                check(f'{label} 未知的驗證名稱', False)
-                continue
+            # 一個片段可同時標記多個驗證名稱，例如 <!-- verify: ecpay-cmv-sha256 newebpay payuni -->
+            for name in names:
+                label = f'{rel}:{line} [{name}/{lang}]'
+                if name not in registry:
+                    check(f'{label} 未知的驗證名稱', False)
+                    continue
 
-            if is_php:
-                check(label, lambda code=code, name=name, label=label: _run_php_snippet(name, code, label))
-                continue
-            if is_js:
-                check(label, lambda code=code, name=name, label=label: _run_js_snippet(name, code, label))
-                continue
+                if is_php:
+                    check(label, lambda code=code, name=name, label=label: _run_php_snippet(name, code, label))
+                    continue
+                if is_js:
+                    check(label, lambda code=code, name=name, label=label: _run_js_snippet(name, code, label))
+                    continue
 
-            def run(code=code, name=name, line=line):
-                ns = _snippet_namespace()
-                exec(compile(code, f'{rel}:{line}', 'exec'), ns)  # noqa: S102 - 執行 repo 內自有文件
-                return SNIPPET_CHECKERS[name](ns)
-            check(label, run)
+                def run(code=code, name=name, line=line):
+                    ns = _snippet_namespace()
+                    exec(compile(code, f'{rel}:{line}', 'exec'), ns)  # noqa: S102 - 執行 repo 內自有文件
+                    return SNIPPET_CHECKERS[name](ns)
+                check(label, run)
     check(f'共找到 {found} 個受驗證片段（應大於 0）', found > 0)
+
+
+# ---------------------------------------------------------------------------
+# 7. 發票服務產生器（generate-invoice-service.py）
+# ---------------------------------------------------------------------------
+#
+# 產生器輸出的是骨架。過去骨架的 issue / void 會「什麼都沒做就回傳成功」，
+# 照抄的人會以為發票已開立 / 作廢。這裡確認：每個 provider 都產得出來、
+# Python 版可載入且未實作的步驟會拋錯、TypeScript 版語法正確、MOF 會被拒絕。
+
+def test_invoice_generator():
+    import csv as _csv
+    import shutil
+    import subprocess
+    import tempfile
+    print('\n7. 發票服務產生器 taiwan-invoice/scripts/generate-invoice-service.py')
+    script = os.path.join(ROOT, 'taiwan-invoice', 'scripts', 'generate-invoice-service.py')
+    with open(os.path.join(ROOT, 'taiwan-invoice', 'data', 'providers.csv'), encoding='utf-8') as f:
+        providers = [r['provider'] for r in _csv.DictReader(f)]
+    node = shutil.which('node')
+    env = dict(os.environ, PYTHONIOENCODING='utf-8')
+    with tempfile.TemporaryDirectory() as tmp:
+        for provider in providers:
+            if provider.lower() == 'mof':
+                proc = subprocess.run([sys.executable, script, provider, '--output', tmp],
+                                      capture_output=True, text=True, encoding='utf-8', env=env)
+                check('[MOF] 拒絕產生開立服務（MOF 不能開立發票）', proc.returncode != 0)
+                continue
+            for lang in ('python', 'typescript'):
+                proc = subprocess.run([sys.executable, script, provider, '--lang', lang, '--output', tmp],
+                                      capture_output=True, text=True, encoding='utf-8', env=env)
+                check(f'[{provider}/{lang}] 可產生', proc.returncode == 0, proc.stderr.strip()[-200:])
+            py = os.path.join(tmp, f'{provider.lower()}-invoice-service.py')
+
+            def stub_raises(py=py):
+                spec = importlib.util.spec_from_file_location('gen_' + os.path.basename(py)[:-3].replace('-', '_'), py)
+                mod = importlib.util.module_from_spec(spec)
+                spec.loader.exec_module(mod)
+                cls = next(getattr(mod, n) for n in dir(mod) if n.endswith('InvoiceService'))
+                svc = cls()
+                for call in (lambda: svc.issue_invoice('1', 'k' * 16, 'i' * 16, mod.InvoiceIssueData(order_id='A')),
+                             lambda: svc.void_invoice('1', 'k' * 16, 'i' * 16, 'AB12345678', 'x')):
+                    try:
+                        call()
+                        return False          # 未實作卻回傳了結果
+                    except NotImplementedError:
+                        pass
+                return True
+            check(f'[{provider}/python] 可載入，未實作的開立 / 作廢會拋錯而不是回傳成功', stub_raises)
+
+            ts = os.path.join(tmp, f'{provider.lower()}-invoice-service.ts')
+            if node and os.path.exists(ts):
+                mts = ts[:-3] + '.mts'
+                shutil.copy(ts, mts)
+                proc = subprocess.run([node, '--experimental-strip-types', '--no-warnings', mts],
+                                      capture_output=True, text=True, encoding='utf-8')
+                check(f'[{provider}/typescript] 語法正確可載入', proc.returncode == 0, proc.stderr.strip()[:200])
 
 
 def _plain_matches(svc, trade_info, plain):
@@ -514,7 +615,7 @@ def main():
         return 1
 
     test_imports()
-    for section in (test_payuni, test_newebpay, test_ecpay, test_scripts, test_doc_snippets):
+    for section in (test_payuni, test_newebpay, test_ecpay, test_scripts, test_doc_snippets, test_invoice_generator):
         try:
             section()
         except Exception as e:  # noqa: BLE001 - 單一區段炸掉不能讓其餘區段不跑

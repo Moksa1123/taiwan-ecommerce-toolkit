@@ -1,10 +1,10 @@
 issue,symptom,cause,solution,provider,severity
-CheckMacValue 錯誤,回傳 10100058 或 CheckValue Error,參數排序錯誤 | URL Encode 不正確 | 編碼問題,重新檢查 CheckMacValue 計算流程 | 確認 URL Encode 使用 lowercase | 移除 CheckMacValue 本身再計算,ecpay/newebpay,high
+CheckMacValue / TradeSha 錯誤,ECPay 回傳 10200073；NewebPay 回傳 MPG02001（檢查碼錯誤）,ECPay：排序區分了大小寫 | URL encode 未依 .NET 規則（空白應為 +、( ) ! * 不編碼）| 物流誤用 SHA256 | NewebPay：TradeSha 字串格式錯誤,"ECPay：不分大小寫排序、PHP urlencode 後轉小寫並還原 ( ) ! * - _ .、金流 SHA256 / 物流 MD5 | NewebPay：SHA256(""HashKey={key}&{TradeInfo}&HashIV={iv}"") 轉大寫 | 以 tests/vectors 的已知答案自我檢查",ecpay/newebpay,high
 訂單編號重複,回傳 10100003 或訂單已存在,使用相同的 MerchantTradeNo,每筆訂單使用唯一編號 | 建議加入時間戳 | 長度限制 20 字元,ecpay/newebpay/payuni,high
 金額計算錯誤,回傳金額驗算錯誤,金額包含小數 | 金額為負數 | 金額為 0,確保金額為正整數 | 移除小數點 | 最小金額 1 元,ecpay/newebpay/payuni,high
 交易描述包含特殊字元,參數錯誤或亂碼,未進行 URL Encode | 包含特殊符號,使用 urlencode() 編碼 TradeDesc | 避免 & = # 等符號,ecpay/newebpay,medium
 AES 加密失敗,NewebPay TradeInfo 加密錯誤,Key/IV 長度錯誤 | Padding 錯誤 | 編碼問題,確認 HashKey 32 bytes | HashIV 16 bytes | 使用 PKCS7 padding,newebpay,high
-AES-GCM 加密失敗,PayUNi 加密錯誤,Nonce 錯誤 | Tag 未附加 | 編碼問題,確認 IV 作為 nonce | 加密後附加 tag (16 bytes) | 總長度為 encrypted + tag,payuni,high
+PAYUNi EncryptInfo 格式錯誤,PAYUNi 拒絕請求或解密失敗,把 EncryptInfo 做成 hex(密文+tag) | 少了最外層 hex | 加密內容用 JSON | HashInfo 順序錯,"EncryptInfo = hex( base64(密文) + "":::"" + base64(tag) )；內容為 query string；HashInfo = SHA256(HashKey + EncryptInfo + HashIV) 轉大寫",payuni,high
 收不到付款通知,ReturnURL 未收到通知,URL 不是 HTTPS | 防火牆阻擋 | 回應格式錯誤,確認 ReturnURL 使用 HTTPS | 檢查防火牆 | 回應 "1|OK",ecpay/newebpay/payuni,high
 測試卡無法付款,測試環境刷卡失敗,使用真實卡號 | 測試卡格式錯誤,使用官方提供的測試卡號 | ECPay: 4311-9522-2222-2222 | NewebPay: 4000-2211-1111-1111,ecpay/newebpay,medium
 信用卡交易失敗,顯示交易被拒絕,餘額不足 | 卡片過期 | 銀行風控,請客戶確認卡片狀態 | 聯繫發卡銀行 | 使用其他卡片,ecpay/newebpay/payuni,medium
@@ -17,8 +17,7 @@ ATM 虛擬帳號未產生,ATM 付款未產生帳號,參數設定錯誤 | ExpireD
 商店代號錯誤,回傳商店不存在,MerchantID 錯誤 | 測試正式環境混用,確認 MerchantID 正確 | 測試環境用測試商店代號 | 正式環境用正式商店代號,ecpay/newebpay/payuni,high
 時間格式錯誤,MerchantTradeDate 格式錯誤,日期格式不符 | 時區問題,使用 yyyy/MM/dd HH:mm:ss 格式 | 使用伺服器時區 | 不可超過當前時間太多,ecpay/newebpay,medium
 JSON API 解析失敗,API 回應無法解析 | JSON 結構不符,回應格式錯誤 | API 版本不符,確認 PAYUNi API 版本 | 檢查 Content-Type: application/json | 記錄完整回應內容,payuni,high
-Nonce 長度錯誤,加密失敗 | 回傳 AES_ENCRYPT_ERROR,Nonce 不是 12 bytes | UTF-8 編碼問題,確認 HashIV 為 12 字節 UTF-8 編碼 | 使用 len(nonce.encode('utf-8')) 檢查長度,payuni,high
-GCM Tag 未附加,解密失敗 | Tag verification failed,加密後未附加 16 bytes tag | 資料截斷,確認加密後總長度 = ciphertext + 16 | 使用 cipher.encrypt_and_digest() 正確取得 tag,payuni,high
+GCM tag 驗證失敗,解密失敗 | Tag verification failed,HashKey / HashIV 錯誤 | EncryptInfo 遭截斷或竄改 | 分離密文與 tag 的方式錯誤,"hex 解碼後以 "":::"" 分成 base64 密文與 base64 tag，各自 base64 解碼後再 decrypt_and_verify",payuni,high
 RESTful 端點錯誤,404 Not Found | 405 Method Not Allowed,端點路徑錯誤 | HTTP 方法錯誤,確認使用 POST 方法 | 檢查端點路徑 /api/upp | 測試環境使用 sandbox-api.payuni.com.tw,payuni,medium
 紅陽 send_time 一直逾時,交易被拒或回無效交易,send_time 格式為 fffssmmHHyyyyMMdd 毫秒在前日期在後 易誤寫成 yyyyMMddHHmmssfff | 超過 120 秒即失效,依手冊格式組字串並校時主機 NTP,sunpay,high
 紅陽 RSA 解密失敗,rsamsg 解出亂碼或長度不符,加密分段為 117 byte 但解密分段是 128 byte 兩者不同 易誤用同一數值,加密時每 117 byte 一段先 urlencode 再加密;解密時先 base64decode 後每 128 byte 一段 最後 urldecode,sunpay,high

@@ -139,6 +139,7 @@ TradeSha = SHA256("HashKey={HashKey}&{TradeInfo}&HashIV={HashIV}")
 
 ### PHP 範例（與 Newebpay 完全相同）
 
+<!-- verify: newebpay -->
 ```php
 <?php
 
@@ -162,17 +163,35 @@ class EzPayEncryption
         return bin2hex($encrypted);
     }
 
+    /**
+     * AES-256-CBC 解密（與藍新官方外掛 create_aes_decrypt() 相同）
+     *
+     * 官方外掛加密時以 32 bytes 區塊補齊，padding 可能是 17–32；
+     * 直接用 OPENSSL_RAW_DATA（預設 PKCS#7，只接受 1–16）會解密失敗回傳 false。
+     */
     public function decrypt(string $encryptedData): array
     {
-        $data = hex2bin($encryptedData);
         $decrypted = openssl_decrypt(
-            $data,
+            hex2bin($encryptedData),
             'AES-256-CBC',
             $this->hashKey,
-            OPENSSL_RAW_DATA,
+            OPENSSL_RAW_DATA | OPENSSL_ZERO_PADDING,
             $this->hashIV
         );
-        parse_str($decrypted, $result);
+
+        // 以最後一個 byte 為 padding 長度移除，並確認尾端一致
+        $pad = ord(substr($decrypted, -1));
+        if ($pad < 1 || $pad > 32 || substr($decrypted, -$pad) !== str_repeat(chr($pad), $pad)) {
+            throw new RuntimeException('解密失敗：HashKey / HashIV 可能不正確');
+        }
+        $plain = substr($decrypted, 0, -$pad);
+
+        // RespondType=JSON 時明文是 JSON（交易明細在 Result 內）；String 時是 query string
+        $json = json_decode($plain, true);
+        if (is_array($json)) {
+            return $json;
+        }
+        parse_str($plain, $result);
         return $result;
     }
 
@@ -186,36 +205,49 @@ class EzPayEncryption
 
 ### Python 範例
 
+> ezPay 金流與藍新共用同一套演算法；此類別由 CI 以藍新官方外掛與規格書產生的標準答案驗證。
+
+<!-- verify: newebpay -->
 ```python
-"""ezPay 簡單付 AES-256-CBC 加密（與 Newebpay 共用實作）"""
+"""ezPay 簡單付 AES-256-CBC 加密（與藍新共用演算法）"""
+
+import hashlib
+import hmac
+import json
+from urllib.parse import urlencode, parse_qsl
 
 from Crypto.Cipher import AES
-from Crypto.Util.Padding import pad, unpad
-from urllib.parse import urlencode, parse_qs
-import hashlib
+from Crypto.Util.Padding import pad
 
 
 class EzPayEncryption:
     def __init__(self, hash_key: str, hash_iv: str):
-        self.hash_key = hash_key.encode('utf-8')
-        self.hash_iv = hash_iv.encode('utf-8')
+        self.hash_key = hash_key
+        self.hash_iv = hash_iv
+
+    def _cipher(self):
+        return AES.new(self.hash_key.encode(), AES.MODE_CBC, self.hash_iv.encode())
 
     def encrypt(self, params: dict) -> str:
-        query_string = urlencode(params)
-        cipher = AES.new(self.hash_key, AES.MODE_CBC, self.hash_iv)
-        padded = pad(query_string.encode('utf-8'), AES.block_size)
-        return cipher.encrypt(padded).hex()
+        """標準 PKCS#7（與規格書 NDNF 的 PHP 範例相同）→ hex"""
+        return self._cipher().encrypt(pad(urlencode(params).encode('utf-8'), 16)).hex()
 
-    def decrypt(self, encrypted_data: str) -> dict:
-        data = bytes.fromhex(encrypted_data)
-        cipher = AES.new(self.hash_key, AES.MODE_CBC, self.hash_iv)
-        decrypted = unpad(cipher.decrypt(data), AES.block_size)
-        result = dict(parse_qs(decrypted.decode('utf-8')))
-        return {k: v[0] for k, v in result.items()}
+    def decrypt(self, trade_info: str) -> dict:
+        data = self._cipher().decrypt(bytes.fromhex(trade_info))
+        # 官方外掛以 32 bytes 補齊，padding 可能是 1–32；Crypto.Util.Padding.unpad(data, 16) 會失敗
+        n = data[-1]
+        if not 1 <= n <= 32 or data[-n:] != bytes([n]) * n:
+            raise ValueError('padding 錯誤（HashKey / HashIV 可能不正確）')
+        text = data[:-n].decode('utf-8')
+        # RespondType=JSON 時明文是 JSON；用 parse_qs 會得到空 dict
+        return json.loads(text) if text.startswith('{') else dict(parse_qsl(text, keep_blank_values=True))
 
     def trade_sha(self, trade_info: str) -> str:
-        raw = f"HashKey={self.hash_key.decode()}&{trade_info}&HashIV={self.hash_iv.decode()}"
+        raw = f"HashKey={self.hash_key}&{trade_info}&HashIV={self.hash_iv}"
         return hashlib.sha256(raw.encode('utf-8')).hexdigest().upper()
+
+    def verify_trade_sha(self, trade_info: str, trade_sha: str) -> bool:
+        return hmac.compare_digest(self.trade_sha(trade_info), trade_sha.upper())
 ```
 
 ### CheckCode 驗證
