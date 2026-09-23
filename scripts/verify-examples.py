@@ -164,6 +164,12 @@ def test_newebpay():
               lambda: svc.generate_check_code(amt=cc['params']['Amt'], merchant_id=cc['params']['MerchantID'],
                                       merchant_order_no=cc['params']['MerchantOrderNo'],
                                       trade_no=cc['params']['TradeNo']) == cc['expected'])
+        sc = v['server_check_code']
+        svc_sc = type(svc)(sc['params']['MerchantID'], sc['hash_key'], sc['hash_iv'])
+        check(f'[{label}] CheckCode 與規格書中「伺服器實際回傳」的值相同',
+              lambda: svc_sc.generate_check_code(amt=sc['params']['Amt'], merchant_id=sc['params']['MerchantID'],
+                                         merchant_order_no=sc['params']['MerchantOrderNo'],
+                                         trade_no=sc['params']['TradeNo']) == sc['expected'])
         cv = v['check_value']
         svc_cv = type(svc)(cv['MerchantID'], v['hash_key'], v['hash_iv'])
         check(f'[{label}] CheckValue 與規格書 4.1.6 相同',
@@ -232,6 +238,260 @@ def test_ecpay():
     check('[發票] 請求帶 RqHeader.Revision=3.0.0', req['RqHeader'].get('Revision') == '3.0.0')
 
 
+# ---------------------------------------------------------------------------
+# 5. 隨 skill 發布的工具腳本
+# ---------------------------------------------------------------------------
+
+def test_scripts():
+    print('\n5. 工具腳本 taiwan-payment/scripts/test_payment.py')
+    tp = load_module('taiwan-payment/scripts/test_payment.py')
+    for platform in ('ecpay', 'newebpay', 'payuni'):
+        check(f'[{platform}] 內建已知答案測試通過', lambda: tp.run_known_answer_test(platform))
+    # 內建的標準答案必須就是 tests/vectors 裡官方程式產生的那一筆，避免各自漂移
+    ecpay = {c['expected'] for c in load_vectors('ecpay')['payment_checkmacvalue_sha256']['cases']}
+    newebpay = {c['TradeSha'] for c in load_vectors('newebpay')['spec_pkcs7_encrypt']}
+    payuni = {c['HashInfo'] for c in load_vectors('payuni')['cases']}
+    check('內建標準答案皆取自 tests/vectors', tp.KNOWN_ANSWERS['ecpay']['expected'] in ecpay
+          and tp.KNOWN_ANSWERS['newebpay']['expected'] in newebpay
+          and tp.KNOWN_ANSWERS['payuni']['expected'] in payuni)
+
+
+# ---------------------------------------------------------------------------
+# 6. 文件中的程式碼片段
+# ---------------------------------------------------------------------------
+#
+# 文件裡的片段才是 AI 助理最常直接照抄的東西，過去卻完全沒被驗證（範例修好了、
+# 文件仍是錯的）。在 ```python 區塊前加上 <!-- verify: <名稱> --> 即納入檢查：
+# 片段會在已匯入常用模組的環境執行，再以同一份官方標準答案比對。
+
+import re  # noqa: E402
+
+SNIPPET_RE = re.compile(
+    r'<!-- verify: ([\w-]+) -->\r?\n```(python|typescript|ts|javascript|js|php)\r?\n(.*?)```', re.S)
+
+# TypeScript / JavaScript 片段交給 Node 執行（Node 22 需 --experimental-strip-types 才能直接跑 TS）。
+# 各驗證名稱約定的函式名稱見下方 driver；片段只要定義出這些函式即可。
+JS_DRIVERS = {
+    'payuni': '''
+const v = VECTORS.payuni
+for (const c of v.cases) {
+  const r = encryptPAYUNi(c.params, v.hash_key, v.hash_iv)
+  if (r.EncryptInfo !== c.EncryptInfo) fail(`${c.name} EncryptInfo`)
+  if (r.HashInfo !== c.HashInfo) fail(`${c.name} HashInfo`)
+  if (JSON.stringify(decryptPAYUNi(c.EncryptInfo, v.hash_key, v.hash_iv)) !== JSON.stringify(c.params)) fail(`${c.name} decrypt`)
+}''',
+    'newebpay': '''
+const v = VECTORS.newebpay
+for (const c of v.spec_pkcs7_encrypt) {
+  const r = encryptNewebPay(c.params, v.hash_key, v.hash_iv)
+  if (r.TradeInfo !== c.TradeInfo) fail(`${c.name} TradeInfo`)
+  if (r.TradeSha !== c.TradeSha) fail(`${c.name} TradeSha`)
+}
+for (const c of v.plugin_32byte_padding) {
+  const got = decryptNewebPay(c.TradeInfo, v.hash_key, v.hash_iv)
+  if (JSON.stringify(got) !== JSON.stringify(Object.fromEntries(new URLSearchParams(c.plain)))) fail(`${c.name} decrypt`)
+}
+for (const c of v.server_callbacks) {
+  if (decryptNewebPay(c.TradeInfo, v.hash_key, v.hash_iv).Status !== 'SUCCESS') fail(`callback ${c.name}`)
+}''',
+    'ecpay-cmv-sha256': '''
+const v = VECTORS.ecpay.payment_checkmacvalue_sha256
+for (const c of v.cases) {
+  if (generateECPayCheckMacValue(c.params, v.hash_key, v.hash_iv) !== c.expected) fail(c.name)
+}''',
+    'ecpay-cmv-md5': '''
+const v = VECTORS.ecpay.logistics_checkmacvalue_md5
+for (const c of v.cases) {
+  if (generateECPayCheckMacValue(c.params, v.hash_key, v.hash_iv) !== c.expected) fail(c.name)
+}''',
+}
+
+
+# PHP 片段：GitHub Actions 的 ubuntu-latest 內建 php；本機沒有 php 時改用 Docker php:8.2-cli。
+# 片段需定義下列類別（與 references/ 中的寫法一致）。
+PHP_DRIVERS = {
+    'payuni': r'''
+$v = $VECTORS['payuni'];
+$e = new PayuniEncryption($v['hash_key'], $v['hash_iv']);
+foreach ($v['cases'] as $c) {
+    if ($e->encrypt($c['params']) !== $c['EncryptInfo']) fail("{$c['name']} EncryptInfo");
+    if ($e->hashInfo($c['EncryptInfo']) !== $c['HashInfo']) fail("{$c['name']} HashInfo");
+    if ($e->decrypt($c['EncryptInfo']) != $c['params']) fail("{$c['name']} decrypt");
+}''',
+    'newebpay': r'''
+$v = $VECTORS['newebpay'];
+$e = new NewebPayEncryption($v['hash_key'], $v['hash_iv']);
+foreach ($v['spec_pkcs7_encrypt'] as $c) {
+    if ($e->encrypt($c['params']) !== $c['TradeInfo']) fail("{$c['name']} TradeInfo");
+    if ($e->tradeSha($c['TradeInfo']) !== $c['TradeSha']) fail("{$c['name']} TradeSha");
+}
+foreach ($v['plugin_32byte_padding'] as $c) {
+    parse_str($c['plain'], $want);
+    if ($e->decrypt($c['TradeInfo']) != $want) fail("{$c['name']} decrypt");
+}
+foreach ($v['server_callbacks'] as $c) {
+    if (($e->decrypt($c['TradeInfo'])['Status'] ?? null) !== 'SUCCESS') fail("callback {$c['name']}");
+}''',
+}
+
+
+def _php_command(path):
+    import shutil
+    php = shutil.which('php')
+    if php:
+        return [php, '-d', 'display_errors=stderr', path]
+    docker = shutil.which('docker')
+    if not docker:
+        raise RuntimeError('找不到 php 或 docker，無法驗證 PHP 片段')
+    host_dir, name = os.path.split(path)
+    return [docker, 'run', '--rm', '-v', f'{host_dir}:/w', 'php:8.2-cli',
+            'php', '-d', 'display_errors=stderr', f'/w/{name}']
+
+
+def _run_php_snippet(name, code, label):
+    import subprocess
+    import tempfile
+    vectors = {n: load_vectors(n) for n in ('payuni', 'newebpay', 'ecpay')}
+    body = re.sub(r'^\s*<\?php', '', code, count=1)
+    program = ('<?php\n' + body + '\n'
+               + "$VECTORS = json_decode(file_get_contents(__DIR__ . '/vectors.json'), true);\n"
+               + '$failures = [];\nfunction fail($m) { global $failures; $failures[] = $m; }\n'
+               + PHP_DRIVERS[name] + '\n'
+               + 'if ($failures) { echo json_encode($failures); exit(1); }\n')
+    with tempfile.TemporaryDirectory() as tmp:
+        path = os.path.join(tmp, 'snippet.php')
+        with open(path, 'w', encoding='utf-8') as f:
+            f.write(program)
+        with open(os.path.join(tmp, 'vectors.json'), 'w', encoding='utf-8') as f:
+            json.dump(vectors, f, ensure_ascii=False)
+        env = dict(os.environ, MSYS_NO_PATHCONV='1')
+        proc = subprocess.run(_php_command(path), capture_output=True, text=True, encoding='utf-8', env=env)
+    if proc.returncode != 0:
+        raise AssertionError(f'{label}: {(proc.stdout + proc.stderr).strip()[:300]}')
+    return True
+
+
+def _run_js_snippet(name, code, label):
+    import shutil
+    import subprocess
+    import tempfile
+    node = shutil.which('node')
+    if not node:
+        raise RuntimeError('找不到 node，無法驗證 TypeScript / JavaScript 片段')
+    vectors = {n: load_vectors(n) for n in ('payuni', 'newebpay', 'ecpay')}
+    prelude = '' if re.search(r"^import crypto\b", code, re.M) else "import crypto from 'crypto'\n"
+    program = (prelude + code + '\n'
+               + 'const VECTORS = ' + json.dumps(vectors, ensure_ascii=False) + '\n'
+               + 'const failures = []\nfunction fail(m) { failures.push(m) }\n'
+               + JS_DRIVERS[name] + '\n'
+               + 'if (failures.length) { console.log(JSON.stringify(failures)); process.exit(1) }\n')
+    with tempfile.TemporaryDirectory() as tmp:
+        path = os.path.join(tmp, 'snippet.mts')
+        with open(path, 'w', encoding='utf-8') as f:
+            f.write(program)
+        proc = subprocess.run([node, '--experimental-strip-types', '--no-warnings', path],
+                              capture_output=True, text=True, encoding='utf-8')
+    if proc.returncode != 0:
+        raise AssertionError(f'{label}: {(proc.stdout + proc.stderr).strip()[:300]}')
+    return True
+
+
+def _snippet_namespace():
+    import base64, hashlib, hmac, json as _json, urllib.parse  # noqa: E401
+    from Crypto.Cipher import AES
+    from Crypto.Util.Padding import pad, unpad
+    return {'base64': base64, 'hashlib': hashlib, 'hmac': hmac, 'json': _json,
+            'urllib': urllib, 'AES': AES, 'pad': pad, 'unpad': unpad}
+
+
+def _check_snippet_payuni(ns):
+    v = load_vectors('payuni')
+    key, iv = v['hash_key'], v['hash_iv']
+    if 'PayuniEncryption' in ns:
+        e = ns['PayuniEncryption'](key, iv)
+        enc, hsh, dec = e.encrypt, e.hash_info, getattr(e, 'decrypt', None)
+    else:
+        enc = lambda p: ns['generate_encrypt_info'](p, key, iv)  # noqa: E731
+        hsh = lambda x: ns['generate_hash_info'](x, key, iv)  # noqa: E731
+        dec = None
+    return all(enc(c['params']) == c['EncryptInfo'] and hsh(c['EncryptInfo']) == c['HashInfo']
+               and (dec is None or dec(c['EncryptInfo']) == c['params']) for c in v['cases'])
+
+
+def _check_snippet_newebpay(ns):
+    v = load_vectors('newebpay')
+    key, iv = v['hash_key'], v['hash_iv']
+    if 'NewebPayEncryption' in ns:
+        # 類別寫法：NewebPayEncryption(key, iv).encrypt / decrypt / trade_sha
+        e = ns['NewebPayEncryption'](key, iv)
+        ns = dict(ns,
+                  generate_trade_info=lambda p, k, i: e.encrypt(p),
+                  generate_trade_sha=lambda t, k, i: e.trade_sha(t),
+                  decrypt_trade_info=lambda t, k, i: e.decrypt(t))
+    ok = all(ns['generate_trade_info'](c['params'], key, iv) == c['TradeInfo'] and
+             ns['generate_trade_sha'](c['TradeInfo'], key, iv) == c['TradeSha']
+             for c in v['spec_pkcs7_encrypt'])
+    if 'decrypt_trade_info' in ns:
+        import urllib.parse
+        ok = ok and all(
+            ns['decrypt_trade_info'](c['TradeInfo'], key, iv) ==
+            dict(urllib.parse.parse_qsl(c['plain'], keep_blank_values=True))
+            for c in v['plugin_32byte_padding'])
+        ok = ok and all(ns['decrypt_trade_info'](c['TradeInfo'], key, iv).get('Status') == 'SUCCESS'
+                        for c in v['server_callbacks'])
+    return ok
+
+
+def _check_snippet_ecpay_cmv(section):
+    def run(ns):
+        p = load_vectors('ecpay')[section]
+        return all(ns['generate_check_mac_value'](c['params'], p['hash_key'], p['hash_iv']) == c['expected']
+                   for c in p['cases'])
+    return run
+
+
+SNIPPET_CHECKERS = {
+    'payuni': _check_snippet_payuni,
+    'newebpay': _check_snippet_newebpay,
+    'ecpay-cmv-sha256': _check_snippet_ecpay_cmv('payment_checkmacvalue_sha256'),
+    'ecpay-cmv-md5': _check_snippet_ecpay_cmv('logistics_checkmacvalue_md5'),
+}
+
+
+def test_doc_snippets():
+    print('\n6. 文件中標記 <!-- verify --> 的程式碼片段')
+    found = 0
+    for path in sorted(glob.glob(os.path.join(ROOT, 'taiwan-*', '**', '*.md'), recursive=True)):
+        rel = os.path.relpath(path, ROOT).replace(os.sep, '/')
+        with open(path, encoding='utf-8') as f:
+            text = f.read()
+        for m in SNIPPET_RE.finditer(text):
+            found += 1
+            name, lang, code = m.group(1), m.group(2), m.group(3)
+            line = text[:m.start()].count('\n') + 1
+            label = f'{rel}:{line} [{name}/{lang}]'
+            is_js = lang in ('typescript', 'ts', 'javascript', 'js')
+            is_php = lang == 'php'
+            registry = JS_DRIVERS if is_js else PHP_DRIVERS if is_php else SNIPPET_CHECKERS
+            if name not in registry:
+                check(f'{label} 未知的驗證名稱', False)
+                continue
+
+            if is_php:
+                check(label, lambda code=code, name=name, label=label: _run_php_snippet(name, code, label))
+                continue
+            if is_js:
+                check(label, lambda code=code, name=name, label=label: _run_js_snippet(name, code, label))
+                continue
+
+            def run(code=code, name=name, line=line):
+                ns = _snippet_namespace()
+                exec(compile(code, f'{rel}:{line}', 'exec'), ns)  # noqa: S102 - 執行 repo 內自有文件
+                return SNIPPET_CHECKERS[name](ns)
+            check(label, run)
+    check(f'共找到 {found} 個受驗證片段（應大於 0）', found > 0)
+
+
 def _plain_matches(svc, trade_info, plain):
     """decrypt_trade_info 會解析成 dict，這裡比對解析結果與原始明文解析結果"""
     import urllib.parse
@@ -254,7 +514,7 @@ def main():
         return 1
 
     test_imports()
-    for section in (test_payuni, test_newebpay, test_ecpay):
+    for section in (test_payuni, test_newebpay, test_ecpay, test_scripts, test_doc_snippets):
         try:
             section()
         except Exception as e:  # noqa: BLE001 - 單一區段炸掉不能讓其餘區段不跑

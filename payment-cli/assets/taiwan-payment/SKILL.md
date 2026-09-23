@@ -306,122 +306,107 @@ export class ECPayPaymentService implements PaymentService {
 
 ### 2. 加密實作
 
-**綠界 (ECPay) - SHA256 簽章：**
+> 以下三段 TypeScript 皆由 CI 以業者官方實作產生的標準答案驗證（`scripts/verify-examples.py`，
+> 標準答案見 `tests/vectors/`）。修改時請保留 `<!-- verify -->` 標記。
 
+**綠界 (ECPay) - SHA256 CheckMacValue：**
+
+<!-- verify: ecpay-cmv-sha256 -->
 ```typescript
 import crypto from 'crypto'
+
+// 與綠界官方 SDK UrlService::ecpayUrlEncode 相同：PHP urlencode → 小寫 → .NET 字元還原
+// encodeURIComponent 與 PHP urlencode 不同：空白要換成 +，! ' ( ) * ~ 要先編碼
+function ecpayUrlEncode(text: string): string {
+    return encodeURIComponent(text)
+        .replace(/%20/g, '+')
+        .replace(/[!'()*~]/g, c => '%' + c.charCodeAt(0).toString(16).toUpperCase())
+        .toLowerCase()
+        .replace(/%21/g, '!').replace(/%2a/g, '*').replace(/%28/g, '(').replace(/%29/g, ')')
+}
 
 function generateECPayCheckMacValue(params: Record<string, any>, hashKey: string, hashIV: string): string {
     // 1. 移除 CheckMacValue 本身
     const { CheckMacValue, ...cleanParams } = params
 
-    // 2. 依照 key 排序（字母順序）
-    const sortedKeys = Object.keys(cleanParams).sort()
+    // 2. 依 key 排序，不分大小寫（SDK 用 strcasecmp；預設 sort() 會把大寫排在小寫前面）
+    const sortedKeys = Object.keys(cleanParams).sort((a, b) => {
+        const x = a.toLowerCase(), y = b.toLowerCase()
+        return x < y ? -1 : x > y ? 1 : 0
+    })
 
-    // 3. 組合參數字串: key1=value1&key2=value2
-    const paramString = sortedKeys
-        .map(key => `${key}=${cleanParams[key]}`)
-        .join('&')
-
-    // 4. 前後加上 HashKey 和 HashIV
+    // 3. 組合 HashKey=...&k=v&...&HashIV=...
+    const paramString = sortedKeys.map(key => `${key}=${cleanParams[key]}`).join('&')
     const rawString = `HashKey=${hashKey}&${paramString}&HashIV=${hashIV}`
 
-    // 5. URL Encode (lowercase)
-    const encoded = encodeURIComponent(rawString).toLowerCase()
-
-    // 6. SHA256 雜湊
-    const hash = crypto.createHash('sha256').update(encoded).digest('hex')
-
-    // 7. 轉大寫
-    return hash.toUpperCase()
+    // 4. 綠界規則 URL encode → SHA256 → 大寫（國內物流改用 md5）
+    return crypto.createHash('sha256').update(ecpayUrlEncode(rawString)).digest('hex').toUpperCase()
 }
 ```
 
-**藍新 (NewebPay) - AES-256-CBC 雙層加密：**
+**藍新 (NewebPay) - AES-256-CBC + SHA256：**
 
+<!-- verify: newebpay -->
 ```typescript
-function encryptNewebPay(data: Record<string, any>, hashKey: string, hashIV: string): {
-    TradeInfo: string,
-    TradeSha: string
-} {
-    // 1. 轉換為查詢字串
+function encryptNewebPay(data: Record<string, any>, hashKey: string, hashIV: string) {
     const queryString = new URLSearchParams(data).toString()
 
-    // 2. AES-256-CBC 加密
+    // 標準 PKCS#7（與規格書 NDNF 的 PHP 範例相同）
     const cipher = crypto.createCipheriv('aes-256-cbc', hashKey, hashIV)
-    cipher.setAutoPadding(true)
-    let encrypted = cipher.update(queryString, 'utf8', 'hex')
-    encrypted += cipher.final('hex')
+    const tradeInfo = cipher.update(queryString, 'utf8', 'hex') + cipher.final('hex')
 
-    // 3. 計算 SHA256
-    const tradeSha = crypto
-        .createHash('sha256')
-        .update(`HashKey=${hashKey}&${encrypted}&HashIV=${hashIV}`)
-        .digest('hex')
-        .toUpperCase()
+    const tradeSha = crypto.createHash('sha256')
+        .update(`HashKey=${hashKey}&${tradeInfo}&HashIV=${hashIV}`)
+        .digest('hex').toUpperCase()
 
-    return {
-        TradeInfo: encrypted,
-        TradeSha: tradeSha
-    }
+    return { TradeInfo: tradeInfo, TradeSha: tradeSha }
 }
 
-function decryptNewebPay(encryptedData: string, hashKey: string, hashIV: string): Record<string, any> {
+function decryptNewebPay(tradeInfo: string, hashKey: string, hashIV: string): Record<string, any> {
+    // 官方外掛以 32 bytes 為區塊補齊，padding 可能是 1–32；
+    // setAutoPadding(true) 只接受 1–16，遇到這類密文會直接拋錯
     const decipher = crypto.createDecipheriv('aes-256-cbc', hashKey, hashIV)
-    decipher.setAutoPadding(true)
-    let decrypted = decipher.update(encryptedData, 'hex', 'utf8')
-    decrypted += decipher.final('utf8')
+    decipher.setAutoPadding(false)
+    const raw = Buffer.concat([decipher.update(tradeInfo, 'hex'), decipher.final()])
 
-    return Object.fromEntries(new URLSearchParams(decrypted))
+    const n = raw[raw.length - 1]
+    if (n < 1 || n > 32 || !raw.subarray(raw.length - n).every(b => b === n)) {
+        throw new Error('padding 錯誤（HashKey / HashIV 可能不正確）')
+    }
+    const text = raw.subarray(0, raw.length - n).toString('utf8')
+
+    // RespondType=JSON 時明文是 JSON（交易明細在 Result 內）；String 時是 query string
+    return text.startsWith('{') ? JSON.parse(text) : Object.fromEntries(new URLSearchParams(text))
 }
 ```
 
-**統一 (PAYUNi) - AES-256-GCM 加密：**
+**統一 (PAYUNi) - AES-256-GCM + SHA256：**
 
+<!-- verify: payuni -->
 ```typescript
-function encryptPAYUNi(data: Record<string, any>, hashKey: string, hashIV: string): {
-    EncryptInfo: string,
-    HashInfo: string
-} {
-    // 1. JSON 字串化
-    const jsonString = JSON.stringify(data)
-
-    // 2. AES-256-GCM 加密
+function encryptPAYUNi(data: Record<string, any>, hashKey: string, hashIV: string) {
+    // 內容是 query string（不是 JSON）；HashIV 直接當 GCM nonce（16 bytes）
     const cipher = crypto.createCipheriv('aes-256-gcm', hashKey, hashIV)
-    let encrypted = cipher.update(jsonString, 'utf8', 'hex')
-    encrypted += cipher.final('hex')
+    const encrypted = Buffer.concat([cipher.update(new URLSearchParams(data).toString(), 'utf8'), cipher.final()])
+    const tag = cipher.getAuthTag()
 
-    // 3. 取得 Auth Tag (16 bytes)
-    const authTag = cipher.getAuthTag().toString('hex')
+    // EncryptInfo = hex( base64(密文) + ":::" + base64(tag) )
+    const encryptInfo = Buffer.from(`${encrypted.toString('base64')}:::${tag.toString('base64')}`).toString('hex')
 
-    // 4. 組合加密資料 (encrypted + tag)
-    const encryptInfo = encrypted + authTag
+    // HashInfo = SHA256( HashKey + EncryptInfo + HashIV )，沒有 "HashKey=" 之類的前綴
+    const hashInfo = crypto.createHash('sha256')
+        .update(hashKey + encryptInfo + hashIV)
+        .digest('hex').toUpperCase()
 
-    // 5. SHA256 簽章
-    const hashInfo = crypto
-        .createHash('sha256')
-        .update(`HashKey=${hashKey}&${encryptInfo}&HashIV=${hashIV}`)
-        .digest('hex')
-        .toUpperCase()
-
-    return {
-        EncryptInfo: encryptInfo,
-        HashInfo: hashInfo
-    }
+    return { EncryptInfo: encryptInfo, HashInfo: hashInfo }
 }
 
-function decryptPAYUNi(encryptedData: string, hashKey: string, hashIV: string): Record<string, any> {
-    // 1. 分離加密內容和 Auth Tag (最後 32 個字元 = 16 bytes hex)
-    const encryptedContent = encryptedData.slice(0, -32)
-    const authTag = Buffer.from(encryptedData.slice(-32), 'hex')
-
-    // 2. AES-256-GCM 解密
+function decryptPAYUNi(encryptInfo: string, hashKey: string, hashIV: string): Record<string, any> {
+    const [data, tag] = Buffer.from(encryptInfo, 'hex').toString('utf8').split(':::')
     const decipher = crypto.createDecipheriv('aes-256-gcm', hashKey, hashIV)
-    decipher.setAuthTag(authTag)
-    let decrypted = decipher.update(encryptedContent, 'hex', 'utf8')
-    decrypted += decipher.final('utf8')
-
-    return JSON.parse(decrypted)
+    decipher.setAuthTag(Buffer.from(tag, 'base64'))   // tag 不符時 final() 會拋錯
+    const text = Buffer.concat([decipher.update(Buffer.from(data, 'base64')), decipher.final()]).toString('utf8')
+    return Object.fromEntries(new URLSearchParams(text))
 }
 ```
 
@@ -562,44 +547,28 @@ async function refundPaymentOrder(merchantTradeNo: string, refundAmount: number)
 
 ## 常見問題排除
 
-### 問題 1: CheckMacValue 驗證失敗
+### 問題 1: CheckMacValue / TradeSha 驗證失敗
 
-**錯誤訊息：** ECPay 回傳 `10100058`，NewebPay 回傳 `CheckValue Error`
+**錯誤訊息：** ECPay 回傳 `10200073`（CheckMacValue 驗證失敗），NewebPay 回傳 `MPG02001`（檢查碼錯誤，即 TradeSha 不符）
 
-**常見原因：**
-1. 參數排序錯誤（必須按照字母順序）
-2. URL Encode 不正確（ECPay 需要 lowercase）
-3. 編碼問題（UTF-8）
+> 注意：ECPay 的 `10100058` 是「ATM 繳費期限已過」，不是檢查碼錯誤。
+
+**常見原因（ECPay）：**
+1. 排序時區分了大小寫（應不分大小寫，SDK 用 `strcasecmp`）
+2. URL encode 規則不對：必須等同 PHP `urlencode` + 轉小寫 + 還原 `( ) ! *`。
+   直接用 `encodeURIComponent(...).toLowerCase()` 會把空白編成 `%20`（應為 `+`），
+   用 Python `quote_plus` 則會把括號編碼 —— 商品名稱含空白或括號時就驗證失敗
+3. 國內物流用了 SHA256（物流是 MD5）
 4. 忘記移除 CheckMacValue 本身
 
-**解決方案：**
+**解決方案：** 使用上方「2. 加密實作」的 `generateECPayCheckMacValue`（已與綠界官方 SDK 逐位元組比對）。
+
 ```typescript
-// * 正確
-function generateCheckMacValue(params: Record<string, any>, hashKey: string, hashIV: string) {
-    // 1. 移除 CheckMacValue
-    const { CheckMacValue, ...cleanParams } = params
+// * 錯誤：大小寫敏感排序
+Object.keys(params).sort()
 
-    // 2. 排序
-    const sortedKeys = Object.keys(cleanParams).sort()
-
-    // 3. 組合字串
-    const paramString = sortedKeys.map(k => `${k}=${cleanParams[k]}`).join('&')
-
-    // 4. 加上 HashKey/HashIV
-    const rawString = `HashKey=${hashKey}&${paramString}&HashIV=${hashIV}`
-
-    // 5. URL Encode (lowercase for ECPay)
-    const encoded = encodeURIComponent(rawString).toLowerCase()
-
-    // 6. SHA256
-    return crypto.createHash('sha256').update(encoded).digest('hex').toUpperCase()
-}
-
-// * 錯誤：未排序
-const paramString = Object.entries(params).map(([k, v]) => `${k}=${v}`).join('&')
-
-// * 錯誤：URL Encode 使用 uppercase
-const encoded = encodeURIComponent(rawString)  // 應該用 toLowerCase()
+// * 錯誤：空白會變成 %20，綠界要的是 +
+encodeURIComponent(rawString).toLowerCase()
 ```
 
 ### 問題 2: 訂單編號重複
@@ -664,7 +633,8 @@ const returnURL = 'https://yourdomain.com/api/payment/callback'  // 必須 HTTPS
 export async function POST(request: Request) {
     // ... 處理邏輯
 
-    // ECPay/NewebPay 需要回應 "1|OK"
+    // ECPay 必須回應純文字 "1|OK"，否則會重送；
+    // NewebPay 只看 HTTP 200，不要求特定內容
     return new Response('1|OK', {
         status: 200,
         headers: { 'Content-Type': 'text/plain' }
@@ -695,30 +665,21 @@ CVV: 任意 3 碼
 請至後台查詢官方測試卡號
 ```
 
-### 問題 6: AES 加密失敗
+### 問題 6: AES 加密 / 解密失敗
 
-**NewebPay AES-256-CBC 加密錯誤：**
+**NewebPay AES-256-CBC：**
 
-```typescript
-// * 確認 Key/IV 長度
-const hashKey = 'your32BytesHashKeyHere123456'  // 必須 32 bytes
-const hashIV = 'your16BytesIV123'              // 必須 16 bytes
+- HashKey 必須 32 bytes、HashIV 必須 16 bytes
+- **解密**官方外掛產生的密文時，padding 可能是 17–32 bytes（外掛以 32 bytes 為區塊補齊）。
+  `setAutoPadding(true)` / Python `unpad(data, 16)` 會直接失敗，須改為手動移除（見上方 `decryptNewebPay`）
+- `RespondType=JSON` 時解出來的是 JSON，用 query string 解析會得到空物件
 
-// * 使用正確的 padding
-const cipher = crypto.createCipheriv('aes-256-cbc', hashKey, hashIV)
-cipher.setAutoPadding(true)  // PKCS7 padding
-```
+**PAYUNi AES-256-GCM：**
 
-**PAYUNi AES-256-GCM 加密錯誤：**
-
-```typescript
-// * 記得附加 Auth Tag
-const cipher = crypto.createCipheriv('aes-256-gcm', hashKey, hashIV)
-let encrypted = cipher.update(jsonString, 'utf8', 'hex')
-encrypted += cipher.final('hex')
-const authTag = cipher.getAuthTag().toString('hex')  // **重要**
-const encryptInfo = encrypted + authTag  // 總長度 = encrypted + 32 chars (16 bytes hex)
-```
+- EncryptInfo 是 `hex( base64(密文) + ":::" + base64(tag) )`，不是 `hex(密文 + tag)`
+- 加密內容是 query string，不是 JSON
+- HashInfo 是 `SHA256(HashKey + EncryptInfo + HashIV)`，不加 `HashKey=` 前綴
+- HashIV（16 bytes）直接當 nonce，不需要另外產生 12 bytes nonce
 
 ### 問題 7: ATM 虛擬帳號未產生
 

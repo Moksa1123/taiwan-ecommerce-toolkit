@@ -11,8 +11,9 @@
             "HashInfo"
         ],
         "cross_checked": [
-            "wpbr-payuni-payment 1.7.1 src/PayuniPayment.php",
-            "wpbr-payuni-shipping 1.6.4 src/PayuniShipping.php"
+            "wpbr-payuni-payment 1.7.1 src/PayuniPayment.php（人工比對）",
+            "wpbr-payuni-shipping 1.6.4 src/PayuniShipping.php（人工比對）",
+            "統一金流官方 PHP SDK payuni/PHP_SDK PayuniApi::Encrypt/HashInfo 實際執行比對 4/4 一致"
         ]
     },
     "generator": "php 8.2.33 / OpenSSL OpenSSL 3.5.6 7 Apr 2026",

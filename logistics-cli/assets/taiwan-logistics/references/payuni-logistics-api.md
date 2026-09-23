@@ -1,712 +1,380 @@
 # PayUni Logistics API Reference
 
-統一金流 (PAYUNi) 物流 API 完整參考文件。
+統一金流 (PAYUNi) 物流 API 參考文件。
+
+> **資料來源與可信度**（2026-09 重新查核）
+>
+> 統一金流的官方文件站 docs.payuni.com.tw 為需登入的 SPA，無法直接擷取。本文件改以**原始碼**為準：
+>
+> | 項目 | 依據 |
+> |---|---|
+> | 加解密 | 統一金流官方外掛 PAYUNi_for_WooCommerce 1.2.8、官方 PHP SDK（github.com/payuni/PHP_SDK），並以 `tests/vectors/payuni.json` 逐位元組驗證 |
+> | 端點、Version、欄位、代碼、通知格式 | wpbr-payuni-shipping 1.6.4（WordPress.org 上架外掛，實際於正式環境運作）|
+>
+> 舊版本文件中的 `/logistics/create`、`LogisticsType`、`GoodsAmount`、`Receiver*`、`LogisticsID` 等
+> **均不存在於 PAYUNi 物流 API**（其中 `PAYUNi_Logistic_711` 之類的字串其實是 WooCommerce 外掛的運送方式 ID）。
 
 ---
 
 ## 目錄
 
 1. [API 端點總覽](#api-端點總覽)
-2. [測試環境](#測試環境)
-3. [加密機制](#加密機制)
-4. [物流類型](#物流類型)
-5. [7-11 超商取貨](#7-11-超商取貨)
-6. [黑貓宅配](#黑貓宅配)
-7. [物流狀態通知](#物流狀態通知)
-8. [物流狀態查詢](#物流狀態查詢)
-9. [錯誤碼對照表](#錯誤碼對照表)
-10. [常見問題排解](#常見問題排解)
+2. [加密機制](#加密機制)
+3. [代碼定義](#代碼定義)
+4. [門市地圖](#門市地圖)
+5. [建立物流單](#建立物流單)
+6. [查詢物流單](#查詢物流單)
+7. [列印託運單](#列印託運單)
+8. [NotifyURL 通知](#notifyurl-通知)
+9. [尚未查證的項目](#尚未查證的項目)
 
 ---
 
 ## API 端點總覽
 
-### 基礎 API 路徑
-
 | 環境 | 基礎路徑 |
 |------|----------|
-| **測試環境** | `https://sandbox-api.payuni.com.tw/api/` |
-| **正式環境** | `https://api.payuni.com.tw/api/` |
+| 測試環境 | `https://sandbox-api.payuni.com.tw/api` |
+| 正式環境 | `https://api.payuni.com.tw/api` |
 
-### 物流相關端點
+| 功能 | 路徑 | Version | 呼叫方式 |
+|------|------|---------|----------|
+| 7-11 門市地圖 | `/logistics/ship_map` | `1.1` | 瀏覽器表單 POST |
+| 建立 7-11 物流單（C2C / B2C） | `/logistics/trade` | `1.1` | 伺服器 POST |
+| 建立黑貓宅配物流單 | `/home_delivery/trade` | `1.1` | 伺服器 POST |
+| 查詢物流單（7-11 與黑貓共用） | `/logistics/query` | `1.1` | 伺服器 POST |
+| 列印 7-11 託運單 | `/logistics/print_label` | `1.0` | 瀏覽器表單 POST |
+| 黑貓託運單號 PDF | `/home_delivery/get_obt_number_pdf` | — | 瀏覽器表單 POST |
+| 黑貓託運單下載 | `/home_delivery/download_pdf` | — | 瀏覽器表單 POST |
 
-| 功能 | 端點路徑 | 說明 |
-|------|----------|------|
-| 建立物流訂單 | `/logistics/create` | 建立物流託運單 |
-| 物流狀態查詢 | `/logistics/query` | 查詢物流狀態 |
-| 取消物流訂單 | `/logistics/cancel` | 取消物流訂單 |
+所有請求外層皆為 `application/x-www-form-urlencoded`，只有四個欄位：
 
----
+| 欄位 | 說明 |
+|------|------|
+| `MerID` | 商店代號 |
+| `Version` | 見上表 |
+| `EncryptInfo` | 業務欄位加密後的字串（見加密機制） |
+| `HashInfo` | EncryptInfo 的 SHA256 驗證碼 |
 
-## 測試環境
+回應為 JSON，外層含 `Status`、`EncryptInfo`、`HashInfo`；業務結果（含內層 `Status` / `Message`）在解密後的 EncryptInfo 內。
 
-### 測試帳號
-
-測試帳號請至 PayUni 後台申請：
-
-```
-後台網址: https://www.payuni.com.tw/
-路徑: 會員 > 商店清單 > 指定商店名稱 > 串接設定
-```
-
-取得以下資訊：
-- **商店代號 (MerID)**
-- **Hash Key**
-- **Hash IV**
-
-### 測試環境端點
-
-```
-https://sandbox-api.payuni.com.tw/api/{endpoint}
-```
-
-### 注意事項
-
-1. 物流幕後 API 需向 PayUni 申請開通
-2. 建議使用固定 IP 主機，避免 IP 變動造成功能失效
-3. 非即時付款 (超商代碼、虛擬帳號) 需等付款完成才會建立物流單
+> 除了獨立的物流 API，PAYUNi 也可在 **UPP 付款時一併建立物流**（在 UPP 的 EncryptInfo 帶
+> `Ship`、`ShipTag`、`ShipType`、`LgsType`、`GoodsType`、`Consignee` 等欄位），
+> 統一金流官方外掛採用的就是這種方式。見 `taiwan-payment` 的 payuni-payment-api.md。
 
 ---
 
 ## 加密機制
 
-PayUni 採用 **AES-256-GCM** 加密與 **SHA256 HMAC** 驗證。
+PayUni 採用 **AES-256-GCM** 加密與 **SHA256** 驗證碼（HashInfo）。
+
+> 以下演算法已與統一金流官方外掛 PAYUNi_for_WooCommerce 1.2.8 `class-payuni.php` 的
+> `Encrypt()` / `Decrypt()` / `HashInfo()` 逐位元組比對（repo 的 `tests/vectors/payuni.json`）。
+
+### 格式
+
+```
+EncryptInfo = hex( base64(AES-256-GCM 密文) + ":::" + base64(tag) )
+HashInfo    = strtoupper( sha256( HashKey + EncryptInfo + HashIV ) )
+```
+
+常見錯誤（皆會被 PAYUNi 拒絕）：
+
+| 錯誤寫法 | 問題 |
+|---|---|
+| `hex(密文 + tag)` | 少了 base64 與 `:::` 分隔 |
+| `base64(密文) + ":::" + base64(tag)`（沒有最外層 hex） | 少了最外層 `bin2hex` |
+| `sha256(EncryptInfo + HashKey + HashIV)` | HashKey 必須在最前面 |
+
+- 物流與金流共用同一組演算法（官方外掛的物流模組直接呼叫同一個類別）
+- IV（HashIV）直接當 GCM nonce 使用，長度 16 bytes（官方外掛即如此），不是 12 bytes
+- tag 為 16 bytes，base64 後為 24 字元
 
 ### 加密流程
 
 1. **準備參數** - 組合所有請求參數
-2. **URL Encode** - 將參數轉為 Query String
-3. **AES-256-GCM 加密** - 使用 Hash Key 和 Hash IV 加密
-4. **產生 HashInfo** - 使用 SHA256 計算驗證碼
-5. **發送請求** - 將加密資料 POST 至 API
+2. **http_build_query** - 將參數轉為 Query String
+3. **AES-256-GCM 加密** - 以 HashKey 為金鑰、HashIV 為 nonce
+4. **組合 EncryptInfo** - `bin2hex(base64密文 . ':::' . base64(tag))`
+5. **產生 HashInfo** - `sha256(HashKey . EncryptInfo . HashIV)` 轉大寫
+6. **發送請求** - 將 `MerID`、`Version`、`EncryptInfo`、`HashInfo` POST 至 API
 
 ### PHP 加密範例
 
+與官方外掛相同的寫法（`openssl_encrypt` 的 options 傳 `0`，回傳值即為 base64 密文）：
+
+<!-- verify: payuni -->
 ```php
 <?php
 
 class PayuniEncryption
 {
-    private string $merKey;
-    private string $merIV;
+    public function __construct(private string $hashKey, private string $hashIV) {}
 
-    public function __construct(string $merKey, string $merIV)
-    {
-        $this->merKey = $merKey;
-        $this->merIV = $merIV;
-    }
-
-    /**
-     * AES-256-GCM 加密
-     */
     public function encrypt(array $params): string
     {
-        // 1. 組合 Query String
-        $queryString = http_build_query($params);
-
-        // 2. AES-256-GCM 加密
         $tag = '';
         $encrypted = openssl_encrypt(
-            $queryString,
+            http_build_query($params),
             'aes-256-gcm',
-            $this->merKey,
-            OPENSSL_RAW_DATA,
-            $this->merIV,
-            $tag,
-            '',
-            16
-        );
-
-        // 3. 組合加密結果 (加密資料 + tag)
-        $encryptInfo = bin2hex($encrypted . $tag);
-
-        return $encryptInfo;
-    }
-
-    /**
-     * AES-256-GCM 解密
-     */
-    public function decrypt(string $encryptInfo): array
-    {
-        // 1. Hex 轉 Binary
-        $data = hex2bin($encryptInfo);
-
-        // 2. 分離加密資料和 tag
-        $encrypted = substr($data, 0, -16);
-        $tag = substr($data, -16);
-
-        // 3. AES-256-GCM 解密
-        $decrypted = openssl_decrypt(
-            $encrypted,
-            'aes-256-gcm',
-            $this->merKey,
-            OPENSSL_RAW_DATA,
-            $this->merIV,
+            trim($this->hashKey),
+            0,                      // 回傳 base64 密文
+            trim($this->hashIV),
             $tag
         );
+        return trim(bin2hex($encrypted . ':::' . base64_encode($tag)));
+    }
 
-        // 4. 解析 Query String
-        parse_str($decrypted, $result);
-
+    public function decrypt(string $encryptInfo): array
+    {
+        [$encryptData, $tag] = explode(':::', hex2bin($encryptInfo), 2);
+        $plain = openssl_decrypt(
+            $encryptData,
+            'aes-256-gcm',
+            trim($this->hashKey),
+            0,
+            trim($this->hashIV),
+            base64_decode($tag)
+        );
+        if ($plain === false) {
+            throw new RuntimeException('解密失敗：tag 驗證不通過（資料遭竄改或金鑰錯誤）');
+        }
+        parse_str($plain, $result);
         return $result;
     }
 
-    /**
-     * 產生 HashInfo (SHA256)
-     */
     public function hashInfo(string $encryptInfo): string
     {
-        $raw = $encryptInfo . $this->merKey . $this->merIV;
-        return strtoupper(hash('sha256', $raw));
+        return strtoupper(hash('sha256', $this->hashKey . $encryptInfo . $this->hashIV));
     }
 }
 ```
 
 ### Python 加密範例
 
+<!-- verify: payuni -->
 ```python
-"""PayUni AES-256-GCM 加密"""
+"""PayUni AES-256-GCM 加密（與官方外掛逐位元組相同）"""
+
+import base64
+import hashlib
+import hmac
+from urllib.parse import urlencode, parse_qs
 
 from Crypto.Cipher import AES
-from urllib.parse import urlencode, parse_qs
-import hashlib
 
 
 class PayuniEncryption:
-    def __init__(self, mer_key: str, mer_iv: str):
-        self.mer_key = mer_key.encode('utf-8')
-        self.mer_iv = mer_iv.encode('utf-8')
+    def __init__(self, hash_key: str, hash_iv: str):
+        self.hash_key = hash_key
+        self.hash_iv = hash_iv
 
     def encrypt(self, params: dict) -> str:
-        """AES-256-GCM 加密"""
-        # 1. 組合 Query String
-        query_string = urlencode(params)
-
-        # 2. AES-256-GCM 加密
-        cipher = AES.new(self.mer_key, AES.MODE_GCM, nonce=self.mer_iv)
-        encrypted, tag = cipher.encrypt_and_digest(query_string.encode('utf-8'))
-
-        # 3. 組合加密結果
-        encrypt_info = (encrypted + tag).hex()
-
-        return encrypt_info
+        cipher = AES.new(self.hash_key.encode(), AES.MODE_GCM, nonce=self.hash_iv.encode())
+        encrypted, tag = cipher.encrypt_and_digest(urlencode(params).encode('utf-8'))
+        return (base64.b64encode(encrypted) + b':::' + base64.b64encode(tag)).hex()
 
     def decrypt(self, encrypt_info: str) -> dict:
-        """AES-256-GCM 解密"""
-        # 1. Hex 轉 Binary
-        data = bytes.fromhex(encrypt_info)
-
-        # 2. 分離加密資料和 tag
-        encrypted = data[:-16]
-        tag = data[-16:]
-
-        # 3. AES-256-GCM 解密
-        cipher = AES.new(self.mer_key, AES.MODE_GCM, nonce=self.mer_iv)
-        decrypted = cipher.decrypt_and_verify(encrypted, tag)
-
-        # 4. 解析 Query String
-        result = dict(parse_qs(decrypted.decode('utf-8')))
-        return {k: v[0] for k, v in result.items()}
+        encrypted_b64, tag_b64 = bytes.fromhex(encrypt_info).split(b':::', 1)
+        cipher = AES.new(self.hash_key.encode(), AES.MODE_GCM, nonce=self.hash_iv.encode())
+        # tag 不符會拋出 ValueError
+        plain = cipher.decrypt_and_verify(base64.b64decode(encrypted_b64), base64.b64decode(tag_b64))
+        return {k: v[0] for k, v in parse_qs(plain.decode('utf-8'), keep_blank_values=True).items()}
 
     def hash_info(self, encrypt_info: str) -> str:
-        """產生 HashInfo (SHA256)"""
-        raw = encrypt_info + self.mer_key.decode() + self.mer_iv.decode()
+        raw = self.hash_key + encrypt_info + self.hash_iv   # HashKey 在前
         return hashlib.sha256(raw.encode('utf-8')).hexdigest().upper()
+
+    def verify(self, encrypt_info: str, hash_info: str) -> bool:
+        return hmac.compare_digest(self.hash_info(encrypt_info), hash_info.upper())
 ```
+
+完整可執行版本見 `examples/payuni-logistics-cvs-example.py`。
 
 ---
 
-## 物流類型
+## 代碼定義
 
-### 支援的物流服務
+以下代碼取自 wpbr-payuni-shipping `src/Utils/*.php`。
 
-| 物流類型 | 代碼 | 溫層 | 說明 |
-|----------|------|------|------|
-| 7-11 店到店 (C2C) | `PAYUNi_Logistic_711` | 常溫 | 消費者自行寄件 |
-| 7-11 店到店冷凍 | `PAYUNi_Logistic_711_Freeze` | 冷凍 | 冷凍店到店 |
-| 7-11 大宗寄倉 (B2C) | `PAYUNi_Logistic_711_B2C` | 常溫 | 商家寄倉 |
-| 黑貓宅配常溫 | `PAYUNi_Logistic_Tcat` | 常溫 | 宅配到府 |
-| 黑貓宅配冷凍 | `PAYUNi_Logistic_Tcat_Freeze` | 冷凍 | 冷凍宅配 |
-| 黑貓宅配冷藏 | `PAYUNi_Logistic_Tcat_Cold` | 冷藏 | 冷藏宅配 |
+### ShipType 物流廠商
 
-### GoodsType 溫層代碼
-
-| 代碼 | 溫層 | 適用物流 |
-|------|------|----------|
-| `1` | 常溫 | 全部 |
-| `2` | 冷凍 | 7-11 冷凍、黑貓冷凍 |
-| `3` | 冷藏 | 僅黑貓宅配 |
-
-### 撥款時間
-
-| 物流類型 | 撥款時間 |
-|----------|----------|
-| 超商取貨 | 取貨日 + 7 天 |
-| 黑貓宅配 | 取貨日 + 15 天 |
-
----
-
-## 7-11 超商取貨
-
-### 建立物流訂單
-
-#### 端點
-
-```
-POST /api/logistics/create
-```
-
-#### EncryptInfo 參數
-
-| 參數 | 類型 | 長度 | 必填 | 說明 |
-|------|------|------|------|------|
-| `MerID` | String | 20 | ● | 商店代號 |
-| `MerTradeNo` | String | 50 | ● | 商店訂單編號 |
-| `LogisticsType` | String | 50 | ● | 物流類型代碼 |
-| `GoodsType` | Integer | - | ● | 溫層 `1`:常溫 `2`:冷凍 |
-| `GoodsAmount` | Integer | - | ● | 商品金額 |
-| `GoodsName` | String | 50 | ● | 商品名稱 |
-| `SenderName` | String | 10 | ● | 寄件人姓名 |
-| `SenderPhone` | String | 20 | ● | 寄件人電話 |
-| `SenderStoreID` | String | 10 | 否 | 寄件門市代號 (C2C 必填) |
-| `ReceiverName` | String | 10 | ● | 收件人姓名 |
-| `ReceiverPhone` | String | 20 | ● | 收件人電話 |
-| `ReceiverStoreID` | String | 10 | ● | 收件門市代號 |
-| `NotifyURL` | String | 500 | ● | 物流狀態通知網址 |
-| `Timestamp` | Integer | - | ● | Unix 時間戳 |
-
-### C2C vs B2C 差異
-
-| 項目 | C2C 店到店 | B2C 大宗寄倉 |
-|------|-----------|-------------|
-| 寄件方式 | 消費者自行至門市寄件 | 商家統一寄倉 |
-| SenderStoreID | 必填 | 不需要 |
-| 適用場景 | 個人賣家 | 企業電商 |
-
-### 門市查詢
-
-7-11 門市代號可透過以下方式取得：
-
-```
-7-11 電子地圖: https://emap.pcsc.com.tw/
-```
-
-### PHP 範例
-
-```php
-<?php
-
-$encryption = new PayuniEncryption($merKey, $merIV);
-
-$params = [
-    'MerID' => 'YOUR_MER_ID',
-    'MerTradeNo' => 'LOG' . time(),
-    'LogisticsType' => 'PAYUNi_Logistic_711',
-    'GoodsType' => 1,
-    'GoodsAmount' => 500,
-    'GoodsName' => '測試商品',
-    'SenderName' => '寄件人',
-    'SenderPhone' => '0912345678',
-    'SenderStoreID' => '123456',  // C2C 必填
-    'ReceiverName' => '收件人',
-    'ReceiverPhone' => '0987654321',
-    'ReceiverStoreID' => '654321',
-    'NotifyURL' => 'https://your-site.com/payuni_shipping_711_notify',
-    'Timestamp' => time(),
-];
-
-$encryptInfo = $encryption->encrypt($params);
-$hashInfo = $encryption->hashInfo($encryptInfo);
-
-$ch = curl_init();
-curl_setopt_array($ch, [
-    CURLOPT_URL => 'https://api.payuni.com.tw/api/logistics/create',
-    CURLOPT_POST => true,
-    CURLOPT_POSTFIELDS => http_build_query([
-        'MerID' => $params['MerID'],
-        'Version' => '1.0',
-        'EncryptInfo' => $encryptInfo,
-        'HashInfo' => $hashInfo,
-    ]),
-    CURLOPT_RETURNTRANSFER => true,
-]);
-
-$response = curl_exec($ch);
-curl_close($ch);
-
-$result = json_decode($response, true);
-
-if ($result['Status'] === 'SUCCESS') {
-    $data = $encryption->decrypt($result['EncryptInfo']);
-    // $data['LogisticsID'] - 物流編號
-    // $data['CVSPaymentNo'] - 超商繳費代碼
-    print_r($data);
-}
-```
-
-### 回應參數 (解密後)
-
-| 參數 | 說明 |
+| 代碼 | 說明 |
 |------|------|
-| `LogisticsID` | PayUni 物流編號 |
-| `MerTradeNo` | 商店訂單編號 |
-| `CVSPaymentNo` | 超商繳費代碼 |
-| `CVSValidationNo` | 超商驗證碼 |
-| `ExpireDate` | 取貨期限 |
+| `1` | 7-ELEVEN |
+| `2` | 黑貓宅配 |
 
----
+### LgsType 運送方式
 
-## 黑貓宅配
+| 代碼 | 說明 |
+|------|------|
+| `C2C` | 7-11 店到店 |
+| `B2C` | 7-11 大宗寄倉 |
+| `HOME` | 黑貓宅配 |
 
-### 建立物流訂單
+### GoodsType 溫層
 
-#### 端點
+| 代碼 | 說明 |
+|------|------|
+| `1` | 常溫 |
+| `2` | 冷凍 |
+| `3` | 冷藏（黑貓） |
 
-```
-POST /api/logistics/create
-```
+### ServiceType 代收
 
-#### EncryptInfo 參數
+| 代碼 | 說明 |
+|------|------|
+| `1` | 取貨付款 |
+| `3` | 取貨不付款 |
 
-| 參數 | 類型 | 長度 | 必填 | 說明 |
-|------|------|------|------|------|
-| `MerID` | String | 20 | ● | 商店代號 |
-| `MerTradeNo` | String | 50 | ● | 商店訂單編號 |
-| `LogisticsType` | String | 50 | ● | 物流類型代碼 |
-| `GoodsType` | Integer | - | ● | 溫層 `1`:常溫 `2`:冷凍 `3`:冷藏 |
-| `GoodsAmount` | Integer | - | ● | 商品金額 |
-| `GoodsName` | String | 50 | ● | 商品名稱 |
-| `GoodsWeight` | Integer | - | 否 | 商品重量 (g) |
-| `SenderName` | String | 10 | ● | 寄件人姓名 |
-| `SenderPhone` | String | 20 | ● | 寄件人電話 |
-| `SenderZipCode` | String | 5 | ● | 寄件人郵遞區號 |
-| `SenderAddress` | String | 200 | ● | 寄件人地址 |
-| `ReceiverName` | String | 10 | ● | 收件人姓名 |
-| `ReceiverPhone` | String | 20 | ● | 收件人電話 |
-| `ReceiverZipCode` | String | 5 | ● | 收件人郵遞區號 |
-| `ReceiverAddress` | String | 200 | ● | 收件人地址 |
-| `ScheduledPickupDate` | String | 10 | 否 | 預定取貨日期 `yyyy/MM/dd` |
-| `ScheduledDeliveryDate` | String | 10 | 否 | 預定配達日期 `yyyy/MM/dd` |
-| `ScheduledDeliveryTime` | String | 2 | 否 | 預定配達時段 |
-| `NotifyURL` | String | 500 | ● | 物流狀態通知網址 |
-| `Timestamp` | Integer | - | ● | Unix 時間戳 |
+### DeliveryTimeTag 黑貓配達時段
 
-### ScheduledDeliveryTime 配達時段
-
-| 代碼 | 時段 |
+| 代碼 | 說明 |
 |------|------|
 | `01` | 13:00 前 |
-| `02` | 14:00 - 18:00 |
-| `03` | 不指定 |
+| `02` | 14:00–18:00 |
+| `04` | 不指定（外掛預設） |
 
-### 尺寸與重量限制
+### ShipStatus 貨態
 
-| 溫層 | 材積 | 重量 |
+| 代碼 | 說明 |
+|------|------|
+| `21` | 待出貨（已產生單號，等待商店出貨） |
+| `22` | 物流中心驗收中（僅超商物流） |
+| `92` | 待出貨處理中 / 寄件門市已收件（僅超商物流，C2C） |
+| `31` | 配送中 |
+| `32` | 待取貨（已配達取件門市） |
+| `11` | 已取貨 |
+
+> 退貨、逾期未取等貨態代碼外掛未定義，未列入；實際值以通知中的 `ShipStatus` / `ShipStatusDesc` 為準。
+
+---
+
+## 門市地圖
+
+瀏覽器表單 POST 到 `/logistics/ship_map`（Version `1.1`），EncryptInfo 內容：
+
+| 欄位 | 範例 | 說明 |
 |------|------|------|
-| 常溫 | 150cm | 20kg |
-| 冷凍/冷藏 | 120cm | 15kg |
+| `MerID` | | 商店代號 |
+| `Timestamp` | `time()` | Unix 時間戳 |
+| `GoodsType` | `1` | 溫層 |
+| `LgsType` | `C2C` / `B2C` | |
+| `ShipType` | `1` | 7-ELEVEN |
+| `MapType` | `2` | |
+| `MapReturnURL` | | 選完門市後 POST 回的網址 |
+| `Tag` | `2` | |
+| `MobileTag` | `Y` / `N` | 是否行動裝置版 |
 
-**材積計算**: 長 + 寬 + 高 ≤ 限制
-
-### PHP 範例
-
-```php
-<?php
-
-$encryption = new PayuniEncryption($merKey, $merIV);
-
-$params = [
-    'MerID' => 'YOUR_MER_ID',
-    'MerTradeNo' => 'LOG' . time(),
-    'LogisticsType' => 'PAYUNi_Logistic_Tcat',
-    'GoodsType' => 1,  // 常溫
-    'GoodsAmount' => 1000,
-    'GoodsName' => '測試商品',
-    'GoodsWeight' => 500,  // 500g
-    'SenderName' => '寄件人',
-    'SenderPhone' => '0912345678',
-    'SenderZipCode' => '100',
-    'SenderAddress' => '台北市中正區某某路1號',
-    'ReceiverName' => '收件人',
-    'ReceiverPhone' => '0987654321',
-    'ReceiverZipCode' => '300',
-    'ReceiverAddress' => '新竹市東區某某路2號',
-    'ScheduledDeliveryTime' => '02',  // 14:00-18:00
-    'NotifyURL' => 'https://your-site.com/payuni_shipping_tcat_notify',
-    'Timestamp' => time(),
-];
-
-$encryptInfo = $encryption->encrypt($params);
-$hashInfo = $encryption->hashInfo($encryptInfo);
-
-$ch = curl_init();
-curl_setopt_array($ch, [
-    CURLOPT_URL => 'https://api.payuni.com.tw/api/logistics/create',
-    CURLOPT_POST => true,
-    CURLOPT_POSTFIELDS => http_build_query([
-        'MerID' => $params['MerID'],
-        'Version' => '1.0',
-        'EncryptInfo' => $encryptInfo,
-        'HashInfo' => $hashInfo,
-    ]),
-    CURLOPT_RETURNTRANSFER => true,
-]);
-
-$response = curl_exec($ch);
-curl_close($ch);
-
-$result = json_decode($response, true);
-
-if ($result['Status'] === 'SUCCESS') {
-    $data = $encryption->decrypt($result['EncryptInfo']);
-    // $data['LogisticsID'] - 物流編號
-    // $data['ShipmentNo'] - 託運單號
-    print_r($data);
-}
-```
-
-### 回應參數 (解密後)
-
-| 參數 | 說明 |
-|------|------|
-| `LogisticsID` | PayUni 物流編號 |
-| `MerTradeNo` | 商店訂單編號 |
-| `ShipmentNo` | 黑貓託運單號 |
-| `BookingNote` | 取貨編號 |
+回傳：PAYUNi POST 到 `MapReturnURL`，外層 `Status=SUCCESS`；解密 `EncryptInfo` 後的 `MapJson`
+是 JSON 字串，內含 `StoreID`、`StoreName`、`Address`。
 
 ---
 
-## 物流狀態通知
+## 建立物流單
 
-### Notify URL 設定
+7-11：`POST /logistics/trade`；黑貓：`POST /home_delivery/trade`。Version 皆為 `1.1`。
 
-| 物流類型 | Notify URL 格式建議 |
-|----------|---------------------|
-| 超商物流 | `https://your-site.com/payuni_shipping_711_notify` |
-| 黑貓宅配 | `https://your-site.com/payuni_shipping_tcat_notify` |
+### EncryptInfo 內容
 
-### 通知流程
+| 欄位 | 7-11 | 黑貓 | 說明 |
+|------|:----:|:----:|------|
+| `MerID` | ● | ● | 商店代號 |
+| `Timestamp` | ● | ● | Unix 時間戳 |
+| `MerTradeNo` | ● | ● | 商店訂單編號 |
+| `GoodsType` | ● | ● | 溫層 |
+| `LgsType` | ● | ● | `C2C` / `B2C` / `HOME` |
+| `ShipType` | ● | ● | `1` / `2` |
+| `TradeAmt` | ● | ● | 取貨付款＝代收金額；取貨不付款＝報值金額（外掛限制 30–20000） |
+| `ServiceType` | ● | ● | `1` 取貨付款 / `3` 取貨不付款 |
+| `StoreID` | ● | 空字串 | 取貨門市（門市地圖回傳） |
+| `Consignee` | ● | ● | 收件人姓名 |
+| `ConsigneeMail` | ● | ● | 收件人 Email |
+| `ConsigneeMobile` | ● | ● | 收件人手機 |
+| `RefundStoreID` | ○ | ○ | 退貨門市 |
+| `SenderName` | ● | ● | 寄件人姓名 |
+| `SenderMobile` | ● | ● | 寄件人手機 |
+| `NotifyURL` | ● | ● | 貨態 / 列印結果通知網址 |
+| `ConsigneeAddress` | | ● | 收件地址 |
+| `ProdDesc` | | ● | 商品描述（外掛截斷為 20 字） |
+| `DeliveryTimeTag` | | ● | 配達時段 |
 
-```
-┌─────────────┐     ┌─────────────┐     ┌─────────────┐
-│   物流商    │────▶│   PayUni    │────▶│    商店     │
-│  狀態更新   │     │    處理     │     │ NotifyURL  │
-└─────────────┘     └─────────────┘     └─────────────┘
-                          │
-                          │ POST (加密資料)
-                          ▼
-                    ┌─────────────┐
-                    │    商店     │
-                    │  解密處理   │
-                    └─────────────┘
-                          │
-                          │ 回應 "SUCCESS"
-                          ▼
-                    ┌─────────────┐
-                    │   PayUni    │
-                    │  確認收到   │
-                    └─────────────┘
-```
+● = 外掛一律帶入　○ = 外掛帶空字串
 
-### 通知參數
+### 回應（EncryptInfo 解密後）
 
-PayUni 會 POST 加密資料到 `NotifyURL`：
+| 欄位 | 說明 |
+|------|------|
+| `Status` / `Message` | 業務結果，`SUCCESS` 為成功 |
+| `ShipTradeNo` | **UNi 物流序號**，後續查詢、列印、通知都用它對應訂單 |
+| `TradeAmt` | 金額 |
+| `ServiceType` | 代收類型 |
 
-| 參數 | 說明 |
+---
+
+## 查詢物流單
+
+`POST /logistics/query`，Version `1.1`（7-11 與黑貓共用）。
+
+| EncryptInfo 欄位 | 說明 |
 |------|------|
 | `MerID` | 商店代號 |
-| `EncryptInfo` | 加密的物流狀態 |
-| `HashInfo` | SHA256 驗證碼 |
+| `Timestamp` | Unix 時間戳 |
+| `LgsType` | `C2C` / `B2C` / `HOME` |
+| `ShipTradeNo` | 建立時取得的 UNi 物流序號 |
 
-### 解密後的通知內容
+回應解密後常見欄位：`ShipTradeNo`、`LgsType`、`ShipType`、`Odno`（出貨編號 / 黑貓託運單號）、
+`PartnerId`、`ValidationNo`（C2C）、`FileNo`（黑貓）、`ShipStatus`、`ShipStatusDesc`、`ShipStatusTime`。
+值為 `-` 代表尚未產生。
 
-| 參數 | 說明 |
+寄件代碼組法（外掛 `build_ship_no`）：C2C 為 `Odno + ValidationNo`；B2C 為 `PartnerId + Odno`；黑貓為 `Odno`。
+
+---
+
+## 列印託運單
+
+### 7-11
+
+瀏覽器表單 POST 到 `/logistics/print_label`，Version `1.0`：
+
+| EncryptInfo 欄位 | 說明 |
 |------|------|
-| `MerID` | 商店代號 |
-| `MerTradeNo` | 商店訂單編號 |
-| `LogisticsID` | PayUni 物流編號 |
-| `LogisticsType` | 物流類型 |
-| `LogisticsStatus` | 物流狀態碼 |
-| `LogisticsStatusMsg` | 物流狀態訊息 |
-| `UpdateTime` | 狀態更新時間 |
+| `MerID` / `Timestamp` | |
+| `ShipTradeNo` | 可用逗號串接多筆 |
+| `GoodsType` / `LgsType` | |
+| `ShipType` | `1` |
+| `ShipDate` | `YYYYMMDD`；外掛在 B2C 時帶隔天 |
+| `LabelMode` | `1` = A4 版型 |
 
-### 處理範例
+列印結果另以 NotifyURL 通知（`ApiType=Print`）。
 
-```php
-<?php
+### 黑貓
 
-// 接收通知
-$encryptInfo = $_POST['EncryptInfo'] ?? '';
-$hashInfo = $_POST['HashInfo'] ?? '';
-$merID = $_POST['MerID'] ?? '';
-
-// 驗證 HashInfo
-$encryption = new PayuniEncryption($merKey, $merIV);
-$calculatedHash = $encryption->hashInfo($encryptInfo);
-
-if ($hashInfo !== $calculatedHash) {
-    echo 'HashInfo Error';
-    exit;
-}
-
-// 解密
-$data = $encryption->decrypt($encryptInfo);
-
-// 根據物流狀態更新訂單
-switch ($data['LogisticsStatus']) {
-    case '11':
-        // 已出貨
-        updateOrderLogisticsStatus($data['MerTradeNo'], 'shipped');
-        break;
-    case '21':
-        // 已到店
-        updateOrderLogisticsStatus($data['MerTradeNo'], 'arrived');
-        break;
-    case '22':
-        // 已取貨
-        updateOrderLogisticsStatus($data['MerTradeNo'], 'picked_up');
-        break;
-    case '31':
-    case '32':
-        // 退貨
-        updateOrderLogisticsStatus($data['MerTradeNo'], 'returned');
-        break;
-}
-
-// 回應 SUCCESS
-echo 'SUCCESS';
-```
+`/home_delivery/get_obt_number_pdf`（取得託運單號）與 `/home_delivery/download_pdf`（下載託運單）。
 
 ---
 
-## 物流狀態查詢
+## NotifyURL 通知
 
-### 端點
+PAYUNi 以表單 POST 到建立物流單時帶的 `NotifyURL`，外層含 `EncryptInfo`（與 `HashInfo`）。
+**先驗 HashInfo 再解密**（官方外掛收通知時沒有驗，這是外掛的疏漏，不要照抄）。
 
-```
-POST /api/logistics/query
-```
+解密後依 `ApiType` 區分：
 
-### EncryptInfo 參數
+| ApiType | 內容 |
+|---------|------|
+| `ShipStatus` | 貨態更新：`ShipTradeNo`、`ShipStatus`、`ShipStatusDesc`、`ShipStatusTime`；黑貓另含 `OBTNumber`（託運單號）、`FileNo` |
+| `Print` | 列印結果：7-11 含 `Odno`、`PartnerId`、`ValidationNo`、`LgsType`；黑貓結果在 `JsonData`（JSON 陣列字串，元素含 `Status`、`ShipTradeNo`） |
 
-| 參數 | 類型 | 必填 | 說明 |
-|------|------|------|------|
-| `MerID` | String | ● | 商店代號 |
-| `MerTradeNo` | String | ● | 商店訂單編號 |
-| `Timestamp` | Integer | ● | Unix 時間戳 |
-
-### 回應參數 (解密後)
-
-| 參數 | 說明 |
-|------|------|
-| `LogisticsID` | PayUni 物流編號 |
-| `MerTradeNo` | 商店訂單編號 |
-| `LogisticsType` | 物流類型 |
-| `LogisticsStatus` | 物流狀態碼 |
-| `LogisticsStatusMsg` | 物流狀態訊息 |
-| `ShipmentNo` | 託運單號 |
-| `ReceiverStoreID` | 收件門市代號 (超商) |
-| `UpdateTime` | 狀態更新時間 |
-
-### 貨態即時查詢
-
-| 物流類型 | 查詢網址 |
-|----------|----------|
-| 7-11 | https://eservice.7-11.com.tw/E-Tracking/search.aspx |
-| 黑貓宅配 | https://www.t-cat.com.tw/inquire/trace.aspx |
+內層 `Status` 不是 `SUCCESS` 時代表通知內容為失敗結果。以 `ShipTradeNo` 對應訂單，並比對是否與已存的值相同。
 
 ---
 
-## 錯誤碼對照表
+## 尚未查證的項目
 
-### 物流狀態碼 (LogisticsStatus)
+以下資訊在可取得的原始碼中找不到依據，**不要當成規格使用**，請以統一金流後台提供的正式文件為準：
 
-| 狀態碼 | 說明 |
-|--------|------|
-| `11` | 已出貨 |
-| `21` | 已到店 (超商) / 配達中 (宅配) |
-| `22` | 已取貨 / 配達完成 |
-| `31` | 退貨中 |
-| `32` | 退貨完成 |
-
-### 詳細物流狀態
-
-#### 7-11 超商
-
-| 狀態碼 | 說明 |
-|--------|------|
-| `11` | 已出貨 (寄件門市已收件) |
-| `21` | 已到店 (到達取件門市) |
-| `22` | 已取貨 (消費者已取件) |
-| `31` | 退貨中 (超過取貨期限) |
-| `32` | 退貨完成 |
-
-#### 黑貓宅配
-
-| 狀態碼 | 說明 |
-|--------|------|
-| `11` | 已出貨 (黑貓已收件) |
-| `21` | 配達中 |
-| `22` | 配達完成 |
-| `31` | 退貨中 (配達失敗) |
-| `32` | 退貨完成 |
-
-### 常見錯誤訊息
-
-| 錯誤訊息 | 說明 | 處理方式 |
-|----------|------|----------|
-| `參數錯誤` | 必填參數缺失或格式錯誤 | 檢查參數格式 |
-| `商店代號錯誤` | MerID 不存在 | 確認商店代號 |
-| `門市代號錯誤` | StoreID 無效 | 重新查詢門市代號 |
-| `物流類型錯誤` | LogisticsType 無效 | 確認物流類型代碼 |
-| `HashInfo 驗證失敗` | 加密資料不正確 | 重新計算 HashInfo |
-| `超過尺寸限制` | 材積/重量超過限制 | 調整商品包裝 |
-
----
-
-## 常見問題排解
-
-### 門市代號無效
-
-**問題**: 收到 `門市代號錯誤`
-
-**解決**:
-1. 至 7-11 電子地圖重新查詢門市代號
-2. 確認門市是否仍在營運
-3. 確認門市是否支援店到店服務
-
-### 物流狀態通知未收到
-
-**問題**: 物流狀態變更但沒收到通知
-
-**檢查項目**:
-1. NotifyURL 是否為 HTTPS
-2. 伺服器是否能被外網存取
-3. 是否正確回應 `SUCCESS`
-4. 防火牆是否阻擋 PayUni IP
-
-### 黑貓取貨時間
-
-**問題**: 如何安排黑貓取貨時間
-
-**說明**:
-1. 使用 `ScheduledPickupDate` 指定取貨日期
-2. 黑貓會在指定日期至寄件地址取貨
-3. 取貨時段通常為 9:00-18:00
-
-### 超商取貨期限
-
-**問題**: 超商取貨期限是多久
-
-**說明**:
-- 7-11: 7 天
-- 超過期限未取件會自動退貨
-
----
-
-## 官方資源
-
-- **官方網站**: https://www.payuni.com.tw/
-- **物流服務**: https://www.payuni.com.tw/shipping
-- **API 文件**: https://www.payuni.com.tw/docs/web/
-- **GitHub**: https://github.com/payuni
+- NotifyURL 需要回應的內容（外掛未輸出任何特定字串）
+- 退貨、逾期未取等貨態代碼
+- 各溫層的材積與重量限制、撥款天數
+- 取消物流單的 API（外掛未實作）

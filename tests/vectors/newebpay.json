@@ -322,6 +322,18 @@
         },
         "expected": "650238295AC4DDBF233BA70F5479F3D15FE5839EF5115E754D9D1CE3AEF2CB71"
     },
+    "server_check_code": {
+        "hash_key": "Fs5cX1TGqYM2PpdbE14a9H83YQSQF5jn",
+        "hash_iv": "C6AcmfqJILwgnhIP",
+        "params": {
+            "Amt": "30",
+            "MerchantID": "MS127874575",
+            "MerchantOrderNo": "Vanespl_ec_1695795668",
+            "TradeNo": "23092714215835071"
+        },
+        "expected": "79C5227AF869AE4F25FDF4E22B928D5B52E415D9905EC6912D7807E18C3FFACA",
+        "expected_source": "NDNF-1.2.2 單筆交易查詢回應範例中藍新伺服器產生的 CheckCode"
+    },
     "check_value": {
         "MerchantID": "MS127874575",
         "MerchantOrderNo": "Vanespl_ec_1695795668",

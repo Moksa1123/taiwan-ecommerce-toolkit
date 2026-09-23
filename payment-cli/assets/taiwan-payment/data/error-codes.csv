@@ -1,45 +1,124 @@
 provider,code,message_zh,message_en,category,severity,solution
 ecpay,1,交易成功,Success,success,info,
-ecpay,10100001,參數格式錯誤,Invalid Parameter,validation,error,檢查參數格式
-ecpay,10100002,商店代號不存在,Merchant Not Found,auth,error,確認 MerchantID
-ecpay,10100003,訂單編號重複,Duplicate Order,validation,error,使用唯一訂單編號
-ecpay,10100050,交易金額錯誤,Invalid Amount,validation,error,確認金額為正整數
-ecpay,10100058,CheckMacValue 錯誤,CheckMacValue Error,auth,error,重新計算檢查碼
-ecpay,10100248,交易被拒絕,Transaction Rejected,payment,error,聯繫發卡銀行
-ecpay,10100251,卡片過期,Card Expired,payment,error,確認卡片效期
-ecpay,10100252,餘額不足,Insufficient Balance,payment,error,確認額度或餘額
-ecpay,10100254,交易受限,Transaction Restricted,payment,error,聯繫發卡銀行
-ecpay,10100255,掛失卡,Lost Card,payment,error,使用其他卡片
-ecpay,10100256,偽卡,Fraudulent Card,payment,error,使用其他卡片
-ecpay,10300066,交易待確認,Pending Confirmation,payment,warning,至後台確認
-newebpay,SUCCESS,交易成功,Success,success,info,
-newebpay,TRA10001,參數錯誤,Parameter Error,validation,error,檢查參數
-newebpay,TRA10014,商店代號錯誤,Invalid Merchant,auth,error,確認商店代號
-newebpay,TRA10027,檢查碼錯誤,CheckValue Error,auth,error,重新計算檢查碼
-newebpay,TRA20001,交易失敗,Transaction Failed,payment,error,稍後重試
-newebpay,TRA20014,交易逾時,Transaction Timeout,payment,error,重新交易
-newebpay,AES-001,AES加密失敗,AES Encryption Failed,encryption,error,檢查HashKey和HashIV是否正確
-newebpay,AES-002,AES解密失敗,AES Decryption Failed,encryption,error,檢查加密資料完整性和IV
-newebpay,TM-999,API逾時,API Timeout,system,error,稍後重試
-newebpay,ORDER-001,訂單狀態衝突,Order Status Conflict,validation,error,檢查訂單當前狀態
-newebpay,REFUND-001,退款失敗,Refund Failed,refund,error,確認訂單可退款且金額正確
-newebpay,AMT-001,金額驗證錯誤,Amount Validation Error,validation,error,檢查金額格式和範圍
-newebpay,MID-001,商店代號錯誤,Invalid Merchant ID,auth,error,確認MerchantID正確
-payuni,SUCCESS,交易成功,Success,success,info,
-payuni,FAILED,交易失敗,Transaction Failed,payment,error,確認交易狀態
-payuni,INVALID_MERID,商店代號不存在,Invalid Merchant ID,auth,error,確認 MerID 正確
-payuni,INVALID_CHECKSUM,CheckSum 驗證失敗,CheckSum Verification Failed,auth,error,重新計算 CheckSum
-payuni,AES_ENCRYPT_ERROR,AES-GCM 加密錯誤,AES-GCM Encryption Error,encryption,error,確認 HashKey/HashIV 格式
-payuni,AES_DECRYPT_ERROR,AES-GCM 解密錯誤,AES-GCM Decryption Error,encryption,error,確認加密資料完整性
-payuni,INVALID_NONCE,Nonce 長度錯誤,Invalid Nonce Length,encryption,error,確保 Nonce 為 12 bytes
-payuni,TAG_VERIFICATION_FAILED,Tag 驗證失敗,Tag Verification Failed,encryption,error,檢查 16 bytes tag 完整性
-payuni,INVALID_AMOUNT,金額驗算錯誤,Invalid Amount,validation,error,確保金額為正整數
-payuni,DUPLICATE_ORDER,訂單編號重複,Duplicate Order,validation,error,使用唯一訂單編號
-payuni,ORDER_NOT_FOUND,訂單不存在,Order Not Found,query,error,檢查訂單編號
-payuni,API_TIMEOUT,API 請求逾時,API Timeout,system,error,重新交易
-payuni,PAYMENT_FAILED,付款失敗,Payment Failed,payment,error,稍後重試或使用其他支付方式
-payuni,INVALID_PAYMENT_TYPE,不支援的支付方式,Unsupported Payment Type,validation,error,使用支援的支付方式
-payuni,JSON_PARSE_ERROR,JSON 解析失敗,JSON Parse Error,system,error,檢查 API 回應格式
+ecpay,2,ATM 取號成功（等待轉帳）,ATM number issued,success,info,不是錯誤；等消費者轉帳後會再收到付款通知
+ecpay,10100073,超商代碼 / 條碼取號成功（等待繳費）,CVS/Barcode number issued,success,info,不是錯誤；等消費者繳費後會再收到付款通知
+ecpay,10100001,超商代碼已失效,CVS code expired,payment,error,重新取號
+ecpay,10100058,ATM 繳費期限已過（電子發票服務中為發票作業逾時）,ATM payment expired,payment,error,重新建立訂單取號；同一代碼在發票服務含意不同，依收到的服務判斷
+ecpay,10100248,帳號錯誤（例如把物流 / 發票帳號用在金流）,Wrong merchant account,auth,error,確認金流、物流、發票各自使用正確的 MerchantID / HashKey / HashIV
+ecpay,10200009,訂單已過期,Order expired,payment,error,檢查 ExpireDate 設定，重新建立訂單
+ecpay,10200043,3D 驗證失敗,3D Secure failed,payment,error,請消費者重新進行 3D 驗證
+ecpay,10200047,MerchantTradeNo 重複,Duplicate MerchantTradeNo,validation,error,使用不同的訂單編號（最長 20 字元，僅英數字）
+ecpay,10200050,TotalAmount 超出範圍（金額不符）,TotalAmount out of range,validation,error,檢查 TotalAmount
+ecpay,10200058,信用卡授權失敗,Card authorization failed,payment,error,請消費者確認卡片資訊或更換信用卡
+ecpay,10200073,CheckMacValue 驗證失敗,CheckMacValue verify fail,auth,error,不分大小寫排序、PHP urlencode 後轉小寫並還原 ( ) ! *、金流 SHA256 / 物流 MD5；確認 HashKey/HashIV
+ecpay,10200095,交易已付款（重複付款）,Already paid,payment,warning,檢查訂單是否已處理
+ecpay,10200105,BNPL 金額未達最低,BNPL amount below minimum,validation,error,"TotalAmount 需 >= 3,000 元"
+ecpay,10200115,信用卡授權逾時,Card authorization timeout,payment,error,請消費者重新付款
+ecpay,10300006,超商繳費期限已過（國內物流中為物流訂單已過期）,CVS payment expired,payment,error,重新建立訂單；同一代碼在物流服務含意不同
+ecpay,10400011,WAF 關鍵字攔截,Blocked by WAF keyword,validation,error,ItemName / TradeDesc 含 echo、python、curl 等系統指令關鍵字，移除即可
+newebpay,SUCCESS,成功,Success,success,info,
+newebpay,MPG01002,時間戳記不可空白,,validation,error,見藍新規格書 NDNF-1.2.2 錯誤代碼表
+newebpay,MPG01005,TokenTerm 不可空白/設定錯誤,,validation,error,見藍新規格書 NDNF-1.2.2 錯誤代碼表
+newebpay,MPG01008,分期參數設定錯誤,,validation,error,見藍新規格書 NDNF-1.2.2 錯誤代碼表
+newebpay,MPG01009,商店代號不可空白,,validation,error,見藍新規格書 NDNF-1.2.2 錯誤代碼表
+newebpay,MPG01010,程式版本設定錯誤,,validation,error,見藍新規格書 NDNF-1.2.2 錯誤代碼表
+newebpay,MPG01011,回傳規格設定錯誤,,validation,error,見藍新規格書 NDNF-1.2.2 錯誤代碼表
+newebpay,MPG01012,商店訂單編號不可空白/設定錯誤,,validation,error,見藍新規格書 NDNF-1.2.2 錯誤代碼表
+newebpay,MPG01013,付款人電子信箱設定錯誤,,validation,error,見藍新規格書 NDNF-1.2.2 錯誤代碼表
+newebpay,MPG01014,網址設定錯誤,,validation,error,見藍新規格書 NDNF-1.2.2 錯誤代碼表
+newebpay,MPG01015,訂單金額不可空白/設定錯誤,,validation,error,見藍新規格書 NDNF-1.2.2 錯誤代碼表
+newebpay,MPG01016,檢查碼不可空白,,validation,error,見藍新規格書 NDNF-1.2.2 錯誤代碼表
+newebpay,MPG01017,商品資訊不可空白,,validation,error,見藍新規格書 NDNF-1.2.2 錯誤代碼表
+newebpay,MPG01018,繳費有效期限設定錯誤,,validation,error,見藍新規格書 NDNF-1.2.2 錯誤代碼表
+newebpay,MPG01023,交易加密資料不可空白,,validation,error,見藍新規格書 NDNF-1.2.2 錯誤代碼表
+newebpay,MPG01024,交易加密SHA 資料不可空白,,validation,error,見藍新規格書 NDNF-1.2.2 錯誤代碼表
+newebpay,MPG01025,金融機構格式錯誤,,validation,error,見藍新規格書 NDNF-1.2.2 錯誤代碼表
+newebpay,MPG01026,金融機構格式錯誤，不接受XXX 參數,,validation,error,見藍新規格書 NDNF-1.2.2 錯誤代碼表
+newebpay,MPG01027,一銀維護中，請選擇其他金融機構,,validation,error,見藍新規格書 NDNF-1.2.2 錯誤代碼表
+newebpay,MPG01028,訂單細項格式錯誤,,validation,error,見藍新規格書 NDNF-1.2.2 錯誤代碼表
+newebpay,MPG01029,訂單金額與訂單細項總金額不相符,,validation,error,Amt 須等於訂單細項總金額
+newebpay,MPG01030,訂單細項品項編號不可重複,,validation,error,見藍新規格書 NDNF-1.2.2 錯誤代碼表
+newebpay,MPG02001,檢查碼錯誤,,auth,error,"TradeSha 錯誤：SHA256(""HashKey={key}&{TradeInfo}&HashIV={iv}"") 轉大寫；確認 HashKey/HashIV"
+newebpay,MPG02002,查無商店開啟任何金流服務,,auth,error,見藍新規格書 NDNF-1.2.2 錯誤代碼表
+newebpay,MPG02003,支付方式未啟用，請洽客服中心,,auth,error,見藍新規格書 NDNF-1.2.2 錯誤代碼表
+newebpay,MPG02004,匯率時間戳記不存在，請確認,,auth,error,見藍新規格書 NDNF-1.2.2 錯誤代碼表
+newebpay,MPG02005,驗證資料錯誤(來源不合法),,auth,error,見藍新規格書 NDNF-1.2.2 錯誤代碼表
+newebpay,MPG02006,信用卡收單機構系統發生異常，請洽客服中心,,auth,error,見藍新規格書 NDNF-1.2.2 錯誤代碼表
+newebpay,MPG02007,本商店強制指定需檢核轉出行，請先啟用智慧,,auth,error,見藍新規格書 NDNF-1.2.2 錯誤代碼表
+newebpay,MPG02008,SourceType 參數錯誤，本商店強制指定需檢核,,auth,error,見藍新規格書 NDNF-1.2.2 錯誤代碼表
+newebpay,MPG02009,不可修改銀行代號與帳號時，須提供指定轉帳,,auth,error,見藍新規格書 NDNF-1.2.2 錯誤代碼表
+newebpay,MPG02010,此版本不支援，請升級至v2.3,,auth,error,見藍新規格書 NDNF-1.2.2 錯誤代碼表
+newebpay,MPG03001,FormPost 加密失敗,,system,error,見藍新規格書 NDNF-1.2.2 錯誤代碼表
+newebpay,MPG03002,拒絕交易 IP,,system,error,見藍新規格書 NDNF-1.2.2 錯誤代碼表
+newebpay,MPG03003,IP 交易次數限制,,system,error,見藍新規格書 NDNF-1.2.2 錯誤代碼表
+newebpay,MPG03004,商店狀態已被暫停或是關閉，無法進行交易,,system,error,見藍新規格書 NDNF-1.2.2 錯誤代碼表
+newebpay,MPG03005,回傳參數資料不存在/解密失敗,,system,error,見藍新規格書 NDNF-1.2.2 錯誤代碼表
+newebpay,MPG03006,回傳參數資料不存在/解密失敗,,system,error,見藍新規格書 NDNF-1.2.2 錯誤代碼表
+newebpay,MPG03007,該筆訂單交易資訊不存在，請重新交易,,system,error,見藍新規格書 NDNF-1.2.2 錯誤代碼表
+newebpay,MPG03008,已存在相同的商店訂單編號,,system,error,MerchantOrderNo 不可重複
+newebpay,MPG03009,交易失敗,,system,error,交易失敗，依 Message 判斷原因
+newebpay,MPG03010,驗證資料不存在或錯誤,,system,error,見藍新規格書 NDNF-1.2.2 錯誤代碼表
+newebpay,MPG03011,訂單資料已不存在，請重新交易,,system,error,見藍新規格書 NDNF-1.2.2 錯誤代碼表
+newebpay,MPG05001,未有信用卡驗證資料,,payment,error,見藍新規格書 NDNF-1.2.2 錯誤代碼表
+newebpay,MPG05002,信用卡卡號長度不足,,payment,error,見藍新規格書 NDNF-1.2.2 錯誤代碼表
+newebpay,MPG05003,此信用卡不支援一次付清，請改用可一次付清,,payment,error,見藍新規格書 NDNF-1.2.2 錯誤代碼表
+newebpay,MPG05004,發卡行暫時無法提供信用卡分期付款服務,,payment,error,見藍新規格書 NDNF-1.2.2 錯誤代碼表
+newebpay,MPG05005,警示交易,,payment,error,見藍新規格書 NDNF-1.2.2 錯誤代碼表
+newebpay,MPG05006,物流設定參數[LgsType]錯誤,,payment,error,見藍新規格書 NDNF-1.2.2 錯誤代碼表
+newebpay,MPG05007,請開啟其他支付方式,,payment,error,見藍新規格書 NDNF-1.2.2 錯誤代碼表
+newebpay,MPG05008,因金額限制關係，無法使用物流服務,,payment,error,見藍新規格書 NDNF-1.2.2 錯誤代碼表
+newebpay,TRA10001,商店資料取得失敗,,request,error,見藍新規格書 NDNF-1.2.2 錯誤代碼表
+newebpay,TRA10003,金額必須為數字,,request,error,見藍新規格書 NDNF-1.2.2 錯誤代碼表
+newebpay,TRA10008,資料加密錯誤,,request,error,見藍新規格書 NDNF-1.2.2 錯誤代碼表
+newebpay,TRA10009,商店代號不可空白,,request,error,見藍新規格書 NDNF-1.2.2 錯誤代碼表
+newebpay,TRA10012,商店代號停用,,request,error,見藍新規格書 NDNF-1.2.2 錯誤代碼表
+newebpay,TRA10013,商店信用卡資格停用,,request,error,見藍新規格書 NDNF-1.2.2 錯誤代碼表
+newebpay,TRA10015,網路連線失敗,,request,error,見藍新規格書 NDNF-1.2.2 錯誤代碼表
+newebpay,TRA10018,資料不足,,request,error,見藍新規格書 NDNF-1.2.2 錯誤代碼表
+newebpay,TRA10021,查無該筆交易或該筆交易不為信用卡交易,,request,error,見藍新規格書 NDNF-1.2.2 錯誤代碼表
+newebpay,TRA10026,此訂單非授權成功狀態，不可請款,,request,error,見藍新規格書 NDNF-1.2.2 錯誤代碼表
+newebpay,TRA10027,此訂單已申請過請款，不可重覆請款,,request,error,見藍新規格書 NDNF-1.2.2 錯誤代碼表
+newebpay,TRA10028,請退款金額超過授權金額，請確認,,request,error,見藍新規格書 NDNF-1.2.2 錯誤代碼表
+newebpay,TRA10029,請款超過授權日N 天，已不得請(退)款,,request,error,見藍新規格書 NDNF-1.2.2 錯誤代碼表
+newebpay,TRA10030,請款/退款資料新增失敗,,request,error,見藍新規格書 NDNF-1.2.2 錯誤代碼表
+newebpay,TRA10031,銀聯卡交易只接受全額請退款,,request,error,見藍新規格書 NDNF-1.2.2 錯誤代碼表
+newebpay,TRA10032,單號類型只能為數字1 或2,,request,error,見藍新規格書 NDNF-1.2.2 錯誤代碼表
+newebpay,TRA10033,選擇使用商店自訂單號不可空白,,request,error,見藍新規格書 NDNF-1.2.2 錯誤代碼表
+newebpay,TRA10035,該交易非授權成功或已請款完成狀態，請確認,,request,error,見藍新規格書 NDNF-1.2.2 錯誤代碼表
+newebpay,TRA10036,RespondType 欄位資料格式錯誤,,request,error,見藍新規格書 NDNF-1.2.2 錯誤代碼表
+newebpay,TRA10037,商家自訂單號錯誤，只允許英數字及_符號,,request,error,見藍新規格書 NDNF-1.2.2 錯誤代碼表
+newebpay,TRA10038,選擇使用系統單號格式錯誤,,request,error,見藍新規格書 NDNF-1.2.2 錯誤代碼表
+newebpay,TRA10039,退款金額已超過請款金額，請確認,,request,error,見藍新規格書 NDNF-1.2.2 錯誤代碼表
+newebpay,TRA10041,網址格式錯誤,,request,error,見藍新規格書 NDNF-1.2.2 錯誤代碼表
+newebpay,TRA10045,該筆交易正在退款中或退款失敗,,request,error,見藍新規格書 NDNF-1.2.2 錯誤代碼表
+newebpay,TRA10046,該筆交易撥款狀態異常，無法執行退款,,request,error,見藍新規格書 NDNF-1.2.2 錯誤代碼表
+newebpay,TRA10047,該交易不為授權成功狀態，不可放棄授權,,request,error,見藍新規格書 NDNF-1.2.2 錯誤代碼表
+newebpay,TRA10048,該交易正在請款狀態,,request,error,見藍新規格書 NDNF-1.2.2 錯誤代碼表
+newebpay,TRA10049,該交易正在退款狀態,,request,error,見藍新規格書 NDNF-1.2.2 錯誤代碼表
+newebpay,TRA10050,金額不符,,request,error,見藍新規格書 NDNF-1.2.2 錯誤代碼表
+newebpay,TRA10051,取消授權失敗,,request,error,見藍新規格書 NDNF-1.2.2 錯誤代碼表
+newebpay,TRA10054,檢查碼CheckValue 有錯誤,,request,error,"CheckValue 錯誤：SHA256(""IV={iv}&Amt=..&MerchantID=..&MerchantOrderNo=..&Key={key}"") 轉大寫"
+newebpay,TRA10058,動態貨幣轉換交易只接授全額請款,,request,error,見藍新規格書 NDNF-1.2.2 錯誤代碼表
+newebpay,TRA10070,銀聯卡交易無需請款,,request,error,見藍新規格書 NDNF-1.2.2 錯誤代碼表
+newebpay,TRA10071,因查無交易資料次數已達上限，已鎖定交易查,,request,error,見藍新規格書 NDNF-1.2.2 錯誤代碼表
+newebpay,TRA10077,只能退未撥金額,,request,error,見藍新規格書 NDNF-1.2.2 錯誤代碼表
+newebpay,TRA10094,資料取消失敗,,request,error,見藍新規格書 NDNF-1.2.2 錯誤代碼表
+newebpay,TRA10095,此筆交易已過關帳時間，不可取消,,request,error,見藍新規格書 NDNF-1.2.2 錯誤代碼表
+newebpay,TRA10678,銀聯卡退款失敗,,request,error,見藍新規格書 NDNF-1.2.2 錯誤代碼表
+newebpay,TRA10675,紅利交易只接授全額請退款,,request,error,見藍新規格書 NDNF-1.2.2 錯誤代碼表
+newebpay,TRA10702,因達到執行請退款筆數上限，您的商店暫時無,,request,error,見藍新規格書 NDNF-1.2.2 錯誤代碼表
+newebpay,TRA11002,因失敗過多您的商店暫時無法使用本功能,,request,error,見藍新規格書 NDNF-1.2.2 錯誤代碼表
+newebpay,TRA20001,金融機構取消授權批次處理中,,request,info,非錯誤：取消授權需由金融機構批次處理，稍後以查詢確認
+newebpay,TRA20002,查無交易資料,,request,error,見藍新規格書 NDNF-1.2.2 錯誤代碼表
+newebpay,TRA20004,商店訂單編號重覆,,request,error,見藍新規格書 NDNF-1.2.2 錯誤代碼表
+newebpay,TRA20011,該筆交易已請款,,request,error,見藍新規格書 NDNF-1.2.2 錯誤代碼表
+newebpay,TRA20027,此訂單已申請過退款，退款中,,request,error,見藍新規格書 NDNF-1.2.2 錯誤代碼表
+newebpay,TRA20028,可退款金額不足，請查看常見問題 https://,,request,error,見藍新規格書 NDNF-1.2.2 錯誤代碼表
+newebpay,TRA40014,TimeStamp 欄位錯誤,,request,error,見藍新規格書 NDNF-1.2.2 錯誤代碼表
+payuni,SUCCESS,交易成功,Success,success,info,業務結果看 EncryptInfo 解密後的 Status 與 TradeStatus
+payuni,OK,AFTEE 審核通過,AFTEE approved,success,info,AFTEE 通知的 Status 可能為 OK
+payuni,ERROR,外層錯誤（回應不含 EncryptInfo）,Outer error,system,error,檢查 MerID、Version 與 EncryptInfo / HashInfo 格式
+payuni,API00003,無 API 版本號,Missing API version,validation,error,外層表單須帶 Version：UPP/退款 1.0、物流/LINE Pay 1.1、查詢 v2 為 2.0
 smilepay,1,交易成功,Success,success,info,
 smilepay,-1,參數錯誤,Parameter error,validation,error,檢查必填欄位 Dcvc/Rvg2c/Verify_key
 smilepay,-2,商家驗證失敗,Merchant verification failed,auth,error,確認 Verify_key 與 mid 正確

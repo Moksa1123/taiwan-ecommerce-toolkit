@@ -13,6 +13,7 @@
     python test_payment.py --query ORDER123   # 查詢訂單
 """
 
+import base64
 import hashlib
 import urllib.parse
 import time
@@ -64,7 +65,7 @@ PLATFORMS = {
         'hash_key': '請至後台申請',
         'hash_iv': '請至後台申請',
         'api_url': 'https://sandbox-api.payuni.com.tw/api/upp',
-        'query_url': 'https://sandbox-api.payuni.com.tw/api/trade_query',
+        'query_url': 'https://sandbox-api.payuni.com.tw/api/trade/query',
         'test_url': 'https://sandbox-api.payuni.com.tw/',
         'auth_method': 'AES-256-GCM',
         'test_card': '4000-2211-1111-1111',
@@ -72,17 +73,25 @@ PLATFORMS = {
 }
 
 
+def ecpay_url_encode(text: str) -> str:
+    """綠界 .NET 風格 URL encode（對應官方 SDK UrlService::ecpayUrlEncode）"""
+    encoded = urllib.parse.quote_plus(text, safe='').replace('~', '%7E').lower()
+    for src, dst in (('%2d', '-'), ('%5f', '_'), ('%2e', '.'), ('%21', '!'),
+                     ('%2a', '*'), ('%28', '('), ('%29', ')')):
+        encoded = encoded.replace(src, dst)
+    return encoded
+
+
 def generate_ecpay_mac(params: dict, hash_key: str, hash_iv: str) -> str:
-    """ECPay CheckMacValue (SHA256)"""
-    sorted_params = sorted(params.items())
-    param_str = '&'.join(f'{k}={v}' for k, v in sorted_params)
+    """ECPay CheckMacValue (SHA256)：排除 CheckMacValue、不分大小寫排序"""
+    items = sorted(((k, v) for k, v in params.items() if k != 'CheckMacValue'), key=lambda kv: kv[0].lower())
+    param_str = '&'.join(f'{k}={v}' for k, v in items)
     raw = f'HashKey={hash_key}&{param_str}&HashIV={hash_iv}'
-    encoded = urllib.parse.quote_plus(raw).lower()
-    return hashlib.sha256(encoded.encode('utf-8')).hexdigest().upper()
+    return hashlib.sha256(ecpay_url_encode(raw).encode('utf-8')).hexdigest().upper()
 
 
 def generate_newebpay_trade_info(params: dict, hash_key: str, hash_iv: str) -> str:
-    """NewebPay TradeInfo (AES-256-CBC)"""
+    """NewebPay TradeInfo (AES-256-CBC, PKCS#7)，與規格書 NDNF 範例一致"""
     if not HAS_CRYPTO:
         return "需要 pycryptodome 套件"
     query_string = urllib.parse.urlencode(params)
@@ -99,19 +108,62 @@ def generate_newebpay_sha(trade_info: str, hash_key: str, hash_iv: str) -> str:
 
 
 def generate_payuni_encrypt(params: dict, hash_key: str, hash_iv: str) -> str:
-    """PayUNi EncryptInfo (AES-256-GCM)"""
+    """PayUNi EncryptInfo = hex( base64(密文) + ":::" + base64(tag) )，與官方外掛一致"""
     if not HAS_CRYPTO:
         return "需要 pycryptodome 套件"
     query_string = urllib.parse.urlencode(params)
     cipher = AES.new(hash_key.encode('utf-8'), AES.MODE_GCM, nonce=hash_iv.encode('utf-8'))
     encrypted, tag = cipher.encrypt_and_digest(query_string.encode('utf-8'))
-    return (encrypted + tag).hex()
+    return (base64.b64encode(encrypted) + b':::' + base64.b64encode(tag)).hex()
 
 
 def generate_payuni_hash(encrypt_info: str, hash_key: str, hash_iv: str) -> str:
-    """PayUNi HashInfo (SHA256)"""
-    raw = encrypt_info + hash_key + hash_iv
+    """PayUNi HashInfo = SHA256(HashKey + EncryptInfo + HashIV)，Key 在前"""
+    raw = hash_key + encrypt_info + hash_iv
     return hashlib.sha256(raw.encode('utf-8')).hexdigest().upper()
+
+
+# 已知答案測試（known-answer test）：輸入與預期值皆由業者官方程式產生
+# （綠界官方 SDK、PAYUNi 官方外掛、藍新規格書 PHP 範例），出處見 repo 的 tests/vectors/。
+# 雜湊值涵蓋整段密文，雜湊相符即代表加密結果逐位元組相同。
+KNOWN_ANSWERS = {
+    'ecpay': {
+        'hash_key': 'pwFHCqoQZGmho4w6', 'hash_iv': 'EkRm7iFT261dpevs',
+        'params': {'MerchantID': '3002607', 'MerchantTradeNo': 'ORD20260923001', 'MerchantTradeDate': '2026/09/23 12:00:00', 'PaymentType': 'aio', 'TotalAmount': '1280', 'TradeDesc': 'a-b_c.d', 'ItemName': '商品(A)*2 限量!#特價', 'ReturnURL': 'https://shop.example.com/ecpay/notify', 'ChoosePayment': 'ALL', 'EncryptType': '1'},
+        'expected': '4C4284BE8276B608A981AB5FF04CD981A9D5C8B54C0F151BC80F012CAA90AAF3',
+    },
+    'newebpay': {
+        'hash_key': '12345678901234567890123456789012', 'hash_iv': '1234567890123456',
+        'params': {'MerchantID': 'MS12345678', 'RespondType': 'JSON', 'TimeStamp': '1758600000', 'Version': '2.0', 'MerchantOrderNo': 'ORD20260923001', 'Amt': '1280', 'ItemDesc': '測試商品 A & B', 'Email': 'buyer+tw@example.com'},
+        'expected': '67426922975581A2D8367FC990C3DB637B5D17A986CC87D560FE8BF1BD9FFAAE',
+    },
+    'payuni': {
+        'hash_key': '12345678901234567890123456789012', 'hash_iv': '1234567890123456',
+        'params': {'MerID': 'S01234567', 'MerTradeNo': 'T20260923002', 'TradeAmt': '1280', 'Timestamp': '1758600000', 'ProdDesc': '測試商品 A & B'},
+        'expected': 'B1EA028236FC4D6B5D768E1EAB57EC60465265EF19AEED500F0ECBB79C4DB63D',
+    },
+}
+
+
+def run_known_answer_test(platform: str) -> bool:
+    """以官方程式產生的標準答案驗證本檔的加密實作"""
+    kat = KNOWN_ANSWERS[platform]
+    key, iv, params = kat['hash_key'], kat['hash_iv'], kat['params']
+    if platform == 'ecpay':
+        got = generate_ecpay_mac(params, key, iv)
+    elif not HAS_CRYPTO:
+        print('  (需要 pycryptodome 套件: pip install pycryptodome)')
+        return False
+    elif platform == 'newebpay':
+        got = generate_newebpay_sha(generate_newebpay_trade_info(params, key, iv), key, iv)
+    else:
+        got = generate_payuni_hash(generate_payuni_encrypt(params, key, iv), key, iv)
+    ok = got == kat['expected']
+    print(f'  已知答案測試: {"通過" if ok else "失敗"}（與官方實作{"一致" if ok else "不一致"}）')
+    if not ok:
+        print(f'    預期 {kat["expected"]}')
+        print(f'    實得 {got}')
+    return ok
 
 
 def test_connection(platform: str):
@@ -135,46 +187,9 @@ def test_connection(platform: str):
     print(f'  測試網址: {config["test_url"]}')
     print()
 
-    # 測試加密計算
+    # 測試加密計算：以官方實作產生的標準答案比對，而不是只看長度
     print('[加密計算測試]')
-    if platform == 'ecpay':
-        test_params = {
-            'MerchantID': config['merchant_id'],
-            'MerchantTradeNo': 'TEST123456',
-            'TotalAmount': 100,
-        }
-        mac = generate_ecpay_mac(test_params, config['hash_key'], config['hash_iv'])
-        print(f'  CheckMacValue: {mac}')
-        print(f'  長度: {len(mac)} (應為 64)')
-        print(f'  格式: {"正確" if len(mac) == 64 else "錯誤"}')
-
-    elif platform == 'newebpay':
-        if HAS_CRYPTO and config['hash_key'] != '請至後台申請':
-            test_params = {
-                'MerchantID': config['merchant_id'],
-                'MerchantOrderNo': 'TEST123456',
-                'Amt': 100,
-            }
-            trade_info = generate_newebpay_trade_info(test_params, config['hash_key'], config['hash_iv'])
-            trade_sha = generate_newebpay_sha(trade_info, config['hash_key'], config['hash_iv'])
-            print(f'  TradeInfo: {trade_info[:50]}...')
-            print(f'  TradeSha: {trade_sha}')
-        else:
-            print('  (需要設定 hash_key/hash_iv 及 pycryptodome 套件)')
-
-    elif platform == 'payuni':
-        if HAS_CRYPTO and config['hash_key'] != '請至後台申請':
-            test_params = {
-                'MerID': config['merchant_id'],
-                'MerTradeNo': 'TEST123456',
-                'TradeAmt': 100,
-            }
-            encrypt_info = generate_payuni_encrypt(test_params, config['hash_key'], config['hash_iv'])
-            hash_info = generate_payuni_hash(encrypt_info, config['hash_key'], config['hash_iv'])
-            print(f'  EncryptInfo: {encrypt_info[:50]}...')
-            print(f'  HashInfo: {hash_info}')
-        else:
-            print('  (需要設定 hash_key/hash_iv 及 pycryptodome 套件)')
+    run_known_answer_test(platform)
     print()
 
     # 測試網路連線

@@ -82,6 +82,7 @@
 
 ### PHP 加密範例
 
+<!-- verify: newebpay -->
 ```php
 <?php
 
@@ -118,25 +119,34 @@ class NewebPayEncryption
     }
 
     /**
-     * AES-256-CBC 解密
+     * AES-256-CBC 解密（與藍新官方外掛 create_aes_decrypt() 相同）
+     *
+     * 官方外掛加密時以 32 bytes 區塊補齊，padding 可能是 17–32；
+     * 直接用 OPENSSL_RAW_DATA（預設 PKCS#7，只接受 1–16）會解密失敗回傳 false。
      */
     public function decrypt(string $encryptedData): array
     {
-        // 1. Hex 轉 Binary
-        $data = hex2bin($encryptedData);
-
-        // 2. AES-256-CBC 解密
         $decrypted = openssl_decrypt(
-            $data,
+            hex2bin($encryptedData),
             'AES-256-CBC',
             $this->hashKey,
-            OPENSSL_RAW_DATA,
+            OPENSSL_RAW_DATA | OPENSSL_ZERO_PADDING,
             $this->hashIV
         );
 
-        // 3. 解析 Query String
-        parse_str($decrypted, $result);
+        // 以最後一個 byte 為 padding 長度移除，並確認尾端一致
+        $pad = ord(substr($decrypted, -1));
+        if ($pad < 1 || $pad > 32 || substr($decrypted, -$pad) !== str_repeat(chr($pad), $pad)) {
+            throw new RuntimeException('解密失敗：HashKey / HashIV 可能不正確');
+        }
+        $plain = substr($decrypted, 0, -$pad);
 
+        // RespondType=JSON 時明文是 JSON（交易明細在 Result 內）；String 時是 query string
+        $json = json_decode($plain, true);
+        if (is_array($json)) {
+            return $json;
+        }
+        parse_str($plain, $result);
         return $result;
     }
 
@@ -153,55 +163,55 @@ class NewebPayEncryption
 
 ### Python 加密範例
 
+> 以下類別由 CI 以藍新官方外掛與規格書產生的標準答案驗證（`tests/vectors/newebpay.json`）。
+
+<!-- verify: newebpay -->
 ```python
 """NewebPay AES-256-CBC 加密"""
 
-from Crypto.Cipher import AES
-from Crypto.Util.Padding import pad, unpad
-from urllib.parse import urlencode, parse_qs
 import hashlib
+import hmac
+import json
+from urllib.parse import urlencode, parse_qsl
+
+from Crypto.Cipher import AES
+from Crypto.Util.Padding import pad
 
 
 class NewebPayEncryption:
     def __init__(self, hash_key: str, hash_iv: str):
-        self.hash_key = hash_key.encode('utf-8')
-        self.hash_iv = hash_iv.encode('utf-8')
+        self.hash_key = hash_key
+        self.hash_iv = hash_iv
+
+    def _cipher(self):
+        return AES.new(self.hash_key.encode(), AES.MODE_CBC, self.hash_iv.encode())
 
     def encrypt(self, params: dict) -> str:
-        """AES-256-CBC 加密"""
-        # 1. 組合 Query String
-        query_string = urlencode(params)
+        """標準 PKCS#7（與規格書 NDNF 的 PHP 範例相同）→ hex"""
+        return self._cipher().encrypt(pad(urlencode(params).encode('utf-8'), 16)).hex()
 
-        # 2. AES-256-CBC 加密
-        cipher = AES.new(self.hash_key, AES.MODE_CBC, self.hash_iv)
-        padded = pad(query_string.encode('utf-8'), AES.block_size)
-        encrypted = cipher.encrypt(padded)
-
-        # 3. 轉十六進制
-        return encrypted.hex()
-
-    def decrypt(self, encrypted_data: str) -> dict:
-        """AES-256-CBC 解密"""
-        # 1. Hex 轉 Binary
-        data = bytes.fromhex(encrypted_data)
-
-        # 2. AES-256-CBC 解密
-        cipher = AES.new(self.hash_key, AES.MODE_CBC, self.hash_iv)
-        decrypted = unpad(cipher.decrypt(data), AES.block_size)
-
-        # 3. 解析 Query String
-        result = dict(parse_qs(decrypted.decode('utf-8')))
-        return {k: v[0] for k, v in result.items()}
+    def decrypt(self, trade_info: str) -> dict:
+        data = self._cipher().decrypt(bytes.fromhex(trade_info))
+        # 官方外掛以 32 bytes 補齊，padding 可能是 1–32；Crypto.Util.Padding.unpad(data, 16) 會失敗
+        n = data[-1]
+        if not 1 <= n <= 32 or data[-n:] != bytes([n]) * n:
+            raise ValueError('padding 錯誤（HashKey / HashIV 可能不正確）')
+        text = data[:-n].decode('utf-8')
+        # RespondType=JSON 時明文是 JSON；用 parse_qs 會得到空 dict
+        return json.loads(text) if text.startswith('{') else dict(parse_qsl(text, keep_blank_values=True))
 
     def trade_sha(self, trade_info: str) -> str:
-        """產生 TradeSha (SHA256)"""
-        raw = f"HashKey={self.hash_key.decode()}&{trade_info}&HashIV={self.hash_iv.decode()}"
+        raw = f"HashKey={self.hash_key}&{trade_info}&HashIV={self.hash_iv}"
         return hashlib.sha256(raw.encode('utf-8')).hexdigest().upper()
+
+    def verify_trade_sha(self, trade_info: str, trade_sha: str) -> bool:
+        return hmac.compare_digest(self.trade_sha(trade_info), trade_sha.upper())
 ```
 
 ### CheckCode 驗證
 
-驗證回傳結果的 CheckCode：
+驗證回傳結果的 CheckCode（規格書 4.1.5）。此規則已與規格書「單筆交易查詢」回應範例中
+**藍新伺服器實際產生**的 CheckCode 比對一致（見 `tests/vectors/newebpay.json` 的 `server_check_code`）：
 
 ```php
 <?php
@@ -623,6 +633,8 @@ echo 'OK';
 
 ### 常見錯誤碼
 
+> 依規格書 NDNF-1.2.2 錯誤代碼表；完整清單（99 筆）見 `data/error-codes.csv`。查詢 API 的 CheckValue 錯誤為 `TRA10054`。
+
 | 錯誤碼 | 說明 | 備註 |
 |--------|------|------|
 | `MPG01002` | 時間戳記不可空白 | TimeStamp |
@@ -631,13 +643,13 @@ echo 'OK';
 | `MPG01015` | 金額錯誤 | Amt |
 | `MPG01023` | TradeInfo 不可空白 | |
 | `MPG01024` | TradeSha 不可空白 | |
-| `MPG02001` | 檢查碼錯誤 | CheckValue |
+| `MPG02001` | 檢查碼錯誤 | TradeSha 不符 |
 | `MPG02002` | 未啟用金流服務 | |
 | `MPG02003` | 支付方式未啟用 | |
 | `MPG03004` | 商店已暫停 | |
 | `MPG03008` | 訂單編號重複 | |
-| `MPG03009` | 交易失敗 | SHA256 驗證失敗 |
-| `MPG05002` | 信用卡卡號錯誤 | |
+| `MPG03009` | 交易失敗 | 依 Message 判斷原因 |
+| `MPG05002` | 信用卡卡號長度不足 | |
 | `MPG05005` | 警示交易 | |
 
 ### 交易狀態碼 (TradeStatus)
@@ -648,8 +660,9 @@ echo 'OK';
 | `1` | 付款成功 |
 | `2` | 付款失敗 |
 | `3` | 取消付款 |
-| `6` | 已退款 |
-| `9` | 付款中 (待銀行確認) |
+| `6` | 退款 |
+
+> 規格書 NDNF-1.2.2 只定義以上五種狀態。
 
 ### 收單機構代碼 (AuthBank)
 
