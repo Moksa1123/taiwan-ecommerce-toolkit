@@ -9,12 +9,31 @@ API 文件: https://developers.ecpay.com.tw
 """
 
 import hashlib
+import hmac
 import urllib.parse
 import time
 from datetime import datetime
 from typing import Dict, Literal, Optional, List
 from dataclasses import dataclass, field
 
+
+
+def ecpay_url_encode(text: str) -> str:
+    """
+    綠界 CheckMacValue 專用的 URL encode（對應官方 SDK UrlService::ecpayUrlEncode）
+
+    PHP urlencode → 轉小寫 → 把 %2d %5f %2e %21 %2a %28 %29 還原成 - _ . ! * ( )
+    （.NET 的 UrlEncode 不編碼這幾個字元，綠界以 .NET 規則驗證）。
+
+    直接用 Python 的 quote_plus 會有兩處不同：
+    - quote_plus 會把 ! * ( ) 編碼，綠界不會 → 商品名稱含括號就驗證失敗
+    - quote_plus 保留 ~，PHP 會編成 %7e
+    """
+    encoded = urllib.parse.quote_plus(text, safe='').replace('~', '%7E').lower()
+    for src, dst in (('%2d', '-'), ('%5f', '_'), ('%2e', '.'), ('%21', '!'),
+                     ('%2a', '*'), ('%28', '('), ('%29', ')')):
+        encoded = encoded.replace(src, dst)
+    return encoded
 
 @dataclass
 class PaymentOrderData:
@@ -137,8 +156,13 @@ class ECPayPaymentService:
             >>> len(mac)
             64
         """
-        # 步驟 1: 參數排序
-        sorted_params = sorted(params.items())
+        # 步驟 1: 排除 CheckMacValue，依參數名稱「不分大小寫」排序
+        #   官方 SDK 用 strcasecmp；Python 預設 sorted 區分大小寫，遇到 CVS* / Custom* 這類
+        #   大小寫交錯的欄位名稱順序就會不同
+        sorted_params = sorted(
+            ((k, v) for k, v in params.items() if k != 'CheckMacValue'),
+            key=lambda kv: kv[0].lower(),
+        )
 
         # 步驟 2: 組合查詢字串
         param_str = '&'.join(f'{k}={v}' for k, v in sorted_params)
@@ -146,8 +170,8 @@ class ECPayPaymentService:
         # 步驟 3: 加入 HashKey 和 HashIV
         raw = f'HashKey={self.hash_key}&{param_str}&HashIV={self.hash_iv}'
 
-        # 步驟 4: URL Encode 並轉小寫
-        encoded = urllib.parse.quote_plus(raw).lower()
+        # 步驟 4: 綠界規則的 URL Encode（含轉小寫與 .NET 字元還原）
+        encoded = ecpay_url_encode(raw)
 
         # 步驟 5: SHA256 雜湊並轉大寫
         return hashlib.sha256(encoded.encode('utf-8')).hexdigest().upper()
@@ -162,12 +186,14 @@ class ECPayPaymentService:
         Returns:
             bool: 驗證是否通過
         """
-        received_mac = params.pop('CheckMacValue', None)
+        # 不修改呼叫端傳入的 dict（原本用 pop 會把 CheckMacValue 從請求資料中刪掉）
+        received_mac = params.get('CheckMacValue', '')
         if not received_mac:
             return False
 
         calculated_mac = self.generate_check_mac_value(params)
-        return calculated_mac == received_mac.upper()
+        # 常數時間比較，避免以回應時間差逐字元猜出正確雜湊
+        return hmac.compare_digest(calculated_mac, received_mac.upper())
 
     def create_order(
         self,

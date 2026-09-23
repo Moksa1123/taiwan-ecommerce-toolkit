@@ -47,6 +47,14 @@ jobs:
       - name: 搜尋引擎回歸測試
         run: python taiwan-invoice/scripts/test_search.py
 
+      # 範例程式曾只用 py_compile 檢查，連 import 失敗、加密格式與官方不符都抓不到。
+      # 這裡實際載入每支範例，並以官方外掛 / SDK / 規格書產生的標準答案逐位元組比對。
+      - name: 安裝範例程式相依套件
+        run: pip install -r requirements-dev.txt
+
+      - name: 範例程式差分驗證（對照官方實作）
+        run: python scripts/verify-examples.py
+
   build:
     runs-on: ubuntu-latest
     strategy:

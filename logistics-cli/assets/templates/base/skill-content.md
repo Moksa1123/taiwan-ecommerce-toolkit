@@ -1,5 +1,7 @@
 # {{TITLE}}
 
+> {{DESCRIPTION}}
+
 **Comprehensive guide for Taiwan Logistics integration (ECPay, NewebPay, PAYUNi, SmilePay, PChomePay, PayNow + HCT direct API)**
 
 ---
@@ -18,7 +20,7 @@ This skill covers **6 logistics aggregators** + **1 direct carrier API**:
 | **PayNow 立吉富** | aggregator (11 條產品線, 3DES/ECB/Zero-Padding) | `references/paynow-logistics-api.md` |
 | **HCT 新竹物流** | **直連 carrier API** | `references/hct-logistics-api.md` |
 
-> {{DESCRIPTION}}
+> 註：選用 `HCT 直連 API` 適合大量出貨企業；一般電商透過 aggregator (`LogisticsType=HCT`) 走 HCT 配送即可，不需自行串接。
 
 ---
 

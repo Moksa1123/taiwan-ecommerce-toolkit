@@ -1,0 +1,231 @@
+{
+    "provider": "ecpay",
+    "source": {
+        "kind": "official-sdk",
+        "name": "ecpay/sdk 1.3.2408190（MIT），由官方外掛 ecpay-ecommerce-for-woocommerce 1.1.2603230 內附",
+        "classes": [
+            "Ecpay\\Sdk\\Services\\CheckMacValueService",
+            "Ecpay\\Sdk\\Services\\AesService"
+        ],
+        "cross_checked": "SDK 與綠界官方 ecpay-api-skill test-vectors 比對：CheckMacValue 7/7、AES-CBC 6/6 一致"
+    },
+    "generator": "php 8.2.33 / OpenSSL 3.5.6 7 Apr 2026",
+    "payment_checkmacvalue_sha256": {
+        "hash_key": "pwFHCqoQZGmho4w6",
+        "hash_iv": "EkRm7iFT261dpevs",
+        "method": "sha256",
+        "cases": [
+            {
+                "name": "aio_basic",
+                "params": {
+                    "MerchantID": "3002607",
+                    "MerchantTradeNo": "ORD20260923001",
+                    "MerchantTradeDate": "2026/09/23 12:00:00",
+                    "PaymentType": "aio",
+                    "TotalAmount": "1280",
+                    "TradeDesc": "測試交易",
+                    "ItemName": "測試商品",
+                    "ReturnURL": "https://shop.example.com/ecpay/notify",
+                    "ChoosePayment": "ALL",
+                    "EncryptType": "1"
+                },
+                "expected": "D5499ADD6F1D331B09D196D56C672A3A6E0D4FE31C1B19E10378B67AD1249DC8"
+            },
+            {
+                "name": "dotnet_chars",
+                "params": {
+                    "MerchantID": "3002607",
+                    "MerchantTradeNo": "ORD20260923001",
+                    "MerchantTradeDate": "2026/09/23 12:00:00",
+                    "PaymentType": "aio",
+                    "TotalAmount": "1280",
+                    "TradeDesc": "a-b_c.d",
+                    "ItemName": "商品(A)*2 限量!#特價",
+                    "ReturnURL": "https://shop.example.com/ecpay/notify",
+                    "ChoosePayment": "ALL",
+                    "EncryptType": "1"
+                },
+                "expected": "4C4284BE8276B608A981AB5FF04CD981A9D5C8B54C0F151BC80F012CAA90AAF3"
+            },
+            {
+                "name": "tilde_and_quote",
+                "params": {
+                    "MerchantID": "3002607",
+                    "MerchantTradeNo": "ORD20260923001",
+                    "MerchantTradeDate": "2026/09/23 12:00:00",
+                    "PaymentType": "aio",
+                    "TotalAmount": "1280",
+                    "TradeDesc": "a~b's",
+                    "ItemName": "x~y",
+                    "ReturnURL": "https://shop.example.com/ecpay/notify",
+                    "ChoosePayment": "ALL",
+                    "EncryptType": "1"
+                },
+                "expected": "4239E1F3ED27175391C41FEE1129D47066B71C4EC8B7D50AFB77485DD10AF393"
+            },
+            {
+                "name": "spaces",
+                "params": {
+                    "MerchantID": "3002607",
+                    "MerchantTradeNo": "ORD20260923001",
+                    "MerchantTradeDate": "2026/09/23 12:00:00",
+                    "PaymentType": "aio",
+                    "TotalAmount": "1280",
+                    "TradeDesc": "測試交易",
+                    "ItemName": "Apple iPhone 17 Pro 256 GB",
+                    "ReturnURL": "https://shop.example.com/ecpay/notify",
+                    "ChoosePayment": "ALL",
+                    "EncryptType": "1"
+                },
+                "expected": "C3B7DE668A5E9F4DD6DCB001793A60915095CCD49091488CD0595C52FA7C7858"
+            },
+            {
+                "name": "reserved_in_value",
+                "params": {
+                    "MerchantID": "3002607",
+                    "MerchantTradeNo": "ORD20260923001",
+                    "MerchantTradeDate": "2026/09/23 12:00:00",
+                    "PaymentType": "aio",
+                    "TotalAmount": "1280",
+                    "TradeDesc": "測試交易",
+                    "ItemName": "測試商品",
+                    "ReturnURL": "https://shop.example.com/ecpay/notify",
+                    "ChoosePayment": "ALL",
+                    "EncryptType": "1",
+                    "ClientBackURL": "https://shop.example.com/thanks?id=1&from=ecpay"
+                },
+                "expected": "6456FD6B83EBAE00D96F1FC05A334ACA616F094F13D92E23E6F4B12D3AD24943"
+            },
+            {
+                "name": "case_insensitive_sort",
+                "params": {
+                    "MerchantID": "3002607",
+                    "MerchantTradeNo": "ORD20260923001",
+                    "MerchantTradeDate": "2026/09/23 12:00:00",
+                    "PaymentType": "aio",
+                    "TotalAmount": "1280",
+                    "TradeDesc": "測試交易",
+                    "ItemName": "測試商品",
+                    "ReturnURL": "https://shop.example.com/ecpay/notify",
+                    "ChoosePayment": "ALL",
+                    "EncryptType": "1",
+                    "CustomField1": "a",
+                    "CVSStoreID": "991182",
+                    "TWQRCode": "x"
+                },
+                "expected": "E12DD21DA25AE354E66E5960D77098E475DABF1AB155573004F2BF03E5ABAFED"
+            },
+            {
+                "name": "callback",
+                "params": {
+                    "MerchantID": "3002607",
+                    "MerchantTradeNo": "ORD20260923001",
+                    "RtnCode": "1",
+                    "RtnMsg": "交易成功",
+                    "TradeNo": "2609231200001234",
+                    "TradeAmt": "1280",
+                    "PaymentDate": "2026/09/23 12:01:02",
+                    "PaymentType": "Credit_CreditCard",
+                    "PaymentTypeChargeFee": "28",
+                    "TradeDate": "2026/09/23 12:00:00",
+                    "SimulatePaid": "0",
+                    "CustomField1": "",
+                    "StoreID": ""
+                },
+                "expected": "FA89FD35685EC843E256DC4D5440FC09EE819771848502D0EEC4AD60C2C2078B"
+            }
+        ]
+    },
+    "logistics_checkmacvalue_md5": {
+        "hash_key": "5294y06JbISpM5x9",
+        "hash_iv": "v77hoKGq4kWxNNIS",
+        "method": "md5",
+        "cases": [
+            {
+                "name": "create_c2c",
+                "params": {
+                    "MerchantID": "2000132",
+                    "MerchantTradeNo": "LGS20260923001",
+                    "MerchantTradeDate": "2026/09/23 12:00:00",
+                    "LogisticsType": "CVS",
+                    "LogisticsSubType": "UNIMARTC2C",
+                    "GoodsAmount": "100",
+                    "GoodsName": "測試商品(A)",
+                    "SenderName": "測試商家",
+                    "SenderCellPhone": "0912345678",
+                    "ReceiverName": "王小明",
+                    "ReceiverCellPhone": "0987654321",
+                    "ReceiverStoreID": "991182",
+                    "ServerReplyURL": "https://shop.example.com/logistics/notify",
+                    "IsCollection": "N"
+                },
+                "expected": "7362212EB7E6F68F81954D98AFF18CC2"
+            },
+            {
+                "name": "status_callback",
+                "params": {
+                    "MerchantID": "2000132",
+                    "MerchantTradeNo": "LGS20260923001",
+                    "RtnCode": "300",
+                    "RtnMsg": "訂單處理中(已收到訂單資料)",
+                    "AllPayLogisticsID": "1234567",
+                    "LogisticsType": "CVS",
+                    "LogisticsSubType": "UNIMARTC2C",
+                    "GoodsAmount": "100",
+                    "UpdateStatusDate": "2026/09/23 12:00:00",
+                    "ReceiverName": "王小明",
+                    "ReceiverCellPhone": "0987654321",
+                    "ReceiverEmail": "",
+                    "ReceiverAddress": "",
+                    "CVSPaymentNo": "F0012345",
+                    "CVSValidationNo": "1234",
+                    "BookingNote": "",
+                    "CollectionAmount": "0"
+                },
+                "expected": "E2C85015BFDAF1A7AD35895C0E336EAC"
+            }
+        ]
+    },
+    "invoice_aes": {
+        "hash_key": "ejCk326UnaZWKisg",
+        "hash_iv": "q9jcZX8Ib9LM8wYk",
+        "issue_data": {
+            "MerchantID": "2000132",
+            "RelateNumber": "INV20260923001",
+            "CustomerIdentifier": "",
+            "CustomerName": "王小明",
+            "CustomerAddr": "台北市信義區 信義路五段7號",
+            "CustomerPhone": "",
+            "CustomerEmail": "buyer+tw@example.com",
+            "Print": "0",
+            "Donation": "0",
+            "LoveCode": "",
+            "CarrierType": "3",
+            "CarrierNum": "/ABC+123",
+            "TaxType": "1",
+            "SalesAmount": 1050,
+            "InvoiceRemark": "備註 (含括號) ~ 波浪",
+            "InvType": "07",
+            "vat": "1",
+            "Items": [
+                {
+                    "ItemName": "測試商品A",
+                    "ItemCount": 1,
+                    "ItemWord": "個",
+                    "ItemPrice": 1050,
+                    "ItemTaxType": "1",
+                    "ItemAmount": 1050
+                }
+            ]
+        },
+        "issue_encrypted": "XeEOdHpTRvxKEqs/JD9RSd16s7VtpyWVCN6AV44pKTV7XoPByaStato0iqOI39rIoBKo9Ho4OJ/Jd94wCyB2m2sPUcpynG486xOAtDWqKur30N3qyWNU3aZNph8ixIRYT/3Xh6nJsWK90xNzM99AVtyD8xysBn0GPDhpGCX+O6XVZfutqGTcsLqveKimbujJ8VA+t3zCpA4kxdLz9G+kLKakAx4tnGc7iVQVIroQJKHQpQQ3BHn/t1d0sQNh0hGAAOcYdk3XyaR1j+z1XKqLOworcGy4audNvubKqM294Unkk9Q/DnLyBwZzFTYsYvHWx90M3YFHWBMv8XwB8vwDZWvq66E1Gw8ZJYk7cD3hXAjHZ8e124oJAr6oloyIQMMH/tA4c0KmtjT9cHNhUK5ZhzeF3hbFqPJZYWNmFAJs1Wo4EqZwixUhEiTDtumlH5QC0CxiseeKAcgz7OXKtTkrn7Cqjr+Fh6lQf8MQOxoDbuMt1CIXZUROTt8CaubTW76YMgpWiKV+0vHGFe3GD61fME+BFCqsLT7TJkf1SypM2nAEaUyehq/jD4SlhySduflB0O+djSV0wGMU4Og7uOwSHCNCbJQ6KpJ7L9dWQ1otgAdHOZ99EWjoJ+5Ipb7AqdVdwnfRt7B9VGRqlgqDsm9LqcbqWKmi6UIqIpMYrNKpGlfJ1BM4lKHne3SpTR/PbOvT4UIEaR1qTuUljIsxjd9GQLptXyBw2o10fzmtfpPAXxIJBf0SSkp536d1Qa7Q1AxzP5tDdqid/vPVWVSKx5cSGXANpfV3G3jUPf9KsWYzdFbA+PPpqYkinJc9+ba7uCjEsWvsyA7Vh5hf7xqTIPLw3//SJQxudP9xGfSW2NJx7akzi5ZZ/TZUUWVAq4Rf0Af0CnJd+Eyg042lczZc6/eRKyrjlLyI+Lr5GkyyAlT9wytLdEuI/5WgVpJTxzy15Kz7Fpq6jZucLU4mGh6YGv4JfvUEIR7MZ2x3ZAOXFC/SBjx3CnmYIP4Azu418LiVWT1unFZb/gNdwGnageSjloELWVBiizKqoExFE6TTpvfxnLwSpgX3FgnnzumNekW6btbDcmbtjYhITbEgLTXRG+27vQBdQnQYDLSh61z/WIrXUvhhHDQxC4cgfeVe52PGChxKwsYvTAOpEF30CN1xoSmtQSpby/N9y64SH/CAGTu8CXfeZBDzh6/TpPHfK1GfP3p/3aHWBy+3MLg4FWeOhoO6sQ8/fsx1w4PMHR5mhSvDqND+trYtIxVAxp/y3pPtJSja",
+        "response_data": {
+            "RtnCode": 1,
+            "RtnMsg": "開立 發票 成功",
+            "InvoiceNo": "AB12345678",
+            "InvoiceDate": "2026-09-23 12:00:00",
+            "RandomNumber": "1234"
+        },
+        "response_encrypted": "vvdAMLz9ExDnnpaFkuViYPSatH9S6psFksGPOsEt6BVsw/zA3hnAkFD/UeL+MukjMCUPB8LUGBDd24hrxOcgp6YAsD2rWt7PQ05xTPkSHN5Xty9hcWOsdnJpw4Pud1rssymKaxEzbrXRq9yxp3tasbxkoxydfMJzHzyiDQ+77MsZ1/NkaSGMmdLI8EeoTNlWfoGWSgq/8jJEtQ+o1YbW8YfcFROciij+VPwxSrospDMpxsIIzF8zD1pVH+xd2XFr5QHR0t2Mo2H9zE76QUm+YgjvR5zFsUaasg7y8CyhJ2g="
+    }
+}

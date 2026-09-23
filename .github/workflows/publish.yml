@@ -101,6 +101,12 @@ jobs:
       - name: 搜尋引擎回歸測試
         run: python3 taiwan-invoice/scripts/test_search.py
 
+      - name: 範例程式差分驗證（對照官方實作）
+        run: |
+          set -euo pipefail
+          python3 -m pip install -r requirements-dev.txt
+          python3 scripts/verify-examples.py
+
       - name: 安裝相依套件
         working-directory: ${{ steps.target.outputs.dir }}
         run: npm ci

@@ -29,6 +29,7 @@ URL 差異:
 """
 
 import hashlib
+import hmac
 import json
 import time
 import urllib.parse
@@ -38,7 +39,7 @@ from typing import Any, Dict, Literal, Optional
 
 try:
     from Crypto.Cipher import AES
-    from Crypto.Util.Padding import pad, unpad
+    from Crypto.Util.Padding import pad
     HAS_CRYPTO = True
 except ImportError:
     HAS_CRYPTO = False
@@ -54,6 +55,53 @@ except ImportError:
 # Dataclasses
 # ----------------------------------------------------------------------------
 
+
+
+def strip_padding(data: bytes) -> bytes:
+    """
+    移除 PKCS#7 padding，容許長度 1–32
+
+    藍新官方 WooCommerce 外掛（newebpay-payment encProcess.php）加密時以 32 bytes
+    為區塊補齊（addpadding 的 blocksize=32），因此 padding 值可能是 17–32；
+    Crypto.Util.Padding.unpad(data, 16) 遇到這種密文會直接拋錯。
+    官方解密端的 strippadding() 以最後一個 byte 為長度移除，此處行為一致，
+    另外檢查尾端每個 byte 都等於 padding 長度，金鑰錯誤時才能及早發現。
+    """
+    if not data:
+        raise ValueError('解密結果為空')
+    pad_len = data[-1]
+    if not 1 <= pad_len <= 32 or pad_len > len(data) or data[-pad_len:] != bytes([pad_len]) * pad_len:
+        raise ValueError('padding 格式錯誤（HashKey / HashIV 可能不正確）')
+    return data[:-pad_len]
+
+
+def parse_trade_info_plaintext(text: str) -> Dict[str, Any]:
+    """
+    解析解密後的 TradeInfo 明文
+
+    明文格式取決於送出時的 RespondType：
+    - JSON   → {"Status": ..., "Message": ..., "Result": {...}}
+    - String → Status=...&Message=...&MerchantID=...（欄位攤平，無 Result）
+
+    與藍新官方外掛 create_aes_decrypt() 相同，先試 JSON 再退回 query string。
+    若一律用 parse_qs，JSON 明文會被解析成空 dict（沒有 "=" 的片段會被丟棄），
+    導致所有回傳都被誤判為失敗。
+    """
+    text = text.strip()
+    if text.startswith('{'):
+        return json.loads(text)
+    params = urllib.parse.parse_qs(text, keep_blank_values=True)
+    return {k: v[0] if len(v) == 1 else v for k, v in params.items()}
+
+
+def extract_result(decrypted: Dict[str, Any]) -> Dict[str, Any]:
+    """取出交易明細：JSON 模式在 Result 內，String 模式則是攤平在最外層"""
+    result = decrypted.get('Result')
+    if isinstance(result, dict):
+        return result
+    if isinstance(result, str) and result.strip().startswith('{'):
+        return json.loads(result)
+    return decrypted
 
 @dataclass
 class EzPayMPGOrder:
@@ -243,9 +291,8 @@ class EzPayPaymentService:
         try:
             encrypted_bytes = bytes.fromhex(encrypted_data)
             cipher = AES.new(self.hash_key, AES.MODE_CBC, self.hash_iv)
-            decrypted = unpad(cipher.decrypt(encrypted_bytes), AES.block_size)
-            params = urllib.parse.parse_qs(decrypted.decode('utf-8'))
-            return {k: v[0] if len(v) == 1 else v for k, v in params.items()}
+            decrypted = strip_padding(cipher.decrypt(encrypted_bytes))
+            return parse_trade_info_plaintext(decrypted.decode('utf-8'))
         except Exception as exc:
             raise ValueError(f'TradeInfo 解密失敗: {exc}')
 
@@ -259,7 +306,7 @@ class EzPayPaymentService:
         return hashlib.sha256(raw.encode('utf-8')).hexdigest().upper()
 
     def verify_trade_sha(self, trade_info: str, trade_sha: str) -> bool:
-        return self.generate_trade_sha(trade_info) == trade_sha.upper()
+        return hmac.compare_digest(self.generate_trade_sha(trade_info), trade_sha.upper())
 
     def generate_check_code(
         self,
@@ -393,11 +440,8 @@ class EzPayPaymentService:
             raise ValueError('TradeSha 驗證失敗')
 
         decrypted = self.decrypt_trade_info(trade_info)
-        result_field = decrypted.get('Result', '{}')
-        try:
-            result = json.loads(result_field) if isinstance(result_field, str) else result_field
-        except json.JSONDecodeError:
-            result = {}
+        # JSON 模式在 Result 內；String 模式攤平在最外層
+        result = extract_result(decrypted)
 
         # 驗 CheckCode (僅成功訂單才會帶)
         check_code_valid = False
@@ -409,7 +453,7 @@ class EzPayPaymentService:
                 merchant_order_no=result.get('MerchantOrderNo', ''),
                 trade_no=result.get('TradeNo', ''),
             )
-            check_code_valid = expected == received_check_code.upper()
+            check_code_valid = hmac.compare_digest(expected, received_check_code.upper())
 
         return EzPayMPGCallback(
             status=decrypted.get('Status', ''),
@@ -434,6 +478,13 @@ class EzPayPaymentService:
     # Order query  POST /API/QueryTradeInfo
     # ------------------------------------------------------------------
 
+    def generate_check_value(self, amt, merchant_order_no: str) -> str:
+        """CheckValue = SHA256("IV=xxx&Amt=...&MerchantID=...&MerchantOrderNo=...&Key=xxx").upper()"""
+        params = {'Amt': amt, 'MerchantID': self.merchant_id, 'MerchantOrderNo': merchant_order_no}
+        query = urllib.parse.urlencode(sorted(params.items()))
+        raw = f'IV={self.hash_iv.decode("utf-8")}&{query}&Key={self.hash_key.decode("utf-8")}'
+        return hashlib.sha256(raw.encode('utf-8')).hexdigest().upper()
+
     def query_order(self, merchant_order_no: str, amt: int) -> EzPayQueryResult:
         """
         訂單查詢 (走 CheckValue 而非 TradeInfo)
@@ -443,16 +494,7 @@ class EzPayPaymentService:
         if not HAS_REQUESTS:
             raise ImportError('需要安裝 requests: pip install requests')
 
-        param_str = (
-            f'Amt={amt}&MerchantID={self.merchant_id}'
-            f'&MerchantOrderNo={merchant_order_no}'
-        )
-        raw = (
-            f'IV={self.hash_iv.decode("utf-8")}'
-            f'&{param_str}'
-            f'&Key={self.hash_key.decode("utf-8")}'
-        )
-        check_value = hashlib.sha256(raw.encode('utf-8')).hexdigest().upper()
+        check_value = self.generate_check_value(amt, merchant_order_no)
 
         body = {
             'MerchantID': self.merchant_id,

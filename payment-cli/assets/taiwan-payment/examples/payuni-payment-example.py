@@ -8,7 +8,9 @@ PAYUNi 統一金流 Python 完整範例
 API 文件: https://www.payuni.com.tw
 """
 
+import base64
 import hashlib
+import hmac
 import urllib.parse
 import time
 from datetime import datetime
@@ -68,8 +70,8 @@ class PaymentCallbackData:
     trade_status: str
     pay_type: str
     pay_date: str
-    settle_date: Optional[str] = None
     checksum: str
+    settle_date: Optional[str] = None
     raw: Dict = field(default_factory=dict)
 
 
@@ -132,68 +134,67 @@ class PAYUNiPaymentService:
         """
         加密資料 (AES-256-GCM)
 
+        格式與 PAYUNi 官方 WooCommerce 外掛 class-payuni.php 的 Encrypt() 逐位元組相同：
+
+            hex( base64(密文) + ":::" + base64(tag) )
+
+        注意最外層還有一次 hex —— 只做到 base64 + ":::" 的版本 PAYUNi 會拒絕。
+        官方以 openssl_encrypt(..., options=0) 取得 base64 密文，再與 base64 tag
+        串接後整段 bin2hex。
+
         Args:
             data: 交易資料字典
 
         Returns:
-            str: AES-GCM 加密後的 hex 字串 (base64(密文) + ":::" + base64(tag))
+            str: EncryptInfo（小寫 hex 字串）
 
         Example:
             >>> data = {'MerID': 'MS123', 'TradeAmt': 100}
             >>> encrypted = service.encrypt_data(data)
-            >>> len(encrypted) > 0
+            >>> ':::' in bytes.fromhex(encrypted).decode()
             True
         """
-        import base64
-        # 步驟 1: 轉換為查詢字串
+        # 步驟 1: 轉換為查詢字串（對應 PHP http_build_query）
         query_string = urllib.parse.urlencode(data)
 
-        # 步驟 2: AES-256-GCM 加密
+        # 步驟 2: AES-256-GCM 加密，IV 即 nonce（16 bytes，與官方一致）
         cipher = AES.new(self.hash_key, AES.MODE_GCM, nonce=self.hash_iv)
         encrypted, tag = cipher.encrypt_and_digest(query_string.encode('utf-8'))
 
-        # 步驟 3: 分別 base64 編碼，用 ":::" 分隔
-        encrypted_b64 = base64.b64encode(encrypted).decode('utf-8')
-        tag_b64 = base64.b64encode(tag).decode('utf-8')
-        return encrypted_b64 + ':::' + tag_b64
+        # 步驟 3: base64(密文) + ":::" + base64(tag)，整段再轉 hex
+        joined = base64.b64encode(encrypted) + b':::' + base64.b64encode(tag)
+        return joined.hex()
 
     def decrypt_data(self, encrypted_data: str) -> Dict[str, any]:
         """
-        解密資料 (AES-256-GCM)
+        解密資料 (AES-256-GCM)，對應官方外掛的 Decrypt()
 
         Args:
-            encrypted_data: AES-GCM 加密的字串 (base64(密文) + ":::" + base64(tag))
+            encrypted_data: EncryptInfo（hex 字串）
 
         Returns:
             Dict: 解密後的資料字典
 
         Raises:
-            ValueError: 解密失敗或驗證失敗
+            ValueError: 格式錯誤，或 tag 驗證失敗（資料遭竄改 / 金鑰錯誤）
         """
         try:
-            import base64
-            # 步驟 1: 分離 base64 編碼的密文和 tag
-            parts = encrypted_data.split(':::')
-            if len(parts) != 2:
-                raise ValueError('格式錯誤: 缺少 ":::" 分隔符')
+            # 步驟 1: hex 解碼後以 ":::" 分離 base64 密文與 base64 tag
+            raw = bytes.fromhex(encrypted_data.strip())
+            if b':::' not in raw:
+                raise ValueError('格式錯誤: hex 解碼後缺少 ":::" 分隔符')
+            encrypted_b64, tag_b64 = raw.split(b':::', 1)
 
-            encrypted_b64, tag_b64 = parts
-
-            # 步驟 2: Base64 解碼
             encrypted = base64.b64decode(encrypted_b64)
             tag = base64.b64decode(tag_b64)
 
-            # 步驟 3: AES-256-GCM 解密並驗證
+            # 步驟 2: AES-256-GCM 解密並驗證 tag
             decipher = AES.new(self.hash_key, AES.MODE_GCM, nonce=self.hash_iv)
             decrypted = decipher.decrypt_and_verify(encrypted, tag)
 
-            # 步驟 4: 解析查詢字串
-            query_string = decrypted.decode('utf-8')
-            params = urllib.parse.parse_qs(query_string)
-
-            # 步驟 5: 轉換為單值字典
-            result = {k: v[0] if len(v) == 1 else v for k, v in params.items()}
-            return result
+            # 步驟 3: 解析查詢字串（對應 PHP parse_str）
+            params = urllib.parse.parse_qs(decrypted.decode('utf-8'), keep_blank_values=True)
+            return {k: v[0] if len(v) == 1 else v for k, v in params.items()}
         except Exception as e:
             raise ValueError(f'解密失敗: {str(e)}')
 
@@ -230,7 +231,8 @@ class PAYUNiPaymentService:
             bool: 驗證是否通過
         """
         calculated_checksum = self.generate_checksum(encrypt_info)
-        return calculated_checksum == checksum.upper()
+        # 常數時間比較，避免以回應時間差逐字元猜出正確雜湊
+        return hmac.compare_digest(calculated_checksum, checksum.upper())
 
     def create_order(
         self,
