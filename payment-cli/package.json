@@ -1,6 +1,6 @@
 {
   "name": "taiwan-payment-skill",
-  "version": "1.5.6",
+  "version": "1.5.7",
   "description": "AI-powered Taiwan Payment Gateway toolkit. Supports 14 providers: ECPay, NewebPay, PAYUNi, SmilePay, PChomePay, ezPay, PayNow, Shopline Payments, LINE Pay v4, TapPay, O'Pay, JKOPAY, SunPay and GoMyPay.",
   "keywords": [
     "taiwan",
