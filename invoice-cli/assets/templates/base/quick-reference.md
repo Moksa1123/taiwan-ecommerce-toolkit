@@ -45,7 +45,7 @@ Reference these guidelines when:
 
 ### 4. Print Handling (HIGH)
 
-- `ecpay-form` - ECPay: `POST /Invoice/Print` 表單跳轉開啟列印頁（`target="_blank"`）
+- `ecpay-print` - ECPay: `/B2CInvoice/InvoicePrint`（AES JSON）回傳 `InvoiceHtml` 網址，1 小時內有效；B2B 用 `/B2BInvoice/InvoicePrint`
 - `smilepay-page` - SmilePay: 以 POST／GET 開啟列印頁（網頁模式或 EPSON IP 列印）
 - `amego-pdf` - Amego: 回傳 `file_url`（PDF）
 

@@ -4,7 +4,7 @@
 > 教學手冊站: https://doc.esafe.com.tw/
 > 電子發票平台: https://inv.sunpay.com.tw/
 > 文件公開程度：public（手冊免登入公開下載）
-> Source: 金流技術串接手冊 v1.1.0（2026-05-25，51 頁），原始 PDF 存於 `_studies/sunpay/`
+> Source: 金流技術串接手冊 v1.1.1（2026-08-19，51 頁）；文中頁碼依 v1.1.0，v1.1.1 因版本異動表多一行，自 §4.2 起頁碼 +1
 
 ## 0. 為什麼收錄——含一個競品訊號
 
@@ -14,7 +14,7 @@
 
 | 項目 | 版本 | 更新日 |
 |---|---|---|
-| 金流 AI 串接指南（Claude Code Skill） | v1.1.0 | 2026-07-28 |
+| 金流 AI 串接指南（Claude Code Skill） | v1.1.1 | 2026-08 |
 | 電子發票 AI 串接指南（Claude Code Skill） | v2.3 | 2026-07-28 |
 
 加上綠界官方已釋出 `ECPay/ecpay-api-skill`（見 `_studies/ecpay-skill-reference/`），這是第二家自己出 skill 的供應商。
@@ -33,14 +33,16 @@
 | 現金 | 網路 ATM、台灣PAY |
 | 超商代收付 | 代碼付款、條碼付款 |
 
-### 物流 ⭐
+### 物流
 
-| 服務 |
-|---|
-| 超商便利送 |
-| 宅配通 |
+兩個官方頁面列的項目不同（2026-09-24 查核）：
 
-> **這一項值得注意**：紅陽同時提供物流，且含**宅配通**——宅配通本身沒有公開 API（見 [../../taiwan-logistics/references/carrier-direct-access.md](../../taiwan-logistics/references/carrier-direct-access.md)），紅陽是目前盤點到少數可經由聚合商取得宅配通的路徑之一。
+| 來源 | 物流項目 |
+|---|---|
+| 官網物流服務頁 https://www.sunpay.com.tw/logistics | 超商大宗貨運（全家大宗）、超商物流（7-11、全家、萊爾富店到店） |
+| 教學手冊站 https://doc.esafe.com.tw/ | 超商便利送、宅配通 |
+
+金流 API 只提供**超商取貨付款**（`card_type=09`，§5），沒有宅配或宅配通的 API 規格。
 
 ### 電子發票
 
@@ -52,14 +54,14 @@
 
 ## 2. 技術文件
 
-### 直連下載網址（2026-08-08 自開發者頁擷取）
+### 直連下載網址（2026-09-24 自開發者頁擷取）
 
 > ✅ **上一輪標記的 404 已解決**：紅陽把技術文件從 `www.sunpay.com.tw/wp-content/uploads/…` 搬到 **Google Cloud Storage**（`storage.googleapis.com/joinchill-image/sunpay_techdoc/…`）。舊連結全數失效，以下為現行網址。
 
 | 分類 | 文件 | 版本 | 更新 | 網址 |
 |---|---|---|---|---|
-| API 金流串接 | **金流技術串接手冊** | **v1.1.0** | 2026-05-25 | `…/202607/紅陽科技金流服務-金流技術串接手冊V1.1.0.pdf` |
-| API 金流串接 | AI 串接指南（Claude Code Skill）| v1.1.0 | 2026-07-28 | `…/202607/sunpay-payment-skill-v1.1.0-v1.zip` |
+| API 金流串接 | **金流技術串接手冊** | **v1.1.1** | 2026-08-19 | `…/202608/紅陽科技金流服務-金流技術串接手冊V1.1.1.pdf` |
+| API 金流串接 | AI 串接指南（Claude Code Skill）| v1.1.1 | — | `…/202608/sunpay-payment-skill-v1.1.1-v1.zip` |
 | API 金流串接 | 範例程式碼 PHP | — | — | `…/202603/金流範例程式SampleCode_PHP.zip` |
 | API 金流串接 | 範例程式碼 JAVA | — | — | `…/202603/金流範例程式SampleCode_JAVA.zip` |
 | 電子發票 | **電子發票技術串接手冊** | **v2.3** | — | `…/202603/紅陽科技電子發票技術串接手冊V2.3.pdf` |
@@ -77,7 +79,7 @@
 | 金流測試環境 | https://testmerchant.sunpay.com.tw/#/formTabs |
 | 電子發票測試帳號 | https://testinv.sunpay.com.tw/sign-up |
 
-> ✅ **版本號疑問已釐清**：開發者頁現行的**金流技術串接手冊就是 v1.1.0**（2026-05-25），AI skill 恰巧同為 v1.1.0。先前看到的「v4.6（2025/10）」是**改版前舊站的檔名**，該連結已失效。以 v1.1.0 為準。
+手冊 v1.1.1（2026-08-19）相對 v1.1.0 的異動：`store_type` 移除 `3`（OK）；§4.2.3 簽名 Step 2 改寫（見 §3.2）；刪除附錄 3（各語言 URL encode 對照表）。
 
 | 其他文件 | 取得 |
 |---|---|
@@ -87,7 +89,7 @@
 
 ## 3. 加解密機制 — RSA 分段加密 + SHA256 簽章
 
-> Source: 金流技術串接手冊 v1.1.0 §4.2
+> Source: 金流技術串接手冊 v1.1.1 §4.2；官方範例程式 PHP／JAVA
 
 ⚠️ **紅陽是本 skill 收錄的 14 家中唯一使用 RSA 的**。其他家不是 SHA256 檢查碼（ECPay）就是 AES 對稱加密（NewebPay / PAYUNi / ezPay）。**既有的加解密函式一律不能沿用。**
 
@@ -142,7 +144,15 @@ rsamsg  →  Base64 decode（URL-safe：- _）  →  以「公鑰」分段解密
 > ⚠️ **ASCII 排序是強制的**，手冊在兩處重複警告「請務必將 head 與 body 參數進行 ASCII 排序，以免加密失敗」。
 > ⚠️ SHA2 密鑰是**直接串接在 URLEncode 後字串的尾端**，不是 ECPay 那種 `HashKey=…&…&HashIV=…` 前後包夾。
 
-`check_value` 的 URL encode **必須符合 Java `URLEncoder`**（手冊附錄 3）：空白編成 `+`、`*` 不編碼、`~` 編成 `%7E`。PHP `urlencode`、Python `quote`、JS `encodeURIComponent` 都不同，值含空白、`*`、`~` 時簽章會錯。附錄 3 有六種語言的對照表。
+> ⚠️ **手冊 v1.1.1 的 Step 2 文字與範例矛盾**：文字改成「JSON 字串化後直接串上 SHA2 密鑰」（不做 URLEncode），
+> 但同頁範例的 `check_value`（`3df3acb3…cad26`）只有**先 URLEncode** 才算得出來；不做 URLEncode 會得到 `5ec973f1…e6ae`。
+> 官方範例程式（`sunpayWeb.php` 的 `getCheck_value()`、JAVA `Payment` 的 `ShaUtil.encodeSHA256(URLEncoder.encode(...) + SHA256)`）
+> 與官方 skill v1.1.1 也都是先 URLEncode。以上述三者為準。
+
+**URL encode 規則**：手冊 v1.1.0 附錄 3 要求符合 Java `URLEncoder`（空白 `+`、`*` 不編碼、`~` 編為 `%7E`），v1.1.1 已刪除附錄 3。
+官方 PHP 範例用 `urlencode`（`*` 編為 `%2A`），JAVA 範例用 `URLEncoder`；兩者都把**同一個編碼後字串**同時拿去做 RSA 加密與 `check_value`。
+所以關鍵是 `rsamsg` 的明文與 `check_value` 用同一個字串；本 skill 範例採 Java `URLEncoder` 規則。
+Python `quote`（空白編為 `%20`）與 JS `encodeURIComponent` 不屬於官方範例的任一種，不要直接用。
 
 ## 4. API 端點
 
@@ -229,7 +239,7 @@ rsamsg  →  Base64 decode（URL-safe：- _）  →  以「公鑰」分段解密
 | `sdt` | 消費者電話 | 20 | | 純數字如 `0911123123`；搭配超商取貨時到店會發簡訊 |
 | `note1` / `note2` | 備註 | 400 | | 交易完成時原樣回傳；不可有 `*'<>[]"` |
 | `lgs_flag` | 物流啟用 | 1 | 條件 | `0`/不帶=不啟用、`1`=啟用。**`card_type=09` 時必須為 1**；**訂單金額 > 2 萬元無法使用物流** |
-| `store_type` | 超商類型 | 1 | 條件 | `0`/不帶=四大超商、`1`=7-11、`2`=全家、`3`=OK、`4`=萊爾富 |
+| `store_type` | 超商類型 | 1 | 條件 | `0`/不帶=全部、`1`=7-11、`2`=全家、`4`=萊爾富（手冊 v1.1.1 移除 `3` OK）|
 | `buyer_cid` | 買方統編 | 8 | | 隨交易開發票用 |
 | `carrier_type` | 載具類型 | 1 | | `1` 手機條碼、`2` 自然人憑證 |
 | `carrier_id` | 載具號碼 | 16 | 條件 | `carrier_type=1/2` 時必填 |
@@ -416,16 +426,18 @@ rsamsg  →  Base64 decode（URL-safe：- _）  →  以「公鑰」分段解密
 
 ## 9. 與官方 Claude Code Skill 的差異
 
-紅陽開發者專區提供「金流 AI 串接指南（Claude Code Skill）v1.1.0」（`sunpay-payment-skill-v1.1.0-v1.zip`，231 行），
-涵蓋付款導頁、回呼解簽、即時查詢、請款、超商取貨；**不含退款欄位、物流狀態通知、隨交易開立發票**。
+紅陽開發者專區提供「金流 AI 串接指南（Claude Code Skill）v1.1.1」（`sunpay-payment-skill-v1.1.1-v1.zip`）。
+相對 v1.1.0，v1.1.1 補上完整 `body` 欄位表、`pay_result=12` 也涵蓋超商代碼／條碼／虛擬帳號取號（依 `card_type` 分流）、
+查詢 `PaymentCheck` 的請求與回應欄位、退款 `CardRefund` 的欄位與回應碼。仍**不含物流狀態通知、隨交易開立發票**。
 
-| 項目 | 官方 skill | 手冊 v1.1.0 |
+| 項目 | 官方 skill v1.1.1 | 手冊 |
 |---|---|---|
-| `check_value` 的 URL encode | PHP `urlencode`（英數與 `-_.` 以外全編碼）| 附錄 3：須符合 Java `URLEncoder`（空白 `+`、`*` 不編碼、`~` 編為 `%7E`）|
-| CallBack 補發 | 30 分鐘內重送 5 次 | 30 分鐘內每 5 分鐘補發一次（§4.3.3）|
+| 對應手冊版本 | 標示依手冊 v1.1.0 校對 | 現行 v1.1.1（2026-08-19） |
+| `store_type` | 仍列 `3`=OK | v1.1.1 已移除 `3` |
+| `check_value` 的 URL encode | PHP `urlencode` 語意 | v1.1.0 附錄 3 要求 Java `URLEncoder`；v1.1.1 刪除附錄 3（見 §3.2） |
+| CallBack 補發 | 30 分鐘內重送 5 次 | 30 分鐘內每 5 分鐘補發一次（§4.3.3） |
 
-兩者至少在 `*` 上不同（Java 不編碼、PHP 編為 `%2A`；附錄 3 對 `~` 也列出不同寫法），值含這些字元時算出的 `check_value` 不同。官方 skill 附的 `check_value` 自檢向量
-（`0994ecc3…671d`）已用 `examples/sunpay-payment-example.py` 驗證相符。
+官方 skill 附的 `check_value` 自檢向量（`0994ecc3…671d`）已用 `examples/sunpay-payment-example.py` 驗證相符。
 
 ## 10. 待補
 
@@ -439,7 +451,10 @@ rsamsg  →  Base64 decode（URL-safe：- _）  →  以「公鑰」分段解密
 ## 11. 來源
 
 - 開發者專區 — https://www.sunpay.com.tw/developers/
-- 金流 AI 串接指南（Claude Code Skill）v1.1.0 — `https://storage.googleapis.com/joinchill-image/sunpay_techdoc/202607/sunpay-payment-skill-v1.1.0-v1.zip`
+- 金流技術串接手冊 v1.1.1 — `https://storage.googleapis.com/joinchill-image/sunpay_techdoc/202608/紅陽科技金流服務-金流技術串接手冊V1.1.1.pdf`
+- 金流 AI 串接指南（Claude Code Skill）v1.1.1 — `https://storage.googleapis.com/joinchill-image/sunpay_techdoc/202608/sunpay-payment-skill-v1.1.1-v1.zip`
+- 金流範例程式 PHP／JAVA — `https://storage.googleapis.com/joinchill-image/sunpay_techdoc/202603/金流範例程式SampleCode_PHP.zip`、`…/金流範例程式SampleCode_JAVA.zip`
+- 物流服務頁 — https://www.sunpay.com.tw/logistics
 - 教學手冊站 — https://doc.esafe.com.tw/
 - 操作手冊 — https://www.sunpay.com.tw/manual/
 - 金流串接頁 — https://www.sunpay.com.tw/金流串接/

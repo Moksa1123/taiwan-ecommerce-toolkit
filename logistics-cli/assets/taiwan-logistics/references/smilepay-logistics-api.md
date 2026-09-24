@@ -6,8 +6,10 @@
 > SmilePay 物流 API 與金流 API **共用同一個帳號** (`Dcvc` + `Verify_key`)。
 > 你不會再看到「物流商代號」之類的東西 — SmilePay 是「金物流整合服務商」，
 > 它在背後再串接 7-11、全家、黑貓 (TCAT) 等實際物流業者。
-> 對開發者而言，所有物流產品都透過「**SmilePay 同一組 API + 不同的 `Pay_zg` / `Pay_subzg` 編碼**」
-> 來路由。掌握這個矩陣是整合 SmilePay 物流的祖傳秘方。
+> 所有物流產品都透過同一組 API，以 `Pay_zg`／`Pay_subzg` 編碼路由。
+>
+> 來源：速買配官方 WooCommerce 外掛 **1.1.23**（`smilepay-module-for-woocommerce`）與 **4.3.3**（各功能分檔，
+> 附 ReadMe 修訂日期 2023/03/31）。兩版不一致處逐項註明。
 
 ---
 
@@ -41,10 +43,11 @@ SmilePay 物流 API 支援 **三大物流體系，共 7 種物流產品**：
 | 7-11 超商取貨 | C2C 店到店 | 個人/小商家取貨；走 7-11 交貨便系統 |
 | 7-11 超商取貨 | B2C 大宗寄倉 | 商家大量寄倉；走大智通配送中心 |
 | 全家 超商取貨 | C2C 店到店 | 個人/小商家取貨；走全家店到店系統 |
-| 全家 超商取貨 | B2C 大宗寄倉 | 商家大量寄倉 (走全家專屬配送) |
-| 黑貓宅急便 | 常溫 | TCAT 室溫宅配 |
-| 黑貓宅急便 | 冷藏 | TCAT 0~7°C 冷藏宅配 |
-| 黑貓宅急便 | 冷凍 | TCAT -18°C 冷凍宅配 |
+| 全家 超商取貨 | B2C 大宗寄倉 | 兩版外掛都未實作，見下方編碼表註記 |
+| 黑貓宅急便 | 常溫 | |
+| 黑貓宅急便 | 冷藏 | |
+| 黑貓宅急便 | 冷凍 | |
+| 7-11 退貨便 | C2B | 消費者寄回商家；4.3.3 ReadMe 標為 B2C 商家限定 |
 
 ### 整合方式
 
@@ -236,8 +239,7 @@ WC_SmilePay_TCAT_FREEZE   // 黑貓冷凍
 
 ## Pay_zg / Pay_subzg 編碼矩陣
 
-> **這是 SmilePay 物流的祖傳秘方** — 所有物流產品都從同一支 `SPPayment.asp`
-> 進入，靠 `Pay_zg`（主要分類）+ `Pay_subzg`（副分類）來路由到實際物流業者。
+所有物流產品都從 `SPPayment.asp`（或 `mtmk_utf.asp` 結帳頁）進入，靠 `Pay_zg`（主要分類）+ `Pay_subzg`（副分類）路由到實際物流業者。
 
 ### Pay_zg（物流主分類）
 
@@ -250,7 +252,8 @@ WC_SmilePay_TCAT_FREEZE   // 黑貓冷凍
 | `TCAT_COD_PAY_ZG` | `81` | 黑貓宅配 **取貨付款** |
 | `TCAT_PICKUP_PAY_ZG` | `82` | 黑貓宅配 **純取貨** |
 | `RETCAT_PAY_ZG` | `83` | 黑貓 **逆物流（退貨）** |
-| `c2b_payzg` | (商家自訂) | C2B 退貨便（由商家後台設定，常見值依超商而異） |
+| — | `57` | C2B 退貨便，運費由消費者付 |
+| — | `58` | C2B 退貨便，運費由商家付（1.1.23 設定預設值） |
 
 ### Pay_subzg（物流副分類）
 
@@ -270,15 +273,19 @@ WC_SmilePay_TCAT_FREEZE   // 黑貓冷凍
 | 7-11 B2C 大宗寄倉 | 純取貨 | `56` | `7NET` |
 | 全家 C2C 店到店 | 取貨付款 | `51` | `FAMI` |
 | 全家 C2C 店到店 | 純取貨 | `52` | `FAMI` |
-| 全家 B2C 大宗寄倉 | 取貨付款 | `55` | `FAMI` |
-| 全家 B2C 大宗寄倉 | 純取貨 | `56` | `FAMI` |
+| 全家 B2C 大宗寄倉 | 取貨付款 | `55`？ | `FAMI`？ |
+| 全家 B2C 大宗寄倉 | 純取貨 | `56`？ | `FAMI`？ |
 | 黑貓常溫 / 冷藏 / 冷凍 | 取貨付款 | `81` | `TCAT` |
 | 黑貓常溫 / 冷藏 / 冷凍 | 純取貨 | `82` | `TCAT` |
 | 黑貓逆物流（退貨） | — | `83` | `TCAT` |
+| 7-11 退貨便（C2B） | 運費消費者付／商家付 | `57`／`58` | `7NET` |
 
-**注意**：黑貓的「常溫 / 冷藏 / 冷凍」差異**不是**靠 `Pay_zg` 區分，
-而是走第二支 API `ezcatGetTrackNum.asp` 時的 `temperature` 參數
-（`0001` 常溫 / `0002` 冷藏 / `0003` 冷凍）。
+> **全家 B2C 未經證實**：1.1.23 只有 `FAMIB2C` 的電子地圖網址，建單分支沒有全家 B2C；
+> 4.3.3 的全家 B2C 整段被註解掉，ReadMe 也只列 7-11 B2C。實際代碼以速買配規格書為準。
+
+**注意**：黑貓的「常溫 / 冷藏 / 冷凍」差異**不是**靠 `Pay_zg` 區分，而是 `temperature` 參數
+（`0001` 常溫 / `0002` 冷藏 / `0003` 冷凍）。兩版外掛送的位置不同：
+1.1.23 送在第二階段 `ezcatGetTrackNum.asp`；4.3.3 送在第一階段 `SPPayment.asp`（`Pay_zg=81/82`），第二階段不再送。
 
 ### 路由邏輯（PHP 範例）
 
@@ -304,11 +311,7 @@ function determine_pay_codes(string $typesserver, string $payment_method): array
                 'pay_zg'    => $is_cod ? 51 : 52,
                 'pay_subzg' => 'FAMI',
             ];
-        case 'FAMIB2C':
-            return [
-                'pay_zg'    => $is_cod ? 55 : 56,
-                'pay_subzg' => 'FAMI',
-            ];
+        // FAMIB2C：兩版外掛都沒有建單分支，未確認代碼
     }
     throw new InvalidArgumentException("Unknown typesserver: {$typesserver}");
 }
@@ -353,6 +356,7 @@ POST https://ssl.smse.com.tw/api/SPPayment.asp
 | `Logistics_Roturl` | String(URL) | ● | **物流貨況通知網址** |
 | `Roturl_status` | String | △ | 回傳狀態識別碼（如 `woook1.1.23`） |
 | `Remark` | String | △ | 備註（取自買家結帳備註） |
+| `Logistics_MapType` | String | △ | `M`＝行動版電子地圖；4.3.3 偵測到 Android／iPad／iPhone 時帶入 |
 
 #### 回應（XML）
 
@@ -382,6 +386,20 @@ POST https://ssl.smse.com.tw/api/SPPayment.asp
 判斷成功的鐵則：
 - HTTP body 含 `<SmilePay>`
 - `<Status>` 等於 `1`
+
+**兩版外掛的建單方式差異**
+
+| 產品 | 1.1.23 | 4.3.3 |
+|------|--------|-------|
+| C2C 取貨付款 `51` | 後端 POST `SPPayment.asp` | 同左（`smilepayc2c.php`） |
+| B2C 取貨付款 `55` | 後端 POST `SPPayment.asp` | **瀏覽器轉址到 `mtmk_utf.asp`**，帶 `MapRoturl`；有預選門市才帶 `Logistics_store`（`smilepayb2c.php`） |
+| C2C／B2C 純取貨 `52`／`56` | 後端 POST `SPPayment.asp` | 同左，商家在後台開啟訂單時才建單（`smilepayc2cup.php`、`smilepayb2cup.php`） |
+| 黑貓 `81`／`82` | 後端 POST `SPPayment.asp` | 同左，`temperature` 在此階段送出（`smilepayezcatp.php`、`smilepayezcatup.php`） |
+
+取貨付款的**款項通知**走金流的 `Roturl`，以 `Classif` 區分：`T` 超商 C2C、`V` 超商 B2C、`O` 黑貓（4.3.3 `smilepay_respond.php`；1.1.23 對 `T`、`O` 將訂單設為 completed）。
+貨況通知另走 `Logistics_Roturl`（見[通知與貨況](#通知與貨況)）。
+
+4.3.3 ReadMe：交貨便服務單產生後須於 7 日內出貨，逾期失效；黑貓與純取貨的物流單要由商家在後台訂單頁觸發才會建立。
 
 ### 第二階段：取得實際物流編號
 
@@ -452,12 +470,12 @@ POST https://ssl.smse.com.tw/api/ezcatGetTrackNum.asp
 | `Dcvc` | ● | 商家代號 |
 | `Verify_key` | ● | 共享密鑰 |
 | `smseid` | ● | 第一階段拿到的 `SmilePayNO` |
-| `package_size` | ● | 包裹尺寸（60/90/120/150 cm） |
-| `temperature` | ● | 溫層：`0001` 常溫 / `0002` 冷藏 / `0003` 冷凍 |
-| `delivery_date` | △ | 預定送達日 (`YYYY/MM/DD`) |
-| `delivery_timezone` | △ | 預定送達時段（`1`/`2`/`4`） |
-| `is_protect` | △ | 易碎品保護（`1` 啟用；`0` 不送出此參數） |
-| `shipment_type` | △ | 出貨類型 |
+| `package_size` | ● | `0001` 60 cm／`0002` 90 cm／`0003` 120 cm／`0004` 150 cm（150 僅常溫；冷藏、冷凍上限 120） |
+| `temperature` | △ | 溫層：`0001` 常溫 / `0002` 冷藏 / `0003` 冷凍（4.3.3 改在第一階段送） |
+| `delivery_date` | △ | 預定送達日 `YYYY-MM-DD`（兩版外掛都送此格式；4.3.3 預設隔日，遇週日延一天） |
+| `delivery_timezone` | △ | `1` 13 時前／`2` 14–18 時／`4` 不指定（4.3.3 固定送 `4`） |
+| `is_protect` | △ | `Y` 使用／`N` 不使用；選「預設」時不送 |
+| `shipment_type` | △ | `1` 手動出貨／`2` 黑貓派工；選「預設」時不送 |
 | `receiver_address` | △ | 收件地址（逆物流時用） |
 
 回應：
@@ -840,7 +858,7 @@ echo "<Roturlstatus>訂單編號:{$id} 速買配追蹤碼:{$smseid} 沒有對應
 
 > 黑貓只回 `1/3/5/7/8` 這幾個狀態，沒有 `2/4/6`。
 
-#### DetailStatus 異常代碼（節錄）
+#### DetailStatus 異常代碼
 
 | 代碼 | 異常類型 |
 |------|---------|
@@ -869,11 +887,21 @@ echo "<Roturlstatus>訂單編號:{$id} 速買配追蹤碼:{$smseid} 沒有對應
 | `009` | 超大 |
 | `010` | 人不在 |
 | `011` | 已收走 |
+| `012` | 暫不退 |
+| `013` | 電話暫停使用 |
 | `014` | 商品送達時已拒收退回 |
 | `015` | 地址有誤 |
+| `016` | 無件可退 |
 | `017` | PCHOME 通知取消 |
+| `018` | 不知回收何物，自行與廠商聯絡 |
+| `019` | 要換貨，需廠商再聯繫 |
+| `020` | 僅需索取說明書，需廠商聯繫 |
+| `021` | 多日聯絡不到，需廠商再聯繫 |
+| `022` | 改住址 |
+| `023` | 區號錯誤 |
 | `024` | 其他 |
 | `025` | 已集貨 |
+| `026` | 廠商通知取消 |
 | `999` | 訂單復原 |
 | `P26` | 另約時間 |
 | `P27` | 電聯不上 |
@@ -886,6 +914,7 @@ echo "<Roturlstatus>訂單編號:{$id} 速買配追蹤碼:{$smseid} 沒有對應
 
 > **處理順序**：通知進來時先檢查 `DetailStatus`，**有值就優先記錄異常**，
 > 然後直接回應 `<Roturlstatus>接收到配送異常XXX</Roturlstatus>` 結束 (不再處理 `Shipstatus`)。
+> 4.3.3（`smilepay_logistic_status.php` `ezcat_logistic_callback`）有 `DetailStatus` 時只寫訂單備註就結束，**不回應任何字串**；兩版代碼表相同。
 
 #### 回應格式
 
@@ -974,8 +1003,8 @@ GET https://ssl.smse.com.tw/ezpos/mtmk_utf.asp
 | `Rvg2c` | ● | 簽章驗證代碼 |
 | `Verify_key` | ● | 共享密鑰 |
 | `Od_sob` | ● | 訂單編號（會原樣回傳） |
-| `Pay_zg` | ● | C2B 退貨便用值（商家後台設定的 `c2b_payzg`，依超商不同） |
-| `Pay_subzg` | ● | `7NET` 或 `FAMI` |
+| `Pay_zg` | ● | `57` 運費由消費者付／`58` 運費由商家付（兩版相同） |
+| `Pay_subzg` | ● | 4.3.3 固定 `7NET`；1.1.23 沿用原 B2C 訂單的值，且只允許 B2C 訂單建立退貨便 |
 | `Data_id` | ● | 訂單編號 |
 | `Amount` | ● | 退款金額 |
 | `Pur_name` | ● | 退貨人姓名 |
@@ -998,6 +1027,8 @@ GET https://ssl.smse.com.tw/ezpos/mtmk_utf.asp
 | `Data_id` | 訂單編號（原樣回傳） |
 
 完整退貨便代碼 = `Paymentno` + `Validationno`
+
+4.3.3（`smilepayc2b.php` `c2b_recv_order_process`）另讀 `Classif`（`R` 或 `S` 才視為成功）與 `Classif_sub`，並以 Form 自動送出到 `mtmk_utf.asp`（欄位名寫成小寫 `verify_key`，未帶 `Tel_number`、`Logistics_Roturl`）。
 
 #### PHP 範例
 

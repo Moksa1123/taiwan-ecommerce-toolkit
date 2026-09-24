@@ -71,7 +71,7 @@ TapPay 用 Prime 一次付清，remember=true 存成 card_token 供下次自動�
 | **O'Pay 歐付寶** | SHA256 CheckMacValue（同 ECPay） | 與 ECPay 同源架構、AccountLink 銀行快付、延遲撥款 |
 | **JKOPAY 街口** | api-key Header + HMAC-SHA256 digest | 線上支付 / POS / 授權扣款 |
 | **SunPay 紅陽** | RSA 分段加密 + SHA256 check_value | 金流 + 發票 + 超商代收 |
-| **GoMyPay** | 需申請文件 | 參數規格待補 |
+| **GoMyPay** | 需向 GoMyPay 申請規格 | 完整 API 規格未公開 |
 
 O'Pay、GoMyPay 以外皆附可執行 Python 範例，加解密以官方測試向量驗證；錯誤碼見 `data/error-codes.csv`。
 

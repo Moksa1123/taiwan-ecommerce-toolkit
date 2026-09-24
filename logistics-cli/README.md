@@ -118,7 +118,7 @@ Claude Code · Cursor · Windsurf · Antigravity · GitHub Copilot · Kiro · Co
 | ECPay | B2C（含冷凍）+ C2C | B2C + C2C | B2C + C2C | C2C | 常溫／冷藏／冷凍 | 中華郵政 |
 | NewebPay | B2C + C2C | C2C | C2C | C2C | — | — |
 | PAYUNi | B2C + C2C（常溫／冷凍） | — | — | — | 常溫／冷凍／冷藏 | — |
-| SmilePay | B2C + C2C | B2C + C2C | — | — | 含逆物流 | — |
+| SmilePay | B2C + C2C | C2C | — | — | 含逆物流 | — |
 | PChomePay | 取貨付款 | 取貨付款 | 取貨付款 | — | — | — |
 | PayNow | B2C + C2C（含冷凍） | B2C + C2C（含冷凍） | C2C | C2C | 宅配、到店 | 7-11 海外 |
 | ezShip | — | C2C | C2C | C2C | — | 宅配、店港澳 |
