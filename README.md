@@ -30,8 +30,8 @@
 Taiwan E-Commerce Toolkit 是專為台灣電商生態系統設計的企業級整合開發工具包，提供完整的電子發票、金流串接、物流整合解決方案。本工具包收錄台灣三大領域共 **34 個服務商**（9 家發票 + 14 家金流 + 11 家可串接物流），另收錄 10 家**無法直接串接**的物流業者與其替代路徑，搭配智能開發工具與生產級程式碼範例，協助開發團隊快速完成電商系統整合。
 
 **最新版本（請以 npm 為準）：**
-- `taiwan-invoice-skill@2.9.6+` — 9 家發票（ECPay / SmilePay / Amego / ezPay / PayNow / O'Pay / SunPay / 財政部大平台 / 關貿）
-- `taiwan-payment-skill@1.5.7+` — 14 家金流（ECPay / NewebPay / PAYUNi / SmilePay / PChomePay / ezPay / PayNow / Shopline / LINE Pay / TapPay / O'Pay / 街口 / 紅陽 / GoMyPay）
+- `taiwan-invoice-skill@2.9.7+` — 9 家發票（ECPay / SmilePay / Amego / ezPay / PayNow / O'Pay / SunPay / 財政部大平台 / 關貿）
+- `taiwan-payment-skill@1.5.8+` — 14 家金流（ECPay / NewebPay / PAYUNi / SmilePay / PChomePay / ezPay / PayNow / Shopline / LINE Pay / TapPay / O'Pay / 街口 / 紅陽 / GoMyPay）
 - `taiwan-logistics-skill@1.4.6+` — 11 家可串接物流（7 aggregator + HCT 直連 + 3 家即時配送）＋ 10 家僅供查詢
 
 > **發票的兩個例外**：財政部大平台是上游，只做查詢／驗證（手機條碼、載具、捐贈碼），**不能開立發票**；關貿網路已收錄於資料層，但文件需簽約，尚無 reference。
