@@ -25,7 +25,7 @@ user-invocable: true
 - `references/opay-payment-api.md` - 歐付寶 O'Pay 全方位金流（與 ECPay 同源的 CheckMacValue 架構）
 - `references/jkopay-payment-api.md` - 街口支付 JKOPAY（線上支付 / POS / 授權扣款，三套簽章並存）
 - `references/sunpay-payment-api.md` - 紅陽 SunPay（RSA 分段加密 + SHA256 check_value）
-- `references/gomypay-payment-api.md` - GoMyPay（完整 API 須洽客服，參數待補）
+- `references/gomypay-payment-api.md` - GoMyPay（服務範圍與文件取得；完整 API 規格需向 GoMyPay 申請）
 - `references/twqr-ewallet-landscape.md` - 電子支付／行動支付生態與 TWQR：全支付、悠遊付等要怎麼收
 - [EXAMPLES.md](EXAMPLES.md) - 程式碼範例集
 

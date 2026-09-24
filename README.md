@@ -384,7 +384,7 @@ taiwan-ecommerce-toolkit/
 
 | 金流平台 | 加密 / 認證 | 支援付款方式 | 技術特點 |
 |----------|----------|--------------|----------|
-| **ECPay 綠界** | SHA256 CheckMacValue | 信用卡 / ATM / CVS / Apple Pay / TWQR / WeiXin / **DigitalPayment umbrella**（街口/全盈+PAY/全支付/一卡通/悠遊付/icashpay/OPENPOINT）/ EcpayPay | 市佔率最高、文檔最完整 |
+| **ECPay 綠界** | SHA256 CheckMacValue | 信用卡 / ATM / WebATM / 超商代碼 / 超商條碼 / Apple Pay / TWQR / 微信 / 無卡分期（裕富、中租）/ **DigitalPayment**（街口、一卡通 MONEY）| 市佔率最高、文檔最完整 |
 | **NewebPay 藍新** | AES-256-CBC + SHA256 | 信用卡 / 分期 (`InstFlag`) / ATM / CVS / LINE Pay / Apple Pay / Google Pay / Samsung Pay / TWQR / 玉山 / 台灣Pay / 跨境支付寶/微信 / CVSCOM | MPG 整合、信用卡記憶 |
 | **PAYUNi 統一** | AES-256-GCM + SHA256 | 信用卡 (Token) / ATM / CVS / **JKoPay** (街口) / **ICASH** (愛金卡) / **AFTEE** / LinePay | RESTful JSON、AFTEE 獨家 |
 | **SmilePay 速買配** | Verify_key + Mid_smilepay 加權檢核碼 | ATM / Barcode / ibon / FamiPort / 信用卡 / 分期 / 聯合信用卡 (Pay_zg=1/2/3/4/6/11) | XML 回應、Pay_zg 編碼 |
@@ -406,7 +406,7 @@ taiwan-ecommerce-toolkit/
 | **ECPay 綠界** | aggregator | MD5 CheckMacValue | B2C 7-11（含冷凍）/ 全家 / 萊爾富；C2C 四大超商；宅配黑貓 / 中華郵政 | 市佔率最高、SDK 完整 |
 | **NewebPay 藍新** | aggregator | AES-256-CBC + SHA256 | B2C 僅 7-11；C2C 四大超商；無宅配 | 取貨付款／不付款皆 ≤ 20,000 |
 | **PAYUNi 統一** | aggregator | AES-256-GCM + SHA256 | 7-11 (常溫/冷凍) / T-Cat (常溫/冷藏/冷凍) | 溫控配送最完整 |
-| **SmilePay 速買配** | aggregator | Verify_key + Mid_smilepay 加權檢核碼 | 7-11/全家 C2C+B2C / 黑貓 COD+PICKUP+逆物流 | Pay_zg 矩陣 51/52/55/56/81/82/83 |
+| **SmilePay 速買配** | aggregator | Verify_key + Mid_smilepay 加權檢核碼 | 7-11 C2C+B2C / 全家 C2C / 黑貓 COD+PICKUP+逆物流 | Pay_zg 矩陣 51/52/55/56/57/58/81/82/83 |
 | **PChomePay 拍錢包** | aggregator | HTTP Basic Auth → token | 7-11 / 全家 / 萊爾富（取貨付款） | 金物流二合一、Notify IP 113.196.231.190 |
 | **PayNow 立吉富** | aggregator | **3DES / ECB / Zero-Padding**（不同於金流端） | 11 條產品線（含海外配送、冷凍） | 雙 API（金流 vs 物流加密不同） |
 | **ezShip 台灣便利配** | aggregator | 無簽章（`su_id` 帳號綁定）| 全家 / 萊爾富 / OK / 宅配 / 店港澳 | 不含 7-11 |

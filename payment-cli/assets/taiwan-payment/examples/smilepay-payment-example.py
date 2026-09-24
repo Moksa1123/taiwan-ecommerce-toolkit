@@ -145,7 +145,7 @@ class SmilePayCreditRedirect:
 @dataclass
 class SmilePayNotification:
     """Roturl 通知解析結果 (取號類 / 信用卡共用)"""
-    classif: str                               # A/B/C/T/O
+    classif: str                               # A 信用卡(Foreign=U 為銀聯)/B ATM/C 條碼/E ibon/F FamiPort/T、V 超取付款/O 黑貓取貨付款
     data_id: str
     smseid: str
     amount: int
@@ -517,8 +517,8 @@ class SmilePayPaymentService:
         )
 
     @staticmethod
-    def build_notification_response(roturl_status: str = 'OK') -> str:
-        """產生回給 SmilePay 的 Roturlstatus 字串"""
+    def build_notification_response(roturl_status: str) -> str:
+        """產生回給 SmilePay 的 Roturlstatus 字串；須與建單時送出的 Roturl_status 完全相同，否則會被重送"""
         return f'<Roturlstatus>{roturl_status}</Roturlstatus>'
 
 

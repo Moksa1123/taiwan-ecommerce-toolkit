@@ -21,7 +21,7 @@ ezShip 是本 skill 收錄的**唯一非金流商的超商取貨聚合商**。�
 |---|---|
 | 超商取貨 | 店到店，買家至指定門市取件 |
 | 超商取貨付款 | 貨到付款（COD） |
-| 大宗直寄 | 大量出貨直送門市 |
+| B2C 寄件（大宗寄倉）| 包裹依超商分箱送至各超商物流中心再轉運門市，只收店配，見 §2.3 |
 | 店到宅 | 門市寄件、宅配到府 |
 | 店退店 | 逆物流 |
 | 臉書店 | 社群電商賣場 |
@@ -236,6 +236,82 @@ ezShip 是本 skill 收錄的**唯一非金流商的超商取貨聚合商**。�
 
 回傳（snake_case）：`order_id`、`sn_id`、`order_status`、`webPara`；代碼同參數版，另有 `E98` XML 無法載入、`E99` 系統錯誤。
 
+## 2.3 B2C 寄件（大宗寄倉）與寄件單下載 API
+
+來源：服務說明 `service_home_w18v1.jsp?vDocNo=2501`（內容頁 `service_doc/2501NN_doc.jsp`，`NN`＝01–23）。
+
+**服務**：賣家把包裹依取件超商分箱，自行以貨運／宅配／郵局送到該超商物流中心，由物流中心轉運至門市（p.01–02）。只收「店配–取貨付款」與「店配–取貨不付款」（p.02）。
+
+| 超商 | 物流中心 | 收貨時間（當日轉運）| 材積 |
+|---|---|---|---|
+| 全家 | 日翊物流大溪倉，桃園市大溪區仁善里15鄰新光東路76巷22-2號 | 08:30–14:00；14:01–16:30 隔日；需先在全家「廠商進貨預約平台」預約（7 家指定貨運商免預約）| 長+寬+高 < 105 cm、最長邊 < 45 cm、< 5 kg |
+| 萊爾富 | 新北市樹林區味王街1-25號（38號碼頭）| 08:00–14:00；14:01–15:00 隔日 | 同上 |
+| OK | 來來物流，桃園市大溪區仁善里9鄰新光東路63巷88號（42-43碼頭）| 08:00–14:00；14:01–17:00 隔日 | 長+寬+高 < 105 cm、最長邊 45 cm、其餘兩邊 ≤ 30 cm、< 5 kg |
+
+（p.05–07）當日轉運者次日中午前送達門市。取貨付款每筆代收上限 10,000 元（p.08）。
+
+**啟用**（p.03、p.19）：限 ezShip 商務會員且合約有效。後台「我的便利配 → 設定 → 配送服務 → B2C寄件設定」：
+
+- **自動要號**：開啟後，以網站串接（§2.1／§2.2 的建單 API）建立的寄件資料**一律視為 B2C 寄件**並自動取號。若部分訂單仍要門市寄件（店到店），不可開啟
+- **來源 IP**：登錄呼叫寄件單 API 的對外 IP
+
+也就是**建單沒有另一組 API**，B2C 與店到店的差別由帳號設定決定。
+
+### 單筆寄件單下載（p.20）
+
+`https://www.ezship.com.tw/emap/ezship_request_order_label_api.jsp`，Form submit 或 URL 參數。
+
+| 參數 | 說明 |
+|---|---|
+| `suID` | ezShip 帳號（需開通網站串接）|
+| `sn_id` | 店到店編號 |
+
+成功直接輸出寄件單 PDF。錯誤以文字輸出：
+
+| 訊息 | 原因 |
+|---|---|
+| `Error: The requested header does not contain a valid source IP address.` | 來源 IP 未設定 |
+| `Error: The requested file with sn_id : … was not found.` | `sn_id` 不存在 |
+| `Error: The requested file was not found.` | `suID` 錯誤或未開自動要號 |
+
+### 多筆寄件單下載（p.21）
+
+兩步驟，皆 `POST` JSON（UTF-8），需先設定來源 IP。
+
+**步驟一** `https://www.ezship.com.tw/myezship_label/myezship_order_print_api.jsp` — 建立批次表單
+
+| 欄位 | 說明 |
+|---|---|
+| `ezship_id` | ezShip 帳號 |
+| `label_for` | 固定 `4` |
+| `label_printer` | `A` A4 四格；`B` 標籤機 10×15 |
+| `label_printtype` | `A` 只印寄件單；`B` 寄件單＋明細 |
+| `label_merge` | `A` 三家超商合併；`B` 各超商分開檔案 |
+| `sn_list[].sn_id` | 店到店編號 |
+
+回應：`errorCode`、`ezship_id`、`file_id`（步驟二使用）、`success_count`、`fail_count`、`fail_list[].sn_id`、`total`、`request_id`。
+
+**步驟二** `https://www.ezship.com.tw/myezship_label/myezship_order_label_api.jsp` — 取得 PDF 網址
+
+請求 `ezship_id`、`file_id`；回應 `errorCode`、`file_list[].file_url`、`file_count`、`request_id`。每 100 筆切一個檔案，製作約 1 分鐘／百筆。
+
+| `errorCode` | 意義 |
+|---|---|
+| `000` | 成功 |
+| `001` | 新增失敗 |
+| `002` | JSON 格式有誤 |
+| `003` | 會員權限異常 |
+| `004` | 製作中（步驟二）|
+| `005` | 製作失敗（步驟二）|
+| `006` | 尚未製作（步驟二）|
+| `007` | 非允許 IP |
+| `008` | 禁止一分鐘內多次傳送（步驟一）|
+| `999` | 傳送失敗 |
+
+> ⚠️ 步驟一一分鐘內不可重送（`008`）；步驟二回 `004` 時稍後再查，不要重跑步驟一。
+
+**逾期未領**（p.10）：貨到門市 7 天未取即退回超商物流中心，依「B2C寄件設定」的退貨週期整箱待領，**由寄件人自行委託物流業者取回**，超過 30 日未處理將捐贈或回收。沒有退貨 API。
+
 ## 3. 申請流程
 
 1. 進入 ezShip 後台
@@ -291,8 +367,7 @@ ezShip 是本 skill 收錄的**唯一非金流商的超商取貨聚合商**。�
 
 | 項目 | 狀態 |
 |---|---|
-| 大宗直寄 | 欄位定義的金額說明把「直寄店配／直寄宅配」與店到店、店到宅並列，顯示直寄訂單走同一組建單 API；開通條件與是否另有參數未載明 |
-| 店退店（逆物流） | 串接文件未提及，應為後台操作；是否有 API 需洽 ezShip |
+| 店退店（逆物流） | 串接文件與 B2C 寄件說明都未提供 API；B2C 逾期件由寄件人自行至物流中心取回。是否有 API 需洽 ezShip |
 | XML 版批次多筆 | 比較表標示 XML 版可「批次多筆」，但欄位定義與範例只有單一 `<ORDER>`，批次格式未載明 |
 
 ## 8. 來源
@@ -304,6 +379,7 @@ ezShip 是本 skill 收錄的**唯一非金流商的超商取貨聚合商**。�
 - 程式碼說明：連結電子地圖 — `…/2017_service_doc_home.jsp?vDocNo=1702&vDefPage=07`
 - 程式碼說明：傳送訂單 — `…&vDefPage=08`
 - 貨況串接（依訂單編號查詢）— `…&vDefPage=22`
+- B2C 寄件服務說明 — https://www.ezship.com.tw/service_doc/service_home_w18v1.jsp?vDocNo=2501&vDefPage=19（內容頁 `service_doc/250101_doc.jsp`–`250123_doc.jsp`，2026-09-24 查核）
 - 欄位定義 PDF — `ezship_WebOrder_HttpRequest_v15.pdf`、`ezship_WebOrder_XML_v15s.pdf`、`ezship_status_api.pdf`、`ezship_status_api_byorder.pdf`（見 §4）
 - 欄位定義 PDF（參數版）— http://www.ezship.com.tw/file/ezship_WebOrder_HttpRequest_v15.pdf
 - 欄位定義 PDF（XML 版）— http://www.ezship.com.tw/file/ezship_WebOrder_XML_v15s.pdf

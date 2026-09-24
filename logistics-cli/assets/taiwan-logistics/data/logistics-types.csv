@@ -20,11 +20,11 @@ CVS,LgsType=C2C ShipType=1 GoodsType=1,7-11 店到店（常溫）,payuni,cvs_c2c
 CVS,LgsType=C2C ShipType=1 GoodsType=2,7-11 店到店（冷凍）,payuni,cvs_c2c,true,,,冷凍,Ship=1 取貨付款、ShipTag=1 啟用物流；冷凍門市地圖 MapType 固定 2
 HOME,LgsType=HOME ShipType=2 GoodsType=1/2/3,黑貓宅配,payuni,home,,,,常溫/冷凍/冷藏,GoodsType 1 常溫／2 冷凍／3 冷藏；ConsigneeAddress、DeliveryTimeTag 必填
 CVS,Pay_zg=55/56 Pay_subzg=7NET,7-11 大宗寄倉（B2C）,smilepay,cvs_b2c,true,,,常溫,55 取貨付款／56 純取貨
-CVS,Pay_zg=55/56 Pay_subzg=FAMI,全家 大宗寄倉（B2C）,smilepay,cvs_b2c,true,,,常溫,55 取貨付款／56 純取貨
 CVS,Pay_zg=51/52 Pay_subzg=7NET,7-11 店到店（C2C）,smilepay,cvs_c2c,true,,,常溫,51 取貨付款／52 純取貨
 CVS,Pay_zg=51/52 Pay_subzg=FAMI,全家 店到店（C2C）,smilepay,cvs_c2c,true,,,常溫,51 取貨付款／52 純取貨
 HOME,Pay_zg=81/82 Pay_subzg=TCAT,黑貓宅配,smilepay,home,true,,,常溫/冷藏/冷凍,81 取貨付款／82 純取貨；溫層由 ezcatGetTrackNum.asp 的 temperature 0001/0002/0003 決定
 HOME,Pay_zg=83 Pay_subzg=TCAT,黑貓逆物流（退貨）,smilepay,return,false,,,常溫,退貨用
+CVS,Pay_zg=57/58,超商 C2B 退貨便,smilepay,return,false,,,常溫,57 消費者付運費／58 商家付運費；通知另帶 Classif R/S 與 Classif_sub
 CVS,pay_type=IPL7,7-11 超商取貨付款,pchomepay,cvs_c2c,true,20000,,常溫,金額 65–20000；物流單由金流訂單派生；不提供 OK／宅配
 CVS,pay_type=IPLFM,全家 超商取貨付款,pchomepay,cvs_c2c,true,20000,,常溫,金額 65–20000；物流單由金流訂單派生；不提供 OK／宅配
 CVS,pay_type=IPLHL,萊爾富 超商取貨付款,pchomepay,cvs_c2c,true,20000,,常溫,金額 65–20000；物流單由金流訂單派生；不提供 OK／宅配
@@ -47,6 +47,9 @@ CVS,Logistic_service=12,7-11 大宗退貨便,paynow,return,false,,,常溫,退貨
 CVS,stCate=TFM,全家 店到店,ezship,cvs_c2c,true,10000,,常溫,order_status A01–A04；order_type 1 取貨付款（代收 10–10000）／3 取貨不付款；不含 7-11
 CVS,stCate=TLF,萊爾富 店到店,ezship,cvs_c2c,true,10000,,常溫,order_status A01–A04；order_type 1 取貨付款（代收 10–10000）／3 取貨不付款；不含 7-11
 CVS,stCate=TOK,OK 店到店,ezship,cvs_c2c,true,10000,,常溫,order_status A01–A04；order_type 1 取貨付款（代收 10–10000）／3 取貨不付款；不含 7-11
+CVS,stCate=TFM（B2C 寄件）,全家 大宗寄倉,ezship,cvs_b2c,true,10000,,常溫,後台開啟「自動要號」後網站建單一律為 B2C 寄件；包裹送超商物流中心；長寬高合計 < 105 cm、< 5 kg
+CVS,stCate=TLF（B2C 寄件）,萊爾富 大宗寄倉,ezship,cvs_b2c,true,10000,,常溫,後台開啟「自動要號」後網站建單一律為 B2C 寄件；包裹送超商物流中心；長寬高合計 < 105 cm、< 5 kg
+CVS,stCate=TOK（B2C 寄件）,OK 大宗寄倉,ezship,cvs_b2c,true,10000,,常溫,後台開啟「自動要號」後網站建單一律為 B2C 寄件；包裹送超商物流中心；長寬高合計 < 105 cm、< 5 kg
 HOME,order_status=A05/A06,ezShip 宅配,ezship,home,true,8000,,常溫,order_type 1 取貨付款（代收 10–8000）；rv_addr、rv_zip 必填
 CROSS_BORDER,stCate=TSF,店港澳,ezship,cross_border,false,,,常溫,order_status A11/A12；無代收
 HOME,eprdcl2=001/003/008,新竹物流（直連）,hct_direct,home,true,,,常溫/冷凍/冷藏,eprdcl2 001 一般／003 冷凍／008 冷藏；eqmny 代收貨款

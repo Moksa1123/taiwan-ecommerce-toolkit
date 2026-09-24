@@ -76,9 +76,10 @@ def _canonical(payload: Dict[str, Any]) -> str:
 
 
 def java_urlencode(text: str) -> str:
-    """Java URLEncoder 規則（手冊附錄 3：check_value 必須符合 Java urlencode）。
+    """Java URLEncoder 規則（手冊 v1.1.0 附錄 3；官方 JAVA 範例程式同此規則）。
 
     空白編成 `+`、`*` 不編碼、`~` 編成 `%7E`；Python 的 quote 三者都不同。
+    rsamsg 的明文與 check_value 必須用同一個編碼後字串（官方 PHP／JAVA 範例皆如此）。
     """
     return urllib.parse.quote_plus(text, safe='*').replace('~', '%7E')
 
@@ -312,7 +313,7 @@ def _self_test() -> int:
         print(f'         期望 {expected_check}')
         print(f'         實得 {got}')
 
-    # 手冊附錄 3 的 Java URLEncoder 欄：空白 +、~ %7E、* 不編、/ %2F
+    # 手冊 v1.1.0 附錄 3 的 Java URLEncoder 欄：空白 +、~ %7E、* 不編、/ %2F
     got = java_urlencode('a b~c*d/e')
     ok = got == 'a+b%7Ec*d%2Fe'
     failed += not ok

@@ -43,7 +43,7 @@
 | **App 內第三方登入（OAuth）** | ✅ | ❌ |
 | **發放街口幣做行銷** | ✅ | ❌ |
 
-> **這張表是選型關鍵**：如果你只是要在結帳頁多一個「街口」按鈕，走 ECPay 的 `DigitalPayment` umbrella 最省事。如果你要做**訂閱制、實體店、或街口幣行銷**，就非得直連不可——這些能力聚合商給不了。
+> **這張表是選型關鍵**：如果你只是要在結帳頁多一個「街口」按鈕，走 ECPay 的 `DigitalPayment`（`ChooseSubPayment=Jkopay`）最省事。如果你要做**訂閱制、實體店、或街口幣行銷**，就非得直連不可——這些能力聚合商給不了。
 
 ## 3. TWQR 關係
 
@@ -54,7 +54,7 @@
 | 路徑 | 說明 |
 |---|---|
 | **TapPay** | 有街口專屬文件站 `docs.tappaysdk.com/jko-pay/`（含 Backend 頁），走 Prime → pay-by-prime 流程。見 [tappay-payment-api.md](tappay-payment-api.md) |
-| **ECPay** | `ChoosePayment=DigitalPayment` umbrella，消費者於綠界選擇頁挑街口 |
+| **ECPay** | `ChoosePayment=DigitalPayment`，`ChooseSubPayment=Jkopay` 直接指定街口（不帶則消費者於綠界選擇頁挑） |
 | **PAYUNi** | `JKoPay` 直送代碼（已驗證） |
 | **HiTRUSTpay** | 有街口介接方案 |
 | **Link Pay（TapPay）** | 連結收款，支援街口 |
@@ -261,7 +261,7 @@ Platform APIs 統一回應格式（**欄位皆小寫**，`result` 為**字串**�
 
 > ⚠️ **查詢 API 不會用 `result` 表達「查無此單」**——`result=000` 但 `status=102`。只判斷 `result` 會把不存在的訂單當成功。
 
-查詢回傳的 `transactions[]` 結構與 `result_url` 的 `transaction` 相同，另含 `refund_history[]`。
+查詢回傳的 `transactions[]` 欄位與 `result_url` 的 `transaction` 相同但**沒有 `currency`**，另含 `refund_history[]`。
 
 ### 5.7 訂單退款 `POST /platform/refund`
 
@@ -688,7 +688,8 @@ OAuth 專屬錯誤碼：`OA-001` 成功、`OA-205` Auth Code 已被使用、`OA-
 
 - npm 套件在街口自有 registry：`https://npmjs.jkos.com/-/web/detail/@jkos/openweb-bridge`
 - ⚠️ **v2.0.6 與先前版本不相容**：使用 v2.0.4（含）以下者，升級前須先聯絡街口窗口
-- 文件另有 v2.0.8 與 Next 兩組 API 頁面，但版本表未列其 UMD／套件位址；官方未標示建議版本，採用前向街口窗口確認
+- 文件另有 v2.0.8 與 Next 兩組 API 頁面，版本表未列。街口的 UMD 套件中心 `https://upkg.jkos.com/`（2026-09-24 查核）列出 `openweb-bridge` v2.0.0–v2.0.8，**v2.0.8 為最新**：`https://upkg.jkos.com/openweb-bridge/v2.0.8/jkos.umd.js`；沒有獨立的 Next 版檔案
+- 官方未標示建議版本，採用前向街口窗口確認
 
 **Next 版 API**：`getAuthCode`（喚起原生授權頁取得 auth code，接 §9 OAuth）、`setNavTitle`、`setNavBackground`、`setNavLeftButton`、`setNavRightButton`、`clearNavRightButton`、`openBrowser`、`redirectMaintainPage`、`close`、`showModal`、`setPullRefreshOn`／`setPullRefreshOff`。
 呼叫形式 `jkos.xxx(data, callback)`，callback 收 `{ error, errorMessage }`，也可改用 async/await。
@@ -814,7 +815,7 @@ OAuth 專屬錯誤碼：`OA-001` 成功、`OA-205` Auth Code 已被使用、`OA-
 | 待補項目 | 備註 |
 |---|---|
 | 街口幣查詢 API | **官方尚未提供**，僅先公布簽章格式 |
-| Web SDK v2.0.8／Next 的載入位址與建議版本 | 官方版本表只列到 2.0.7，需向街口窗口確認 |
+| Web SDK 建議採用版本 | v2.0.8 載入位址已由 UPKG 確認；官方未標示建議版本，需向街口窗口確認 |
 | R 檔 FTP 連線資訊 | 須提供來源 IP 給業務窗口審核後才提供 |
 
 ## 13. 來源
@@ -828,6 +829,7 @@ OAuth 專屬錯誤碼：`OA-001` 成功、`OA-205` Auth Code 已被使用、`OA-
 - 店家撥款檔 R 檔（線上支付）— `…/線上支付onlinepay/api列表/店家撥款檔r檔`
 - 店家撥款檔 R 檔（線下 POS）— `…/線下交易pos/api列表/店家撥款檔r檔`
 - Web SDK 版本 — https://open-doc.jkos.com/?docs=inapp-第三方服務/web-sdk/sdk-環境版本
+- UMD 套件中心 — https://upkg.jkos.com/
 - Web SDK Next — `…/inapp-第三方服務/web-sdk/next`（基礎開放能力、介面交互、按鈕、錯誤代碼）
 - 授權扣款 Authorized Payment — https://open-doc.jkos.com/?docs=授權扣款-authorized-payment
 - 授權創建 Binding — `…/授權扣款-authorized-payment/api列表-api-lists/授權綁定創建-authorization-binding`

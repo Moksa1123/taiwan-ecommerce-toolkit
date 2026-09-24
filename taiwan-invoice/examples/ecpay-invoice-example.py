@@ -13,7 +13,7 @@ ECPay 綠界 B2C 電子發票 Python 完整範例
 API 文件: https://developers.ecpay.com.tw
 
 注意：本範例是「B2C 發票平台」。開給公司（打統編）一樣走 B2C 平台的 Issue，
-金額依 vat 參數決定含稅與否（預設含稅）；另有獨立的 B2B 發票平台（交換 / 存證），
+SalesAmount／ItemAmount 一律含稅，vat 只影響 ItemPrice 是否含稅（/7896）；另有獨立的 B2B 發票平台（交換 / 存證），
 欄位與金額規則都不同，不要混用。
 """
 
@@ -63,7 +63,7 @@ def php_json_encode(data: Any) -> str:
 class InvoiceIssueData:
     """ECPay B2C 發票開立資料（欄位對應 /B2CInvoice/Issue 的 Data）"""
     relate_number: str                  # 特店自訂編號，每次唯一；英數字，大小寫視為相同
-    sales_amount: int                   # 發票總金額；vat='1' 為含稅，須等於 Items 的 ItemAmount 加總
+    sales_amount: int                   # 發票總金額（一律含稅），須等於 Items 的 ItemAmount 加總
     items: List[Dict[str, Any]]         # ItemName / ItemCount / ItemWord / ItemPrice / ItemAmount（/ ItemTaxType）
     customer_email: str = ''            # CustomerPhone 與 CustomerEmail 至少擇一
     customer_phone: str = ''
@@ -333,7 +333,7 @@ def example_personal_invoice():
 
     invoice_data = InvoiceIssueData(
         relate_number=f'ORD{int(time.time())}',
-        sales_amount=1050,              # vat='1'：含稅總額
+        sales_amount=1050,              # 含稅總額
         customer_email='test@example.com',
         carrier_type='1',               # 綠界載具
         items=[{
@@ -345,7 +345,7 @@ def example_personal_invoice():
 
 
 def example_company_invoice():
-    """範例: 打統編（一樣走 B2C 平台，金額依 vat 決定；此處為預設的含稅）"""
+    """範例: 打統編（一樣走 B2C 平台；SalesAmount 仍為含稅總額）"""
     print('\n=== 打統編發票開立範例 ===\n')
 
     invoice_data = InvoiceIssueData(

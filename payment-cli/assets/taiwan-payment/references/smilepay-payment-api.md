@@ -2,7 +2,9 @@
 
 速買配 (SmilePay) 金流 API 完整參考文件。
 
-> 本文件以速買配 WooCommerce 模組為主要分析來源，整理出常用的 `SPPayment.asp` (虛擬帳號 / 超商代碼 / 條碼) 與 `mtmk_utf.asp` (信用卡 / 銀聯) 兩條主要金流通道。實際上線時，建議再向速買配技術窗口確認最新版本的參數欄位。
+> 來源：速買配官方 WooCommerce 外掛兩個世代——
+> **1.1.23**（`smilepay-module-for-woocommerce`，單一外掛）與 **4.3.3**（各付款方式分檔：`smilepayatm.php`、`smilepaycredit.php`…，附 ReadMe 修訂日期 2023/03/31）。
+> 兩版不一致處逐項註明。速買配規格書需登入商家帳務後台，於左側選單「程式串接說明」取得。
 
 ---
 
@@ -164,6 +166,7 @@ SmilePay 並不採用 ECPay 的 SHA256 摘要驗證；而是以「**帳號參數
 ### 商品名稱 (`od_sob`) 注意事項
 
 - WooCommerce 模組以 `品名*數量｜品名*數量` 串接，超出長度截斷
+- 4.3.3 的取號類（ATM／條碼／ibon／FamiPort）`od_sob` 直接帶訂單編號；信用卡帶 `品名*數量,` 串接並截 49 字元
 - 取號類 (`SPPayment.asp`) 限制 **45 個字元**
 - 結帳頁 (`mtmk_utf.asp`) 限制 **49 個字元**
 - 中文以 UTF-8 計算，建議事先 `mb_substr` 截斷避免亂碼
@@ -253,7 +256,8 @@ Pay_zg = 2
 |------|------|------|------|
 | `Deadline_date` | String | ● | 繳費期限 `YYYY/MM/DD`，最大 720 天 |
 
-> 模組預設：未指定時為「下單日 + 7 天」。
+> 1.1.23：設定值不是小於 720 的數字時，用「下單日 + 7 天」。
+> 4.3.3：設定天數不在範圍時送出空的 `Deadline_date`；回傳 `PayEndDate` 為 ` 23:59:59`（無日期）時，外掛顯示為「無繳費期限」（`smilepayatm.php` `thankyou_page`）。
 
 ### ATM 回應欄位
 
@@ -318,7 +322,7 @@ Pay_zg = 3
 
 | 參數 | 類型 | 必填 | 說明 |
 |------|------|------|------|
-| `Deadline_date` | String | ● | 繳費期限 `YYYY/MM/DD`，模組限制 < 50 天 |
+| `Deadline_date` | String | ● | 繳費期限 `YYYY/MM/DD`；1.1.23 限 < 50 天（設定預設 7，超出範圍改用 50），4.3.3 限 1–50 天（超出範圍改用 50） |
 
 ### Barcode 回應欄位
 
@@ -361,7 +365,7 @@ Pay_zg = 4
 
 | 參數 | 類型 | 必填 | 說明 |
 |------|------|------|------|
-| `Deadline_date` | String | ● | 繳費期限 `YYYY/MM/DD`，模組限制 < 7 天 |
+| `Deadline_date` | String | ● | 繳費期限 `YYYY/MM/DD`；1.1.23 限 < 7 天、4.3.3 限 < 6 天，超出範圍兩版都改用 6 天 |
 
 ### ibon 回應欄位
 
@@ -393,7 +397,7 @@ Pay_zg = 6
 
 | 參數 | 類型 | 必填 | 說明 |
 |------|------|------|------|
-| `Deadline_date` | String | ● | 繳費期限 `YYYY/MM/DD`，模組限制 < 7 天 |
+| `Deadline_date` | String | ● | 繳費期限 `YYYY/MM/DD`；1.1.23 限 < 7 天、4.3.3 限 < 6 天，超出範圍兩版都改用 6 天 |
 
 ### FamiPort 回應欄位
 
@@ -502,6 +506,13 @@ else:
 
 > 模組以 `Amount == 訂單金額` 為通過條件，金額若不符會落入失敗分支，避免被改價攻擊。
 
+**兩版外掛差異**
+
+- 結帳頁是瀏覽器轉址，兩版都把 `Verify_key` 放在 querystring，消費者可在網址列看到（4.3.3 `smilepaycredit.php` `credit_create_order`；1.1.23 `class-smilepay-payment-base.php`）。4.3.3 的銀聯轉址則不帶 `Verify_key`（`smilepayunion.php` `thankyou_page`）。
+- 1.1.23 的 `credit_roturl` 會驗 `Mid_smilepay`；**4.3.3 的 `credit_roturl` 不驗**，只比對金額。自行實作時一律驗章。
+- 4.3.3 沒有分期；`Stage` 只見於 1.1.23。
+- `credit_roturl` 處理完即 `wp_redirect` 到訂單完成頁（兩版相同），代表它同時是消費者的返回網址。
+
 ---
 
 ## 信用卡分期
@@ -576,6 +587,13 @@ Pay_zg = 11
 - 部分銀聯卡會走國際 3D Secure 驗證，回傳時間較長
 - `Errdesc` 可能以 BIG-5 編碼，務必轉碼後才寫入訂單備註
 
+**4.3.3 的銀聯通知**（`smilepay_respond.php` `smilepay_respond`）
+
+- 通知帶 `Classif=A` 與 **`Foreign=U`**，以此區分銀聯與一般信用卡
+- 失敗通知為 `Amount=0` 且 `Response_id=0`；成功為 `Response_id=1`
+- 失敗通知驗 `Mid_smilepay` 時，金額改用**訂單總額**而不是通知的 `0`（1.1.23 一律用通知的 `Amount`）
+- ReadMe：銀聯非即時回傳，約 5～20 分鐘後才會收到結果
+
 ---
 
 ## 付款結果通知 (Roturl)
@@ -607,13 +625,18 @@ SmilePay 在消費者完成付款 (取號類) 或刷卡 (信用卡 / 銀聯) 後
 
 | 值 | 說明 |
 |----|------|
-| `A` | 信用卡 / 銀聯授權通知 |
+| `A` | 信用卡授權；帶 `Foreign=U` 時為銀聯 |
 | `B` | ATM 虛擬帳號入帳 |
-| `C` | 超商代碼 / 條碼 入帳 |
-| `T` | 配合貨到付款結案 |
-| `O` | 其他完成狀態 |
+| `C` | 超商條碼繳費 |
+| `E` | 7-11 ibon 代碼繳費 |
+| `F` | 全家 FamiPort 代碼繳費 |
+| `T` | 超商取貨付款（C2C） |
+| `V` | 超商取貨付款（B2C） |
+| `O` | 黑貓取貨付款 |
+| `D` | 4.3.3 列為 `smilepaycn`，未對應任何付款模組 |
 
-> 註：以上來自 WooCommerce 模組對 `Classif` 的處理邏輯 (T/O 直接 completed，其餘 processing)。完整官方對照請以速買配規格書為準。
+> 來源：4.3.3 `smilepay_respond.php` `smilepay_respond` 依 `Classif` 分派付款模組。
+> 1.1.23 對 `T`、`O` 直接改為 completed，其餘改為 processing；4.3.3 對 `T` 改為 completed，其餘 processing。
 
 ### 商店回應格式
 
@@ -627,6 +650,8 @@ Content-Type: text/html; charset=utf-8
 ```
 
 回應的字串需與商家在送出訂單時填的 `Roturl_status` 一致；速買配收到對應字串後即視為通知成功，否則會重送。
+
+4.3.3 送出 `Roturl_status=woook`，成功時回 `<Roturlstatus>woook</Roturlstatus>`（1.1.23 為 `woook1.1.23`），兩版都遵守這個對應。
 
 ### 失敗訊息範例
 
@@ -745,8 +770,6 @@ XML 回應的 `Status`：**只有 `1` 代表成功**（官方 WooCommerce 模組
 
 ### Roturl 自訂錯誤訊息 (商家回給 SmilePay)
 
-### Roturl 自訂錯誤訊息 (商家回給 SmilePay)
-
 以下為官方模組 `class-smilepay-payment.php` 在 Roturl 驗證失敗時回給速買配的訊息：
 
 | 訊息 | 觸發條件 |
@@ -756,6 +779,17 @@ XML 回應的 `Status`：**只有 `1` 代表成功**（官方 WooCommerce 模組
 | `<Roturlstatus>未付款或金額為0</Roturlstatus>` | Amount 為空或 0 |
 | `<Roturlstatus>查無訂單!!</Roturlstatus>` | Data_id 不存在 |
 | `<Roturlstatus>Mid_smilepay不符合!!</Roturlstatus>` | 簽章驗證失敗 |
+
+4.3.3（`smilepay_respond.php`）失敗時直接輸出純文字、不包 `<Roturlstatus>`：
+
+| 訊息 | 觸發條件 |
+|------|----------|
+| `No Information` | 缺 `Classif` |
+| `Not Paid` | `Amount` 為空或 0（銀聯失敗通知除外） |
+| `Order Error` | 訂單不存在或金額不符 |
+| `MID Error` | `Mid_smilepay` 驗證失敗 |
+| `Repeat Respond` | 訂單已是 processing |
+| `Not Found Order!` | 銀聯通知找不到訂單 |
 
 ---
 
@@ -882,7 +916,6 @@ def big5_to_utf8(text: str | bytes) -> str:
 
 - **官方網站**：https://www.smilepay.net/
 - **金流系統**：https://www.smse.com.tw/
-- **API 規格書**：商店後台「下載專區」(需登入)
-- **客服電話**：(02) 8751-1898
-- **技術窗口**：service@smilepay.com.tw
+- **API 規格書**：商家帳務後台左側選單「程式串接說明」（需登入）
+- **客服**：+886-37-376006、service@smilepay.net（訊航科技，外掛 4.3.3 ReadMe）
 

@@ -54,22 +54,23 @@ NewebPay 的 MPG（NDNF-1.2.2）沒有個別錢包參數，這些錢包都以 `T
 
 | 錢包 | ECPay | PAYUNi | NewebPay | PayNow | TapPay |
 |---|---|---|---|---|---|
-| 街口 | `DigitalPayment` umbrella | `JKoPay` ✅ | `TWQR` | — | ✅ 有專屬文件 |
-| 全支付 | `DigitalPayment` umbrella ✅ | — | `TWQR` | — | ✅ 支援 |
-| 全盈+PAY | `DigitalPayment` umbrella ✅ | — | `TWQR` | — | ✅ 有專屬文件 |
-| 一卡通 | `DigitalPayment` umbrella ✅ | — | `TWQR` | — | ✅ 支援 |
-| 悠遊付 | `DigitalPayment` umbrella ✅ | — | `TWQR` | — | ✅ 支援 |
-| icash Pay | `DigitalPayment` umbrella | `ICASH` ✅ | `TWQR` | — | ✅ 支援 |
-| LINE Pay | ✅ | ✅ | ✅ | ✅ | ✅ |
-| AFTEE | `BNPL` umbrella | `AFTEE` ✅ | — | — | ✅ 支援 |
+| 街口 | `DigitalPayment` + `ChooseSubPayment=Jkopay` | `JKoPay` ✅ | `TWQR` | — | ✅ 有專屬文件 |
+| 全支付 | `TWQR` | — | `TWQR` | — | ✅ 支援 |
+| 全盈+PAY | `TWQR` | — | `TWQR` | — | ✅ 有專屬文件 |
+| 一卡通 | `DigitalPayment` + `ChooseSubPayment=iPASS` | — | `TWQR` | — | ✅ 支援 |
+| 悠遊付 | `TWQR` | — | `TWQR` | — | ✅ 支援 |
+| icash Pay | `TWQR` | `ICASH` ✅ | `TWQR` | — | ✅ 支援 |
+| LINE Pay | — | ✅ | ✅ | ✅ | ✅ |
+| AFTEE | — | `AFTEE` ✅ | — | — | ✅ 支援 |
 
-### ECPay 的 umbrella 模式
+### ECPay 的付款方式
 
-ECPay 不讓你指定「就要街口」，而是給一個 `DigitalPayment` 傘型代碼，消費者在綠界的付款選擇頁自己挑街口／全盈+PAY／全支付／一卡通／悠遊付／icash pay。
+依官方付款方式一覽表（developers.ecpay.com.tw/5679）：
 
-**設計含意**：你的訂單資料裡不會事先知道消費者用哪個錢包，要等付款結果通知回來才知道。若業務邏輯需要「依錢包給不同優惠」，ECPay umbrella 模式做不到，得改用 PAYUNi 的直送代碼或 TapPay。
-
-BNPL 同理：ECPay 用 `BNPL` umbrella 承接 `BNPL_URICH`（裕富無卡分期）與 `BNPL_ZINGALA`（中租銀角零卡）。
+- `DigitalPayment` 的子項目只有 `Jkopay`（街口）與 `iPASS`（一卡通 MONEY）。帶 `ChooseSubPayment` 可直接指定；不帶則由消費者在綠界選擇頁挑。
+- 全支付、全盈+PAY、悠遊付、icash Pay 等沒有專屬代碼，走 `TWQR`（歐付寶 TWQR，需申請開通，6～49,999 元）。
+- 沒有 LINE Pay、AFTEE。
+- `BNPL` 子項目為 `URICH`（裕富無卡分期）與 `ZINGALA`（中租銀角零卡）。
 
 ## 3. TWQR——電支跨機構共用平台
 
@@ -126,7 +127,7 @@ BNPL 同理：ECPay 用 `BNPL` umbrella 承接 `BNPL_URICH`（裕富無卡分期
 ```
 我要收「街口 / 全支付 / 悠遊付 / 一卡通 / icash / 全盈」
 ├─ 只想接一次，不在乎消費者選哪個錢包
-│  └─ ECPay ChoosePayment=ALL 或 DigitalPayment umbrella   ← 最省事
+│  └─ ECPay ChoosePayment=ALL、DigitalPayment 或 TWQR   ← 最省事
 ├─ 要能指定特定錢包（例如做錢包別的行銷）
 │  ├─ PAYUNi 直送代碼（JKoPay / ICASH …）
 │  └─ TapPay（每個錢包有獨立文件與 Prime 流程）

@@ -660,10 +660,10 @@ Base: `https://einvoice.opay.tw/B2CInvoice/`（與 B2C 共用網域）
 | 項目 | 狀態 |
 |---|---|
 | 完整錯誤碼 | **需商家帳號**（廠商後台 → 電子發票後台 → 系統開發管理 → 錯誤代碼查詢） |
-| 離線 `OfflineIssue` 的 `vat`、`Items[].ItemTaxType` 取值 | 規格書只列欄位名，未列值 |
+| 離線 `OfflineIssue` 的 `vat`、`Items[].ItemTaxType` 取值 | 規格書只列欄位名，未列值；B2C 線上 `Issue` 的定義（`vat` 1/0、`ItemTaxType` 1/2/3）是否適用需歐付寶確認 |
 | B2B `VoidWithReIssue` 的 `Items[].ItemName` 長度 | 規格書標 String(2)，與 `Issue` 的 String(256) 不一致 |
 
-原始 PDF 已存於 `_studies/opay/`（含抽出的純文字），可直接再解析。
+2026-09-24 重新下載官方總覽（修訂於 2026-09-21）的 i100／i200／i301／O_Pay_011／O_Pay_012，與既有版本逐位元組相同；公開頁面沒有錯誤代碼表。
 
 ## 9. 來源
 

@@ -30,12 +30,25 @@
 
 ### 物流相關端點
 
-| 功能 | 測試環境 | 正式環境 |
-|------|----------|----------|
-| 建立物流訂單 | `/Express/Create` | `/Express/Create` |
-| 超商電子地圖 | `/Express/map` | `/Express/map` |
-| 列印託運單 | `/helper/printTradeDocument` | `/helper/printTradeDocument` |
-| 查詢訂單 | `/Helper/QueryLogisticsTradeInfo/V2` | `/Helper/QueryLogisticsTradeInfo/V2` |
+| 功能 | 路徑 | 官方頁 |
+|------|------|--------|
+| 門市電子地圖 | `/Express/map` | /8795 |
+| 取得門市清單 | `/Helper/GetStoreList` | /47496 |
+| 建立物流訂單（超商、宅配） | `/Express/Create` | /8809、/7414 |
+| 產生測試標籤資料（B2C） | `/Express/CreateTestData` | /7402 |
+| 列印託運單：B2C（含測標）、宅配 | `/helper/printTradeDocument` | /8875 |
+| 列印託運單：C2C 7-ELEVEN | `/Express/PrintUniMartC2COrderInfo` | /7406 |
+| 列印託運單：C2C 全家 | `/Express/PrintFAMIC2COrderInfo` | /8848 |
+| 列印託運單：C2C 萊爾富 | `/Express/PrintHILIFEC2COrderInfo` | /8858 |
+| 列印託運單：C2C OK | `/Express/PrintOKMARTC2COrderInfo` | 綠界官方 ecpay-api-skill guides/06 |
+| 逆物流：B2C 7-ELEVEN／全家／萊爾富 | `/express/ReturnUniMartCVS`、`/express/ReturnCVS`、`/express/ReturnHilifeCVS` | /7408、/8894、/8896 |
+| 逆物流：宅配 | `/Express/ReturnHome` | /7416 |
+| 異動訂單：B2C 7-ELEVEN | `/Helper/UpdateShipmentInfo` | /7410 |
+| 異動門市：C2C 7-ELEVEN | `/Express/UpdateStoreInfo` | /8907 |
+| 取消訂單：C2C 7-ELEVEN | `/Express/CancelC2COrder` | /7412 |
+| 查詢物流訂單 | `/Helper/QueryLogisticsTradeInfo/V5` | /7418 |
+
+2024-11-25 起查詢 API 版本為 **V5**（/36099 更新歷程）。
 
 ---
 
@@ -182,62 +195,53 @@ POST /Express/Create
 
 | 參數 | 類型 | 必填 | 說明 |
 |------|------|------|------|
-| `MerchantID` | String(10) | ● | 商店代號 |
-| `MerchantTradeNo` | String(20) | ● | 訂單編號 (唯一) |
-| `MerchantTradeDate` | String(20) | ● | 訂單日期 `yyyy/MM/dd HH:mm:ss` |
-| `LogisticsType` | String(20) | ● | 物流類型 `CVS`/`HOME` |
-| `LogisticsSubType` | String(20) | ● | 物流子類型 |
-| `GoodsAmount` | Integer | ● | 商品金額 |
-| `GoodsName` | String(50) | ● | 商品名稱 |
-| `SenderName` | String(10) | ● | 寄件人姓名 |
-| `SenderPhone` | String(20) | ● | 寄件人電話 |
-| `SenderCellPhone` | String(20) | 否 | 寄件人手機 |
-| `ReceiverName` | String(10) | ● | 收件人姓名 |
-| `ReceiverPhone` | String(20) | ● | 收件人電話 |
-| `ReceiverCellPhone` | String(20) | 否 | 收件人手機 |
+| `MerchantID` | String(10) | ● | 廠商編號 |
+| `MerchantTradeNo` | String(20) | ● | 廠商交易編號，唯一 |
+| `MerchantTradeDate` | String(20) | ● | `yyyy/MM/dd HH:mm:ss` |
+| `LogisticsType` | String(20) | ● | `CVS`／`HOME` |
+| `LogisticsSubType` | String(20) | ● | 見「物流類型」 |
+| `GoodsAmount` | Int | ● | 超商 1–20,000；宅配 1 元以上（黑貓代收時上限 20,000） |
+| `GoodsName` | String(50) | 條件 | 超商 `UNIMARTC2C`、`HILIFEC2C`、`OKMARTC2C` 必填 |
+| `SenderName` | String(10) | ● | 4–10 字元（中文 2–5 字），不可含數字、特殊符號、emoji；C2C 退件須憑證件領取，勿填公司名 |
+| `ReceiverName` | String(10) | ● | 同上 |
 | `ServerReplyURL` | String(200) | ● | 物流狀態通知網址 |
-| `CheckMacValue` | String | ● | 檢查碼 |
+| `ClientReplyURL` | String(200) | | Client 端回傳網址 |
+| `ReceiverEmail` | String(50) | | 收件人 email |
+| `TradeDesc` | String(200) | | 交易描述 |
+| `Remark` | String(200) | | 備註 |
+| `PlatformID` | String(10) | | 平台商代號 |
+| `CheckMacValue` | String | ● | 檢查碼（MD5） |
 
-### 超商取貨專用參數
-
-| 參數 | 類型 | 必填 | 說明 |
-|------|------|------|------|
-| `ReceiverStoreID` | String(6) | ● | 收件門市代號 |
-| `ReturnStoreID` | String(6) | 否 | 退貨門市代號 |
-| `IsCollection` | String(1) | 否 | 是否代收貨款 `Y`/`N` |
-| `CollectionAmount` | Integer | 否 | 代收金額 |
-
-### 宅配專用參數
+### 超商專用參數（/8809）
 
 | 參數 | 類型 | 必填 | 說明 |
 |------|------|------|------|
-| `SenderZipCode` | String(5) | ● | 寄件人郵遞區號 |
-| `SenderAddress` | String(200) | ● | 寄件人地址 |
-| `ReceiverZipCode` | String(5) | ● | 收件人郵遞區號 |
-| `ReceiverAddress` | String(200) | ● | 收件人地址 |
-| `Temperature` | String(4) | 否 | 溫層 `0001`常溫 `0002`冷藏 `0003`冷凍 |
-| `Distance` | String(2) | 否 | 距離 `00`同縣市 `01`外縣市 `02`離島 |
-| `Specification` | String(4) | 否 | 規格 (見下表) |
-| `ScheduledDeliveryTime` | String(1) | 否 | 預定送達時段 |
-| `ScheduledDeliveryDate` | String(10) | 否 | 預定送達日期 |
+| `ReceiverStoreID` | String(6) | ● | 收件門市代碼 |
+| `ReturnStoreID` | String(6) | | 退貨門市；僅 7-ELEVEN C2C 適用，未帶則退回原寄件門市 |
+| `SenderPhone` | String(20) | | 寄件人電話 |
+| `SenderCellPhone` | String(10) | 條件 | `UNIMARTC2C`、`HILIFEC2C`、`OKMARTC2C` 必填；09 開頭 10 碼；`FAMIC2C` 空值時帶入後台設定 |
+| `ReceiverPhone` | String(20) | | 允許數字與 `()-#` |
+| `ReceiverCellPhone` | String(10) | ● | 09 開頭 10 碼 |
+| `IsCollection` | String(1) | | `Y` 代收貨款、`N` 不代收（預設） |
+| `CollectionAmount` | Int | 條件 | `UNIMARTC2C`、`UNIMART`、`UNIMARTFREEZE` 須等於 `GoodsAmount` |
 
-### Specification 規格代碼
+### 宅配專用參數（/7414）
 
-| 代碼 | 尺寸 |
-|------|------|
-| `0001` | 60cm |
-| `0002` | 90cm |
-| `0003` | 120cm |
-| `0004` | 150cm |
-
-### ScheduledDeliveryTime 時段代碼
-
-| 代碼 | 時段 |
-|------|------|
-| `1` | 13:00 前 |
-| `2` | 14:00-18:00 |
-| `3` | 不限時 |
-| `4` | 任何時間 (黑貓夜配) |
+| 參數 | 類型 | 必填 | 說明 |
+|------|------|------|------|
+| `SenderPhone`／`SenderCellPhone` | String(20) | 擇一 | |
+| `ReceiverPhone`／`ReceiverCellPhone` | String(20) | 擇一 | |
+| `SenderZipCode` | String(6) | ● | 寄件人郵遞區號 |
+| `SenderAddress` | String(60) | ● | 6–60 字元；中華郵政僅台灣本島 |
+| `ReceiverZipCode` | String(6) | ● | 收件人郵遞區號 |
+| `ReceiverAddress` | String(60) | ● | 收件人地址 |
+| `IsCollection` | String(1) | | `Y` 代收（僅 `TCAT`，商品金額上限 20,000）；中華郵政勿填 |
+| `GoodsWeight` | Number | 條件 | `POST` 必填，公斤，上限 20、小數 3 位 |
+| `Temperature` | String(4) | | `0001` 常溫（預設）、`0002` 冷藏、`0003` 冷凍；`POST` 只能 `0001` |
+| `Distance` | String(2) | | `00` 同縣市（預設）、`01` 外縣市、`02` 離島；`POST` 忽略 |
+| `Specification` | String(4) | | `0001` 60cm（預設）、`0002` 90cm、`0003` 120cm、`0004` 150cm；冷藏冷凍不可用 150cm；`POST` 忽略 |
+| `ScheduledPickupTime` | String(1) | | 固定帶 `4`（不限時）；`POST` 忽略 |
+| `ScheduledDeliveryTime` | String(2) | | `1` 13 點前、`2` 14–18 點、`4` 不限時（官方表另列 `3` 亦為 14–18 點） |
 
 ### PHP 範例 - 超商取貨
 
@@ -349,23 +353,19 @@ HTML;
 
 ## 列印託運單
 
-### 端點
-
-```
-POST /helper/printTradeDocument
-```
-
-### 參數
+### B2C（含測標）、宅配 `POST /helper/printTradeDocument`（/8875）
 
 | 參數 | 類型 | 必填 | 說明 |
 |------|------|------|------|
-| `MerchantID` | String(10) | ● | 商店代號 |
-| `AllPayLogisticsID` | String(20) | ● | ECPay 物流編號 |
+| `MerchantID` | String(10) | ● | 廠商編號 |
+| `AllPayLogisticsID` | String | ● | 物流交易編號，批次列印以半形逗號分隔 |
+| `PlatformID` | String(10) | | 平台商代號 |
+| `PrintMode` | Int | | `1` 一般 A4、`2` 熱感應標籤 A6 |
 | `CheckMacValue` | String | ● | 檢查碼 |
 
-### 回應
+回傳 HTML 頁面（`Accept: text/html`）。**不可放在 iframe**，導向超商時會被阻擋。
 
-成功時會回傳 PDF 檔案內容。
+C2C 各超商另有列印端點（見上方端點表），需帶 `CVSPaymentNo`（7-11 另帶 `CVSValidationNo`）。
 
 ---
 
@@ -374,33 +374,23 @@ POST /helper/printTradeDocument
 ### 端點
 
 ```
-POST /Helper/QueryLogisticsTradeInfo/V2
+POST /Helper/QueryLogisticsTradeInfo/V5
 ```
 
-### 參數
+### 參數（/7418）
 
 | 參數 | 類型 | 必填 | 說明 |
 |------|------|------|------|
-| `MerchantID` | String(10) | ● | 商店代號 |
-| `AllPayLogisticsID` | String(20) | ● | ECPay 物流編號 |
+| `MerchantID` | String(10) | ● | 廠商編號 |
+| `AllPayLogisticsID` | String(20) | 擇一 | 綠界物流交易編號 |
+| `MerchantTradeNo` | String(20) | 擇一 | 廠商交易編號 |
+| `TimeStamp` | Int | ● | Unix 時間，3 分鐘內有效 |
+| `PlatformID` | String(10) | | 平台商代號 |
 | `CheckMacValue` | String | ● | 檢查碼 |
 
 ### 回應參數
 
-| 參數 | 說明 |
-|------|------|
-| `MerchantID` | 商店代號 |
-| `MerchantTradeNo` | 訂單編號 |
-| `AllPayLogisticsID` | ECPay 物流編號 |
-| `LogisticsType` | 物流類型 |
-| `LogisticsSubType` | 物流子類型 |
-| `LogisticsStatus` | 物流狀態碼 |
-| `GoodsAmount` | 商品金額 |
-| `UpdateStatusDate` | 狀態更新時間 |
-| `ReceiverName` | 收件人姓名 |
-| `ReceiverPhone` | 收件人電話 |
-| `ReceiverStoreID` | 收件門市代號 |
-| `TradeDate` | 交易時間 |
+`MerchantID`、`MerchantTradeNo`、`AllPayLogisticsID`、`LogisticsType`（如 `CVS_UNIMARTC2C`）、`LogisticsStatus`（代碼見 /7440）、`GoodsAmount`、`GoodsName`、`GoodsWeight`、`ActualWeight`、`HandlingCharge`、`CollectionAmount`、`CollectionChargeFee`、`CollectionAllocateAmount`、`CollectionAllocateDate`、`CVSPaymentNo`、`CVSValidationNo`、`ShipmentNo`、`ShipChargeDate`、`BookingNote`、`TradeDate`、`SenderName`、`SenderPhone`、`SenderCellPhone`、`CheckMacValue`。
 
 ---
 
