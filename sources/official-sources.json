@@ -1,5 +1,383 @@
 [
  {
+  "id": "ai-agentskills-clients",
+  "provider": "ai-platform",
+  "skills": [
+   "invoice",
+   "payment",
+   "logistics"
+  ],
+  "title": "Agent Skills 支援的用戶端清單",
+  "url": "https://agentskills.io/clients",
+  "format": "html",
+  "fetch": "get",
+  "access": "public",
+  "covers": [
+   "CLAUDE.md",
+   "taiwan-invoice/SKILL.md",
+   "taiwan-payment/SKILL.md",
+   "taiwan-logistics/SKILL.md"
+  ],
+  "notes": "frontmatter 欄位規則與通用 .agents/skills/ 路徑"
+ },
+ {
+  "id": "ai-agentskills-spec",
+  "provider": "ai-platform",
+  "skills": [
+   "invoice",
+   "payment",
+   "logistics"
+  ],
+  "title": "Agent Skills 規格（SKILL.md frontmatter）",
+  "url": "https://agentskills.io/specification",
+  "format": "html",
+  "fetch": "get",
+  "access": "public",
+  "covers": [
+   "CLAUDE.md",
+   "taiwan-invoice/SKILL.md",
+   "taiwan-payment/SKILL.md",
+   "taiwan-logistics/SKILL.md"
+  ],
+  "notes": "frontmatter 欄位規則與通用 .agents/skills/ 路徑"
+ },
+ {
+  "id": "ai-antigravity",
+  "provider": "ai-platform",
+  "skills": [
+   "invoice",
+   "payment",
+   "logistics"
+  ],
+  "title": "Google Antigravity：Skills",
+  "url": "https://antigravity.google/docs/skills",
+  "format": "html",
+  "fetch": "get",
+  "access": "public",
+  "covers": [
+   "invoice-cli/assets/templates/platforms/agent.json",
+   "payment-cli/assets/templates/platforms/agent.json",
+   "logistics-cli/assets/templates/platforms/agent.json",
+   "CLAUDE.md"
+  ],
+  "notes": "skill 目錄慣例；變動時核對各 CLI 的平台設定 folderStructure"
+ },
+ {
+  "id": "ai-claude",
+  "provider": "ai-platform",
+  "skills": [
+   "invoice",
+   "payment",
+   "logistics"
+  ],
+  "title": "Claude Code：Agent Skills",
+  "url": "https://code.claude.com/docs/en/skills",
+  "format": "html",
+  "fetch": "get",
+  "access": "public",
+  "covers": [
+   "invoice-cli/assets/templates/platforms/claude.json",
+   "payment-cli/assets/templates/platforms/claude.json",
+   "logistics-cli/assets/templates/platforms/claude.json",
+   "CLAUDE.md"
+  ],
+  "notes": "skill 目錄慣例；變動時核對各 CLI 的平台設定 folderStructure"
+ },
+ {
+  "id": "ai-cline",
+  "provider": "ai-platform",
+  "skills": [
+   "invoice",
+   "payment",
+   "logistics"
+  ],
+  "title": "Cline：Skills",
+  "url": "https://docs.cline.bot/customization/skills",
+  "format": "html",
+  "fetch": "get",
+  "access": "public",
+  "covers": [
+   "invoice-cli/assets/templates/platforms/cline.json",
+   "payment-cli/assets/templates/platforms/cline.json",
+   "logistics-cli/assets/templates/platforms/cline.json",
+   "CLAUDE.md"
+  ],
+  "notes": "skill 目錄慣例；變動時核對各 CLI 的平台設定 folderStructure"
+ },
+ {
+  "id": "ai-codebuddy",
+  "provider": "ai-platform",
+  "skills": [
+   "invoice",
+   "payment",
+   "logistics"
+  ],
+  "title": "CodeBuddy：Skills",
+  "url": "https://www.codebuddy.ai/docs/ide/Features/Skills",
+  "format": "html",
+  "fetch": "get",
+  "access": "public",
+  "covers": [
+   "invoice-cli/assets/templates/platforms/codebuddy.json",
+   "payment-cli/assets/templates/platforms/codebuddy.json",
+   "logistics-cli/assets/templates/platforms/codebuddy.json",
+   "CLAUDE.md"
+  ],
+  "notes": "skill 目錄慣例；變動時核對各 CLI 的平台設定 folderStructure"
+ },
+ {
+  "id": "ai-codex",
+  "provider": "ai-platform",
+  "skills": [
+   "invoice",
+   "payment",
+   "logistics"
+  ],
+  "title": "OpenAI Codex：Skills",
+  "url": "https://developers.openai.com/codex/skills",
+  "format": "html",
+  "fetch": "get",
+  "access": "public",
+  "covers": [
+   "invoice-cli/assets/templates/platforms/codex.json",
+   "payment-cli/assets/templates/platforms/codex.json",
+   "logistics-cli/assets/templates/platforms/codex.json",
+   "CLAUDE.md"
+  ],
+  "notes": "skill 目錄慣例；變動時核對各 CLI 的平台設定 folderStructure"
+ },
+ {
+  "id": "ai-continue-cli",
+  "provider": "ai-platform",
+  "skills": [
+   "invoice",
+   "payment",
+   "logistics"
+  ],
+  "title": "Continue CLI 原始碼：loadMarkdownSkills.ts（文件未載明 skills 支援）",
+  "url": "https://raw.githubusercontent.com/continuedev/continue/main/extensions/cli/src/util/loadMarkdownSkills.ts",
+  "format": "txt",
+  "fetch": "get",
+  "access": "public",
+  "covers": [
+   "invoice-cli/assets/templates/platforms/continue.json",
+   "payment-cli/assets/templates/platforms/continue.json",
+   "logistics-cli/assets/templates/platforms/continue.json",
+   "CLAUDE.md"
+  ],
+  "notes": "skill 目錄慣例；變動時核對各 CLI 的平台設定 folderStructure"
+ },
+ {
+  "id": "ai-continue-ide",
+  "provider": "ai-platform",
+  "skills": [
+   "invoice",
+   "payment",
+   "logistics"
+  ],
+  "title": "Continue IDE 原始碼：core/config/markdown/loadMarkdownSkills.ts",
+  "url": "https://raw.githubusercontent.com/continuedev/continue/main/core/config/markdown/loadMarkdownSkills.ts",
+  "format": "txt",
+  "fetch": "get",
+  "access": "public",
+  "covers": [
+   "invoice-cli/assets/templates/platforms/continue.json",
+   "payment-cli/assets/templates/platforms/continue.json",
+   "logistics-cli/assets/templates/platforms/continue.json",
+   "CLAUDE.md"
+  ],
+  "notes": "skill 目錄慣例；變動時核對各 CLI 的平台設定 folderStructure"
+ },
+ {
+  "id": "ai-copilot",
+  "provider": "ai-platform",
+  "skills": [
+   "invoice",
+   "payment",
+   "logistics"
+  ],
+  "title": "GitHub Copilot：Create skills",
+  "url": "https://docs.github.com/en/copilot/how-tos/use-copilot-agents/coding-agent/create-skills",
+  "format": "html",
+  "fetch": "get",
+  "access": "public",
+  "covers": [
+   "invoice-cli/assets/templates/platforms/copilot.json",
+   "payment-cli/assets/templates/platforms/copilot.json",
+   "logistics-cli/assets/templates/platforms/copilot.json",
+   "CLAUDE.md"
+  ],
+  "notes": "skill 目錄慣例；變動時核對各 CLI 的平台設定 folderStructure"
+ },
+ {
+  "id": "ai-copilot-vscode",
+  "provider": "ai-platform",
+  "skills": [
+   "invoice",
+   "payment",
+   "logistics"
+  ],
+  "title": "VS Code Copilot：Agent Skills",
+  "url": "https://code.visualstudio.com/docs/copilot/customization/agent-skills",
+  "format": "html",
+  "fetch": "get",
+  "access": "public",
+  "covers": [
+   "invoice-cli/assets/templates/platforms/copilot.json",
+   "payment-cli/assets/templates/platforms/copilot.json",
+   "logistics-cli/assets/templates/platforms/copilot.json",
+   "CLAUDE.md"
+  ],
+  "notes": "skill 目錄慣例；變動時核對各 CLI 的平台設定 folderStructure"
+ },
+ {
+  "id": "ai-cursor",
+  "provider": "ai-platform",
+  "skills": [
+   "invoice",
+   "payment",
+   "logistics"
+  ],
+  "title": "Cursor：Agent Skills",
+  "url": "https://cursor.com/docs/context/skills",
+  "format": "html",
+  "fetch": "get",
+  "access": "public",
+  "covers": [
+   "invoice-cli/assets/templates/platforms/cursor.json",
+   "payment-cli/assets/templates/platforms/cursor.json",
+   "logistics-cli/assets/templates/platforms/cursor.json",
+   "CLAUDE.md"
+  ],
+  "notes": "skill 目錄慣例；變動時核對各 CLI 的平台設定 folderStructure"
+ },
+ {
+  "id": "ai-gemini",
+  "provider": "ai-platform",
+  "skills": [
+   "invoice",
+   "payment",
+   "logistics"
+  ],
+  "title": "Gemini CLI：Agent Skills",
+  "url": "https://geminicli.com/docs/cli/skills/",
+  "format": "html",
+  "fetch": "get",
+  "access": "public",
+  "covers": [
+   "invoice-cli/assets/templates/platforms/gemini.json",
+   "payment-cli/assets/templates/platforms/gemini.json",
+   "logistics-cli/assets/templates/platforms/gemini.json",
+   "CLAUDE.md"
+  ],
+  "notes": "skill 目錄慣例；變動時核對各 CLI 的平台設定 folderStructure"
+ },
+ {
+  "id": "ai-kiro",
+  "provider": "ai-platform",
+  "skills": [
+   "invoice",
+   "payment",
+   "logistics"
+  ],
+  "title": "Kiro：Skills",
+  "url": "https://kiro.dev/docs/skills/",
+  "format": "html",
+  "fetch": "get",
+  "access": "public",
+  "covers": [
+   "invoice-cli/assets/templates/platforms/kiro.json",
+   "payment-cli/assets/templates/platforms/kiro.json",
+   "logistics-cli/assets/templates/platforms/kiro.json",
+   "CLAUDE.md"
+  ],
+  "notes": "skill 目錄慣例；變動時核對各 CLI 的平台設定 folderStructure"
+ },
+ {
+  "id": "ai-opencode",
+  "provider": "ai-platform",
+  "skills": [
+   "invoice",
+   "payment",
+   "logistics"
+  ],
+  "title": "OpenCode：Agent Skills",
+  "url": "https://opencode.ai/docs/skills/",
+  "format": "html",
+  "fetch": "get",
+  "access": "public",
+  "covers": [
+   "invoice-cli/assets/templates/platforms/opencode.json",
+   "payment-cli/assets/templates/platforms/opencode.json",
+   "logistics-cli/assets/templates/platforms/opencode.json",
+   "CLAUDE.md"
+  ],
+  "notes": "skill 目錄慣例；變動時核對各 CLI 的平台設定 folderStructure"
+ },
+ {
+  "id": "ai-qoder",
+  "provider": "ai-platform",
+  "skills": [
+   "invoice",
+   "payment",
+   "logistics"
+  ],
+  "title": "Qoder：Skills",
+  "url": "https://docs.qoder.com/extensions/skills",
+  "format": "html",
+  "fetch": "get",
+  "access": "public",
+  "covers": [
+   "invoice-cli/assets/templates/platforms/qoder.json",
+   "payment-cli/assets/templates/platforms/qoder.json",
+   "logistics-cli/assets/templates/platforms/qoder.json",
+   "CLAUDE.md"
+  ],
+  "notes": "skill 目錄慣例；變動時核對各 CLI 的平台設定 folderStructure"
+ },
+ {
+  "id": "ai-trae",
+  "provider": "ai-platform",
+  "skills": [
+   "invoice",
+   "payment",
+   "logistics"
+  ],
+  "title": "Trae：Skills",
+  "url": "https://docs.trae.ai/ide/skills",
+  "format": "html",
+  "fetch": "browser",
+  "access": "public",
+  "covers": [
+   "invoice-cli/assets/templates/platforms/trae.json",
+   "payment-cli/assets/templates/platforms/trae.json",
+   "logistics-cli/assets/templates/platforms/trae.json",
+   "CLAUDE.md"
+  ],
+  "notes": "skill 目錄慣例；變動時核對各 CLI 的平台設定 folderStructure"
+ },
+ {
+  "id": "ai-windsurf",
+  "provider": "ai-platform",
+  "skills": [
+   "invoice",
+   "payment",
+   "logistics"
+  ],
+  "title": "Windsurf：Cascade Skills",
+  "url": "https://docs.windsurf.com/windsurf/cascade/skills",
+  "format": "html",
+  "fetch": "get",
+  "access": "public",
+  "covers": [
+   "invoice-cli/assets/templates/platforms/windsurf.json",
+   "payment-cli/assets/templates/platforms/windsurf.json",
+   "logistics-cli/assets/templates/platforms/windsurf.json",
+   "CLAUDE.md"
+  ],
+  "notes": "skill 目錄慣例；變動時核對各 CLI 的平台設定 folderStructure"
+ },
+ {
   "id": "amego-api-doc",
   "provider": "amego",
   "skills": [
@@ -3391,13 +3769,13 @@
   "title": "萊爾富官網",
   "url": "https://www.hilife.com.tw",
   "format": "html",
-  "fetch": "browser",
+  "fetch": "manual",
   "access": "public",
   "covers": [
    "taiwan-logistics/references/carrier-direct-access.md",
    "taiwan-logistics/data/providers.csv"
   ],
-  "notes": "WAF 擋程式請求（403），需瀏覽器"
+  "notes": "官網 WAF（Akamai）連無頭瀏覽器也阻擋，無法自動追蹤；僅作為「無公開 API」的佐證"
  },
  {
   "id": "jkopay-authorized-payment",
@@ -3932,9 +4310,9 @@
    "logistics"
   ],
   "title": "藍新物流服務技術串接手冊 NDNS v1.0.0（PDF）",
-  "url": "https://www.newebpay.com/website/Page/download_file?name=物流服務技術串接手冊_NDNSv1.0.0.pdf",
+  "url": "https://www.newebpay.com/website/Page/download_file?name=%E7%89%A9%E6%B5%81%E6%9C%8D%E5%8B%99%E6%8A%80%E8%A1%93%E4%B8%B2%E6%8E%A5%E6%89%8B%E5%86%8A_NDNSv1.0.0.pdf",
   "format": "pdf",
-  "fetch": "browser",
+  "fetch": "get",
   "access": "public",
   "covers": [
    "taiwan-logistics/references/NEWEBPAY_LOGISTICS_REFERENCE.md",
@@ -3944,7 +4322,7 @@
    "taiwan-logistics/EXAMPLES.md",
    "tests/vectors/newebpay.json"
   ],
-  "notes": "直接 GET 會轉到 error_file_link；需從下載頁 https://www.newebpay.com/website/Page/content/download_api 點擊。下載頁 HTML 內嵌 JSON（WDI_Document_Number=NDNSv1.0.0、WDI_Latest_Date）可用來偵測改版；站台擋無 User-Agent 請求（403）"
+  "notes": "檔名需 URL 編碼後直接下載；改版時檔名版號會變，以 newebpay-download-api 下載頁偵測"
  },
  {
   "id": "newebpay-ndns-sample",
@@ -3953,14 +4331,14 @@
    "logistics"
   ],
   "title": "藍新物流服務技術串接手冊 程式範例 v1（zip）",
-  "url": "https://www.newebpay.com/website/Page/download_file?name=物流服務技術串接手冊_程式範例v1.zip",
+  "url": "https://www.newebpay.com/website/Page/download_file?name=%E7%89%A9%E6%B5%81%E6%9C%8D%E5%8B%99%E6%8A%80%E8%A1%93%E4%B8%B2%E6%8E%A5%E6%89%8B%E5%86%8A_%E7%A8%8B%E5%BC%8F%E7%AF%84%E4%BE%8Bv1.zip",
   "format": "zip",
-  "fetch": "browser",
+  "fetch": "get",
   "access": "public",
   "covers": [
    "taiwan-logistics/examples/newebpay-logistics-cvs-example.py"
   ],
-  "notes": "同 NDNS PDF，需從下載頁點擊"
+  "notes": "檔名需 URL 編碼後直接下載；改版時檔名版號會變，以 newebpay-download-api 下載頁偵測"
  },
  {
   "id": "newebpay-woocommerce-plugin",
@@ -4367,22 +4745,6 @@
    "taiwan-logistics/data/logistics-types.csv"
   ],
   "notes": "取消原因與費用表在頁面內嵌資料中"
- },
- {
-  "id": "paynow-apidoc",
-  "provider": "paynow",
-  "skills": [
-   "payment"
-  ],
-  "title": "PayNow 技術文件：現代版 API（PaymentIntent）總覽",
-  "url": "https://docs.paynow.com.tw/developer/docs/apidoc",
-  "format": "html",
-  "fetch": "browser",
-  "access": "public",
-  "covers": [
-   "taiwan-payment/references/paynow-payment-api.md"
-  ],
-  "notes": "Docusaurus SPA，需瀏覽器渲染（Playwright + history.pushState）後取 innerText"
  },
  {
   "id": "paynow-apidoc-api-external",
@@ -4942,7 +5304,7 @@
    "logistics"
   ],
   "title": "PayNow 物流 7-11 冷凍大宗 B2C（V2.4，服務代碼 22）",
-  "url": "https://docs.paynow.com.tw/developer/docs/apipdf/logistics/711-freezing-bulk-B2C",
+  "url": "https://docs.paynow.com.tw/developer/docs/apipdf/logistics/freezing-bulk-B2C",
   "format": "html",
   "fetch": "browser",
   "access": "public",
