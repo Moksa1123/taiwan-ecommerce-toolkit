@@ -80,6 +80,25 @@ DELIVERY_TIMES = {
     '9': '非常規配送',
 }
 
+# 貨況查詢回傳的 order_status（ezship_status_api.pdf／ezship_status_api_byorder.pdf）
+# 與建單回傳的 S01／E 代碼同名但意義不同，不可共用對照表
+TRACKING_STATUS = {
+    'S01': '尚未寄件或尚未收到超商總公司提供的寄件訊息',
+    'S02': '運往取件門市途中',
+    'S03': '已送達取件門市',
+    'S04': '已完成取貨',
+    'S05': '退貨（已退回物流中心／再寄一次給取件人／退回給寄件人）',
+    'S06': '配送異常（刪單／門市閉店／貨故）',
+}
+TRACKING_ERRORS = {
+    'E00': '參數傳遞內容有誤或欄位短缺',
+    'E01': 'su_id 帳號不存在',
+    'E02': 'su_id 帳號無網站串接權限',
+    'E03': 'sn_id 店到店編號有誤',
+    'E04': 'su_id 帳號與 sn_id 店到店編號無法對應',
+    'E99': '系統錯誤',
+}
+
 # 這兩個狀態無法呈現最終貨況，需登入 ezShip 系統查詢
 NEEDS_MANUAL_CHECK = {'S05': '包裹退貨', 'S06': '包裹配送異常'}
 
@@ -279,6 +298,8 @@ def parse_status_result(query: Dict[str, str]) -> Dict[str, str]:
         'sn_id': query.get('sn_id', ''),
         'order_no': query.get('order_no', ''),
         'order_status': status,
+        'status_desc': TRACKING_STATUS.get(status, ''),
+        'error': TRACKING_ERRORS.get(status, ''),
         'times': times,
         'times_desc': DELIVERY_TIMES.get(times, f'未知 {times}'),
         # sdate 由超商或宅配公司提供；udate 是 ezShip 收到該狀態的時間
@@ -340,6 +361,22 @@ def _self_test() -> int:
     ok = 'A11' in ORDER_STATUS_GROUPS['hk_mo']
     failed += not ok
     print(f'  [{"PASS" if ok else "FAIL"}] A11/A12 歸類為店港澳（ezShip 支援港澳店配）')
+
+    # 貨況：S01 在貨況查詢代表尚未寄件，不是建單成功
+    r = parse_status_result({'sn_id': '12345678', 'order_status': 'S01', 'times': '1'})
+    ok = r['status_desc'].startswith('尚未寄件') and r['error'] == '' and not r['needs_manual_check']
+    failed += not ok
+    print(f'  [{"PASS" if ok else "FAIL"}] 貨況 S01 解析為尚未寄件')
+
+    r = parse_status_result({'sn_id': '12345678', 'order_status': 'E03'})
+    ok = r['error'] == TRACKING_ERRORS['E03'] and r['status_desc'] == ''
+    failed += not ok
+    print(f'  [{"PASS" if ok else "FAIL"}] 貨況 E03 解析為店到店編號有誤')
+
+    r = parse_status_result({'sn_id': '12345678', 'order_status': 'S06', 'times': '8'})
+    ok = r['needs_manual_check'] and r['times_desc'] == '退還給寄件人'
+    failed += not ok
+    print(f'  [{"PASS" if ok else "FAIL"}] 貨況 S06 標記需登入後台查詢')
 
     # 特殊字元
     try:

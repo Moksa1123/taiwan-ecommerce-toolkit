@@ -38,10 +38,12 @@
 | `Createallowance` | 開立折讓 |
 | `CreateallowanceInvalid` | 作廢折讓 |
 | `CreateOfflineInvoiceB2c` | **離線 B2C 開立** |
+| `FetchOfflineSequence` | 離線字軌取號 |
 | `GetInvoiceList` | 查詢發票清單 |
 | `GetPrefixList` | 查詢字軌清單 |
 | `GetOfflineInvoiceDeviceList` | 查詢離線裝置清單 |
-| `UpdateDestroyInvoiceB2b` | B2B 銷毀更新 |
+| `UpdateDestroyInvoiceB2c` | B2C 註銷重開 |
+| `UpdateDestroyInvoiceB2b` | B2B 註銷重開 |
 | `ValidateToken` | **驗證 Token**（可先用這支確認加密實作正確）|
 
 > 💡 **先打 `ValidateToken`**。它只驗 Token，不會產生發票資料——是驗證 AES 實作與時間校正最安全的起手式。
@@ -285,22 +287,113 @@ long timeStamp = Convert.ToInt32(
 
 > **紅陽最特別的兩點**：一是**只加密 `Token` 一個欄位**，業務參數走明文——這讓 debug 容易很多，但也代表傳輸層安全完全靠 HTTPS；二是**內建冪等**，這在台灣加值中心裡少見。
 
-## 12. 待補
+## 12. 查詢與字軌 API
 
-開立類端點（B2C／B2B／作廢／折讓／作廢折讓／離線）與認證皆已完整。
+以下各支都帶 `merchantID`、`Token` 與各自的條件，回應外層同 §10。
+
+### `GetInvoiceList` 查詢發票（手冊 §7，p.29–36）
+
+| 參數 | 必填 | 型態 | 說明 |
+|---|---|---|---|
+| `merchantID` | ✅ | String(10) | |
+| `invoiceNumbers` | 擇一 | String(16) 陣列 | 發票號碼，例 `["AB12345678","AB12345679"]` |
+| `orderNo` | 擇一 | String(60) | 自訂訂單編號；與 `invoiceNumbers` 擇一 |
+| `Token` | ✅ | String(200) | 見 §3 |
+
+`result` 為陣列，每筆欄位：
+
+| 欄位 | 型態 | 說明 |
+|---|---|---|
+| `merchantID` / `orderNo` / `invoiceNumber` / `randomNumber` | | |
+| `b2B` | String(3) | `1` B2B / `2` B2C |
+| `buyerIdentifier` / `buyerName` / `buyerEmailAddress` / `buyerTelephoneNumber` / `buyerAddress` | | 買受人資料 |
+| `invoiceType` | Integer | `7` 一般 / `8` 特種 |
+| `printFlag` | String(1) | `Y` 索取紙本 / `N` 不索取（表格誤植為 `orintFlag`，範例為 `printFlag`）|
+| `isPrint` / `printCount` | Integer | 是否已列印（`0`/`1`）、已列印次數 |
+| `donateMark` / `poban` | | 捐贈與捐贈碼 |
+| `carrierType` / `carrierId1` | | `0` 無載具 / `1` 手機條碼 / `2` 自然人憑證 / `3` 紅陽會員載具 |
+| `taxType` / `taxRate` / `taxAmount` / `salesAmount` / `zeroTaxSalesAmount` / `freeTaxSalesAmount` / `totalAmount` | | `taxType` 含 `9` 混合 |
+| `productItems` | 陣列 | `sequenceNumber`、`description`、`quantity`、`unit`、`unitPrice`、`amount`、`remark`、`taxType` |
+| `hasAllowance` / `allowanceBalance` | Boolean / Integer | 是否有折讓、可開折讓餘額 |
+| `flagA` | String(1) | 上傳財政部狀態：`1` 待轉 / `2` 已轉 / `3` 上傳成功 / `4` 上傳失敗 / `5` 完成 / `6` 失敗 |
+| `flagCancel` | Integer | `0` 未作廢 / `1` 已作廢 |
+| `CRT_DAT` | DateTime | 開立時間（表格寫 `yyyy/MM/dd HH:mm:ss`，範例為 ISO `2022-07-22T16:38:02`）|
+| `barcode` / `leftQrCode` / `rightQrCode` | | **僅 `isPrint=1`** |
+
+範例另有表格未列的 `tradeNumber`、`CRT_USR`、`cancelDateTime`、`mem`、`flagA_DATE`。
+
+### `GetPrefixList` 查詢字軌（手冊 §8，p.37–38）
+
+| 參數 | 必填 | 型態 | 說明 |
+|---|---|---|---|
+| `merchantID` / `Token` | ✅ | | |
+| `RocYear` | | Integer | 民國年 |
+| `IsOffline` | | Integer | `0` 否 / `1` 離線字軌 |
+| `PeriodType` | | Integer | `1`–`6` 對應 01–02 月 … 11–12 月 |
+
+`result` 欄位：`invoiceType`、`onf`（`1` 啟用 / `2` 暫停 / `3` 停用）、`InvoiceTrack`（字軌 2 碼）、`PeriodType`、
+`Start_NO`、`End_NO`、`Now_NO`（`0` 尚未使用）、`IsOffline`、`IdCode`（發票機台代碼）。
+
+### `GetOfflineInvoiceDeviceList` 查詢發票機台（手冊 §9，p.39–40）
+
+只帶 `merchantID`、`Token`。`result` 欄位：`IdCode` String(10)、`Note` String(200)、`CRT_DAT`。
+
+### `FetchOfflineSequence` 離線字軌取號（手冊 §10，p.41–42）
+
+輔助配號並標記離線字軌取號狀態；不用這支、改用 `GetPrefixList` 自行管理配號也能開立離線發票。
+
+| 參數 | 必填 | 型態 | 說明 |
+|---|---|---|---|
+| `merchantID` / `Token` | ✅ | | |
+| `IdCode` | ✅ | String(10) | 發票機台代碼 |
+| `InvoiceType` | | Integer | `7` 一般 / `8` 特種；未帶預設一般 |
+| `RocYear` | ✅ | Integer | 民國年 |
+| `PeriodType` | ✅ | Integer | `1`–`6` |
+| `FetchCount` | ✅ | Integer | 取號本數，每本 50 張 |
+
+`result` 欄位：`InvoiceTrack`、`Start_NO`、`End_NO`。
+
+## 13. 註銷重開（手冊 §12，p.50–64）
+
+以新內容重開同一張發票：`UpdateDestroyInvoiceB2c`、`UpdateDestroyInvoiceB2b`。
+
+請求欄位與對應的開立端點（§4、§5）相同，差異：
+
+| 參數 | 說明 |
+|---|---|
+| `invoiceNumber` | ✅ String(10)，要註銷重開的發票號碼 |
+| `reSend_Reason` | ✅ String(20)，註銷重開原因 |
+| `orderNo` | **不帶** |
+| `IsSendMessage` | ✅ `0` 不寄 / `1` 寄簡訊（B2C 開立沒有這欄，註銷重開兩版都有）；`=1` 時 `buyerTelephoneNumber` 必填 |
+
+回應同開立（B2C p.56–57、B2B p.63–64）。B2B 回應表格寫 `randomNum`，範例為 `randomNumber`。
+
+## 14. 與官方 Claude Code Skill 的差異
+
+紅陽開發者專區提供「電子發票 AI 串接指南（Claude Code Skill）v2.3」（`sunpay-einvoice-skill-v2.3-v1.zip`，165 行）。
+
+| 項目 | 官方 skill | 手冊 v2.3（本文件依據）|
+|---|---|---|
+| `TimeStamp` | Unix epoch 秒 | 第 8 章 C# 範例 `DateTime.UtcNow.AddHours(8)`，比 Unix 多 28800 秒（§3）|
+| 欄位命名 | PascalCase（`InvoiceType`、`BuyerIdentifier`…）| camelCase（`invoiceType`、`buyerIdentifier`…）|
+| 紙本／捐贈 | `PrintMark`、`NPOBAN`、請求帶 `RandomNumber` | `isprint`、`PaperInvoiceOption`、`poban`；請求沒有隨機碼欄位 |
+| 涵蓋端點 | B2C 開立、作廢；其餘寫「見手冊」| 全部 13 支 |
+
+Token 的 AES 流程兩者一致，官方 skill 附的自檢向量已用 `examples/sunpay-invoice-example.py` 驗證相符。
+`TimeStamp` 的兩種定義互相矛盾，需在測試環境實測確認。
+
+## 15. 待補
 
 | 項目 | 備註 |
 |---|---|
-| `GetInvoiceList` / `GetPrefixList` / `GetOfflineInvoiceDeviceList` 查詢參數 | 端點已確認，查詢條件欄位待擷取 |
-| `UpdateDestroyInvoiceB2b` | 端點已確認，用途與欄位待確認 |
-| 錯誤訊息清單 | ⚠️ **手冊未提供統一錯誤碼表**，僅 `message` String(30) 動態說明。無法整理成 `error-codes.csv` |
+| `TimeStamp` 定義 | 手冊與官方 skill 矛盾（§14），需測試帳號實測 |
+| 錯誤訊息清單 | 手冊未提供統一錯誤碼表，僅 `message` String(30) 動態說明，無法整理成 `error-codes.csv` |
 
-原始 PDF 與抽出文字存於 `_studies/sunpay/`，可直接再解析。
-
-## 13. 來源
+## 16. 來源
 
 - 電子發票技術串接手冊 v2.3 — `https://storage.googleapis.com/joinchill-image/sunpay_techdoc/202603/紅陽科技電子發票技術串接手冊V2.3.pdf`
 - 開發者專區 — https://www.sunpay.com.tw/developers/
+- 電子發票 AI 串接指南（Claude Code Skill）v2.3 — `https://storage.googleapis.com/joinchill-image/sunpay_techdoc/202607/sunpay-einvoice-skill-v2.3-v1.zip`
 - 測試環境申請 — https://testinv.sunpay.com.tw/sign-up
 - 正式環境會員 — https://einv.sunpay.com.tw
 - 發票管理後台 — https://inv.sunpay.com.tw/

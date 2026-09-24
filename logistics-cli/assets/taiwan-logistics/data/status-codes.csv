@@ -926,14 +926,39 @@ hct,址誤,Address Error,Address Error,error,地址錯誤無法配送,聯繫商�
 hct,拒收退回,Refused,Refused Return,returned,收件人拒收，包裹退回,
 hct,商品保留不退,Hold No Return,Held No Return,on_hold,商品保留不退回,聯繫商家
 hct,公司行號休息,Office Closed,Office Closed,error,公司行號休息日無法配送,延後重新配送
-ezship,A01,超商取貨,CVS Pickup,order_type,建單時的訂單狀態分組 超商取貨類 須帶 st_code,
-ezship,A02,超商取貨,CVS Pickup,order_type,建單時的訂單狀態分組 超商取貨類 須帶 st_code,
-ezship,A03,超商取貨,CVS Pickup,order_type,建單時的訂單狀態分組 超商取貨類 須帶 st_code,
-ezship,A04,超商取貨,CVS Pickup,order_type,建單時的訂單狀態分組 超商取貨類 須帶 st_code,
-ezship,A05,宅配,Home Delivery,order_type,建單時的訂單狀態分組 宅配類 須帶 rv_addr 與 rv_zip,
-ezship,A06,宅配,Home Delivery,order_type,建單時的訂單狀態分組 宅配類 須帶 rv_addr 與 rv_zip,
-ezship,A11,店港澳,HK/Macau Store,order_type,建單時的訂單狀態分組 店港澳類 須帶 st_code,
-ezship,A12,店港澳,HK/Macau Store,order_type,建單時的訂單狀態分組 店港澳類 須帶 st_code,
-ezship,S05,包裹退貨,Package Returned,returned,貨況查詢回傳 此狀態無法呈現最終貨況,登入 ezShip 系統查詢最終貨況
-ezship,S06,包裹配送異常,Delivery Exception,error,貨況查詢回傳 此狀態無法呈現最終貨況,登入 ezShip 系統查詢最終貨況
-ezship,00000000,建單失敗,Order Creation Failed,error,傳送訂單回傳的 sn_id 為八個零即代表建單失敗 無獨立錯誤碼欄位,檢查必填欄位與帳號是否已開通網站串接
+ezship,A01,超商取貨新訂單（免確認）,CVS order,order_type,建單時送出的 order_status：不需在 ezShip 確認，可直接印單；回 sn_id；須帶 st_code,傳送訂單回傳（ezship_WebOrder_HttpRequest_v15.pdf／ezship_WebOrder_XML_v15s.pdf）
+ezship,A02,超商取貨新訂單（需確認）,CVS order,order_type,建單時送出的 order_status：需在 ezShip 確認後才能印單（預設值）；回 sn_id；須帶 st_code,傳送訂單回傳（ezship_WebOrder_HttpRequest_v15.pdf／ezship_WebOrder_XML_v15s.pdf）
+ezship,A03,超商取貨新訂單（輕鬆袋／迷你袋，免確認）,CVS order,order_type,建單時送出的 order_status：不回 sn_id；須到 ezShip 後台登錄專用編號；須帶 st_code,傳送訂單回傳（ezship_WebOrder_HttpRequest_v15.pdf／ezship_WebOrder_XML_v15s.pdf）
+ezship,A04,超商取貨新訂單（輕鬆袋／迷你袋，需確認）,CVS order,order_type,建單時送出的 order_status：不回 sn_id；需確認並登錄專用編號；須帶 st_code,傳送訂單回傳（ezship_WebOrder_HttpRequest_v15.pdf／ezship_WebOrder_XML_v15s.pdf）
+ezship,A05,宅配新訂單（免確認）,Home delivery order,order_type,建單時送出的 order_status：可直接印單；回 sn_id；須帶 rv_addr、rv_zip,傳送訂單回傳（ezship_WebOrder_HttpRequest_v15.pdf／ezship_WebOrder_XML_v15s.pdf）
+ezship,A06,宅配新訂單（需確認）,Home delivery order,order_type,建單時送出的 order_status：需確認後才能印單；回 sn_id；須帶 rv_addr、rv_zip,傳送訂單回傳（ezship_WebOrder_HttpRequest_v15.pdf／ezship_WebOrder_XML_v15s.pdf）
+ezship,A11,店港澳訂單（免確認）,HK/Macau store order,order_type,建單時送出的 order_status：無代收；可直接印單；回 sn_id；須帶 st_code,傳送訂單回傳（ezship_WebOrder_HttpRequest_v15.pdf／ezship_WebOrder_XML_v15s.pdf）
+ezship,A12,店港澳訂單（需確認）,HK/Macau store order,order_type,建單時送出的 order_status：無代收；需確認後才能印單；回 sn_id；須帶 st_code,傳送訂單回傳（ezship_WebOrder_HttpRequest_v15.pdf／ezship_WebOrder_XML_v15s.pdf）
+ezship,S01,訂單新增成功,Order created,success,建單回傳；sn_id 須存起來,傳送訂單回傳（ezship_WebOrder_HttpRequest_v15.pdf／ezship_WebOrder_XML_v15s.pdf）
+ezship,E00,參數傳遞內容有誤或欄位短缺（XML 版：XML 內容有誤）,,error,建單回傳；此時 sn_id 為 00000000,傳送訂單回傳（ezship_WebOrder_HttpRequest_v15.pdf／ezship_WebOrder_XML_v15s.pdf）
+ezship,E01,su_id 帳號不存在,,error,建單回傳；此時 sn_id 為 00000000,傳送訂單回傳（ezship_WebOrder_HttpRequest_v15.pdf／ezship_WebOrder_XML_v15s.pdf）
+ezship,E02,帳號無取貨付款／網站串接／宅配／店港澳權限,,error,建單回傳；此時 sn_id 為 00000000,傳送訂單回傳（ezship_WebOrder_HttpRequest_v15.pdf／ezship_WebOrder_XML_v15s.pdf）
+ezship,E03,帳號無可用之輕鬆袋或迷你袋,,error,建單回傳；此時 sn_id 為 00000000,傳送訂單回傳（ezship_WebOrder_HttpRequest_v15.pdf／ezship_WebOrder_XML_v15s.pdf）
+ezship,E04,取件門市有誤,,error,建單回傳；此時 sn_id 為 00000000,傳送訂單回傳（ezship_WebOrder_HttpRequest_v15.pdf／ezship_WebOrder_XML_v15s.pdf）
+ezship,E05,金額有誤,,error,建單回傳；此時 sn_id 為 00000000,傳送訂單回傳（ezship_WebOrder_HttpRequest_v15.pdf／ezship_WebOrder_XML_v15s.pdf）
+ezship,E06,取件人 email 格式有誤,,error,建單回傳；此時 sn_id 為 00000000,傳送訂單回傳（ezship_WebOrder_HttpRequest_v15.pdf／ezship_WebOrder_XML_v15s.pdf）
+ezship,E07,取件人手機格式有誤,,error,建單回傳；此時 sn_id 為 00000000,傳送訂單回傳（ezship_WebOrder_HttpRequest_v15.pdf／ezship_WebOrder_XML_v15s.pdf）
+ezship,E08,order_status 內容有誤或為空值,,error,建單回傳；此時 sn_id 為 00000000,傳送訂單回傳（ezship_WebOrder_HttpRequest_v15.pdf／ezship_WebOrder_XML_v15s.pdf）
+ezship,E09,order_type 內容有誤或為空值,,error,建單回傳；此時 sn_id 為 00000000,傳送訂單回傳（ezship_WebOrder_HttpRequest_v15.pdf／ezship_WebOrder_XML_v15s.pdf）
+ezship,E10,取件人姓名內容有誤或為空值,,error,建單回傳；此時 sn_id 為 00000000,傳送訂單回傳（ezship_WebOrder_HttpRequest_v15.pdf／ezship_WebOrder_XML_v15s.pdf）
+ezship,E11,收件地址內容有誤或為空值,,error,建單回傳；此時 sn_id 為 00000000,傳送訂單回傳（ezship_WebOrder_HttpRequest_v15.pdf／ezship_WebOrder_XML_v15s.pdf）
+ezship,E13,店港澳無法使用 order_type=1（取貨付款）,,error,建單回傳；此時 sn_id 為 00000000,傳送訂單回傳（ezship_WebOrder_HttpRequest_v15.pdf／ezship_WebOrder_XML_v15s.pdf）
+ezship,E98,XML 系統發生錯誤無法載入（僅 XML 版）,,error,建單回傳；此時 sn_id 為 00000000,傳送訂單回傳（ezship_WebOrder_HttpRequest_v15.pdf／ezship_WebOrder_XML_v15s.pdf）
+ezship,E99,系統錯誤,,error,建單回傳；此時 sn_id 為 00000000,傳送訂單回傳（ezship_WebOrder_HttpRequest_v15.pdf／ezship_WebOrder_XML_v15s.pdf）
+ezship,S01,尚未寄件或尚未收到超商總公司提供的寄件訊息,Not yet shipped,pending,貨況查詢回傳；times 1 第一次配送／2 第二次配送／8 退還寄件人／9 非常規配送,貨況查詢回傳（ezship_status_api.pdf／ezship_status_api_byorder.pdf）
+ezship,S02,運往取件門市途中,In transit,in_transit,貨況查詢回傳；times 1 第一次配送／2 第二次配送／8 退還寄件人／9 非常規配送,貨況查詢回傳（ezship_status_api.pdf／ezship_status_api_byorder.pdf）
+ezship,S03,已送達取件門市,Arrived at store,at_store,貨況查詢回傳；times 1 第一次配送／2 第二次配送／8 退還寄件人／9 非常規配送,貨況查詢回傳（ezship_status_api.pdf／ezship_status_api_byorder.pdf）
+ezship,S04,已完成取貨,Picked up,picked_up,貨況查詢回傳；times 1 第一次配送／2 第二次配送／8 退還寄件人／9 非常規配送,貨況查詢回傳（ezship_status_api.pdf／ezship_status_api_byorder.pdf）
+ezship,S05,退貨（已退回物流中心／再寄一次給取件人／退回給寄件人）,Returned,returned,貨況查詢回傳；times 1 第一次配送／2 第二次配送／8 退還寄件人／9 非常規配送,貨況查詢回傳（ezship_status_api.pdf／ezship_status_api_byorder.pdf）
+ezship,S06,配送異常（刪單／門市閉店／貨故）,Delivery exception,error,貨況查詢回傳；times 1 第一次配送／2 第二次配送／8 退還寄件人／9 非常規配送,貨況查詢回傳（ezship_status_api.pdf／ezship_status_api_byorder.pdf）
+ezship,E00,參數傳遞內容有誤或欄位短缺,,error,貨況查詢回傳,貨況查詢回傳（ezship_status_api.pdf／ezship_status_api_byorder.pdf）
+ezship,E01,su_id 帳號不存在,,error,貨況查詢回傳,貨況查詢回傳（ezship_status_api.pdf／ezship_status_api_byorder.pdf）
+ezship,E02,su_id 帳號無網站串接權限,,error,貨況查詢回傳,貨況查詢回傳（ezship_status_api.pdf／ezship_status_api_byorder.pdf）
+ezship,E03,sn_id 店到店編號有誤,,error,貨況查詢回傳,貨況查詢回傳（ezship_status_api.pdf／ezship_status_api_byorder.pdf）
+ezship,E04,su_id 帳號與 sn_id 店到店編號無法對應,,error,貨況查詢回傳,貨況查詢回傳（ezship_status_api.pdf／ezship_status_api_byorder.pdf）
+ezship,E99,系統錯誤,,error,貨況查詢回傳,貨況查詢回傳（ezship_status_api.pdf／ezship_status_api_byorder.pdf）

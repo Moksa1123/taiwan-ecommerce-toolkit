@@ -51,5 +51,5 @@ HOME,order_status=A05/A06,ezShip 宅配,ezship,home,true,8000,,常溫,order_type
 CROSS_BORDER,stCate=TSF,店港澳,ezship,cross_border,false,,,常溫,order_status A11/A12；無代收
 HOME,eprdcl2=001/003/008,新竹物流（直連）,hct_direct,home,true,,,常溫/冷凍/冷藏,eprdcl2 001 一般／003 冷凍／008 冷藏；eqmny 代收貨款
 ONDEMAND,LALAMOVE,Lalamove 即時配送,lalamove,ondemand,false,依方案,依車型,常溫,先報價後下單;報價效期5分鐘;同城/當日;可換司機;非批次物流
-ONDEMAND,PANDAGO,pandago 即時配送,pandago,ondemand,false,依報價,34x34x36cm/20kg,常溫,費用與時間為兩支獨立端點;Sandbox僅新加坡;不需成為foodpanda餐廳夥伴
+ONDEMAND,PANDAGO,pandago 即時配送,pandago,ondemand,false,依報價,34x34x36cm/20kg,常溫,費用與時間為兩支獨立端點;公開Sandbox僅新加坡(台灣另有Stage環境);不需成為foodpanda餐廳夥伴
 ONDEMAND,UBER_DIRECT,Uber Direct 即時配送,uber_direct,ondemand,false,依報價,依方案,常溫,配送半徑約10英里;可預約最多30天;台灣可用性未經官方確認

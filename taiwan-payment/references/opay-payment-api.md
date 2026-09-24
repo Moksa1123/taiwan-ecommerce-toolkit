@@ -101,7 +101,7 @@ Form POST，`application/x-www-form-urlencoded`。
 | `IgnorePayment` | String(100) | `ChoosePayment=ALL` 時隱藏特定付款方式，多筆以 `#` 分隔 |
 | `DeviceSource` | String(10) | 空值＝預設版型；`APP`＝App 版型 |
 | `PlatformID` | String(10) | 平台商代號。**有帶此參數時，檢查碼須用平台商的 HashKey/HashIV 計算** |
-| `HoldTradeAMT` | Int | `0`＝不延遲撥款（預設）；`1`＝延遲撥款，需另呼叫「會員申請撥款/退款」API。**不適用信用卡** |
+| `HoldTradeAMT` | Int | `0`＝不延遲撥款（預設）；`1`＝延遲撥款，需另呼叫「會員申請撥款/退款」API（`Cashier/Capture`，見第 5 節）。**不適用信用卡** |
 | `UseRedeem` | String(1) | `Y`/`N`，是否可用購物金/紅包折抵 |
 | `Remark` / `ItemURL` | String | 備註 / 商品銷售網址 |
 | `ChooseSubPayment` | String(20) | 付款子項目（如 `TAISHIN`） |
@@ -226,6 +226,31 @@ def gen_check_mac_value(params: dict, hash_key: str, hash_iv: str) -> str:
 - 已關帳的信用卡訂單**不適用**，請用「信用卡關帳/退刷/取消/放棄」
 - 微信支付已撥款者無法用 API 退款，僅能人工處理（洽客服 02-2655-0115）
 
+### 會員申請撥款／退款 `Cashier/Capture`
+
+延遲撥款（`HoldTradeAMT=1`）的交易付款後，呼叫此 API 讓歐付寶撥款到會員帳戶，並可同時退款給買方（《全方位金流介接技術文件》第 13 章，p.41–42）。
+非延遲撥款的交易改用 `AioChargeback`；**信用卡交易不適用**。
+
+- 正式：`https://payment.opay.tw/Cashier/Capture`
+- 測試：`https://payment-stage.opay.tw/Cashier/Capture`
+- Server POST，CheckMacValue 同第 4 節
+
+| 參數 | 型態 | 必填 | 說明 |
+|------|------|:---:|------|
+| `MerchantID` | String(10) | ● | 會員編號 |
+| `MerchantTradeNo` | String(64) | ● | 建立訂單時的會員交易編號 |
+| `CheckMacValue` | String | ● | |
+| `CaptureAMT` | Int | ● | 申請撥款金額 |
+| `UserRefundAMT` | Int | ● | 退款給買方的金額，不退款帶 `0`；範圍 0～訂單金額。**`CaptureAMT + UserRefundAMT` 須等於訂單金額** |
+| `PlatformID` | String(10) | | 專案合作平台商代號；一般會員帶空值 |
+| `UpdatePlatformChargeFee` | String(1) | | `Y` 更改訂單的平台商手續費，預設 `N`；僅平台商使用 |
+| `PlatformChargeFee` | Int | | `UpdatePlatformChargeFee=Y` 時帶，範圍 0～原手續費 |
+| `Remark` | String(30) | | 備註 |
+
+實際撥款金額 = 訂單金額 − `UserRefundAMT` − 必要手續費。
+
+回應以 `參數=值&…` 直接回傳：`MerchantID`、`MerchantTradeNo`、`TradeNo`（String(20)）、`RtnCode`（`1` 成功，其餘失敗）、`RtnMsg`、`AllocationDate`（預計撥款日 `yyyy-MM-dd`）。
+
 ### 其他端點
 
 | 功能 | 路徑 |
@@ -266,8 +291,7 @@ def gen_check_mac_value(params: dict, hash_key: str, hash_iv: str) -> str:
 | 會員 Open ID API | https://www.opay.tw/Content/files/O_Pay_041.pdf |
 | 電子發票 B2C / B2B / 離線 | 見 [../../taiwan-invoice/references/OPAY_API_REFERENCE.md](../../taiwan-invoice/references/OPAY_API_REFERENCE.md) |
 
-## 8. 待驗證
+## 8. 備註與待驗證
 
 - POS、微信公眾號文件標註「若要串接使用請洽歐付寶客服」，可能需額外開通
-- 歐付寶物流 API 未出現在官方文件總覽頁；社群教學顯示存在，端點與參數待確認
-- 「會員申請撥款/退款」API（延遲撥款情境）的完整參數本次未擷取
+- 歐付寶沒有公開物流 API：官方文件總覽（2026-09-21 修訂版，2026-09-24 查核）只列金流、電子發票、Open ID、平台綁定、直播主收款網址

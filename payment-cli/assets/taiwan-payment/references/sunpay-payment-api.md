@@ -142,7 +142,7 @@ rsamsg  →  Base64 decode（URL-safe：- _）  →  以「公鑰」分段解密
 > ⚠️ **ASCII 排序是強制的**，手冊在兩處重複警告「請務必將 head 與 body 參數進行 ASCII 排序，以免加密失敗」。
 > ⚠️ SHA2 密鑰是**直接串接在 URLEncode 後字串的尾端**，不是 ECPay 那種 `HashKey=…&…&HashIV=…` 前後包夾。
 
-手冊附錄 3 另附**各程式語言 URL_Encode 編碼表**（Java URLEncoder / RFC 3986 / PHP urlencode / PHP rawurlencode / C# UrlEncode / C# EscapeDataString 六欄對照）——跨語言實作前先查這張表。
+`check_value` 的 URL encode **必須符合 Java `URLEncoder`**（手冊附錄 3）：空白編成 `+`、`*` 不編碼、`~` 編成 `%7E`。PHP `urlencode`、Python `quote`、JS `encodeURIComponent` 都不同，值含空白、`*`、`~` 時簽章會錯。附錄 3 有六種語言的對照表。
 
 ## 4. API 端點
 
@@ -166,6 +166,42 @@ rsamsg  →  Base64 decode（URL-safe：- _）  →  以「公鑰」分段解密
 > **CallBack 補發機制**：30 分鐘內每 5 分鐘補發一次，**超過 30 分鐘不再補發**。
 > ⚠️ **回傳網址不可帶 port**（如 `https://example.com:8080/x.php`），紅陽基於資安風險控管會擋。
 > 貨態通知為 **HTTP FORM POST key-value，非 JSON**。
+> 收到 CallBack 並驗簽後回純文字 `success`（不含 HTML 或 JavaScript），紅陽收到即停止補發；`success` 不改變訂單狀態（§4.3.3，p.31）。
+
+### 請款 Capture（手冊 §4.5，p.41–43）
+
+- 申請制；只能對 **21 天內**的交易請款。
+- 外層 POST 欄位同交易：`web`、`send_time`、`rsamsg`、`check_value`（§3）。
+
+| 位置 | 參數 | 長度 | 必填 | 說明 |
+|---|---|---|---|---|
+| head | `web` | 32 | ✅ | 特店代號 |
+| body | `currency` | 4 | | `TWD`，空值預設 `TWD` |
+| body | `mn` | 8 | ✅ | 請款金額，正整數；**分期付款與銀聯卡只能全額請款** |
+| body | `td` | 50 | ✅ | 特店訂單編號 |
+| body | `trade_no` | 19 | | 紅陽交易編號 |
+
+回應為明文 JSON：`code`（`00` 請求成功 / `99` 請求失敗）、`msg`。
+
+### 退款 Refund（手冊 §4.6，p.44–47）
+
+- 申請制，且只接受事先登記白名單的 IP；只能對 **170 天內**的交易退款，逾期需另向紅陽申請。
+- 外層 POST 欄位同交易。
+
+| 位置 | 參數 | 長度 | 必填 | 說明 |
+|---|---|---|---|---|
+| head | `send_time` | 17 | ✅ | `fffssmmHHyyyyMMdd`，120 秒內有效 |
+| head | `web` | 32 | ✅ | 特店代號 |
+| body | `card_type` | 2 | ✅ | `01` 信用卡 / `02` 銀聯卡 / `03` Apple Pay、Google Pay / `10` 街口支付 |
+| body | `currency` | 4 | | `TWD`，空值預設 `TWD` |
+| body | `mn` | 8 | ✅ | 退款金額，正整數 |
+| body | `refund_memo` | 100 | ✅ | 退款原因，不可有 `*'<>[]"` 等特殊字元 |
+| body | `td` | 50 | ✅ | 特店訂單編號 |
+| body | `trade_no` | 19 | | 紅陽交易編號 |
+
+回應為明文 JSON：`code`、`msg`，代碼見 §6「退款 API 的 `code`」。
+
+> ⚠️ 請款的 `head` 只有 `web`，退款的 `head` 有 `send_time` 與 `web`（手冊範例亦同）。
 
 ## 5. 交易 (Cash) 請求參數
 
@@ -378,24 +414,32 @@ rsamsg  →  Base64 decode（URL-safe：- _）  →  以「公鑰」分段解密
 
 聯絡：(02) 2502-6969
 
-## 9. 待補
+## 9. 與官方 Claude Code Skill 的差異
 
-**金流側已完成**：端點（§4）、加解密（§3）、交易全欄位（§5）、代碼表（§6）。
+紅陽開發者專區提供「金流 AI 串接指南（Claude Code Skill）v1.1.0」（`sunpay-payment-skill-v1.1.0-v1.zip`，231 行），
+涵蓋付款導頁、回呼解簽、即時查詢、請款、超商取貨；**不含退款欄位、物流狀態通知、隨交易開立發票**。
 
-**金流側已完整**：端點（§4）、加解密（§3）、交易全欄位含五種支付方式的專屬參數（§5）、回應與代碼（§6）。
+| 項目 | 官方 skill | 手冊 v1.1.0 |
+|---|---|---|
+| `check_value` 的 URL encode | PHP `urlencode`（英數與 `-_.` 以外全編碼）| 附錄 3：須符合 Java `URLEncoder`（空白 `+`、`*` 不編碼、`~` 編為 `%7E`）|
+| CallBack 補發 | 30 分鐘內重送 5 次 | 30 分鐘內每 5 分鐘補發一次（§4.3.3）|
 
-| 項目 | 優先 | 來源 | 備註 |
-|---|---|---|---|
-| 請款 / 退款 API 的請求欄位 | 中 | 金流手冊 §4.4–4.5 | 端點與 `refund_status` 已確認 |
-| 物流貨態 `StoreType` 代碼表 | 中 | — | ⚠️ **手冊未提供代碼對照**，僅說明是「物流狀態之代碼」，需洽紅陽索取 |
-| 統一錯誤碼表 | 中 | — | ⚠️ 手冊無獨立錯誤碼章節，僅有各 API 的 `pay_result`；已全數收錄於 §6 |
-| 對照紅陽官方 Claude Code Skill 的涵蓋範圍 | 高 | skill zip | 決定我們補到什麼程度 |
+兩者至少在 `*` 上不同（Java 不編碼、PHP 編為 `%2A`；附錄 3 對 `~` 也列出不同寫法），值含這些字元時算出的 `check_value` 不同。官方 skill 附的 `check_value` 自檢向量
+（`0994ecc3…671d`）已用 `examples/sunpay-payment-example.py` 驗證相符。
+
+## 10. 待補
+
+| 項目 | 備註 |
+|---|---|
+| 物流貨態 `StoreType` 代碼表 | 手冊只說是「物流狀態之代碼」，未附對照，需洽紅陽索取 |
+| 統一錯誤碼表 | 手冊無獨立錯誤碼章節，各 API 的 `pay_result`／`code` 已收錄於 §6 |
 
 電子發票側見 [../../taiwan-invoice/references/SUNPAY_API_REFERENCE.md](../../taiwan-invoice/references/SUNPAY_API_REFERENCE.md)。
 
-## 10. 來源
+## 11. 來源
 
 - 開發者專區 — https://www.sunpay.com.tw/developers/
+- 金流 AI 串接指南（Claude Code Skill）v1.1.0 — `https://storage.googleapis.com/joinchill-image/sunpay_techdoc/202607/sunpay-payment-skill-v1.1.0-v1.zip`
 - 教學手冊站 — https://doc.esafe.com.tw/
 - 操作手冊 — https://www.sunpay.com.tw/manual/
 - 金流串接頁 — https://www.sunpay.com.tw/金流串接/

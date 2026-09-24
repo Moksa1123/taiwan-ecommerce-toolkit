@@ -36,6 +36,8 @@ Thumbs.db
 # private specs that we read but never commit. Distilled output lives in the
 # public skill folders (taiwan-invoice/, taiwan-payments/, taiwan-logistics/).
 _studies/
+# 使用者提供的商家文件（需帳號取得，不可公開）
+_inbox/
 *.pdf
 *-private.md
 *-internal.md

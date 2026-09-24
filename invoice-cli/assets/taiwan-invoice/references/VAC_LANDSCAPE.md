@@ -31,7 +31,7 @@
 - 為什麼「已開立但未上傳」的發票不能作廢（ezPay `LIB10009`）
 - 為什麼各家的上傳時間都是凌晨批次（ezPay 每日 01:00 上傳、06:00 更新狀態）
 
-## 1. 本 skill 已收錄（6 家）
+## 1. 本 skill 已收錄（7 家）
 
 | 加值中心 | 加密 | 特色 | doc_access | Reference |
 |---|---|---|---|---|
@@ -41,6 +41,7 @@
 | **Amego 光貿** | MD5 簽章 | **MIG 4.0**、統編查詢、PDF 下載、測試正式共用 URL | public | [AMEGO_API_REFERENCE.md](AMEGO_API_REFERENCE.md) |
 | **SmilePay 速買配** | Verify_key | 雙協定 GET/POST、簡單整合、XML 回應 | public | [SMILEPAY_API_REFERENCE.md](SMILEPAY_API_REFERENCE.md) |
 | **PayNow 立吉富** | JWT Bearer | 金物流發票一站式、**POS 批次取號** | apply | [PAYNOW_API_REFERENCE.md](PAYNOW_API_REFERENCE.md) |
+| **紅陽科技 SunPay** | Token 欄位 AES-128-CBC | 相同 PostData 回原發票（內建冪等）、離線字軌、註銷重開 | public | [SUNPAY_API_REFERENCE.md](SUNPAY_API_REFERENCE.md) |
 
 ## 2. 已知但未收錄的主要加值中心
 
@@ -49,7 +50,6 @@
 | **關貿網路 TradeVAN** | 最大加值中心之一。蝦皮供應商電子發票平台走它。另有 EzSign 數位簽章平台 | apply/contract | 文件需申請；市佔重要，**列為後續優先** |
 | **精誠 Systex 金融科技** | 大型系統整合商體系 | contract | 無公開文件 |
 | **中華電信** | invoice.cht.com.tw、einvoice.hisales.hinet.net | contract | 無公開文件 |
-| **紅陽科技 SunPay** | inv.sunpay.com.tw，有技術手冊 v2.3 | public | 已在金流端建檔，發票端待補（見 [../../taiwan-payment/references/sunpay-payment-api.md](../../taiwan-payment/references/sunpay-payment-api.md)） |
 | **GoMyPay** | einvoice.gomypay.asia | apply | 已在金流端建檔 |
 | **訊航科技** | einvoice.net.tw | contract | 無公開文件 |
 | **e首發票** | youshop.com.tw，支援多電商平台 API 串接、Email/SMS/LINE 通知 | apply | 小型 |
