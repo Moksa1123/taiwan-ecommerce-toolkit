@@ -30,7 +30,7 @@ UNIQUE_KEYS = {
     'providers.csv': ('provider',),
     'error-codes.csv': ('provider', 'code'),
     'payment-methods.csv': ('method_code',),
-    'logistics-types.csv': ('type_code', 'provider'),
+    'logistics-types.csv': ('provider', 'logistics_sub_type'),
 }
 
 # 檔案 -> 不可為空的欄位
@@ -73,7 +73,10 @@ def check_file(path):
 
     # 2. 重複主鍵
     keys = UNIQUE_KEYS.get(name)
-    if keys and all(k in header for k in keys):
+    missing = [k for k in keys or () if k not in header]
+    if missing:
+        problems.append(f'{rel}: 唯一鍵欄位不存在：{", ".join(missing)}（請同步修正 UNIQUE_KEYS）')
+    elif keys:
         seen = Counter(tuple(r.get(k, '') for k in keys) for r in dict_rows)
         for key, count in seen.items():
             if count > 1:

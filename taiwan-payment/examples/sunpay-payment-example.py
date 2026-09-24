@@ -75,6 +75,14 @@ def _canonical(payload: Dict[str, Any]) -> str:
     return json.dumps(ordered, separators=(',', ':'), ensure_ascii=False)
 
 
+def java_urlencode(text: str) -> str:
+    """Java URLEncoder 規則（手冊附錄 3：check_value 必須符合 Java urlencode）。
+
+    空白編成 `+`、`*` 不編碼、`~` 編成 `%7E`；Python 的 quote 三者都不同。
+    """
+    return urllib.parse.quote_plus(text, safe='*').replace('~', '%7E')
+
+
 def make_check_value(payload: Dict[str, Any], sha2_key: str) -> str:
     """產生 check_value。
 
@@ -84,7 +92,7 @@ def make_check_value(payload: Dict[str, Any], sha2_key: str) -> str:
     `HashKey=...&參數&HashIV=...` 的前後包夾。
     值為 null 的參數不參與簽名（官方明註），本函式已於 build 階段排除。
     """
-    encoded = urllib.parse.quote(_canonical(payload), safe='')
+    encoded = java_urlencode(_canonical(payload))
     return hashlib.sha256((encoded + sha2_key).encode('utf-8')).hexdigest()
 
 
@@ -94,7 +102,7 @@ def make_rsamsg(payload: Dict[str, Any], public_key_pem: str) -> str:
         raise RuntimeError('需要 cryptography 套件：pip install cryptography')
 
     key = serialization.load_pem_public_key(public_key_pem.encode('utf-8'))
-    data = urllib.parse.quote(_canonical(payload), safe='').encode('utf-8')
+    data = java_urlencode(_canonical(payload)).encode('utf-8')
 
     out = bytearray()
     for i in range(0, len(data), RSA_ENCRYPT_CHUNK):
@@ -288,7 +296,7 @@ def _self_test() -> int:
     failed = 0
     print('紅陽官方測試向量驗證')
 
-    encoded = urllib.parse.quote(_canonical(payload), safe='')
+    encoded = java_urlencode(_canonical(payload))
     ok = encoded == expected_encoded
     failed += not ok
     print(f'  [{"PASS" if ok else "FAIL"}] urlencode 結果與手冊逐字相同')
@@ -303,6 +311,12 @@ def _self_test() -> int:
     if not ok:
         print(f'         期望 {expected_check}')
         print(f'         實得 {got}')
+
+    # 手冊附錄 3 的 Java URLEncoder 欄：空白 +、~ %7E、* 不編、/ %2F
+    got = java_urlencode('a b~c*d/e')
+    ok = got == 'a+b%7Ec*d%2Fe'
+    failed += not ok
+    print(f'  [{"PASS" if ok else "FAIL"}] 特殊字元依 Java URLEncoder 編碼（實得 {got}）')
 
     # send_time 格式：毫秒在最前面、日期在最後
     st = build_send_time(datetime(2023, 9, 27, 16, 21, 34, 585_000))

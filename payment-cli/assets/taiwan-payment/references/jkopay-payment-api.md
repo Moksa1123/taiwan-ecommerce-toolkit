@@ -291,7 +291,86 @@ GET https://[Host]/platform/inquiry?platform_order_ids={id1},{id2}
 
 > 官方範例中第二筆退款紀錄沒有 `refund_order_id`——舊資料可能缺欄，解析時別假設必存在。
 
-另有**交易撥款檔 R File**（Reimburse File）供對帳，欄位格式待補。
+### 5.9 店家撥款檔 R File（Reimburse File）
+
+線上支付與線下 POS 的 R 檔格式相同（兩份官方頁面欄位逐一一致）。
+
+**取得方式**
+
+- 街口上傳至街口端 FTP Server；須向業務窗口提供抓檔的來源 IP，審核通過後才給正式／測試 FTP 連線資訊
+- 依請款週期產生，每日 06:00 後可下載
+- 檔名：一般店 `M_ReimburseReport_{店家統編}_{產生日 yyyyMMdd}_R_P.csv`；平台店（僅線上支付頁列出）`…_R_P{Number}.csv`
+- CSV，欄位以 `,` 分隔，每列以 `0d0a`（CRLF）結尾
+- 金額欄一律兩位小數（含小數點），不帶 `+`／`-`；正負由類別欄（`J`／`K`）表示
+
+**檔頭 `H`**：資料類別 `H`、檔案日期 `yyyyMMdd`、檔案時間 `HHmm`、預計撥款日期 `yyyyMMdd`
+
+**明細 `I`**（依序）
+
+| # | 欄位 | 型態(長) | 說明 |
+|---|---|---|---|
+| 1 | 資料類別 | String(1) | `I` |
+| 2 | 交易時間 | String(19) | `TransactionTime`，`yyyy/MM/dd HH:mm:ss` |
+| 3 | 店舖代碼 | String(36) | `StoreID` |
+| 4 | 店舖名稱 | String(70) | 可含中文 |
+| 5 | 交易行為 | String(1) | `1` 支付、`3` 點餐、`5` 外送 |
+| 6 | 交易類別 | String(1) | `J` 付款、`K` 退款 |
+| 7 | 街口端交易序號 | String(50) | `PurchaseNo`（tradeNo） |
+| 8 | 廠商端交易序號 | String(50) | `platform_order_id`；從街口端發起的退款沒有序號，補空白 |
+| 9 | 訂單金額 | Decimal(10) | `BaseAmount` |
+| 10 | 街口配送費 | Decimal(10) | `DeliveryFee`，僅街口配送的外送交易，否則空白 |
+| 11 | 店家街口券折抵 | Decimal(10) | `CouponStoreRedeem`，店家負擔，未使用則空白 |
+| 12 | 官方街口券折抵 | Decimal(10) | `CouponJKORedeem`，街口負擔，未使用則空白 |
+| 13 | 街口幣折抵 | Decimal(10) | `Redeem` |
+| 14 | 支付金額 | Decimal(10) | `PayAmount` = 訂單金額 − 店家／官方券折抵 − 街口幣折抵 + 街口配送費 |
+| 15 | 店家街口幣回饋 | Decimal(8) | 店家負擔，無回饋則空白 |
+| 16 | 支付請款金額 | Decimal(10) | 支付金額 − 支付手續費 − 店家街口幣回饋 − 點餐／外送服務費 − 街口配送費 |
+| 17 | 支付手續費 | Decimal(8) | （支付金額 − 街口配送費）× 支付費率 |
+| 18 | 點餐／外送服務費 | Decimal(8) | 訂單金額 × 點餐／外送費率，非此類交易空白 |
+| 19 | 街口幣折抵請款金額 | Decimal(10) | 街口幣折抵 − 街口幣折抵手續費 |
+| 20 | 街口幣折抵手續費 | Decimal(8) | 街口幣折抵 × 折抵費率 |
+| 21 | 官方街口券折抵請款金額 | Decimal(10) | 官方券折抵 − 官方券折抵手續費 |
+| 22 | 官方街口券折抵手續費 | Decimal(8) | 官方券折抵 × 折抵費率 |
+| 23–25 | 保留欄位 ×3 | String(30) | 補空白 |
+
+**檔尾 `T`**（依序）
+
+| # | 欄位 | 型態(長) | 說明 |
+|---|---|---|---|
+| 1 | 資料類別 | String(1) | `T` |
+| 2 | 總筆數 | Decimal(8) | 明細筆數 |
+| 3 | 訂單總金額 | Decimal(12) | |
+| 4 | 支付總金額 | Decimal(12) | |
+| 5 | 支付總手續費 | Decimal(8) | 支付手續費 + 店家回饋街口幣 + 點餐／外送服務費 |
+| 6 | 支付總請款金額 | Decimal(12) | |
+| 7 | 街口幣折抵總金額 | Decimal(12) | 紅利月結店家一律 `0.00` |
+| 8 | 街口幣折抵總手續費 | Decimal(8) | 紅利月結店家一律 `0.00` |
+| 9 | 街口幣折抵總請款金額 | Decimal(12) | |
+| 10 | 官方街口券折抵總金額 | Decimal(12) | 紅利月結店家一律 `0.00` |
+| 11 | 官方街口券折抵總手續費 | Decimal(8) | 紅利月結店家一律 `0.00` |
+| 12 | 官方街口券折抵總請款金額 | Decimal(12) | |
+| 13 | 店家街口券折抵總金額型別 | String(1) | `J` 退還店家、`K` 向店家收取 |
+| 14 | 店家街口券折抵總金額 | Decimal(12) | 全數店家負擔 |
+| 15 | 街口券發送費 | Decimal(12) | `SendingFee` 加總 |
+| 16 | 街口券折抵費型別 | String(1) | `J` 退還店家、`K` 向店家收取 |
+| 17 | 街口券折抵費 | Decimal(12) | `UsageFee` 加總 |
+| 18 | 調帳金額型別 | String(1) | `J` 調帳補匯、`K` 調帳扣回 |
+| 19 | 調帳金額 | Decimal(8) | |
+| 20 | 匯費 | Decimal(8) | 銀行匯款手續費 |
+| 21 | 總撥款金額 | Decimal(12) | 支付總請款 + 街口幣總請款 + 官方券總請款 + 調帳 − 街口券發送費 − 街口券折抵費 − 匯費，已四捨五入到整數 |
+| 22–24 | 保留欄位 ×3 | String(30) | 補空白 |
+
+官方範例：
+
+```
+H,20190708,0500,2019070900
+I,2019/07/07 12:00:00,d7120db2-8c76-4124-bf08-02e5b775d8fe,哈拉股份有限公司,1,J,J0026910118070413C4,19070710026C8N8,1000.00,,200.00,, 200.00,600.00,,586.80,13.20,,195.60,4.40,,,,,,
+I,2019/07/07 12:30:00, d7120db2-8c76-4124-bf08-02e5b775d8fe,哈拉股份有限公司,1,J,J0026910118070413C5,190707214361GPU,1000.00,,,200.00, 200.00,600.00,,586.80,13.20,,195.60,4.40,195.60,4.40,,,,
+I,2019/07/07 12:55:20,d7120db2-8c76-4124-bf08-02e5b775d8fe,哈拉股份有限公司,1, K,K0026910118070413C4001,,1000.00,,,,200.00,800.00,,782.40,17.60,,195.60,4.40,,,,,,
+T,3,2000.00,400.00,8.80,391.20,200.00,4.40,195.60,200.00,4.40,195.60, K,200.00,1.00,K,2.00,J,0.00,5.00,774.40,,,,
+```
+
+> ⚠️ 官方範例與欄位表有出入，解析時要寬鬆：檔頭預計撥款日期寫成 10 碼（`2019070900`，表定 8 碼）；部分欄位前帶空白（`, 200.00`、`, K`），先 `trim` 再判斷。
 
 ## 6. 授權扣款 Authorized Payment — 完整規格
 
@@ -445,7 +524,7 @@ Response 的 `result_object` 與 OnlinePay 的 `result_url` 同構（`tradeNo`�
 
 `POST https://pos.jkopay.com/{系統方名稱}/Payment`
 
-端點：付款 / 取消 / 退款 / 查詢 / 店家撥款檔（R 檔）。
+端點：付款 / 取消 / 退款 / 查詢 / 店家撥款檔（R 檔，格式見 §5.9）。
 
 ### 簽章（與線上支付完全不同）
 
@@ -543,7 +622,7 @@ Response 另含 `RefundTradeNo`、`RefundTradeTime`、`IsRep`、`PaymentType`、
 
 > 對帳程式若用同一個函式處理折抵金額，跨模組時金額會反號。建議在解析層就依來源正規化，不要在計算層才處理。
 
-## 9. inApp 第三方服務 — OAuth / JOP Gateway
+## 9. inApp 第三方服務 — OAuth / JOP Gateway / Web SDK
 
 給 ISV 業者取得街口使用者授權資料用，**網域與支付 API 完全不同**：
 
@@ -591,6 +670,30 @@ Response 另含 `RefundTradeNo`、`RefundTradeTime`、`IsRep`、`PaymentType`、
 > 💡 **`phone_barcode` 又是一個跨 skill 接點**：OAuth 拿到的手機載具可直接用於發票 `CarrierType=3` 流程。街口在三個地方都會回載具（OnlinePay 的 `invoice_vehicle`、POS 的 `InvoiceVehicle`、OAuth 的 `phone_barcode`），**欄位名各不相同**。
 
 OAuth 專屬錯誤碼：`OA-001` 成功、`OA-205` Auth Code 已被使用、`OA-360` Auth Code 過期、`OA-999` 系統異常；`UP-001` 成功、`UP-360` Auth Code 過期、`UP-460` **Access Token 過期**、`UP-999`；通用 `205` 參數錯誤、`405` 權限不足、`999` 網關異常。
+
+### Web SDK（`@jkos/openweb-bridge`）
+
+在街口 App 的 webview 內呼叫原生能力（授權、導航欄、路由、介面交互），全域物件為 `jkos`。
+
+**版本與載入**（官方「SDK 版本」頁）
+
+| 版本 | UMD | CJS | 變動 | 上版日 |
+|---|---|---|---|---|
+| 2.0.7 | `https://upkg.jkos.com/openweb-bridge/v2.0.7/jkos.umd.js` | `@jkos/openweb-bridge@2.0.7-prod` | 新增 `close` | 2022/08/10 |
+| 2.0.6 | `…/v2.0.6/jkos.umd.js` | `@jkos/openweb-bridge@2.0.6-prod` | 新增 `setNavRightButton`、`setPullRefreshOn` | 2022/02/14 |
+| 2.0.4 | `…/v2.0.4/jkos.umd.js` | `@jkos/openweb-bridge@2.0.4-prod` | 新增 `showModal` | 2021/11/16 |
+| 2.0.3 | `…/v2.0.3/jkos.umd.js` | `@jkos/openweb-bridge@2.0.3-prod` | 新增 `openBrowser`、`redirectMaintainPage` | 2021/09/30 |
+| 2.0.2 | `…/v2.0.2/jkos.umd.js` | `@jkos/openweb-bridge@2.0.2-prod` | `setNavRightButton` 我的按鈕 onClick | 2021/09/14 |
+| 2.0.1 | `…/v2.0.1/jkos.umd.js` | `@jkos/openweb-bridge@2.0.1-prod` | 修正取得環境資訊 | 2021/09/05 |
+
+- npm 套件在街口自有 registry：`https://npmjs.jkos.com/-/web/detail/@jkos/openweb-bridge`
+- ⚠️ **v2.0.6 與先前版本不相容**：使用 v2.0.4（含）以下者，升級前須先聯絡街口窗口
+- 文件另有 v2.0.8 與 Next 兩組 API 頁面，但版本表未列其 UMD／套件位址；官方未標示建議版本，採用前向街口窗口確認
+
+**Next 版 API**：`getAuthCode`（喚起原生授權頁取得 auth code，接 §9 OAuth）、`setNavTitle`、`setNavBackground`、`setNavLeftButton`、`setNavRightButton`、`clearNavRightButton`、`openBrowser`、`redirectMaintainPage`、`close`、`showModal`、`setPullRefreshOn`／`setPullRefreshOff`。
+呼叫形式 `jkos.xxx(data, callback)`，callback 收 `{ error, errorMessage }`，也可改用 async/await。
+
+**SDK 錯誤碼**：`0` 成功、`15` App 版本不支援該函式版本、`16` 格式錯誤、`17` 須在支援的街口 webview 入口開啟、`18` 無法取得 App 環境資訊、`19` App 版本找不到該函式、`206` 無效的 ClientID、`207` 無效的 Scope。
 
 ## 10. 統一錯誤代碼表（線下 POS）
 
@@ -708,13 +811,11 @@ OAuth 專屬錯誤碼：`OA-001` 成功、`OA-205` Auth Code 已被使用、`OA-
 
 ## 12. 仍待補
 
-五大模組的 API 皆已擷取，剩餘為週邊項目：
-
-| 待補項目 | 優先 | 備註 |
-|---|---|---|
-| R File（店家撥款檔）欄位格式 | 中 | 線上支付與 POS 皆有此檔，對帳需要 |
-| Web SDK | 低 | 版本多（v2.0.2–v2.0.8 + Next），需先確認採用版本 |
-| 街口幣查詢 API | — | **官方尚未提供**，僅先公布簽章格式 |
+| 待補項目 | 備註 |
+|---|---|
+| 街口幣查詢 API | **官方尚未提供**，僅先公布簽章格式 |
+| Web SDK v2.0.8／Next 的載入位址與建議版本 | 官方版本表只列到 2.0.7，需向街口窗口確認 |
+| R 檔 FTP 連線資訊 | 須提供來源 IP 給業務窗口審核後才提供 |
 
 ## 13. 來源
 
@@ -724,6 +825,10 @@ OAuth 專屬錯誤碼：`OA-001` 成功、`OA-205` Auth Code 已被使用、`OA-
 - 加簽加密說明 — `…/線上支付onlinepay/串接說明/加簽加密說明`
 - 訂單創建 Entry API — `…/線上支付onlinepay/api列表/訂單創建-api`
 - 代碼意義 API Response Code — `…/線上支付onlinepay/api列表/代碼意義`
+- 店家撥款檔 R 檔（線上支付）— `…/線上支付onlinepay/api列表/店家撥款檔r檔`
+- 店家撥款檔 R 檔（線下 POS）— `…/線下交易pos/api列表/店家撥款檔r檔`
+- Web SDK 版本 — https://open-doc.jkos.com/?docs=inapp-第三方服務/web-sdk/sdk-環境版本
+- Web SDK Next — `…/inapp-第三方服務/web-sdk/next`（基礎開放能力、介面交互、按鈕、錯誤代碼）
 - 授權扣款 Authorized Payment — https://open-doc.jkos.com/?docs=授權扣款-authorized-payment
 - 授權創建 Binding — `…/授權扣款-authorized-payment/api列表-api-lists/授權綁定創建-authorization-binding`
 - 授權綁定結果通知 CallBack — `…/api列表-api-lists/授權綁定結果通知-authorization-callback`

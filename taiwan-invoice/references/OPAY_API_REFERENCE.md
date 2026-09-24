@@ -294,20 +294,44 @@ Base: `https://einvoice.opay.tw/B2BInvoice/`
 
 ### 端點
 
-| 端點 | 功能 | 模式 |
-|---|---|---|
-| `Issue` → `IssueConfirm` | 開立 → 確認 | 確認僅交換模式 |
-| `Invalid` → `InvalidConfirm` | 作廢 → 確認 | 確認僅交換模式 |
-| `Reject` → `RejectConfirm` | 退回 → 確認 | 確認僅交換模式 |
-| `Allowance` → `AllowanceConfirm` | 折讓 → 確認 | 確認僅交換模式 |
-| `CancelAllowance` → `CancelAllowanceConfirm` | 取消折讓 → 確認 | 確認僅交換模式 |
-| `VoidWithReIssue` | 作廢重開 | 共用 |
-| `GetIssue` | 查詢開立 | 共用 |
-| `AddInvoiceWordSetting` / `UpdateInvoiceWordStatus` | 字軌管理 | 共用 |
-| `MaintainMerchantCustomerData` | **維護交易對象＋設定模式（前置必做）** | 共用 |
-| `Notify` | 發送通知 | 共用 |
+依 opay_i200.pdf（V1.2.0，2025-09-10）章節順序；頁碼為文件頁碼。
 
-另有對應的查詢端點：查詢發票確認 / 作廢發票確認 / 退回發票確認 / 折讓發票確認 / 作廢折讓發票確認。
+| 端點 | 功能 | 頁 |
+|---|---|---|
+| `MaintainMerchantCustomerData` | **維護交易對象＋設定模式（前置必做）** | 6 |
+| `Notify` | 發送通知 | 9 |
+| `AddInvoiceWordSetting` / `UpdateInvoiceWordStatus` / `GetInvoiceWordSetting` | 新增字軌 / 設定字軌狀態 / 查詢字軌 | 13 / 16 / 121 |
+| `Issue` → `IssueConfirm` | 開立 → 開立確認 | 19 / 27 |
+| `Invalid` → `InvalidConfirm` | 作廢 → 作廢確認 | 31 / 36 |
+| `Reject` → `RejectConfirm` | 退回 → 退回確認 | 40 / 44 |
+| `Allowance` → `AllowanceConfirm` | 開立折讓 → 折讓確認 | 48 / 54 |
+| `CancelAllowance` → `CancelAllowanceConfirm` | 作廢折讓 → 作廢折讓確認 | 58 / 63 |
+| `VoidWithReIssue` | 註銷重開（發票號碼、開立時間不變） | 66 |
+| `GetIssue` / `GetIssueConfirm` | 查詢發票 / 查詢發票確認 | 75 / 82 |
+| `GetInvalid` / `GetInvalidConfirm` | 查詢作廢 / 查詢作廢確認 | 87 / 91 |
+| `GetReject` / `GetRejectConfirm` | 查詢退回 / 查詢退回確認 | 95 / 99 |
+| `GetAllowance` / `GetAllowanceConfirm` | 查詢折讓 / 查詢折讓確認 | 103 / 109 |
+| `GetAllowanceInvalid` / `GetAllowanceInvalidConfirm` | 查詢作廢折讓 / 查詢作廢折讓確認 | 113 / 117 |
+| `GetCompanyNameByTaxID` | 統一編號驗證（回公司名稱） | 125 |
+
+`*Confirm` 由交易相對人呼叫，僅交換模式需要。作廢、退回、折讓送出後由歐付寶暫存，**隔日**上傳財政部；交換模式要等相對人確認才完成交換。
+
+### `MaintainMerchantCustomerData` 交易對象維護 — `Data` 欄位
+
+| 參數 | 名稱 | 型態 | 說明 |
+|---|---|---|---|
+| `*MerchantID` | 特店編號 | String(10) | |
+| `*Action` | 動作 | String(10) | `Add` 新增 / `Update` 編輯 / `Delete` 刪除 |
+| `CustomerNumber` | 公司編號 | String(20) | 可與統編相同 |
+| `*Identifier` | 統一編號 | String(8) | 設定後不可變更 |
+| `*type` | 交易對象 | String(1) | `1` 買方 / `2` 賣方 / `3` 買賣方 |
+| `*CompanyName` | 公司名稱 | String(60) | |
+| `PersonInCharge` | 負責人 | String(30) | |
+| `Address` / `TelephoneNumber` / `FacsimileNumber` | 地址 / 電話 / 傳真 | String(100) / (30) / (30) | |
+| `*TradingSlang` | 交易暗語 | String(20) | |
+| `*ExchangeMode` | 開立形式 | String(1) | `0` 存證 / `1` 交換。交換須先至財政部平台設定由歐付寶接收 |
+| `*EmailAddress` | 公司信箱 | String(80) | 多組以半形分號區隔 |
+| `SalesName` / `ContactAddress` | 業務負責人 / 聯絡地址 | String(30) / (100) | |
 
 ### `Notify` 發送通知 — `Data` 欄位
 
@@ -380,46 +404,232 @@ Base: `https://einvoice.opay.tw/B2BInvoice/`
 
 > 這套容差設計是為了容納各家系統的浮點捨入差異。實作時**不要**直接用浮點結果送出，先四捨五入成整數再比對這五條。
 
-回應的 `Data` 含 `RtnCode`（`1` 成功）、`RtnMsg`、`InvoiceNumber`。
+回應的 `Data` 含 `RtnCode`（`1` 成功）、`RtnMsg`、`InvoiceNumber`（失敗時為空）、`RandomNumber` String(4)。
 
-## 6. 離線電子發票 API
+以下端點回應 `Data` 皆含 `RtnCode`（`1` 成功）與 `RtnMsg` String(200)，另有欄位才列出。
 
-Base: `https://einvoice.opay.tw/B2CInvoice/`（與 B2C 共用網域，端點名有 `Offline` 前綴）
+### 確認：`IssueConfirm` / `InvalidConfirm` / `RejectConfirm`
 
-| 端點 | 功能 |
-|---|---|
-| `OfflineIssue` | 離線開立 |
-| `OfflineInvalid` | 離線作廢 |
-| `GetOfflineInvoiceWordSetting` | 查詢離線字軌設定 |
-| `GetOfflineInvoiceWordSettingNumber` | 取得離線字軌號碼 |
-| `GetOfflineInvoiceWordSettingWithAutoSplit` | 取得離線字軌（自動分段） |
-| `GetOfflineMerchantInfo` | 查詢離線商家資訊 |
-| `OfflineMerchantPosSetting` | POS 設定 |
-| `QueryOfflineMerchantPosSetting` | 查詢 POS 設定 |
+| 參數 | 名稱 | 型態 | 說明 |
+|---|---|---|---|
+| `*MerchantID` | 特店編號 | String(10) | |
+| `*InvoiceNumber` | 發票號碼 | String(10) | |
+| `InvoiceDate` | 發票開立日期 | String(20) | `yyyy-mm-dd`。`IssueConfirm` 選填，另兩支必填 |
+| `Remark` | 備註 | String(200) | |
 
-**應用場景**：實體門市 POS 在網路中斷時仍需開立發票。做法是**預先向平台批次取號**（`GetOfflineInvoiceWordSettingNumber`），本地端配號開立，恢復連線後再上傳。
+### 作廢 `Invalid` / 退回 `Reject`
 
-### 兩種取號方式的差別
+| 參數 | 名稱 | 型態 | 說明 |
+|---|---|---|---|
+| `*MerchantID` | 特店編號 | String(10) | |
+| `*InvoiceNumber` | 發票號碼 | String(10) | |
+| `*InvoiceDate` | 發票開立日期 | String(20) | `yyyy-mm-dd` |
+| `*Reason` | 作廢／退回原因 | String(20) | |
+| `Remark` | 備註 | String(200) | |
 
-| 端點 | 回傳 | 適用 |
-|---|---|---|
-| `GetOfflineInvoiceWordSettingNumber` | **單一發票號碼**（含隨機碼與驗證資料）| 一次要一張 |
-| `GetOfflineInvoiceWordSettingWithAutoSplit` | **一組號碼區間**（字軌 + 起訖號碼）| POS 端自行組成發票內容，**多台 POS 分段避免衝突** |
+存證模式須先與交易相對人達成合意再送出。退回用於收到內容錯誤（數量、單價、品名）的發票時拒收。
 
-`WithAutoSplit` 取的是「營業人在廠商後台設定之自動配號」後的區間。若你的 POS 只需要知道可開立的區間、後續自行組裝電子發票內容，用這支即可。
+### `Allowance` 開立折讓 — `Data` 欄位
 
-### 取號回傳的關鍵欄位
+一張折讓單可同時折讓多張發票。
+
+| 參數 | 名稱 | 型態 | 說明 |
+|---|---|---|---|
+| `*MerchantID` | 特店編號 | String(10) | |
+| `AllowanceDate` | 折讓單時間 | String(20) | `yyyy-mm-dd hh:mm:ss`；有值僅接受 6 天內，未帶為當下 |
+| `CustomerEmail` | 買方信箱 | String(80) | 多組以半形分號區隔；未帶自動帶入交易對象設定 |
+| `CustomerAddress` | 買方地址 | String(100) | |
+| `*TaxAmount` | 營業稅額 | Int | 與「`TotalAmount` × 原發票 `TaxRate`」四捨五入的差距 ≤ 2；僅含特種稅額帶 `0` |
+| `*TotalAmount` | 折讓金額總計（未稅） | Int | 不可為 0；須等於 `Details[].ItemAmount` 加總四捨五入 |
+| `*Details` | 折讓明細 | Array | |
+
+`Details[]`：
+
+| 參數 | 名稱 | 型態 | 說明 |
+|---|---|---|---|
+| `*OriginalInvoiceNumber` | 原發票號碼 | String(10) | |
+| `*OriginalInvoiceDate` | 原發票日期 | String(20) | `yyyy-mm-dd` |
+| `*OriginalSequenceNumber` | 原發票商品序號 | Int | `1`–`999`，須與原發票商品排序相同 |
+| `*ItemName` | 商品名稱 | String(256) | 須與原發票對應商品名稱相同 |
+| `*ItemCount` | 數量 | Number | 整數 8 位、小數 2 位；不可超過原開立數量 |
+| `*ItemPrice` | 價格 | Number | 整數 8 位、小數 7 位；不可超過原開立價格 |
+| `*ItemAmount` | 合計 | Number | 整數 12 位、小數 7 位；與 `ItemCount × ItemPrice` 差距 ≤ 1 |
+| `Tax` | 商品稅額 | Int | 與「`ItemAmount` × 原發票 `TaxRate`」四捨五入差距 ≤ 1；特種稅額帶 `0` |
+
+回應另含 `AllowanceNo` String(16)（歐付寶折讓編號，失敗為空）、`AllowanceNumber` String(16)（折讓單號碼）。後續折讓相關端點都以 `AllowanceNo` 識別。
+
+### `AllowanceConfirm` / `CancelAllowance` / `CancelAllowanceConfirm`
+
+| 參數 | 名稱 | 型態 | 說明 |
+|---|---|---|---|
+| `*MerchantID` | 特店編號 | String(10) | |
+| `*AllowanceNo` | 歐付寶折讓編號 | String(16) | 固定 16 碼 |
+| `*Reason` | 折讓作廢原因 | String(20) | **僅 `CancelAllowance`** |
+| `Remark` | 備註 | String(200) | |
+
+### `VoidWithReIssue` 註銷重開
+
+發票號碼與開立時間不可更改。歐付寶先上傳註銷，財政部回覆成功後再上傳開立。`Data` 分兩層：
 
 | 參數 | 型態 | 說明 |
 |---|---|---|
-| `InvoiceNo` | String(10) | 發票號碼 |
-| `RandomNumber` | String(4) | 電子發票證明聯上的 4 碼隨機碼。**同一字軌重複取號會回傳不同隨機碼** |
-| `EncryptData` | String(24) | **發票號碼 10 碼 + 隨機碼 4 碼字串合併後 AES 加密再 Base64** |
-| `Times` | Int | 同一字軌已取用次數 |
-| `InvoiceHeader` | String(2) | 字軌英文字軌（如 `AA`、`KK`、`TW`）|
+| `*MerchantID` | String(10) | |
+| `*VoidModel.InvoiceNumber` | String(10) | |
+| `*VoidModel.VoidReason` | String(20) | |
+| `*IssueModel.RelateNumber` | String(50) | 帶原發票自訂編號；僅限中英數 |
+| `*IssueModel.InvoiceTime` | String(20) | 須為原開立時間，`yyyy-MM-dd HH:mm:ss` 或 `yyyy/MM/dd HH:mm:ss` |
+| `IssueModel` 其餘欄位 | | 同 `Issue`：`CustomerIdentifier`、`CustomerAddress`、`CustomerTelephoneNumber` String(26)、`CustomerEmail` String(200)、`ClearanceMark`、`InvType`、`TaxType`、`ZeroTaxRateReason`、`SpecialTaxType`、`SalesAmount`、`TaxAmount`、`TotalAmount`、`InvoiceRemark`、`Items[]`（最多 999 項） |
 
-> `EncryptData` 是印在證明聯上供查驗的欄位，**不是你自己算的**——直接用平台回的值，別重算。
-> 查無資料時，官方列出的原因是：**取字軌號碼時未授權於歐付寶，或字軌尚未取號完成**。
+與 `Issue` 的差異：
+- `ZeroTaxRateReason`：**自 115 年 1 月 1 日起**零稅率必填，或須在廠商後台設定，否則開立失敗（`Issue` 章節寫未帶預設 `71`）。
+- `Items[].ItemPrice` 整數最多 10 位、固定填未稅價；`ItemCount` 小數 7 位；`ItemRemark` String(120)。
+- 官方表格 `Items[].ItemName` 標 String(2)，與 `Issue` 的 String(256) 不一致，範例值為 `item01`，以實測為準。
+
+回應另含 `InvoiceNumber`、`RandomNumber`。
+
+### 查詢端點
+
+`GetIssue` / `GetInvalid` / `GetReject` / `GetIssueConfirm` / `GetInvalidConfirm` / `GetRejectConfirm`：
+
+| 參數 | 型態 | 說明 |
+|---|---|---|
+| `*MerchantID` | String(10) | |
+| `*InvoiceCategory` | Int | `0` 銷項（特店開出）/ `1` 進項（相對人開給特店） |
+| `InvoiceNumber` | String(10) | 與 `RelateNumber` 擇一（`GetIssue` 必填） |
+| `InvoiceDate` | String(20) | `yyyy-mm-dd`；`InvoiceNumber` 有值時必填（`GetIssue` 必填） |
+| `RelateNumber` | String(20) | 與 `InvoiceNumber` 擇一 |
+
+`GetIssueConfirm` 另可帶篩選條件：`Seller_Identifier`、`Buyer_Identifier`、`InvoiceDateBegin`／`InvoiceDateEnd`、`InvoiceNumberBegin`／`InvoiceNumberEnd`（8 碼不含字軌）、`Issue_Status`（`1` 開立 / `0` 退回）、`Invalid_Status`、`ExchangeMode`、`ExchangeStatus`、`Upload_Status`（`0` 未上傳 / `1` 已上傳 / `2` 上傳失敗）。
+
+`GetAllowance` / `GetAllowanceConfirm` / `GetAllowanceInvalid` / `GetAllowanceInvalidConfirm`：`*MerchantID`、`*AllowanceNo`。
+
+結果在回應的 `RtnData`：
+
+| 端點 | `RtnData` 主要欄位 |
+|---|---|
+| `GetIssue` | 買賣方資料（`Buyer_*`／`Seller_*`，銷項時 `Seller_*` 為空）、`InvoiceType`、`TaxType`、`TaxRate`、`SalesAmount`、`TaxAmount`、`TotalAmount`、`Issue_Status`、`Upload_Status`、`Upload_Date`、`ConfirmDate`、`Invalid_Status`、`ExchangeMode`、`ExchangeStatus`、`BalanceAmount`（剩餘可折讓金額）、`RandomNumber`、`Items[]` |
+| `GetInvalid` / `GetReject` | `CancelDate`／`RejectDate`、原因、`Upload_Status`、`ConfirmDate`、`ExchangeStatus`、`Remark` |
+| `*Confirm` 查詢 | 買賣方統編、日期、`ConfirmDate`、`Upload_Status`、`Upload_Date`、`ConfirmRemark` |
+| `GetAllowance` | `AllowanceNo`、`AllowanceNumber`、`AllowanceType`、買賣方資料、`AllowanceDate`、`TotalAmount`、`TaxAmount`、`Upload_Status`、`ConfirmDate`、`Invalid_Status`、`ExchangeStatus`、`Items[]`（原發票號碼／日期／序號、`Quantity`、`UnitPrice`、`Tax`、`Amount`、`BalanceAmount`） |
+
+### 字軌管理
+
+| 端點 | `Data` 欄位 | 回應 |
+|---|---|---|
+| `AddInvoiceWordSetting` | `*InvoiceTerm` Int（`1`–`6` 對應 1-2 月…11-12 月）、`*InvoiceYear` String(3)（民國年，僅當年與明年）、`*InvType`（`07`/`08`）、`*InvoiceCategory` 固定 `2`、`*InvoiceHeader` String(2)、`*InvoiceStart` String(8)（尾數 `00`/`50`）、`*InvoiceEnd` String(8)（尾數 `49`/`99`） | `TrackID` String(10)，設定狀態時要用 |
+| `UpdateInvoiceWordStatus` | `*TrackID`、`*InvoiceStatus` Int（`0` 停用 / `1` 暫停 / `2` 啟用；停用後該區間無法上傳發票） | |
+| `GetInvoiceWordSetting` | `*InvoiceYear`（去年～明年）、`*InvoiceTerm`（`0` 全部）、`*UseStatus`（`0` 全部 / `1` 未啟用 / `2` 使用中 / `3` 已停用 / `4` 暫停中 / `5` 待審核 / `6` 審核不通過）、`*InvoiceCategory` 固定 `2`、`InvType`、`InvoiceHeader` | `InvoiceInfo[]`：`TrackID`、起訖號碼、`InvoiceNo`（目前已使用號碼）、`UseStatus`、`InvoiceLastDate` |
+
+### `GetCompanyNameByTaxID` 統一編號驗證
+
+`Data`：`*MerchantID`、`*UnifiedBusinessNo` String(8)（僅數字）。回應另含 `CompanyName` String(60)。
+
+## 6. 離線電子發票 API
+
+依 opay_i301.pdf（V1.3.0，2025-09-10）；頁碼為文件頁碼。
+
+Base: `https://einvoice.opay.tw/B2CInvoice/`（與 B2C 共用網域）
+
+適用於有實體發票機台、無法隨時連線的特店：特店自行開立，再上傳歐付寶代傳財政部。
+
+### 流程
+
+1. `OfflineMerchantPosSetting` 設定發票機台 ID（或在廠商後台設定）
+2. `GetGovInvoiceWordSetting` 查財政部配號結果 → `AddInvoiceWordSetting` 設定字軌區間並綁機台 → `UpdateInvoiceWordStatus` 啟用
+3. 取號（三擇一，見下）
+4. 自行開立，`OfflineIssue` 上傳；作廢以 `OfflineInvalid` 上傳
+
+**上傳期限**：發票開立時間不可超過下一期的 15 號（例：9-10 月的發票須在 11 月 15 日前上傳）。
+
+### 端點
+
+| 端點 | 功能 | 頁 |
+|---|---|---|
+| `GetOfflineMerchantInfo` | 查詢特店基本資料 | 5 |
+| `GetGovInvoiceWordSetting` | 查詢財政部配號結果 | 8 |
+| `OfflineMerchantPosSetting` / `QueryOfflineMerchantPosSetting` | 管理 / 查詢發票機台 | 11 / 14 |
+| `AddInvoiceWordSetting` / `UpdateInvoiceWordStatus` / `GetInvoiceWordSetting` | 新增字軌 / 設定字軌狀態 / 查詢字軌 | 17 / 20 / 44 |
+| `GetOfflineInvoiceWordSettingWithAutoSplit` | 取得自動配發的字軌號碼區間 | 23 |
+| `GetOfflineInvoiceWordSetting` | 取得字軌號碼區間 | 26 |
+| `GetOfflineInvoiceWordSettingNumber` | 取得字軌號碼清單（含隨機碼、加密資料） | 29 |
+| `OfflineIssue` | 上傳開立發票 | 32 |
+| `OfflineInvalid` | 上傳作廢發票 | 41 |
+
+回應 `Data` 皆含 `RtnCode`（`1` 成功）與 `RtnMsg`，另有欄位才列出。
+
+### 特店、配號、機台
+
+| 端點 | `Data` 欄位 | 回應 |
+|---|---|---|
+| `GetOfflineMerchantInfo` | `*MerchantID` | `MerchantName`、`MerchantIdentifier` |
+| `GetGovInvoiceWordSetting` | `*MerchantID`、`*InvoiceYear` String(3)（民國年，去年～明年） | `InvoiceInfo[]`：`InvoiceTerm`、`InvType`、`InvoiceHeader`、`InvoiceStart`、`InvoiceEnd`、`Number`（本數，一本 50 號）。查無資料可能是取字軌時未授權於歐付寶，或字軌尚未取號完成 |
+| `OfflineMerchantPosSetting` | `*ActionType` Int（`1` 新增 / `2` 修改 / `3` 刪除）、`*MachineID` String(10)（勿用特殊符號；已設定字軌的機台不可改 ID 或刪除）、`Remark` String(100) | |
+| `QueryOfflineMerchantPosSetting` | `*MerchantID` | `MachineIDList[]`：`MachineID`、`CreateTime`、`Remark` |
+
+### 字軌
+
+| 端點 | `Data` 欄位 | 回應 |
+|---|---|---|
+| `AddInvoiceWordSetting` | 同 B2B 版，但 `*InvoiceCategory` 固定 `4`（離線），另加 `*MachineID` | `TrackID` |
+| `UpdateInvoiceWordStatus` | `*TrackID`、`*InvoiceStatus`（`0` 停用 / `1` 暫停 / `2` 啟用） | |
+| `GetInvoiceWordSetting` | 同 B2B 版，`*InvoiceCategory` 固定 `4` | `InvoiceInfo[]`，另含 `MachineID` |
+
+### 取號：三支擇一
+
+| 端點 | `Data` 欄位 | 回傳 | 適用 |
+|---|---|---|---|
+| `GetOfflineInvoiceWordSettingWithAutoSplit` | `*MerchantID`、`*InvoiceYear`、`*InvoiceTerm`、`*MachineID`、`*InvType` | `InvoiceHeader`、`InvoiceStart`、`InvoiceEnd` | 取廠商後台設定之自動配號後的區間 |
+| `GetOfflineInvoiceWordSetting` | `*MerchantID`、`*InvoiceYear`、`*InvoiceTerm`、`*InvoiceStatus`（`1` 啟用 / `2` 備用字軌）、`*MachineID` | `InvoiceHeader`、`InvoiceStart`、`InvoiceEnd`、`InvoiceStatus`、`Times`（同字軌已取次數） | 只需要可開立區間，發票內容自行組成 |
+| `GetOfflineInvoiceWordSettingNumber` | 同上 | `InvoiceInfo[]`：`InvoiceNo` String(10)、`RandomNumber` String(4)、`EncryptData` String(24)、`Times` | 開立裝置**無法自行產生 QRCode 所需 AES 加密資料**時 |
+
+- `EncryptData`：發票號碼 10 碼 + 隨機碼 4 碼合併後 AES 加密，再 Base64。
+- 同一字軌重複取號，回傳的隨機碼不同。
+- 上傳時的 `RandomNumber` 要用實際開立的隨機碼；取號 API 給的隨機碼僅供參考。
+
+### `OfflineIssue` 上傳開立發票 — `Data` 欄位
+
+| 參數 | 名稱 | 型態 | 說明 |
+|---|---|---|---|
+| `*MerchantID` | 特店編號 | String(10) | |
+| `*MachineID` | 發票機台 ID | String(10) | |
+| `*InvoiceNo` | 發票號碼 | String(10) | 2 碼字軌 + 8 碼數字 |
+| `*InvoiceDate` | 開立時間 | String(20) | `yyyy-MM-dd HH:mm:ss`，不可晚於上傳當下 |
+| `*RelateNumber` | 特店自訂編號 | String(30) | 唯一，不可用特殊符號 |
+| `*TaxType` | 課稅類別 | String(1) | `1` 應稅 / `2` 零稅率 / `3` 免稅 / `4` 特種應稅 / `9` 混合（限收銀機無法分辨且經申請核可） |
+| `ZeroTaxRateReason` | 零稅率原因 | String(2) | 自 115 年 1 月 1 日起，`TaxType=2` 或 `9` 時必填或須在廠商後台設定；`71`–`79`，預設 `71` |
+| `*SalesAmount` | 發票總金額（含稅） | Int | |
+| `*InvType` | 字軌類別 | String(2) | `07` / `08` |
+| `*RandomNumber` | 隨機碼 | String(4) | 僅數字、不可用流水號；建議每一萬張不重複 |
+| `*Items` | 商品 | Array | 最多 200 項 |
+| `CustomerIdentifier` | 統編 | String(8) | |
+| `CustomerID` / `CustomerName` | 客戶編號 / 名稱 | String(20) / (60) | |
+| `CustomerAddr` / `CustomerPhone` / `CustomerEmail` | 地址 / 手機 / 信箱 | String(100) / (20) / (80) | |
+| `ClearanceMark` | 通關方式 | String(1) | `TaxType=2` 必填：`1` 非經海關 / `2` 經海關 |
+| `SpecialTaxType` | 特種稅額類別 | String(1) | `TaxType` 為 `1`/`2`/`9` 帶 `0`；`3` 帶 `8`；`4` 帶 `1`–`8` |
+| `vat` | 商品單價是否含稅 | String(1) | 文件未列值 |
+| `InvoiceRemark` | 發票備註 | String(200) | |
+| `*Print` | 列印註記 | String(1) | `0` 不列印（捐贈或有載具時）/ `1` 列印（有統編時） |
+| `*Donation` | 捐贈註記 | String(1) | `0` 不捐贈（有統編或載具時）/ `1` 捐贈 |
+| `LoveCode` | 捐贈碼 | String(7) | 捐贈時必填，3–7 碼數字 |
+| `CarrierType` | 載具類別 | String(1) | 空字串無載具；`1` 歐付寶載具 / `2` 自然人憑證 / `3` 手機條碼 / `4` 悠遊卡 / `5` icash / `6` 一卡通 / `7` 金融卡 / `8` 信用卡 |
+| `CarrierNum` | 載具編號 | String(64) | `1` 帶空字串（系統帶客戶信箱或手機）；`2` 2 碼大寫英文 + 14 碼數字；`3` `/` + 7 碼；`4`–`7` 卡片隱碼（內碼）；`8` 信用卡加密卡號 |
+| `CarrierNum2` | 第二載具編號 | String(64) | `4`–`7` 必填卡片顯碼；`8` 必填刷卡日期（民國年月日 7 碼）+ 金額（10 碼左補 0）；`1`–`3` 勿帶（會被系統阻擋） |
+
+`Items[]`：`ItemSeq` Int、`*ItemName` String(100)、`*ItemCount` Number、`*ItemWord` String(6)、`*ItemPrice` Number、`ItemTaxType` String(1)、`*ItemAmount` Number、`ItemRemark` String(40)。
+
+回應另含 `InvoiceNo`、`RelateNumber`。
+
+### `OfflineInvalid` 上傳作廢發票 — `Data` 欄位
+
+| 參數 | 型態 | 說明 |
+|---|---|---|
+| `*MerchantID` | String(10) | |
+| `*InvoiceNo` | String(10) | 字軌 + 號碼 |
+| `*InvoiceDate` | String(20) | 開立日期 `yyyy-MM-dd` |
+| `*Reason` | String(20) | 作廢原因 |
+| `*CancelDate` | String(20) | 作廢時間 `yyyy-MM-dd HH:mm:ss` |
+
+回應另含 `InvoiceNo`（成功時回傳，失敗為空）。
 
 > 本 skill 已收錄的 provider 中，**PayNow 也有 POS 批次取號**（見 [PAYNOW_API_REFERENCE.md](PAYNOW_API_REFERENCE.md)）。若需求是實體門市，這兩家是目前有離線方案的選項。
 
@@ -441,16 +651,17 @@ Base: `https://einvoice.opay.tw/B2CInvoice/`（與 B2C 共用網域，端點名�
 
 > 因錯誤代碼一直在新增，詳細的錯誤代碼，請到廠商後台 → 電子發票後台 → 系統開發管理 → 錯誤代碼查詢。
 
-亦即**必須有商家帳號才拿得到完整錯誤碼**。本文件已收錄從各端點章節反推出的 `RtnCode`：`1`（成功）、`4000003`（延後開立成功）、`4000004`（開立成功）。
+亦即**必須有商家帳號才拿得到完整錯誤碼**。B2B（opay_i200.pdf 附錄 1）與離線（opay_i301.pdf 附錄 1）同樣只指向廠商後台。本文件已收錄從各端點章節反推出的 `RtnCode`：`1`（成功）、`4000003`（延後開立成功）、`4000004`（開立成功）。
+
+**沒有物流 API。** 官方文件總覽（修訂於 2026-09-21，2026-09-24 查核）只列金流、電子發票、Open ID、平台綁定、直播主收款網址。
 
 ### 仍待補
 
 | 項目 | 狀態 |
 |---|---|
-| B2B 其餘端點（`Invalid`／`Reject`／`Allowance` 與各 `Confirm`）逐欄 | `Issue` 已完成；其餘端點欄位待擷取 |
-| 離線 POS 其餘端點（`OfflineIssue`／`OfflineInvalid`／POS 設定）逐欄 | 取號流程已完成；其餘待擷取 |
-| 完整錯誤碼 | **需商家帳號**，公開文件不提供 |
-| 歐付寶**物流** API | 未出現在官方文件總覽頁，端點待確認 |
+| 完整錯誤碼 | **需商家帳號**（廠商後台 → 電子發票後台 → 系統開發管理 → 錯誤代碼查詢） |
+| 離線 `OfflineIssue` 的 `vat`、`Items[].ItemTaxType` 取值 | 規格書只列欄位名，未列值 |
+| B2B `VoidWithReIssue` 的 `Items[].ItemName` 長度 | 規格書標 String(2)，與 `Issue` 的 String(256) 不一致 |
 
 原始 PDF 已存於 `_studies/opay/`（含抽出的純文字），可直接再解析。
 

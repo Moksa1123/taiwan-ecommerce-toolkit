@@ -74,7 +74,7 @@ ezShip 是本 skill 收錄的**唯一非金流商的超商取貨聚合商**。�
 | 回傳 | 說明 |
 |---|---|
 | `processID` | 原值回傳 |
-| `stCate` | **`TOK` OK／`TLF` 萊爾富／`TFM` 全家** |
+| `stCate` | **`TOK` OK／`TLF` 萊爾富／`TFM` 全家／`TSF` 店港澳** |
 | `stCode` / `stName` / `stAddr` / `stTel` | 門市代號／名稱／地址／電話 |
 | `webPara` | 原值回傳 |
 
@@ -122,7 +122,7 @@ ezShip 是本 skill 收錄的**唯一非金流商的超商取貨聚合商**。�
 **建單失敗代碼**（回傳於 `order_status`）：`E00` 參數短缺、`E01` 帳號不存在、`E02` 無代收／串接／宅配／店港澳權限、`E03` 無可用輕鬆袋或迷你袋、`E04` 門市有誤、`E05` 金額有誤、`E06` email 格式、`E07` 手機格式、`E08` `order_status` 有誤、`E09` `order_type` 有誤、`E10` `rv_name` 有誤、`E11` `rv_addr` 有誤、`E13` 店港澳無法使用；成功為 `S01`。
 
 > ⚠️ **`rv_name` 超過四個中英文字，超商取貨單會印不完整**，可能導致取貨問題。官方特別提醒。
-> 💡 **港澳配送**（`A11`/`A12`）是先前未收錄的能力——ezShip 是本 skill 少數支援港澳店配的聚合商。
+> 💡 **港澳配送**（`A11`/`A12`）：ezShip 是本 skill 少數支援港澳店配的聚合商；店港澳只能 `order_type=3`，報值金額商務會員 0–2,500（XML 版欄位定義）。
 
 回傳：`order_id`、`sn_id`、`order_status`、`webPara`。
 
@@ -139,9 +139,9 @@ ezShip 是本 skill 收錄的**唯一非金流商的超商取貨聚合商**。�
 | ezShip 店到店編號 | `.../emap/ezship_request_order_status_api.jsp` |
 | 購物網站訂單編號 | `.../emap/ezship_request_order_status_api_byorder.jsp` |
 
-送出：`su_id`、`order_no`、`rtn_url`、`web_para`。
+送出：`su_id`、`sn_id`（依店到店編號）或 `order_no`（依訂單編號，≤25）、`rtn_url`、`web_para`。
 
-回傳：`sn_id`、`order_no`、`order_status`、`webPara`，另有三個時序欄位：
+回傳：`sn_id`、`order_no`（僅依訂單編號查詢）、`order_status`、`webPara`，另有三個時序欄位：
 
 | 參數 | 說明 |
 |---|---|
@@ -149,10 +149,92 @@ ezShip 是本 skill 收錄的**唯一非金流商的超商取貨聚合商**。�
 | `sdate` | 配送狀態發生日期（`yyyy/mm/dd`），由超商或宅配公司提供 |
 | `udate` | ezShip 接收到該狀態的時間（`yyyy/mm/dd hh24:mi`）|
 
+**貨況 `order_status`**（`ezship_status_api.pdf`、`ezship_status_api_byorder.pdf`）：
+
+| 代碼 | 說明 |
+|---|---|
+| `S01` | 尚未寄件或尚未收到超商總公司提供的寄件訊息 |
+| `S02` | 運往取件門市途中 |
+| `S03` | 已送達取件門市 |
+| `S04` | 已完成取貨 |
+| `S05` | 退貨（已退回物流中心／再寄一次給取件人／退回給寄件人）|
+| `S06` | 配送異常（刪單／門市閉店／貨故）|
+| `E00` | 參數傳遞內容有誤或欄位短缺 |
+| `E01` | `su_id` 帳號不存在 |
+| `E02` | `su_id` 帳號無網站串接權限 |
+| `E03` | `sn_id` 店到店編號有誤 |
+| `E04` | `su_id` 與 `sn_id` 無法對應 |
+| `E99` | 系統錯誤 |
+
+> ⚠️ `S01` 在建單回傳代表「訂單新增成功」，在貨況查詢代表「尚未寄件」；`E00`–`E04` 兩邊意義也不同，解析時要分開處理。
+
 > ⚠️ **有速率限制且會被停權**：官方明文「若因大量反覆查詢結案資料，導致 ezShip 系統忙碌或運行困難，ezShip 將中斷其網路串接之權利」，**建議每筆查詢間隔 3 秒以上**，已結案貨件勿重複查詢。不要做整批預先輪詢。
 > ⚠️ **`order_status` 回傳 `S05`（包裹退貨）或 `S06`（包裹配送異常）時無法呈現最終貨況**，需登入 ezShip 系統查詢。
 > ⚠️ 訂單號碼重複時，**以最後一次上傳的訂單資料為準**。
 > ⚠️ 以訂單編號查詢**不適用簡易版**串接的訂單。
+
+## 2.2 XML 版 — 傳送訂單
+
+電子地圖與貨況查詢同參數版；傳送訂單改以 HTTP POST 將 XML 放在 **`web_map_xml`** 參數送到
+`https://www.ezship.com.tw/emap/ezship_xml_order_api_ex.jsp`（`ezship_xml_order_api.jsp` 已於 2017 年底停用）。
+欄位依 `ezship_WebOrder_XML_v15s.pdf`（版本 1.5），標籤為 camelCase。
+
+**訂單 `<ORDER>`**
+
+| 標籤 | 必要 | 型態／長度 | 說明 |
+|---|:---:|---|---|
+| `suID` | Y | varchar 100 | 賣家 ezShip 帳號；取貨付款訂單帳號須在合約期間內 |
+| `orderID` | Y | varchar 10 | 購物網站訂單編號 |
+| `orderStatus` | Y | varchar 3 | `A01`–`A06`、`A11`、`A12`，同參數版 |
+| `orderType` | Y | varchar 1 | `1` 取貨付款／`3` 取貨不付款 |
+| `orderAmount` | Y | number 5 | 範圍同參數版；店港澳只能 `orderType=3`，報值金額商務會員 0–2,500 |
+| `rvName` | Y | varchar 60 | 取件人姓名；`orderType=3` 須為證件上真實姓名 |
+| `rvEmail` | Y | varchar 100 | 店到店包裹送達時寄取件通知 |
+| `rvMobile` | Y | varchar 10 | 店到店發台灣手機簡訊；店到宅供配送聯絡；店港澳發港澳手機簡訊 |
+| `stCode` | 條件 | varchar 9 | **通路別 + 門市代號**（電子地圖回傳的 `stCate` + `stCode`，如 `TFM0038`）；`A01`–`A04`、`A11`、`A12` 必填 |
+| `rvAddr` | 條件 | varchar 120 | `A05`、`A06` 必填 |
+| `rvZip` | 條件 | varchar 10 | `A05`、`A06` 必填 |
+| `rtURL` | Y | varchar 100 | 回傳網址 |
+| `webPara` | N | varchar 100 | 原值回傳；勿含 `' : @ % & * $ "` |
+
+**商品明細 `<Detail>`**（可重複，非必要；有傳才可在便利配列印寄件單與撿貨報表）
+
+| 標籤 | 型態／長度 | 說明 |
+|---|---|---|
+| `prodItem` | number 3 | 商品序號，**必須從 1 開始依序遞增** |
+| `prodNo` | varchar 30 | 商品編號 |
+| `prodName` | varchar 120 | 商品名稱 |
+| `prodPrice` | number 5 | 價格 |
+| `prodQty` | number 5 | 數量 |
+| `prodSpec` | varchar 120 | 規格 |
+
+有傳 `<Detail>` 時 `prodItem`、`prodName` 必須有值。含特殊符號的欄位以 `<![CDATA[...]]>` 包起來。
+
+```xml
+<ORDER>
+   <suID>service@ezship.com.tw</suID>
+   <orderID>20140318154002</orderID>
+   <orderStatus>A01</orderStatus>
+   <orderType>1</orderType>
+   <orderAmount>1680</orderAmount>
+   <rvName><![CDATA[謝無忌]]></rvName>
+   <rvEmail>123@ezship.com.tw</rvEmail>
+   <rvMobile>0987654321</rvMobile>
+   <stCode>TFM0038</stCode>
+   <rtURL>http://yourdomain.domain/direct/program.php</rtURL>
+   <webPara>20140318154002-xxx</webPara>
+   <Detail>
+      <prodItem>1</prodItem>
+      <prodNo>A2769-1</prodNo>
+      <prodName><![CDATA[格子口袋襯衫]]></prodName>
+      <prodPrice>860</prodPrice>
+      <prodQty>1</prodQty>
+      <prodSpec><![CDATA[白]]></prodSpec>
+   </Detail>
+</ORDER>
+```
+
+回傳（snake_case）：`order_id`、`sn_id`、`order_status`、`webPara`；代碼同參數版，另有 `E98` XML 無法載入、`E99` 系統錯誤。
 
 ## 3. 申請流程
 
@@ -165,22 +247,21 @@ ezShip 是本 skill 收錄的**唯一非金流商的超商取貨聚合商**。�
 
 ## 4. 技術文件
 
-> ✅ **上一輪標記的 404 已查明**：社群流傳的是**無版號檔名** `ezship_WebOrder_HttpRequest.pdf`，實際檔名帶版本後綴。官網 `service_doc` 當時回「系統忙碌中」是暫時性的，現已可正常存取。
-
 | 文件 | 網址 |
 |---|---|
 | 欄位定義（參數版）| `http://www.ezship.com.tw/file/ezship_WebOrder_HttpRequest_v15.pdf` |
 | 欄位定義（XML 版）| `http://www.ezship.com.tw/file/ezship_WebOrder_XML_v15s.pdf` |
+| 貨況（依店到店編號）| `http://www.ezship.com.tw/file/ezship_status_api.pdf` |
+| 貨況（依訂單編號）| `http://www.ezship.com.tw/file/ezship_status_api_byorder.pdf` |
 | 文件站首頁 | `https://www.ezship.com.tw/service_doc/service_home_w18v1.jsp?vDocNo=1702` |
 
-文件站以 `vDefPage` 參數分頁（`04`–`09` 參數版、`10`–`16` XML 版、`17`–`18` 簡易版、`19`–`23` 貨況串接）。
+文件站內容由 `service_doc/1702NN_doc.jsp` 載入（`04`–`09` 參數版、`10`–`16` XML 版、`17`–`18` 簡易版、`19`–`22` 貨況串接）。
 
 官方另提供 PHP／JSP 的 BIG5 與 UTF-8 兩種版本程式碼範例。
 
-### 已知欄位線索
+`webPara` 官方定義為「網站所需額外判別資料，ezShip 將原值回傳」，是原值透傳的識別欄位（類似其他 provider 的 `ExtraData`），沒有驗證或簽章語意。ezShip **沒有簽章機制**，安全性倚賴 `su_id` 帳號綁定與 HTTPS。
 
-- 傳遞參數中有預留的 **`webPara`** 欄位，用於**令牌驗證（token）**功能——這是把 ezShip 回傳對回自家訂單的關鍵欄位，設計上類似其他 provider 的 `MerchantTradeNo` 或 `ExtraData`
-- 開源實作可參考：https://github.com/recca0120/payum-ezship（PHP，`src/Api.php`）
+開源實作可參考：https://github.com/recca0120/payum-ezship（PHP，`src/Api.php`）
 
 > 已知的踩雷點：OpenCart 等平台串 ezShip 時會遇到 **SameSite cookie** 問題（導轉回站時 session 遺失）。若採導轉式串接，須設定 `SameSite=None; Secure`。
 
@@ -208,16 +289,11 @@ ezShip 是本 skill 收錄的**唯一非金流商的超商取貨聚合商**。�
 
 ## 7. 待補
 
-參數版三支端點（電子地圖／傳送訂單／貨況查詢）的欄位已完整。
-
 | 項目 | 狀態 |
 |---|---|
-| 貨況代碼 | 建單的 `A`／`S01`／`E` 代碼已依 PDF 補齊；貨況查詢回傳的 `S05`／`S06` 等完整對照待補 |
-| XML 版欄位 | 端點與能力差異已確認，欄位定義在 `ezship_WebOrder_XML_v15s.pdf` |
-| 商品資料結構 | XML 版獨有（可列印含商品明細寄件單），欄位待補 |
-| 大宗直寄／店退店的串接方式 | 服務存在，是否走同一組 API 未確認 |
-
-> `webPara` 先前被記為「token 驗證欄位」，**這是誤解**。官方定義為「網站所需額外判別資料，ezShip 將原值回傳」——它是**原值透傳的識別欄位**（類似其他 provider 的 `ExtraData`／`CustomField`），沒有任何驗證或簽章語意。ezShip 的參數版**沒有簽章機制**，安全性倚賴 `su_id` 帳號綁定與 HTTPS。
+| 大宗直寄 | 欄位定義的金額說明把「直寄店配／直寄宅配」與店到店、店到宅並列，顯示直寄訂單走同一組建單 API；開通條件與是否另有參數未載明 |
+| 店退店（逆物流） | 串接文件未提及，應為後台操作；是否有 API 需洽 ezShip |
+| XML 版批次多筆 | 比較表標示 XML 版可「批次多筆」，但欄位定義與範例只有單一 `<ORDER>`，批次格式未載明 |
 
 ## 8. 來源
 
@@ -228,6 +304,7 @@ ezShip 是本 skill 收錄的**唯一非金流商的超商取貨聚合商**。�
 - 程式碼說明：連結電子地圖 — `…/2017_service_doc_home.jsp?vDocNo=1702&vDefPage=07`
 - 程式碼說明：傳送訂單 — `…&vDefPage=08`
 - 貨況串接（依訂單編號查詢）— `…&vDefPage=22`
+- 欄位定義 PDF — `ezship_WebOrder_HttpRequest_v15.pdf`、`ezship_WebOrder_XML_v15s.pdf`、`ezship_status_api.pdf`、`ezship_status_api_byorder.pdf`（見 §4）
 - 欄位定義 PDF（參數版）— http://www.ezship.com.tw/file/ezship_WebOrder_HttpRequest_v15.pdf
 - 欄位定義 PDF（XML 版）— http://www.ezship.com.tw/file/ezship_WebOrder_XML_v15s.pdf
 - 開源 PHP 實作 — https://github.com/recca0120/payum-ezship
