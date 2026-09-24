@@ -210,6 +210,7 @@ def main():
     ap.add_argument('--validate', action='store_true', help='只做離線格式檢查')
     ap.add_argument('--manual', action='store_true', help='列出需人工取得的來源')
     ap.add_argument('--fail-on-change', action='store_true', help='有變動時 exit 1（排程檢查用）')
+    ap.add_argument('--json-out', help='把結果寫成 JSON（排程開 issue 用）')
     args = ap.parse_args()
 
     entries = load_manifest()
@@ -270,6 +271,13 @@ def main():
         state = {k: v for k, v in sorted(state.items()) if k in known}
         STATE.write_text(json.dumps(state, ensure_ascii=False, indent=1) + '\n', encoding='utf-8')
         print(f'\n已更新基準：{STATE.relative_to(ROOT)}')
+
+    if args.json_out:
+        out = {status: [{'id': r['id'], 'title': by_id[r['id']]['title'], 'url': by_id[r['id']]['url'],
+                         'covers': by_id[r['id']]['covers'], 'detail': r.get('detail', '')}
+                        for r in groups.get(status, [])]
+               for status in ('changed', 'new', 'error')}
+        Path(args.json_out).write_text(json.dumps(out, ensure_ascii=False, indent=1), encoding='utf-8')
 
     return 1 if args.fail_on_change and groups.get('changed') else 0
 

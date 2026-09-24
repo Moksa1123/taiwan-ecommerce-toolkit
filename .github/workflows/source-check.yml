@@ -1,0 +1,73 @@
+# 每週抓一次官方來源（sources/official-sources.json），有變動就開 issue 列出受影響的檔案。
+# 只讀不寫：不更新 sources/state.json，基準要在本機改完 reference 後用 --update 記錄。
+name: 官方來源檢查
+
+on:
+  schedule:
+    - cron: '0 1 * * 1'   # 每週一 09:00（台灣時間）
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: 抓取並比對
+        env:
+          PYTHONIOENCODING: utf-8
+        run: |
+          python scripts/check-sources.py --json-out result.json | tee report.txt
+          {
+            echo '```'
+            cat report.txt
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: 保存新版本快照
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: source-snapshots
+          path: _studies/snapshots/
+          if-no-files-found: ignore
+          retention-days: 30
+
+      # 只有「內容變動」才開 issue；抓取失敗（例如綠界暫時封鎖）只記在執行摘要，避免誤報
+      - name: 有變動時開 issue
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PYTHONIOENCODING: utf-8
+        run: |
+          python - <<'PY'
+          import json, os
+          r = json.load(open('result.json', encoding='utf-8'))
+          if not r['changed']:
+              raise SystemExit
+          run = f"{os.environ['GITHUB_SERVER_URL']}/{os.environ['GITHUB_REPOSITORY']}/actions/runs/{os.environ['GITHUB_RUN_ID']}"
+          lines = ['以下官方來源的內容與 `sources/state.json` 的基準不同：', '']
+          for c in r['changed']:
+              lines.append(f"- **{c['id']}** — [{c['title']}]({c['url']})")
+              if c['covers']:
+                  lines.append('  - 影響：' + '、'.join(f'`{p}`' for p in c['covers']))
+          lines += ['', f'新版本快照：[執行紀錄的 artifact]({run})', '',
+                    '處理方式：本機跑 `python scripts/check-sources.py` 取得 diff → 更新受影響的檔案 → `--update` 記錄新基準。']
+          open('issue.md', 'w', encoding='utf-8').write('\n'.join(lines))
+          open('has_change', 'w').write('1')
+          PY
+          [ -f has_change ] || exit 0
+          gh label create "官方來源變動" --color FBCA04 --description "check-sources 偵測到官方文件變動" 2>/dev/null || true
+          existing=$(gh issue list --label "官方來源變動" --state open --json number -q '.[0].number')
+          if [ -n "$existing" ]; then
+            gh issue comment "$existing" --body-file issue.md
+          else
+            gh issue create --title "官方來源有變動（$(date -u +%Y-%m-%d)）" --label "官方來源變動" --body-file issue.md
+          fi

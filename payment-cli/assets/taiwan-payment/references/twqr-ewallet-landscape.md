@@ -50,7 +50,7 @@
 
 > ezPay 簡單付不在本表：它是電支機構，街口、全支付、全盈+PAY、一卡通、悠遊付、icash Pay 等都以 **TWQR 跨機構交易**收款（`PaymentType=TWQR`），不分錢包代碼（ezPay 電子支付平台手冊 W1.0.2「規格介紹」）。
 
-NewebPay 的 MPG（NDNF-1.2.2）沒有個別錢包參數，這些錢包都以 `TWQR=1` 收款；PayNow 現代版 `allowedPaymentMethods` 不含這些錢包。
+NewebPay 的 MPG（NDNF-1.2.5）沒有個別錢包參數，這些錢包都以 `TWQR=1` 收款；PayNow 現代版 `allowedPaymentMethods` 不含這些錢包。
 
 | 錢包 | ECPay | PAYUNi | NewebPay | PayNow | TapPay |
 |---|---|---|---|---|---|

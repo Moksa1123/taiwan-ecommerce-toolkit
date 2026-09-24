@@ -11,6 +11,7 @@
 > | `API_Cross_Trans_ezPay_1.0.1.pdf` 跨境網路交易串接手冊 | 1.0.1 | 支付寶／微信 MPG |
 > | `API_Cross_Trans_search_ezPay_1.0.1.pdf` 跨境交易單筆查詢 | 1.0.1 | QueryInfo |
 > | `API_Cross_Trans_refund_ezPay_1.0.3.pdf` 跨境交易退款 | 1.0.3 | RefundInfo |
+> | `API_Cross_Trans_physical_ezPay_1.0.0.pdf` 跨境實體商店串接手冊（標準版） | 檔名 1.0.0／文件 ezPay_2.0.0（2019-11-05） | 門市掃消費者支付寶／微信條碼 |
 
 
 ---
@@ -21,9 +22,10 @@
 2. [加解密（兩組 API 共用）](#加解密兩組-api-共用)
 3. [電子支付平台 API（境內）](#電子支付平台-api境內)
 4. [跨境網路交易 API](#跨境網路交易-api)
-5. [錯誤代碼](#錯誤代碼)
-6. [手冊中的不一致之處](#手冊中的不一致之處)
-7. [與藍新 NewebPay 的差異](#與藍新-newebpay-的差異)
+5. [跨境實體商店 API](#跨境實體商店-api)
+6. [錯誤代碼](#錯誤代碼)
+7. [手冊中的不一致之處](#手冊中的不一致之處)
+8. [與藍新 NewebPay 的差異](#與藍新-newebpay-的差異)
 
 ---
 
@@ -274,6 +276,122 @@ NotifyURL / ReturnURL **在 ezPay 後台設定**（手冊「交易支付系統�
 
 ---
 
+## 跨境實體商店 API
+
+門市以設備或 App 掃描境外消費者出示的支付寶／微信付款條碼（一維或二維）收款，另有查詢、退款與異步通知
+（《跨境實體商店串接手冊》ezPay_2.0.0，以下頁碼為 PDF 頁尾頁碼）。商店屬性需選「跨境實體商店」，
+須經 ezPay 與跨境機構審核開通（p.12）。
+
+### 與跨境網路交易（MPG）的差異
+
+| 項目 | 跨境網路交易 | 跨境實體商店 |
+|------|-------------|-------------|
+| 情境 | 消費者在網站付款（前景 Form Post） | 門市掃消費者條碼（幕後 API） |
+| 網域 | `(c)payment.ezpay.com.tw` | `(c)o2o.ezpay.com.tw` |
+| 外層欄位 | `MerchantID`、`Version`、`TradeInfo`、`TradeSha` | `APIID`、`Version`、`UID`、`EncryptData`、`HashData`（同電子支付平台） |
+| Version | 1.0（退款 2.1） | 2.0（退款 3.0） |
+| PaymentType | `ALIPAY`、`WECHAT` | `ALIPAY`、`WECHATPAY`、`REROUTE`（自動分流，僅請求） |
+| NotifyURL | 後台設定 | 後台設定（「設定 API 應用 URL」，p.9） |
+| 通知格式 | Form POST | `Content-Type: application/json`（p.7） |
+| 錯誤代碼 | `MPG…` | `CTI…`／`CTQ…`／`CTR…` |
+
+### 環境（p.8、p.11）
+
+| APIID | 用途 | 測試 | 正式 |
+|-------|------|------|------|
+| `SCBOOTradeInfo` | 跨境交易付款 | `https://co2o.ezpay.com.tw/APIS/Trade` | `https://o2o.ezpay.com.tw/APIS/Trade` |
+| `SCBOOTradeInfoNotify` | 交易結果異步通知 | 商店指定 URL | 商店指定 URL |
+| `SCBGetTradeInfo` | 交易狀態查詢 | `https://co2o.ezpay.com.tw/APIS/Query` | `https://o2o.ezpay.com.tw/APIS/Query` |
+| `SCBRefundTradeInfo` | 跨境交易退款 | `https://co2o.ezpay.com.tw/APIS/Trade` | `https://o2o.ezpay.com.tw/APIS/Trade` |
+
+付款與退款共用 `/APIS/Trade`，以 `APIID` 區分。測試平台 `https://cwww.ezpay.com.tw/` 註冊後建立跨境實體測試商店，
+系統自動審核開通；Hash Key／IV 在【銷售中心】→【管理商店】→【詳細資料】→「API 串接金鑰」（p.8–9）。
+
+### 加解密（p.5–6）
+
+- AES-256-CBC，Key = Hash Key（32 字元）、IV = Hash IV（16 字元），PKCS#7，密文以十六進位字串輸出（不轉 Base64）
+- 加密前參數先 URL encode 以 `&` 串接；建議 `TimeStamp` 放第一個
+- `HashData = SHA256("HashKey={Hash Key}&{密文}&HashIV={Hash IV}")` 轉大寫
+
+外層與電子支付平台相同，演算法見上方「加解密」。本手冊沒有提供範例值，32 bytes padding 是否同樣適用無法以手冊驗證。
+
+請求：`POST`、`application/x-www-form-urlencoded`、UTF-8；回應：`application/json`，外層 `Status`、`APIID`、`Version`、
+`UID`、`EncryptData`、`HashData`（p.6–7）。
+
+### 付款 `SCBOOTradeInfo`（p.14–16）
+
+外層 `APIID`、`Version`（`2.0`）、`UID`（商店代號，如 `PG300000000066`）、`EncryptData`、`HashData`。EncryptData 內：
+
+| 參數 | 必填 | 型態 | 說明 |
+|------|:---:|------|------|
+| `TimeStamp` | V | String(50) | Unix 秒 |
+| `APIID` | V | String(20) | `SCBOOTradeInfo` |
+| `Version` | V | String(5) | `2.0` |
+| `UID` | V | String(15) | 商店代號 |
+| `MerchantOrderNo` | V | String(40) | 英數與底線，同商店不可重複 |
+| `PaymentType` | V | String(10) | `ALIPAY`、`WECHATPAY`、`REROUTE`（自動分流） |
+| `BarCode` | V | String(32) | 境外支付機構的付款條碼內容 |
+| `Currency` | V | String(3) | `TWD` |
+| `OrderAmt` | V | Int(10) | 告知消費者的訂單金額，不得為 0，須 ≥ `AmtPayable` |
+| `AmtPayable` | V | Int(10) | 扣除門市折扣後的應付金額（撥付時未扣手續費的收款金額），不得為 0 |
+| `ItemDesc` | V | String(50) | 商品資訊 |
+| `SeqNo` | | String(64) | 端末機交易序號 |
+| `StoreNo` | | String(64) | 門市代號 |
+| `POSNo` | | String(64) | POS 機代號 |
+| `TestMode` | | String(2) | 僅測試環境：`0` 模擬立即付款完成、`1` 模擬須等候付款方確認 |
+
+回應外層 `Status`：`SUCCESS`、錯誤代碼，或 **`UNKNOW`**（須等候付款方確認）。EncryptData 解密為 JSON：
+`TimeStamp`、`APIID`、`Version`、`UID`、`Status`、`Message`、`Result`、`ResponseType`（如 `R1`）（p.17–18）。
+
+`Result`（p.18–19）：`OrderStatus`（1=待付款、2=已付款、5=取消付款、6=付款失敗）、`PaymentType`、`BarCode`、
+`MerchantOrderNo`、`TradeNo`、`CrossID`（境外支付機構交易序號）、`Currency`、`OrderAmt`、`AmtPayable`、
+`AmtPaid`（扣除紅利、副支付、優惠後的實付金額）、`CNYAmtPaid`、`USDAmtPaid`、`RequestTime`、
+`PaymentTime`（等候確認時為 `-`）、`SeqNo`、`StoreNo`、`POSNo`。
+
+回應為 `UNKNOW` 時，以**間隔 2 秒以上**持續呼叫查詢 API，直到訂單為已付款、取消付款或付款失敗，或收到異步通知（p.10）。
+
+### 異步通知 `SCBOOTradeInfoNotify`（p.20–22）
+
+付款方完成付款後 POST 到後台設定的 Notify URL，`Content-Type: application/json`，外層與付款回應相同（`APIID` 為
+`SCBOOTradeInfoNotify`）；`ResponseType` 如 `N1`（第一次通知）。`Result` 欄位同付款回應。
+回應非 HTTP 200 時最多重送三次（p.10）。
+
+### 交易狀態查詢 `SCBGetTradeInfo`（p.23–27）
+
+EncryptData 內 `TimeStamp`、`APIID`、`Version`（`2.0`）、`UID`，加上 `MerchantOrderNo` 或 `TradeNo`（**擇一，不可同時帶入**）。
+
+`Result`：`OrderStatus`（1=待付款、2=已付款、3=部分退款、4=全額退款、5=取消付款、6=付款失敗）、`MerchantOrderNo`、
+`TradeNo`、`Currency`、`OrderAmt`、`AmtPayable`、`AmtPaid`、`FeeAmt`（交易手續費）、`CNYAmtPaid`、`USDAmtPaid`、
+`CrossID`、`PaymentType`、`TotalRefundAmt`、`RefundLimit`（剩餘可退）、`SeqNo`、`StoreNo`、`POSNo`、`RequestTime`、
+`PaymentTime`、`CloseDT`（實際撥款日，未撥付為 `-`）。
+
+手冊建議查詢時機（p.10）：付款回應 `SUCCESS` 但未收到通知、回應 `UNKNOW`、退款成功後確認狀態、網路中斷無法取得回應。
+
+### 退款 `SCBRefundTradeInfo`（p.28–31）
+
+外層 `Version` 為 **`3.0`**。EncryptData 內：
+
+| 參數 | 必填 | 說明 |
+|------|:---:|------|
+| `TimeStamp`、`APIID`、`Version`、`UID` | V | `APIID`=`SCBRefundTradeInfo`、`Version`=`3.0` |
+| `MerchantOrderNo` / `TradeNo` | 擇一 | 不可同時帶入 |
+| `RefundType` | V | `1`（退款） |
+| `Currency` | V | `TWD` |
+| `RefundAmt` | V | 本次退款金額（整數） |
+
+`Result`：`OrderStatus`（3=部分退款、4=全額退款等）、`RefundType`、`MerchantOrderNo`、`TradeNo`、`Currency`、
+`RefundAmt`、`RefundLimit`、`RefundTime`。
+
+退款限制（p.13）：
+
+- 每日 23:55 至隔日 00:05 結帳期間暫停退款（`CTR08002` 該時段無法退款）
+- 未結帳累計金額小於退款金額時拒絕（`CTR08003` 在途金額不足）
+- 無法確認付款結果的交易，手冊建議直接發動退款（p.11）
+
+手冊寫「每日 00:00 至隔日 00:05 進行當日結帳作業」，結帳完成的交易依約定日期撥款並自動提領至指定帳戶（p.13）。
+
+---
+
 ## 錯誤代碼
 
 電子支付平台每支 API 有自己的前綴，219 個代碼全部收在 `data/error-codes.csv`：
@@ -295,6 +413,14 @@ NotifyURL / ReturnURL **在 ezPay 後台設定**（手冊「交易支付系統�
 `MPG01015` 訂單金額錯誤、`MPG01016` 時間戳記錯誤、`MPG02004` 超過交易限制時間、`MPG03001` 訂單資訊解密失敗、
 `MPG03007` 查無此商店代號、`MPG03008` 已存在相同的商店訂單編號、`MPG03009` 交易失敗（完整見 CSV）。
 
+跨境實體商店的錯誤代碼（手冊「十、錯誤代碼」p.32–34）：
+
+| API | 前綴 | 常見 |
+|-----|------|------|
+| 付款 | `CTI` | `CTI02002` 資料解密失敗、`CTI03001` SHA256 檢查不符、`CTI04002` 商店屬性不符、`CTI05008` 買方跨境條碼不可空白、`CTI05014` 訂單金額不可低於應付金額、`CTI06003` 付款失敗 |
+| 查詢 | `CTQ` | `CTQ05006` 交易序號或商店自訂單號擇一填寫、`CTQ06001` 查無符合交易紀錄 |
+| 退款 | `CTR` | `CTR07001` 訂單不為已付款狀態、`CTR07002` 退款金額超過可退款金額、`CTR08002` 該時段無法退款、`CTR08003` 在途金額不足 |
+
 ---
 
 ## 手冊中的不一致之處
@@ -309,6 +435,10 @@ NotifyURL / ReturnURL **在 ezPay 後台設定**（手冊「交易支付系統�
 | 跨境 八、SHA256 範例 | TradeSha `B5C41ADB…` | 這個值是在 `HashKey=…&` 後**多一個空白**算出來的（PDF 斷行處）；正確公式不含空白 |
 | 跨境查詢 七 | QuerySha 只印 63 位 | 前 63 位與正確計算相符 |
 | 跨境退款 七 | 範例明文 `Version=1.0`、`RefundAmt=` 空白 | 參數表規定 Version `2.1`、RefundAmt 必填；範例只能當演算法向量 |
+| 跨境實體 封面 | 檔名 `1.0.0` | 封面與異動表為文件版本 `ezPay_2.0.0`（2019-11-05，整合所有規格並改用新參數與統一端口） |
+| 跨境實體 五、異步通知 | 傳輸表寫「請求方 跨境實體商店、接收方 ezPay」 | 通知是 ezPay 發給商店；方向寫反 |
+| 跨境實體 二、(8) | 參考附錄的測試用 QR Code | 手冊沒有附錄 |
+| 跨境實體 付款請求 PaymentType | 可帶 `REROUTE`（自動分流） | 回應與通知的 `PaymentType` 只列 `ALIPAY`、`WECHATPAY` |
 
 ---
 
@@ -316,15 +446,15 @@ NotifyURL / ReturnURL **在 ezPay 後台設定**（手冊「交易支付系統�
 
 同集團，但**不是同一套 API**：
 
-| 項目 | ezPay 電子支付平台 | ezPay 跨境 | 藍新 NewebPay MPG |
-|------|-------------------|-----------|-------------------|
-| 網域 | `(c)payment.ezpay.com.tw` | `(c)payment.ezpay.com.tw` | `(c)core.newebpay.com` |
-| 路徑 | `/API/Twqr/{APIID}` | `/MPG/mpg_gateway` | `/MPG/mpg_gateway` |
-| 外層欄位 | APIID、Version、UID、EncryptData、HashData | MerchantID、Version、TradeInfo、TradeSha | MerchantID、Version、TradeInfo、TradeSha |
-| Version | 1.0 | 1.0（退款 2.1） | 2.0／2.3 |
-| 加密時 padding | 32 bytes | 32 bytes | 規格書範例為 16 bytes（解密須容許 1–32） |
-| 回應明文 | urlencoded（`Result[...]`） | JSON | JSON 或 query string（依 RespondType） |
-| 支付工具 | EPACC、ACCLINK、CREDIT、TWQR | ALIPAY、WECHAT | 信用卡、ATM、超商、各電子錢包… |
-| 收款方 | ezPay 會員商店（電子支付機構） | 同左 | 藍新特約商店 |
+| 項目 | ezPay 電子支付平台 | ezPay 跨境網路 | ezPay 跨境實體 | 藍新 NewebPay MPG |
+|------|-------------------|---------------|---------------|-------------------|
+| 網域 | `(c)payment.ezpay.com.tw` | `(c)payment.ezpay.com.tw` | `(c)o2o.ezpay.com.tw` | `(c)core.newebpay.com` |
+| 路徑 | `/API/Twqr/{APIID}` | `/MPG/mpg_gateway` | `/APIS/Trade`、`/APIS/Query` | `/MPG/mpg_gateway` |
+| 外層欄位 | APIID、Version、UID、EncryptData、HashData | MerchantID、Version、TradeInfo、TradeSha | 同電子支付平台 | MerchantID、Version、TradeInfo、TradeSha |
+| Version | 1.0 | 1.0（退款 2.1） | 2.0（退款 3.0） | 2.0／2.3 |
+| 加密時 padding | 32 bytes | 32 bytes | 手冊只寫 PKCS#7，無範例值 | 規格書範例為 16 bytes（解密須容許 1–32） |
+| 回應明文 | urlencoded（`Result[...]`） | JSON | JSON | JSON 或 query string（依 RespondType） |
+| 支付工具 | EPACC、ACCLINK、CREDIT、TWQR | ALIPAY、WECHAT | ALIPAY、WECHATPAY（掃消費者條碼） | 信用卡、ATM、超商、各電子錢包… |
+| 收款方 | ezPay 會員商店（電子支付機構） | 同左 | 同左（跨境實體商店） | 藍新特約商店 |
 
 需要信用卡收單、ATM、超商代碼等完整金流時用藍新 NewebPay；ezPay 適合要收 ezPay 錢包與 TWQR 的商店。
