@@ -490,7 +490,7 @@ B2B 列印端點為 `/B2BInvoice/InvoicePrint`；PDF 下載為 `/B2BInvoice/Down
 | `4000003` | 延後開立成功（觸發開立且 `DelayDay>0`） | 觸發開立（/15371） |
 | `4000004` | 開立成功（觸發開立且 `DelayDay=0`） | 觸發開立（/15371） |
 | `7` | 統一編號查無資料（不影響開立） | 統一編號驗證（/32089） |
-| `10100058` | 發票作業逾時（AIO 金流同代碼為 ATM 繳費逾期） | 綠界官方 ecpay-api-skill `guides/20-error-codes-reference.md` |
+| `10100058` | 發票作業逾時（AIO 金流同代碼為 Pay fail，/5740） | 綠界官方 ecpay-api-skill `guides/20-error-codes-reference.md` |
 | `10000002` | 必填欄位遺漏（Phone/Email 皆未填，或 Items 格式錯誤） | 綠界官方 ecpay-api-skill `guides/04-invoice-b2c.md` |
 | `10000009` | RelateNumber 重複（同一帳號不可重用） | 同上 |
 | `1500047`、`5070350` | 當期字軌未新增、未啟用或號碼已用罄 → 後台「字軌與配號設定」 | 附錄 錯誤代碼一覽表（/7954） |

@@ -541,7 +541,7 @@ async function refundPaymentOrder(merchantTradeNo: string, refundAmount: number)
 
 **錯誤訊息：** ECPay 回傳 `10200073`（CheckMacValue 驗證失敗），NewebPay 回傳 `MPG02001`（檢查碼錯誤，即 TradeSha 不符）
 
-> 注意：ECPay 的 `10100058` 是「ATM 繳費期限已過」，不是檢查碼錯誤。
+> 注意：ECPay 的 `10100058` 是「Pay fail」（3D 驗證未完成，/5740），不是檢查碼錯誤。
 
 **常見原因（ECPay）：**
 1. 排序時區分了大小寫（應不分大小寫，SDK 用 `strcasecmp`）
