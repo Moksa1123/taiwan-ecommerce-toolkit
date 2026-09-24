@@ -168,7 +168,8 @@ def normalize(raw, charset, e):
     for pattern in e.get('ignore', []):
         text = re.sub(pattern, '', text)
     lines = [re.sub(r'[ \t　]+', ' ', ln).strip() for ln in text.splitlines()]
-    lines = [ln for ln in lines if ln]
+    # 中文字之間的空白常被官網編輯時增刪，不影響內容
+    lines = [re.sub(r'(?<=[　-鿿＀-￯]) (?=[　-鿿＀-￯])', '', ln) for ln in lines if ln]
     if e.get('sort_lines'):
         lines = sorted(set(lines))  # 內容順序會隨機變動的頁面（首頁推薦、關鍵字雲）
     text = '\n'.join(lines)
