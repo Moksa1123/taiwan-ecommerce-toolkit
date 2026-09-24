@@ -143,7 +143,8 @@ Copilot、Gemini CLI、OpenCode、Windsurf 的文件都額外接受 **`.agents/s
 python3 scripts/check-sources.py                    # 抓取並比對，列出有變動的來源與受影響的檔案
 python3 scripts/check-sources.py --provider newebpay
 python3 scripts/check-sources.py --update           # 更新完 reference 後，把目前版本記為新基準
-python3 scripts/check-sources.py --manual           # 需瀏覽器（SPA）或人工取得（後台、需申請）的來源
+python3 scripts/check-sources.py --manual           # 需人工取得（後台、需申請、機密）的來源
+python3 scripts/check-sources.py --no-browser       # 略過需瀏覽器渲染的來源
 python3 scripts/check-sources.py --validate         # 離線檢查清單格式（CI 會跑）
 ```
 
@@ -152,6 +153,8 @@ reference / data / 範例 → 跑驗證腳本 → `--update` 記錄新基準，�
 
 - `.github/workflows/source-check.yml` 每週一自動檢查，有變動會開 issue（標籤「官方來源變動」），新版本快照在該次執行的 artifact
 - 新增來源時直接編輯 `official-sources.json`；`covers` 路徑必須存在
+- `fetch: browser` 的來源（PayNow 文件站、Uber、Trae 等網頁應用）用 Playwright 渲染：`pip install playwright && playwright install chromium`；沒裝會自動略過
+- 也追蹤 14 個 AI 平台的 skill 規範頁（`provider: ai-platform`），有變動時核對各 CLI 平台設定的 `folderStructure`
 - 版號寫在檔名的 PDF（ezPay、紅陽、ezShip）改版會換網址，要同時追蹤下載頁
 - 綠界開發者網站過頻會回 403 並封鎖約 30 分鐘，腳本已限速；被封鎖時等 30 分鐘再跑 `--provider ecpay`
 - 機密文件（GoMyPay）與後台資料只登記取得方式，內容放 `_studies/`，不進 repo

@@ -176,11 +176,56 @@ def normalize(raw, charset, e):
     return text.encode('utf-8'), text
 
 
-def check(e, state):
+class BrowserFetcher:
+    """網頁應用（Docusaurus、SPA）用無頭瀏覽器渲染後取可見文字；需要 pip install playwright 與 playwright install chromium"""
+
+    NOT_FOUND = ('Page Not Found', '找不到頁面')
+    BLOCKED = ("You don't have permission to access", 'Access Denied')
+
+    def __enter__(self):
+        from playwright.sync_api import sync_playwright
+        self._pw = sync_playwright().start()
+        self._browser = self._pw.chromium.launch()
+        self._page = self._browser.new_page(user_agent=HEADERS['User-Agent'], locale='zh-TW')
+        return self
+
+    def __exit__(self, *exc):
+        self._browser.close()
+        self._pw.stop()
+
+    def __call__(self, e):
+        with _host_slot(e['url']):
+            try:
+                self._page.goto(e['url'], wait_until='networkidle', timeout=45000)
+            except Exception:
+                # 有長連線的頁面（Uber Help）永遠不會 networkidle，改取已載入的內容
+                self._page.wait_for_load_state('load', timeout=30000)
+                self._page.wait_for_timeout(3000)
+            text = self._page.inner_text('body')
+        if any(marker in text for marker in self.NOT_FOUND):
+            raise OSError('頁面不存在（Page Not Found）')
+        if any(marker in text for marker in self.BLOCKED):
+            raise OSError('被網站防火牆阻擋')
+        return text.encode('utf-8'), 'utf-8'
+
+
+def browser_available():
     try:
-        raw, charset = fetch(e)
+        import playwright.sync_api  # noqa: F401
+        return True
+    except ImportError:
+        return False
+
+
+def check(e, state, fetcher=fetch):
+    try:
+        raw, charset = fetcher(e)
     except (urllib.error.URLError, TimeoutError, ConnectionError, OSError) as exc:
         return {'id': e['id'], 'status': 'error', 'detail': str(exc)[:160]}
+    except Exception as exc:  # 瀏覽器逾時等
+        return {'id': e['id'], 'status': 'error', 'detail': f'{type(exc).__name__}: {str(exc)[:140]}'}
+    if fetcher is not fetch:
+        e = {**e, 'format': 'txt'}  # 已是渲染後的可見文字
     body, text = normalize(raw, charset, e)
     digest = hashlib.sha256(body).hexdigest()
     prev = state.get(e['id'], {})
@@ -212,6 +257,7 @@ def main():
     ap.add_argument('--manual', action='store_true', help='列出需人工取得的來源')
     ap.add_argument('--fail-on-change', action='store_true', help='有變動時 exit 1（排程檢查用）')
     ap.add_argument('--json-out', help='把結果寫成 JSON（排程開 issue 用）')
+    ap.add_argument('--no-browser', action='store_true', help='略過需瀏覽器渲染的來源')
     args = ap.parse_args()
 
     entries = load_manifest()
@@ -232,15 +278,24 @@ def main():
 
     if args.manual:
         for e in selected:
-            if e['fetch'] in ('manual', 'browser'):
+            if e['fetch'] == 'manual':
                 print(f'- [{e["fetch"]}] {e["provider"]}: {e["title"]} — {e.get("url", "（無公開網址）")}' + (f'（{e["notes"]}）' if e.get('notes') else ''))
         return 0
 
-    auto = [e for e in selected if e['fetch'] not in ('manual', 'browser')]
+    use_browser = not args.no_browser and browser_available()
+    kinds = ('manual',) if use_browser else ('manual', 'browser')
+    auto = [e for e in selected if e['fetch'] not in kinds]
     state = load_state()
     by_id = {e['id']: e for e in selected}
+    plain = [e for e in auto if e['fetch'] != 'browser']
     with concurrent.futures.ThreadPoolExecutor(max_workers=8) as pool:
-        results = list(pool.map(lambda e: check(e, state), auto))
+        results = list(pool.map(lambda e: check(e, state), plain))
+    rendered = [e for e in auto if e['fetch'] == 'browser']
+    if rendered:
+        with BrowserFetcher() as browser:
+            results += [check(e, state, browser) for e in rendered]
+    if not use_browser and any(e['fetch'] == 'browser' for e in selected):
+        print('（未安裝 playwright，略過需瀏覽器的來源：pip install playwright && playwright install chromium）')
 
     groups = {}
     for r in results:
