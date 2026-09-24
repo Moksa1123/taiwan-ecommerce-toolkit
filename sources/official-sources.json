@@ -8192,7 +8192,14 @@
   "covers": [
    "taiwan-logistics/references/ondemand-delivery.md"
   ],
-  "notes": "SPA，需瀏覽器渲染"
+  "notes": "SPA，需瀏覽器渲染",
+  "ignore": [
+   "(?m)^(© \\d{4} )?Uber Technologies Inc\\.$",
+   "(?m)^EN$",
+   "(?m)^[A-Z][a-z]+( [A-Z][a-z]+)?$"
+  ],
+  "sort_lines": true,
+  "min_line_length": 30
  },
  {
   "id": "uber-direct-guides-authentication",
@@ -8208,7 +8215,14 @@
   "covers": [
    "taiwan-logistics/references/ondemand-delivery.md"
   ],
-  "notes": "SPA，需瀏覽器渲染"
+  "notes": "SPA，需瀏覽器渲染",
+  "ignore": [
+   "(?m)^(© \\d{4} )?Uber Technologies Inc\\.$",
+   "(?m)^EN$",
+   "(?m)^[A-Z][a-z]+( [A-Z][a-z]+)?$"
+  ],
+  "sort_lines": true,
+  "min_line_length": 30
  },
  {
   "id": "uber-direct-help-issues",
@@ -8224,7 +8238,14 @@
   "covers": [
    "taiwan-logistics/references/ondemand-delivery.md"
   ],
-  "notes": "依存取地區顯示不同內容（台灣版未列費用）"
+  "notes": "依存取地區顯示不同內容（台灣版未列費用）",
+  "ignore": [
+   "(?m)^(© \\d{4} )?Uber Technologies Inc\\.$",
+   "(?m)^EN$",
+   "(?m)^[A-Z][a-z]+( [A-Z][a-z]+)?$"
+  ],
+  "sort_lines": true,
+  "min_line_length": 30
  },
  {
   "id": "uber-direct-overview",
@@ -8241,7 +8262,14 @@
    "taiwan-logistics/references/ondemand-delivery.md",
    "taiwan-logistics/data/providers.csv"
   ],
-  "notes": "SPA，需瀏覽器渲染"
+  "notes": "SPA，需瀏覽器渲染",
+  "ignore": [
+   "(?m)^(© \\d{4} )?Uber Technologies Inc\\.$",
+   "(?m)^EN$",
+   "(?m)^[A-Z][a-z]+( [A-Z][a-z]+)?$"
+  ],
+  "sort_lines": true,
+  "min_line_length": 30
  },
  {
   "id": "uber-merchants-tw",
