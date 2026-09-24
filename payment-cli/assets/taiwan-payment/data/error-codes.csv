@@ -1,21 +1,28 @@
 provider,code,message_zh,message_en,category,severity,solution
-ecpay,1,交易成功,Success,success,info,
-ecpay,2,ATM 取號成功（等待轉帳）,ATM number issued,success,info,不是錯誤；等消費者轉帳後會再收到付款通知
-ecpay,10100073,超商代碼 / 條碼取號成功（等待繳費）,CVS/Barcode number issued,success,info,不是錯誤；等消費者繳費後會再收到付款通知
-ecpay,10100001,超商代碼已失效,CVS code expired,payment,error,重新取號
-ecpay,10100058,ATM 繳費期限已過（電子發票服務中為發票作業逾時）,ATM payment expired,payment,error,重新建立訂單取號；同一代碼在發票服務含意不同，依收到的服務判斷
-ecpay,10100248,帳號錯誤（例如把物流 / 發票帳號用在金流）,Wrong merchant account,auth,error,確認金流、物流、發票各自使用正確的 MerchantID / HashKey / HashIV
-ecpay,10200009,訂單已過期,Order expired,payment,error,檢查 ExpireDate 設定，重新建立訂單
-ecpay,10200043,3D 驗證失敗,3D Secure failed,payment,error,請消費者重新進行 3D 驗證
-ecpay,10200047,MerchantTradeNo 重複,Duplicate MerchantTradeNo,validation,error,使用不同的訂單編號（最長 20 字元，僅英數字）
-ecpay,10200050,TotalAmount 超出範圍（金額不符）,TotalAmount out of range,validation,error,檢查 TotalAmount
-ecpay,10200058,信用卡授權失敗,Card authorization failed,payment,error,請消費者確認卡片資訊或更換信用卡
-ecpay,10200073,CheckMacValue 驗證失敗,CheckMacValue verify fail,auth,error,不分大小寫排序、PHP urlencode 後轉小寫並還原 ( ) ! *、金流 SHA256 / 物流 MD5；確認 HashKey/HashIV
-ecpay,10200095,交易已付款（重複付款）,Already paid,payment,warning,檢查訂單是否已處理
-ecpay,10200105,BNPL 金額未達最低,BNPL amount below minimum,validation,error,"TotalAmount 需 >= 3,000 元"
-ecpay,10200115,信用卡授權逾時,Card authorization timeout,payment,error,請消費者重新付款
-ecpay,10300006,超商繳費期限已過（國內物流中為物流訂單已過期）,CVS payment expired,payment,error,重新建立訂單；同一代碼在物流服務含意不同
-ecpay,10400011,WAF 關鍵字攔截,Blocked by WAF keyword,validation,error,ItemName / TradeDesc 含 echo、python、curl 等系統指令關鍵字，移除即可
+ecpay,1,付款成功,Success,success,info,（/2878）
+ecpay,2,ATM 取號成功,ATM number issued,success,info,不是錯誤；等消費者轉帳後會再收到付款通知（/2881）
+ecpay,10100073,CVS／BARCODE 取號成功,CVS/Barcode number issued,success,info,不是錯誤；等消費者繳費後會再收到付款通知（/2881）
+ecpay,10100001,超商代碼已失效,CVS code expired,payment,error,重新取號（出處：綠界官方 skill guides/20，developers.ecpay.com.tw 未列，以後台「交易狀態代碼查詢」為準）
+ecpay,10100058,Pay fail（3D 驗證未完成）,Pay fail.,payment,error,請消費者更換瀏覽器或裝置、關閉 VPN、切換網路取得新 IP；定期定額時手機號碼須與銀行資料一致（/5740）
+ecpay,10100248,信用卡被銀行拒絕,Wrong merchant account,payment,error,資料錯誤、額度不足等，請消費者洽發卡行（/5740）
+ecpay,10200009,訂單已過期,Order expired,payment,error,檢查 ExpireDate 設定，重新建立訂單（出處：綠界官方 skill guides/20，developers.ecpay.com.tw 未列，以後台「交易狀態代碼查詢」為準）
+ecpay,10200043,3D 驗證失敗,3D Secure failed,payment,error,請消費者重新進行 3D 驗證（出處：綠界官方 skill guides/20，developers.ecpay.com.tw 未列，以後台「交易狀態代碼查詢」為準）
+ecpay,10200047,MerchantTradeNo 重複,Duplicate MerchantTradeNo,validation,error,使用不同的訂單編號（最長 20 字元，僅英數字）（出處：綠界官方 skill guides/20，developers.ecpay.com.tw 未列，以後台「交易狀態代碼查詢」為準）
+ecpay,10200050,TotalAmount 超出範圍（金額不符）,TotalAmount out of range,validation,error,檢查 TotalAmount（出處：綠界官方 skill guides/20，developers.ecpay.com.tw 未列，以後台「交易狀態代碼查詢」為準）
+ecpay,10200058,信用卡授權失敗,Card authorization failed,payment,error,請消費者確認卡片資訊或更換信用卡（出處：綠界官方 skill guides/20，developers.ecpay.com.tw 未列，以後台「交易狀態代碼查詢」為準）
+ecpay,10200073,CheckMacValue 驗證失敗,CheckMacValue verify fail,auth,error,不分大小寫排序、PHP urlencode 後轉小寫並還原 ( ) ! *、金流 SHA256 / 物流 MD5；確認 HashKey/HashIV（出處：綠界官方 skill guides/20，developers.ecpay.com.tw 未列，以後台「交易狀態代碼查詢」為準）
+ecpay,10200095,訂單未成立，消費者未完成付款,Already paid,payment,warning,查詢 API 的 TradeStatus；不是已付款或已退款（/2890）
+ecpay,10200105,BNPL 金額未達最低,BNPL amount below minimum,validation,error,"TotalAmount 需 >= 3,000 元（出處：綠界官方 skill guides/20，developers.ecpay.com.tw 未列，以後台「交易狀態代碼查詢」為準）"
+ecpay,10200115,信用卡授權逾時,Card authorization timeout,payment,error,請消費者重新付款（出處：綠界官方 skill guides/20，developers.ecpay.com.tw 未列，以後台「交易狀態代碼查詢」為準）
+ecpay,10300006,超商繳費期限已過（國內物流中為物流訂單已過期）,CVS payment expired,payment,error,重新建立訂單；同一代碼在物流服務含意不同（出處：綠界官方 skill guides/20，developers.ecpay.com.tw 未列，以後台「交易狀態代碼查詢」為準）
+ecpay,10400011,WAF 關鍵字攔截,Blocked by WAF keyword,validation,error,ItemName / TradeDesc 含 echo、python、curl 等系統指令關鍵字，移除即可（出處：綠界官方 skill guides/20，developers.ecpay.com.tw 未列，以後台「交易狀態代碼查詢」為準）
+ecpay,10800001,觸發綠界風控,,payment,error,連續刷卡、可疑電話等；後台交易明細灰底表示扣款失敗（/5740）
+ecpay,10200141,商店未開啟收款服務,,config,error,測試／正式環境金鑰混用，或正式環境未完成金流申請（/5740）
+ecpay,10200146,此商店不支援信用卡分期,,config,error,分期服務未啟用（/5740）
+ecpay,10300023,本次交易未提供任何付款方式,,config,error,MerchantID 錯誤，或收款審核未通過、服務未開通（/5740）
+ecpay,10300024,資料驗證錯誤，請回到原廠商頁面重新操作,,payment,warning,消費者於簡訊驗證時返回上一頁再送出所致（/5740）
+ecpay,5100070,建立訂單失敗：金額超出上下限或無可用付款方式,,api,error,例：1 元訂單只開 ATM；測試環境請用 2 元以上（/5740）
+ecpay,5100071,建立訂單失敗：無權限使用,,config,error,服務未開通，請聯繫業務（/5740）
 newebpay,SUCCESS,成功,Success,success,info,
 newebpay,MPG01002,時間戳記不可空白,,validation,error,見藍新規格書 NDNF-1.2.2 錯誤代碼表
 newebpay,MPG01005,TokenTerm 不可空白/設定錯誤,,validation,error,見藍新規格書 NDNF-1.2.2 錯誤代碼表

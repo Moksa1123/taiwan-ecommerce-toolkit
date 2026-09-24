@@ -10,7 +10,7 @@ ECPay,2027000,統一編號格式錯誤（長度非 8 碼）,Tax ID format error,
 ECPay,9000001,呼叫財政部 API 失敗,MOF API call failed,檢查統一編號／手機條碼驗證,財政部系統維護或異常，暫時無法驗證；統編檢核不影響發票開立，手機條碼請稍後再驗（developers.ecpay.com.tw/32089、7886）
 ECPay,4000004,開立發票成功（觸發開立，DelayDay=0）,Invoice issued (trigger issue),延後開立,觸發開立 API 的成功碼不是 1：DelayDay>0 回 4000003、DelayDay=0 回 4000004，其餘為失敗（developers.ecpay.com.tw/15371）
 ECPay,7,統一編號查無資料,Tax ID not found,檢查統一編號,少數統編未在公開資料揭露，不影響發票開立，可繼續開立（developers.ecpay.com.tw/32089）
-ECPay,10100058,發票作業逾時,Invoice operation timeout,callback,同一代碼在 AIO 金流為「ATM 繳費期限已過」，依收到 callback 的服務判斷；綠界官方 ecpay-api-skill guides/20-error-codes-reference
+ECPay,10100058,發票作業逾時,Invoice operation timeout,callback,同一代碼在 AIO 金流為「Pay fail」（/5740），依收到 callback 的服務判斷；綠界官方 ecpay-api-skill guides/20-error-codes-reference
 SmilePay,0,開立成功,,success,見 references/SMILEPAY_API_REFERENCE.md「回應代號說明」（速買配官方文件，原始 PDF 未存檔）
 SmilePay,-1001,[開立發票] 商家帳號缺少參數 / [開立折讓單] 商家帳號缺少參數 / [作廢/註銷] 查無商家帳號,,多個 API,見 references/SMILEPAY_API_REFERENCE.md「回應代號說明」（速買配官方文件，原始 PDF 未存檔）
 SmilePay,-10011,[開立發票] 查無商家帳號 / [開立折讓單] 查無商家帳號,,多個 API,見 references/SMILEPAY_API_REFERENCE.md「回應代號說明」（速買配官方文件，原始 PDF 未存檔）

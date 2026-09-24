@@ -1126,7 +1126,7 @@ export async function POST(request: Request) {
 
 **錯誤訊息：** ECPay 回傳 `10200073`（CheckMacValue 驗證失敗）
 
-> `10100058` 是「ATM 繳費期限已過」，不是檢查碼錯誤。
+> `10100058` 是「Pay fail」（3D 驗證未完成，/5740），不是檢查碼錯誤。
 
 **常見的錯誤寫法：**
 
