@@ -134,6 +134,27 @@ Continue 的官方文件只列出 rules / prompts / MCP，也不在 [Agent Skill
 
 Copilot、Gemini CLI、OpenCode、Windsurf 的文件都額外接受 **`.agents/skills/`** 作為跨工具通用路徑（Agent Skills 標準已由 Anthropic 捐給 Linux Foundation 旗下的 AAIF）。目前 CLI 未輸出此路徑，可考慮作為新平台的預設 fallback。
 
+## 官方來源與更新流程
+
+所有 reference、data、範例依據的官方文件都登記在 `sources/official-sources.json`
+（網址、格式、抓法、公開程度、影響哪些檔案）。`sources/state.json` 記錄上次比對的內容指紋。
+
+```bash
+python3 scripts/check-sources.py                    # 抓取並比對，列出有變動的來源與受影響的檔案
+python3 scripts/check-sources.py --provider newebpay
+python3 scripts/check-sources.py --update           # 更新完 reference 後，把目前版本記為新基準
+python3 scripts/check-sources.py --manual           # 需瀏覽器（SPA）或人工取得（後台、需申請）的來源
+python3 scripts/check-sources.py --validate         # 離線檢查清單格式（CI 會跑）
+```
+
+更新步驟：跑 `check-sources.py` → 看 `_studies/snapshots/<id>/` 的新版本與 diff → 改 covers 列出的
+reference / data / 範例 → 跑驗證腳本 → `--update` 記錄新基準，一起 commit。
+
+- 新增來源時直接編輯 `official-sources.json`；`covers` 路徑必須存在
+- 版號寫在檔名的 PDF（ezPay、紅陽、ezShip）改版會換網址，要同時追蹤下載頁
+- 綠界開發者網站過頻會回 403 並封鎖約 30 分鐘，腳本已限速；被封鎖時等 30 分鐘再跑 `--provider ecpay`
+- 機密文件（GoMyPay）與後台資料只登記取得方式，內容放 `_studies/`，不進 repo
+
 ## Prerequisites
 
 - Node.js 18+ (for CLI)

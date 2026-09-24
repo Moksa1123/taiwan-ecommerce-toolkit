@@ -14,7 +14,7 @@ fami,全家店到店,FamilyMart,cvs,false,,,,,https://www.famiport.com.tw,店到
 hilife,萊爾富,Hi-Life,cvs,false,,,,,https://www.hilife.com.tw,店到店;無獨立對外API;須經 ECPay/ezShip 等聚合商,全台 1500+ 門市,none,https://www.hilife.com.tw,2026-08-08
 okmart,OK 便利商店,OK Mart,cvs,false,,,,,,店到店;無獨立對外API;須經 ECPay/ezShip 等聚合商,全台 900+ 門市,none,,2026-08-08
 tcat,黑貓宅急便,t-cat,home,false,,,,https://www.t-cat.com.tw,https://www.t-cat.com.tw,常溫/冷藏/冷凍;無公開API規格;官方為 ezcat 印單軟體+契約客戶 iCat/API 授權;建議走 SmilePay(Pay_zg 81/82/83) 或 ECPay,全台,contract,https://www.t-cat.com.tw/contract/ezcat.aspx,2026-08-08
-pelican,宅配通,Pelican Express,home,false,,,,https://www.pelican.com.tw,https://www.pelican.com.tw,"常溫;無公開API規格;紅陽舊文件站曾列宅配通,官網物流頁已未列;可用的聚合路徑需向業者確認",全台,contract,https://www.pelican.com.tw,2026-09-24
+pelican,宅配通,Pelican Express,home,false,,,,https://www.e-can.com.tw,https://www.e-can.com.tw,"常溫;無公開API規格;紅陽舊文件站曾列宅配通,官網物流頁已未列;可用的聚合路徑需向業者確認",全台,contract,https://www.e-can.com.tw,2026-09-24
 kerrytj,嘉里大榮,Kerry TJ Logistics,home,false,,,,https://www.kerrytj.com,https://www.kerrytj.com,"常溫;官網僅貨態查詢頁,無公開API規格;須簽約洽業務",全台,contract,https://www.kerrytj.com/zh/checking,2026-08-08
 post,中華郵政,Chunghwa Post,home,false,,,,https://www.post.gov.tw,https://www.post.gov.tw,"注意:中華郵政 Open API 僅開放金融類(存款/ATM/匯率/餘額),物流面完全無 API;郵政宅配須經 ECPay 等聚合商;流傳的包裹查詢API為非官方逆向",全台,none,https://www.post.gov.tw/post/internet/Message/index.jsp?ID=1584329354372,2026-08-08
 shopee_store,蝦皮店到店,Shopee Store-to-Store,cvs,false,,,,,,無對外商家API;僅蝦皮生態內可用;無替代路徑,全台,none,,2026-08-08

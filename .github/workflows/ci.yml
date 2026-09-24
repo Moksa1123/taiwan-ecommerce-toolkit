@@ -38,6 +38,9 @@ jobs:
       - name: 驗證資料檔完整性
         run: python scripts/validate-data.py
 
+      - name: 驗證官方來源清單
+        run: python scripts/check-sources.py --validate
+
       - name: 推薦系統回歸測試
         run: |
           set -euo pipefail
