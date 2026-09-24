@@ -4015,7 +4015,10 @@
    "taiwan-payment/data/providers.csv",
    "taiwan-payment/references/opay-payment-api.md"
   ],
-  "notes": "列出各 PDF 與修訂日期；PDF 改版不一定換檔名，需比對雜湊；新版文件從此頁發現"
+  "notes": "列出各 PDF 與修訂日期；PDF 改版不一定換檔名，需比對雜湊；新版文件從此頁發現",
+  "ignore": [
+   "修訂於\\d+年\\d+月\\d+日"
+  ]
  },
  {
   "id": "opay-einvoice-manual",
@@ -7132,6 +7135,11 @@
   "covers": [
    "taiwan-logistics/references/carrier-direct-access.md",
    "taiwan-logistics/data/providers.csv"
+  ],
+  "ignore": [
+   "\\d+ 年 \\d+ 月 \\d+ 日星期.",
+   "\\d+年至\\d+月\\d+日止，[^\n]*",
+   "累計瀏覽人次：[^\n]*"
   ]
  },
  {
