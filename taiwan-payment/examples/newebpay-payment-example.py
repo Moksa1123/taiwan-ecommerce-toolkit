@@ -307,6 +307,78 @@ class NewebPayMPGService:
         raw = f"IV={self.hash_iv.decode('utf-8')}&{query}&Key={self.hash_key.decode('utf-8')}"
         return hashlib.sha256(raw.encode('utf-8')).hexdigest().upper()
 
+    # BNPL 先買後付（AFTEE 先享後付、OPPAY 大哥付你分期），規格書 NDNF-1.2.5 §4.7、§4.8
+    BNPL_PATHS = {'refund': '/API/Bnpl/refund', 'settle': '/API/Bnpl/settle'}
+
+    def build_bnpl_request(self, action: Literal['refund', 'settle'], merchant_order_no: str, amt: int,
+                           payment_type: Literal['AFTEE', 'OPPAY'], reason: str = '',
+                           timestamp: Optional[int] = None, respond_type: str = 'JSON') -> Dict[str, str]:
+        """
+        組出 BNPL 取消交易／退款（refund，須帶 reason）或請款（settle）的 Post 參數。
+
+        取消金額須等於訂單完成金額；退款金額可小於（可部分、多次）。
+        取消／退款：交易成立後一年內。請款：AFTEE 89 天內、大哥付你分期 365 天內，須整筆請款。
+        EncryptData_／HashData_ 與 MPG 的 TradeInfo／TradeSha 算法相同。
+        """
+        data = {
+            'MerchantOrderNo': merchant_order_no,
+            'Amt': amt,
+            'TimeStamp': timestamp if timestamp is not None else int(datetime.now().timestamp()),
+            'PaymentType': payment_type,
+        }
+        if action == 'refund':
+            if not reason:
+                raise ValueError('取消交易／退款須填 Reason')
+            data['Reason'] = reason
+        encrypted = self.encrypt_trade_info(data)
+        return {
+            'UID_': self.merchant_id,
+            'Version_': '1.1',
+            'EncryptData_': encrypted,
+            'RespondType_': respond_type,
+            'HashData_': self.generate_trade_sha(encrypted),
+        }
+
+    def bnpl_url(self, action: Literal['refund', 'settle']) -> str:
+        return self.api_url.split('/MPG/')[0] + self.BNPL_PATHS[action]
+
+    # 信用卡定期定額，規格書 NDNP-1.0.8。Post 參數為 MerchantID_ + PostData_（加密同 TradeInfo，無 SHA 欄位）
+    PERIOD_PATHS = {
+        'create': '/MPG/period',                # 建立委託 NPA-B05，Version 1.5
+        'alter_status': '/MPG/period/AlterStatus',  # 修改委託狀態 NPA-B051，Version 1.0
+        'alter_amt': '/MPG/period/AlterAmt',    # 修改委託內容 NPA-B052，Version 1.2
+        'query': '/MPG/period/query',           # 委託單查詢 NPA-B053，Version 1.0（1.0.8 新增）
+    }
+    PERIOD_VERSIONS = {'create': '1.5', 'alter_status': '1.0', 'alter_amt': '1.2', 'query': '1.0'}
+
+    def period_url(self, action: str) -> str:
+        return self.api_url.split('/MPG/')[0] + self.PERIOD_PATHS[action]
+
+    def build_period_request(self, action: str, data: Dict[str, any]) -> Dict[str, str]:
+        """組出定期定額 API 的 Post 參數；data 未帶 Version 時補上該 API 的版本"""
+        data = dict(data)
+        data.setdefault('Version', self.PERIOD_VERSIONS[action])
+        return {'MerchantID_': self.merchant_id, 'PostData_': self.encrypt_trade_info(data)}
+
+    def parse_period_response(self, period: str) -> Dict:
+        """
+        解密回傳的 Period（建立完成、每期授權 NPA-N050、修改、查詢皆同）。
+        委託單查詢的明文鍵名是小寫 status／message／result，這裡統一成 Status／Message／Result。
+        """
+        data = self.decrypt_trade_info(period)
+        for low, key in (('status', 'Status'), ('message', 'Message'), ('result', 'Result')):
+            if low in data and key not in data:
+                data[key] = data.pop(low)
+        return data
+
+    def parse_bnpl_response(self, response: Dict[str, str]) -> Dict:
+        """驗證 HashData 後解密 EncryptData；回應密文可能是 32 bytes 區塊補齊，strip_padding 已處理"""
+        if not self.verify_trade_sha(response['EncryptData'], response['HashData']):
+            raise ValueError('HashData 驗證失敗')
+        result = self.decrypt_trade_info(response['EncryptData'])
+        result['Status'] = response.get('Status')
+        return result
+
     def create_order(
         self,
         data: MPGOrderData,

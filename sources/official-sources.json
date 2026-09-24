@@ -2985,13 +2985,15 @@
   "skills": [
    "payment"
   ],
-  "title": "ezPay 跨境實體交易串接手冊 1.0.0",
+  "title": "《跨境實體商店串接手冊》標準版（檔名 1.0.0，文件版本 ezPay_2.0.0）",
   "url": "https://www.ezpay.com.tw/dw_files/api_files/API_Cross_Trans_physical_ezPay_1.0.0.pdf",
   "format": "pdf",
   "fetch": "get",
   "access": "public",
-  "covers": [],
-  "notes": "下載頁列出但 reference 尚未收錄；需帶 User-Agent"
+  "covers": [
+   "taiwan-payment/references/ezpay-payment-api.md"
+  ],
+  "notes": "需帶瀏覽器 User-Agent；版號在檔名，改版會換網址，需同時追蹤 ezpay-api-document 下載頁"
  },
  {
   "id": "ezpay-cross-refund",
@@ -3894,13 +3896,14 @@
   "fetch": "get",
   "access": "public",
   "covers": [
-   "taiwan-payment/references/newebpay-payment-api.md",
    "taiwan-payment/data/error-codes.csv",
+   "taiwan-payment/data/payment-methods.csv",
    "taiwan-payment/examples/newebpay-payment-example.py",
-   "tests/vectors/newebpay.json",
-   "taiwan-payment/references/twqr-ewallet-landscape.md"
+   "taiwan-payment/references/newebpay-payment-api.md",
+   "taiwan-payment/references/twqr-ewallet-landscape.md",
+   "tests/vectors/newebpay.json"
   ],
-  "notes": "reference 與 error-codes 目前依 NDNF-1.2.2 整理，官網已更新為 1.2.5（WDI_Modify_Date 2026-09-02），需比對差異；需帶 User-Agent"
+  "notes": "需帶瀏覽器 User-Agent；版號在檔名，改版會換網址，需同時追蹤下載頁"
  },
  {
   "id": "newebpay-ndnp",
@@ -3914,9 +3917,13 @@
   "fetch": "get",
   "access": "public",
   "covers": [
-   "taiwan-payment/references/newebpay-payment-api.md"
+   "taiwan-payment/data/error-codes.csv",
+   "taiwan-payment/data/operations.csv",
+   "taiwan-payment/examples/newebpay-payment-example.py",
+   "taiwan-payment/references/newebpay-payment-api.md",
+   "tests/vectors/newebpay.json"
   ],
-  "notes": "先前整理依 NDNP-1.0.4，官網已更新為 1.0.8；需帶 User-Agent"
+  "notes": "需帶瀏覽器 User-Agent；版號在檔名，改版會換網址，需同時追蹤下載頁"
  },
  {
   "id": "newebpay-ndns",
@@ -4182,13 +4189,15 @@
   "skills": [
    "payment"
   ],
-  "title": "歐付寶：歐付寶行動支付 APP 第三方應用（交易）",
+  "title": "《歐付寶行動支付 APP 第三方應用(交易)介接技術文件》V1.0.8",
   "url": "https://developers.opay.tw/Content/Doc/O_Pay_appapi01.pdf",
   "format": "pdf",
   "fetch": "get",
   "access": "public",
-  "covers": [],
-  "notes": "reference 尚未收錄"
+  "covers": [
+   "taiwan-payment/references/opay-payment-api.md"
+  ],
+  "notes": "收錄於 opay-payment-api.md 第 7 節"
  },
  {
   "id": "opay-o-pay-appapi02",
@@ -4196,13 +4205,15 @@
   "skills": [
    "payment"
   ],
-  "title": "歐付寶：歐付寶掃碼付（動態 QRCode）",
+  "title": "《歐付寶掃碼付(動態 QRCode)介接技術文件》V1.6.3",
   "url": "https://developers.opay.tw/Content/Doc/O_Pay_appapi02.pdf",
   "format": "pdf",
   "fetch": "get",
   "access": "public",
-  "covers": [],
-  "notes": "reference 尚未收錄"
+  "covers": [
+   "taiwan-payment/references/opay-payment-api.md"
+  ],
+  "notes": "收錄於 opay-payment-api.md 第 8 節"
  },
  {
   "id": "opay-o-pay-broadcaster",
@@ -4210,13 +4221,15 @@
   "skills": [
    "payment"
   ],
-  "title": "歐付寶：直播主收款網址",
+  "title": "《歐付寶直播主收款網址 API 技術文件》V1.0.0",
   "url": "https://developers.opay.tw/Content/Doc/O_Pay_broadcaster.pdf",
   "format": "pdf",
   "fetch": "get",
   "access": "public",
-  "covers": [],
-  "notes": "reference 尚未收錄"
+  "covers": [
+   "taiwan-payment/references/opay-payment-api.md"
+  ],
+  "notes": "收錄於 opay-payment-api.md 第 9 節"
  },
  {
   "id": "opay-o-pay-posapi02",

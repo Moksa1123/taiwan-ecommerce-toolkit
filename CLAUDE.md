@@ -150,6 +150,7 @@ python3 scripts/check-sources.py --validate         # 離線檢查清單格式�
 更新步驟：跑 `check-sources.py` → 看 `_studies/snapshots/<id>/` 的新版本與 diff → 改 covers 列出的
 reference / data / 範例 → 跑驗證腳本 → `--update` 記錄新基準，一起 commit。
 
+- `.github/workflows/source-check.yml` 每週一自動檢查，有變動會開 issue（標籤「官方來源變動」），新版本快照在該次執行的 artifact
 - 新增來源時直接編輯 `official-sources.json`；`covers` 路徑必須存在
 - 版號寫在檔名的 PDF（ezPay、紅陽、ezShip）改版會換網址，要同時追蹤下載頁
 - 綠界開發者網站過頻會回 403 並封鎖約 30 分鐘，腳本已限速；被封鎖時等 30 分鐘再跑 `--provider ecpay`

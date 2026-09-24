@@ -175,6 +175,34 @@ def test_newebpay():
         check(f'[{label}] CheckValue 與規格書 4.1.6 相同',
               lambda: svc_cv.generate_check_value(cv['Amt'], cv['MerchantOrderNo']) == cv['expected'])
 
+    # BNPL 取消交易／退款、請款（NDNF-1.2.5 4.7、4.8 的 PHP 範例）
+    b = v['bnpl']
+    svc_b = neweb.NewebPayMPGService(b['merchant_id'], b['hash_key'], b['hash_iv'])
+    rq = b['refund_request']
+    def _bnpl_refund_ok():
+        p = rq['params']
+        got = svc_b.build_bnpl_request('refund', p['MerchantOrderNo'], p['Amt'], p['PaymentType'],
+                                       reason=p['Reason'], timestamp=p['TimeStamp'])
+        return got['EncryptData_'] == rq['EncryptData_'] and got['HashData_'] == rq['HashData_']
+    check('[newebpay] BNPL 退款請求 EncryptData_／HashData_ 與規格書 4.7 相同', _bnpl_refund_ok)
+    for c in b['responses']:
+        check(f'[newebpay] BNPL {c["name"]} 回應驗章並解密出規格書欄位',
+              lambda: {k: svc_b.parse_bnpl_response({'Status': 'SUCCESS', 'EncryptData': c['EncryptData'],
+                                                     'HashData': c['HashData']}).get(k) for k in c['fields']}
+              == c['fields'])
+
+    # 信用卡定期定額（NDNP-1.0.8）
+    pv = v['period']
+    svc_p = neweb.NewebPayMPGService(pv['merchant_id'], pv['hash_key'], pv['hash_iv'])
+    check('[newebpay] 定期定額建立委託 PostData_ 與規格書 4.1 相同',
+          lambda: svc_p.build_period_request('create', pv['create_request']['params'])['PostData_']
+          == pv['create_request']['PostData_'])
+    for c in pv['responses']:
+        check(f'[newebpay] 定期定額 {c["name"]} 回傳解密出規格書欄位',
+              lambda: (lambda d: d.get('Status') == 'SUCCESS'
+                       and all(d['Result'].get(k) == val for k, val in c['result'].items()))(
+                  svc_p.parse_period_response(c['Period'])))
+
     # 完整回呼流程：JSON 模式的 NotifyURL 必須解析出成功狀態
     svc = services['newebpay']
     cb = next(c for c in v['server_callbacks'] if c['name'] == 'json')

@@ -17,10 +17,11 @@ linepay,LINE Pay,LINE Pay,,LINEPAY,LinePay,,,,,LINEPayOnline,,1,,2-3,percentage,
 linepay_offline,LINE Pay 線下,LINE Pay Offline,,,,,,,,LINEPayOffline,,1,,2-3,percentage,PayNow 現代版獨家
 esunwallet,玉山 Wallet,E.SUN Wallet,,ESUNWALLET,,,,,TWQR,,,1,,2-3,percentage,需申請
 taiwanpay,台灣 Pay,Taiwan Pay,,TAIWANPAY,,,,,TWQR,,,1,49999,2-3,percentage,需申請
-bitopay,BitoPay,BitoPay,,BITOPAY,,,,,,,,100,49999,2-3,percentage,加密貨幣
+bitopay,BitoPay,BitoPay,,BITOPAY,,,,,,,,100,49999,2-3,percentage,加密貨幣；NewebPay 回傳 CryptoCurrency 為 USDT 或 USDC（NDNF-1.2.5 4.2.2，已移除 BTC、ETH）
 twqr,TWQR,TWQR,TWQR,TWQR,TWQR,TWQR,,,TWQR,,,1,,2-3,percentage,"台灣Pay QR Code；O'Pay ChoosePayment=TWQR 已由官方 PDF 驗證；ECPay 的 TWQR 為歐付寶 TWQR，需申請開通，6～49,999 元（/36991）"
 bnpl,無卡分期,BNPL,BNPL,,,,,,,,,50,500000,依方案,percentage,"ECPay 無卡分期：裕富 URICH 1,000～500,000、中租 ZINGALA 50～500,000（/36659）"
-aftee,AFTEE先享後付,AFTEE,,,AFTEE,,,,,,,1,,2-3,percentage,PayUNi 直送 AFTEE；ECPay 透過 BNPL umbrella
+aftee,AFTEE先享後付,AFTEE,,AFTEE,AFTEE,,,,,,,1,,2-3,percentage,PAYUNi 直送 AFTEE；NewebPay AFTEE=1 一般支付、2 一般支付+分期（AFTEE_Inst 指定期數），須帶 OrderDetail（NDNF-1.2.5 4.2.1）；ECPay 無 AFTEE
+oppay,大哥付你分期,OPPAY,,OPPAY,,,,,,,,1,,依方案,percentage,NewebPay OPPAY=1 消費者負擔手續費、2 商店負擔，須帶 OrderDetail；取消／退款 1 年內，請款 365 天內（NDNF-1.2.5 4.2.1、4.7、4.8）
 icash,愛金卡,iCash,,,ICASH,,,,,iCashPay,,1,,2-3,percentage,PAYUNi 直送 ICASH；PayNow 現代版 iCashPay；ECPay DigitalPayment 不含（官方僅 Jkopay、iPASS）
 ezpalipay,簡單付支付寶,Alipay,,EZPALIPAY,,,,,ALIPAY（跨境）,,,1,,2-3,percentage,跨境支付
 ezpwechat,簡單付微信,WeChat Pay,,EZPWECHAT,,,,,WECHAT（跨境）,,,1,,2-3,percentage,跨境支付
@@ -28,12 +29,12 @@ pcpay_wallet,拍錢包,PChome Wallet,,,,,,PI,,,,1,,2-3,percentage,PChomePay 獨�
 cvs_cod,超商取貨付款,CVS COD,,CVSCOM,,,,COD,,,09 (需 lgs_flag=1),1,20000,1-3,fixed,NewebPay 用 CVSCOM (值: 1=取貨不付款 2=取貨付款 3=兩者)；PChomePay 用 COD 對應 7-Eleven 取貨
 weixinpay,微信支付,WeChat Pay (ECPay),WeiXin,EZPWECHAT,,WeiXinpay,,,WECHAT（跨境）,,,1,,2-3,percentage,ECPay 直接 ChoosePayment=WeiXin；NewebPay 走 EZPWECHAT；O'Pay WeiXinpay 已驗證（MerchantTradeNo 限 32 位元、繳費期限 2 小時、無測試回應）
 digital_payment,電子支付/電子錢包 umbrella,Digital Payment Umbrella,DigitalPayment,,,,,,,,,1,,2-3,percentage,ECPay 專屬；子項目只有 Jkopay（街口）與 iPASS（一卡通 MONEY），可用 ChooseSubPayment 指定（/5679）
-jkopay,街口支付,JKO Pay,DigitalPayment,TWQR,JKoPay,,,,TWQR,,10,1,,2-3,percentage,同一街口服務跨家命名不同；ECPay 為 DigitalPayment + ChooseSubPayment=Jkopay；PAYUNi JKoPay 已驗證；NewebPay 無個別錢包代碼，以 TWQR=1 收款（NDNF-1.2.2）
-pxpay_plus,全支付,PX Pay Plus,,TWQR,,,,,TWQR,,,1,,2-3,percentage,全聯系；NewebPay 無個別錢包代碼，以 TWQR=1 收款（NDNF-1.2.2）；ECPay DigitalPayment 不含（官方僅 Jkopay、iPASS）
-plus_pay,全盈+PAY,Plus Pay,,TWQR,,,,,TWQR,,,1,,2-3,percentage,玉山金控；NewebPay 無個別錢包代碼，以 TWQR=1 收款（NDNF-1.2.2）；ECPay DigitalPayment 不含（官方僅 Jkopay、iPASS）
-ipass_money,一卡通 MONEY,iPASS Money,DigitalPayment,TWQR,,,,,TWQR,,,1,,2-3,percentage,一卡通；ECPay 為 DigitalPayment + ChooseSubPayment=iPASS；NewebPay 無個別錢包代碼，以 TWQR=1 收款（NDNF-1.2.2）
-easywallet,悠遊付,Easy Wallet,,TWQR,,,,,TWQR,,,1,,2-3,percentage,悠遊卡公司；NewebPay 無個別錢包代碼，以 TWQR=1 收款（NDNF-1.2.2）；ECPay DigitalPayment 不含（官方僅 Jkopay、iPASS）
-icash_pay,icash Pay,iCash Pay,,TWQR,,,,,TWQR,,,1,,2-3,percentage,愛金卡；PAYUNi 直送 ICASH (見 icash 行)；PayNow 現代版 PaymentIntent enum 不含 iCashPay；NewebPay 無個別錢包代碼，以 TWQR=1 收款（NDNF-1.2.2）；ECPay DigitalPayment 不含（官方僅 Jkopay、iPASS）
+jkopay,街口支付,JKO Pay,DigitalPayment,TWQR,JKoPay,,,,TWQR,,10,1,,2-3,percentage,同一街口服務跨家命名不同；ECPay 為 DigitalPayment + ChooseSubPayment=Jkopay；PAYUNi JKoPay 已驗證；NewebPay 無個別錢包代碼，以 TWQR=1 收款（NDNF-1.2.5）
+pxpay_plus,全支付,PX Pay Plus,,TWQR,,,,,TWQR,,,1,,2-3,percentage,全聯系；NewebPay 無個別錢包代碼，以 TWQR=1 收款（NDNF-1.2.5）；ECPay DigitalPayment 不含（官方僅 Jkopay、iPASS）
+plus_pay,全盈+PAY,Plus Pay,,TWQR,,,,,TWQR,,,1,,2-3,percentage,玉山金控；NewebPay 無個別錢包代碼，以 TWQR=1 收款（NDNF-1.2.5）；ECPay DigitalPayment 不含（官方僅 Jkopay、iPASS）
+ipass_money,一卡通 MONEY,iPASS Money,DigitalPayment,TWQR,,,,,TWQR,,,1,,2-3,percentage,一卡通；ECPay 為 DigitalPayment + ChooseSubPayment=iPASS；NewebPay 無個別錢包代碼，以 TWQR=1 收款（NDNF-1.2.5）
+easywallet,悠遊付,Easy Wallet,,TWQR,,,,,TWQR,,,1,,2-3,percentage,悠遊卡公司；NewebPay 無個別錢包代碼，以 TWQR=1 收款（NDNF-1.2.5）；ECPay DigitalPayment 不含（官方僅 Jkopay、iPASS）
+icash_pay,icash Pay,iCash Pay,,TWQR,,,,,TWQR,,,1,,2-3,percentage,愛金卡；PAYUNi 直送 ICASH (見 icash 行)；PayNow 現代版 PaymentIntent enum 不含 iCashPay；NewebPay 無個別錢包代碼，以 TWQR=1 收款（NDNF-1.2.5）；ECPay DigitalPayment 不含（官方僅 Jkopay、iPASS）
 openpoint,OPENPOINT,OPEN POINT,,,,,,,,,,1,,2-3,percentage,7-11/統一集團；ECPay DigitalPayment 不含（官方僅 Jkopay、iPASS）
 atome,Atome 安多目,Atome,BNPL,,,,,,,,,1,30000,依方案,percentage,新加坡 BNPL 服務；ECPay 走 BNPL umbrella
 account_link,銀行快付,Account Link,,,,AccountLink,,,,,,1,,2-3,percentage,歐付寶獨有付款方式；ECPay 無對應代碼

@@ -11,7 +11,7 @@
 | 檔案 | 標準答案來源 |
 |---|---|
 | `payuni.json` | PAYUNi_for_WooCommerce 1.2.8（外掛標頭 Author: 統一金流 PAYUNi）`class-payuni.php` 的 `Encrypt` / `Decrypt` / `HashInfo`；另與 wpbr-payuni-payment 1.7.1、wpbr-payuni-shipping 1.6.4 人工比對一致 |
-| `newebpay.json` | 藍新官方外掛 newebpay-payment 1.0.12 `encProcess.php`；規格書 NDNF-1.2.2 的 PHP 範例（加密、4.1.4 解密、4.1.5 CheckCode、4.1.6 CheckValue）與其附的真實伺服器密文；物流規格書 NDNS 1.0.0 附錄的 HashData 範例結果 |
+| `newebpay.json` | 藍新官方外掛 newebpay-payment 1.0.12 `encProcess.php`；規格書 NDNF-1.2.2 的 PHP 範例（加密、4.1.4 解密、4.1.5 CheckCode、4.1.6 CheckValue）與其附的真實伺服器密文；NDNF-1.2.5 BNPL 退款／請款範例（4.7、4.8）；定期定額 NDNP-1.0.8 加密範例與四種回傳密文（4.1、4.3.2、4.4.2、4.5.2、4.6.2）；物流規格書 NDNS 1.0.0 附錄的 HashData 範例結果 |
 | `ecpay.json` | 綠界官方 PHP SDK `ecpay/sdk`（MIT，由官方 WooCommerce 外掛內附）直接載入執行；SDK 本身另與綠界官方 ecpay-api-skill 的 test-vectors 交叉比對一致 |
 | `opay.json` | 歐付寶全方位金流介接技術文件附錄「檢查碼機制」的計算範例（文件印出的預期值，逐字轉錄） |
 | `ezpay-invoice.json` | ezPay 電子發票規格書 EZP_INVI_1.2.2 附件一（執行結果與文件印出的 PostData_ 完全相同）、附件二 CheckCode 印出值；ry-woocommerce-ezpay-invoice 2.1.5 `args_encrypt()` |
