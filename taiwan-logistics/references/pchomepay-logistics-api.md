@@ -147,7 +147,7 @@ POST https://api.pchomepay.com.tw/v1/token
 
 ```bash
 curl --location --request POST 'https://api.pchomepay.com.tw/v1/token' \
-  --header 'Authorization: Basic RTIzNjc5QkY2NEFFNDU0RjRDQjY3MTFGQUMzNjp4UGdWTmdXb2I4YkdnRVQyZUJSc25pX3lYRW10cXV0bHhVa19VVXVo' \
+  --header 'Authorization: Basic <base64(APP_ID:SECRET)>' \
   --header 'Content-Type: application/json'
 ```
 
@@ -180,7 +180,7 @@ function getPcpayToken(string $appId, string $secret): array
 
 // 範例回應
 // {
-//   "token": "zHm67sQRuPSO__eiuy2h_lEgtPlS12aVqrcVz3Kc",
+//   "token": "YOUR_PCPAY_TOKEN",
 //   "expired_in": 28800,
 //   "expired_timestamp": 1474470110
 // }
@@ -314,7 +314,7 @@ POST https://api.pchomepay.com.tw/v1/logistic/batch
 ```bash
 curl --location 'https://api.pchomepay.com.tw/v1/logistic/batch' \
   --header 'Content-Type: application/json' \
-  --header 'pcpay-token: __kJw1OMKTkwwssWPsAnGNtIzMYFIZ5ymmkq8nCd' \
+  --header 'pcpay-token: YOUR_PCPAY_TOKEN' \
   --data '{
     "order_id": ["B2C1702640091"]
   }'
@@ -437,7 +437,7 @@ GET https://api.pchomepay.com.tw/v1/logistic/query/{order_id}/history
 ```bash
 curl --location 'https://api.pchomepay.com.tw/v1/logistic/query/B2C1723815435/history' \
   --header 'Content-Type: application/json' \
-  --header 'pcpay-token: 0BZyFozlvqFtlwJoL5HQstTbNW_gNrNmsPQ4upc7'
+  --header 'pcpay-token: YOUR_PCPAY_TOKEN'
 ```
 
 ### 回應欄位
@@ -535,7 +535,7 @@ GET https://api.pchomepay.com.tw/v1/logistic/query/{order_id}/history-page
 ```bash
 curl --location 'https://api.pchomepay.com.tw/v1/logistic/query/B2C1723815435/history-page' \
   --header 'Content-Type: application/json' \
-  --header 'pcpay-token: e0A_XRsPMDgCKvRnrikpdMTfEJzvIGuveJsn_695'
+  --header 'pcpay-token: YOUR_PCPAY_TOKEN'
 ```
 
 ### 回應欄位
@@ -583,7 +583,7 @@ GET https://api.pchomepay.com.tw/v1/logistic/yet
 ```bash
 curl --location 'https://api.pchomepay.com.tw/v1/logistic/yet' \
   --header 'Content-Type: application/json' \
-  --header 'pcpay-token: F6uG0pXXTPTHDMRkIj_HGnzrWJvom_m_HhPxf296'
+  --header 'pcpay-token: YOUR_PCPAY_TOKEN'
 ```
 
 #### 回應欄位 (Array)
@@ -642,7 +642,7 @@ GET https://api.pchomepay.com.tw/v1/logistic/store_return/{date}
 
 ```bash
 curl --location 'https://api.pchomepay.com.tw/v1/logistic/store_return/20250409' \
-  --header 'pcpay-token: F6uG0pXXTPTHDMRkIj_HGnzrWJvom_m_HhPxf296'
+  --header 'pcpay-token: YOUR_PCPAY_TOKEN'
 ```
 
 #### 回應欄位 (Array)
@@ -694,7 +694,7 @@ GET https://api.pchomepay.com.tw/v1/logistic/accounting/{date}
 
 ```bash
 curl --location 'https://api.pchomepay.com.tw/v1/logistic/accounting/20240816' \
-  --header 'pcpay-token: fGVWZrMrYEVLHbj1joxn7CpdjsygFYYN8vLaygGM'
+  --header 'pcpay-token: YOUR_PCPAY_TOKEN'
 ```
 
 ### 回應格式
@@ -778,7 +778,7 @@ GET https://api.pchomepay.com.tw/v1/logistic/compensation/{date}
 
 ```bash
 curl --location 'https://api.pchomepay.com.tw/v1/logistic/compensation/202408' \
-  --header 'pcpay-token: fGVWZrMrYEVLHbj1joxn7CpdjsygFYYN8vLaygGM'
+  --header 'pcpay-token: YOUR_PCPAY_TOKEN'
 ```
 
 ### 回應格式
