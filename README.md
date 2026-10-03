@@ -748,6 +748,15 @@ taiwan-logistics init --ai claude
 
 ---
 
+## 資料與網路行為
+
+- 三個 skill 只提供文件、範例與本機腳本，不收集、不儲存個人資料，也不會把任何資料傳給本專案作者
+- `search.py`、`recommend.py`、`generate-*-service.py` 只讀本機 CSV 與範本，不連網；`persist.py` 只在本機寫入設定檔
+- `taiwan-payment/scripts/test_payment.py`、`taiwan-logistics/scripts/test_logistics.py` 只在你手動執行時，以腳本內的測試設定（綠界官方公開測試帳號，或你自行填入的測試商店資料）送請求到該服務商的**測試環境**（如 `payment-stage.ecpay.com.tw`、`ccore.newebpay.com`、`sandbox-api.payuni.com.tw`）
+- 範例程式中的 API 呼叫由你自己的程式執行，送往你選用的服務商
+
+---
+
 ## 授權
 
 [MIT License](LICENSE)
