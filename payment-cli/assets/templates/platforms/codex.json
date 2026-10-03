@@ -3,10 +3,10 @@
   "displayName": "Codex CLI",
   "installType": "full",
   "folderStructure": {
-    "root": ".codex",
+    "root": ".agents",
     "skillPath": "skills/taiwan-payment",
     "filename": "SKILL.md",
-    "globalRoot": "~/.codex"
+    "globalRoot": "~/.agents"
   },
   "scriptPath": "skills/taiwan-payment/scripts",
   "frontmatter": {

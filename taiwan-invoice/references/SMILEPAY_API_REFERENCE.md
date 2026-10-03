@@ -1,6 +1,6 @@
 # SmilePay 電子發票 API 完整技術規格
 
-> 來源：SmilePay 官方文件
+> 來源：SmilePay 官方電子發票 API 文件（`ssl.smse.com.tw/pay_gr/pay_help_paydc_einvoice_api.asp`，速買配客服 2026-09-30 回覆列為可公開整理的文件；未登入會導向商家登入頁）
 > 注意：本 API 可接受 **POST** 與 **GET** 兩種傳輸方式
 > 編碼：僅提供 UTF-8 編碼
 

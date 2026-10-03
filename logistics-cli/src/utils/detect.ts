@@ -78,7 +78,7 @@ export function getAITypeDescription(aiType: AIType): string {
     case 'kiro':
       return 'Kiro (.kiro/skills/)';
     case 'codex':
-      return 'Codex CLI (.codex/skills/)';
+      return 'Codex CLI (.agents/skills/)';
     case 'qoder':
       return 'Qoder (.qoder/skills/)';
     case 'cline':

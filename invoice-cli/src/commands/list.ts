@@ -16,7 +16,7 @@ export async function listCommand(): Promise<void> {
     { key: 'antigravity', path: '.agent/skills/taiwan-invoice/' },
     { key: 'copilot', path: '.github/skills/taiwan-invoice/' },
     { key: 'kiro', path: '.kiro/skills/taiwan-invoice/' },
-    { key: 'codex', path: '.codex/skills/taiwan-invoice/' },
+    { key: 'codex', path: '.agents/skills/taiwan-invoice/' },
     { key: 'qoder', path: '.qoder/skills/taiwan-invoice/' },
     { key: 'cline', path: '.cline/skills/taiwan-invoice/' },
     { key: 'gemini', path: '.gemini/skills/taiwan-invoice/' },

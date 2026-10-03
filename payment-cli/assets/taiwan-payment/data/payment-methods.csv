@@ -26,7 +26,7 @@ icash,愛金卡,iCash,,,ICASH,,,,,iCashPay,,1,,2-3,percentage,PAYUNi 直送 ICAS
 ezpalipay,簡單付支付寶,Alipay,,EZPALIPAY,,,,,ALIPAY（跨境）,,,1,,2-3,percentage,跨境支付
 ezpwechat,簡單付微信,WeChat Pay,,EZPWECHAT,,,,,WECHAT（跨境）,,,1,,2-3,percentage,跨境支付
 pcpay_wallet,拍錢包,PChome Wallet,,,,,,PI,,,,1,,2-3,percentage,PChomePay 獨家；含 5% P 幣回饋
-cvs_cod,超商取貨付款,CVS COD,,CVSCOM,,,,COD,,,09 (需 lgs_flag=1),1,20000,1-3,fixed,NewebPay 用 CVSCOM (值: 1=取貨不付款 2=取貨付款 3=兩者)；PChomePay 用 COD 對應 7-Eleven 取貨
+cvs_cod,超商取貨付款,CVS COD,,CVSCOM,,,,COD,,,09 (需 lgs_flag=1),1,20000,1-3,fixed,NewebPay 用 CVSCOM (值: 1=取貨不付款 2=取貨付款 3=兩者)；PChomePay 用 COD 對應 7-Eleven 取貨；SunPay 超商取貨付款不支援 OK（store_type 移除 3，紅陽客服 2026-09-29）
 weixinpay,微信支付,WeChat Pay (ECPay),WeiXin,EZPWECHAT,,WeiXinpay,,,WECHAT（跨境）,,,1,,2-3,percentage,ECPay 直接 ChoosePayment=WeiXin；NewebPay 走 EZPWECHAT；O'Pay WeiXinpay 已驗證（MerchantTradeNo 限 32 位元、繳費期限 2 小時、無測試回應）
 digital_payment,電子支付/電子錢包 umbrella,Digital Payment Umbrella,DigitalPayment,,,,,,,,,1,,2-3,percentage,ECPay 專屬；子項目只有 Jkopay（街口）與 iPASS（一卡通 MONEY），可用 ChooseSubPayment 指定（/5679）
 jkopay,街口支付,JKO Pay,DigitalPayment,TWQR,JKoPay,,,,TWQR,,10,1,,2-3,percentage,同一街口服務跨家命名不同；ECPay 為 DigitalPayment + ChooseSubPayment=Jkopay；PAYUNi JKoPay 已驗證；NewebPay 無個別錢包代碼，以 TWQR=1 收款（NDNF-1.2.5）

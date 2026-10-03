@@ -213,7 +213,6 @@ SmilePay 物流可由「**寄送方式**」與「**金流方式**」兩個維度
 | 7-11 C2C 店到店 | `typesserver = 711C2C` |
 | 7-11 B2C 大宗寄倉 | `typesserver = 711B2C` |
 | 全家 C2C 店到店 | `typesserver = FAMIC2C` |
-| 全家 B2C 大宗寄倉 | `typesserver = FAMIB2C`（部分商家可選用） |
 | 黑貓 常溫 | TCAT (溫層 `0001`) |
 | 黑貓 冷藏 | TCAT (溫層 `0002`) |
 | 黑貓 冷凍 | TCAT (溫層 `0003`) |
@@ -273,15 +272,12 @@ WC_SmilePay_TCAT_FREEZE   // 黑貓冷凍
 | 7-11 B2C 大宗寄倉 | 純取貨 | `56` | `7NET` |
 | 全家 C2C 店到店 | 取貨付款 | `51` | `FAMI` |
 | 全家 C2C 店到店 | 純取貨 | `52` | `FAMI` |
-| 全家 B2C 大宗寄倉 | 取貨付款 | `55`？ | `FAMI`？ |
-| 全家 B2C 大宗寄倉 | 純取貨 | `56`？ | `FAMI`？ |
 | 黑貓常溫 / 冷藏 / 冷凍 | 取貨付款 | `81` | `TCAT` |
 | 黑貓常溫 / 冷藏 / 冷凍 | 純取貨 | `82` | `TCAT` |
 | 黑貓逆物流（退貨） | — | `83` | `TCAT` |
 | 7-11 退貨便（C2B） | 運費消費者付／商家付 | `57`／`58` | `7NET` |
 
-> **全家 B2C 未經證實**：1.1.23 只有 `FAMIB2C` 的電子地圖網址，建單分支沒有全家 B2C；
-> 4.3.3 的全家 B2C 整段被註解掉，ReadMe 也只列 7-11 B2C。實際代碼以速買配規格書為準。
+> **全家 B2C（大宗寄倉）目前沒有提供**（SmilePay 客服回覆 2026-09-30）。1.1.23 雖有 `FAMIB2C` 電子地圖網址，但兩版外掛都沒有建單分支。
 
 **注意**：黑貓的「常溫 / 冷藏 / 冷凍」差異**不是**靠 `Pay_zg` 區分，而是 `temperature` 參數
 （`0001` 常溫 / `0002` 冷藏 / `0003` 冷凍）。兩版外掛送的位置不同：
@@ -311,7 +307,7 @@ function determine_pay_codes(string $typesserver, string $payment_method): array
                 'pay_zg'    => $is_cod ? 51 : 52,
                 'pay_subzg' => 'FAMI',
             ];
-        // FAMIB2C：兩版外掛都沒有建單分支，未確認代碼
+        // 全家 B2C（大宗寄倉）速買配目前未提供
     }
     throw new InvalidArgumentException("Unknown typesserver: {$typesserver}");
 }
@@ -396,7 +392,21 @@ POST https://ssl.smse.com.tw/api/SPPayment.asp
 | C2C／B2C 純取貨 `52`／`56` | 後端 POST `SPPayment.asp` | 同左，商家在後台開啟訂單時才建單（`smilepayc2cup.php`、`smilepayb2cup.php`） |
 | 黑貓 `81`／`82` | 後端 POST `SPPayment.asp` | 同左，`temperature` 在此階段送出（`smilepayezcatp.php`、`smilepayezcatup.php`） |
 
-取貨付款的**款項通知**走金流的 `Roturl`，以 `Classif` 區分：`T` 超商 C2C、`V` 超商 B2C、`O` 黑貓（4.3.3 `smilepay_respond.php`；1.1.23 對 `T`、`O` 將訂單設為 completed）。
+物流相關通知走金流的 `Roturl`，以 `Classif` 區分（SmilePay 客服回覆 2026-09-30）：
+
+| `Classif` | 交易方式 |
+|---|---|
+| `T` | C2C 取貨付款 |
+| `U` | C2C 純取貨 |
+| `V` | B2C 取貨付款 |
+| `W` | B2C 純取貨 |
+| `O` | 黑貓貨到收現 |
+| `P` | 黑貓宅配 |
+| `Q` | 黑貓逆物流 |
+| `R` | C2B 客付 |
+| `S` | C2B 場付 |
+
+4.3.3 外掛（`smilepay_respond.php`）只處理 `T`、`V`、`O`；1.1.23 對 `T`、`O` 將訂單設為 completed。
 貨況通知另走 `Logistics_Roturl`（見[通知與貨況](#通知與貨況)）。
 
 4.3.3 ReadMe：交貨便服務單產生後須於 7 日內出貨，逾期失效；黑貓與純取貨的物流單要由商家在後台訂單頁觸發才會建立。
@@ -619,7 +629,7 @@ GET https://ssl.smse.com.tw/api/LogisticsEmap.asp
 | `711C2C` | 7-11 C2C 店到店 |
 | `711B2C` | 7-11 B2C 大宗寄倉 |
 | `FAMIC2C` | 全家 C2C 店到店 |
-| `FAMIB2C` | 全家 B2C 大宗寄倉 |
+| `FAMIB2C` | 全家 B2C 大宗寄倉（電子地圖網址存在，但速買配目前未提供此服務） |
 
 ### TypesInterface 對照
 
@@ -1307,7 +1317,7 @@ WC 端記得**禁用「貨到付款」金流**避免重複扣款。
 | 列印 API | 自帶 (`types=Web`) | `B2C_MultiplePrint.asp` |
 | 適合對象 | 個人 / 小批量出貨 | 商家大量出貨 |
 | 號碼格式 | `paymentno` + `validationno` | `766` + `EshopOrderNo` |
-| 可選店 | 7-11 / 全家 | 7-11（全家 B2C 較少見） |
+| 可選店 | 7-11 / 全家 | 僅 7-11（全家 B2C 目前未提供） |
 
 ### Q10：能否 B2C 與 C2C 同時開？
 

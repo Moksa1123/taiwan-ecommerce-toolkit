@@ -96,7 +96,7 @@ When modifying files:
 | Antigravity | `.agent/skills/` | AgentSkillsManager |
 | Copilot / VS Code | `.github/skills/` | docs.github.com |
 | Kiro | `.kiro/skills/` | kiro.dev/docs/skills |
-| Codex | `.codex/skills/` | developers.openai.com/codex/skills |
+| Codex | `.agents/skills/` | developers.openai.com/codex/skills |
 | Qoder | `.qoder/skills/` | docs.qoder.com/extensions/skills |
 | Cline | `.cline/skills/` | docs.cline.bot/customization/skills |
 | Gemini | `.gemini/skills/` | geminicli.com/docs/cli/skills |
@@ -113,6 +113,7 @@ When modifying files:
 |---|---|---|---|
 | Copilot | `.github/prompts/` | `.github/skills/` | `prompts/` 是給 `*.prompt.md`，不是 skill |
 | Kiro | `.kiro/steering/` | `.kiro/skills/` | Kiro 的 steering（常駐規範）與 skills（按需能力）是兩套機制 |
+| Codex | `.codex/skills/` | `.agents/skills/` | 官方文件（2026-10-03 查核）：repo 掃 `$CWD`～`$REPO_ROOT` 的 `.agents/skills`，user 為 `$HOME/.agents/skills`；`~/.codex/` 只放 `config.toml` |
 | Roo Code | `.roo/commands/` | — | **Roo Code 已於 2026-05-15 封存停止營運**，改為支援其上游 Cline |
 
 ### Continue —— 文件沒寫，但原始碼確認支援

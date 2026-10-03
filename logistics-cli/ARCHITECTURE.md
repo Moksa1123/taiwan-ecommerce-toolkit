@@ -115,7 +115,7 @@ npm publish
 | Antigravity | `.agent` | `~/.gemini/antigravity` |
 | GitHub Copilot | `.github` | - |
 | Kiro | `.kiro` | `~/.kiro` |
-| Codex | `.codex` | `~/.codex` |
+| Codex | `.agents` | `~/.agents` |
 | Qoder | `.qoder` | `~/.qoder` |
 | Cline | `.cline` | `~/.cline` |
 | Gemini | `.gemini` | `~/.gemini` |

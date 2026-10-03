@@ -42,7 +42,7 @@
 | 官網物流服務頁 https://www.sunpay.com.tw/logistics | 超商大宗貨運（全家大宗）、超商物流（7-11、全家、萊爾富店到店） |
 | 教學手冊站 https://doc.esafe.com.tw/ | 超商便利送、宅配通 |
 
-金流 API 只提供**超商取貨付款**（`card_type=09`，§5），沒有宅配或宅配通的 API 規格。
+金流 API 只提供**超商取貨付款**（`card_type=09`，§5）。紅陽確認**目前不支援物流 API 串接**（紅陽客服回覆 2026-09-29），官網列的物流服務需透過後台使用。
 
 ### 電子發票
 
@@ -74,12 +74,14 @@
 
 ### 測試環境申請
 
-| 用途 | 入口 |
-|---|---|
-| 金流測試環境 | https://testmerchant.sunpay.com.tw/#/formTabs |
-| 電子發票測試帳號 | https://testinv.sunpay.com.tw/sign-up |
+測試帳號自行註冊即可使用（紅陽客服回覆 2026-09-29）：
 
-手冊 v1.1.1（2026-08-19）相對 v1.1.0 的異動：`store_type` 移除 `3`（OK）；§4.2.3 簽名 Step 2 改寫（見 §3.2）；刪除附錄 3（各語言 URL encode 對照表）。
+| 用途 | 入口 | 申請方式 |
+|---|---|---|
+| 金流測試環境 | https://testmerchant.sunpay.com.tw/#/login | 點選下方「立即申請」 |
+| 電子發票測試帳號 | https://testinv.sunpay.com.tw/ | 點選右上角「帳號申請」 |
+
+手冊 v1.1.1（2026-08-19）相對 v1.1.0 的異動：`store_type` 移除 `3`（OK，超商取貨付款不再支援 OK 超商）；§4.2.3 簽名 Step 2 改寫（見 §3.2）；刪除附錄 3（各語言 URL encode 對照表）。
 
 | 其他文件 | 取得 |
 |---|---|
@@ -136,22 +138,24 @@ rsamsg  →  Base64 decode（URL-safe：- _）  →  以「公鑰」分段解密
 
 ```
 1. head 與 body（含內容）做 ASCII 升序排序
-2. 整份 JSON 做 URLEncode，尾端直接串上 SHA2 密鑰
+2. 整份 JSON 字串（可先 URLEncode，見下方），尾端直接串上 SHA2 密鑰
 3. SHA256 → check_value
 ```
 
+**URLEncode 兩種皆可**（紅陽客服回覆 2026-09-29）：手冊 v1.1.1 優化了簽名步驟，可以不做 URLEncode；做了也相容。
+建議與 `rsamsg` 的加密明文使用**同一個字串**，避免兩邊編碼不一致。
+
 > ⚠️ **`null` 值的參數不參與簽名**（官方明註）。
 > ⚠️ **ASCII 排序是強制的**，手冊在兩處重複警告「請務必將 head 與 body 參數進行 ASCII 排序，以免加密失敗」。
-> ⚠️ SHA2 密鑰是**直接串接在 URLEncode 後字串的尾端**，不是 ECPay 那種 `HashKey=…&…&HashIV=…` 前後包夾。
+> ⚠️ SHA2 密鑰是**直接串接在（URLEncode 後的）字串尾端**，不是 ECPay 那種 `HashKey=…&…&HashIV=…` 前後包夾。
 
-> ⚠️ **手冊 v1.1.1 的 Step 2 文字與範例矛盾**：文字改成「JSON 字串化後直接串上 SHA2 密鑰」（不做 URLEncode），
-> 但同頁範例的 `check_value`（`3df3acb3…cad26`）只有**先 URLEncode** 才算得出來；不做 URLEncode 會得到 `5ec973f1…e6ae`。
-> 官方範例程式（`sunpayWeb.php` 的 `getCheck_value()`、JAVA `Payment` 的 `ShaUtil.encodeSHA256(URLEncoder.encode(...) + SHA256)`）
-> 與官方 skill v1.1.1 也都是先 URLEncode。以上述三者為準。
+> 手冊 v1.1.1 同頁範例的 `check_value`（`3df3acb3…cad26`）是先 URLEncode 的結果；不做 URLEncode 會得到 `5ec973f1…e6ae`。
+> 官方範例程式（`sunpayWeb.php` 的 `getCheck_value()`、JAVA `Payment`）與官方 skill v1.1.1 都先 URLEncode。
+> 本 skill 範例採 URLEncode 版本，可直接用官方範例值驗證。
 
 **URL encode 規則**：手冊 v1.1.0 附錄 3 要求符合 Java `URLEncoder`（空白 `+`、`*` 不編碼、`~` 編為 `%7E`），v1.1.1 已刪除附錄 3。
 官方 PHP 範例用 `urlencode`（`*` 編為 `%2A`），JAVA 範例用 `URLEncoder`；兩者都把**同一個編碼後字串**同時拿去做 RSA 加密與 `check_value`。
-所以關鍵是 `rsamsg` 的明文與 `check_value` 用同一個字串；本 skill 範例採 Java `URLEncoder` 規則。
+若做 URLEncode，關鍵是 `rsamsg` 的明文與 `check_value` 用同一個字串；本 skill 範例採 Java `URLEncoder` 規則。
 Python `quote`（空白編為 `%20`）與 JS `encodeURIComponent` 不屬於官方範例的任一種，不要直接用。
 
 ## 4. API 端點
@@ -239,7 +243,7 @@ Python `quote`（空白編為 `%20`）與 JS `encodeURIComponent` 不屬於官�
 | `sdt` | 消費者電話 | 20 | | 純數字如 `0911123123`；搭配超商取貨時到店會發簡訊 |
 | `note1` / `note2` | 備註 | 400 | | 交易完成時原樣回傳；不可有 `*'<>[]"` |
 | `lgs_flag` | 物流啟用 | 1 | 條件 | `0`/不帶=不啟用、`1`=啟用。**`card_type=09` 時必須為 1**；**訂單金額 > 2 萬元無法使用物流** |
-| `store_type` | 超商類型 | 1 | 條件 | `0`/不帶=全部、`1`=7-11、`2`=全家、`4`=萊爾富（手冊 v1.1.1 移除 `3` OK）|
+| `store_type` | 超商類型 | 1 | 條件 | `0`/不帶=全部、`1`=7-11、`2`=全家、`4`=萊爾富（超商取貨付款不再支援 OK，手冊 v1.1.1 移除 `3`；紅陽客服回覆 2026-09-29）|
 | `buyer_cid` | 買方統編 | 8 | | 隨交易開發票用 |
 | `carrier_type` | 載具類型 | 1 | | `1` 手機條碼、`2` 自然人憑證 |
 | `carrier_id` | 載具號碼 | 16 | 條件 | `carrier_type=1/2` 時必填 |
@@ -382,7 +386,7 @@ Python `quote`（空白編為 `%20`）與 JS `encodeURIComponent` 不屬於官�
 
 欄位：`trade_no`、`web`、`Td`（⚠️ **大寫 T**，與請求端的 `td` 不同）、`note1`、`note2`、`SendType`（`1`=背景傳送）、`CargoNo`（寄件代碼）、`StoreType`（物流狀態代碼）、`StoreMsg`（狀態文字說明）、`ChkValue`（檢查碼）。
 
-> ⚠️ **手冊未提供 `StoreType` 的代碼對照表**，只說明「物流狀態之代碼」。實務上需以 `StoreMsg` 的文字說明為主，或洽紅陽索取代碼表。
+> `StoreType` **沒有另外的代碼對照表**；每次通知都會同時回傳中文狀態說明 `StoreMsg`，以 `StoreMsg` 判讀即可（紅陽客服回覆 2026-09-29）。
 
 ### 測試環境的模擬方式（附錄 1）
 
@@ -418,7 +422,7 @@ Python `quote`（空白編為 `%20`）與 JS `encodeURIComponent` 不屬於官�
 
 ## 8. 串接流程
 
-1. 申請測試帳號
+1. 自行註冊測試帳號（§2「測試環境申請」）
 2. 下載串接手冊及 sample code
 3. 串接購物車（或自建）
 
@@ -433,8 +437,8 @@ Python `quote`（空白編為 `%20`）與 JS `encodeURIComponent` 不屬於官�
 | 項目 | 官方 skill v1.1.1 | 手冊 |
 |---|---|---|
 | 對應手冊版本 | 標示依手冊 v1.1.0 校對 | 現行 v1.1.1（2026-08-19） |
-| `store_type` | 仍列 `3`=OK | v1.1.1 已移除 `3` |
-| `check_value` 的 URL encode | PHP `urlencode` 語意 | v1.1.0 附錄 3 要求 Java `URLEncoder`；v1.1.1 刪除附錄 3（見 §3.2） |
+| `store_type` | 仍列 `3`=OK | v1.1.1 已移除 `3`；超商取貨付款不再支援 OK（紅陽客服回覆 2026-09-29） |
+| `check_value` 的 URL encode | PHP `urlencode` 語意 | v1.1.1 可不做 URLEncode，做了也相容（紅陽客服回覆 2026-09-29；見 §3.2） |
 | CallBack 補發 | 30 分鐘內重送 5 次 | 30 分鐘內每 5 分鐘補發一次（§4.3.3） |
 
 官方 skill 附的 `check_value` 自檢向量（`0994ecc3…671d`）已用 `examples/sunpay-payment-example.py` 驗證相符。
@@ -443,14 +447,16 @@ Python `quote`（空白編為 `%20`）與 JS `encodeURIComponent` 不屬於官�
 
 | 項目 | 備註 |
 |---|---|
-| 物流貨態 `StoreType` 代碼表 | 手冊只說是「物流狀態之代碼」，未附對照，需洽紅陽索取 |
 | 統一錯誤碼表 | 手冊無獨立錯誤碼章節，各 API 的 `pay_result`／`code` 已收錄於 §6 |
+
+已由紅陽確認、不再待補：`StoreType` 無代碼表（以 `StoreMsg` 為準）、目前無物流 API（紅陽客服回覆 2026-09-29）。
 
 電子發票側見 [../../taiwan-invoice/references/SUNPAY_API_REFERENCE.md](../../taiwan-invoice/references/SUNPAY_API_REFERENCE.md)。
 
 ## 11. 來源
 
 - 開發者專區 — https://www.sunpay.com.tw/developers/
+- 紅陽客服回覆 2026-09-29（service@esafe.com.tw 轉客服 mandy@esafe.com.tw）：簽章 URLEncode、OK 超商、StoreType、物流 API、測試帳號
 - 金流技術串接手冊 v1.1.1 — `https://storage.googleapis.com/joinchill-image/sunpay_techdoc/202608/紅陽科技金流服務-金流技術串接手冊V1.1.1.pdf`
 - 金流 AI 串接指南（Claude Code Skill）v1.1.1 — `https://storage.googleapis.com/joinchill-image/sunpay_techdoc/202608/sunpay-payment-skill-v1.1.1-v1.zip`
 - 金流範例程式 PHP／JAVA — `https://storage.googleapis.com/joinchill-image/sunpay_techdoc/202603/金流範例程式SampleCode_PHP.zip`、`…/金流範例程式SampleCode_JAVA.zip`

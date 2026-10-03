@@ -63,6 +63,7 @@ def taiwan_epoch(now: Optional[datetime] = None) -> int:
     手冊定義為「從 1970/1/1 至今的台灣時間（UTC+8）之總秒數」，
     並附上 C# 範例 `DateTime.UtcNow.AddHours(8).Subtract(new DateTime(1970,1,1))`。
     注意那個 `.AddHours(8)` —— 送出的值比真正的 epoch 多 28800 秒。
+    紅陽客服回覆（2026-09-29）確認此寫法正確，官方 AI Skill 也已改為 UTC+8。
 
     手冊自己的對照也印證：1666204130 = 2022/10/19 18:28:50（台灣時間），
     而該數字若當成標準 epoch 解讀，在 UTC 下正好也是 18:28:50。
