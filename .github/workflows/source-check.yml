@@ -21,7 +21,7 @@ jobs:
         with:
           python-version: '3.12'
 
-      # PayNow 文件站、Uber、Trae 等是網頁應用，需要瀏覽器渲染才讀得到內容
+      # PayNow 文件站、Trae 等是網頁應用，需要瀏覽器渲染才讀得到內容
       - name: 安裝無頭瀏覽器
         run: |
           pip install playwright

@@ -50,8 +50,8 @@ CSV_CONFIG = {
     'field': {
         'file': 'field-mappings.csv',
         # 逐一列出所有 provider 欄位
-        'search_cols': ['field_name', 'field_zh', 'ecpay_name', 'newebpay_name', 'payuni_name', 'smilepay_name', 'pchomepay_name', 'paynow_name', 'hct_name', 'ezship_name', 'lalamove_name', 'pandago_name', 'uber_direct_name', 'notes'],
-        'output_cols': ['field_name', 'field_zh', 'ecpay_name', 'newebpay_name', 'payuni_name', 'smilepay_name', 'pchomepay_name', 'paynow_name', 'hct_name', 'ezship_name', 'lalamove_name', 'pandago_name', 'uber_direct_name', 'type', 'required', 'notes']
+        'search_cols': ['field_name', 'field_zh', 'ecpay_name', 'newebpay_name', 'payuni_name', 'smilepay_name', 'pchomepay_name', 'paynow_name', 'hct_name', 'ezship_name', 'lalamove_name', 'pandago_name', 'notes'],
+        'output_cols': ['field_name', 'field_zh', 'ecpay_name', 'newebpay_name', 'payuni_name', 'smilepay_name', 'pchomepay_name', 'paynow_name', 'hct_name', 'ezship_name', 'lalamove_name', 'pandago_name', 'type', 'required', 'notes']
     },
     'status': {
         'file': 'status-codes.csv',

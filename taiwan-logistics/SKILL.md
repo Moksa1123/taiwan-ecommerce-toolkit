@@ -1,6 +1,6 @@
 ---
 name: taiwan-logistics
-description: Taiwan Logistics API integration specialist for ECPay, NewebPay, PAYUNi, SmilePay, PChomePay, PayNow and ezShip aggregators, HCT direct carrier API, and on-demand delivery (Lalamove, pandago, Uber Direct). Use when developing shipping flows, implementing CVS pickup (7-11/全家/萊爾富/OK), home delivery (黑貓/中華郵政), cold-chain, store-map selectors, COD orders, or shipment tracking. Handles encryption (MD5, AES-256-CBC, AES-256-GCM, 3DES), store maps, and provider field mappings.
+description: Taiwan Logistics API integration specialist for ECPay, NewebPay, PAYUNi, SmilePay, PChomePay, PayNow and ezShip aggregators, HCT direct carrier API, and on-demand delivery (Lalamove, pandago). Use when developing shipping flows, implementing CVS pickup (7-11/全家/萊爾富/OK), home delivery (黑貓/中華郵政), cold-chain, store-map selectors, COD orders, or shipment tracking. Handles encryption (MD5, AES-256-CBC, AES-256-GCM, 3DES), store maps, and provider field mappings.
 user-invocable: true
 ---
 
@@ -25,7 +25,7 @@ This skill covers **7 logistics aggregators** + **1 direct carrier API** + **3 o
 | **ezShip 台灣便利配** | aggregator (全家/萊爾富/OK、宅配、店港澳；不含 7-11) | `references/ezship-logistics-api.md` |
 | **HCT 新竹物流** | **直連 carrier API** | `references/hct-logistics-api.md` |
 | **Lalamove** | 即時／同城配送 | `references/lalamove-logistics-api.md` |
-| **pandago / Uber Direct** | 即時／同城配送 | `references/ondemand-delivery.md` |
+| **pandago** | 即時／同城配送 | `references/ondemand-delivery.md` |
 
 黑貓、宅配通、中華郵政、超商賣家平台等沒有對外商家 API，替代路徑見 `references/carrier-direct-access.md`。
 各家實際參數值（子類型、溫層、代收上限）見 `data/logistics-types.csv`。

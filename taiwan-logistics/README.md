@@ -3,17 +3,17 @@
 <h3 align="center">台灣物流 AI 開發技能包</h3>
 
 <p align="center">
-  <strong>7 家物流 aggregator + HCT 新竹物流直連 + 3 家即時配送</strong>
+  <strong>7 家物流 aggregator + HCT 新竹物流直連 + 2 家即時配送</strong>
 </p>
 
 <p align="center">
-  ECPay · NewebPay · PAYUNi · SmilePay · PChomePay · PayNow · ezShip · HCT 直連 · Lalamove · pandago · Uber Direct
+  ECPay · NewebPay · PAYUNi · SmilePay · PChomePay · PayNow · ezShip · HCT 直連 · Lalamove · pandago
 </p>
 
 <p align="center">
   <a href="https://www.npmjs.com/package/taiwan-logistics-skill"><img src="https://img.shields.io/npm/v/taiwan-logistics-skill?style=flat-square&logo=npm" alt="npm version"></a>
   <a href="https://www.npmjs.com/package/taiwan-logistics-skill"><img src="https://img.shields.io/npm/dm/taiwan-logistics-skill?style=flat-square&label=downloads" alt="npm downloads"></a>
-  <img src="https://img.shields.io/badge/providers-11-success?style=flat-square" alt="11 Providers">
+  <img src="https://img.shields.io/badge/providers-10-success?style=flat-square" alt="10 Providers">
   <img src="https://img.shields.io/badge/AI%20platforms-14-blue?style=flat-square" alt="14 AI Platforms">
   <a href="https://github.com/Moksa1123/taiwan-ecommerce-toolkit/blob/main/LICENSE"><img src="https://img.shields.io/github/license/Moksa1123/taiwan-ecommerce-toolkit?style=flat-square" alt="License"></a>
 </p>
@@ -66,7 +66,6 @@ HCT 直連 API 傳入託運資料，逆物流單獨處理
 | **HCT 新竹物流** | **direct carrier API** | 申請後提供金鑰 | 收錄的聚合商都沒有新竹物流選項，只能直連 |
 | **Lalamove** | 即時配送 | HMAC-SHA256 自簽 | 先報價後下單（報價 5 分鐘效期） |
 | **pandago** | 即時配送 | OAuth 2.0 + RSA 簽 JWT assertion | 同城即時配送 |
-| **Uber Direct** | 即時配送 | OAuth 2.0 client_credentials | 台灣可用性未經官方確認 |
 
 ## 技能包內容
 
@@ -84,7 +83,7 @@ taiwan-logistics/
 │   ├── ezship-logistics-api.md
 │   ├── hct-logistics-api.md              # 直連 HCT
 │   ├── lalamove-logistics-api.md
-│   ├── ondemand-delivery.md              # Lalamove / pandago / Uber Direct
+│   ├── ondemand-delivery.md              # Lalamove / pandago
 │   └── carrier-direct-access.md          # 無公開 API 的物流業者與替代路徑
 ├── examples/                             # Python 範例
 └── data/                                 # search / recommend 使用的 CSV

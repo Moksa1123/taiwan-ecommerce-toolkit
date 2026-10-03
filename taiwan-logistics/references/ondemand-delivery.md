@@ -1,6 +1,7 @@
 # 即時／同城配送（On-demand Delivery）在台灣
 
-> 涵蓋: Lalamove、pandago（foodpanda）、Uber Direct
+> 涵蓋: Lalamove、pandago（foodpanda）
+> Uber Direct 台灣未提供（Uber Direct 台灣客服 2026-10-03 確認），不收錄。
 > Lalamove 詳細規格見 [lalamove-logistics-api.md](lalamove-logistics-api.md)
 
 ## 0. 這個分類跟其他物流不同在哪
@@ -13,27 +14,27 @@
 |---|---|---|
 | 報價 | 費率表固定，可預先算 | **必須先呼叫 API 取得即時報價**，且報價有效期短 |
 | 建單時機 | 出貨當下 | 消費者下單當下或稍後派遣 |
-| 取消 | 出貨前可取消 | **司機接單後取消多半要付費**（見 §5） |
+| 取消 | 出貨前可取消 | **司機接單後取消多半要付費**（見 §3） |
 | 追蹤 | 貨態代碼（數小時～數日更新）| **司機即時座標** |
 | 失敗處理 | 退回寄件人 | 需重新派遣或人工介入 |
 | 服務範圍 | 全台 | **限同城／特定半徑** |
 
 > ⚠️ 把即時配送套用批次物流的資料模型（先建單再出貨）會不合用——報價會過期、司機座標無處可放。
 
-## 1. 三家對照
+## 1. 兩家對照
 
-| | Lalamove | pandago | Uber Direct |
-|---|---|---|---|
-| 母公司 | Lalamove | Delivery Hero（foodpanda）| Uber |
-| 台灣可用 | ✅ 官方文件列台灣 | ✅ **官方 API 文件列 `tw`** | ⚠️ 見 §4 |
-| 文件公開 | ✅ 免登入 | ✅ 免登入（Delivery Hero ODR）| ✅ 免登入 |
-| 認證 | HMAC-SHA256 自簽 | **OAuth 2.0 + RSA 簽的 JWT assertion** | OAuth 2.0 client_credentials |
-| 取得憑證 | 開發者後台 | **須洽 ODR 窗口申請** | 商家後台 |
-| 報價 | 先報價後下單，效期 5 分鐘 | `POST /orders/fee` 與 `/orders/time` 分開 | `POST .../delivery_quotes`，回傳 `expires` |
-| 司機座標 | ✅ | ✅ `GET /orders/{id}/coordinates` | ✅ `courier.location` |
-| 尺寸限制 | 依車型 | **保溫箱 34×34×36 cm、前踏板 30×20×27 cm，合計 ≤ 20 kg** | 依方案 |
-| 貨到收款 | — | `CASH_ON_DELIVERY`／`CARD_ON_DELIVERY` | — |
-| 取消 | 媒合後 6 分鐘寬限期 | **外送夥伴接單後不能用 API 取消** | 隨時可取消，費用依階段 |
+| | Lalamove | pandago |
+|---|---|---|
+| 母公司 | Lalamove | Delivery Hero（foodpanda）|
+| 台灣可用 | ✅ 官方文件列台灣 | ✅ **官方 API 文件列 `tw`** |
+| 文件公開 | ✅ 免登入 | ✅ 免登入（Delivery Hero ODR）|
+| 認證 | HMAC-SHA256 自簽 | **OAuth 2.0 + RSA 簽的 JWT assertion** |
+| 取得憑證 | 開發者後台 | **須洽 ODR 窗口申請** |
+| 報價 | 先報價後下單，效期 5 分鐘 | `POST /orders/fee` 與 `/orders/time` 分開 |
+| 司機座標 | ✅ | ✅ `GET /orders/{id}/coordinates` |
+| 尺寸限制 | 依車型 | **保溫箱 34×34×36 cm、前踏板 30×20×27 cm，合計 ≤ 20 kg** |
+| 貨到收款 | — | `CASH_ON_DELIVERY`／`CARD_ON_DELIVERY` |
+| 取消 | 媒合後 6 分鐘寬限期 | **外送夥伴接單後不能用 API 取消** |
 
 ## 2. pandago（foodpanda）
 
@@ -115,93 +116,7 @@ pandago 屬 Delivery Hero 的 **On Demand Rider（ODR）API**，同一套 API �
 
 ODR 會 POST 到商家設定的 callback URL，內容含 `order_id`、`status`、`timeline`、`driver`（有外送夥伴時含座標）、取消時的 `cancellation`。可向營運窗口申請簽章：header `X-Signature-SHA256` = hex(HMAC-SHA256(secret, 原始 body))。
 
-## 3. Uber Direct
-
-### 認證
-
-| 項目 | 值 |
-|---|---|
-| Token 端點 | `https://auth.uber.com/oauth/v2/token` |
-| grant_type | `client_credentials` |
-| scope | **`eats.deliveries`** |
-| API Base | `https://api.uber.com/v1` |
-
-Token 請求用 `application/x-www-form-urlencoded`；後續 API 呼叫用 `application/json`，以 Bearer token 帶入 Authorization header。
-
-> 💡 **Token 有效期 30 天（2,592,000 秒）**，官方明文建議快取而非每次重新產生。這與 Lalamove（每次請求都簽章）、pandago（JWT assertion）的模式都不同——Uber Direct 這邊反而要注意**別把 token 當短期憑證反覆申請**。
-
-### Direct API 端點
-
-`customer_id` 為組織 ID（UUID 或 `cus_` 開頭），`delivery_id` 以 `del_` 開頭。
-
-| 操作 | Method | 路徑 |
-|---|---|---|
-| 建立報價 | POST | `/customers/{customer_id}/delivery_quotes` |
-| 建立配送 | POST | `/customers/{customer_id}/deliveries` |
-| 列出配送 | GET | `/customers/{customer_id}/deliveries` |
-| 查詢配送 | GET | `/customers/{customer_id}/deliveries/{delivery_id}` |
-| 更新配送 | POST | `/customers/{customer_id}/deliveries/{delivery_id}` |
-| 取消配送 | POST | `/customers/{customer_id}/deliveries/{delivery_id}/cancel` |
-| 送達證明 | POST | `/customers/{customer_id}/deliveries/{delivery_id}/proof-of-delivery` |
-
-### 建立報價
-
-必填 `pickup_address`、`dropoff_address`（**JSON 字串**，例如 `"{\"street_address\":[\"…\"],\"city\":\"…\",\"zip_code\":\"…\",\"country\":\"…\"}"`）；選填座標、`pickup_ready_dt`／`pickup_deadline_dt`／`dropoff_ready_dt`／`dropoff_deadline_dt`（RFC 3339）、電話、`manifest_total_value`（貨幣最小單位）、`external_store_id`。
-
-回應：`id`（`dqt_` 開頭）、`fee`、`currency`、`expires`、`dropoff_eta`、`duration`、`pickup_duration`。
-
-### 建立配送
-
-| 欄位 | 必填 | 說明 |
-|---|:---:|---|
-| `pickup_name`、`pickup_address`、`pickup_phone_number` | ● | 電話格式 `^\+[0-9]+$` |
-| `dropoff_name`、`dropoff_address`、`dropoff_phone_number` | ● | 同上 |
-| `manifest_items` | ● | 品項清單，會顯示在外送夥伴 App |
-| `quote_id` | | 先前報價的 ID |
-| `pickup_latitude`／`longitude`、`dropoff_latitude`／`longitude` | | 建議提供，提高定位精準度 |
-| `pickup_notes`、`dropoff_notes`、`dropoff_seller_notes` | | 各 ≤ 280 字 |
-| `pickup_verification`、`dropoff_verification`、`return_verification` | | 拍照、掃條碼、簽名、身分驗證等 |
-| `deliverable_action` | | `deliverable_action_meet_at_door`（預設）／`deliverable_action_leave_at_door` |
-| `undeliverable_action` | | `return`（預設）／`leave_at_door`／`discard` |
-| `pickup_ready_dt` | | 須在 30 天內 |
-| `pickup_deadline_dt` | | 比 `pickup_ready_dt` 晚至少 10 分鐘，且距現在至少 20 分鐘 |
-| `dropoff_ready_dt` | | ≤ `pickup_deadline_dt` |
-| `dropoff_deadline_dt` | | 比 `dropoff_ready_dt` 晚至少 20 分鐘，且 ≥ `pickup_deadline_dt` |
-| `manifest_reference` | | 與 `external_id` 的組合須唯一 |
-| `idempotency_key` | | 防重複建單，預設保留 60 分鐘 |
-| `tip` | | 貨幣最小單位；回應的 `fee` 已含小費 |
-| `external_store_id` | | 建單有用時，報價也必須帶 |
-
-錯誤：`402 customer_suspended`、`403 customer_blocked`、`409 duplicate_delivery`、`429 customer_limited`。
-
-### 狀態與查詢
-
-列出配送的 `filter`：`pending`、`pickup`、`pickup_complete`、`dropoff`、`delivered`、`canceled`、`returned`、`ongoing`。查詢結果含 `status`、`courier`（姓名、車種、電話、座標）、`tracking_url`、`undeliverable_action`／`undeliverable_reason`。
-
-### 取消
-
-`POST .../cancel`，選填 `cancelation_reason`（區分大小寫）：`out_of_items`、`store_closed`、`customer_called_to_cancel`、`store_too_busy`、`courier_delayed_en_route_to_pickup`、`too_expensive`、`delivery_vehicle_too_small`、`no_courier_assigned`、`other`（需搭配 `additional_description`）。
-
-### 服務範圍
-
-官方行銷頁只說「available in 2 dozen countries」，未逐一列出。配送半徑約 **10 英里**內，時效可選 2 小時內／當日／最多預約 30 天後。
-
-## 4. ⚠️ Uber Direct 的台灣可用性：有間接證據，無官方確認
-
-**支持的證據：**
-- 存在台灣在地化的商家頁 `merchants.ubereats.com/tw/zh-tw/`
-- Uber Help 有中文的「Uber Direct 控制台」章節
-- 台灣的系統整合商（如 weiby.tw）公開販售「Uber Eats／Uber Direct／foodpanda／pandago」的 API 串接服務
-
-**缺乏的證據：**
-- Uber 官方**沒有**逐一列出支援國家的清單，台灣未被點名
-- 開發者文件未標示市場代碼或區域端點；範例地址全是美國
-
-**結論**：可用性高度可能，但**本 skill 不將其標為已確認**。與 pandago 不同——pandago 的官方 API 文件直接列出 `tw` 的正式與 Stage 端點，那是明確的一手證據。
-
-實務建議：導入前先向 Uber 業務確認貴公司所在區域是否在服務範圍內，不要依賴行銷頁的在地化路徑判斷。
-
-## 5. 取消規則與費用
+## 3. 取消規則與費用
 
 ### Lalamove（台灣官方 FAQ）
 
@@ -238,13 +153,7 @@ API 層面：外送夥伴接單後不能取消（`409`）。依原因的費用�
 | 超出運送範圍 | 外送夥伴接單後拒單 | 否 | 否 | 否 |
 | 技術問題／超出營業時間／天氣問題／無法媒合外送夥伴 | | 否 | 否 | 否 |
 
-### Uber Direct（Uber Help「Issues with deliveries: Uber Direct」）
-
-- 可隨時取消（Dashboard 或 API）
-- 需要把商品送回的餐廳，必須透過 Uber Direct 支援團隊取消，讓外送夥伴有退回的行程
-- 該文章的非台灣版本另列：尚無外送夥伴接單時不收取消或退回費用；取件階段取消不收取消費，但收取件費補償外送夥伴；配送途中取消會收費；配送途中取消並要求退回，收配送費與退回費。**從台灣存取的版本未列費用**，台灣的實際收費需向 Uber 確認
-
-## 6. 選型
+## 4. 選型
 
 | 情境 | 建議 |
 |---|---|
@@ -252,26 +161,19 @@ API 層面：外送夥伴接單後不能取消（`409`）。依原因的費用�
 | 已有 HMAC 簽章經驗、想快速上線 | **Lalamove**（自簽 HMAC，開發者後台自助取得憑證）|
 | 需要多車型／路線最佳化／換司機 | **Lalamove** |
 | 小件、標準箱體、需要貨到收款 | **pandago**（≤ 20 kg，`CASH_ON_DELIVERY`）|
-| 已在用 Uber Eats 生態 | **Uber Direct**（但先確認台灣服務範圍）|
 
-> 三家都**不是批次物流的替代品**。單日出貨量大、跨縣市、需要超取的情境，仍應走 ECPay／ezShip 等聚合商。即時配送適合的是同城、急件、生鮮這類批次物流做不到的需求。
+> 兩家都**不是批次物流的替代品**。單日出貨量大、跨縣市、需要超取的情境，仍應走 ECPay／ezShip 等聚合商。即時配送適合的是同城、急件、生鮮這類批次物流做不到的需求。
 
-## 7. 待補
+## 5. 待補
 
 | 項目 | 說明 |
 |---|---|
-| Uber Direct 台灣可用性與收費 | 官方未列支援國家；台灣版說明頁未列取消費 |
 | pandago 台灣運費表 | 官方 API 文件與商家專區皆未列，運費以 `/orders/fee` 即時估算 |
 
-## 8. 來源
+## 6. 來源
 
 - Delivery Hero On Demand Rider API（端點、欄位、狀態、取消、回呼簽章）— https://on-demand-rider-docs.deliveryhero.io/
 - foodpanda 商家專區 pandago（尺寸重量、責任規範與費用收取／補償）— https://vendor.foodpanda.com.tw/pandago
 - pandago 台灣 — https://pandago.tw/
-- Uber Direct API 總覽 — https://developer.uber.com/docs/deliveries/overview
-- Uber Direct API Reference（Direct API）— https://developer.uber.com/docs/deliveries/api-reference/daas
-- Uber Direct 認證 — https://developer.uber.com/docs/deliveries/guides/authentication
-- Uber Help：Issues with deliveries: Uber Direct — https://help.uber.com/en/merchants-and-restaurants/article/issues-with-deliveries-uber-direct-?nodeId=1d5914c7-b638-4d4b-8a18-d2e3cb29217a
-- Uber Direct 商家頁（台灣在地化）— https://merchants.ubereats.com/tw/zh-tw/
 - Lalamove 台灣 FAQ（取消規則）— https://www.lalamove.com/zh-tw/faq
 - Lalamove API — [lalamove-logistics-api.md](lalamove-logistics-api.md)

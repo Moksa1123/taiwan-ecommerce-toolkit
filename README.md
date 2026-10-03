@@ -13,7 +13,7 @@
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/providers-34-success?style=flat-square" alt="34 Providers">
+  <img src="https://img.shields.io/badge/providers-33-success?style=flat-square" alt="33 Providers">
   <img src="https://img.shields.io/badge/AI%20platforms-14-blue?style=flat-square" alt="14 AI Platforms">
   <img src="https://img.shields.io/badge/quality-production--ready-green?style=flat-square" alt="Production Ready">
   <a href="LICENSE"><img src="https://img.shields.io/github/license/Moksa1123/taiwan-ecommerce-toolkit?style=flat-square" alt="License"></a>
@@ -27,12 +27,12 @@
 
 ## 專案概覽
 
-Taiwan E-Commerce Toolkit 是專為台灣電商生態系統設計的企業級整合開發工具包，提供完整的電子發票、金流串接、物流整合解決方案。本工具包收錄台灣三大領域共 **34 個服務商**（9 家發票 + 14 家金流 + 11 家可串接物流），另收錄 10 家**無法直接串接**的物流業者與其替代路徑，搭配智能開發工具與生產級程式碼範例，協助開發團隊快速完成電商系統整合。
+Taiwan E-Commerce Toolkit 是專為台灣電商生態系統設計的企業級整合開發工具包，提供完整的電子發票、金流串接、物流整合解決方案。本工具包收錄台灣三大領域共 **33 個服務商**（9 家發票 + 14 家金流 + 10 家可串接物流），另收錄 10 家**無法直接串接**的物流業者與其替代路徑，搭配智能開發工具與生產級程式碼範例，協助開發團隊快速完成電商系統整合。
 
 **最新版本（請以 npm 為準）：**
 - `taiwan-invoice-skill@2.9.8+` — 9 家發票（ECPay / SmilePay / Amego / ezPay / PayNow / O'Pay / SunPay / 財政部大平台 / 關貿）
 - `taiwan-payment-skill@1.5.10+` — 14 家金流（ECPay / NewebPay / PAYUNi / SmilePay / PChomePay / ezPay / PayNow / Shopline / LINE Pay / TapPay / O'Pay / 街口 / 紅陽 / GoMyPay）
-- `taiwan-logistics-skill@1.4.7+` — 11 家可串接物流（7 aggregator + HCT 直連 + 3 家即時配送）＋ 10 家僅供查詢
+- `taiwan-logistics-skill@1.4.7+` — 10 家可串接物流（7 aggregator + HCT 直連 + 2 家即時配送）＋ 10 家僅供查詢
 
 > **發票的兩個例外**：財政部大平台是上游，只做查詢／驗證（手機條碼、載具、捐贈碼），**不能開立發票**；關貿網路已收錄於資料層，但文件需簽約，尚無 reference。
 >
@@ -88,9 +88,9 @@ ECPay · NewebPay · PAYUNi · SmilePay · PChomePay · ezPay · PayNow · Shopl
 
 **taiwan-logistics-skill**
 
-整合 11 家物流（7 aggregator + HCT 直連 + 3 即時配送）
+整合 10 家物流（7 aggregator + HCT 直連 + 2 即時配送）
 
-ECPay · NewebPay · PAYUNi · SmilePay · PChomePay · PayNow · ezShip · HCT · Lalamove · pandago · Uber Direct
+ECPay · NewebPay · PAYUNi · SmilePay · PChomePay · PayNow · ezShip · HCT · Lalamove · pandago
 
 <p align="center">
   <a href="https://www.npmjs.com/package/taiwan-logistics-skill"><img src="https://img.shields.io/npm/v/taiwan-logistics-skill?style=flat-square&color=cb3837&logo=npm" alt="npm version"></a>
@@ -399,7 +399,7 @@ taiwan-ecommerce-toolkit/
 | **SunPay 紅陽** | RSA 分段加密 + SHA256 check_value | 信用卡 / ATM / 超商代收 | 收錄的金流中唯一使用 RSA |
 | **GoMyPay** | 需申請文件 | 信用卡 / 銀聯 / WEBATM / 虛擬帳號 / 超商條碼 / 定期扣款 | 參數規格待補 |
 
-### 物流串接服務 (11 家：7 aggregator + HCT 直連 + 3 即時配送)
+### 物流串接服務 (10 家：7 aggregator + HCT 直連 + 2 即時配送)
 
 | 物流服務 | 類型 | 加密 / 認證 | 支援物流類型 | 技術特點 |
 |----------|----------|----------|--------------|----------|
@@ -413,7 +413,6 @@ taiwan-ecommerce-toolkit/
 | **HCT 新竹物流** | **direct carrier API** | 自訂加密（申請後提供） | 直連 carrier API | 收錄的聚合商都沒有新竹物流選項 |
 | **Lalamove** | 即時配送 | HMAC-SHA256 自簽 | 同城即時配送 | 先報價後下單（報價 5 分鐘效期） |
 | **pandago** | 即時配送 | OAuth 2.0 + RSA 簽 JWT assertion | 同城即時配送 | 費用與時間為兩支獨立端點 |
-| **Uber Direct** | 即時配送 | OAuth 2.0 client_credentials | 同城即時配送 | Token 30 天，台灣可用性未經官方確認 |
 
 ---
 
