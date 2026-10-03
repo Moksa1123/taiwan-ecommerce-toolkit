@@ -1,0 +1,18 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "taiwan-ecommerce-toolkit",
+  "description": "Taiwan e-commerce integration skills: e-invoice, payment gateways and logistics",
+  "owner": {
+    "name": "Moksa",
+    "url": "https://moksaweb.com"
+  },
+  "plugins": [
+    {
+      "name": "taiwan-ecommerce",
+      "description": "Taiwan e-invoice, payment gateway and logistics API integration skills",
+      "source": "./",
+      "category": "development",
+      "homepage": "https://github.com/Moksa1123/taiwan-ecommerce-toolkit"
+    }
+  ]
+}
