@@ -89,6 +89,9 @@ def make_check_value(payload: Dict[str, Any], sha2_key: str) -> str:
 
     排序 → JSON → urlencode → 尾端直接串上 SHA2 密鑰 → SHA256。
 
+    手冊 v1.1.1 起可不做 urlencode，做了也相容（紅陽客服回覆 2026-09-29）；
+    這裡維持 urlencode，才能用手冊範例值驗證。
+
     密鑰是接在字串尾端，不是 ECPay 那種
     `HashKey=...&參數&HashIV=...` 的前後包夾。
     值為 null 的參數不參與簽名（官方明註），本函式已於 build 階段排除。

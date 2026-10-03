@@ -26,7 +26,7 @@
 
 > ⚠️ **正式環境是 `einv.` 不是 `inv.`**。`inv.sunpay.com.tw` 是發票管理後台入口，**不是 API 網域**——這兩個很容易混淆。
 
-申請流程：測試環境於 `testinv.sunpay.com.tw` 申請，取得測試用 **Hash Key 與 Hash IV**；正式環境於 `einv.sunpay.com.tw` 申請會員後取得正式金鑰。
+申請流程：測試帳號自行註冊——`https://testinv.sunpay.com.tw/` 右上角「帳號申請」，完成後取得測試用 **Hash Key 與 Hash IV**（紅陽客服回覆 2026-09-29）；正式環境於 `einv.sunpay.com.tw` 申請會員後取得正式金鑰。
 
 ## 2. 端點總表
 
@@ -95,7 +95,7 @@ long timeStamp = Convert.ToInt32(
     DateTime.UtcNow.AddHours(8).Subtract(new DateTime(1970, 1, 1)).TotalSeconds);
 ```
 
-**注意 `.AddHours(8)`**——這代表送出的值比真正的 Unix epoch **多 28800 秒**。手冊自己的對照也印證：`1666204130 = 2022/10/19 18:28:50`（台灣時間）。
+**注意 `.AddHours(8)`**——這代表送出的值比真正的 Unix epoch **多 28800 秒**。手冊自己的對照也印證：`1666204130 = 2022/10/19 18:28:50`（台灣時間）。紅陽確認 C# 範例的 `UtcNow.AddHours(8)` 是正確寫法，官方 AI Skill 也已修正（紅陽客服回覆 2026-09-29）。
 
 > 如果你用 `time.time()`、`Date.now()/1000`、`DateTimeOffset.UtcNow.ToUnixTimeSeconds()` 這類標準做法，會**整整差 8 小時**而必定逾時失敗。正確做法是取 UTC 後加 8 小時再算 epoch。
 
@@ -250,7 +250,7 @@ long timeStamp = Convert.ToInt32(
 | 參數 | 型態 | 說明 |
 |---|---|---|
 | `status` | String(10) | `SUCCESS` / `ERROR` |
-| `message` | String(30) | `status=ERROR` 時的錯誤說明 |
+| `message` | String(30) | `status=ERROR` 時的錯誤說明（紅陽確認目前沒有錯誤碼清單，紅陽客服回覆 2026-09-29） |
 | `result` | JSON | 業務資料 |
 
 ### ⚠️ 內建冪等：重複送出相同 PostData 會回 SUCCESS 與**原發票**
@@ -374,27 +374,29 @@ long timeStamp = Convert.ToInt32(
 
 | 項目 | 官方 skill | 手冊 v2.3（本文件依據）|
 |---|---|---|
-| `TimeStamp` | Unix epoch 秒 | 第 8 章 C# 範例 `DateTime.UtcNow.AddHours(8)`，比 Unix 多 28800 秒（§3）|
+| `TimeStamp` | v2.3 寫 Unix epoch 秒；紅陽表示官方 Skill 已修正為 UTC+8 | 第 8 章 C# 範例 `DateTime.UtcNow.AddHours(8)`，比 Unix 多 28800 秒（§3）；紅陽客服回覆 2026-09-29 確認手冊正確 |
 | 欄位命名 | PascalCase（`InvoiceType`、`BuyerIdentifier`…）| camelCase（`invoiceType`、`buyerIdentifier`…）|
 | 紙本／捐贈 | `PrintMark`、`NPOBAN`、請求帶 `RandomNumber` | `isprint`、`PaperInvoiceOption`、`poban`；請求沒有隨機碼欄位 |
 | 涵蓋端點 | B2C 開立、作廢；其餘寫「見手冊」| 全部 13 支 |
 
 Token 的 AES 流程兩者一致，官方 skill 附的自檢向量已用 `examples/sunpay-invoice-example.py` 驗證相符。
-`TimeStamp` 的兩種定義互相矛盾，需在測試環境實測確認。
+`TimeStamp` 以手冊為準（UTC+8），紅陽客服回覆 2026-09-29。
 
 ## 15. 待補
 
 | 項目 | 備註 |
 |---|---|
-| `TimeStamp` 定義 | 手冊與官方 skill 矛盾（§14），需測試帳號實測 |
-| 錯誤訊息清單 | 手冊未提供統一錯誤碼表，僅 `message` String(30) 動態說明，無法整理成 `error-codes.csv` |
+| 無 | — |
+
+已由紅陽確認：`TimeStamp` 為 UTC+8 秒數；電子發票目前沒有錯誤碼清單，只有 `message` 文字說明（紅陽客服回覆 2026-09-29）。
 
 ## 16. 來源
 
 - 電子發票技術串接手冊 v2.3 — `https://storage.googleapis.com/joinchill-image/sunpay_techdoc/202603/紅陽科技電子發票技術串接手冊V2.3.pdf`
 - 開發者專區 — https://www.sunpay.com.tw/developers/
 - 電子發票 AI 串接指南（Claude Code Skill）v2.3 — `https://storage.googleapis.com/joinchill-image/sunpay_techdoc/202607/sunpay-einvoice-skill-v2.3-v1.zip`
-- 測試環境申請 — https://testinv.sunpay.com.tw/sign-up
+- 測試環境申請 — https://testinv.sunpay.com.tw/（右上角「帳號申請」）
+- 紅陽客服回覆 2026-09-29（service@esafe.com.tw 轉客服 mandy@esafe.com.tw）：TimeStamp、錯誤碼清單、測試帳號
 - 正式環境會員 — https://einv.sunpay.com.tw
 - 發票管理後台 — https://inv.sunpay.com.tw/
 - 金流端 reference — [../../taiwan-payment/references/sunpay-payment-api.md](../../taiwan-payment/references/sunpay-payment-api.md)

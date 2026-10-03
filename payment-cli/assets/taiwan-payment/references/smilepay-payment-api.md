@@ -5,6 +5,9 @@
 > 來源：速買配官方 WooCommerce 外掛兩個世代——
 > **1.1.23**（`smilepay-module-for-woocommerce`，單一外掛）與 **4.3.3**（各付款方式分檔：`smilepayatm.php`、`smilepaycredit.php`…，附 ReadMe 修訂日期 2023/03/31）。
 > 兩版不一致處逐項註明。速買配規格書需登入商家帳務後台，於左側選單「程式串接說明」取得。
+> 另依**速買配客服回覆（2026-09-30）**補正 `Classif` 對照、銀聯檢核碼、測試卡與非公開 API 範圍；回覆中列出的三份 API 文件
+> （背景取號 `pay_help_paydc_Background_api.ASP`、標準收款 `pay_help_paydc_api.ASP`、電子發票 `pay_help_paydc_einvoice_api.asp`）
+> 位於 `ssl.smse.com.tw/pay_gr/`，未登入會導向商家登入頁。
 
 ---
 
@@ -61,7 +64,6 @@
 |------|------|
 | 訂單建立 (ATM/條碼/ibon/FamiPort) | `https://ssl.smse.com.tw/api/SPPayment.asp` |
 | 信用卡 / 銀聯 結帳頁 (GET / Form) | `https://ssl.smse.com.tw/ezpos/mtmk_utf.asp` |
-| 訂單修改 / 取消 (官方文件提供) | `https://ssl.smse.com.tw/api/SPPayment_Modify.asp` |
 
 ### 通知端點 (由商店實作，速買配回呼)
 
@@ -94,7 +96,15 @@ mid         : 1111
 
 ### 測試卡號
 
-信用卡 / 銀聯走 `mtmk_utf.asp` 模擬結帳頁，速買配會引導使用內部測試卡片，正式上線前向其客服索取最新測試卡號。
+試用帳號（`Dcvc=107`）發動信用卡交易時，`mtmk_utf.asp` 會導向測試刷卡頁 `ssl.smse.com.tw/PAY_TEST/smilepay_evpos_TestVisa_utf.ASP`，頁面上列出測試卡（SmilePay 客服回覆 2026-09-30；測試頁內容 2026-10-03 查核）：
+
+| 項目 | 值 |
+|---|---|
+| 卡號 | `1111-1111-1111-1234` |
+| 到期日 | `01-18` |
+| 末三碼 | `222` |
+
+其他卡號一律以授權失敗處理。
 
 ---
 
@@ -484,7 +494,7 @@ redirect_url = f"{base}?{urlencode(params)}"
 
 | 欄位 | 說明 |
 |------|------|
-| `Classif` | `A` = 授權；`O`/`T` = 完成 |
+| `Classif` | `A` = 刷卡（完整對照見 [Classif 通知類型](#classif-通知類型)） |
 | `Response_id` | `1` = 成功；其他為失敗 |
 | `Smseid` | 速買配金流追蹤碼 |
 | `Amount` | 授權金額 |
@@ -509,6 +519,7 @@ else:
 **兩版外掛差異**
 
 - 結帳頁是瀏覽器轉址，兩版都把 `Verify_key` 放在 querystring，消費者可在網址列看到（4.3.3 `smilepaycredit.php` `credit_create_order`；1.1.23 `class-smilepay-payment-base.php`）。4.3.3 的銀聯轉址則不帶 `Verify_key`（`smilepayunion.php` `thankyou_page`）。
+- `mtmk_utf.asp` 目前不需要 `Verify_key`，但日後版本將要求帶入，串接時應先預留（SmilePay 客服回覆 2026-09-30）。
 - 1.1.23 的 `credit_roturl` 會驗 `Mid_smilepay`；**4.3.3 的 `credit_roturl` 不驗**，只比對金額。自行實作時一律驗章。
 - 4.3.3 沒有分期；`Stage` 只見於 1.1.23。
 - `credit_roturl` 處理完即 `wp_redirect` 到訂單完成頁（兩版相同），代表它同時是消費者的返回網址。
@@ -591,7 +602,7 @@ Pay_zg = 11
 
 - 通知帶 `Classif=A` 與 **`Foreign=U`**，以此區分銀聯與一般信用卡
 - 失敗通知為 `Amount=0` 且 `Response_id=0`；成功為 `Response_id=1`
-- 失敗通知驗 `Mid_smilepay` 時，金額改用**訂單總額**而不是通知的 `0`（1.1.23 一律用通知的 `Amount`）
+- 失敗通知驗 `Mid_smilepay` 時，金額用**訂單金額**而不是通知的 `0`：SmilePay 客服回覆 2026-09-30確認「無論交易成功或失敗，`Mid_smilepay` 均以訂單金額計算」。4.3.3 的做法正確，1.1.23 一律用通知的 `Amount` 是錯的
 - ReadMe：銀聯非即時回傳，約 5～20 分鐘後才會收到結果
 
 ---
@@ -623,19 +634,28 @@ SmilePay 在消費者完成付款 (取號類) 或刷卡 (信用卡 / 銀聯) 後
 
 ### Classif 通知類型
 
-| 值 | 說明 |
-|----|------|
-| `A` | 信用卡授權；帶 `Foreign=U` 時為銀聯 |
-| `B` | ATM 虛擬帳號入帳 |
-| `C` | 超商條碼繳費 |
-| `E` | 7-11 ibon 代碼繳費 |
-| `F` | 全家 FamiPort 代碼繳費 |
-| `T` | 超商取貨付款（C2C） |
-| `V` | 超商取貨付款（B2C） |
-| `O` | 黑貓取貨付款 |
-| `D` | 4.3.3 列為 `smilepaycn`，未對應任何付款模組 |
+官方對照（SmilePay 客服回覆 2026-09-30）：
 
-> 來源：4.3.3 `smilepay_respond.php` `smilepay_respond` 依 `Classif` 分派付款模組。
+| 值 | 交易方式 |
+|----|------|
+| `A` | 刷卡（4.3.3 外掛以 `Foreign=U` 區分銀聯） |
+| `B` | 虛擬帳號 |
+| `C` | 超商代收 |
+| `D` | CVS 代碼繳費 |
+| `E` | 7-11 ibon |
+| `F` | FamiPort |
+| `L` | LifeET |
+| `O` | 黑貓貨到收現 |
+| `P` | 黑貓宅配 |
+| `Q` | 黑貓逆物流 |
+| `T` | C2C 取貨付款 |
+| `U` | C2C 純取貨 |
+| `V` | B2C 取貨付款 |
+| `W` | B2C 純取貨 |
+| `R` | C2B 客付 |
+| `S` | C2B 場付 |
+
+> 4.3.3 外掛（`smilepay_respond.php` `smilepay_respond`）只處理 `A`/`B`/`C`/`D`/`E`/`F`/`T`/`V`/`O`，其中 `D` 未對應任何付款模組。
 > 1.1.23 對 `T`、`O` 直接改為 completed，其餘改為 processing；4.3.3 對 `T` 改為 completed，其餘 processing。
 
 ### 商店回應格式
@@ -722,42 +742,8 @@ def verify_callback(mid, amount, smseid, mid_smilepay_received) -> bool:
 
 ## 訂單查詢與退款
 
-### 訂單修改 / 退款
-
-SmilePay 提供 `SPPayment_Modify.asp` 端點 (官方規格書) 用於：
-
-- 取消尚未授權的信用卡訂單
-- 信用卡退款 / 退刷
-- 修改 ATM 期限 / 金額
-
-```
-POST https://ssl.smse.com.tw/api/SPPayment_Modify.asp
-Content-Type: application/x-www-form-urlencoded
-```
-
-### 通用必填
-
-| 欄位 | 說明 |
-|------|------|
-| `Dcvc` / `Rvg2c` / `Verify_key` | 帳號驗證 |
-| `Smseid` | 速買配金流追蹤碼 (對應 `SmilePayNO`) |
-| `Modify_type` | 動作代碼 (依官方規格設定) |
-| `Amount` | 退款 / 修改後金額 |
-
-> WooCommerce 模組未直接整合此 API，建議參考速買配最新版規格書 (`SmilePay_API_v*.pdf`) 取得完整 `Modify_type` 對照表。
-
-### 訂單查詢
-
-實務上 SmilePay 的後續通知為主要狀態來源；商家如需主動查詢 (對帳)：
-
-- 透過商店後台「交易查詢」匯出
-- 或使用速買配提供的對帳 API (需另行開通)
-
-### 退款限制 (一般慣例)
-
-- 信用卡：請款後 6 個月內 (依發卡銀行)
-- 部分退款：信用卡支援；ATM / 超商需走「退匯款」程序
-- 取號類訂單未付款者：可由商家直接標記為作廢，無需通知 SmilePay
+- `SPPayment_Modify.asp` **不是對外公開的 API**，速買配不提供其規格（SmilePay 客服回覆 2026-09-30）。外掛兩版都未使用。
+- 主動查詢交易請用商家後台「交易查詢」；交易狀態以付款結果通知為準。
 
 ---
 
@@ -916,6 +902,6 @@ def big5_to_utf8(text: str | bytes) -> str:
 
 - **官方網站**：https://www.smilepay.net/
 - **金流系統**：https://www.smse.com.tw/
-- **API 規格書**：商家帳務後台左側選單「程式串接說明」（需登入）
+- **API 規格書**：商家帳務後台左側選單「程式串接說明」（需登入）；客服回覆列出的公開版位於 `ssl.smse.com.tw/pay_gr/pay_help_paydc_Background_api.ASP`、`pay_help_paydc_api.ASP`、`pay_help_paydc_einvoice_api.asp`，未登入會導向登入頁
 - **客服**：+886-37-376006、service@smilepay.net（訊航科技，外掛 4.3.3 ReadMe）
 

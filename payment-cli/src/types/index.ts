@@ -48,7 +48,7 @@ export const AI_FOLDERS: Record<string, string> = {
   antigravity: '.agent',
   copilot: '.github',
   kiro: '.kiro',
-  codex: '.codex',
+  codex: '.agents',
   qoder: '.qoder',
   cline: '.cline',
   gemini: '.gemini',

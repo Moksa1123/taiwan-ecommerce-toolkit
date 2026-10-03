@@ -170,6 +170,10 @@ def normalize(raw, charset, e):
     lines = [re.sub(r'[ \t　]+', ' ', ln).strip() for ln in text.splitlines()]
     # 中文字之間的空白常被官網編輯時增刪，不影響內容
     lines = [re.sub(r'(?<=[　-鿿＀-￯]) (?=[　-鿿＀-￯])', '', ln) for ln in lines if ln]
+    # 空白正規化後再套一次（原始 HTML 的空白、換行可能讓規則對不上）
+    for pattern in e.get('ignore', []):
+        lines = [re.sub(pattern, '', ln).strip() for ln in lines]
+    lines = [ln for ln in lines if ln]
     if e.get('min_line_length'):
         # 導覽列、頁尾多是短字詞，渲染時常缺漏；只比對較長的內文行
         lines = [ln for ln in lines if len(ln) >= e['min_line_length']]

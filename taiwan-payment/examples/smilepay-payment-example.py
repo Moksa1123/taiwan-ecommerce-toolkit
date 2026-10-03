@@ -197,7 +197,6 @@ class SmilePayPaymentService:
     # API 端點
     PAYMENT_URL = 'https://ssl.smse.com.tw/api/SPPayment.asp'           # 取號類
     CHECKOUT_URL = 'https://ssl.smse.com.tw/ezpos/mtmk_utf.asp'         # 信用卡 / 銀聯
-    MODIFY_URL = 'https://ssl.smse.com.tw/api/SPPayment_Modify.asp'     # 訂單修改 / 退款
 
     def __init__(
         self,

@@ -83,7 +83,7 @@ export const AI_FOLDERS: Record<Exclude<AIType, 'all'>, string[]> = {
   antigravity: ['.agent'],
   copilot: ['.github'],
   kiro: ['.kiro'],
-  codex: ['.codex'],
+  codex: ['.agents'],
   qoder: ['.qoder'],
   cline: ['.cline'],
   gemini: ['.gemini'],

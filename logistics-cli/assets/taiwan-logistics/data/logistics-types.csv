@@ -19,12 +19,12 @@ CVS,LgsType=B2C ShipType=1 GoodsType=2,7-11 大宗寄倉（冷凍）,payuni,cvs_
 CVS,LgsType=C2C ShipType=1 GoodsType=1,7-11 店到店（常溫）,payuni,cvs_c2c,true,,,常溫,Ship=1 取貨付款、ShipTag=1 啟用物流
 CVS,LgsType=C2C ShipType=1 GoodsType=2,7-11 店到店（冷凍）,payuni,cvs_c2c,true,,,冷凍,Ship=1 取貨付款、ShipTag=1 啟用物流；冷凍門市地圖 MapType 固定 2
 HOME,LgsType=HOME ShipType=2 GoodsType=1/2/3,黑貓宅配,payuni,home,,,,常溫/冷凍/冷藏,GoodsType 1 常溫／2 冷凍／3 冷藏；ConsigneeAddress、DeliveryTimeTag 必填
-CVS,Pay_zg=55/56 Pay_subzg=7NET,7-11 大宗寄倉（B2C）,smilepay,cvs_b2c,true,,,常溫,55 取貨付款／56 純取貨
-CVS,Pay_zg=51/52 Pay_subzg=7NET,7-11 店到店（C2C）,smilepay,cvs_c2c,true,,,常溫,51 取貨付款／52 純取貨
-CVS,Pay_zg=51/52 Pay_subzg=FAMI,全家 店到店（C2C）,smilepay,cvs_c2c,true,,,常溫,51 取貨付款／52 純取貨
-HOME,Pay_zg=81/82 Pay_subzg=TCAT,黑貓宅配,smilepay,home,true,,,常溫/冷藏/冷凍,81 取貨付款／82 純取貨；溫層由 ezcatGetTrackNum.asp 的 temperature 0001/0002/0003 決定
-HOME,Pay_zg=83 Pay_subzg=TCAT,黑貓逆物流（退貨）,smilepay,return,false,,,常溫,退貨用
-CVS,Pay_zg=57/58,超商 C2B 退貨便,smilepay,return,false,,,常溫,57 消費者付運費／58 商家付運費；通知另帶 Classif R/S 與 Classif_sub
+CVS,Pay_zg=55/56 Pay_subzg=7NET,7-11 大宗寄倉（B2C）,smilepay,cvs_b2c,true,,,常溫,55 取貨付款／56 純取貨；通知 Classif V 取貨付款／W 純取貨
+CVS,Pay_zg=51/52 Pay_subzg=7NET,7-11 店到店（C2C）,smilepay,cvs_c2c,true,,,常溫,51 取貨付款／52 純取貨；通知 Classif T 取貨付款／U 純取貨
+CVS,Pay_zg=51/52 Pay_subzg=FAMI,全家 店到店（C2C）,smilepay,cvs_c2c,true,,,常溫,51 取貨付款／52 純取貨；通知 Classif T 取貨付款／U 純取貨；全家 B2C 速買配目前未提供（客服回覆 2026-09-30）
+HOME,Pay_zg=81/82 Pay_subzg=TCAT,黑貓宅配,smilepay,home,true,,,常溫/冷藏/冷凍,81 取貨付款／82 純取貨；溫層由 ezcatGetTrackNum.asp 的 temperature 0001/0002/0003 決定；通知 Classif O 貨到收現／P 宅配
+HOME,Pay_zg=83 Pay_subzg=TCAT,黑貓逆物流（退貨）,smilepay,return,false,,,常溫,退貨用；通知 Classif Q
+CVS,Pay_zg=57/58,超商 C2B 退貨便,smilepay,return,false,,,常溫,57 消費者付運費／58 商家付運費；通知 Classif R 客付／S 場付，另帶 Classif_sub
 CVS,pay_type=IPL7,7-11 超商取貨付款,pchomepay,cvs_c2c,true,20000,,常溫,金額 65–20000；物流單由金流訂單派生；不提供 OK／宅配
 CVS,pay_type=IPLFM,全家 超商取貨付款,pchomepay,cvs_c2c,true,20000,,常溫,金額 65–20000；物流單由金流訂單派生；不提供 OK／宅配
 CVS,pay_type=IPLHL,萊爾富 超商取貨付款,pchomepay,cvs_c2c,true,20000,,常溫,金額 65–20000；物流單由金流訂單派生；不提供 OK／宅配

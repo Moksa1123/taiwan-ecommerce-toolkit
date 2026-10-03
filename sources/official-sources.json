@@ -18,7 +18,8 @@
    "taiwan-payment/SKILL.md",
    "taiwan-logistics/SKILL.md"
   ],
-  "notes": "frontmatter 欄位規則與通用 .agents/skills/ 路徑"
+  "notes": "frontmatter 欄位規則與通用 .agents/skills/ 路徑",
+  "min_line_length": 40
  },
  {
   "id": "ai-agentskills-spec",
@@ -39,7 +40,8 @@
    "taiwan-payment/SKILL.md",
    "taiwan-logistics/SKILL.md"
   ],
-  "notes": "frontmatter 欄位規則與通用 .agents/skills/ 路徑"
+  "notes": "frontmatter 欄位規則與通用 .agents/skills/ 路徑",
+  "min_line_length": 40
  },
  {
   "id": "ai-antigravity",
@@ -60,7 +62,8 @@
    "logistics-cli/assets/templates/platforms/agent.json",
    "CLAUDE.md"
   ],
-  "notes": "skill 目錄慣例；變動時核對各 CLI 的平台設定 folderStructure"
+  "notes": "skill 目錄慣例；變動時核對各 CLI 的平台設定 folderStructure",
+  "min_line_length": 40
  },
  {
   "id": "ai-claude",
@@ -81,7 +84,8 @@
    "logistics-cli/assets/templates/platforms/claude.json",
    "CLAUDE.md"
   ],
-  "notes": "skill 目錄慣例；變動時核對各 CLI 的平台設定 folderStructure"
+  "notes": "skill 目錄慣例；變動時核對各 CLI 的平台設定 folderStructure",
+  "min_line_length": 40
  },
  {
   "id": "ai-cline",
@@ -102,7 +106,8 @@
    "logistics-cli/assets/templates/platforms/cline.json",
    "CLAUDE.md"
   ],
-  "notes": "skill 目錄慣例；變動時核對各 CLI 的平台設定 folderStructure"
+  "notes": "skill 目錄慣例；變動時核對各 CLI 的平台設定 folderStructure",
+  "min_line_length": 40
  },
  {
   "id": "ai-codebuddy",
@@ -123,7 +128,8 @@
    "logistics-cli/assets/templates/platforms/codebuddy.json",
    "CLAUDE.md"
   ],
-  "notes": "skill 目錄慣例；變動時核對各 CLI 的平台設定 folderStructure"
+  "notes": "skill 目錄慣例；變動時核對各 CLI 的平台設定 folderStructure",
+  "min_line_length": 40
  },
  {
   "id": "ai-codex",
@@ -144,7 +150,8 @@
    "logistics-cli/assets/templates/platforms/codex.json",
    "CLAUDE.md"
   ],
-  "notes": "skill 目錄慣例；變動時核對各 CLI 的平台設定 folderStructure"
+  "notes": "skill 目錄慣例；變動時核對各 CLI 的平台設定 folderStructure",
+  "min_line_length": 40
  },
  {
   "id": "ai-continue-cli",
@@ -207,7 +214,8 @@
    "logistics-cli/assets/templates/platforms/copilot.json",
    "CLAUDE.md"
   ],
-  "notes": "skill 目錄慣例；變動時核對各 CLI 的平台設定 folderStructure"
+  "notes": "skill 目錄慣例；變動時核對各 CLI 的平台設定 folderStructure",
+  "min_line_length": 40
  },
  {
   "id": "ai-copilot-vscode",
@@ -228,7 +236,8 @@
    "logistics-cli/assets/templates/platforms/copilot.json",
    "CLAUDE.md"
   ],
-  "notes": "skill 目錄慣例；變動時核對各 CLI 的平台設定 folderStructure"
+  "notes": "skill 目錄慣例；變動時核對各 CLI 的平台設定 folderStructure",
+  "min_line_length": 40
  },
  {
   "id": "ai-cursor",
@@ -249,7 +258,8 @@
    "logistics-cli/assets/templates/platforms/cursor.json",
    "CLAUDE.md"
   ],
-  "notes": "skill 目錄慣例；變動時核對各 CLI 的平台設定 folderStructure"
+  "notes": "skill 目錄慣例；變動時核對各 CLI 的平台設定 folderStructure",
+  "min_line_length": 40
  },
  {
   "id": "ai-gemini",
@@ -270,7 +280,8 @@
    "logistics-cli/assets/templates/platforms/gemini.json",
    "CLAUDE.md"
   ],
-  "notes": "skill 目錄慣例；變動時核對各 CLI 的平台設定 folderStructure"
+  "notes": "skill 目錄慣例；變動時核對各 CLI 的平台設定 folderStructure",
+  "min_line_length": 40
  },
  {
   "id": "ai-kiro",
@@ -291,7 +302,8 @@
    "logistics-cli/assets/templates/platforms/kiro.json",
    "CLAUDE.md"
   ],
-  "notes": "skill 目錄慣例；變動時核對各 CLI 的平台設定 folderStructure"
+  "notes": "skill 目錄慣例；變動時核對各 CLI 的平台設定 folderStructure",
+  "min_line_length": 40
  },
  {
   "id": "ai-opencode",
@@ -312,7 +324,8 @@
    "logistics-cli/assets/templates/platforms/opencode.json",
    "CLAUDE.md"
   ],
-  "notes": "skill 目錄慣例；變動時核對各 CLI 的平台設定 folderStructure"
+  "notes": "skill 目錄慣例；變動時核對各 CLI 的平台設定 folderStructure",
+  "min_line_length": 40
  },
  {
   "id": "ai-qoder",
@@ -333,7 +346,8 @@
    "logistics-cli/assets/templates/platforms/qoder.json",
    "CLAUDE.md"
   ],
-  "notes": "skill 目錄慣例；變動時核對各 CLI 的平台設定 folderStructure"
+  "notes": "skill 目錄慣例；變動時核對各 CLI 的平台設定 folderStructure",
+  "min_line_length": 40
  },
  {
   "id": "ai-trae",
@@ -354,7 +368,8 @@
    "logistics-cli/assets/templates/platforms/trae.json",
    "CLAUDE.md"
   ],
-  "notes": "skill 目錄慣例；變動時核對各 CLI 的平台設定 folderStructure"
+  "notes": "skill 目錄慣例；變動時核對各 CLI 的平台設定 folderStructure",
+  "min_line_length": 40
  },
  {
   "id": "ai-windsurf",
@@ -375,7 +390,8 @@
    "logistics-cli/assets/templates/platforms/windsurf.json",
    "CLAUDE.md"
   ],
-  "notes": "skill 目錄慣例；變動時核對各 CLI 的平台設定 folderStructure"
+  "notes": "skill 目錄慣例；變動時核對各 CLI 的平台設定 folderStructure",
+  "min_line_length": 40
  },
  {
   "id": "amego-api-doc",
@@ -4034,7 +4050,11 @@
   "covers": [
    "taiwan-logistics/references/lalamove-logistics-api.md"
   ],
-  "notes": "GitHub repo：更新時以 git clone／pull 比對最新 commit"
+  "notes": "GitHub repo：更新時以 git clone／pull 比對最新 commit",
+  "ignore": [
+   "^\\d+ (stars?|forks?|watching)$",
+   "^\\d+$"
+  ]
  },
  {
   "id": "lalamove-api-reference",
@@ -7500,6 +7520,8 @@
   ],
   "ignore": [
    "\\d+ 年 \\d+ 月 \\d+ 日星期.",
+   "\\d+年\\d+月\\d+日星期.",
+   "\\d+年至\\d+月\\d+日止，.*",
    "\\d+年至\\d+月\\d+日止，[^\n]*",
    "累計瀏覽人次：[^\n]*"
   ]
@@ -7660,6 +7682,59 @@
   ]
  },
  {
+  "id": "smilepay-api-background",
+  "provider": "smilepay",
+  "skills": [
+   "payment",
+   "logistics"
+  ],
+  "title": "速買配 金流 API－背景取號（SPPayment.asp，含 Status 錯誤碼）",
+  "url": "https://ssl.smse.com.tw/pay_gr/pay_help_paydc_Background_api.ASP",
+  "format": "html",
+  "fetch": "manual",
+  "access": "login",
+  "covers": [
+   "taiwan-payment/references/smilepay-payment-api.md",
+   "taiwan-payment/data/error-codes.csv",
+   "taiwan-logistics/references/smilepay-logistics-api.md"
+  ],
+  "notes": "速買配客服 2026-09-30 回覆列為可公開整理的官方文件；實際需登入商家帳務後台（未登入導向 INDEX_LOGIN.ASP），無法自動追蹤"
+ },
+ {
+  "id": "smilepay-api-einvoice",
+  "provider": "smilepay",
+  "skills": [
+   "invoice"
+  ],
+  "title": "速買配 電子發票 API",
+  "url": "https://ssl.smse.com.tw/pay_gr/pay_help_paydc_einvoice_api.asp",
+  "format": "html",
+  "fetch": "manual",
+  "access": "login",
+  "covers": [
+   "taiwan-invoice/references/SMILEPAY_API_REFERENCE.md",
+   "taiwan-invoice/data/error-codes.csv"
+  ],
+  "notes": "速買配客服 2026-09-30 回覆列為可公開整理的官方文件；實際需登入商家帳務後台（未登入導向 INDEX_LOGIN.ASP），無法自動追蹤"
+ },
+ {
+  "id": "smilepay-api-standard",
+  "provider": "smilepay",
+  "skills": [
+   "payment"
+  ],
+  "title": "速買配 金流 API－標準收款（mtmk_utf.asp）",
+  "url": "https://ssl.smse.com.tw/pay_gr/pay_help_paydc_api.ASP",
+  "format": "html",
+  "fetch": "manual",
+  "access": "login",
+  "covers": [
+   "taiwan-payment/references/smilepay-payment-api.md",
+   "taiwan-payment/examples/smilepay-payment-example.py"
+  ],
+  "notes": "速買配客服 2026-09-30 回覆列為可公開整理的官方文件；實際需登入商家帳務後台（未登入導向 INDEX_LOGIN.ASP），無法自動追蹤"
+ },
+ {
   "id": "smilepay-backoffice-spec",
   "provider": "smilepay",
   "skills": [
@@ -7674,7 +7749,7 @@
    "taiwan-invoice/data/error-codes.csv",
    "taiwan-invoice/references/SMILEPAY_API_REFERENCE.md"
   ],
-  "notes": "需商家帳號登入；左側選單「程式串接說明」；公開下載網址未確認"
+  "notes": "需商家帳號登入；左側選單「程式串接說明」；公開下載網址未確認；官方已提供公開版文件（smilepay-api-background／standard／einvoice），但同樣需登入"
  },
  {
   "id": "smilepay-backoffice-spec-payment",
@@ -7696,7 +7771,7 @@
    "taiwan-payment/examples/smilepay-payment-example.py",
    "taiwan-payment/references/smilepay-payment-api.md"
   ],
-  "notes": "需商家帳號登入；SPPayment.asp Status 錯誤碼、SPPayment_Modify.asp Modify_type、Classif 官方表都只在此；需商家登入；目前 reference 依官方外掛整理，規格書未取得"
+  "notes": "需商家帳號登入；SPPayment.asp Status 錯誤碼、SPPayment_Modify.asp Modify_type、Classif 官方表都只在此；需商家登入；目前 reference 依官方外掛整理，規格書未取得；官方已提供公開版文件（smilepay-api-background／standard／einvoice），但同樣需登入"
  },
  {
   "id": "smilepay-faq-api",
@@ -7752,6 +7827,26 @@
    "tests/vectors/smilepay.json"
   ],
   "notes": "外掛 Plugin URI 為 smilepay.net，無公開直連下載；check_mid() 為 Mid_smilepay 向量來源；無公開直連下載"
+ },
+ {
+  "id": "smilepay-test-card-page",
+  "provider": "smilepay",
+  "skills": [
+   "payment"
+  ],
+  "title": "速買配 測試刷卡頁（試用帳號 Dcvc=107，列出測試卡）",
+  "url": "http://ssl.smse.com.tw/ezpos/mtmk_utf.asp?Rvg2c=1&Dcvc=107&Od_sob=123456&Amount=500&Pay_zg=1",
+  "format": "html",
+  "fetch": "browser",
+  "access": "public",
+  "covers": [
+   "taiwan-payment/references/smilepay-payment-api.md"
+  ],
+  "notes": "速買配客服 2026-09-30 回覆提供；導向 PAY_TEST/smilepay_evpos_TestVisa_utf.ASP，訂單編號與日期每次不同",
+  "ignore": [
+   "訂單編號\\(Order Number\\)[^\n]*",
+   "交易日期\\(Trans. Date\\)[^\n]*"
+  ]
  },
  {
   "id": "smilepay-woo-plugin-1.1.23",
@@ -8157,9 +8252,10 @@
   ],
   "sort_lines": true,
   "ignore": [
-   "熱門關鍵字：[^\n]*",
-   "更新日期：[^\n]*",
    "[^\n]*opendata[^\n]*",
+   "^\\d{4}\\.\\d{2}\\.\\d{2} .*",
+   "更新日期：[^\n]*",
+   "熱門關鍵字：[^\n]*",
    "累計瀏覽人數：[^\n]*"
   ]
  },
