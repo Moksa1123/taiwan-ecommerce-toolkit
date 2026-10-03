@@ -108,6 +108,15 @@ ECPay · NewebPay · PAYUNi · SmilePay · PChomePay · PayNow · ezShip · HCT 
 
 ## 快速開始
 
+### 以 Claude Plugin 安裝（Claude Code / Cowork / claude.ai）
+
+本 repo 也是一個 Claude plugin（`taiwan-ecommerce`），一次裝好發票、金流、物流三個 skill：
+
+- **claude.ai / Cowork**：在 [Claude 目錄](https://claude.ai/directory) 搜尋「Taiwan E-commerce Toolkit」並加入
+- **Claude Code（本機測試）**：`claude --plugin-dir /path/to/taiwan-ecommerce-toolkit`
+
+要在其他 AI 工具使用，或只裝其中一個 skill，請改用下方的 CLI 安裝方式。
+
 ### Step 1: 安裝 CLI 工具
 
 ```bash
