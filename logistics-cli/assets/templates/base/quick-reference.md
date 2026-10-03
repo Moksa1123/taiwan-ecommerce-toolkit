@@ -7,7 +7,7 @@ Reference these guidelines when:
 - Implementing home delivery (黑貓宅急便 / 中華郵政)
 - Embedding store-map selectors
 - Handling COD orders, shipment tracking, or store relocation
-- Using on-demand delivery (Lalamove / pandago / Uber Direct)
+- Using on-demand delivery (Lalamove / pandago)
 
 ## Provider Quick Reference
 

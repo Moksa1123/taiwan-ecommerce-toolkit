@@ -205,7 +205,7 @@ class BrowserFetcher:
             try:
                 self._page.goto(e['url'], wait_until='networkidle', timeout=45000)
             except Exception:
-                # 有長連線的頁面（Uber Help）永遠不會 networkidle，改取已載入的內容
+                # 有長連線的頁面永遠不會 networkidle，改取已載入的內容
                 self._page.wait_for_load_state('load', timeout=30000)
                 self._page.wait_for_timeout(3000)
             text = self._page.inner_text('body')

@@ -128,7 +128,7 @@ v3 支援 14 個市場，**含台灣**：香港、新加坡、泰國、越南、
 - 台灣市場實際可用的 `serviceType` 清單與費率結構（需以 `GET /v3/cities` 實測）
 - Webhook 事件型別與 payload 結構
 - 台灣是否需另行申請商業帳號才能取得 production key
-- pandago（foodpanda）、Uber Direct 在台灣的商家 API 與文件公開程度——本次未確認，若可用應併入 `ondemand` 類型
+- pandago（foodpanda）見 [ondemand-delivery.md](ondemand-delivery.md)
 
 ## 9. 來源
 

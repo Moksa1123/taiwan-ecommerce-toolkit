@@ -1,7 +1,7 @@
 {
   "name": "taiwan-logistics-skill",
   "version": "1.4.7",
-  "description": "AI-powered Taiwan Logistics toolkit. Supports 7 aggregators (ECPay, NewebPay, PAYUNi, SmilePay, PChomePay, PayNow, ezShip), HCT direct carrier API, and on-demand delivery (Lalamove, pandago, Uber Direct).",
+  "description": "AI-powered Taiwan Logistics toolkit. Supports 7 aggregators (ECPay, NewebPay, PAYUNi, SmilePay, PChomePay, PayNow, ezShip), HCT direct carrier API, and on-demand delivery (Lalamove, pandago).",
   "bin": {
     "taiwan-logistics": "./dist/index.js"
   },

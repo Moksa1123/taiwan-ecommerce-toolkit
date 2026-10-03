@@ -9,7 +9,7 @@ export async function infoCommand(): Promise<void> {
   console.log();
   console.log(`  ${chalk.dim('Name:')}        taiwan-logistics`);
   console.log(`  ${chalk.dim('Version:')}     ${VERSION}`);
-  console.log(`  ${chalk.dim('Providers:')}   ECPay, NewebPay, PAYUNi, SmilePay, PChomePay, PayNow, ezShip, HCT; Lalamove, pandago, Uber Direct`);
+  console.log(`  ${chalk.dim('Providers:')}   ECPay, NewebPay, PAYUNi, SmilePay, PChomePay, PayNow, ezShip, HCT; Lalamove, pandago`);
   console.log(`  ${chalk.dim('Features:')}    CVS pickup, Home delivery, Store map, Tracking, On-demand delivery`);
   console.log(`  ${chalk.dim('Platforms:')}   14 AI assistants (Claude, Cursor, Windsurf, Copilot, etc.)`);
   console.log(`  ${chalk.dim('License:')}     MIT`);

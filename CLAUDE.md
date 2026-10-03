@@ -154,7 +154,7 @@ reference / data / 範例 → 跑驗證腳本 → `--update` 記錄新基準，�
 
 - `.github/workflows/source-check.yml` 每週一自動檢查，有變動會開 issue（標籤「官方來源變動」），新版本快照在該次執行的 artifact
 - 新增來源時直接編輯 `official-sources.json`；`covers` 路徑必須存在
-- `fetch: browser` 的來源（PayNow 文件站、Uber、Trae 等網頁應用）用 Playwright 渲染：`pip install playwright && playwright install chromium`；沒裝會自動略過
+- `fetch: browser` 的來源（PayNow 文件站、Trae 等網頁應用）用 Playwright 渲染：`pip install playwright && playwright install chromium`；沒裝會自動略過
 - 也追蹤 14 個 AI 平台的 skill 規範頁（`provider: ai-platform`），有變動時核對各 CLI 平台設定的 `folderStructure`
 - 版號寫在檔名的 PDF（ezPay、紅陽、ezShip）改版會換網址，要同時追蹤下載頁
 - 綠界開發者網站過頻會回 403 並封鎖約 30 分鐘，腳本已限速；被封鎖時等 30 分鐘再跑 `--provider ecpay`

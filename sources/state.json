@@ -2259,31 +2259,6 @@
   "size": 201402,
   "checked": "2026-10-03"
  },
- "uber-direct-api-reference-daas": {
-  "sha256": "6e5155f124ef3b959e2b030d56a8802f45392504b506ce5967f12c809af56631",
-  "size": 39442,
-  "checked": "2026-10-03"
- },
- "uber-direct-guides-authentication": {
-  "sha256": "449d9223bb66000a4a218e696a5f883e8b97adf44c76a95785d1422b4743001f",
-  "size": 5770,
-  "checked": "2026-10-03"
- },
- "uber-direct-help-issues": {
-  "sha256": "b9965641ff4e17f96b404691289343f63afc3014ce194f39701825ff800ec318",
-  "size": 1409,
-  "checked": "2026-10-03"
- },
- "uber-direct-overview": {
-  "sha256": "b4fc56f8b26be698fe4f72aa6bcb1f2bed7a917c6625f2e4044a808aadc955cc",
-  "size": 2329,
-  "checked": "2026-10-03"
- },
- "uber-merchants-tw": {
-  "sha256": "8aa15b4f3fda339bb1a6468862eff906a95ce973dd8ab19da0a225bf27d6a002",
-  "size": 457276,
-  "checked": "2026-10-03"
- },
  "unimart-myship": {
   "sha256": "837478adbd538dcba03550a88366dc03c20003191cfda72bc17af3f99c89a0d7",
   "size": 12399,
