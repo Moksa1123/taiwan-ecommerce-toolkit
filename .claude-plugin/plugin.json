@@ -9,6 +9,8 @@
   },
   "homepage": "https://github.com/Moksa1123/taiwan-ecommerce-toolkit",
   "repository": "https://github.com/Moksa1123/taiwan-ecommerce-toolkit",
+  "documentationUrl": "https://github.com/Moksa1123/taiwan-ecommerce-toolkit#readme",
+  "supportUrl": "https://github.com/Moksa1123/taiwan-ecommerce-toolkit/issues",
   "license": "MIT",
   "icon": "./icon.png",
   "keywords": [
