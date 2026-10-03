@@ -117,19 +117,19 @@ PChomePay 採 **兩階段認證**：
 ```python
 import base64
 
-app_id = "0F46D58D576A09BD96E4F22339A5"
-secret = "8gKryfZEcY3tWKWJIlc0QLq9pvJ_XQaj1s7ktfva"
+app_id = "YOUR_APP_ID"
+secret = "YOUR_SECRET"
 
 raw = f"{app_id}:{secret}"
 auth = "Basic " + base64.b64encode(raw.encode()).decode()
-# Authorization: Basic MEY0NkQ1OEQ1NzZBMD...
+# Authorization: Basic <base64(APP_ID:SECRET)>
 ```
 
 ### 步驟 2 — 取得 Token
 
 ```bash
 curl -X POST "https://api.pchomepay.com.tw/v1/token" \
-  -H "Authorization: Basic MEY0NkQ1OEQ1NzZBMD..." \
+  -H "Authorization: Basic <base64(APP_ID:SECRET)>" \
   -H "Content-Type: application/json"
 ```
 
@@ -137,7 +137,7 @@ curl -X POST "https://api.pchomepay.com.tw/v1/token" \
 
 ```json
 {
-  "token": "zHm67sQRuPSO__eiuy2h_lEgtPlS12aVqrcVz3Kc",
+  "token": "YOUR_PCPAY_TOKEN",
   "expired_in": 28800,
   "expired_timestamp": 1474470110
 }
@@ -149,7 +149,7 @@ curl -X POST "https://api.pchomepay.com.tw/v1/token" \
 
 ```bash
 curl -X POST "https://api.pchomepay.com.tw/v1/payment" \
-  -H "pcpay-token: zHm67sQRuPSO__eiuy2h_lEgtPlS12aVqrcVz3Kc" \
+  -H "pcpay-token: YOUR_PCPAY_TOKEN" \
   -H "Content-Type: application/json" \
   -d '{...}'
 ```
@@ -209,7 +209,7 @@ Authorization: Basic <base64(APP_ID:SECRET)>
 
 ```json
 {
-  "token": "zHm67sQRuPSO__eiuy2h_lEgtPlS12aVqrcVz3Kc",
+  "token": "YOUR_PCPAY_TOKEN",
   "expired_in": 28800,
   "expired_timestamp": 1474470110
 }
@@ -284,7 +284,7 @@ pcpay-token: <token>
 ```bash
 curl -X POST "https://api.pchomepay.com.tw/v1/payment" \
   -H "Content-Type: application/json" \
-  -H "pcpay-token: DDjz2xrCdCvBRPSFGaoNedVrGHvED8JbAAcU17WT" \
+  -H "pcpay-token: YOUR_PCPAY_TOKEN" \
   -d '{
     "order_id": "B2C1703247199",
     "pay_type": ["CARD"],
