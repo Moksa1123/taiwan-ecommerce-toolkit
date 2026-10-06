@@ -43,7 +43,8 @@ CSV_CONFIG = {
         'output_cols': ['operation', 'operation_zh', 'ecpay_endpoint', 'newebpay_endpoint', 'payuni_endpoint', 'smilepay_endpoint', 'pchomepay_endpoint', 'ezpay_endpoint', 'paynow_legacy_endpoint', 'paynow_modern_endpoint', 'opay_endpoint', 'jkopay_endpoint', 'sunpay_endpoint', 'method', 'required_fields', 'notes']
     },
     'error': {
-        'file': 'error-codes.csv',
+        # 依外掛目錄單檔 256 KiB 上限分檔（error-codes.csv、-tappay、-payuni-1/2）
+        'file': 'error-codes*.csv',
         'search_cols': ['provider', 'code', 'message_zh', 'message_en', 'category', 'solution'],
         'output_cols': ['provider', 'code', 'message_zh', 'category', 'severity', 'solution']
     },
@@ -220,23 +221,25 @@ def load_csv(domain: str) -> Tuple[List[Dict], List[List[str]]]:
     if not config:
         return [], []
 
-    csv_path = DATA_DIR / config['file']
-    if not csv_path.exists():
+    # file 可為 glob，同一張表拆成多檔時依檔名順序合併
+    csv_paths = sorted(DATA_DIR.glob(config['file']))
+    if not csv_paths:
         return [], []
 
     rows = []
     documents = []
 
-    with open(csv_path, 'r', encoding='utf-8') as f:
-        reader = csv.DictReader(f)
-        for row in reader:
-            rows.append(row)
+    for csv_path in csv_paths:
+        with open(csv_path, 'r', encoding='utf-8') as f:
+            reader = csv.DictReader(f)
+            for row in reader:
+                rows.append(row)
 
-            # 組合搜索欄位
-            search_text = ' '.join(
-                str(row.get(col, '')) for col in config['search_cols']
-            )
-            documents.append(tokenize(search_text))
+                # 組合搜索欄位
+                search_text = ' '.join(
+                    str(row.get(col, '')) for col in config['search_cols']
+                )
+                documents.append(tokenize(search_text))
 
     return rows, documents
 

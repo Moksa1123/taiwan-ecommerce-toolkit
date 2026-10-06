@@ -13,6 +13,9 @@
 
 3. 空白必填欄 —— provider 或 code 為空的列等同垃圾資料。
 
+4. 檔案大小 —— Claude 外掛目錄對圖片以外的單檔上限 256 KiB，超過會被扣留人工審查；
+   大表依 TABLE_PARTS 拆成多檔（如 error-codes*.csv），主鍵唯一性跨檔檢查。
+
 用法:
     python scripts/validate-data.py
 """
@@ -20,6 +23,7 @@
 import csv
 import glob
 import os
+import re
 import sys
 from collections import Counter
 
@@ -39,11 +43,23 @@ REQUIRED = {
     'error-codes.csv': ('provider', 'code'),
 }
 
+# 拆成多檔的表：error-codes-tappay.csv、error-codes-payuni-1.csv 等都屬 error-codes.csv
+TABLE_PARTS = re.compile(r'^(error-codes)(-[a-z0-9-]+)?\.csv$')
+
+# Claude 外掛目錄：圖片與字型以外的單檔上限
+MAX_FILE_BYTES = 256 * 1024
+BINARY_OK = ('.png', '.jpg', '.jpeg', '.gif', '.webp', '.woff', '.woff2', '.ttf', '.otf')
+
+
+def table_of(name):
+    m = TABLE_PARTS.match(name)
+    return m.group(1) + '.csv' if m else name
+
 
 def check_file(path):
     """回傳這個檔案的問題清單"""
     rel = os.path.relpath(path, ROOT).replace('\\', '/')
-    name = os.path.basename(path)
+    name = table_of(os.path.basename(path))
     problems = []
 
     with open(path, encoding='utf-8') as f:
@@ -93,6 +109,52 @@ def check_file(path):
     return problems
 
 
+def header_of(path):
+    with open(path, encoding='utf-8') as f:
+        return next(csv.reader(f))
+
+
+def check_split_tables(paths):
+    """拆成多檔的表，主鍵唯一性要跨檔檢查"""
+    problems = []
+    groups = {}
+    for path in paths:
+        name = os.path.basename(path)
+        if TABLE_PARTS.match(name) and table_of(name) in UNIQUE_KEYS:
+            groups.setdefault((os.path.dirname(path), table_of(name)), []).append(path)
+    for (folder, table), files in groups.items():
+        if len(files) < 2:
+            continue
+        keys = UNIQUE_KEYS[table]
+        seen = Counter()
+        for path in files:
+            with open(path, encoding='utf-8') as f:
+                for r in csv.DictReader(f):
+                    seen[tuple(r.get(k, '') for k in keys)] += 1
+        rel = os.path.relpath(os.path.join(folder, table), ROOT).replace('\\', '/')
+        for key, count in seen.items():
+            if count > 1:
+                problems.append(f'{rel}（跨分檔）: {"+".join(keys)} = {key} 重複 {count} 次')
+    return problems
+
+
+def check_file_sizes():
+    """skill 內圖片與字型以外的檔案不得超過外掛目錄的 256 KiB 上限"""
+    problems = []
+    for skill in sorted(glob.glob(os.path.join(ROOT, 'taiwan-*'))):
+        for folder, dirs, files in os.walk(skill):
+            dirs[:] = [d for d in dirs if d != '__pycache__']
+            for f in files:
+                if f.lower().endswith(BINARY_OK):
+                    continue
+                path = os.path.join(folder, f)
+                size = os.path.getsize(path)
+                if size > MAX_FILE_BYTES:
+                    rel = os.path.relpath(path, ROOT).replace('\\', '/')
+                    problems.append(f'{rel}: {size:,} bytes，超過外掛目錄單檔上限 256 KiB，請拆檔')
+    return problems
+
+
 def check_search_config():
     """各 skill scripts/core.py 的 CSV_CONFIG 引用的欄位必須存在於對應 CSV，否則該搜尋域永遠查無結果"""
     import importlib.util
@@ -107,13 +169,16 @@ def check_search_config():
         finally:
             sys.path.pop(0)
         for domain, cfg in getattr(mod, 'CSV_CONFIG', {}).items():
-            csv_path = os.path.join(skill_dir, 'data', cfg['file'])
+            # file 可為 glob（拆成多檔的表），各分檔欄位須一致
+            matches = sorted(glob.glob(os.path.join(skill_dir, 'data', cfg['file'])))
             rel = os.path.relpath(core, ROOT).replace('\\', '/')
-            if not os.path.exists(csv_path):
+            if not matches:
                 problems.append(f'{rel}: {domain} 的檔案 {cfg["file"]} 不存在')
                 continue
-            with open(csv_path, encoding='utf-8') as f:
-                header = next(csv.reader(f))
+            header = header_of(matches[0])
+            for other in matches[1:]:
+                if header_of(other) != header:
+                    problems.append(f'{rel}: {domain} 的分檔 {os.path.basename(other)} 欄位與 {os.path.basename(matches[0])} 不一致')
             for key in ('search_cols', 'output_cols'):
                 missing = [c for c in cfg.get(key, []) if c not in header]
                 if missing:
@@ -134,6 +199,14 @@ def main():
         status = 'OK' if not problems else f'{len(problems)} 個問題'
         print(f'  {rel:<48} {status}')
         all_problems.extend(problems)
+
+    split_problems = check_split_tables(paths)
+    print(f'  {"分檔主鍵跨檔唯一":<48} {"OK" if not split_problems else f"{len(split_problems)} 個問題"}')
+    all_problems.extend(split_problems)
+
+    size_problems = check_file_sizes()
+    print(f'  {"單檔 256 KiB 上限":<48} {"OK" if not size_problems else f"{len(size_problems)} 個問題"}')
+    all_problems.extend(size_problems)
 
     config_problems = check_search_config()
     print(f'  {"scripts/core.py 搜尋欄位設定":<48} {"OK" if not config_problems else f"{len(config_problems)} 個問題"}')
