@@ -77,7 +77,7 @@ python scripts/search.py "ATM" --format json
 |-----|------|----------|
 | `provider` | 服務商比較 | providers.csv |
 | `operation` | API 操作端點 | operations.csv |
-| `error` | 錯誤碼查詢 | error-codes.csv |
+| `error` | 錯誤碼查詢 | error-codes*.csv |
 | `field` | 欄位映射 | field-mappings.csv |
 | `payment_method` | 付款方式 | payment-methods.csv |
 | `troubleshoot` | 疑難排解 | troubleshooting.csv |

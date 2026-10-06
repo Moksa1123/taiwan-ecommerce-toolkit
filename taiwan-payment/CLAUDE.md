@@ -56,7 +56,7 @@ taiwan-payment/                     # Source of Truth
 └── data/                           # search / recommend 使用的 CSV
     ├── providers.csv               # 14 家（含 doc_access 文件公開程度分級）
     ├── operations.csv
-    ├── error-codes.csv             # 依各家官方文件重建
+    ├── error-codes*.csv            # 依各家官方文件重建（依 256 KiB 上限分檔）
     ├── field-mappings.csv
     ├── payment-methods.csv
     ├── reasoning.csv
@@ -223,7 +223,7 @@ All core logic is in CSV files:
 
 - **providers.csv** - Provider details (encryption, API endpoints, test accounts)
 - **operations.csv** - API operations (create, query, refund, etc.)
-- **error-codes.csv** - Error code lookup table
+- **error-codes*.csv** - Error code lookup table (split to stay under 256 KiB per file)
 - **field-mappings.csv** - Field name mappings across providers
 - **payment-methods.csv** - Payment method details
 - **reasoning.csv** - Recommendation rules

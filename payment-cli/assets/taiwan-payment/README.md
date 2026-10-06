@@ -73,7 +73,7 @@ TapPay 用 Prime 一次付清，remember=true 存成 card_token 供下次自動�
 | **SunPay 紅陽** | RSA 分段加密 + SHA256 check_value | 金流 + 發票 + 超商代收 |
 | **GoMyPay** | 需向 GoMyPay 申請規格 | 完整 API 規格未公開 |
 
-O'Pay、GoMyPay 以外皆附可執行 Python 範例，加解密以官方測試向量驗證；錯誤碼見 `data/error-codes.csv`。
+O'Pay、GoMyPay 以外皆附可執行 Python 範例，加解密以官方測試向量驗證；錯誤碼見 `data/error-codes*.csv`。
 
 ## 技能包內容
 
@@ -102,7 +102,7 @@ taiwan-payment/
     ├── providers.csv
     ├── operations.csv
     ├── payment-methods.csv
-    ├── error-codes.csv                  # 各家官方錯誤碼
+    ├── error-codes*.csv                 # 各家官方錯誤碼（依 256 KiB 上限分檔）
     └── ...
 ```
 
