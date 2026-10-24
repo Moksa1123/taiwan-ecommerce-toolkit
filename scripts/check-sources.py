@@ -208,7 +208,8 @@ class BrowserFetcher:
                 # 有長連線的頁面永遠不會 networkidle，改取已載入的內容
                 self._page.wait_for_load_state('load', timeout=30000)
                 self._page.wait_for_timeout(3000)
-            text = self._page.inner_text('body')
+            # selector 只取內文區（如 Docusaurus 的 article），避免側欄新增頁面造成誤報
+            text = self._page.inner_text(e.get('selector') or 'body')
         if any(marker in text for marker in self.NOT_FOUND):
             raise OSError('頁面不存在（Page Not Found）')
         if any(marker in text for marker in self.BLOCKED):

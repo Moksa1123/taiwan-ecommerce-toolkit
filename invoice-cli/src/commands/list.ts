@@ -13,7 +13,7 @@ export async function listCommand(): Promise<void> {
     { key: 'claude', path: '.claude/skills/taiwan-invoice/' },
     { key: 'cursor', path: '.cursor/skills/taiwan-invoice/' },
     { key: 'windsurf', path: '.windsurf/skills/taiwan-invoice/' },
-    { key: 'antigravity', path: '.agent/skills/taiwan-invoice/' },
+    { key: 'antigravity', path: '.agents/skills/taiwan-invoice/' },
     { key: 'copilot', path: '.github/skills/taiwan-invoice/' },
     { key: 'kiro', path: '.kiro/skills/taiwan-invoice/' },
     { key: 'codex', path: '.agents/skills/taiwan-invoice/' },

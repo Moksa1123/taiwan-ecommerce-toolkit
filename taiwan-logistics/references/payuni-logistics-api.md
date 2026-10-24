@@ -1,6 +1,6 @@
 # PAYUNi 物流 API
 
-統一金流 (PAYUNi) 物流：7-ELEVEN 大宗寄倉 (B2C)／店到店 (C2C)／退貨便 (C2B)、黑貓宅配 (HOME)。
+統一金流 (PAYUNi) 物流：7-ELEVEN 大宗寄倉 (B2C)／店到店 (C2C)、黑貓宅配 (HOME)；退貨便 (C2B) 僅能查詢與接收貨態，要號 API 已移除。
 
 來源：PAYUNi 官方文件 <https://docs.payuni.com.tw/web/#/7>（物流工具、Notify、物流貨態狀態碼 120、物流錯誤代碼 119）。
 加解密另以官方外掛 PAYUNi_for_WooCommerce 1.2.8 與官方 PHP SDK 逐位元組比對（`tests/vectors/payuni.json`）。
@@ -182,7 +182,9 @@ EncryptInfo 加入：
 
 有物流時 `UsrMail` 必填（視為收件人信箱）。
 
-> `/logistics/trade`、`/home_delivery/trade` 未列於官方文件，只見於第三方外掛 wpbr-payuni-shipping 1.6.4。
+> 官方已於 2026-09-09 移除獨立的「建立超商物流單」「退貨便要號」「店到店物流單轉宅配資料提供」「建立宅配單」「呼叫黑貓」API
+> （修改記錄 page 25），現行只能如上在交易 API 一併建立。第三方外掛 wpbr-payuni-shipping 1.6.4 使用的
+> `/logistics/trade`、`/home_delivery/trade` 屬已移除的流程，不要再用。
 
 ---
 
@@ -202,7 +204,7 @@ EncryptInfo 加入：
 | `Tag` | Y | `2` 回傳門市、`3` 更新商店 C2C 退貨門市、`4` 更新物流單取件門市、`5` 更新單筆 C2C 退貨門市 |
 | `MobileTag` | C | `Y` 手機版、`N` PC 版（預設） |
 
-回傳 EncryptInfo 的 `MapJson` 為 JSON：`StoreType`（SEVEN）、`StoreID`、`StoreName`、`Address`、`InsularArea`（`I` 本島／`O` 離島）。
+回傳 EncryptInfo 的 `MapJson` 為 JSON：`StoreType`（超商別，官方說明為 7-ELEVEN，未註明值與長度）、`StoreID`、`StoreName`、`Address`、`InsularArea`（`I` 本島／`O` 離島）。
 
 門市關轉（貨態 `81`）後須以 `Tag=4` 重選門市：B2C 期限為通知日 +2 天 23:59，C2C 為 +6 天 23:59。
 
@@ -256,7 +258,7 @@ Notify URL 在 PAYUNi 後台「物流設定」填寫（超商與黑貓各自設�
 
 | 類型 | 解密後欄位 |
 |------|-----------|
-| 超商 B2C／C2C | `Status`、`Message`、`MerID`、`PartnerId`、`ShipTradeNo`、`LgsType`、`GoodsType`、`ShipType`、`ShipStatus`、`PickupStoreType`（僅 81）、`ShipStatusDesc`、`ShipStatusTime`、`ApiType=ShipStatus` |
+| 超商 B2C／C2C | `Status`、`Message`、`MerID`、`PartnerId`、`ShipTradeNo`、`LgsType`、`GoodsType`、`ShipType`、`Odno`（出貨單編號 8 碼；交貨便查詢系統 B2C 11 碼、C2C 12 碼）、`ShipStatus`、`PickupStoreType`（僅 81）、`ShipStatusDesc`、`ShipStatusTime`、`ApiType=ShipStatus` |
 | 退貨便 C2B | 同上，以 `RefundODNO`、`ValidationNo` 取代 `ShipTradeNo` |
 | 黑貓 | `Status`、`Message`、`MerID`、`TradeType`、`ShipTradeNo`、`OBTNumber`、`GoodsType`、`LgsType=HOME`、`ShipType=2`、`FileNo`、`ShipStatus` |
 

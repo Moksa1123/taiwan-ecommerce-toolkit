@@ -101,7 +101,11 @@ pandago 屬 Delivery Hero 的 **On Demand Rider（ODR）API**，同一套 API �
 
 回應 `201`：`order_id`、`status`、`delivery_fee`、`distance`（公尺）、`timeline.estimated_pickup_time`／`estimated_delivery_time`、`driver`。`GET /orders/{id}` 另有 `tracking_link`、`status_history`、`proof_of_*_url`，取消時有 `cancellation.source`／`reason`。
 
+> 送出時 `handover_confirmation.drop_off` 是字串（`"PIN"`），回應裡則是物件：`201` 為 `{"type": "PIN"}`，`GET /orders/{id}` 另帶 `code`（給收件人的 PIN 碼），解析回應時不要當字串處理。
+
 錯誤：`400` 參數錯誤、`401` 未授權、`404` Outlet 不存在、`422` 違反業務規則。
+
+> 母帳號（parent vendor）可能關閉以 API 建立門市：此時**建立新 Outlet** 回 `403 Forbidden`（Outlet creation via API is disabled for this vendor），**更新既有 Outlet** 不受影響。
 
 ### 訂單狀態
 

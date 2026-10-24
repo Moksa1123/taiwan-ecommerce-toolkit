@@ -30,7 +30,7 @@ GoMyPay（台灣萬事達金流股份有限公司）是台灣合規的第三方�
 
 | 類別 | 項目 |
 |---|---|
-| 購物車模組 | WooCommerce V2 (v1.6.4)、WooCommerce V1 (v1.1.0)、Magento2、OpenCart |
+| 購物車模組 | WooCommerce V2 (v1.7.0，2026-10-16)、WooCommerce V1 (v1.1.0)、Magento2、OpenCart |
 | 行動支付手冊 | 台灣PAY、悠遊付、Apple Pay、Google Pay |
 | 微信支付 API | 線上版、線下版 |
 | 其他 | 物流商家資料表、超商代碼繳費流程 |

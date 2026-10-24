@@ -143,15 +143,10 @@ export async function generatePlatformFiles(
   if (isGlobal) {
     // Global installation paths vary by platform:
     // - Cursor: ~/.cursor/skills/taiwan-logistics/
-    // - Antigravity: ~/.gemini/antigravity/global_skills/taiwan-logistics/
+    // - Antigravity: ~/.gemini/config/skills/taiwan-logistics/
     // The skillPath is like "skills/taiwan-logistics", we use it directly for most platforms
-    // But for Antigravity global_skills, we only need "taiwan-logistics"
-    let skillPath = config.folderStructure.skillPath;
+    const skillPath = config.folderStructure.skillPath;
 
-    // If globalRoot already ends with "global_skills" or similar, remove "skills/" prefix
-    if (config.folderStructure.globalRoot?.includes('global_skills')) {
-      skillPath = skillPath.replace(/^skills\//, '');
-    }
 
     skillDir = join(targetDir, skillPath);
     createdFolders.push(targetDir);

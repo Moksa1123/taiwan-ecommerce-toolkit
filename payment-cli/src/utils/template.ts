@@ -138,12 +138,8 @@ export async function generatePlatformFiles(
   let skillDir: string;
 
   if (isGlobal) {
-    let skillPath = config.folderStructure.skillPath;
+    const skillPath = config.folderStructure.skillPath;
 
-    // If globalRoot already ends with "global_skills" or similar, remove "skills/" prefix
-    if (config.folderStructure.globalRoot?.includes('global_skills')) {
-      skillPath = skillPath.replace(/^skills\//, '');
-    }
 
     skillDir = join(targetDir, skillPath);
     createdFolders.push(targetDir);

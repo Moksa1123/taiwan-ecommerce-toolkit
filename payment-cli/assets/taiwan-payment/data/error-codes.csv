@@ -780,7 +780,6 @@ jkopay,302,授權編號已取消,Canceled auth_no,business,error,該授權已終
 jkopay,303,超過用戶設定的最高額度,FinalPrice exceeded the max amount quota set by the user,business,error,額度由消費者在街口 App 自行設定 非商家可控 須請消費者調高
 jkopay,304,金額與授權帳單金額不一致,Order finalPrice is not consistent with authpay billing amount,validation,error,定期定額的 final_price 必須等於綁定時的 billing_amount
 jkopay,305,超過當前週期扣款次數,Authpay payment exceeds current billing cycle times,business,error,週期次數上限 week/month/quarter<=7 year<=12 檢查 billing_cycle.times
-jkopay,306,授權扣款時段無效,Authpay payment transaction time invalid.(Available at 08:00 - 20:00 UTC+8),business,error,授權扣款僅限 08:00-20:00 UTC+8 排程勿排夜間
 jkopay,307,同一授權不可併發扣款,Payment with the same auth_no is allowed one at a time,business,error,同一 auth_no 同時僅允許一筆付款 扣款須序列化
 sunpay,10,交易成功,Transaction Success,success,info,交易通知 status / 查詢 result.status（紅陽金流技術串接手冊 v1.1.0 4.3、4.4.2）
 sunpay,11,交易失敗,Transaction Failed,payment,error,交易通知 status / 查詢 result.status；查 msg 確認原因（紅陽金流技術串接手冊 v1.1.0 4.3、4.4.2）

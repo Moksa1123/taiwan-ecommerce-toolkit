@@ -48,7 +48,7 @@
 | 整合式支付頁 | `/upp` | 導向 PayUni 支付頁面 |
 | ATM 虛擬帳號 | `/atm` | 幕後取得虛擬帳號 |
 | 超商代碼 | `/cvs` | 幕後取得繳費代碼 |
-| 信用卡幕後 | `/credit` | 信用卡直接扣款 |
+| 信用卡幕後 Token 交易 | `/credit` | 以既有 `CreditHash` 授權（不收卡號；舊版帶卡號幕後已於 2026-07-01 移除） |
 | LINE Pay | `/linepay` | LINE Pay 支付 |
 | AFTEE 先享後付 | `/aftee_direct` | AFTEE 支付 |
 
@@ -370,12 +370,16 @@ echo $html;
 
 ## 信用卡幕後
 
-直接在商店頁面完成信用卡扣款，不需導向 PayUni。
+> **官方已於 2026-07-01 移除舊版「信用卡幕後(CREDIT)」**（直接帶卡號的幕後授權），改為「信用卡幕後 Token 交易(CREDIT)」
+> （官方文件 page 522、修改記錄 page 25）。現行 `/api/credit` **不收卡號**，只能以既有信用卡 Token 授權。
+
+流程：先以整合式支付頁（UPP）或信用卡免跳轉支付元件（UNi Embed）完成首次交易並同意建立 Token，取得 `CreditHash`；
+之後以 `CreditHash` 呼叫本 API 進行與持卡人約定的授權。須向 PAYUNi 申請信用卡 Token 機制並綁定幕後授權 IP。
 
 ### 端點
 
 ```
-POST /api/credit
+POST /api/credit          # Version 固定 1.3
 ```
 
 ### EncryptInfo 參數
@@ -383,40 +387,29 @@ POST /api/credit
 | 參數 | 類型 | 必填 | 說明 |
 |------|------|------|------|
 | `MerID` | String | ● | 商店代號 |
-| `MerTradeNo` | String | ● | 訂單編號 |
-| `TradeAmt` | Integer | ● | 交易金額 |
-| `Timestamp` | Integer | ● | Unix 時間戳 |
-| `CardNo` | String | ● | 信用卡號 (16 碼) |
-| `CardExpiry` | String | ● | 有效期限 `MMYY` |
-| `CardCVC` | String | ● | 安全碼 (3 碼) |
-| `ProdDesc` | String | 否 | 商品描述 |
-| `UsrMail` | String | 否 | 消費者 Email |
-| `NotifyURL` | String | 否 | 背景通知網址 |
+| `MerTradeNo` | String | ● | 訂單編號，長度 25，`[A-Za-z0-9_-]`，10 分鐘內不可重複 |
+| `TradeAmt` | Integer | ● | 訂單金額 |
+| `Timestamp` | Integer | ● | `time()` |
+| `ProdDesc` | String | ● | 商品說明，長度 550，可用半形 `;` 分隔多項 |
+| `UsrMail` | String | 條件 | 開啟物流時必填（視為收件人信箱）；`CarrierType=amego` 時必填 |
+| `CreditHash` | String | 否 | 首次 Token 交易回傳的 `CreditHash` |
+| `CardInst` | String | 否 | `1` 一次（預設）；`3`,`6`,`9`,`12`,`18`,`24`,`30` 分期 |
+| `API3D` | Integer | 否 | `1` = 強制 3D |
+| `EnName` | String | 否 | 3D 交易持卡人英文名稱 |
+| `ReturnURL` | String | 否 | 僅 `API3D=1` 時使用，3D 完成後導回 |
+| `NotifyURL` | String | 否 | 僅補觸發或回覆 `UNKNOWN` 後通知結果使用；限 80/443 port |
+| `UserIP` | String | 否 | 消費者 IP（IPv4/IPv6），列入風險管控 |
+| `BuyerHash` | String | 條件 | 買方會員 Token Hash；開放交易金額上限且金額超過訂單金額限制時必填 |
+| `CarrierType` / `CarrierInfo` / `InvBuyerName` | String | 條件 | 需開立發票時帶入（`3J0002`、`CQ0001`、`amego`、`Donate`、`Company`） |
 
-### 分期付款參數
+開啟物流功能時可做取貨不付款（`ServiceType=3`），另帶 `Consignee`、`ConsigneeMobile`、`LgsType`（`B2C`/`C2C`/`HOME`）、
+`GoodsType`、`ShipType`（`1` 7-ELEVEN、`2` 黑貓），以及 `StoreID`（超商）或 `ConsigneeAddress`、`DeliveryTimeTag`（黑貓）。
 
-| 參數 | 類型 | 說明 |
-|------|------|------|
-| `Inst` | Integer | 分期期數 `3`, `6`, `12`, `18`, `24`, `30` |
+### 回應
 
-### 紅利折抵參數
-
-| 參數 | 類型 | 說明 |
-|------|------|------|
-| `Red` | String | 啟用紅利折抵 `Y` |
-
-### 銀聯卡參數
-
-| 參數 | 類型 | 說明 |
-|------|------|------|
-| `UnionPay` | Integer | `1`:使用銀聯 |
-
-### 信用卡約定 (Token) 參數
-
-| 參數 | 類型 | 說明 |
-|------|------|------|
-| `UseTokenType` | Integer | `1`:建立 Token `2`:使用既有 Token |
-| `BindVal` | String | Token 代碼 (UseTokenType=2 時必填) |
+`Status`：`SUCCESS`、`UNKNOWN`（60 秒未收到銀行回應，結果之後 Notify 或 15 分鐘後以交易查詢確認）、`UNAPPROVED`。
+EncryptInfo 內含 `TradeNo`、`TradeStatus`（`1` 已付款、`2` 失敗、`3` 取消、`8` 待確認）、`AuthCode`、`AuthType`（`1` 一次、`2` 分期、`7` 銀聯）、
+`Card6No`、`Card4No`、`CreditHash`、`CreditLife`（`MMYY`）等。`API3D=1` 時回傳 `URL`（3D 導頁網址）。錯誤碼見官方 page 45。
 
 ---
 
@@ -616,8 +609,12 @@ POST /api/credit_bind/query
 | 參數 | 類型 | 必填 | 說明 |
 |------|------|------|------|
 | `MerID` | String | ● | 商店代號 |
-| `BindVal` | String | ● | Token 代碼 |
+| `CreditToken` | String | 二擇一 | 信用卡 Token（如會員編號、Email），長度 200 |
+| `CreditTokenType` | Integer | 否 | `1` 會員（預設）、`2` 商店；用 `CreditHash` 查詢時不用帶 |
+| `CreditHash` | String | 二擇一 | 信用卡 Token Hash，長度 64 |
 | `Timestamp` | Integer | ● | Unix 時間戳 |
+
+Version 固定 `1.0`。可能有多筆，解密後資料在 `Result` 陣列（`CreditHash`、`CreditTokenStatus` `1` 正常／`3` 刪除／`4` 逾期、`Card6No`、`Card4No` 等）。
 
 ### 取消約定信用卡
 
@@ -632,7 +629,9 @@ POST /api/credit_bind/cancel
 | 參數 | 類型 | 必填 | 說明 |
 |------|------|------|------|
 | `MerID` | String | ● | 商店代號 |
-| `BindVal` | String | ● | Token 代碼 |
+| `UseTokenType` | Integer | ● | `1` 綁定（`BindVal` 帶 `CreditHash`）、`2` 記憶卡號（`BindVal` 帶 `CreditToken`） |
+| `BindVal` | String | ● | 依 `UseTokenType` 帶 `CreditHash` 或 `CreditToken` |
+| `CreditTokenType` | Integer | 否 | `1` 會員（預設）、`2` 商店 |
 | `Timestamp` | Integer | ● | Unix 時間戳 |
 
 ---

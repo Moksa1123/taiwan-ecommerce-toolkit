@@ -1600,7 +1600,7 @@
    "payment"
   ],
   "title": "綠界官方 ecpay-api-skill（GitHub）",
-  "url": "https://github.com/ECPay/ecpay-api-skill",
+  "url": "https://github.com/ECPay/ecpay-api-skill/commits/master.atom",
   "format": "html",
   "fetch": "get",
   "access": "public",
@@ -1611,7 +1611,7 @@
    "taiwan-payment/data/error-codes.csv",
    "taiwan-payment/references/ecpay-payment-api.md"
   ],
-  "notes": "All Rights Reserved，不可提交進 repo；guides/20-error-codes-reference.md 為 10100058（發票作業逾時）出處；以 git pull 更新；只能讀來交叉驗證，不可複製進 repo；更新以 git clone/pull；guides/20 錯誤碼速查表與官方頁有衝突時以 developers.ecpay.com.tw 為準；All Rights Reserved：只能讀來驗證，不可複製進 repo；以 git pull 取最新，看 commit 是否變動。OK C2C 列印端點 PrintOKMARTC2COrderInfo 目前只見於 guides/06；GitHub repo：更新時以 git clone／pull 比對最新 commit"
+  "notes": "All Rights Reserved，不可提交進 repo；guides/20-error-codes-reference.md 為 10100058（發票作業逾時）出處；以 git pull 更新；只能讀來交叉驗證，不可複製進 repo；更新以 git clone/pull；guides/20 錯誤碼速查表與官方頁有衝突時以 developers.ecpay.com.tw 為準；All Rights Reserved：只能讀來驗證，不可複製進 repo；以 git pull 取最新，看 commit 是否變動。OK C2C 列印端點 PrintOKMARTC2COrderInfo 目前只見於 guides/06；GitHub repo：更新時以 git clone／pull 比對最新 commit；GitHub repo（https://github.com/ECPay/ecpay-api-skill）：追蹤 master 的 commits Atom feed，只有新 commit 才會變動，repo 頁面的導覽列與星數不再誤報"
  },
  {
   "id": "ecpay-api-skill-error-guide",
@@ -3229,14 +3229,14 @@
    "invoice"
   ],
   "title": "綠界官方 PHP SDK（ecpay/sdk）",
-  "url": "https://github.com/ECPay/SDK_PHP",
+  "url": "https://github.com/ECPay/SDK_PHP/commits/master.atom",
   "format": "html",
   "fetch": "get",
   "access": "public",
   "covers": [
    "taiwan-invoice/references/ECPAY_API_REFERENCE.md"
   ],
-  "notes": "MIT；AesService 為發票 AES 加解密實作出處"
+  "notes": "MIT；AesService 為發票 AES 加解密實作出處；GitHub repo（https://github.com/ECPay/SDK_PHP）：追蹤 master 的 commits Atom feed，只有新 commit 才會變動"
  },
  {
   "id": "ecpay-skill-index-b2b-exchange",
@@ -3800,14 +3800,15 @@
    "payment"
   ],
   "title": "街口開放文件：授權扣款 Authorized Payment",
-  "url": "https://open-doc.jkos.com/?docs=%E6%8E%88%E6%AC%8A%E6%89%A3%E6%AC%BE-authorized-payment",
+  "url": "https://open-doc.jkos.com/authorized-payment/",
   "format": "html",
-  "fetch": "get",
+  "fetch": "browser",
+  "selector": "article",
   "access": "public",
   "covers": [
    "taiwan-payment/references/jkopay-payment-api.md"
   ],
-  "notes": "WordPress/weDocs，一般 GET 即可；部分內容以 Cloudflare email 混淆"
+  "notes": "Docusaurus 網站（2026-10 改版，舊 ?docs= 網址一律回首頁），需瀏覽器渲染；selector 只取 article 內文，避免側欄新增頁面誤報"
  },
  {
   "id": "jkopay-authorized-payment-codes",
@@ -3816,15 +3817,16 @@
    "payment"
   ],
   "title": "街口開放文件：授權模組代碼意義",
-  "url": "https://open-doc.jkos.com/?docs=%E6%8E%88%E6%AC%8A%E6%89%A3%E6%AC%BE-authorized-payment/api%E5%88%97%E8%A1%A8-api-lists/%E4%BB%A3%E7%A2%BC%E6%84%8F%E7%BE%A9-api-response-code",
+  "url": "https://open-doc.jkos.com/authorized-payment/api/response-code",
   "format": "html",
-  "fetch": "get",
+  "fetch": "browser",
+  "selector": "article",
   "access": "public",
   "covers": [
    "taiwan-payment/data/error-codes.csv",
    "taiwan-payment/references/jkopay-payment-api.md"
   ],
-  "notes": "WordPress/weDocs，一般 GET 即可；部分內容以 Cloudflare email 混淆"
+  "notes": "Docusaurus 網站（2026-10 改版，舊 ?docs= 網址一律回首頁），需瀏覽器渲染；selector 只取 article 內文，避免側欄新增頁面誤報"
  },
  {
   "id": "jkopay-onlinepay",
@@ -3833,15 +3835,16 @@
    "payment"
   ],
   "title": "街口開放文件：線上支付 OnlinePay",
-  "url": "https://open-doc.jkos.com/?docs=%E7%B7%9A%E4%B8%8A%E6%94%AF%E4%BB%98onlinepay",
+  "url": "https://open-doc.jkos.com/online-pay/",
   "format": "html",
-  "fetch": "get",
+  "fetch": "browser",
+  "selector": "article",
   "access": "public",
   "covers": [
    "taiwan-payment/references/jkopay-payment-api.md",
    "taiwan-payment/data/providers.csv"
   ],
-  "notes": "WordPress/weDocs，一般 GET 即可；部分內容以 Cloudflare email 混淆"
+  "notes": "Docusaurus 網站（2026-10 改版，舊 ?docs= 網址一律回首頁），需瀏覽器渲染；selector 只取 article 內文，避免側欄新增頁面誤報"
  },
  {
   "id": "jkopay-onlinepay-api-list",
@@ -3850,14 +3853,15 @@
    "payment"
   ],
   "title": "街口開放文件：線上支付 API 列表",
-  "url": "https://open-doc.jkos.com/?docs=%E7%B7%9A%E4%B8%8A%E6%94%AF%E4%BB%98onlinepay/api%E5%88%97%E8%A1%A8",
+  "url": "https://open-doc.jkos.com/online-pay/api/",
   "format": "html",
-  "fetch": "get",
+  "fetch": "browser",
+  "selector": "article",
   "access": "public",
   "covers": [
    "taiwan-payment/references/jkopay-payment-api.md"
   ],
-  "notes": "WordPress/weDocs，一般 GET 即可；部分內容以 Cloudflare email 混淆"
+  "notes": "Docusaurus 網站（2026-10 改版，舊 ?docs= 網址一律回首頁），需瀏覽器渲染；selector 只取 article 內文，避免側欄新增頁面誤報"
  },
  {
   "id": "jkopay-onlinepay-codes",
@@ -3866,15 +3870,16 @@
    "payment"
   ],
   "title": "街口開放文件：代碼意義 API Response Code",
-  "url": "https://open-doc.jkos.com/?docs=%E7%B7%9A%E4%B8%8A%E6%94%AF%E4%BB%98onlinepay/api%E5%88%97%E8%A1%A8/%E4%BB%A3%E7%A2%BC%E6%84%8F%E7%BE%A9",
+  "url": "https://open-doc.jkos.com/online-pay/api/response-code",
   "format": "html",
-  "fetch": "get",
+  "fetch": "browser",
+  "selector": "article",
   "access": "public",
   "covers": [
    "taiwan-payment/data/error-codes.csv",
    "taiwan-payment/references/jkopay-payment-api.md"
   ],
-  "notes": "WordPress/weDocs，一般 GET 即可；部分內容以 Cloudflare email 混淆"
+  "notes": "Docusaurus 網站（2026-10 改版，舊 ?docs= 網址一律回首頁），需瀏覽器渲染；selector 只取 article 內文，避免側欄新增頁面誤報"
  },
  {
   "id": "jkopay-onlinepay-entry",
@@ -3883,14 +3888,15 @@
    "payment"
   ],
   "title": "街口開放文件：訂單創建 Entry API",
-  "url": "https://open-doc.jkos.com/?docs=%E7%B7%9A%E4%B8%8A%E6%94%AF%E4%BB%98onlinepay/api%E5%88%97%E8%A1%A8/%E8%A8%82%E5%96%AE%E5%89%B5%E5%BB%BA-api",
+  "url": "https://open-doc.jkos.com/online-pay/api/entry",
   "format": "html",
-  "fetch": "get",
+  "fetch": "browser",
+  "selector": "article",
   "access": "public",
   "covers": [
    "taiwan-payment/references/jkopay-payment-api.md"
   ],
-  "notes": "WordPress/weDocs，一般 GET 即可；部分內容以 Cloudflare email 混淆"
+  "notes": "Docusaurus 網站（2026-10 改版，舊 ?docs= 網址一律回首頁），需瀏覽器渲染；selector 只取 article 內文，避免側欄新增頁面誤報"
  },
  {
   "id": "jkopay-onlinepay-protocol",
@@ -3899,14 +3905,15 @@
    "payment"
   ],
   "title": "街口開放文件：API 協議規則",
-  "url": "https://open-doc.jkos.com/?docs=%E7%B7%9A%E4%B8%8A%E6%94%AF%E4%BB%98onlinepay/%E4%B8%B2%E6%8E%A5%E8%AA%AA%E6%98%8E/api-%E5%8D%94%E8%AD%B0%E8%A6%8F%E5%89%87",
+  "url": "https://open-doc.jkos.com/online-pay/general/api-protocol-rules",
   "format": "html",
-  "fetch": "get",
+  "fetch": "browser",
+  "selector": "article",
   "access": "public",
   "covers": [
    "taiwan-payment/references/jkopay-payment-api.md"
   ],
-  "notes": "WordPress/weDocs，一般 GET 即可；部分內容以 Cloudflare email 混淆"
+  "notes": "Docusaurus 網站（2026-10 改版，舊 ?docs= 網址一律回首頁），需瀏覽器渲染；selector 只取 article 內文，避免側欄新增頁面誤報"
  },
  {
   "id": "jkopay-onlinepay-rfile",
@@ -3915,14 +3922,15 @@
    "payment"
   ],
   "title": "街口開放文件：店家撥款檔 R 檔（線上支付）",
-  "url": "https://open-doc.jkos.com/?docs=%E7%B7%9A%E4%B8%8A%E6%94%AF%E4%BB%98onlinepay/api%E5%88%97%E8%A1%A8/%E5%BA%97%E5%AE%B6%E6%92%A5%E6%AC%BE%E6%AA%94r%E6%AA%94",
+  "url": "https://open-doc.jkos.com/online-pay/api/reimburse-file",
   "format": "html",
-  "fetch": "get",
+  "fetch": "browser",
+  "selector": "article",
   "access": "public",
   "covers": [
    "taiwan-payment/references/jkopay-payment-api.md"
   ],
-  "notes": "WordPress/weDocs，一般 GET 即可；部分內容以 Cloudflare email 混淆"
+  "notes": "Docusaurus 網站（2026-10 改版，舊 ?docs= 網址一律回首頁），需瀏覽器渲染；selector 只取 article 內文，避免側欄新增頁面誤報"
  },
  {
   "id": "jkopay-onlinepay-signing",
@@ -3931,15 +3939,16 @@
    "payment"
   ],
   "title": "街口開放文件：加簽加密說明",
-  "url": "https://open-doc.jkos.com/?docs=%E7%B7%9A%E4%B8%8A%E6%94%AF%E4%BB%98onlinepay/%E4%B8%B2%E6%8E%A5%E8%AA%AA%E6%98%8E/%E5%8A%A0%E7%B0%BD%E5%8A%A0%E5%AF%86%E8%AA%AA%E6%98%8E",
+  "url": "https://open-doc.jkos.com/online-pay/general/signature",
   "format": "html",
-  "fetch": "get",
+  "fetch": "browser",
+  "selector": "article",
   "access": "public",
   "covers": [
    "taiwan-payment/references/jkopay-payment-api.md",
    "taiwan-payment/examples/jkopay-payment-example.py"
   ],
-  "notes": "WordPress/weDocs，一般 GET 即可；部分內容以 Cloudflare email 混淆"
+  "notes": "Docusaurus 網站（2026-10 改版，舊 ?docs= 網址一律回首頁），需瀏覽器渲染；selector 只取 article 內文，避免側欄新增頁面誤報"
  },
  {
   "id": "jkopay-pos-rfile",
@@ -3948,14 +3957,15 @@
    "payment"
   ],
   "title": "街口開放文件：店家撥款檔 R 檔（線下 POS）",
-  "url": "https://open-doc.jkos.com/?docs=%E7%B7%9A%E4%B8%8B%E4%BA%A4%E6%98%93pos/api%E5%88%97%E8%A1%A8/%E5%BA%97%E5%AE%B6%E6%92%A5%E6%AC%BE%E6%AA%94r%E6%AA%94",
+  "url": "https://open-doc.jkos.com/pos/api/reimburse-file",
   "format": "html",
-  "fetch": "get",
+  "fetch": "browser",
+  "selector": "article",
   "access": "public",
   "covers": [
    "taiwan-payment/references/jkopay-payment-api.md"
   ],
-  "notes": "WordPress/weDocs，一般 GET 即可；部分內容以 Cloudflare email 混淆"
+  "notes": "Docusaurus 網站（2026-10 改版，舊 ?docs= 網址一律回首頁），需瀏覽器渲染；selector 只取 article 內文，避免側欄新增頁面誤報"
  },
  {
   "id": "jkopay-sdk-recommendation",
@@ -3994,15 +4004,16 @@
   "skills": [
    "payment"
   ],
-  "title": "街口開放文件：Web SDK Next",
-  "url": "https://open-doc.jkos.com/?docs=inapp-%E7%AC%AC%E4%B8%89%E6%96%B9%E6%9C%8D%E5%8B%99/web-sdk/next",
+  "title": "街口開放文件：Web SDK 錯誤代碼（v2.0.8）",
+  "url": "https://open-doc.jkos.com/web-sdk/error-codes",
   "format": "html",
-  "fetch": "get",
+  "fetch": "browser",
+  "selector": "article",
   "access": "public",
   "covers": [
    "taiwan-payment/references/jkopay-payment-api.md"
   ],
-  "notes": "WordPress/weDocs，一般 GET 即可；部分內容以 Cloudflare email 混淆"
+  "notes": "Docusaurus 網站（2026-10 改版，舊 ?docs= 網址一律回首頁），需瀏覽器渲染；selector 只取 article 內文，避免側欄新增頁面誤報"
  },
  {
   "id": "jkopay-web-sdk-versions",
@@ -4010,15 +4021,16 @@
   "skills": [
    "payment"
   ],
-  "title": "街口開放文件：Web SDK 環境版本",
-  "url": "https://open-doc.jkos.com/?docs=inapp-%E7%AC%AC%E4%B8%89%E6%96%B9%E6%9C%8D%E5%8B%99/web-sdk/sdk-%E7%92%B0%E5%A2%83%E7%89%88%E6%9C%AC",
+  "title": "街口開放文件：Web SDK 總覽與版本表（v2.0.8）",
+  "url": "https://open-doc.jkos.com/web-sdk/",
   "format": "html",
-  "fetch": "get",
+  "fetch": "browser",
+  "selector": "article",
   "access": "public",
   "covers": [
    "taiwan-payment/references/jkopay-payment-api.md"
   ],
-  "notes": "WordPress/weDocs，一般 GET 即可；部分內容以 Cloudflare email 混淆"
+  "notes": "Docusaurus 網站（2026-10 改版，舊 ?docs= 網址一律回首頁），需瀏覽器渲染；selector 只取 article 內文，避免側欄新增頁面誤報"
  },
  {
   "id": "kerrytj-checking",
@@ -4043,18 +4055,14 @@
    "logistics"
   ],
   "title": "Lalamove 官方多語言範例（HMAC 簽章）",
-  "url": "https://github.com/lalamove/api-examples",
+  "url": "https://github.com/lalamove/api-examples/commits/master.atom",
   "format": "html",
   "fetch": "get",
   "access": "public",
   "covers": [
    "taiwan-logistics/references/lalamove-logistics-api.md"
   ],
-  "notes": "GitHub repo：更新時以 git clone／pull 比對最新 commit",
-  "ignore": [
-   "^\\d+ (stars?|forks?|watching)$",
-   "^\\d+$"
-  ]
+  "notes": "GitHub repo（https://github.com/lalamove/api-examples）：追蹤 master 的 commits Atom feed，只有新 commit 才會變動，repo 頁面的導覽列與星數不再誤報；有變動時 git clone／pull 比對程式"
  },
  {
   "id": "lalamove-api-reference",
@@ -4180,7 +4188,12 @@
   "covers": [
    "tests/vectors/linepay.json"
   ],
-  "notes": "非 LINE 官方；向量以官方文件公式為準，SDK 僅交叉比對"
+  "notes": "非 LINE 官方；向量以官方文件公式為準，SDK 僅交叉比對",
+  "ignore": [
+   "(?s)\\A.*?(?=Latest commit)",
+   "(?s)Footer.*\\Z",
+   "(?m)^\\s*\\d+\\s+(stars?|watching|forks?)\\s*$"
+  ]
  },
  {
   "id": "linepay-zh-online-api-v4",
@@ -6316,7 +6329,58 @@
   "access": "public",
   "covers": [
    "taiwan-payment/references/payuni-payment-api.md"
+  ],
+  "ignore": [
+   "(?s)\\A.*?(?=Latest commit)",
+   "(?s)Footer.*\\Z",
+   "(?m)^\\s*\\d+\\s+(stars?|watching|forks?)\\s*$"
   ]
+ },
+ {
+  "id": "payuni-page-25",
+  "provider": "payuni",
+  "skills": [
+   "payment",
+   "logistics"
+  ],
+  "title": "PAYUNi 修改記錄（全站更新日誌）",
+  "url": "https://docs.payuni.com.tw/server/index.php?s=/api/page/info",
+  "format": "json",
+  "fetch": {
+   "method": "POST",
+   "data": {
+    "page_id": "25"
+   }
+  },
+  "access": "public",
+  "covers": [
+   "taiwan-payment/references/payuni-payment-api.md",
+   "taiwan-logistics/references/payuni-logistics-api.md"
+  ],
+  "json_path": "data.page_content",
+  "notes": "網頁版 https://docs.payuni.com.tw/web/#/7/25（SPA）；官方逐月列出各 API 的新增／升版／移除，看到新條目再對照該 API 頁"
+ },
+ {
+  "id": "payuni-page-156",
+  "provider": "payuni",
+  "skills": [
+   "payment"
+  ],
+  "title": "PAYUNi 所有API通用錯誤代碼",
+  "url": "https://docs.payuni.com.tw/server/index.php?s=/api/page/info",
+  "format": "json",
+  "fetch": {
+   "method": "POST",
+   "data": {
+    "page_id": "156"
+   }
+  },
+  "access": "public",
+  "covers": [
+   "taiwan-payment/data/error-codes-payuni-1.csv"
+  ],
+  "json_path": "data.page_content",
+  "notes": "網頁版 https://docs.payuni.com.tw/web/#/7/156（SPA）；比對 data.page_content"
  },
  {
   "id": "payuni-page-103",
@@ -7325,7 +7389,12 @@
    "taiwan-payment/references/payuni-payment-api.md",
    "tests/vectors/payuni.json"
   ],
-  "notes": "端點路徑對照 PayuniApi::UniversalTrade()；Encrypt/HashInfo 用於交叉比對向量；GitHub repo：更新時以 git clone／pull 比對最新 commit"
+  "notes": "端點路徑對照 PayuniApi::UniversalTrade()；Encrypt/HashInfo 用於交叉比對向量；GitHub repo：更新時以 git clone／pull 比對最新 commit",
+  "ignore": [
+   "(?s)\\A.*?(?=Latest commit)",
+   "(?s)Footer.*\\Z",
+   "(?m)^\\s*\\d+\\s+(stars?|watching|forks?)\\s*$"
+  ]
  },
  {
   "id": "payuni-showdoc-index",
@@ -7348,7 +7417,10 @@
    "taiwan-logistics/references/payuni-logistics-api.md",
    "taiwan-payment/references/payuni-payment-api.md"
   ],
-  "notes": "回傳全部頁面目錄與 page_id；新增或改版頁面從這裡發現；新增／改名頁面從這裡發現"
+  "notes": "回傳全部頁面目錄與 page_id；新增或改版頁面從這裡發現；新增／改名頁面從這裡發現",
+  "ignore": [
+   "\"addtime\": \\d+,?"
+  ]
  },
  {
   "id": "payuni-woocommerce-plugin",
@@ -7365,7 +7437,12 @@
    "tests/vectors/payuni.json",
    "taiwan-payment/examples/payuni-payment-example.py"
   ],
-  "notes": "向量取自 1.2.8 class-payuni.php Encrypt/Decrypt/HashInfo"
+  "notes": "向量取自 1.2.8 class-payuni.php Encrypt/Decrypt/HashInfo；1.2.9（2026-09-18 commit 16c4160）只在超商貨態通知加 Odno，加解密未變",
+  "ignore": [
+   "(?s)\\A.*?(?=Latest commit)",
+   "(?s)Footer.*\\Z",
+   "(?m)^\\s*\\d+\\s+(stars?|watching|forks?)\\s*$"
+  ]
  },
  {
   "id": "pchomepay-api-doc",
@@ -7435,6 +7512,9 @@
   "covers": [
    "taiwan-logistics/references/pchomepay-logistics-api.md",
    "taiwan-payment/references/pchomepay-payment-api.md"
+  ],
+  "ignore": [
+   "^(View|See) all industries$"
   ]
  },
  {
@@ -7497,10 +7577,11 @@
    "taiwan-logistics/references/carrier-direct-access.md",
    "taiwan-logistics/data/providers.csv"
   ],
-  "notes": "官網網域為 e-can.com.tw；providers.csv 的 www.pelican.com.tw 已無法解析（2026-09-24）",
+  "notes": "官網網域為 e-can.com.tw；providers.csv 的 www.pelican.com.tw 已無法解析（2026-09-24）；首頁多為導覽與活動，只比對含 API／串接／開發者等字樣的行（版權行作為頁面存在的錨點），用來發現宅配通是否推出公開 API",
   "sort_lines": true,
   "ignore": [
-   "【[^】]*】[^\n]*"
+   "【[^】]*】[^\n]*",
+   "(?m)^(?![^\\n]*(API|串接|開發者|介接|EDI|版權所有|Copyright))[^\\n]*$"
   ]
  },
  {
@@ -8077,6 +8158,11 @@
   "covers": [
    "taiwan-payment/references/tappay-payment-api.md",
    "taiwan-payment/examples/tappay-payment-example.py"
+  ],
+  "ignore": [
+   "(?s)\\A.*?(?=Latest commit)",
+   "(?s)Footer.*\\Z",
+   "(?m)^\\s*\\d+\\s+(stars?|watching|forks?)\\s*$"
   ]
  },
  {
@@ -8092,6 +8178,10 @@
   "access": "public",
   "covers": [
    "taiwan-payment/references/tappay-payment-api.md"
+  ],
+  "ignore": [
+   "(?s)\\A.*?(?=Release list)",
+   "(?s)Footer.*\\Z"
   ]
  },
  {
@@ -8212,14 +8302,15 @@
   "skills": [
    "invoice"
   ],
-  "title": "關貿網路 電子發票平台",
-  "url": "https://neinv.tradevan.com.tw/",
+  "title": "關貿網路 E-HUB（電子發票平台登入）",
+  "url": "https://lgc.tradevan.com.tw/tln-bin/APTLN/welcome.do",
   "format": "html",
   "fetch": "get",
   "access": "public",
   "covers": [
    "taiwan-invoice/references/VAC_LANDSCAPE.md"
-  ]
+  ],
+  "notes": "原 neinv.tradevan.com.tw 於 2026-10 公告移轉至 E-HUB，舊網址 10 月底失效"
  },
  {
   "id": "twqr-fisc",
@@ -8256,7 +8347,9 @@
    "^\\d{4}\\.\\d{2}\\.\\d{2} .*",
    "更新日期：[^\n]*",
    "熱門關鍵字：[^\n]*",
-   "累計瀏覽人數：[^\n]*"
+   "累計瀏覽人數：[^\n]*",
+   "[^\\n]*講習[^\\n]*",
+   "[^\\n]*會議報名[^\\n]*"
   ]
  },
  {
@@ -8272,6 +8365,9 @@
   "access": "public",
   "covers": [
    "taiwan-payment/references/twqr-ewallet-landscape.md"
+  ],
+  "ignore": [
+   "(?s)最新優惠活動.*?(?=商家專區)"
   ]
  },
  {

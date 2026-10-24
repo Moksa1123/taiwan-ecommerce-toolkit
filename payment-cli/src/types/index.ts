@@ -45,7 +45,7 @@ export const AI_FOLDERS: Record<string, string> = {
   claude: '.claude',
   cursor: '.cursor',
   windsurf: '.windsurf',
-  antigravity: '.agent',
+  antigravity: '.agents',
   copilot: '.github',
   kiro: '.kiro',
   codex: '.agents',

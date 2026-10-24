@@ -104,6 +104,7 @@ def build_headers(method, path, body_dict, key, secret, market="TW"):
 | `isRouteOptimized` | `true` 啟用多點路線最佳化 |
 | `isPODEnabled` | `true` 啟用 Proof of Delivery（送達證明） |
 | `metadata` | 自訂 key-value，可掛你自己的訂單編號 |
+| `pricingTierCode` | 報價時選填（字串）：`"1"` 一般（預設）、`"2"` Priority Tier（加速媒合、較快送達），回傳價格依所選等級計算。官方文件未列適用市場，台灣是否開放需以報價實測或向 Lalamove 確認 |
 
 `metadata` 是把 Lalamove 訂單對回自家系統的建議做法——不要依賴 Lalamove 的 order ID 當主鍵。
 
@@ -128,6 +129,7 @@ v3 支援 14 個市場，**含台灣**：香港、新加坡、泰國、越南、
 - 台灣市場實際可用的 `serviceType` 清單與費率結構（需以 `GET /v3/cities` 實測）
 - Webhook 事件型別與 payload 結構
 - 台灣是否需另行申請商業帳號才能取得 production key
+- 台灣是否可用 `pricingTierCode: "2"`（Priority Tier）
 - pandago（foodpanda）見 [ondemand-delivery.md](ondemand-delivery.md)
 
 ## 9. 來源

@@ -117,7 +117,7 @@ When modifying files:
 | Claude Code | `.claude`   | full         |
 | Cursor      | `.cursor`   | full         |
 | Windsurf    | `.windsurf` | full         |
-| Antigravity | `.agent`    | full         |
+| Antigravity | `.agents`   | full         |
 | Copilot     | `.github`   | full         |
 | Kiro        | `.kiro`     | full         |
 | Codex       | `.agents`   | full         |

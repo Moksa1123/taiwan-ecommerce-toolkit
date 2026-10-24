@@ -5,7 +5,7 @@ credit_action,信用卡請退款,/CreditDetail/DoAction,/API/CreditCard/Close,/a
 query_credit,信用卡查詢,/CreditDetail/QueryTrade/V2,/API/QueryTradeInfo,/api/trade/query,N/A,/v1/refund/{refund_id},N/A,N/A,/api/v1/refund/{id},/CreditDetail/QueryTrade/V2,N/A,N/A,POST,"MerchantID,CreditRefundId",查詢信用卡交易
 periodic_create,定期定額建立,/Cashier/AioCheckOut/V5,/MPG/period,,N/A,N/A,,N/A,/api/v1/customer (saved card),/Cashier/AioCheckOut/V5,/platform/authpay/regular 或 /limited,N/A,POST,"PeriodAmount,PeriodType,Frequency,ExecTimes",設定週期付款；PayNow 現代版用 Customer + Card Token 機制 | 街口 JKOPAY 授權扣款分定期定額 regular 與不定期不定額 limited 兩種;歐付寶 O'Pay 同綠界定期定額
 periodic_query,定期定額查詢,/Cashier/QueryCreditCardPeriodInfo,/MPG/period/query,,N/A,N/A,,N/A,N/A,/Cashier/QueryCreditCardPeriodInfo,/platform/authpay/detail,N/A,POST,"MerchantID,MerchantTradeNo",查詢週期付款
-periodic_action,定期定額操作,/Cashier/CreditCardPeriodAction,/MPG/period/AlterStatus（暫停／終止／啟用）、/MPG/period/AlterAmt（金額／週期／期數／到期日）,,N/A,N/A,,N/A,N/A,,/platform/authpay/transaction (扣款) 與 /cancel (終止),N/A,POST,"MerchantID,Action",取消/修改週期 | 街口 JKOPAY 扣款限 08:00-20:00 UTC+8 且同一 auth_no 不可併發
+periodic_action,定期定額操作,/Cashier/CreditCardPeriodAction,/MPG/period/AlterStatus（暫停／終止／啟用）、/MPG/period/AlterAmt（金額／週期／期數／到期日）,,N/A,N/A,,N/A,N/A,,/platform/authpay/transaction (扣款) 與 /cancel (終止),N/A,POST,"MerchantID,Action",取消/修改週期 | 街口 JKOPAY 同一 auth_no 扣款不可併發
 get_token,取得 Token,N/A,N/A,N/A,N/A,/v1/token,N/A,N/A,N/A,N/A,N/A,N/A,POST,"BasicAuth(APP_ID,SECRET)",PChomePay 兩階段認證；token 預設 28800 秒 (8h) 有效
 balance_query,查詢餘額,N/A,N/A,N/A,N/A,/v1/balance,N/A,N/A,N/A,N/A,N/A,N/A,GET,pcpay-token header,PChomePay 商家後台帳戶餘額
 withdraw,提領款項,N/A,N/A,N/A,N/A,/v1/withdraw,N/A,N/A,N/A,N/A,N/A,N/A,POST,"amount,bank,account",PChomePay 提領至銀行

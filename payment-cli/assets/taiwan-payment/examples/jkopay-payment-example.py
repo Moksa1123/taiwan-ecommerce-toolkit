@@ -220,8 +220,7 @@ class JkopayClient:
     ) -> Dict[str, Any]:
         """以既有授權發動扣款。
 
-        六個硬限制，設計排程前務必知道（回應碼見 reference §6.6）：
-          306  扣款只能在 08:00–20:00 (UTC+8) 發動 —— 夜間 batch 必失敗
+        五個硬限制，設計排程前務必知道（回應碼見 reference §6.6）：
           307  同一 auth_no 同時只允許一筆付款 —— 扣款必須序列化
           303  金額超過「消費者自己在 App 設定的額度」，商家不可控
           304  final_price 必須等於授權時的 billing_amount
