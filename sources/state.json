@@ -1,93 +1,93 @@
 {
  "ai-agentskills-clients": {
   "sha256": "5c515ecbb104bac6319d9b8efe277da8aafc374ee51136ab116b64728e486b59",
-  "size": 257872,
-  "checked": "2026-10-03"
+  "size": 267398,
+  "checked": "2026-10-24"
  },
  "ai-agentskills-spec": {
   "sha256": "8a340b175e1964dae4fddc86d3938a8a738444c232563aeb7411965f6c733ab2",
-  "size": 435111,
-  "checked": "2026-10-03"
+  "size": 402936,
+  "checked": "2026-10-24"
  },
  "ai-antigravity": {
-  "sha256": "8dfc12078f3e1c76edf0ec7a418a7f140ae3987996423c76639428ec3939b1ec",
-  "size": 103995,
-  "checked": "2026-10-03"
+  "sha256": "d1d1a0cb79e5cc1c29d3a47c676ff623780b465dc39a02f31dd23988be5bd0a3",
+  "size": 150914,
+  "checked": "2026-10-24"
  },
  "ai-claude": {
-  "sha256": "475d41c529e4ff5d80efb1c4898cb1b6fea8d467bbb1cda4c9bb4c9ee2ca7fbc",
-  "size": 1184308,
-  "checked": "2026-10-03"
+  "sha256": "e0348a5c64f590a0ce6eb6d6e41872a70c1ad5a304eb5365d2e9ddba760fd4b8",
+  "size": 1142521,
+  "checked": "2026-10-24"
  },
  "ai-cline": {
-  "sha256": "e02a954eeec91bd971b5f8dd772328d289d26bb0fa720a3694be62bd68c0942f",
-  "size": 375886,
-  "checked": "2026-10-03"
+  "sha256": "eef45011015140e5fd1d5d0db85d1999e4b29bb8c17f16eb208fe5d78dcc2669",
+  "size": 243959,
+  "checked": "2026-10-24"
  },
  "ai-codebuddy": {
-  "sha256": "6f5ec966ce9c3866a20a9b44f7dfbd02f0a024f545b69372413e50f580687085",
-  "size": 34373,
-  "checked": "2026-10-03"
+  "sha256": "14051fa1d305a11c4d8e1f330f02caa8ad70132781eeeeba42820e47414e7bd4",
+  "size": 34575,
+  "checked": "2026-10-24"
  },
  "ai-codex": {
-  "sha256": "a6f638990131e821c063404eb95dba1ae85eab891d4a33e79a98677a0334c010",
-  "size": 401070,
-  "checked": "2026-10-03"
+  "sha256": "2d36f3f795a8da6eeed75b8dee33816ffef1a2c6cb5ace178dca5566bc5c5b1f",
+  "size": 418399,
+  "checked": "2026-10-24"
  },
  "ai-continue-cli": {
   "sha256": "8e798e650f2f8c4f164fefc569fc15517706364fe22926898dde939748d18c8b",
   "size": 4553,
-  "checked": "2026-10-03"
+  "checked": "2026-10-24"
  },
  "ai-continue-ide": {
   "sha256": "a4fd1631610c88e1048ddf2be8cb14edfaf1ee2cd1addf4d5ae5e1120d7c7412",
   "size": 3292,
-  "checked": "2026-10-03"
+  "checked": "2026-10-24"
  },
  "ai-copilot": {
-  "sha256": "8c5594cce83603e6e2b3c7d23e40f547cd2ec08b0faf0a7aeada9f1c34ca8902",
-  "size": 664282,
-  "checked": "2026-10-03"
+  "sha256": "94d2b3c31cd05e89fe4684963745ff6aab7bc62bc1c208f13f6fc24522a3f0c9",
+  "size": 663934,
+  "checked": "2026-10-24"
  },
  "ai-copilot-vscode": {
-  "sha256": "0d2b1430672f2933ec33afb83639c70b28b74155c7860b121834234ff3f0b4b7",
-  "size": 148753,
-  "checked": "2026-10-03"
+  "sha256": "93db43e784748a0faf1b509313a2ec2fa2135ff6cb0325048ec3b61b36b2dac8",
+  "size": 157105,
+  "checked": "2026-10-24"
  },
  "ai-cursor": {
-  "sha256": "3e0a9e42dd570cecc558ef2b36727f54d040ee3af3006a23f63f66bec3bc6768",
-  "size": 535229,
-  "checked": "2026-10-03"
+  "sha256": "074174758b7ab1027928250d71f8d4ce41d6347725c66e39f08fd2476a75c890",
+  "size": 489518,
+  "checked": "2026-10-24"
  },
  "ai-gemini": {
-  "sha256": "55227aaf0e3316225b7a242f58f73e77123b5ff4ac7ed72ea6968b2789f04922",
-  "size": 114261,
-  "checked": "2026-10-03"
+  "sha256": "432fabf3bb2a3ea98650e31f8c403a3162831beef9e9f47ba4c4b334fe5f1ae4",
+  "size": 114148,
+  "checked": "2026-10-24"
  },
  "ai-kiro": {
-  "sha256": "67103dcd5b66bca724b30c16d4dbe37e3a28897ceaef80c588105490e3ec4816",
-  "size": 303094,
-  "checked": "2026-10-03"
+  "sha256": "5960aff3320aebb48b16b6bb9057322739427e183667efe9960267c468d846b9",
+  "size": 310883,
+  "checked": "2026-10-24"
  },
  "ai-opencode": {
-  "sha256": "f6e910777783b694f8a288b673153d07fc021a8c634ac3b62de286afa43556ce",
-  "size": 71885,
-  "checked": "2026-10-03"
+  "sha256": "a7eba92267da4ece723cdd64ae7472438ba10e5f8c7d6e0ae24e8ea62163746c",
+  "size": 71581,
+  "checked": "2026-10-24"
  },
  "ai-qoder": {
-  "sha256": "ba8caf36ca24574fcdb373a44bdafb1c44ccc6f201905a1b342293971a56e924",
-  "size": 1079967,
-  "checked": "2026-10-03"
+  "sha256": "1c4a87d439f4649fd5fe738e22b58bd362bf8221932a190fcf0831eb76ef5fe8",
+  "size": 1118061,
+  "checked": "2026-10-24"
  },
  "ai-trae": {
-  "sha256": "e7b51a60b6428ce4949f7e7fe08e878be787f4d6df6208e7d2e518849496dd99",
-  "size": 14333,
-  "checked": "2026-10-03"
+  "sha256": "27dfca5487544b16579810ddd2be1399404e322462fe428fa101b7a6b54a422f",
+  "size": 14654,
+  "checked": "2026-10-24"
  },
  "ai-windsurf": {
   "sha256": "4c7ecd420703e0fab5af6cefa04d28e1387f1a36f1b9bfcdd64662261497edac",
-  "size": 1042937,
-  "checked": "2026-10-03"
+  "size": 684813,
+  "checked": "2026-10-24"
  },
  "amego-api-doc": {
   "sha256": "860ddd3a645e34701da917c84b1d02a73553387de096dc4503916c89ac2434b6",

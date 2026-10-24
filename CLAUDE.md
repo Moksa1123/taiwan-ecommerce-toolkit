@@ -93,7 +93,7 @@ When modifying files:
 | Claude Code | `.claude/skills/` | code.claude.com/docs |
 | Cursor | `.cursor/skills/` | cursor.com/docs/context/skills |
 | Windsurf | `.windsurf/skills/` | docs.devin.ai/desktop/cascade/skills |
-| Antigravity | `.agent/skills/` | AgentSkillsManager |
+| Antigravity | `.agents/skills/` | antigravity.google/docs/skills |
 | Copilot / VS Code | `.github/skills/` | docs.github.com |
 | Kiro | `.kiro/skills/` | kiro.dev/docs/skills |
 | Codex | `.agents/skills/` | developers.openai.com/codex/skills |
@@ -114,6 +114,7 @@ When modifying files:
 | Copilot | `.github/prompts/` | `.github/skills/` | `prompts/` 是給 `*.prompt.md`，不是 skill |
 | Kiro | `.kiro/steering/` | `.kiro/skills/` | Kiro 的 steering（常駐規範）與 skills（按需能力）是兩套機制 |
 | Codex | `.codex/skills/` | `.agents/skills/` | 官方文件（2026-10-03 查核）：repo 掃 `$CWD`～`$REPO_ROOT` 的 `.agents/skills`，user 為 `$HOME/.agents/skills`；`~/.codex/` 只放 `config.toml` |
+| Antigravity | `.agent/skills/`，global `~/.gemini/antigravity/global_skills` | `.agents/skills/`，global `~/.gemini/config/skills` | 官方文件（2026-10-24 查核）：預設 `.agents/skills`，`.agent/skills` 僅向下相容；global 為 `~/.gemini/config/skills/`（舊的 `~/.gemini/antigravity/skills/` 也支援），原本的 `global_skills` 文件沒有列出 |
 | Roo Code | `.roo/commands/` | — | **Roo Code 已於 2026-05-15 封存停止營運**，改為支援其上游 Cline |
 
 ### Continue —— 文件沒寫，但原始碼確認支援

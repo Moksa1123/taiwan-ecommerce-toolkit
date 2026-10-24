@@ -3,10 +3,10 @@
   "displayName": "Antigravity / Generic Agent",
   "installType": "full",
   "folderStructure": {
-    "root": ".agent",
+    "root": ".agents",
     "skillPath": "skills/taiwan-logistics",
     "filename": "SKILL.md",
-    "globalRoot": "~/.gemini/antigravity/global_skills"
+    "globalRoot": "~/.gemini/config"
   },
   "scriptPath": "skills/taiwan-logistics/scripts",
   "frontmatter": {

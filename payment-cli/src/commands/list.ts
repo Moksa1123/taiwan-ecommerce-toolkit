@@ -12,7 +12,7 @@ const PLATFORMS: Platform[] = [
   { name: 'claude', folder: '.claude', description: 'Claude Code (Anthropic)' },
   { name: 'cursor', folder: '.cursor', description: 'Cursor Editor' },
   { name: 'windsurf', folder: '.windsurf', description: 'Windsurf (Codeium)' },
-  { name: 'antigravity', folder: '.agent', description: 'Antigravity (Google)' },
+  { name: 'antigravity', folder: '.agents', description: 'Antigravity (Google)' },
   { name: 'copilot', folder: '.github', description: 'GitHub Copilot' },
   { name: 'kiro', folder: '.kiro', description: 'Kiro (AWS)' },
   { name: 'codex', folder: '.agents', description: 'Codex CLI (OpenAI)' },
