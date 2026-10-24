@@ -1352,7 +1352,7 @@ https://payment-stage.opay.tw/Cashier/AioCheckOut/V5
 2. **連空白都算數**。官方範例 `"currency": "TWD"` 冒號後有空格，拿掉 digest 就變。**先組好字串、簽它、原封不動送出**，不要簽完再用另一次 `json.dumps()` 產生 body。
 3. **街口有三套簽章**（線上支付／POS／OAuth），程式碼不可共用。見 [reference §7](references/jkopay-payment-api.md)。
 4. **對帳用 `debit_amount` 不是 `final_price`**。街口幣與券折抵不進撥款，用 `final_price` 對帳會長期短差。
-5. **授權扣款有六個硬限制**，其中兩個直接約束排程設計：`306` 扣款只能在 **08:00–20:00** 發動（夜間 batch 必失敗）、`307` 同一 `auth_no` **不可併發**（扣款必須序列化）。
+5. **授權扣款有五個硬限制**，其中 `307` 直接約束排程設計：同一 `auth_no` **不可併發**（扣款必須序列化）。
 
 ### 一個資料庫層的地雷
 

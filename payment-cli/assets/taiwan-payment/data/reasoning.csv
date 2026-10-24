@@ -38,7 +38,7 @@ WooCommerce/Magento/OpenCart 官方模組,sunpay,MEDIUM,三大自架購物車皆
 金流+發票同一家且行動支付齊全,gomypay,MEDIUM,行動支付涵蓋台灣PAY/悠遊付/Apple Pay/Google Pay | 自營電子發票加值中心 | 有官方購物車模組,需要公開 API 文件自行串接者不適合(規格需申請);大型電商建議選市佔更高者,悠遊付 | 台灣PAY | 微信線上線下
 電子支付錢包選型,ecpay,HIGH,DigitalPayment 收街口與一卡通 MONEY，其他電子支付走 TWQR（歐付寶 TWQR）| 最省事,需要指定特定錢包做行銷者請改用 PAYUNi 直送代碼或 TapPay,多錢包收款 | 不在意消費者選哪個錢包
 指定特定電子支付錢包,tappay,HIGH,每個錢包有獨立文件與 Prime 流程 | 可精確指定街口/全支付/全盈+PAY/悠遊付/一卡通,只想接一次就好者請用 ECPay（DigitalPayment 收街口／一卡通，其餘走 TWQR）,錢包別行銷 | 分錢包對帳 | 指定錢包
-電子錢包訂閱制,jkopay,HIGH,街口授權扣款支援定期定額(regular)與不定期不定額(limited)兩種綁定 | 扣款須在08:00-20:00 UTC+8且同一auth_no不可併發 | 週期次數上限week/month/quarter各7次 year 12次,需要跨錢包一次涵蓋者請改用 TWQR 或聚合商 umbrella,電子錢包訂閱 | 街口定期定額 | 按用量計費 | 課金儲值
+電子錢包訂閱制,jkopay,HIGH,街口授權扣款支援定期定額(regular)與不定期不定額(limited)兩種綁定 | 同一auth_no扣款不可併發 | 週期次數上限week/month/quarter各7次 year 12次,需要跨錢包一次涵蓋者請改用 TWQR 或聚合商 umbrella,電子錢包訂閱 | 街口定期定額 | 按用量計費 | 課金儲值
 不定期不定額授權,jkopay,HIGH,limited 模式授權後可在額度內隨時扣款 | 適合用量計費與儲值加值 | 額度上限由消費者在App自行設定商家不可控,固定金額訂閱請改用 regular 模式,按用量計費 | 儲值加值 | 變動金額扣款
 RSA加密金流,sunpay,MEDIUM,紅陽為本 skill 14 家中唯一使用 RSA 分段加密者 | 加密117byte解密128byte | check_value 為 ASCII 排序後尾接 SHA2 密鑰的 SHA256,團隊已熟悉 ECPay CheckMacValue 或 AES 家族且不想再導入 RSA,既有系統已用 RSA | 需要非對稱加密
 金流發票物流一家包辦,sunpay,MEDIUM,金流+電子發票+超商代收+物流(超商取貨付款;官網物流頁另列全家大宗與C2C 7-11/全家/萊爾富)同一家 | 支援隨交易自動開立發票,已自行串接發票系統者請勿啟用隨交易開立以免重複開立,一站式整合 | 減少廠商數量

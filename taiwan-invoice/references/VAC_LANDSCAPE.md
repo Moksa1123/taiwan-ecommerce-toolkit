@@ -104,7 +104,7 @@
 ## 6. 來源
 
 - 財政部加值中心查詢 — https://www.einvoice.nat.gov.tw/ptl008w
-- 關貿網路電子發票 — https://services.tradevan.com.tw/e-commerce/e-invoice/ ／ https://neinv.tradevan.com.tw/
+- 關貿網路電子發票 — https://services.tradevan.com.tw/e-commerce/e-invoice/ ／ 平台登入 E-HUB https://lgc.tradevan.com.tw/tln-bin/APTLN/welcome.do（舊網址 neinv.tradevan.com.tw 已移轉，官方公告 2026 年 10 月底失效）
 - 中華電信電子發票 — https://invoice.cht.com.tw/
 - 訊航科技 — https://einvoice.net.tw/
 - e首發票 — https://www.youshop.com.tw/pricing.html

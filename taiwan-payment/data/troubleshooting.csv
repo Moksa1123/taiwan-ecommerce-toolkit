@@ -27,7 +27,6 @@ RESTful 端點錯誤,404 Not Found | 405 Method Not Allowed,端點路徑錯誤 |
 紅陽 CallBack 收不到,交易完成但系統未更新狀態,回傳網址含連接埠會被資安風控阻擋 | CallBack 僅在 30 分鐘內每 5 分鐘補發 超過即不再補發,移除網址中的 port;另實作查詢 API 定時對帳補回漏收的交易,sunpay,high
 紅陽超商代碼商品金額不符,交易被拒不允許送出,product 陣列的單價乘數量總和與 mn 不一致,調整商品明細使總和等於 mn;商品過多或含負數金額時整合為單一商品名稱送出,sunpay,medium
 紅陽物流通知解析失敗,貨態通知內容為亂碼或無法解析 JSON,物流狀態通知是 HTTP FORM POST key-value 非 JSON 且全部欄位經過 URL Encode,先 URL Decode(UTF-8) 再處理;注意訂單編號欄位為大寫 Td 與請求端的 td 不同,sunpay,medium
-街口授權扣款夜間失敗,回 306 Authpay payment transaction time invalid,授權扣款僅限 08:00-20:00 UTC+8 發動,將扣款排程改到白天時段;失敗需保留重試佇列待隔日,jkopay,high
 街口授權扣款併發失敗,回 307 Payment with the same auth_no is allowed one at a time,同一 auth_no 同時僅允許一筆付款,以授權編號為鍵序列化扣款請求 勿並行送出,jkopay,high
 街口三套簽章搞混,不同模組驗簽一直失敗,街口線上支付用 HMAC-SHA256 簽 payload 原文;線下 POS 用 SHA256 簽排序後 JSON 尾接 MerchantKey 且須全小寫;OAuth 用 SHA256 簽 secret+jsonBody+timestamp除以1000除以86400 且需先轉小寫再轉大寫,三個模組的簽章程式碼必須各寫一份 不可共用,jkopay,high
 街口 POS 驗簽失敗 904,POS 付款回 StatusCode 904,欄位未依 Key 字母排序 | JSON 含空白或換行 | 字串欄位省略未帶空字串 | Sign 未轉全小寫,序列化時排序去空白 空值欄位帶空字串 最後將 Sign 轉小寫,jkopay,high

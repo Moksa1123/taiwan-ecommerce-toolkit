@@ -463,20 +463,19 @@ Response 的 `result_object` 與 OnlinePay 的 `result_url` 同構（`tradeNo`�
 
 > `status` 非 0 時，其餘欄位一律不回傳——別預期拿得到 `tradeNo`。
 
-### 6.6 ⚠️ 授權扣款的六個硬限制
+### 6.6 ⚠️ 授權扣款的五個硬限制
 
 這些是設計訂閱系統時**必須先知道**的，全部來自 `/authpay/transaction` 的回應碼：
 
 | result | 限制 |
 |---|---|
-| `306` | **扣款只能在 08:00–20:00（UTC+8）發動**。半夜跑 batch 一定失敗——排程要避開 |
 | `307` | **同一 `auth_no` 同時只允許一筆付款**，不能併發 |
 | `303` | 金額超過**用戶自己在 App 設定的最高額度**（不是你設的）|
 | `304` | 訂單 `final_price` 與授權時的 `billing_amount` 不一致 |
 | `305` | 超過當前計費週期的扣款次數（見 6.3 上限表）|
 | `104` | 超過**月限額**（電支法規的個人限額）|
 
-> 前兩項是排程設計的直接約束：**扣款 job 要排在白天，而且同一授權要序列化**。
+> 第一項是排程設計的直接約束：**同一授權的扣款要序列化**。
 
 ### 6.7 端點總表與回應碼
 
@@ -500,7 +499,6 @@ Response 的 `result_object` 與 OnlinePay 的 `result_url` 同構（`tradeNo`�
 | `303` | FinalPrice exceeded the max amount quota set by the user | 超過用戶設定額度 |
 | `304` | Order finalPrice is not consistent with authpay billing amount | 金額與授權不符 |
 | `305` | Authpay payment exceeds current billing cycle times | 超過週期次數 |
-| `306` | Authpay payment transaction time invalid.(Available at 08:00 - 20:00 UTC+8) | **時段限制** |
 | `307` | Payment with the same auth_no is allowed one at a time | 同授權不可併發 |
 | `110` | Store not found | 查無商店 |
 | `115` | Payment failed | 付款失敗 |
@@ -688,7 +686,7 @@ OAuth 專屬錯誤碼：`OA-001` 成功、`OA-205` Auth Code 已被使用、`OA-
 
 - npm 套件在街口自有 registry：`https://npmjs.jkos.com/-/web/detail/@jkos/openweb-bridge`
 - ⚠️ **v2.0.6 與先前版本不相容**：使用 v2.0.4（含）以下者，升級前須先聯絡街口窗口
-- 文件另有 v2.0.8 與 Next 兩組 API 頁面，版本表未列。街口的 UMD 套件中心 `https://upkg.jkos.com/`（2026-09-24 查核）列出 `openweb-bridge` v2.0.0–v2.0.8，**v2.0.8 為最新**：`https://upkg.jkos.com/openweb-bridge/v2.0.8/jkos.umd.js`；沒有獨立的 Next 版檔案
+- 文件站以 v2.0.8 為目前版本（另保留 v2.0.2–v2.0.7 各版 API 頁面），但版本表未列 2.0.8。街口的 UMD 套件中心 `https://upkg.jkos.com/`（2026-09-24 查核）列出 `openweb-bridge` v2.0.0–v2.0.8，**v2.0.8 為最新**：`https://upkg.jkos.com/openweb-bridge/v2.0.8/jkos.umd.js`；沒有獨立的 Next 版檔案
 - 官方未標示建議版本，採用前向街口窗口確認
 
 **Next 版 API**：`getAuthCode`（喚起原生授權頁取得 auth code，接 §9 OAuth）、`setNavTitle`、`setNavBackground`、`setNavLeftButton`、`setNavRightButton`、`clearNavRightButton`、`openBrowser`、`redirectMaintainPage`、`close`、`showModal`、`setPullRefreshOn`／`setPullRefreshOff`。
@@ -821,21 +819,21 @@ OAuth 專屬錯誤碼：`OA-001` 成功、`OA-205` Auth Code 已被使用、`OA-
 ## 13. 來源
 
 - 街口開放文件 — https://open-doc.jkos.com/
-- 線上支付 OnlinePay — https://open-doc.jkos.com/?docs=線上支付onlinepay
-- API 協議規則 — `…/線上支付onlinepay/串接說明/api-協議規則`
-- 加簽加密說明 — `…/線上支付onlinepay/串接說明/加簽加密說明`
-- 訂單創建 Entry API — `…/線上支付onlinepay/api列表/訂單創建-api`
-- 代碼意義 API Response Code — `…/線上支付onlinepay/api列表/代碼意義`
-- 店家撥款檔 R 檔（線上支付）— `…/線上支付onlinepay/api列表/店家撥款檔r檔`
-- 店家撥款檔 R 檔（線下 POS）— `…/線下交易pos/api列表/店家撥款檔r檔`
-- Web SDK 版本 — https://open-doc.jkos.com/?docs=inapp-第三方服務/web-sdk/sdk-環境版本
+- 線上支付 OnlinePay — https://open-doc.jkos.com/online-pay/
+- API 協議規則 — https://open-doc.jkos.com/online-pay/general/api-protocol-rules
+- 加簽加密說明 — https://open-doc.jkos.com/online-pay/general/signature
+- 訂單創建 Entry API — https://open-doc.jkos.com/online-pay/api/entry
+- 代碼意義 API Response Code — https://open-doc.jkos.com/online-pay/api/response-code
+- 店家撥款檔 R 檔（線上支付）— https://open-doc.jkos.com/online-pay/api/reimburse-file
+- 店家撥款檔 R 檔（線下 POS）— https://open-doc.jkos.com/pos/api/reimburse-file
+- Web SDK（v2.0.8，含版本表、基礎開放能力、介面交互、按鈕、錯誤代碼）— https://open-doc.jkos.com/web-sdk/
 - UMD 套件中心 — https://upkg.jkos.com/
-- Web SDK Next — `…/inapp-第三方服務/web-sdk/next`（基礎開放能力、介面交互、按鈕、錯誤代碼）
-- 授權扣款 Authorized Payment — https://open-doc.jkos.com/?docs=授權扣款-authorized-payment
-- 授權創建 Binding — `…/授權扣款-authorized-payment/api列表-api-lists/授權綁定創建-authorization-binding`
-- 授權綁定結果通知 CallBack — `…/api列表-api-lists/授權綁定結果通知-authorization-callback`
-- 授權扣款發動 — `…/api列表-api-lists/授權扣款發動-merchant-platform-authorization-request`
-- 授權模組代碼意義 — `…/授權扣款-authorized-payment/api列表-api-lists/代碼意義-api-response-code`
+- 授權扣款 Authorized Payment — https://open-doc.jkos.com/authorized-payment/
+- 授權創建 Binding — https://open-doc.jkos.com/authorized-payment/api/create-authorization
+- 授權綁定結果通知 CallBack — https://open-doc.jkos.com/authorized-payment/api/authorization-callback
+- 授權扣款發動 — https://open-doc.jkos.com/authorized-payment/api/deduction
+- 授權模組代碼意義 — https://open-doc.jkos.com/authorized-payment/api/response-code
+- 文件站為需 JavaScript 渲染的 Docusaurus 網站（2026-10 改版，舊 `?docs=` 網址一律導回首頁）
 - 街口店家收款 — https://www.jkopay.com/application/store
 - TapPay 街口 Backend 文件 — https://docs.tappaysdk.com/jko-pay/zh/back.html
 - TapPay 街口支付服務頁 — https://www.tappaysdk.com/taiwan-zhtw/service/payments/jko-pay

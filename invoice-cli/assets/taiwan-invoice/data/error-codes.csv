@@ -156,7 +156,7 @@ Amego,3050111,第n筆 CancelInvoiceNumber 錯誤,,發票-作廢發票,見光貿 
 Amego,3050112,此 API 支援傳輸多張發票，data 欄位資料應為陣列字串,,發票-作廢發票,見光貿 API 錯誤代碼（invoice.amego.tw/info_detail?mid=71）
 Amego,3050113,第n筆 CancelReason 超過 20 字,,發票-作廢發票,見光貿 API 錯誤代碼（invoice.amego.tw/info_detail?mid=71）
 Amego,3050121,指定發票號碼 開立中,,發票-作廢發票,見光貿 API 錯誤代碼（invoice.amego.tw/info_detail?mid=71）
-Amego,3050122,指定發票號碼 已存在開立作廢,,發票-作廢發票,見光貿 API 錯誤代碼（invoice.amego.tw/info_detail?mid=71）
+Amego,3050122,指定發票號碼 已存在作廢,,發票-作廢發票,見光貿 API 錯誤代碼（invoice.amego.tw/info_detail?mid=71）
 Amego,3050123,指定發票號碼 已存在註銷,,發票-作廢發票,見光貿 API 錯誤代碼（invoice.amego.tw/info_detail?mid=71）
 Amego,3050124,指定發票號碼 發票類型錯誤,,發票-作廢發票,見光貿 API 錯誤代碼（invoice.amego.tw/info_detail?mid=71）
 Amego,3050125,指定發票號碼 發票不存在,,發票-作廢發票,見光貿 API 錯誤代碼（invoice.amego.tw/info_detail?mid=71）
