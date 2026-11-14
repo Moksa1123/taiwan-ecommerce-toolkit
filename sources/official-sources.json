@@ -5148,7 +5148,7 @@
    "taiwan-invoice/references/PAYNOW_API_REFERENCE.md",
    "tests/vectors/paynow.json"
   ],
-  "notes": "本機檔 E:/moksa-plugins/mowpmowp/reference/paynow-docs/PayNow_EInvoice_v1.5.pdf；公開下載網址未確認"
+  "notes": "本機檔 E:/moksa-plugins/mowp/reference/paynow-docs/PayNow_EInvoice_v1.5.pdf；公開下載網址未確認"
  },
  {
   "id": "paynow-guideline",
@@ -5601,7 +5601,7 @@
    "taiwan-payment/references/paynow-payment-api.md",
    "taiwan-payment/examples/paynow-payment-example.py"
   ],
-  "notes": "本機存於 E:/moksa-plugins/mowpmowp/reference/paynow-docs/；直連下載網址未記錄，需從 API Reference 頁取得"
+  "notes": "本機存於 E:/moksa-plugins/mowp/reference/paynow-docs/；直連下載網址未記錄，需從 API Reference 頁取得"
  },
  {
   "id": "payuni-errors-156",
