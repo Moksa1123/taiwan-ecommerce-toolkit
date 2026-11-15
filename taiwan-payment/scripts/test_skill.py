@@ -38,7 +38,9 @@ EXTRA_TESTS = {
     'taiwan-logistics': [['test_logistics.py']],
 }[SKILL.name]
 
-HEADINGS = ['資料出處', '用法', '路由', '使用', '驗證', '維護']
+# 中文版或英文版（SOP 6-9；英文寫的 skill 保持英文）
+HEADINGS = [('資料出處', 'Sources'), ('用法', 'Usage'), ('路由', 'Routing'),
+            ('使用', 'Tasks'), ('驗證', 'Verify'), ('維護', 'Maintenance')]
 TRUST = {'實測', '官方文件', '推論', '站內風格'}
 PENDING_COLS = ['date', 'question', 'why_not_found', 'asked_by', 'status']
 # 使用者會跑的腳本（SOP 6-2：只能用標準函式庫）
@@ -66,12 +68,14 @@ def test_structure() -> None:
     print('1. SKILL.md 結構')
     text = skill_md()
     heads = re.findall(r'^## (.+?)\s*$', text, re.M)
-    missing = [h for h in HEADINGS if h not in heads]
+    names = [pair[0 if '資料出處' in heads else 1] for pair in HEADINGS]
+    missing = [h for h in names if h not in heads]
     check('六個固定段落標題', not missing, '缺 ' + '、'.join(missing))
-    order = [heads.index(h) for h in HEADINGS if h in heads]
+    order = [heads.index(h) for h in names if h in heads]
     check('段落順序', order == sorted(order))
-    route = text.split('## 路由', 1)[-1].lstrip('\n').split('\n', 1)[0]
-    check('鐵則在路由段第一行', '先查再答' in route and 'pending.csv' in route, route[:60])
+    route = text.split('## ' + names[2], 1)[-1].lstrip('\n').split('\n', 1)[0]
+    rule = '先查再答' in route or 'look it up first' in route
+    check('鐵則在路由段第一行', rule and 'pending.csv' in route, route[:60])
     size = (SKILL / 'SKILL.md').stat().st_size
     check('SKILL.md ≤ 20KB', size <= 20 * 1024, f'{size:,} bytes')
     refs = sorted(p.name for p in (SKILL / 'references').glob('*.md'))
