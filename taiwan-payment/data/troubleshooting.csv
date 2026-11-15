@@ -1,47 +1,47 @@
-issue,symptom,cause,solution,provider,severity
-CheckMacValue / TradeSha 錯誤,ECPay 回傳 10200073；NewebPay 回傳 MPG02001（檢查碼錯誤）,ECPay：排序區分了大小寫 | URL encode 未依 .NET 規則（空白應為 +、( ) ! * 不編碼）| 物流誤用 SHA256 | NewebPay：TradeSha 字串格式錯誤,"ECPay：不分大小寫排序、PHP urlencode 後轉小寫並還原 ( ) ! * - _ .、金流 SHA256 / 物流 MD5 | NewebPay：SHA256(""HashKey={key}&{TradeInfo}&HashIV={iv}"") 轉大寫 | 以 tests/vectors 的已知答案自我檢查",ecpay/newebpay,high
-訂單編號重複,回傳 10100003 或訂單已存在,使用相同的 MerchantTradeNo,每筆訂單使用唯一編號 | 建議加入時間戳 | 長度限制 20 字元,ecpay/newebpay/payuni,high
-金額計算錯誤,回傳金額驗算錯誤,金額包含小數 | 金額為負數 | 金額為 0,確保金額為正整數 | 移除小數點 | 最小金額 1 元,ecpay/newebpay/payuni,high
-交易描述包含特殊字元,參數錯誤或亂碼,未進行 URL Encode | 包含特殊符號,使用 urlencode() 編碼 TradeDesc | 避免 & = # 等符號,ecpay/newebpay,medium
-AES 加密失敗,NewebPay TradeInfo 加密錯誤,Key/IV 長度錯誤 | Padding 錯誤 | 編碼問題,確認 HashKey 32 bytes | HashIV 16 bytes | 使用 PKCS7 padding,newebpay,high
-PAYUNi EncryptInfo 格式錯誤,PAYUNi 拒絕請求或解密失敗,把 EncryptInfo 做成 hex(密文+tag) | 少了最外層 hex | 加密內容用 JSON | HashInfo 順序錯,"EncryptInfo = hex( base64(密文) + "":::"" + base64(tag) )；內容為 query string；HashInfo = SHA256(HashKey + EncryptInfo + HashIV) 轉大寫",payuni,high
-收不到付款通知,ReturnURL 未收到通知,URL 不是 HTTPS | 防火牆阻擋 | 回應格式錯誤,確認 ReturnURL 使用 HTTPS | 檢查防火牆 | 回應 "1|OK",ecpay/newebpay/payuni,high
-測試卡無法付款,測試環境刷卡失敗,使用真實卡號 | 測試卡格式錯誤,使用官方提供的測試卡號 | ECPay: 4311-9522-2222-2222 | NewebPay: 4000-2211-1111-1111,ecpay/newebpay,medium
-信用卡交易失敗,顯示交易被拒絕,餘額不足 | 卡片過期 | 銀行風控,請客戶確認卡片狀態 | 聯繫發卡銀行 | 使用其他卡片,ecpay/newebpay/payuni,medium
-ATM 虛擬帳號未產生,ATM 付款未產生帳號,參數設定錯誤 | ExpireDate 格式錯誤,確認 ChoosePayment=ATM | 設定正確的 ExpireDate (yyyy/MM/dd) | 長度 3-60 天,ecpay/newebpay,medium
-超商代碼未產生,CVS 付款未產生代碼,參數設定錯誤 | Desc 長度超過,確認 ChoosePayment=CVS | Desc 限制 20 字元 | 設定 StoreExpireDate,ecpay/newebpay,medium
-定期定額建立失敗,週期扣款設定失敗,參數不完整 | 週期設定錯誤,確認 PeriodAmount/PeriodType/Frequency/ExecTimes 都有填 | PeriodType: D/M/Y,ecpay/newebpay,high
-查詢訂單失敗,QueryTradeInfo 無資料,訂單尚未付款 | MerchantTradeNo 錯誤,確認訂單已付款 | 檢查訂單編號正確性 | 測試環境查測試訂單,ecpay/newebpay/payuni,medium
-請款退款失敗,DoAction 失敗,訂單狀態不符 | 金額錯誤 | 超過期限,確認訂單已授權 | 退款金額不可超過原金額 | 注意請款期限,ecpay/newebpay/payuni,high
-跨域問題,前端導向付款頁失敗,CORS 限制 | 使用 AJAX,使用 Form POST 方式導向 | 不可使用 AJAX | 需整頁跳轉,ecpay/newebpay,medium
-商店代號錯誤,回傳商店不存在,MerchantID 錯誤 | 測試正式環境混用,確認 MerchantID 正確 | 測試環境用測試商店代號 | 正式環境用正式商店代號,ecpay/newebpay/payuni,high
-時間格式錯誤,MerchantTradeDate 格式錯誤,日期格式不符 | 時區問題,使用 yyyy/MM/dd HH:mm:ss 格式 | 使用伺服器時區 | 不可超過當前時間太多,ecpay/newebpay,medium
-JSON API 解析失敗,API 回應無法解析 | JSON 結構不符,回應格式錯誤 | API 版本不符,確認 PAYUNi API 版本 | 檢查 Content-Type: application/json | 記錄完整回應內容,payuni,high
-GCM tag 驗證失敗,解密失敗 | Tag verification failed,HashKey / HashIV 錯誤 | EncryptInfo 遭截斷或竄改 | 分離密文與 tag 的方式錯誤,"hex 解碼後以 "":::"" 分成 base64 密文與 base64 tag，各自 base64 解碼後再 decrypt_and_verify",payuni,high
-RESTful 端點錯誤,404 Not Found | 405 Method Not Allowed,端點路徑錯誤 | HTTP 方法錯誤,確認使用 POST 方法 | 檢查端點路徑 /api/upp | 測試環境使用 sandbox-api.payuni.com.tw,payuni,medium
-紅陽 send_time 一直逾時,交易被拒或回無效交易,send_time 格式為 fffssmmHHyyyyMMdd 毫秒在前日期在後 易誤寫成 yyyyMMddHHmmssfff | 超過 120 秒即失效,依手冊格式組字串並校時主機 NTP,sunpay,high
-紅陽 RSA 解密失敗,rsamsg 解出亂碼或長度不符,加密分段為 117 byte 但解密分段是 128 byte 兩者不同 易誤用同一數值,加密時每 117 byte 一段先 urlencode 再加密;解密時先 base64decode 後每 128 byte 一段 最後 urldecode,sunpay,high
-紅陽 check_value 驗證失敗,簽章不符被拒,head 與 body 未做 ASCII 升序排序 | null 值參數誤入簽名 | SHA2 密鑰位置錯誤,排序後 urlencode 再把 SHA2 密鑰接在字串尾端 最後 SHA256;null 值不參與簽名,sunpay,high
-紅陽 pay_result 12 判斷錯誤,訂單狀態誤判為已建立或誤判為不存在,交易 CallBack 的 12 是已建立 但查詢 API 的 12 是查無該筆訂單 同值不同義,兩支 API 的 pay_result 判斷邏輯必須分開寫 不可共用 mapping,sunpay,high
-紅陽超商取貨參數拼字,送出 receiver_name 被視為未帶必填欄位,請求端官方參數為 recevier_name 與 recevier_phone(i 與 e 顛倒) 但回應端是正確的 receiver_name,送出時用 recevier_* 接收時解析 receiver_*,sunpay,medium
-紅陽 CallBack 收不到,交易完成但系統未更新狀態,回傳網址含連接埠會被資安風控阻擋 | CallBack 僅在 30 分鐘內每 5 分鐘補發 超過即不再補發,移除網址中的 port;另實作查詢 API 定時對帳補回漏收的交易,sunpay,high
-紅陽超商代碼商品金額不符,交易被拒不允許送出,product 陣列的單價乘數量總和與 mn 不一致,調整商品明細使總和等於 mn;商品過多或含負數金額時整合為單一商品名稱送出,sunpay,medium
-紅陽物流通知解析失敗,貨態通知內容為亂碼或無法解析 JSON,物流狀態通知是 HTTP FORM POST key-value 非 JSON 且全部欄位經過 URL Encode,先 URL Decode(UTF-8) 再處理;注意訂單編號欄位為大寫 Td 與請求端的 td 不同,sunpay,medium
-街口授權扣款併發失敗,回 307 Payment with the same auth_no is allowed one at a time,同一 auth_no 同時僅允許一筆付款,以授權編號為鍵序列化扣款請求 勿並行送出,jkopay,high
-街口三套簽章搞混,不同模組驗簽一直失敗,街口線上支付用 HMAC-SHA256 簽 payload 原文;線下 POS 用 SHA256 簽排序後 JSON 尾接 MerchantKey 且須全小寫;OAuth 用 SHA256 簽 secret+jsonBody+timestamp除以1000除以86400 且需先轉小寫再轉大寫,三個模組的簽章程式碼必須各寫一份 不可共用,jkopay,high
-街口 POS 驗簽失敗 904,POS 付款回 StatusCode 904,欄位未依 Key 字母排序 | JSON 含空白或換行 | 字串欄位省略未帶空字串 | Sign 未轉全小寫,序列化時排序去空白 空值欄位帶空字串 最後將 Sign 轉小寫,jkopay,high
-街口 POS 折抵金額算錯,對帳金額與街口不符,POS 回傳的 RedeemAmount 與 StoreRedeemAmount 為負值 與線上支付 redeem_detail 的正值相反,POS 端對帳時折抵金額需取絕對值或直接相加(因其為負);實扣金額請用 DebitAmount,jkopay,medium
-街口 POS 斷線重送重複計費,同一筆交易出現兩筆成功紀錄,POS 端逾時重送時未檢查回應的 IsRep 欄位,IsRep=1 代表街口判定為重複交易 應視為同一筆而非新交易,jkopay,high
-街口代碼 301 意義判斷錯誤,依錯誤碼處理卻走錯分支,Platform API 的 301 是 Invalid auth_no 但 POS 的 StatusCode 301 是網路或系統異常 兩套代碼空間數字會相撞,依模組分開維護代碼對照表 勿共用同一份 mapping,jkopay,high
-街口幣重複發放,同一筆行銷活動發了兩次街口幣,收到 2-MT-9005 或 2-MT-9999 後換了新的 exchangeId 重送 街口視為新交易,必須用同一個 exchangeId 重送;帶相同 exchangeId 為冪等會回原訂單結果,jkopay,high
-街口折抵金額正負號反了,對帳金額差兩倍折抵金額,同名欄位在不同情境正負相反 付款與付款查詢為負值 退款與退款查詢為正值 線上支付的 redeem_detail 則一律為正值,在解析層依來源正規化正負號 勿在計算層才處理,jkopay,high
-街口 POS 查詢回 916 查無此訂單,剛送出的交易查不到,付款或退款送出後 15 秒內查詢可能因交易仍進行中而回 916,等待 15 秒後再查;另已送出 Cancel 的交易不可使用查詢 API,jkopay,medium
-街口 POS 退款單號用錯欄位,退款失敗或退到錯的訂單,POS 退款的 MerchantTradeNo 是退款流水號不是原付款流水號 原交易須用 TradeNo 指定,MerchantTradeNo 帶新的唯一退款單號 TradeNo 帶原街口端交易序號,jkopay,high
-街口線上支付退款單號重送無效,重送退款請求沒有反應或被拒,refund_order_id 一筆只能退一次 重送同號不會重試而是視為已使用,逾時後改用 Inquiry API 查詢結果 勿換號重送否則會變成第二筆退款,jkopay,high
-街口幣回應欄位解析失敗,取不到 Result 或 ResultObject,街口幣發放的回應欄位為 PascalCase(Result/Message/ResultObject) 與線上支付的小寫(result/message/result_object)不同,依模組分別定義回應模型 勿共用同一個 DTO,jkopay,medium
-SunPay RSA 加密失敗,RSA Encryption Failed,RSA 加密失敗,加密分段須為 117 byte 且需先 urlencode 再加密,sunpay,high
-SunPay RSA 解密失敗,RSA Decryption Failed,RSA 解密失敗,回傳 rsamsg 是紅陽以私鑰加密，須用紅陽「公鑰」還原（m=c^e mod n，PKCS#1 v1.5 type 1）；先把 URL-safe base64 的 - _ 換回 + / 再解碼，分段 128 byte，最後 urldecode,sunpay,high
-SunPay check_value 驗證失敗,Signature Mismatch,check_value 驗證失敗,送出：head 與 body 依 ASCII 排序、null 不參與、JSON urlencode 後尾接 SHA2 密鑰再 SHA256；回傳：對解密後「尚未 urldecode」的字串 + SHA2 密鑰計算，不可自行重新編碼,sunpay,high
-SunPay 交易發起時間逾時,Send Time Expired,交易發起時間逾時,send_time 格式為 fffssmmHHyyyyMMdd 且超過 120 秒視為無效 請校時,sunpay,high
-SunPay 物流金額超限,Logistics Amount Exceeded,物流金額超限,訂單金額大於 2 萬元無法使用物流服務,sunpay,high
-SunPay 回傳網址含連接埠被擋,Callback URL With Port Blocked,回傳網址含連接埠被擋,回傳網址不可帶 port 紅陽基於資安風控會阻擋,sunpay,high
+issue,symptom,cause,solution,provider,severity,doc_url,retrieved_on,trust
+CheckMacValue / TradeSha 錯誤,ECPay 回傳 10200073；NewebPay 回傳 MPG02001（檢查碼錯誤）,ECPay：排序區分了大小寫 | URL encode 未依 .NET 規則（空白應為 +、( ) ! * 不編碼）| 物流誤用 SHA256 | NewebPay：TradeSha 字串格式錯誤,"ECPay：不分大小寫排序、PHP urlencode 後轉小寫並還原 ( ) ! * - _ .、金流 SHA256 / 物流 MD5 | NewebPay：SHA256(""HashKey={key}&{TradeInfo}&HashIV={iv}"") 轉大寫 | 以 tests/vectors 的已知答案自我檢查",ecpay/newebpay,high,https://developers.ecpay.com.tw/ https://www.newebpay.com/website/Page/content/download_api,2026-08-08,推論
+訂單編號重複,回傳 10100003 或訂單已存在,使用相同的 MerchantTradeNo,每筆訂單使用唯一編號 | 建議加入時間戳 | 長度限制 20 字元,ecpay/newebpay/payuni,high,https://developers.ecpay.com.tw/ https://www.newebpay.com/website/Page/content/download_api https://docs.payuni.com.tw/,2026-08-08,推論
+金額計算錯誤,回傳金額驗算錯誤,金額包含小數 | 金額為負數 | 金額為 0,確保金額為正整數 | 移除小數點 | 最小金額 1 元,ecpay/newebpay/payuni,high,https://developers.ecpay.com.tw/ https://www.newebpay.com/website/Page/content/download_api https://docs.payuni.com.tw/,2026-08-08,推論
+交易描述包含特殊字元,參數錯誤或亂碼,未進行 URL Encode | 包含特殊符號,使用 urlencode() 編碼 TradeDesc | 避免 & = # 等符號,ecpay/newebpay,medium,https://developers.ecpay.com.tw/ https://www.newebpay.com/website/Page/content/download_api,2026-08-08,推論
+AES 加密失敗,NewebPay TradeInfo 加密錯誤,Key/IV 長度錯誤 | Padding 錯誤 | 編碼問題,確認 HashKey 32 bytes | HashIV 16 bytes | 使用 PKCS7 padding,newebpay,high,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,推論
+PAYUNi EncryptInfo 格式錯誤,PAYUNi 拒絕請求或解密失敗,把 EncryptInfo 做成 hex(密文+tag) | 少了最外層 hex | 加密內容用 JSON | HashInfo 順序錯,"EncryptInfo = hex( base64(密文) + "":::"" + base64(tag) )；內容為 query string；HashInfo = SHA256(HashKey + EncryptInfo + HashIV) 轉大寫",payuni,high,https://docs.payuni.com.tw/,2026-08-08,推論
+收不到付款通知,ReturnURL 未收到通知,URL 不是 HTTPS | 防火牆阻擋 | 回應格式錯誤,"確認 ReturnURL 使用 HTTPS | 檢查防火牆 | 回應 ""1|OK""",ecpay/newebpay/payuni,high,https://developers.ecpay.com.tw/ https://www.newebpay.com/website/Page/content/download_api https://docs.payuni.com.tw/,2026-08-08,推論
+測試卡無法付款,測試環境刷卡失敗,使用真實卡號 | 測試卡格式錯誤,使用官方提供的測試卡號 | ECPay: 4311-9522-2222-2222 | NewebPay: 4000-2211-1111-1111,ecpay/newebpay,medium,https://developers.ecpay.com.tw/ https://www.newebpay.com/website/Page/content/download_api,2026-08-08,推論
+信用卡交易失敗,顯示交易被拒絕,餘額不足 | 卡片過期 | 銀行風控,請客戶確認卡片狀態 | 聯繫發卡銀行 | 使用其他卡片,ecpay/newebpay/payuni,medium,https://developers.ecpay.com.tw/ https://www.newebpay.com/website/Page/content/download_api https://docs.payuni.com.tw/,2026-08-08,推論
+ATM 虛擬帳號未產生,ATM 付款未產生帳號,參數設定錯誤 | ExpireDate 格式錯誤,確認 ChoosePayment=ATM | 設定正確的 ExpireDate (yyyy/MM/dd) | 長度 3-60 天,ecpay/newebpay,medium,https://developers.ecpay.com.tw/ https://www.newebpay.com/website/Page/content/download_api,2026-08-08,推論
+超商代碼未產生,CVS 付款未產生代碼,參數設定錯誤 | Desc 長度超過,確認 ChoosePayment=CVS | Desc 限制 20 字元 | 設定 StoreExpireDate,ecpay/newebpay,medium,https://developers.ecpay.com.tw/ https://www.newebpay.com/website/Page/content/download_api,2026-08-08,推論
+定期定額建立失敗,週期扣款設定失敗,參數不完整 | 週期設定錯誤,確認 PeriodAmount/PeriodType/Frequency/ExecTimes 都有填 | PeriodType: D/M/Y,ecpay/newebpay,high,https://developers.ecpay.com.tw/ https://www.newebpay.com/website/Page/content/download_api,2026-08-08,推論
+查詢訂單失敗,QueryTradeInfo 無資料,訂單尚未付款 | MerchantTradeNo 錯誤,確認訂單已付款 | 檢查訂單編號正確性 | 測試環境查測試訂單,ecpay/newebpay/payuni,medium,https://developers.ecpay.com.tw/ https://www.newebpay.com/website/Page/content/download_api https://docs.payuni.com.tw/,2026-08-08,推論
+請款退款失敗,DoAction 失敗,訂單狀態不符 | 金額錯誤 | 超過期限,確認訂單已授權 | 退款金額不可超過原金額 | 注意請款期限,ecpay/newebpay/payuni,high,https://developers.ecpay.com.tw/ https://www.newebpay.com/website/Page/content/download_api https://docs.payuni.com.tw/,2026-08-08,推論
+跨域問題,前端導向付款頁失敗,CORS 限制 | 使用 AJAX,使用 Form POST 方式導向 | 不可使用 AJAX | 需整頁跳轉,ecpay/newebpay,medium,https://developers.ecpay.com.tw/ https://www.newebpay.com/website/Page/content/download_api,2026-08-08,推論
+商店代號錯誤,回傳商店不存在,MerchantID 錯誤 | 測試正式環境混用,確認 MerchantID 正確 | 測試環境用測試商店代號 | 正式環境用正式商店代號,ecpay/newebpay/payuni,high,https://developers.ecpay.com.tw/ https://www.newebpay.com/website/Page/content/download_api https://docs.payuni.com.tw/,2026-08-08,推論
+時間格式錯誤,MerchantTradeDate 格式錯誤,日期格式不符 | 時區問題,使用 yyyy/MM/dd HH:mm:ss 格式 | 使用伺服器時區 | 不可超過當前時間太多,ecpay/newebpay,medium,https://developers.ecpay.com.tw/ https://www.newebpay.com/website/Page/content/download_api,2026-08-08,推論
+JSON API 解析失敗,API 回應無法解析 | JSON 結構不符,回應格式錯誤 | API 版本不符,確認 PAYUNi API 版本 | 檢查 Content-Type: application/json | 記錄完整回應內容,payuni,high,https://docs.payuni.com.tw/,2026-08-08,推論
+GCM tag 驗證失敗,解密失敗 | Tag verification failed,HashKey / HashIV 錯誤 | EncryptInfo 遭截斷或竄改 | 分離密文與 tag 的方式錯誤,"hex 解碼後以 "":::"" 分成 base64 密文與 base64 tag，各自 base64 解碼後再 decrypt_and_verify",payuni,high,https://docs.payuni.com.tw/,2026-08-08,推論
+RESTful 端點錯誤,404 Not Found | 405 Method Not Allowed,端點路徑錯誤 | HTTP 方法錯誤,確認使用 POST 方法 | 檢查端點路徑 /api/upp | 測試環境使用 sandbox-api.payuni.com.tw,payuni,medium,https://docs.payuni.com.tw/,2026-08-08,推論
+紅陽 send_time 一直逾時,交易被拒或回無效交易,send_time 格式為 fffssmmHHyyyyMMdd 毫秒在前日期在後 易誤寫成 yyyyMMddHHmmssfff | 超過 120 秒即失效,依手冊格式組字串並校時主機 NTP,sunpay,high,https://www.sunpay.com.tw/developers/,2026-09-29,推論
+紅陽 RSA 解密失敗,rsamsg 解出亂碼或長度不符,加密分段為 117 byte 但解密分段是 128 byte 兩者不同 易誤用同一數值,加密時每 117 byte 一段先 urlencode 再加密;解密時先 base64decode 後每 128 byte 一段 最後 urldecode,sunpay,high,https://www.sunpay.com.tw/developers/,2026-09-29,推論
+紅陽 check_value 驗證失敗,簽章不符被拒,head 與 body 未做 ASCII 升序排序 | null 值參數誤入簽名 | SHA2 密鑰位置錯誤,排序後 urlencode 再把 SHA2 密鑰接在字串尾端 最後 SHA256;null 值不參與簽名,sunpay,high,https://www.sunpay.com.tw/developers/,2026-09-29,推論
+紅陽 pay_result 12 判斷錯誤,訂單狀態誤判為已建立或誤判為不存在,交易 CallBack 的 12 是已建立 但查詢 API 的 12 是查無該筆訂單 同值不同義,兩支 API 的 pay_result 判斷邏輯必須分開寫 不可共用 mapping,sunpay,high,https://www.sunpay.com.tw/developers/,2026-09-29,推論
+紅陽超商取貨參數拼字,送出 receiver_name 被視為未帶必填欄位,請求端官方參數為 recevier_name 與 recevier_phone(i 與 e 顛倒) 但回應端是正確的 receiver_name,送出時用 recevier_* 接收時解析 receiver_*,sunpay,medium,https://www.sunpay.com.tw/developers/,2026-09-29,推論
+紅陽 CallBack 收不到,交易完成但系統未更新狀態,回傳網址含連接埠會被資安風控阻擋 | CallBack 僅在 30 分鐘內每 5 分鐘補發 超過即不再補發,移除網址中的 port;另實作查詢 API 定時對帳補回漏收的交易,sunpay,high,https://www.sunpay.com.tw/developers/,2026-09-29,推論
+紅陽超商代碼商品金額不符,交易被拒不允許送出,product 陣列的單價乘數量總和與 mn 不一致,調整商品明細使總和等於 mn;商品過多或含負數金額時整合為單一商品名稱送出,sunpay,medium,https://www.sunpay.com.tw/developers/,2026-09-29,推論
+紅陽物流通知解析失敗,貨態通知內容為亂碼或無法解析 JSON,物流狀態通知是 HTTP FORM POST key-value 非 JSON 且全部欄位經過 URL Encode,先 URL Decode(UTF-8) 再處理;注意訂單編號欄位為大寫 Td 與請求端的 td 不同,sunpay,medium,https://www.sunpay.com.tw/developers/,2026-09-29,推論
+街口授權扣款併發失敗,回 307 Payment with the same auth_no is allowed one at a time,同一 auth_no 同時僅允許一筆付款,以授權編號為鍵序列化扣款請求 勿並行送出,jkopay,high,https://open-doc.jkos.com/,2026-08-08,推論
+街口三套簽章搞混,不同模組驗簽一直失敗,街口線上支付用 HMAC-SHA256 簽 payload 原文;線下 POS 用 SHA256 簽排序後 JSON 尾接 MerchantKey 且須全小寫;OAuth 用 SHA256 簽 secret+jsonBody+timestamp除以1000除以86400 且需先轉小寫再轉大寫,三個模組的簽章程式碼必須各寫一份 不可共用,jkopay,high,https://open-doc.jkos.com/,2026-08-08,推論
+街口 POS 驗簽失敗 904,POS 付款回 StatusCode 904,欄位未依 Key 字母排序 | JSON 含空白或換行 | 字串欄位省略未帶空字串 | Sign 未轉全小寫,序列化時排序去空白 空值欄位帶空字串 最後將 Sign 轉小寫,jkopay,high,https://open-doc.jkos.com/,2026-08-08,推論
+街口 POS 折抵金額算錯,對帳金額與街口不符,POS 回傳的 RedeemAmount 與 StoreRedeemAmount 為負值 與線上支付 redeem_detail 的正值相反,POS 端對帳時折抵金額需取絕對值或直接相加(因其為負);實扣金額請用 DebitAmount,jkopay,medium,https://open-doc.jkos.com/,2026-08-08,推論
+街口 POS 斷線重送重複計費,同一筆交易出現兩筆成功紀錄,POS 端逾時重送時未檢查回應的 IsRep 欄位,IsRep=1 代表街口判定為重複交易 應視為同一筆而非新交易,jkopay,high,https://open-doc.jkos.com/,2026-08-08,推論
+街口代碼 301 意義判斷錯誤,依錯誤碼處理卻走錯分支,Platform API 的 301 是 Invalid auth_no 但 POS 的 StatusCode 301 是網路或系統異常 兩套代碼空間數字會相撞,依模組分開維護代碼對照表 勿共用同一份 mapping,jkopay,high,https://open-doc.jkos.com/,2026-08-08,推論
+街口幣重複發放,同一筆行銷活動發了兩次街口幣,收到 2-MT-9005 或 2-MT-9999 後換了新的 exchangeId 重送 街口視為新交易,必須用同一個 exchangeId 重送;帶相同 exchangeId 為冪等會回原訂單結果,jkopay,high,https://open-doc.jkos.com/,2026-08-08,推論
+街口折抵金額正負號反了,對帳金額差兩倍折抵金額,同名欄位在不同情境正負相反 付款與付款查詢為負值 退款與退款查詢為正值 線上支付的 redeem_detail 則一律為正值,在解析層依來源正規化正負號 勿在計算層才處理,jkopay,high,https://open-doc.jkos.com/,2026-08-08,推論
+街口 POS 查詢回 916 查無此訂單,剛送出的交易查不到,付款或退款送出後 15 秒內查詢可能因交易仍進行中而回 916,等待 15 秒後再查;另已送出 Cancel 的交易不可使用查詢 API,jkopay,medium,https://open-doc.jkos.com/,2026-08-08,推論
+街口 POS 退款單號用錯欄位,退款失敗或退到錯的訂單,POS 退款的 MerchantTradeNo 是退款流水號不是原付款流水號 原交易須用 TradeNo 指定,MerchantTradeNo 帶新的唯一退款單號 TradeNo 帶原街口端交易序號,jkopay,high,https://open-doc.jkos.com/,2026-08-08,推論
+街口線上支付退款單號重送無效,重送退款請求沒有反應或被拒,refund_order_id 一筆只能退一次 重送同號不會重試而是視為已使用,逾時後改用 Inquiry API 查詢結果 勿換號重送否則會變成第二筆退款,jkopay,high,https://open-doc.jkos.com/,2026-08-08,推論
+街口幣回應欄位解析失敗,取不到 Result 或 ResultObject,街口幣發放的回應欄位為 PascalCase(Result/Message/ResultObject) 與線上支付的小寫(result/message/result_object)不同,依模組分別定義回應模型 勿共用同一個 DTO,jkopay,medium,https://open-doc.jkos.com/,2026-08-08,推論
+SunPay RSA 加密失敗,RSA Encryption Failed,RSA 加密失敗,加密分段須為 117 byte 且需先 urlencode 再加密,sunpay,high,https://www.sunpay.com.tw/developers/,2026-09-29,推論
+SunPay RSA 解密失敗,RSA Decryption Failed,RSA 解密失敗,回傳 rsamsg 是紅陽以私鑰加密，須用紅陽「公鑰」還原（m=c^e mod n，PKCS#1 v1.5 type 1）；先把 URL-safe base64 的 - _ 換回 + / 再解碼，分段 128 byte，最後 urldecode,sunpay,high,https://www.sunpay.com.tw/developers/,2026-09-29,推論
+SunPay check_value 驗證失敗,Signature Mismatch,check_value 驗證失敗,送出：head 與 body 依 ASCII 排序、null 不參與、JSON urlencode 後尾接 SHA2 密鑰再 SHA256；回傳：對解密後「尚未 urldecode」的字串 + SHA2 密鑰計算，不可自行重新編碼,sunpay,high,https://www.sunpay.com.tw/developers/,2026-09-29,推論
+SunPay 交易發起時間逾時,Send Time Expired,交易發起時間逾時,send_time 格式為 fffssmmHHyyyyMMdd 且超過 120 秒視為無效 請校時,sunpay,high,https://www.sunpay.com.tw/developers/,2026-09-29,推論
+SunPay 物流金額超限,Logistics Amount Exceeded,物流金額超限,訂單金額大於 2 萬元無法使用物流服務,sunpay,high,https://www.sunpay.com.tw/developers/,2026-09-29,推論
+SunPay 回傳網址含連接埠被擋,Callback URL With Port Blocked,回傳網址含連接埠被擋,回傳網址不可帶 port 紅陽基於資安風控會阻擋,sunpay,high,https://www.sunpay.com.tw/developers/,2026-09-29,推論

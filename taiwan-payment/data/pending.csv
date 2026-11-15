@@ -1,0 +1,5 @@
+date,question,why_not_found,asked_by,status
+2026-11-15,payment-methods.csv 的 openpoint、gamapay 兩列（OPENPOINT、橘子支）沒有登記官方來源,sources/official-sources.json 沒有這兩種支付的官方頁；先標推論、doc_url 空,taiwan-toolkit（SOP 第 5 項補出處）,open
+2026-11-15,reasoning.csv「成本考量」一列沒有對應服務商與出處,這列是比較多家的選型建議，沒有單一官方來源；標推論,taiwan-toolkit（SOP 第 5 項補出處）,open
+2026-11-15,error-codes-payuni-*.csv、error-codes.csv 等多來源檔的 doc_url 只到服務商文件入口，不是逐碼所在的頁,官方來源登記到「檔」而不是「列」；要逐碼對頁得改 _studies/harness/import_error_codes.py 輸出頁碼,taiwan-toolkit（SOP 第 5 項補出處）,open
+2026-11-15,test_payment.py 的 NewebPay／PAYUNi 已知答案測試需要 pycryptodome；沒裝時離線測試會標「略過」,AES 不在 Python 標準函式庫；ECPay（SHA256）一定會跑,taiwan-toolkit（SOP 6-2）,open

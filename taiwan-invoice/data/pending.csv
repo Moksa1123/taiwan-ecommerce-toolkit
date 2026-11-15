@@ -1,0 +1,3 @@
+date,question,why_not_found,asked_by,status
+2026-11-15,tax-rules.csv 8 列（B2C／B2B 應稅、零稅率、免稅的金額公式）沒有登記官方來源,公式由 test-invoice-amounts.py 驗算過但沒對到財政部或廠商文件的條文；標推論,taiwan-toolkit（SOP 第 5 項補出處）,open
+2026-11-15,troubleshooting.csv 6 列通用規則（載具與捐贈衝突、B2B 不可用載具或捐贈、已作廢、折讓超額、列印錯誤服務商）沒有服務商與出處,這些是跨廠商的共通規則，還沒對到財政部電子發票規格的條文；標推論,taiwan-toolkit（SOP 第 5 項補出處）,open

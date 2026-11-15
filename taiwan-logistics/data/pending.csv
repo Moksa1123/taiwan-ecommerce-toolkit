@@ -1,0 +1,3 @@
+date,question,why_not_found,asked_by,status
+2026-11-15,providers.csv 的 okmart（OK 超商）、shopee_store（蝦皮店到店）沒有官方文件網址,兩者沒有公開的串接文件；只能透過聚合商使用；標推論,taiwan-toolkit（SOP 第 5 項補出處）,open
+2026-11-15,status-codes.csv 等多來源檔的 doc_url 只到服務商文件入口，不是逐碼所在的頁,官方來源登記到「檔」而不是「列」；要逐碼對頁得改 _studies/harness/import_logistics_status.py,taiwan-toolkit（SOP 第 5 項補出處）,open
