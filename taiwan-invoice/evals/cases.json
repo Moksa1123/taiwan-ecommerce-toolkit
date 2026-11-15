@@ -1,0 +1,89 @@
+{
+  "about": "taiwan-invoice 真題：考加值中心文件裡的細節（網域、簽章公式、時間窗、錯誤碼、端點名稱），憑記憶不容易答對。評分：must 裡每一組都要命中（組內任一正規式命中即可，不分大小寫）。沒 skill 也答對的題沒有鑑別度（SOP 6-4），標 retired 並換題。",
+  "cases": [
+    {
+      "id": "sunpay-inv-prod-domain",
+      "question": "紅陽 SunPay 電子發票 API 正式環境的 API 網域是哪一個？inv.sunpay.com.tw 可以拿來打 API 嗎？",
+      "must": [["einv\\.sunpay\\.com\\.tw"], ["不行|不可以|不能|不是|後台|not"]],
+      "source": "https://www.sunpay.com.tw/developers/",
+      "trust": "官方文件"
+    },
+    {
+      "id": "sunpay-validate-token",
+      "question": "紅陽 SunPay 電子發票 API 有哪一支端點只驗證 Token、不產生發票資料，適合先拿來確認加密實作？",
+      "must": [["ValidateToken"]],
+      "source": "https://www.sunpay.com.tw/developers/",
+      "trust": "官方文件"
+    },
+    {
+      "id": "sunpay-three-sales-amounts",
+      "question": "紅陽 SunPay B2C 開立發票時，哪三個銷售額欄位是必填（即使是 0 也要帶）？",
+      "must": [["\\bsalesAmount"], ["zeroTaxSalesAmount"], ["freeTaxSalesAmount"]],
+      "source": "https://www.sunpay.com.tw/developers/",
+      "trust": "官方文件"
+    },
+    {
+      "id": "opay-timestamp-window",
+      "question": "歐付寶 O'Pay 電子發票 API 的 RqHeader.Timestamp 有效區間是多久？",
+      "must": [["(?<!\\d)10 ?(分鐘|分|min)"]],
+      "source": "https://developers.opay.tw/download/document",
+      "trust": "官方文件"
+    },
+    {
+      "id": "opay-b2b-modes",
+      "question": "歐付寶 O'Pay B2B 電子發票有哪兩種模式？哪一種才有「開立 → 確認」的兩階段？",
+      "must": [["存證"], ["交換"], ["交換模式.{0,30}(確認|Confirm)|(確認|Confirm).{0,40}交換"]],
+      "source": "https://developers.opay.tw/download/document",
+      "trust": "官方文件"
+    },
+    {
+      "id": "amego-sign-formula",
+      "question": "光貿 Amego 電子發票 API 的 sign 簽章怎麼算？輸入字串由哪些部分依序組成？",
+      "must": [["md5"], ["time"], ["APP[_ ]?KEY"]],
+      "source": "https://invoice.amego.tw/api_doc/",
+      "trust": "官方文件"
+    },
+    {
+      "id": "amego-error-3050131",
+      "question": "光貿 Amego 作廢發票時回錯誤碼 3050131 是什麼意思？",
+      "must": [["等待|待處理|處理中|pending|尚未完成"]],
+      "source": "https://invoice.amego.tw/info_detail?mid=71",
+      "trust": "官方文件"
+    },
+    {
+      "id": "smilepay-error-10033",
+      "question": "速買配 SmilePay 電子發票開立回 -10033 代表什麼限制？",
+      "must": [["48 ?(hr|小時|h)"]],
+      "source": "https://www.smilepay.net/",
+      "trust": "官方文件"
+    },
+    {
+      "id": "smilepay-account-field",
+      "question": "速買配 SmilePay 電子發票 API 用哪兩個參數做帳號認證（電子發票帳號與驗證碼的欄位名稱）？",
+      "must": [["Grvc"], ["Verify_key"]],
+      "source": "https://www.smilepay.net/",
+      "trust": "官方文件"
+    },
+    {
+      "id": "ezpay-error-key10007",
+      "question": "ezPay 電子發票回錯誤碼 KEY10007 是什麼原因？",
+      "must": [["30 ?(分鐘|分|min)"], ["停留|逾時|超過|timeout"]],
+      "source": "https://inv.ezpay.com.tw/Invoice_index/download",
+      "trust": "官方文件"
+    },
+    {
+      "id": "smilepay-error-10022",
+      "question": "速買配 SmilePay 開立發票回 -10022，是哪個欄位組合不合法？",
+      "must": [["統一編號|統編"], ["捐贈|DonateMark"]],
+      "source": "https://www.smilepay.net/",
+      "trust": "官方文件"
+    },
+    {
+      "id": "opay-donation-print",
+      "question": "歐付寶 O'Pay B2C 開立發票時，如果 Donation=1（要捐贈），Print 欄位必須帶什麼值？",
+      "must": [["Print.{0,20}(必須|要|=|為|帶).{0,6}0|(?<!\\d)0.{0,10}不列印"]],
+      "source": "https://developers.opay.tw/download/document",
+      "trust": "官方文件"
+    }
+  ]
+}

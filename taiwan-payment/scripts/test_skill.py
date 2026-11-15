@@ -42,7 +42,8 @@ HEADINGS = ['資料出處', '用法', '路由', '使用', '驗證', '維護']
 TRUST = {'實測', '官方文件', '推論', '站內風格'}
 PENDING_COLS = ['date', 'question', 'why_not_found', 'asked_by', 'status']
 # 使用者會跑的腳本（SOP 6-2：只能用標準函式庫）
-USER_SCRIPTS = ['core.py', 'search.py', 'recommend.py', 'check_numbers.py', 'test_skill.py']
+USER_SCRIPTS = ['core.py', 'search.py', 'recommend.py', 'check_numbers.py', 'test_skill.py',
+                'generate-invoice-service.py', 'generate-logistics-service.py', 'persist.py', 'error_handler.py']
 
 failed = 0
 passed = 0

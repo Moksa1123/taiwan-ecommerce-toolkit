@@ -1,0 +1,4 @@
+# examples/ 用到的第三方套件。
+# scripts/ 全部只用標準函式庫，不需要安裝。
+pycryptodome>=3.20   # AES-128-CBC／AES-256-CBC（綠界、O'Pay、SunPay、ezPay）
+requests>=2.31       # 範例的 HTTP 呼叫
