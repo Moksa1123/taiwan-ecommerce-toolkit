@@ -239,6 +239,10 @@ def search(
     for score, idx in scores[:max_results]:
         row = rows[idx]
         result = {col: row.get(col, '') for col in config['output_cols']}
+        # 出處欄（SOP 第 5 項）：回答時要附 doc_url，trust=推論 的不可說成官方規定
+        for col in ('doc_url', 'trust'):
+            if row.get(col):
+                result[col] = row[col]
         result['_score'] = round(score, 2)
         result['_domain'] = domain
         results.append(result)
@@ -256,6 +260,19 @@ def search_all(query: str, max_per_domain: int = 3) -> Dict[str, List]:
             all_results[domain] = results
 
     return all_results
+
+
+def dataset_stats() -> Dict[str, int]:
+    """每個搜尋域的筆數（SKILL.md 的數字由這裡產生，不手寫）"""
+    return {domain: len(load_csv(domain)[0]) for domain in CSV_CONFIG}
+
+
+def use_utf8_stdout() -> None:
+    """Windows 主控台預設不是 UTF-8，印中文會變亂碼"""
+    import sys
+    for stream in (sys.stdout, sys.stderr):
+        if hasattr(stream, 'reconfigure'):
+            stream.reconfigure(encoding='utf-8', errors='replace')
 
 
 if __name__ == '__main__':

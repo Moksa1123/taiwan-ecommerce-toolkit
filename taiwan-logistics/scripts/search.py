@@ -18,7 +18,7 @@ from pathlib import Path
 SCRIPT_DIR = Path(__file__).parent
 sys.path.insert(0, str(SCRIPT_DIR))
 
-from core import search, search_all, detect_domain, CSV_CONFIG
+from core import search, search_all, detect_domain, CSV_CONFIG, dataset_stats, use_utf8_stdout
 
 
 def format_text(results: list) -> str:
@@ -70,7 +70,7 @@ def main():
     )
 
     parser.add_argument(
-        'query',
+        'query', nargs='?',
         help='搜索關鍵字'
     )
     parser.add_argument(
@@ -92,7 +92,22 @@ def main():
         help='輸出格式 (預設: text)'
     )
 
+    parser.add_argument('--stats', action='store_true', help='列出每個搜尋域的筆數')
+
     args = parser.parse_args()
+    use_utf8_stdout()
+    if args.stats:
+        import json as _json
+        stats = dataset_stats()
+        if args.format == 'json':
+            print(_json.dumps(stats, ensure_ascii=False, indent=2))
+        else:
+            for name, count in stats.items():
+                print(f'{name:16s} {count}')
+            print(f"{'total':16s} {sum(stats.values())}")
+        return
+    if not args.query:
+        parser.error('要給搜索關鍵字，或用 --stats')
 
     # 執行搜索
     if args.domain == 'all':
