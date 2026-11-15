@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
 """
-台灣金流 API 連線測試腳本
+台灣金流加密已知答案測試（預設離線）＋測試環境連線（--live）
 
 支援平台: ECPay, NewebPay, PayUNi
 
 用法:
-    python test_payment.py                    # 測試 ECPay 連線
-    python test_payment.py --platform newebpay # 測試 NewebPay 連線
-    python test_payment.py --platform payuni   # 測試 PayUNi 連線
+    python test_payment.py                    # ECPay 已知答案測試（離線）
+    python test_payment.py --platform all     # 三家已知答案測試（離線）
+    python test_payment.py --platform newebpay --live  # 另外連 NewebPay 測試環境
     python test_payment.py --list             # 列出支援平台
     python test_payment.py --create           # 建立測試訂單
     python test_payment.py --query ORDER123   # 查詢訂單
@@ -152,8 +152,8 @@ def run_known_answer_test(platform: str) -> bool:
     if platform == 'ecpay':
         got = generate_ecpay_mac(params, key, iv)
     elif not HAS_CRYPTO:
-        print('  (需要 pycryptodome 套件: pip install pycryptodome)')
-        return False
+        print('  已知答案測試: 略過（AES 需要 pycryptodome：pip install -r requirements.txt）')
+        return None
     elif platform == 'newebpay':
         got = generate_newebpay_sha(generate_newebpay_trade_info(params, key, iv), key, iv)
     else:
@@ -166,8 +166,8 @@ def run_known_answer_test(platform: str) -> bool:
     return ok
 
 
-def test_connection(platform: str):
-    """測試 API 連線"""
+def test_connection(platform: str, live: bool = False):
+    """已知答案測試；live=True 時另外連測試環境。回傳 True／False／None（略過）"""
     config = PLATFORMS.get(platform)
     if not config:
         print(f'錯誤: 不支援的平台 "{platform}"')
@@ -189,18 +189,24 @@ def test_connection(platform: str):
 
     # 測試加密計算：以官方實作產生的標準答案比對，而不是只看長度
     print('[加密計算測試]')
-    run_known_answer_test(platform)
+    ok = run_known_answer_test(platform)
     print()
 
-    # 測試網路連線
-    if HAS_REQUESTS:
+    # 測試網路連線（SOP 6-6：預設不連網，要明確加 --live）
+    if not live:
+        print('[網路連線測試]')
+        print('  略過（離線模式；要連測試環境請加 --live）')
+    elif HAS_REQUESTS:
         print('[網路連線測試]')
         try:
             response = requests.head(config['test_url'], timeout=5)
             print(f'  狀態碼: {response.status_code}')
             print(f'  連線: {"成功" if response.status_code < 500 else "失敗"}')
+            if response.status_code >= 500:
+                ok = False
         except requests.RequestException as e:
             print(f'  連線失敗: {e}')
+            ok = False
     else:
         print('[網路連線測試]')
         print('  (需要 requests 套件: pip install requests)')
@@ -214,8 +220,9 @@ def test_connection(platform: str):
     print()
 
     print('=' * 60)
-    print('測試完成')
+    print('測試完成：' + {True: '通過', False: '失敗', None: '略過'}[ok])
     print('=' * 60)
+    return ok
 
 
 def create_test_order(platform: str):
@@ -338,7 +345,12 @@ def main():
         '--platform', '-p',
         type=str,
         default='ecpay',
-        help='金流平台 (ecpay/newebpay/payuni)'
+        help='金流平台 (ecpay/newebpay/payuni/all)'
+    )
+    parser.add_argument(
+        '--live',
+        action='store_true',
+        help='另外連測試環境（預設離線，只跑已知答案測試）'
     )
     parser.add_argument(
         '--list', '-l',
@@ -366,8 +378,18 @@ def main():
     elif args.query:
         query_order(args.platform, args.query)
     else:
-        test_connection(args.platform)
+        names = list(PLATFORMS) if args.platform == 'all' else [args.platform]
+        results = [test_connection(name, live=args.live) for name in names]
+        passed = sum(r is True for r in results)
+        skipped = sum(r is None for r in results)
+        failed = sum(r is False for r in results)
+        print(f'通過 {passed}、失敗 {failed}、略過 {skipped}')
+        return 1 if failed else 0
+    return 0
 
 
 if __name__ == '__main__':
-    main()
+    for _s in (sys.stdout, sys.stderr):
+        if hasattr(_s, 'reconfigure'):
+            _s.reconfigure(encoding='utf-8', errors='replace')
+    sys.exit(main())

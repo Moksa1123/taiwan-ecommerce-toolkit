@@ -5,8 +5,9 @@
 簽章／加解密一律沿用 examples/ 內已驗證的實作（CI 以官方測試向量比對），本檔不另寫一份。
 
 用法:
-    python test_logistics.py                  # 檢查全部廠商（簽章已知答案 + 測試環境連線）
+    python test_logistics.py                  # 檢查全部廠商（簽章已知答案；離線）
     python test_logistics.py ecpay            # 只檢查 ECPay
+    python test_logistics.py --live           # 另外連各家測試環境
     python test_logistics.py ecpay --create   # 於 ECPay 測試環境建立 C2C 測試訂單
     python test_logistics.py ecpay --query 1234567
 """
@@ -94,7 +95,7 @@ def check_reachable(base):
     return status < 500
 
 
-def check_provider(name):
+def check_provider(name, live=False):
     info = ENDPOINTS[name]
     print(f'=== {name} ===')
     ok = True
@@ -102,7 +103,10 @@ def check_provider(name):
         ok &= check_ecpay_signature()
     else:
         print('  簽章與加解密的已知答案測試：python scripts/verify-examples.py（repo 根目錄）')
-    ok &= check_reachable(info['base'])
+    if live:
+        ok &= check_reachable(info['base'])
+    else:
+        print('  連線測試：略過（離線模式；要連測試環境請加 --live）')
     print('  端點：' + '、'.join(info['paths']))
     print(f'  規格：{info["ref"]}')
     print()
@@ -124,6 +128,7 @@ def main():
     parser.add_argument('provider', nargs='?', choices=list(ENDPOINTS), help='指定廠商（預設全部）')
     parser.add_argument('--create', action='store_true', help='於 ECPay 測試環境建立 C2C 測試訂單')
     parser.add_argument('--query', metavar='ALL_PAY_LOGISTICS_ID', help='查詢 ECPay 測試環境物流訂單')
+    parser.add_argument('--live', action='store_true', help='另外連測試環境（預設離線）')
     args = parser.parse_args()
 
     if args.create or args.query:
@@ -138,9 +143,12 @@ def main():
             url, params = client.query_order(args.query)
         return ecpay_post(url, params)
 
-    results = [check_provider(name) for name in ([args.provider] if args.provider else ENDPOINTS)]
+    results = [check_provider(name, live=args.live) for name in ([args.provider] if args.provider else ENDPOINTS)]
     return 0 if all(results) else 1
 
 
 if __name__ == '__main__':
+    for _s in (sys.stdout, sys.stderr):
+        if hasattr(_s, 'reconfigure'):
+            _s.reconfigure(encoding='utf-8', errors='replace')
     sys.exit(main())
