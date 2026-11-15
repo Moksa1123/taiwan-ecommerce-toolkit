@@ -1,0 +1,23 @@
+{
+  "meta": {
+    "date": "2026-11-15",
+    "model": "claude-opus-5-5",
+    "how": "subagent 不用任何工具查資料，憑記憶作答"
+  },
+  "answers": {
+    "sunpay-rsa-chunk": "RSA-2048 PKCS#1 v1.5 分段加密時每段明文 245 bytes；用公鑰解密回應時每段密文 256 bytes。",
+    "pchomepay-notify-ip": "我記得 PChomePay 的通知來源 IP 是 210.71.200.0 網段（例如 210.71.200.100），白名單請加這個 IP；不確定，請以官方文件為準。",
+    "jkopay-digest-header": "簽章放在 HTTP header「DIGEST」，用 HMAC-SHA256、以 secret key 對請求 body（JSON 字串，GET 則為 query string）計算，輸出 hex；另帶 API-KEY header。",
+    "shopline-webhook-sign": "用 HMAC-SHA256 驗簽：把 header 裡的 timestamp 與原始 request body 以「timestamp.body」串接成輸入字串，以 webhook 簽章金鑰（signKey）計算後和 header 的 sign 比對。",
+    "ezpay-twqr-apiid": "我猜是「TWQRCreate」（建立 TWQR 訂單的 APIID）。",
+    "ezpay-padding-32": "要以 32 bytes 為區塊補齊（PKCS#7 block size 32），才會和官方範例一致。",
+    "sunpay-error-22": "錯誤碼 22 我記得是「檢查碼（ChkValue）錯誤」，即驗證碼比對失敗。",
+    "pchomepay-error-50009": "50009 代表退款金額超過可退金額（或訂單狀態不允許退款）；應檢查原訂單已退金額與狀態，修正退款金額後再送。",
+    "jkopay-error-307": "307 我記得是「交易已存在／平台訂單編號重複」，需換新的訂單編號重送。",
+    "shopline-error-4407": "4407 我猜是「訂單不存在或狀態不允許此操作」（例如交易已關閉，無法再請款／退款）。",
+    "paynow-error-r033": "R033 我記得是退款金額超過原交易可退金額，或原交易尚未請款／撥款完成而不符退款條件。",
+    "linepay-error-1193": "1193 代表交易已過期（付款請求逾時，transaction expired）。",
+    "paynow-bootstrap-key": "我不確定，猜測是固定字串「PayNowEncrypt」之類的 bootstrap key；需查官方文件。",
+    "ecpay-10100058": "不是 CheckMacValue 錯誤（那是 10200073）；10100058 代表付款失敗／信用卡授權失敗，屬於交易本身失敗，需請消費者改用其他卡或重新付款。"
+  }
+}

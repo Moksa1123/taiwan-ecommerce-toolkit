@@ -4,85 +4,256 @@
     {
       "id": "sunpay-inv-prod-domain",
       "question": "紅陽 SunPay 電子發票 API 正式環境的 API 網域是哪一個？inv.sunpay.com.tw 可以拿來打 API 嗎？",
-      "must": [["einv\\.sunpay\\.com\\.tw"], ["不行|不可以|不能|不是|後台|not"]],
+      "must": [
+        [
+          "einv\\.sunpay\\.com\\.tw"
+        ],
+        [
+          "不行|不可以|不能|不是|後台|not"
+        ]
+      ],
       "source": "https://www.sunpay.com.tw/developers/",
       "trust": "官方文件"
     },
     {
       "id": "sunpay-validate-token",
       "question": "紅陽 SunPay 電子發票 API 有哪一支端點只驗證 Token、不產生發票資料，適合先拿來確認加密實作？",
-      "must": [["ValidateToken"]],
+      "must": [
+        [
+          "ValidateToken"
+        ]
+      ],
       "source": "https://www.sunpay.com.tw/developers/",
-      "trust": "官方文件"
+      "trust": "官方文件",
+      "retired": "2026-11-15 沒 skill 也答對（無鑑別度）"
     },
     {
       "id": "sunpay-three-sales-amounts",
       "question": "紅陽 SunPay B2C 開立發票時，哪三個銷售額欄位是必填（即使是 0 也要帶）？",
-      "must": [["\\bsalesAmount"], ["zeroTaxSalesAmount"], ["freeTaxSalesAmount"]],
+      "must": [
+        [
+          "\\bsalesAmount"
+        ],
+        [
+          "zeroTaxSalesAmount"
+        ],
+        [
+          "freeTaxSalesAmount"
+        ]
+      ],
       "source": "https://www.sunpay.com.tw/developers/",
-      "trust": "官方文件"
+      "trust": "官方文件",
+      "retired": "2026-11-15 沒 skill 也答對（無鑑別度）"
     },
     {
       "id": "opay-timestamp-window",
       "question": "歐付寶 O'Pay 電子發票 API 的 RqHeader.Timestamp 有效區間是多久？",
-      "must": [["(?<!\\d)10 ?(分鐘|分|min)"]],
+      "must": [
+        [
+          "(?<!\\d)10 ?(分鐘|分|min)"
+        ]
+      ],
       "source": "https://developers.opay.tw/download/document",
-      "trust": "官方文件"
+      "trust": "官方文件",
+      "retired": "2026-11-15 沒 skill 也答對（無鑑別度）"
     },
     {
       "id": "opay-b2b-modes",
       "question": "歐付寶 O'Pay B2B 電子發票有哪兩種模式？哪一種才有「開立 → 確認」的兩階段？",
-      "must": [["存證"], ["交換"], ["交換模式.{0,30}(確認|Confirm)|(確認|Confirm).{0,40}交換"]],
+      "must": [
+        [
+          "存證"
+        ],
+        [
+          "交換"
+        ],
+        [
+          "交換模式.{0,30}(確認|Confirm)|(確認|Confirm).{0,40}交換"
+        ]
+      ],
       "source": "https://developers.opay.tw/download/document",
-      "trust": "官方文件"
+      "trust": "官方文件",
+      "retired": "2026-11-15 沒 skill 也答對（無鑑別度）"
     },
     {
       "id": "amego-sign-formula",
       "question": "光貿 Amego 電子發票 API 的 sign 簽章怎麼算？輸入字串由哪些部分依序組成？",
-      "must": [["md5"], ["time"], ["APP[_ ]?KEY"]],
+      "must": [
+        [
+          "md5"
+        ],
+        [
+          "time"
+        ],
+        [
+          "APP[_ ]?KEY"
+        ]
+      ],
       "source": "https://invoice.amego.tw/api_doc/",
-      "trust": "官方文件"
+      "trust": "官方文件",
+      "retired": "2026-11-15 沒 skill 也答對（無鑑別度）"
     },
     {
       "id": "amego-error-3050131",
       "question": "光貿 Amego 作廢發票時回錯誤碼 3050131 是什麼意思？",
-      "must": [["等待|待處理|處理中|pending|尚未完成"]],
+      "must": [
+        [
+          "等待|待處理|處理中|pending|尚未完成"
+        ]
+      ],
       "source": "https://invoice.amego.tw/info_detail?mid=71",
       "trust": "官方文件"
     },
     {
       "id": "smilepay-error-10033",
       "question": "速買配 SmilePay 電子發票開立回 -10033 代表什麼限制？",
-      "must": [["48 ?(hr|小時|h)"]],
+      "must": [
+        [
+          "48 ?(hr|小時|h)"
+        ]
+      ],
       "source": "https://www.smilepay.net/",
       "trust": "官方文件"
     },
     {
       "id": "smilepay-account-field",
       "question": "速買配 SmilePay 電子發票 API 用哪兩個參數做帳號認證（電子發票帳號與驗證碼的欄位名稱）？",
-      "must": [["Grvc"], ["Verify_key"]],
+      "must": [
+        [
+          "Grvc"
+        ],
+        [
+          "Verify_key"
+        ]
+      ],
       "source": "https://www.smilepay.net/",
-      "trust": "官方文件"
+      "trust": "官方文件",
+      "retired": "2026-11-15 沒 skill 也答對（無鑑別度）"
     },
     {
       "id": "ezpay-error-key10007",
       "question": "ezPay 電子發票回錯誤碼 KEY10007 是什麼原因？",
-      "must": [["30 ?(分鐘|分|min)"], ["停留|逾時|超過|timeout"]],
+      "must": [
+        [
+          "30 ?(分鐘|分|min)"
+        ],
+        [
+          "停留|逾時|超過|timeout"
+        ]
+      ],
       "source": "https://inv.ezpay.com.tw/Invoice_index/download",
       "trust": "官方文件"
     },
     {
       "id": "smilepay-error-10022",
       "question": "速買配 SmilePay 開立發票回 -10022，是哪個欄位組合不合法？",
-      "must": [["統一編號|統編"], ["捐贈|DonateMark"]],
+      "must": [
+        [
+          "(統一編號|統編|DonateMark).{0,20}(不可|不能|不得|必須為 ?0|須為 ?0|=\\s*0)"
+        ],
+        [
+          "捐贈|DonateMark"
+        ]
+      ],
       "source": "https://www.smilepay.net/",
       "trust": "官方文件"
     },
     {
       "id": "opay-donation-print",
       "question": "歐付寶 O'Pay B2C 開立發票時，如果 Donation=1（要捐贈），Print 欄位必須帶什麼值？",
-      "must": [["Print.{0,20}(必須|要|=|為|帶).{0,6}0|(?<!\\d)0.{0,10}不列印"]],
+      "must": [
+        [
+          "Print.{0,20}(必須|要|=|為|帶).{0,6}0|(?<!\\d)0.{0,10}不列印"
+        ]
+      ],
       "source": "https://developers.opay.tw/download/document",
+      "trust": "官方文件",
+      "retired": "2026-11-15 沒 skill 也答對（無鑑別度）"
+    },
+    {
+      "id": "amego-error-4040133",
+      "question": "光貿 Amego 開立折讓回錯誤碼 4040133，是什麼限制？",
+      "must": [
+        [
+          "一張折讓|僅支援一張|只能.{0,10}一張|只支援一張"
+        ]
+      ],
+      "source": "https://invoice.amego.tw/info_detail?mid=71",
+      "trust": "官方文件"
+    },
+    {
+      "id": "ezpay-error-lib10009",
+      "question": "ezPay 電子發票作廢時回 LIB10009，原因是什麼？",
+      "must": [
+        [
+          "未上傳|尚未上傳|還沒上傳|not uploaded"
+        ],
+        [
+          "財政部|大平台|MOF"
+        ]
+      ],
+      "source": "https://inv.ezpay.com.tw/Invoice_index/download",
+      "trust": "官方文件"
+    },
+    {
+      "id": "ezpay-error-clc10004",
+      "question": "ezPay 電子發票回錯誤碼 CLC10004 代表什麼？",
+      "must": [
+        [
+          "財政部|大平台|MOF"
+        ],
+        [
+          "連線|網路|connection|network"
+        ]
+      ],
+      "source": "https://inv.ezpay.com.tw/Invoice_index/download",
+      "trust": "官方文件"
+    },
+    {
+      "id": "smilepay-error-10057",
+      "question": "速買配 SmilePay 開立發票回 -10057 是哪個欄位有問題？",
+      "must": [
+        [
+          "自然人憑證"
+        ]
+      ],
+      "source": "https://www.smilepay.net/",
+      "trust": "官方文件"
+    },
+    {
+      "id": "smilepay-error-100411",
+      "question": "速買配 SmilePay 回 -100411 是什麼錯誤？",
+      "must": [
+        [
+          "RelateNumber|相關號碼"
+        ]
+      ],
+      "source": "https://www.smilepay.net/",
+      "trust": "官方文件"
+    },
+    {
+      "id": "ecpay-inv-4000004",
+      "question": "綠界 ECPay 電子發票 API 回 RtnCode 4000004 是成功還是失敗？代表什麼情況？",
+      "must": [
+        [
+          "成功"
+        ],
+        [
+          "觸發|DelayDay|延遲"
+        ]
+      ],
+      "source": "https://developers.ecpay.com.tw/",
+      "trust": "官方文件"
+    },
+    {
+      "id": "paynow-pos-invoice-numbers",
+      "question": "立吉富 PayNow 電子發票 REST API 給 POS 機批次取得發票號碼的端點路徑是什麼？",
+      "must": [
+        [
+          "/api/invoices/pos/invoice-numbers"
+        ]
+      ],
+      "source": "https://owlting.github.io/paynow-guideline/",
       "trust": "官方文件"
     }
   ]

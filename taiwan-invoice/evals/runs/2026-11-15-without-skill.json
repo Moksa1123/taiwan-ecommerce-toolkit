@@ -1,0 +1,21 @@
+{
+  "meta": {
+    "date": "2026-11-15",
+    "model": "claude-opus-5-5",
+    "how": "subagent 不用任何工具查資料，憑記憶作答"
+  },
+  "answers": {
+    "sunpay-inv-prod-domain": "正式環境 API 網域應為 einvoice.sunpay.com.tw（測試環境為 test-einvoice.sunpay.com.tw）；inv.sunpay.com.tw 是商家後台網站，不能拿來打 API。",
+    "sunpay-validate-token": "可用驗證 Token 的端點（例如 /api/Auth/ValidateToken 或 CheckToken），它只檢查 Token 與加密簽章是否正確、不會產生發票，適合先測加密實作。",
+    "sunpay-three-sales-amounts": "應稅銷售額 SalesAmount、免稅銷售額 FreeTaxSalesAmount、零稅率銷售額 ZeroTaxSalesAmount 三個欄位必填，沒有金額也要帶 0。",
+    "opay-timestamp-window": "RqHeader.Timestamp 為 Unix 時間戳，有效區間為 10 分鐘，超過即視為逾時被拒。",
+    "opay-b2b-modes": "B2B 分為「交換模式」與「存證模式」兩種；只有交換模式需要「開立 → 對方確認」的兩階段流程，存證模式開立即完成。",
+    "amego-sign-formula": "sign = MD5(data 的 JSON 字串 + time 的 Unix 時間戳 + APP Key)，依序串接後取 MD5（小寫 32 碼）。",
+    "amego-error-3050131": "3050131 表示該發票已經作廢（或已作廢過），不能重複作廢。",
+    "smilepay-error-10033": "-10033 代表發票開立日期超過可開立期限（例如只能開立當期或前 N 天內的發票），日期不在允許範圍內。",
+    "smilepay-account-field": "用 Grvc（電子發票帳號／商家代號）與 Verify_key（驗證碼）兩個參數做帳號認證。",
+    "ezpay-error-key10007": "KEY10007 表示 PostData_ 解密失敗或 HashKey／HashIV 錯誤，常見原因是加密金鑰不符或加密資料格式不正確。",
+    "smilepay-error-10022": "-10022 代表載具類別（CarrierType）與載具編號（CarrierID）組合不合法，例如手機條碼格式與載具類別不符或與捐贈／統編同時使用。",
+    "opay-donation-print": "Donation=1 捐贈時 Print 必須帶 0（不列印），且不可同時帶統一編號。"
+  }
+}

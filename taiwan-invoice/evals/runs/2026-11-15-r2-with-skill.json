@@ -1,0 +1,16 @@
+{
+  "meta": {
+    "date": "2026-11-15 第 2 輪",
+    "model": "claude-opus-5-5",
+    "how": "subagent 讀 SKILL.md、用 search.py 查"
+  },
+  "answers": {
+    "amego-error-4040133": "光貿 Amego 4040133 屬「折讓-開立折讓」錯誤：第 n 筆第 n 品項，目前僅支援一張折讓單折讓同一張發票（一張折讓單不能同時折讓多張發票）。出處 https://invoice.amego.tw/info_detail?mid=71",
+    "ezpay-error-lib10009": "ezPay LIB10009 表示發票已開立但尚未上傳至財政部，所以無法作廢；須等開立資料上傳財政部完成（次日 06:00 後）才可作廢。",
+    "ezpay-error-clc10004": "ezPay CLC10004 代表「財政部大平台網路連線異常」，屬捐贈碼（手機條碼／捐贈碼驗證）類錯誤，詳見 ezPay 手機條碼／捐贈碼驗證手冊 BDV 1.0.0 第六章。",
+    "smilepay-error-10057": "速買配 SmilePay -10057 是自然人憑證（CarrierID）格式錯誤，屬開立發票錯誤，要檢查 CarrierID 欄位。",
+    "smilepay-error-100411": "速買配 SmilePay -100411 是相關號碼（RelateNumber）錯誤，屬開立發票類錯誤。",
+    "ecpay-inv-4000004": "是成功：綠界觸發開立 API 在 DelayDay=0 時回 RtnCode 4000004 表示開立發票成功（DelayDay>0 則回 4000003 延後開立成功），其餘才是失敗，所以不能只判斷 RtnCode==1。出處 developers.ecpay.com.tw/15371",
+    "paynow-pos-invoice-numbers": "PayNow POS 批次取號端點是 POST /api/invoices/pos/invoice-numbers（帶 quantity 等，例 {\"quantity\":10,\"uuid\":\"辨識用\"}），取號後開立用 POST /api/invoices/pos/issue。"
+  }
+}

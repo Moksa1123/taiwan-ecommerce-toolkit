@@ -4,91 +4,154 @@
     {
       "id": "paynow-3des-key",
       "question": "PayNow 立吉富物流 API（Logistic_service）用 3DES 加密，24 bytes 的金鑰要怎麼組出來？",
-      "must": [["1234567890.{0,40}(Password|密碼|pwd).{0,40}123456(?!\\d)"]],
+      "must": [
+        [
+          "1234567890.{0,40}(Password|密碼|pwd).{0,40}123456(?!\\d)"
+        ]
+      ],
       "source": "https://owlting.github.io/paynow-guideline/",
       "trust": "官方文件"
     },
     {
       "id": "lalamove-quote-ttl",
       "question": "Lalamove API 取得的報價（quotationId）多久內要下單，不然就失效？",
-      "must": [["(?<!\\d)5 ?(分鐘|分|min)"]],
+      "must": [
+        [
+          "(?<!\\d)5 ?(分鐘|分|min)"
+        ]
+      ],
       "source": "https://developers.lalamove.com/",
-      "trust": "官方文件"
+      "trust": "官方文件",
+      "retired": "2026-11-15 沒 skill 也答對（無鑑別度）"
     },
     {
       "id": "lalamove-change-driver",
       "question": "Lalamove 訂單媒合到司機後，要過多久才可以呼叫 API 更換司機？",
-      "must": [["(?<!\\d)15 ?(分鐘|分|min)"]],
+      "must": [
+        [
+          "(?<!\\d)15 ?(分鐘|分|min)"
+        ]
+      ],
       "source": "https://developers.lalamove.com/",
-      "trust": "官方文件"
+      "trust": "官方文件",
+      "retired": "2026-11-15 沒 skill 也答對（無鑑別度）"
     },
     {
       "id": "ezship-param-naming",
       "question": "ezShip 台灣便利配的電子地圖和傳送訂單 API，賣家帳號參數各叫什麼名字？兩者命名風格一樣嗎？",
-      "must": [["\\bsuID\\b"], ["\\bsu_id\\b"]],
+      "must": [
+        [
+          "\\bsuID\\b"
+        ],
+        [
+          "\\bsu_id\\b"
+        ]
+      ],
       "source": "https://www.ezship.com.tw/service_doc/service_home_w18v1.jsp?vDocNo=1702",
       "trust": "官方文件"
     },
     {
       "id": "ecpay-status-7020",
       "question": "綠界物流狀態碼 7020 代表什麼？",
-      "must": [["遺失|lost"]],
+      "must": [
+        [
+          "遺失|lost"
+        ]
+      ],
       "source": "https://developers.ecpay.com.tw/7380/",
       "trust": "官方文件"
     },
     {
       "id": "payuni-lgr03014",
       "question": "PAYUNi 統一物流回 LGR03014 是什麼原因？",
-      "must": [["未啟用|未開通|沒有啟用|not enabled"], ["常溫"]],
+      "must": [
+        [
+          "未啟用|未開通|沒有啟用|not enabled"
+        ],
+        [
+          "常溫"
+        ]
+      ],
       "source": "https://docs.payuni.com.tw/",
       "trust": "官方文件"
     },
     {
       "id": "payuni-shipstatus-81",
       "question": "PAYUNi 統一物流的 ShipStatus 81 是什麼狀態？",
-      "must": [["關|closed|閉店"]],
+      "must": [
+        [
+          "關|closed|閉店"
+        ]
+      ],
       "source": "https://docs.payuni.com.tw/",
       "trust": "官方文件"
     },
     {
       "id": "pchomepay-ssnd",
       "question": "PChomePay 拍錢包物流狀態 SSND 是什麼意思？",
-      "must": [["寄件(門店|門市)|sender store|drop-?off"]],
+      "must": [
+        [
+          "寄件(門店|門市)|sender store|drop-?off"
+        ]
+      ],
       "source": "https://docs.google.com/document/d/1dPIPJc4xfyjkJ1i2yxaja4OP0G-iGFRXM08NDMuttZE/",
       "trust": "官方文件"
     },
     {
       "id": "smilepay-00022",
       "question": "速買配 SmilePay 物流狀態碼 00022 是什麼？",
-      "must": [["超重|overweight|重量"]],
+      "must": [
+        [
+          "超重|overweight|重量"
+        ]
+      ],
       "source": "https://www.smilepay.net/",
       "trust": "官方文件"
     },
     {
       "id": "paynow-7204",
       "question": "PayNow 立吉富物流狀態碼 7204 代表什麼情況？",
-      "must": [["退件|退貨|return"], ["關|轉店|閉店|closed"]],
+      "must": [
+        [
+          "退件|退貨|return"
+        ],
+        [
+          "關|轉店|閉店|closed"
+        ]
+      ],
       "source": "https://owlting.github.io/paynow-guideline/",
       "trust": "官方文件"
     },
     {
       "id": "newebpay-1111",
       "question": "藍新物流 API 回 1111 是什麼錯誤？",
-      "must": [["無法修改|不能修改|不可修改|cannot (be )?modif"]],
+      "must": [
+        [
+          "無法修改|不能修改|不可修改|cannot (be )?modif"
+        ]
+      ],
       "source": "https://www.newebpay.com/website/Page/download_file?name=%E7%89%A9%E6%B5%81%E6%9C%8D%E5%8B%99%E6%8A%80%E8%A1%93%E4%B8%B2%E6%8E%A5%E6%89%8B%E5%86%8A_NDNSv1.0.0.pdf",
       "trust": "官方文件"
     },
     {
       "id": "ezship-s06",
       "question": "ezShip 貨況狀態 S06 是什麼？",
-      "must": [["異常|exception"]],
+      "must": [
+        [
+          "異常|exception"
+        ]
+      ],
       "source": "https://www.ezship.com.tw/service_doc/service_home_w18v1.jsp?vDocNo=1702",
       "trust": "官方文件"
     },
     {
       "id": "ezship-711",
       "question": "ezShip 台灣便利配可以寄 7-ELEVEN 超商取貨嗎？",
-      "must": [["不(支援|含|包含|能|可以)|沒有|no\\b|not"]],
+      "must": [
+        [
+          "不(支援|含|包含|能|可以)|沒有|no\\b|not"
+        ]
+      ],
       "source": "https://www.ezship.com.tw/service_doc/service_home_w18v1.jsp?vDocNo=1702",
       "trust": "官方文件"
     }

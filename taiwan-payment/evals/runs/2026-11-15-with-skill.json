@@ -1,0 +1,23 @@
+{
+  "meta": {
+    "date": "2026-11-15",
+    "model": "claude-opus-5-5",
+    "how": "subagent 讀 SKILL.md、用 search.py 查"
+  },
+  "answers": {
+    "sunpay-rsa-chunk": "紅陽 SunPay 的 rsamsg 加密時每段明文 117 byte（1024-bit RSA PKCS#1 v1.5 上限），用公鑰解密回應時每段密文 128 byte；流程為 JSON → URLEncode → RSA 分段加密 → Base64，回應是 URL-safe base64 需先換回 +、/。",
+    "pchomepay-notify-ip": "PChomePay 後台以 113.196.231.190 發送 Notify 通知，請將此 IP 加入防火牆白名單，否則收不到付款／退款／物流狀態通知。",
+    "jkopay-digest-header": "放在 HTTP header `digest`（另需 `api-key` header），演算法為 HMAC-SHA256：以街口核發的 Secret Key 為金鑰，對 request payload 原文字串（POST 為 JSON body 原文、GET 為 query string 原文，不排序、不 URL encode）計算，輸出小寫 16 進位字串。",
+    "shopline-webhook-sign": "SHOPLINE Payments 以 signKey 對 `timestamp + \".\" + 原始 JSON body`（timestamp 取自 header，毫秒；body 不可重新序列化）計算 HMAC-SHA256（hex），與 webhook header 的 `sign` 比對一致才算驗簽通過。",
+    "ezpay-twqr-apiid": "ezPay 電子支付平台 TWQR 訂單建立的 APIID 是 `SCreateTWQR`（端點 https://cpayment.ezpay.com.tw/API/Twqr/SCreateTWQR 測試、payment.ezpay.com.tw 正式）。",
+    "ezpay-padding-32": "要以 32 bytes 為區塊做 PKCS#7 補齊（手冊 BlockSize=32）；用 AES 標準 16 bytes 補齊會得到與官方範例不同的密文。",
+    "sunpay-error-22": "紅陽 SunPay 錯誤碼 22 是「超過退款申請期限」，屬退款 API 回傳碼（紅陽金流技術串接手冊 4.6.2）。",
+    "pchomepay-error-50009": "PChomePay 錯誤碼 50009 表示「ATM 退款資訊未備齊，請隔日再試」，處理方式是隔日再重新呼叫退款 API。",
+    "jkopay-error-307": "街口 JKOPAY 錯誤碼 307 是「同一授權不可併發扣款」：同一 auth_no 同時僅允許一筆付款，扣款須序列化處理。",
+    "shopline-error-4407": "SHOPLINE Payments 錯誤碼 4407 代表「付款私鑰錯誤」（付款場景），出處為其錯誤碼附錄 docs.shoplinepayments.com/appendix/errorCode/。",
+    "paynow-error-r033": "PayNow 傳統版退款回 R033 表示「今日請款金額(+30)須大於退款金額」，即當日請款金額加 30 後仍須大於退款金額這個條件未滿足。",
+    "linepay-error-1193": "LINE Pay returnCode 1193 官方訊息為「Pre-approved payment key has expired.」，即自動付款（Preapproved）的 regKey 已過期；資料中沒有中文說明，出處 developers-pay.line.me/online-api-v3。",
+    "paynow-bootstrap-key": "PayNow 傳統版呼叫 GP/GK 時用的固定 Bootstrap Key 是 `paynowencryptpaynowcomtw28229955`（32 bytes），IV 是 `encrypt282299550`（16 bytes），AES-256-CBC + Zeros padding。",
+    "ecpay-10100058": "不是 CheckMacValue 錯誤（那是 10200073）；10100058 是 Pay fail（3D 驗證未完成），常見於瀏覽器版本、VPN、IP 不符銀行規範，定期定額時手機號碼與銀行資料不一致也會發生，可請消費者換瀏覽器／裝置、關 VPN、換網路。"
+  }
+}
