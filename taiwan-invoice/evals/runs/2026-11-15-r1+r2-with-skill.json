@@ -1,0 +1,22 @@
+{
+  "meta": {
+    "date": "2026-11-15 現行題組（第 1 輪留下 5 題＋第 2 輪新題 7 題）",
+    "model": "claude-opus-5-5",
+    "how": "subagent 讀 SKILL.md、用 search.py 查",
+    "file": "evals/runs/2026-11-15-r1+r2-with-skill.json"
+  },
+  "answers": {
+    "sunpay-inv-prod-domain": "紅陽 SunPay 電子發票正式環境 API 網域是 einv.sunpay.com.tw（https://einv.sunpay.com.tw/api/v1/SunPay/），測試是 testinv.sunpay.com.tw。inv.sunpay.com.tw 是發票管理後台入口，不是 API 網域，不能拿來打 API。",
+    "amego-error-3050131": "光貿 Amego 錯誤碼 3050131 表示「指定發票號碼 等待 開立/作廢/註銷」，即該發票號碼目前仍在等待開立／作廢／註銷處理中（出現在發票-作廢發票 API）。",
+    "smilepay-error-10033": "SmilePay -10033 表示「B2C開立需再48hr內」，B2C 發票必須在 48 小時內開立（B2B 對應的是 -10034，需在 168 小時內）。",
+    "ezpay-error-key10007": "ezPay KEY10007 是「頁面停留超過 30 分鐘」，處理方式是重新整理頁面後再送。",
+    "smilepay-error-10022": "開立發票回 -10022 表示「統一編號不可捐贈」：有帶統一編號（Buyer_id，B2B）時捐贈註記 DonateMark 必須為 0。（註：在開立折讓單 API，-10022 則代表商品各項目數量不符。）",
+    "amego-error-4040133": "光貿 Amego 4040133 屬「折讓-開立折讓」錯誤：第 n 筆第 n 品項，目前僅支援一張折讓單折讓同一張發票（一張折讓單不能同時折讓多張發票）。出處 https://invoice.amego.tw/info_detail?mid=71",
+    "ezpay-error-lib10009": "ezPay LIB10009 表示發票已開立但尚未上傳至財政部，所以無法作廢；須等開立資料上傳財政部完成（次日 06:00 後）才可作廢。",
+    "ezpay-error-clc10004": "ezPay CLC10004 代表「財政部大平台網路連線異常」，屬捐贈碼（手機條碼／捐贈碼驗證）類錯誤，詳見 ezPay 手機條碼／捐贈碼驗證手冊 BDV 1.0.0 第六章。",
+    "smilepay-error-10057": "速買配 SmilePay -10057 是自然人憑證（CarrierID）格式錯誤，屬開立發票錯誤，要檢查 CarrierID 欄位。",
+    "smilepay-error-100411": "速買配 SmilePay -100411 是相關號碼（RelateNumber）錯誤，屬開立發票類錯誤。",
+    "ecpay-inv-4000004": "是成功：綠界觸發開立 API 在 DelayDay=0 時回 RtnCode 4000004 表示開立發票成功（DelayDay>0 則回 4000003 延後開立成功），其餘才是失敗，所以不能只判斷 RtnCode==1。出處 developers.ecpay.com.tw/15371",
+    "paynow-pos-invoice-numbers": "PayNow POS 批次取號端點是 POST /api/invoices/pos/invoice-numbers（帶 quantity 等，例 {\"quantity\":10,\"uuid\":\"辨識用\"}），取號後開立用 POST /api/invoices/pos/issue。"
+  }
+}

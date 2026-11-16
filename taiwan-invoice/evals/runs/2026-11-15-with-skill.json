@@ -1,0 +1,21 @@
+{
+  "meta": {
+    "date": "2026-11-15",
+    "model": "claude-opus-5-5",
+    "how": "subagent 讀 SKILL.md、用 search.py 查"
+  },
+  "answers": {
+    "sunpay-inv-prod-domain": "紅陽 SunPay 電子發票正式環境 API 網域是 einv.sunpay.com.tw（https://einv.sunpay.com.tw/api/v1/SunPay/），測試是 testinv.sunpay.com.tw。inv.sunpay.com.tw 是發票管理後台入口，不是 API 網域，不能拿來打 API。",
+    "sunpay-validate-token": "用 ValidateToken（POST /api/v1/SunPay/ValidateToken），它只驗證 Token、不會產生發票資料，適合先確認 AES 加密實作與時間校正是否正確。",
+    "sunpay-three-sales-amounts": "salesAmount（應稅銷售額，未稅）、zeroTaxSalesAmount（零稅率銷售額）、freeTaxSalesAmount（免稅銷售額）三個都是必填，即使該類別為 0 也要帶。",
+    "opay-timestamp-window": "O'Pay 的 RqHeader.Timestamp（Unix timestamp）有效區間為 10 分鐘，超過即被拒絕，主機需做 NTP 校時。",
+    "opay-b2b-modes": "O'Pay B2B 分「存證模式」（單向，資料存證至財政部，開立方送出即可）與「交換模式」（雙向，仿紙本交付流程，需交易相對人確認）。「開立 → 確認」（如 Issue → IssueConfirm）的兩階段只存在於交換模式。",
+    "amego-sign-formula": "sign = md5(data 的 JSON 字串 + time + APP_KEY)，即依序串接 data 轉成的 JSON 字串、Unix Timestamp 的 time、再接 APP_KEY，對整個字串做 MD5（hex）。time 誤差容許 ±60 秒，data 送出時需 URL Encode。",
+    "amego-error-3050131": "光貿 Amego 錯誤碼 3050131 表示「指定發票號碼 等待 開立/作廢/註銷」，即該發票號碼目前仍在等待開立／作廢／註銷處理中（出現在發票-作廢發票 API）。",
+    "smilepay-error-10033": "SmilePay -10033 表示「B2C開立需再48hr內」，B2C 發票必須在 48 小時內開立（B2B 對應的是 -10034，需在 168 小時內）。",
+    "smilepay-account-field": "用 Grvc（電子發票帳號，由速買配提供，例如測試 SEI1000034）與 Verify_key（驗證碼）兩個參數做帳號認證。",
+    "ezpay-error-key10007": "ezPay KEY10007 是「頁面停留超過 30 分鐘」，處理方式是重新整理頁面後再送。",
+    "smilepay-error-10022": "開立發票回 -10022 表示「統一編號不可捐贈」：有帶統一編號（Buyer_id，B2B）時捐贈註記 DonateMark 必須為 0。（註：在開立折讓單 API，-10022 則代表商品各項目數量不符。）",
+    "opay-donation-print": "Donation=1（要捐贈）時，Print 必須帶 0（不列印）。"
+  }
+}

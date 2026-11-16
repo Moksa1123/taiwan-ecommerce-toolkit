@@ -1,0 +1,4 @@
+# examples/ 與 test_logistics.py --live／--create／--query 用到的第三方套件。
+# search.py、recommend.py、generate-logistics-service.py、check_numbers.py、test_skill.py 只用標準函式庫。
+pycryptodome>=3.20   # AES-256-CBC／GCM、3DES（藍新、PAYUNi、PayNow 等）
+requests>=2.31       # 範例的 HTTP 呼叫、test_logistics.py --live

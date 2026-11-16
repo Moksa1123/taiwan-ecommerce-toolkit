@@ -19,6 +19,8 @@ from core import (
     search_all,
     detect_domain,
     get_available_domains,
+    dataset_stats,
+    use_utf8_stdout,
     get_domain_info
 )
 
@@ -218,7 +220,20 @@ Examples:
     parser.add_argument('-f', '--format', choices=['ascii', 'simple', 'json', 'markdown', 'md'],
                         default='ascii', help='Output format (default: ascii)')
 
+    parser.add_argument('--stats', action='store_true', help='列出每個搜尋域的筆數')
+
     args = parser.parse_args()
+    use_utf8_stdout()
+    if args.stats:
+        import json as _json
+        stats = dataset_stats()
+        if args.format == 'json':
+            print(_json.dumps(stats, ensure_ascii=False, indent=2))
+        else:
+            for name, count in stats.items():
+                print(f'{name:16s} {count}')
+            print(f"{'total':16s} {sum(stats.values())}")
+        return
 
     # 列出域
     if args.list:

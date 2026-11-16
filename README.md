@@ -30,9 +30,9 @@
 Taiwan E-Commerce Toolkit 是專為台灣電商生態系統設計的企業級整合開發工具包，提供完整的電子發票、金流串接、物流整合解決方案。本工具包收錄台灣三大領域共 **33 個服務商**（9 家發票 + 14 家金流 + 10 家可串接物流），另收錄 10 家**無法直接串接**的物流業者與其替代路徑，搭配智能開發工具與生產級程式碼範例，協助開發團隊快速完成電商系統整合。
 
 **最新版本（請以 npm 為準）：**
-- `taiwan-invoice-skill@2.9.10+` — 9 家發票（ECPay / SmilePay / Amego / ezPay / PayNow / O'Pay / SunPay / 財政部大平台 / 關貿）
-- `taiwan-payment-skill@1.5.13+` — 14 家金流（ECPay / NewebPay / PAYUNi / SmilePay / PChomePay / ezPay / PayNow / Shopline / LINE Pay / TapPay / O'Pay / 街口 / 紅陽 / GoMyPay）
-- `taiwan-logistics-skill@1.4.10+` — 10 家可串接物流（7 aggregator + HCT 直連 + 2 家即時配送）＋ 10 家僅供查詢
+- `taiwan-invoice-skill@2.9.11+` — 9 家發票（ECPay / SmilePay / Amego / ezPay / PayNow / O'Pay / SunPay / 財政部大平台 / 關貿）
+- `taiwan-payment-skill@1.5.14+` — 14 家金流（ECPay / NewebPay / PAYUNi / SmilePay / PChomePay / ezPay / PayNow / Shopline / LINE Pay / TapPay / O'Pay / 街口 / 紅陽 / GoMyPay）
+- `taiwan-logistics-skill@1.4.11+` — 10 家可串接物流（7 aggregator + HCT 直連 + 2 家即時配送）＋ 10 家僅供查詢
 
 > **發票的兩個例外**：財政部大平台是上游，只做查詢／驗證（手機條碼、載具、捐贈碼），**不能開立發票**；關貿網路已收錄於資料層，但文件需簽約，尚無 reference。
 >
@@ -752,7 +752,7 @@ taiwan-logistics init --ai claude
 
 - 三個 skill 只提供文件、範例與本機腳本，不收集、不儲存個人資料，也不會把任何資料傳給本專案作者
 - `search.py`、`recommend.py`、`generate-*-service.py` 只讀本機 CSV 與範本，不連網；`persist.py` 只在本機寫入設定檔
-- `taiwan-payment/scripts/test_payment.py`、`taiwan-logistics/scripts/test_logistics.py` 只在你手動執行時，以腳本內的測試設定（綠界官方公開測試帳號，或你自行填入的測試商店資料）送請求到該服務商的**測試環境**（如 `payment-stage.ecpay.com.tw`、`ccore.newebpay.com`、`sandbox-api.payuni.com.tw`）
+- `taiwan-payment/scripts/test_payment.py`、`taiwan-logistics/scripts/test_logistics.py` 預設離線（只跑已知答案測試）；只有加 `--live`、`--create`、`--query` 手動執行時，以腳本內的測試設定（綠界官方公開測試帳號，或你自行填入的測試商店資料）送請求到該服務商的**測試環境**（如 `payment-stage.ecpay.com.tw`、`ccore.newebpay.com`、`sandbox-api.payuni.com.tw`）
 - 範例程式中的 API 呼叫由你自己的程式執行，送往你選用的服務商
 
 ---

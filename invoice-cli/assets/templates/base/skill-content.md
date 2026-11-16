@@ -2,507 +2,136 @@
 
 > {{DESCRIPTION}}
 
-## 快速導覽
+## 資料出處
 
-### 相關文件
-使用此技能時，請參考專案中的 API 規格文件：
-- `references/ECPAY_API_REFERENCE.md` - 綠界 API 規格
-- `references/SMILEPAY_API_REFERENCE.md` - 速買配 API 規格
-- `references/AMEGO_API_REFERENCE.md` - 光貿 API 規格
-- `references/EZPAY_API_REFERENCE.md` - ezPay 簡單付 API 規格（藍新金流集團）
-- `references/PAYNOW_API_REFERENCE.md` - 立吉富 PayNow API 規格（含 POS 機批次取號流程）
-- `references/OPAY_API_REFERENCE.md` - 歐付寶 O'Pay 發票 API（B2C / B2B / 離線，與綠界同源架構）
-- `references/SUNPAY_API_REFERENCE.md` - 紅陽 SunPay 發票 API（Token 欄位 AES-128-CBC）
-- `references/MOF_EINVOICE_API_REFERENCE.md` - 財政部大平台應用 API（手機條碼／捐贈碼驗證、中獎號碼；不能開立）
-- `references/VAC_LANDSCAPE.md` - 加值中心生態地圖與選型（沒收錄的加值中心怎麼辦）
-- [EXAMPLES.md](EXAMPLES.md) - 程式碼範例集
+| 項目 | 內容 |
+|---|---|
+| 來源 | 各加值中心官方 API 文件與 PDF 規格書、官方 SDK、財政部電子發票整合服務平台規格；每個來源登記在 repo 的 `sources/official-sources.json` |
+| 服務商 | `data/providers.csv` 共 9 筆：可開立的加值中心 7 家都有 reference，另有財政部大平台（只查詢）與關貿（只登記，沒有 reference） |
+| 筆數 | 共 **408 筆**，分 7 個搜尋域；各域筆數用 `python scripts/search.py --stats` 看，不在這裡手寫 |
+| 出處欄 | 每筆都有 `doc_url`（官方文件）與 `trust`（實測／官方文件／推論）；`retrieved_on` 是官方來源最近一次比對的日期 |
+| 加密實作 | 由官方 SDK 或規格書範例原封不動執行產生標準答案（`tests/vectors/`），範例逐位元組比對 |
+| 驗證 | 2026-11-15：自我測試全過、`verify-examples.py` 全過；已知落差記在 `data/pending.csv` |
 
-### 智能工具
-- `scripts/search.py` - BM25 搜索引擎（查詢 API、錯誤碼、欄位映射）
-- `scripts/recommend.py` - 加值中心推薦系統
-- `scripts/generate-invoice-service.py` - 服務代碼生成器
-- `scripts/persist.py` - 持久化配置工具（MASTER.md 生成）
-- `data/` - CSV 數據檔（providers, operations, error-codes, field-mappings, tax-rules, troubleshooting, reasoning）
+`trust` 是「推論」的資料（`reasoning` 選型建議、`troubleshoot` 疑難排解、`tax` 金額公式）是依官方文件歸納的，
+轉述給使用者時要說「建議」或「依規格推算」，不可以說成官方規定。
 
-### 何時使用此技能
-- 開發電子發票開立功能
-- 整合台灣電子發票服務商 API
-- 實作 B2C（二聯式）或 B2B（三聯式）發票
-- 處理發票列印、作廢、折讓等功能
-- 處理加密簽章（AES、MD5）
-- 解決發票 API 整合問題
+## 用法
 
-## 智能搜索與推薦
+**何時用**
 
-### 搜索引擎 (search.py)
+- 開立 B2C（二聯式）、B2B（三聯式）電子發票，作廢、折讓、註銷重開
+- 載具（手機條碼、自然人憑證）、捐贈碼、統編的驗證
+- 發票金額與稅額計算（含稅、未稅、零稅率、免稅）
+- 加密與簽章、列印、選加值中心、查錯誤碼
+- 財政部大平台查詢（手機條碼驗證、捐贈碼、中獎號碼）
 
-使用 BM25 算法在資料庫中搜索相關資訊：
+**何時不用**
 
-```bash
-# 搜索加值中心
-python scripts/search.py "ecpay" --domain provider
+| 情況 | 改用 |
+|---|---|
+| 收款、刷卡、退款 | `taiwan-payment` skill |
+| 出貨、超取、物流單 | `taiwan-logistics` skill |
+| 營業稅申報、會計帳務 | 不在資料集內；直接說查不到 |
+| 用財政部大平台開立發票 | 大平台不能開立，要透過加值中心 |
 
-# 搜索錯誤碼
-python scripts/search.py "10000009" --domain error
+**唯一入口：`scripts/search.py`。** 任何問題先用它查，其他工具都是查完之後的下一步。
 
-# 搜索欄位映射
-python scripts/search.py "MerchantID" --domain field
+| 使用者會跑的 | 用途 |
+|---|---|
+| `scripts/search.py` | 入口：查資料庫（`--stats` 看筆數） |
+| `scripts/recommend.py` | 依需求推薦加值中心 |
+| `scripts/generate-invoice-service.py` | 產生服務骨架（未實作的步驟會拋 `NotImplementedError`） |
+| `scripts/persist.py` | 把專案的發票設定存成 `MASTER.md` |
+| `scripts/test_skill.py` | 自我測試：數字核對、出處欄、路由表、evals 題庫格式、既有測試 |
+| `scripts/check_numbers.py` | 核對 SKILL.md 每個數字與資料一致 |
+| `examples/*.py` | 各家可執行範例（複製進專案用） |
 
-# 搜索稅務規則
-python scripts/search.py "B2B 稅額計算" --domain tax
+| 維護者用的（repo 根目錄） | 用途 |
+|---|---|
+| `scripts/verify-examples.py` | 範例對官方標準答案 |
+| `scripts/validate-data.py` | CSV 格式、主鍵、檔案大小 |
+| `scripts/check-sources.py` | 比對官方來源有沒有改版 |
+| `scripts/add-provenance.py` | 補 CSV 出處欄 |
 
-# 搜索疑難排解
-python scripts/search.py "列印空白" --domain troubleshoot
+**依賴**：`scripts/` 全部只用 Python 標準函式庫。`examples/` 的 AES 加解密需要 `pycryptodome`，HTTP 呼叫需要 `requests`：
+`pip install -r requirements.txt`。
 
-# JSON 輸出
-python scripts/search.py "折讓" --format json
-```
+## 路由
 
-**搜索域：**
-| 域 | 說明 | CSV 檔案 |
-|-----|------|----------|
-| `provider` | 加值中心比較 | providers.csv |
-| `operation` | API 操作端點 | operations.csv |
-| `error` | 錯誤碼查詢 | error-codes.csv |
-| `field` | 欄位映射 | field-mappings.csv |
-| `tax` | 稅務計算規則 | tax-rules.csv |
-| `troubleshoot` | 疑難排解 | troubleshooting.csv |
-| `reasoning` | 推薦決策規則 | reasoning.csv |
-
-### 推薦系統 (recommend.py)
-
-根據需求自動推薦最適合的加值中心：
+**鐵則：先查再答，不憑記憶。查不到就說查不到，標「待補」並記進 `data/pending.csv`，不猜。**
 
 ```bash
-# 高交易量電商
-python scripts/recommend.py "電商 高交易量 穩定"
-# → 推薦 ECPay (市佔率高，穩定性佳)
-
-# 快速整合需求
-python scripts/recommend.py "簡單 快速 小型專案"
-# → 推薦 SmilePay (整合最簡單)
-
-# API 設計優先
-python scripts/recommend.py "API 設計 MIG標準"
-# → 推薦 Amego (MIG 4.0 最新標準)
-
-# JSON 輸出
-python scripts/recommend.py "穩定 文檔完整" --format json
+python scripts/search.py "<關鍵字>"                 # 自動偵測域
+python scripts/search.py "<關鍵字>" --domain <域>   # 只搜那一個域
+python scripts/search.py "<關鍵字>" --all           # 每個域都搜
+python scripts/search.py --stats                    # 每個域有幾筆
 ```
 
-**推薦關鍵字：**
-- **ECPay**: 穩定、市佔、文檔、SDK、高交易量、電商
-- **SmilePay**: 簡單、快速、小型、測試、無加密、便宜
-- **Amego**: API、設計、新、MIG、標準
-- **ezPay**: 藍新、簡單付、AES-256、字軌管理、批次開立、與 Newebpay 同集團
-- **PayNow**: 立吉富、JWT、金物流發票一站式、POS 批次取號、外帶 POS 機
-
-### 代碼生成器 (generate-invoice-service.py)
-
-自動生成服務商專用代碼：
-
-```bash
-# TypeScript（預設）
-python scripts/generate-invoice-service.py ECPay
-
-# Python
-python scripts/generate-invoice-service.py SmilePay --lang python
-
-# 指定輸出目錄
-python scripts/generate-invoice-service.py Amego --output ./lib/services/
-```
-
-### 持久化配置 (persist.py)
-
-將發票配置保存為 MASTER.md，供 AI 助手持續參考：
-
-```bash
-# 初始化配置
-python scripts/persist.py init ECPay
-python scripts/persist.py init SmilePay -p "MyProject"
-
-# 顯示當前配置
-python scripts/persist.py show
-
-# 列出可用服務商
-python scripts/persist.py list
-
-# 強制覆蓋
-python scripts/persist.py init Amego --force
-```
-
-**生成結構：**
-```
-invoice-config/
-└── MASTER.md       # 專案發票配置
-    ├── 基本資訊
-    ├── 服務商配置
-    ├── API 端點
-    ├── 發票類型設定
-    ├── 環境變數建議
-    └── 開發檢查清單
-```
-
----
-
-## 發票類型
-
-### B2C 二聯式發票
-- 買受人無統編
-- `BuyerIdentifier` = `0000000000`
-- 金額為**含稅價**
-- 可使用載具或捐贈
-- 示例：一般消費者購物
-
-### B2B 三聯式發票
-- 買受人有 8 碼統編
-- `BuyerIdentifier` = 實際統編（需驗證格式）
-- 金額為**未稅價**，需另計稅額
-- **不可**使用載具或捐贈
-- 示例：公司採購
-
-## 各服務商特性比較
-
-| 特性 | 綠界 ECPay | 速買配 SmilePay | 光貿 Amego | ezPay 簡單付 | PayNow 立吉富 |
-|------|-----------|-----------------|------------|--------------|----------------|
-| 測試/正式 URL | 不同 URL | 不同 URL | **相同 URL** | 不同 URL (cinv/inv) | 不同 URL (dev/prod) |
-| 認證方式 | AES-128-CBC + HashKey/HashIV | Grvc + Verify_key | MD5 簽章 + App Key | AES-256-CBC + 32 碼 HashKey + 16 碼 HashIV + SHA256 CheckCode | JWT Bearer Token |
-| 列印方式 | POST 表單提交 | GET URL 參數 | API 取得 PDF URL | 無列印 API（`/Api/invoice_touch_issue` 是觸發「待開立」發票，不是列印） | REST 無列印 API；SOAP 用 `Get_InvoiceURL_I` 取得發票連結 |
-| B2B 金額欄位 | SalesAmount (未稅) | UnitTAX=N | DetailVat=0 | `Category=B2B` + `Amt`/`TaxAmt` 拆分 | `BuyerIdentifier` + `TaxType` 切換 |
-| 傳輸格式 | JSON (AES 加密) | URL Parameters | JSON (URL Encode) | Form Post (`MerchantID_`/`PostData_` 後綴底線) | JSON (Bearer Header) |
-| 與其他系統共用加密 | 獨立 | 獨立 | 獨立 | AES-256-CBC（與藍新同演算法、金鑰獨立） | 與 PayNow 金流不同（金流端用動態 AES-256） |
-| 文件成熟度 | 高 | 高 | 中 | 中（5 本 PDF） | **低**（公開頁面僅約 70 行，多項 API 須索取 PDF） |
-
-## 開發實作步驟
-
-### 1. 服務實作架構
-
-創建服務時遵循以下結構：
-
-```typescript
-// lib/services/invoice-provider.ts - 介面定義
-export interface InvoiceService {
-    issueInvoice(userId: string, data: InvoiceIssueData): Promise<InvoiceIssueResponse>
-    voidInvoice(userId: string, invoiceNumber: string, reason: string): Promise<InvoiceVoidResponse>
-    printInvoice(userId: string, invoiceNumber: string): Promise<InvoicePrintResponse>
-}
-
-// lib/services/{provider}-invoice-service.ts - 各服務商實作
-export class ECPayInvoiceService implements InvoiceService {
-    private async encryptData(data: any, hashKey: string, hashIV: string): Promise<string> {
-        // AES-128-CBC 加密實作
-    }
-
-    async issueInvoice(userId: string, data: InvoiceIssueData) {
-        // 1. 取得使用者設定
-        // 2. 準備 API 資料
-        // 3. 加密簽章
-        // 4. 發送請求
-        // 5. 解密回應
-        // 6. 回傳標準格式
-    }
-}
-```
-
-### 2. 金額計算邏輯
-
-**含稅總額 → 未稅金額 + 稅額：**
-
-```typescript
-function calculateInvoiceAmounts(totalAmount: number, isB2B: boolean) {
-    if (isB2B) {
-        // B2B: 需分拆稅額
-        const taxAmount = Math.round(totalAmount - (totalAmount / 1.05))
-        const salesAmount = totalAmount - taxAmount
-        return { salesAmount, taxAmount, totalAmount }
-    } else {
-        // B2C: 含稅總額
-        return { salesAmount: totalAmount, taxAmount: 0, totalAmount }
-    }
-}
-
-// 範例
-const amounts = calculateInvoiceAmounts(1050, true)
-// { salesAmount: 1000, taxAmount: 50, totalAmount: 1050 }
-```
-
-### 3. 加密實作
-
-**綠界 (ECPay) - AES 加密：**
-
-```typescript
-import crypto from 'crypto'
-
-function encryptECPay(data: object, hashKey: string, hashIV: string): string {
-    // 1. JSON 轉字串並 URL Encode
-    const jsonString = JSON.stringify(data)
-    const urlEncoded = encodeURIComponent(jsonString)
-
-    // 2. AES-128-CBC 加密
-    const cipher = crypto.createCipheriv('aes-128-cbc', hashKey, hashIV)
-    let encrypted = cipher.update(urlEncoded, 'utf8', 'base64')
-    encrypted += cipher.final('base64')
-
-    return encrypted
-}
-
-function decryptECPay(encryptedData: string, hashKey: string, hashIV: string): object {
-    const decipher = crypto.createDecipheriv('aes-128-cbc', hashKey, hashIV)
-    let decrypted = decipher.update(encryptedData, 'base64', 'utf8')
-    decrypted += decipher.final('utf8')
-
-    const urlDecoded = decodeURIComponent(decrypted)
-    return JSON.parse(urlDecoded)
-}
-```
-
-**光貿 (Amego) - MD5 簽章：**
-
-```typescript
-function generateAmegoSign(data: object, time: number, appKey: string): string {
-    const dataString = JSON.stringify(data)
-    const signString = dataString + time + appKey
-    return crypto.createHash('md5').update(signString).digest('hex')
-}
-```
-
-### 4. 服務商綁定
-
-**關鍵：開立發票時必須記錄使用的服務商，列印時才能正確調用**
-
-```typescript
-// 開立時儲存服務商
-await prisma.financialRecord.update({
-    where: { id: recordId },
-    data: {
-        invoiceNo: result.invoiceNumber,
-        invoiceProvider: actualProvider,  // 'ECPAY' | 'SMILEPAY' | 'AMEGO'
-        invoiceRandomNum: result.randomNumber, // **重要**：列印時需要
-        invoiceDate: new Date(),
-    }
-})
-
-// 列印時使用開立時的服務商
-const service = record.invoiceProvider
-    ? InvoiceServiceFactory.getService(record.invoiceProvider)
-    : await InvoiceServiceFactory.getServiceForUser(userId)
-```
-
-### 5. 列印回應處理
-
-前端需根據回應類型處理：
-
-```typescript
-// 後端回應格式
-interface InvoicePrintResponse {
-    success: boolean
-    type?: 'html' | 'redirect' | 'form'
-    htmlContent?: string      // 綠界
-    printUrl?: string          // 速買配/光貿
-    formUrl?: string
-    formParams?: Record<string, string>
-}
-
-// 前端處理範例
-if (result.type === 'html') {
-    const win = window.open('', '_blank')
-    win.document.write(result.htmlContent)
-} else if (result.type === 'redirect') {
-    window.open(result.url, '_blank')
-} else if (result.type === 'form') {
-    // 動態建立表單提交
-    const form = document.createElement('form')
-    form.method = 'POST'
-    form.action = result.formUrl
-    form.target = '_blank'
-    // ... 添加參數
-    form.submit()
-}
-```
-
-## 常見問題排除
-
-### 問題 1: 開立發票失敗，錯誤訊息不明確
-
-**診斷步驟：**
-1. 檢查 logger 輸出，查看 `raw` 欄位完整錯誤
-2. 確認環境變數（測試/正式）是否正確
-3. 驗證必填欄位是否完整
-
-**綠界常見錯誤：**（綠界未公開完整代碼表，一律記錄 `RtnMsg`；完整說明見 references）
-- `10000009`: RelateNumber 重複 → 訂單編號已使用
-- `10000002`: 必填欄位遺漏 → Phone/Email 至少填一個、檢查 Items 格式
-- `1500047` / `5070350`: 字軌未新增、未啟用或已用罄 → 後台「字軌與配號設定」
-
-**速買配常見錯誤：**
-- `-10066`: 商品總金額(AllAmount)驗算錯誤 → 檢查是否傳入 TotalAmount
-- `-10084`: orderid 格式錯誤 → 限制 30 字元
-- `-10052`: 載具號碼(CarrierID)錯誤 → 驗證手機條碼格式（`-10053` 是查無載具號碼）
-
-**光貿常見錯誤：**
-- `3040171`: OrderId 重複 → 使用唯一訂單編號
-- `3040174` / `3040177` / `3040178`: SalesAmount / TaxAmount / TotalAmount 計算錯誤 → 檢查 DetailVat 設定
-- `16`: 簽名驗證錯誤 → 檢查 MD5 簽章組字串
-
-### 問題 2: 列印時顯示「查詢不到該發票」
-
-**解決方案：**
-確認 `invoiceProvider` 欄位有正確儲存，列印時使用開立時的服務商。
-
-```typescript
-// 正確：使用發票記錄中的服務商
-const service = record.invoiceProvider
-    ? InvoiceServiceFactory.getService(record.invoiceProvider)
-    : await InvoiceServiceFactory.getServiceForUser(userId)
-
-// 錯誤：使用使用者當前預設服務商
-const service = await InvoiceServiceFactory.getServiceForUser(userId)
-```
-
-### 問題 3: B2B 發票金額錯誤
-
-**各服務商金額欄位：**
-
-```typescript
-// 綠界 ECPay
-const b2bData = {
-    SalesAmount: 1000,      // 未稅銷售額
-    TaxAmount: 50,          // 稅額
-    TotalAmount: 1050,      // 總計
-    ItemPrice: 100,         // 商品單價（未稅）
-    ItemAmount: 1000,       // 商品小計（未稅）
-    ItemTax: 50             // 商品稅額
-}
-
-// 速買配 SmilePay
-const b2bData = {
-    AllAmount: '1050',      // 含稅總額
-    SalesAmount: '1000',    // 未稅銷售額（選填，但建議填）
-    TaxAmount: '50',        // 稅額（選填）
-    UnitTAX: 'N',           // **重要**：單價未稅
-    UnitPrice: '100',       // 商品單價（未稅）
-    Amount: '1000'          // 商品小計（未稅）
-}
-
-// 光貿 Amego
-const b2bData = {
-    DetailVat: 0,           // **重要**：0=未稅
-    SalesAmount: 1000,      // 未稅銷售額
-    TaxAmount: 50,          // 稅額
-    TotalAmount: 1050,      // 總計
-    ProductItem: [{
-        UnitPrice: 100,     // 商品單價（未稅）
-        Amount: 1000        // 商品小計（未稅）
-    }]
-}
-```
-
-### 問題 4: 速買配列印空白
-
-**原因：** 回傳 `method: 'GET'` 時錯誤使用 `type: 'form'`
-
-**解決：**
-```typescript
-// 正確
-if (printData.method === 'GET' && printData.url) {
-    return { type: 'redirect', url: printData.url }
-}
-
-// 錯誤
-return { type: 'form', url: printData.url, params: printData.params }
-```
-
-### 問題 5: 時間戳記逾時
-
-**綠界：** Timestamp 與綠界時間相差超過 10 分鐘即無法建立（官方未公開對應代碼，以 RtnMsg 判讀）；光貿則回 `15`（Time 錯誤）
-
-**解決：**
-```typescript
-// 確保使用當前時間戳
-const timestamp = Math.floor(Date.now() / 1000)
-
-// 光貿：誤差容許 ±60 秒
-const time = Math.floor(Date.now() / 1000)
-```
-
-## 測試帳號
-
-### 綠界測試環境
-```
-MerchantID: 2000132
-HashKey: ejCk326UnaZWKisg
-HashIV: q9jcZX8Ib9LM8wYk
-URL: https://einvoice-stage.ecpay.com.tw
-```
-
-### 速買配測試環境
-```
-Grvc: SEI1000034
-Verify_key: 9D73935693EE0237FABA6AB744E48661
-測試統編: 80129529
-URL: https://ssl.smse.com.tw/api_test/SPEinvoice_Storage.asp
-```
-
-### 光貿測試環境
-```
-統編: 12345678
-App Key: sHeq7t8G1wiQvhAuIM27
-後台: https://invoice.amego.tw/
-測試帳號: test@amego.tw
-測試密碼: 12345678
-```
-
-### ezPay 簡單付測試環境
-```
-測試後台: https://cinv.ezpay.com.tw/
-申請流程: 自行註冊測試會員 → 取得 MerchantID + HashKey + HashIV
-官方範例 HashKey: abcdefghijklmnopqrstuvwxyzabcdef (32 碼)
-官方範例 HashIV: 1234567891234567 (16 碼)
-正式環境: https://inv.ezpay.com.tw/
-```
-
-> **重要**：ezPay HashKey 為 **32 碼**、HashIV **16 碼**（與 ECPay 16/16 不同）。
-> 加密：`PostData_ = hex(AES-256-CBC(http_build_query(參數)))`，以 32 bytes 補齊；回應以 `CheckCode` 驗證。
-
-### PayNow 立吉富測試環境
-```
-測試環境 URL: https://invoiceapi-dev.paynow.com.tw/
-正式環境 URL: https://invoiceapi-prod.paynow.com.tw/
-認證方式: JWT Bearer Token (向 einvoice@paynow.com.tw 申請)
-```
-
-> 端點：`POST /api/invoices/issue`、`/cancel`、`/allowance`、`/cancel-allowance`、`GET /api/invoices`、POS `/api/invoices/pos/invoice-numbers` 與 `/pos/issue`。
-> 官方未公開錯誤代碼表。POS 取得的號碼未使用時於次期單數月 5 號上傳空白發票。
-
-## 開發檢查清單
-
-使用此清單確保實作完整：
-
-- [ ] 實作 `InvoiceService` 介面
-- [ ] 處理 B2C / B2B 金額計算差異
-- [ ] 實作加密/簽章機制（AES 或 MD5）
-- [ ] 儲存 `invoiceProvider` 欄位
-- [ ] 儲存 `invoiceRandomNum`（列印時需要）
-- [ ] 處理列印回應類型（html/redirect/form）
-- [ ] 實作錯誤處理與 logger
-- [ ] 測試環境驗證
-- [ ] 處理載具與捐贈互斥邏輯
-- [ ] 驗證統編格式（8 碼數字）
-
-## 新增服務商步驟
-
-1. 在 `lib/services/` 建立 `{provider}-invoice-service.ts`
-2. 實作 `InvoiceService` 介面的所有方法
-3. 在 `InvoiceServiceFactory` 註冊新服務商
-4. 在 `prisma/schema.prisma` 的 `InvoiceProvider` enum 新增選項
-5. 執行 `prisma migrate` 或 `prisma db push`
-6. 更新前端設定頁面（`app/settings/invoice/page.tsx`）
-7. 撰寫單元測試
-
-## 參考資料
-
-詳細 API 規格請查看 `references/` 目錄：
-- [綠界 ECPay API 規格](./references/ECPAY_API_REFERENCE.md)
-- [速買配 SmilePay API 規格](./references/SMILEPAY_API_REFERENCE.md)
-- [光貿 Amego API 規格](./references/AMEGO_API_REFERENCE.md)
-
+| 使用者會怎麼說 | 查哪個域 | 指令 |
+|---|---|---|
+| 「綠界回 10000009 是什麼」「錯誤碼」 | `error` | `search.py "10000009" --domain error` |
+| 「列印出來是空白」「查不到發票」 | `troubleshoot` | `search.py "列印空白" --domain troubleshoot` |
+| 「統編、載具欄位各家叫什麼」 | `field` | `search.py "統編" --domain field` |
+| 「作廢／折讓要打哪支 API」 | `operation` | `search.py "折讓" --domain operation` |
+| 「B2B 稅額怎麼算」「含稅未稅」 | `tax` | `search.py "B2B 稅額" --domain tax` |
+| 「哪家用什麼加密」「測試網址」 | `provider` | `search.py "SunPay" --domain provider` |
+| 「該選哪一家加值中心」 | `reasoning` | `recommend.py "<需求>"` |
+| 「沒收錄的加值中心怎麼辦」 | — | 讀 `references/VAC_LANDSCAPE.md` |
+
+搜尋結果每筆都附 `doc_url` 與 `trust`。回答時附上 `doc_url`；結果裡沒有的事實不要補。
+查到後再讀該家的 reference：
+
+| 服務商 | reference |
+|---|---|
+| 綠界 ECPay | `references/ECPAY_API_REFERENCE.md` |
+| 速買配 SmilePay | `references/SMILEPAY_API_REFERENCE.md` |
+| 光貿 Amego | `references/AMEGO_API_REFERENCE.md` |
+| ezPay 簡單付 | `references/EZPAY_API_REFERENCE.md` |
+| 立吉富 PayNow | `references/PAYNOW_API_REFERENCE.md` |
+| 歐付寶 O'Pay | `references/OPAY_API_REFERENCE.md` |
+| 紅陽 SunPay | `references/SUNPAY_API_REFERENCE.md` |
+| 財政部大平台（只查詢） | `references/MOF_EINVOICE_API_REFERENCE.md` |
+| 加值中心生態與選型 | `references/VAC_LANDSCAPE.md` |
+| 工具用法、各家比較表、金額計算、加密、列印、常見問題、測試帳號 | `references/implementation-guide.md` |
+
+## 使用
+
+| 任務 | 步驟 | 查的資料 | 產出與完成的證據 |
+|---|---|---|---|
+| 選加值中心 | 1. `recommend.py` 2. 讀 `implementation-guide.md` 的比較表 | `reasoning`、`provider` | 推薦理由＋`doc_url`；標明是建議 |
+| 開立 B2C／B2B | 1. 查必填欄位 2. 算金額與稅額 3. 從 `examples/` 複製加密 | `operation`、`field`、`tax` | 程式碼；金額公式與 `test-invoice-amounts.py` 的算法一致 |
+| 作廢、折讓、註銷重開 | 1. 查端點 2. 查限制（期限、金額上限） | `operation`、`troubleshoot` | 程式碼＋`doc_url` |
+| 載具、捐贈碼、統編 | 1. 查格式 2. 需要時打大平台驗證 | `field`、`troubleshoot`、MOF reference | 驗證規則＋`doc_url` |
+| 列印 | 1. 查該家列印方式（各家不同） 2. 依 reference 實作 | reference、`troubleshoot` | 程式碼 |
+| 錯誤碼除錯 | 1. 查錯誤碼 2. 查疑難排解 | `error`、`troubleshoot` | 原因＋`doc_url` |
+| 新專案設定 | 1. `persist.py init <服務商>` 2. `generate-invoice-service.py` | — | `MASTER.md` 與服務骨架 |
+
+**寫程式時務必遵守**
+
+1. **B2C 金額含稅、B2B 金額未稅另計稅額**；B2B 不可用載具或捐贈。各家欄位名稱不同，一律先查 `field`。
+2. **捐贈、載具、列印三者互斥規則**各家寫法不同（例：O'Pay 捐贈時 `Print` 必須是 `0`），照 reference 做。
+3. **加密各家不同**：綠界、O'Pay、SunPay 用 AES-128-CBC，ezPay 用 AES-256-CBC，PayNow 用 JWT，SmilePay 用共享金鑰；同一家的金流與發票常常也不同。
+4. **加密前要先 URL Encode，但各家規則不同**：綠界是 JSON 字串 URL Encode 後再 AES；O'Pay 有自己的 .NET 字元轉換表（與 RFC 3986 不同），SunPay 要 .NET 風格且 `%xx` 小寫。照該家 reference 與 `examples/` 做，不要直接套語言內建函式。
+5. **時間戳記有效區間短**，主機要校時；HashKey、HashIV 不進前端、repo、log。
+
+## 驗證
+
+產出後一定要跑。全部驗證器有錯都回非 0 的 exit code，可以直接當關卡。
+
+| 產出 | 驗證器 | 通過標準 |
+|---|---|---|
+| 範例、加密實作 | `python scripts/verify-examples.py`（repo 根目錄，需 `pip install -r requirements-dev.txt`） | FAIL 0，exit 0 |
+| 金額計算 | `python scripts/test-invoice-amounts.py` | exit 0 |
+| 資料 CSV | `python scripts/validate-data.py`（repo 根目錄） | 全數通過，exit 0 |
+| SKILL.md 數字 | `python scripts/check_numbers.py` | exit 0 |
+| skill 本身 | `python scripts/test_skill.py` | 失敗 0，exit 0 |
+| 回答品質 | `python evals/grade.py --with <有 skill 答案> --without <沒 skill 答案>` | 有 skill 計分題答對率 ≥ 90%；結果記在 `evals/RESULTS.md` |
+
+## 維護
+
+- 官方來源改版：repo 根目錄 `python scripts/check-sources.py` → 改受影響的 reference／CSV → 跑上面的驗證 → `check-sources.py --update`。
+- CSV 新增列後補出處：`python scripts/add-provenance.py`；找不到官方來源的列會標推論，要記進 `data/pending.csv`。
+- 筆數變了：`python scripts/check_numbers.py --fix`。
+- 錯誤碼重建：`_studies/harness/import_invoice_error_codes.py`（原始文件在 `_studies/`，不進 repo）。
+- 改完同步安裝版：repo 的 `taiwan-invoice/` 蓋到 `~/.claude/skills/taiwan-invoice/`，不刪安裝版獨有的檔。

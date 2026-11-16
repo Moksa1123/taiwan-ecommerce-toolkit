@@ -1,0 +1,193 @@
+{
+  "about": "taiwan-payment 真題：考廠商文件裡的細節（加密參數、header、錯誤碼），憑記憶不容易答對。評分：must 裡每一組都要命中（組內任一正規式命中即可，不分大小寫）。沒 skill 也答對的題沒有鑑別度（SOP 6-4），標 retired 並換題。",
+  "cases": [
+    {
+      "id": "sunpay-rsa-chunk",
+      "question": "紅陽 SunPay 金流的 rsamsg 用 RSA 分段加密。加密時每段明文幾 byte？用公鑰解密回應時每段密文幾 byte？",
+      "must": [
+        [
+          "(?<!\\d)117(?!\\d)"
+        ],
+        [
+          "(?<!\\d)128(?!\\d)"
+        ]
+      ],
+      "source": "https://www.sunpay.com.tw/developers/",
+      "trust": "官方文件"
+    },
+    {
+      "id": "pchomepay-notify-ip",
+      "question": "PChomePay 拍錢包的付款通知（notify）從哪個 IP 送出？防火牆白名單要加哪個 IP？",
+      "must": [
+        [
+          "113\\.196\\.231\\.190"
+        ]
+      ],
+      "source": "https://docs.google.com/document/d/1dPIPJc4xfyjkJ1i2yxaja4OP0G-iGFRXM08NDMuttZE/",
+      "trust": "官方文件"
+    },
+    {
+      "id": "jkopay-digest-header",
+      "question": "街口支付 JKOPAY 線上支付 API 的請求簽章放在哪個 HTTP header？用什麼演算法、對什麼內容計算？",
+      "must": [
+        [
+          "\\bdigest\\b"
+        ],
+        [
+          "HMAC[- ]?SHA[- ]?256"
+        ],
+        [
+          "payload|body|原文|請求內容|request"
+        ]
+      ],
+      "source": "https://open-doc.jkos.com/online-pay/general/signature",
+      "trust": "官方文件",
+      "retired": "2026-11-15 沒 skill 也答對（無鑑別度）"
+    },
+    {
+      "id": "shopline-webhook-sign",
+      "question": "SHOPLINE Payments 的 webhook 通知要怎麼驗簽？簽章的輸入字串怎麼組、用哪一把金鑰？",
+      "must": [
+        [
+          "timestamp"
+        ],
+        [
+          "signKey"
+        ],
+        [
+          "HMAC[- ]?SHA[- ]?256"
+        ]
+      ],
+      "source": "https://docs.shoplinepayments.com/api/event/",
+      "trust": "官方文件",
+      "retired": "2026-11-15 沒 skill 也答對（無鑑別度）"
+    },
+    {
+      "id": "ezpay-twqr-apiid",
+      "question": "ezPay 簡單付電子支付平台要建立一筆 TWQR 訂單，請求的 APIID 是什麼？",
+      "must": [
+        [
+          "SCreateTWQR"
+        ]
+      ],
+      "source": "https://www.ezpay.com.tw/info/Service_intro/api_document/member",
+      "trust": "官方文件"
+    },
+    {
+      "id": "ezpay-padding-32",
+      "question": "ezPay 簡單付電子支付平台 API 的 EncryptData 用 AES-256-CBC，PKCS#7 要以幾 bytes 為區塊補齊才會和官方範例一致？",
+      "must": [
+        [
+          "(?<!\\d)32 ?(bytes?|位元組|byte)"
+        ]
+      ],
+      "source": "https://www.ezpay.com.tw/info/Service_intro/api_document/member",
+      "trust": "實測",
+      "retired": "2026-11-15 沒 skill 也答對（無鑑別度）"
+    },
+    {
+      "id": "sunpay-error-22",
+      "question": "紅陽 SunPay 金流回傳錯誤碼 22 是什麼意思？",
+      "must": [
+        [
+          "退款.{0,8}(期限|期間|時限)|refund period"
+        ]
+      ],
+      "source": "https://www.sunpay.com.tw/developers/",
+      "trust": "官方文件"
+    },
+    {
+      "id": "pchomepay-error-50009",
+      "question": "PChomePay 拍錢包退款 API 回錯誤碼 50009，原因是什麼、該怎麼處理？",
+      "must": [
+        [
+          "ATM"
+        ],
+        [
+          "隔日|明天|次日|next day|未備齊|not ready"
+        ]
+      ],
+      "source": "https://docs.google.com/document/d/1dPIPJc4xfyjkJ1i2yxaja4OP0G-iGFRXM08NDMuttZE/",
+      "trust": "官方文件"
+    },
+    {
+      "id": "jkopay-error-307",
+      "question": "街口支付 JKOPAY 授權扣款回錯誤碼 307 是什麼意思？",
+      "must": [
+        [
+          "併發|同時|concurren|one at a time|同一授權"
+        ]
+      ],
+      "source": "https://open-doc.jkos.com/authorized-payment/api/response-code",
+      "trust": "官方文件"
+    },
+    {
+      "id": "shopline-error-4407",
+      "question": "SHOPLINE Payments 回錯誤碼 4407 代表什麼？",
+      "must": [
+        [
+          "私鑰|private key"
+        ]
+      ],
+      "source": "https://docs.shoplinepayments.com/appendix/errorCode/",
+      "trust": "官方文件"
+    },
+    {
+      "id": "paynow-error-r033",
+      "question": "立吉富 PayNow 傳統版金流退款時回錯誤碼 R033，是什麼條件沒滿足？",
+      "must": [
+        [
+          "請款"
+        ],
+        [
+          "退款"
+        ],
+        [
+          "今日|當日|當天|today"
+        ]
+      ],
+      "source": "https://docs.paynow.com.tw/developer/docs/apipdf/cashflow/cashflow-errorcode",
+      "trust": "官方文件"
+    },
+    {
+      "id": "linepay-error-1193",
+      "question": "LINE Pay API 回 returnCode 1193 是什麼意思？",
+      "must": [
+        [
+          "pre-?approved|自動付款|自動扣款|regKey"
+        ],
+        [
+          "過期|expired|失效"
+        ]
+      ],
+      "source": "https://developers-pay.line.me/online-api-v3",
+      "trust": "官方文件"
+    },
+    {
+      "id": "paynow-bootstrap-key",
+      "question": "立吉富 PayNow 傳統版（cashflow）動態 AES-256 要先用固定的 bootstrap key 取得 Key/IV，這把固定字串是什麼？",
+      "must": [
+        [
+          "paynowencryptpaynowcomtw28229955"
+        ]
+      ],
+      "source": "https://docs.paynow.com.tw/developer/docs/apipdf/cashflow/cashflow-check-code",
+      "trust": "官方文件"
+    },
+    {
+      "id": "ecpay-10100058",
+      "question": "綠界 ECPay 信用卡付款回 RtnCode 10100058，是 CheckMacValue 錯誤嗎？代表什麼？",
+      "must": [
+        [
+          "不是|並非|not"
+        ],
+        [
+          "Pay fail|付款失敗|3D|授權失敗"
+        ]
+      ],
+      "source": "https://developers.ecpay.com.tw/",
+      "trust": "官方文件",
+      "retired": "2026-11-15 沒 skill 也答對（無鑑別度）"
+    }
+  ]
+}

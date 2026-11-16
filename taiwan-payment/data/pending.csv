@@ -1,0 +1,8 @@
+date,question,why_not_found,asked_by,status
+2026-11-15,payment-methods.csv 的 openpoint、gamapay 兩列（OPENPOINT、橘子支）沒有登記官方來源,sources/official-sources.json 沒有這兩種支付的官方頁；先標推論、doc_url 空,taiwan-toolkit（SOP 第 5 項補出處）,open
+2026-11-15,reasoning.csv「成本考量」一列沒有對應服務商與出處,這列是比較多家的選型建議，沒有單一官方來源；標推論,taiwan-toolkit（SOP 第 5 項補出處）,open
+2026-11-15,error-codes-payuni-*.csv、error-codes.csv 等多來源檔的 doc_url 只到服務商文件入口，不是逐碼所在的頁,官方來源登記到「檔」而不是「列」；要逐碼對頁得改 _studies/harness/import_error_codes.py 輸出頁碼,taiwan-toolkit（SOP 第 5 項補出處）,open
+2026-11-15,test_payment.py 的 NewebPay／PAYUNi 已知答案測試需要 pycryptodome；沒裝時離線測試會標「略過」,AES 不在 Python 標準函式庫；ECPay（SHA256）一定會跑,taiwan-toolkit（SOP 6-2）,open
+2026-11-15,npm 套件的平台樣板（<cli>/assets/templates/base/skill-content.md）仍是舊內容，payment、logistics 樣板還寫「七家」「3 on-demand」等舊數字,這些是 npm 使用者 init 後拿到的產出，改了等於改對外介面，要使用者決定；skill 本體 SKILL.md 已改成指令產生的數字,taiwan-toolkit（6-1 補齊時）,已解決 2026-11-16
+2026-11-15,下次 npm run build 時 sync-assets 會把 evals/（含 runs/ 答案檔）一起打包進 npm,sync-assets.mjs 沒有排除 evals/；要不要排除是發版決定，這次沒有動 CLI assets,taiwan-toolkit（同步時發現）,已解決 2026-11-16
+2026-11-15,安裝版獨有的 evals/basic（只有 TODO 樣板 prompt.md）要不要刪,規則是不刪安裝版獨有的檔；原始碼的 evals/ 已有真題，這份樣板沒有用處,taiwan-toolkit（同步安裝版時）,等使用者

@@ -259,6 +259,10 @@ def _search_csv(query: str, domain: str, max_results: int = 5) -> List[Dict[str,
         score = bm25_score(query_tokens, doc_tokens, idf, avg_dl)
         if score > 0:
             result = {col: row.get(col, '') for col in config['output_cols']}
+            # 出處欄（SOP 第 5 項）：回答時要附 doc_url，trust=推論 的不可說成官方規定
+            for col in ('doc_url', 'trust'):
+                if row.get(col):
+                    result[col] = row[col]
             result['_score'] = round(score, 4)
             scored_results.append(result)
 
@@ -357,6 +361,21 @@ def get_domain_info(domain: str) -> Optional[Dict[str, Any]]:
 
 
 # CLI 測試
+
+
+def dataset_stats() -> Dict[str, int]:
+    """每個搜尋域的筆數（SKILL.md 的數字由這裡產生，不手寫）"""
+    return {domain: len(_load_csv(os.path.join(DATA_DIR, CSV_CONFIG[domain]["file"]))) for domain in CSV_CONFIG}
+
+
+def use_utf8_stdout() -> None:
+    """Windows 主控台預設不是 UTF-8，印中文會變亂碼"""
+    import sys
+    for stream in (sys.stdout, sys.stderr):
+        if hasattr(stream, 'reconfigure'):
+            stream.reconfigure(encoding='utf-8', errors='replace')
+
+
 if __name__ == '__main__':
     import sys
 

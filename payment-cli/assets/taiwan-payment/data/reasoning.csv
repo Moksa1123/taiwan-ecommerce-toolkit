@@ -1,46 +1,46 @@
-scenario,recommended_provider,confidence,reason,anti_patterns,use_cases
-高交易量電商,ecpay,HIGH,市佔率最高 | 穩定性佳 | 完整SDK | 社群資源豐富,小型項目會過度設計,大型電商 | 高頻交易 | 需要穩定性
-快速整合,ecpay,HIGH,文檔完整 | 範例豐富 | 測試帳號可用,複雜加密需求,MVP 快速驗證 | 新創項目
-多元支付,newebpay,HIGH,支援 13 種付款方式 | MPG 整合 | 電子錢包,基礎需求過度,需要多種支付方式 | 電商平台
-信用卡記憶,newebpay,HIGH,信用卡記憶功能 | 快速結帳,隱私考量需評估,會員制電商 | 訂閱服務
-簡潔 API,payuni,MEDIUM,JSON RESTful | 統一集團背景 | AES-GCM 加密,大型專案社群資源少,新項目 | API 優先設計
-LINE Pay 整合,newebpay,HIGH,原生支援 LINE Pay | 整合簡單,單一支付方式不需要,LINE 生態系 | 年輕族群
-Apple Pay / Google Pay,newebpay,HIGH,完整支援行動支付 | 多種電子錢包,桌面為主不需要,行動優先 | App 支付
-ATM 轉帳,ecpay,HIGH,虛擬帳號配發 | 自動對帳,即時性要求高,大額交易 | B2B 付款
-超商代碼,ecpay,HIGH,四大超商支援 | 廣泛通路,數位原生族群,無卡族群 | 學生市場
-定期定額,ecpay,HIGH,週期扣款 | 彈性設定,單次交易不需要,訂閱制服務 | SaaS
-BNPL 先買後付,ecpay,MEDIUM,BNPL 無卡分期,風險控管需評估,年輕族群 | 高單價商品
-跨境支付,newebpay,MEDIUM,支援國際卡 | 多元貨幣,國內為主不需要,跨境電商 | 國際客戶
-測試開發,ecpay,HIGH,測試帳號完整 | 測試卡可用,正式環境,開發階段 | 測試驗證
-傳統產業,ecpay,HIGH,市佔率高 | 社群支援好 | 整合商多,技術能力強的團隊,傳統轉型 | 中小企業
-新創公司,payuni,MEDIUM,RESTful 設計 | 統一集團,需要完整文檔參考,新創 API 設計 | 現代架構
-PHP 開發,ecpay,HIGH,PHP SDK 完整 | 範例豐富,非 PHP 技術棧,PHP 電商系統 | WordPress
-Node.js 開發,payuni,MEDIUM,JSON API 友好 | RESTful,無特定框架需求,Node.js 後端 | Express
-Python 開發,ecpay,HIGH,Python 範例完整 | 加密庫支援,無特定框架需求,Django | Flask
-行動 App,newebpay,HIGH,行動支付完整 | Apple/Google Pay,網頁為主,iOS | Android App
-小額付款,ecpay,HIGH,支援超商條碼 | 代碼繳費,大額交易,小額商品 | 虛擬商品
-大額交易,ecpay,HIGH,ATM 轉帳 | 穩定性高 | 安全,小額即時,B2B | 高單價商品
-會員制,newebpay,HIGH,信用卡記憶 | 快速結帳 | 定期扣款,一次性交易,會員訂閱 | 定期服務
-分期付款,ecpay,HIGH,支援 3/6/12/18/24 期 | 銀行合作完整,小額交易,高單價商品 | 3C 電商
-即時到帳,ecpay,HIGH,網路 ATM | 信用卡即時,延遲可接受,需要即時確認訂單
-批次對帳,ecpay,HIGH,API 查詢完整 | CSV 下載,手動對帳,大量訂單處理
-後台管理,ecpay,HIGH,商店後台功能完整 | 報表齊全,API 自動化,需要人工管理
-發票整合,ecpay,HIGH,同時支援金流發票 | 整合簡單,已有發票系統,一站式服務
-物流整合,ecpay,HIGH,同時支援金流物流 | 整合簡單,已有物流系統,一站式服務
-API 文檔,ecpay,HIGH,官方文檔完整 | 中英文,不需文檔參考,學習階段 | 整合開發
-社群支援,ecpay,HIGH,使用者多 | 問題解決快,技術能力強,遇到問題需支援
-成本考量,三家比較,MEDIUM,費率需個別洽談 | 交易量影響,成本非主要考量,費率敏感 | 高毛利商品
-街口訂閱扣款,jkopay,HIGH,街口官方公開文件站 | 授權扣款(定期/訂閱)模組 | 聚合商多半不支援街口定期扣款,只是結帳頁想多一個街口按鈕（走 ECPay DigitalPayment + ChooseSubPayment=Jkopay 更省事）,訂閱制 | 街口定期扣款 | 街口幣行銷 | 街口 inApp OAuth
-街口實體店POS,jkopay,MEDIUM,街口線下交易(POS)模組 | 亦可改用 TWQR 一碼收全部電支,純線上電商,實體門市 | POS 收款
-歐付寶多元支付,opay,HIGH,與 ECPay 同源架構可沿用 CheckMacValue 程式碼 | 獨有 AccountLink 銀行快付/TopUpUsed 儲值消費/WeiXinpay/TWQR | 文件全公開免登入,已深度綁定 ECPay 且無跨境或微信需求,微信支付 | 銀行快付 | 儲值消費 | 從 ECPay 遷移 | 金流+發票同一家
-延遲撥款/擔保交易,opay,HIGH,HoldTradeAMT=1 延遲撥款 | 款項先留在歐付寶待確認出貨後再申請撥款 | 適合代收代付情境,信用卡付款不適用延遲撥款,平台型電商 | 代收代付 | 擔保交易 | C2C 市集
-WooCommerce/Magento/OpenCart 官方模組,sunpay,MEDIUM,三大自架購物車皆有官方模組 | 金流+發票+超商代收+物流(超商取貨付款;官網物流頁另列全家大宗與C2C 7-11/全家/萊爾富)一家包辦,需要極高市佔與社群資源者請選 ECPay,自架購物車 | WooCommerce | Magento 2 | OpenCart
-金流+發票同一家且行動支付齊全,gomypay,MEDIUM,行動支付涵蓋台灣PAY/悠遊付/Apple Pay/Google Pay | 自營電子發票加值中心 | 有官方購物車模組,需要公開 API 文件自行串接者不適合(規格需申請);大型電商建議選市佔更高者,悠遊付 | 台灣PAY | 微信線上線下
-電子支付錢包選型,ecpay,HIGH,DigitalPayment 收街口與一卡通 MONEY，其他電子支付走 TWQR（歐付寶 TWQR）| 最省事,需要指定特定錢包做行銷者請改用 PAYUNi 直送代碼或 TapPay,多錢包收款 | 不在意消費者選哪個錢包
-指定特定電子支付錢包,tappay,HIGH,每個錢包有獨立文件與 Prime 流程 | 可精確指定街口/全支付/全盈+PAY/悠遊付/一卡通,只想接一次就好者請用 ECPay（DigitalPayment 收街口／一卡通，其餘走 TWQR）,錢包別行銷 | 分錢包對帳 | 指定錢包
-電子錢包訂閱制,jkopay,HIGH,街口授權扣款支援定期定額(regular)與不定期不定額(limited)兩種綁定 | 同一auth_no扣款不可併發 | 週期次數上限week/month/quarter各7次 year 12次,需要跨錢包一次涵蓋者請改用 TWQR 或聚合商 umbrella,電子錢包訂閱 | 街口定期定額 | 按用量計費 | 課金儲值
-不定期不定額授權,jkopay,HIGH,limited 模式授權後可在額度內隨時扣款 | 適合用量計費與儲值加值 | 額度上限由消費者在App自行設定商家不可控,固定金額訂閱請改用 regular 模式,按用量計費 | 儲值加值 | 變動金額扣款
-RSA加密金流,sunpay,MEDIUM,紅陽為本 skill 14 家中唯一使用 RSA 分段加密者 | 加密117byte解密128byte | check_value 為 ASCII 排序後尾接 SHA2 密鑰的 SHA256,團隊已熟悉 ECPay CheckMacValue 或 AES 家族且不想再導入 RSA,既有系統已用 RSA | 需要非對稱加密
-金流發票物流一家包辦,sunpay,MEDIUM,金流+電子發票+超商代收+物流(超商取貨付款;官網物流頁另列全家大宗與C2C 7-11/全家/萊爾富)同一家 | 支援隨交易自動開立發票,已自行串接發票系統者請勿啟用隨交易開立以免重複開立,一站式整合 | 減少廠商數量
-街口幣行銷發放,jkopay,HIGH,街口幣發放 API 可直接發幣給指定用戶做行銷 為聚合商完全無法提供的能力,需自行處理重試冪等 收到 internal error 必須以同一 exchangeId 重送否則重複發幣,街口幣 行銷發放 會員獎勵 積分
-街口實體店POS完整串接,jkopay,HIGH,POS 模組含付款 取消 退款 查詢四支與 33 個統一錯誤碼,簽章與線上支付不同須另寫;折抵金額正負與線上支付相反,POS 實體店 收銀機 條碼收款
+scenario,recommended_provider,confidence,reason,anti_patterns,use_cases,doc_url,retrieved_on,trust
+高交易量電商,ecpay,HIGH,市佔率最高 | 穩定性佳 | 完整SDK | 社群資源豐富,小型項目會過度設計,大型電商 | 高頻交易 | 需要穩定性,https://developers.ecpay.com.tw/,2026-08-08,推論
+快速整合,ecpay,HIGH,文檔完整 | 範例豐富 | 測試帳號可用,複雜加密需求,MVP 快速驗證 | 新創項目,https://developers.ecpay.com.tw/,2026-08-08,推論
+多元支付,newebpay,HIGH,支援 13 種付款方式 | MPG 整合 | 電子錢包,基礎需求過度,需要多種支付方式 | 電商平台,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,推論
+信用卡記憶,newebpay,HIGH,信用卡記憶功能 | 快速結帳,隱私考量需評估,會員制電商 | 訂閱服務,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,推論
+簡潔 API,payuni,MEDIUM,JSON RESTful | 統一集團背景 | AES-GCM 加密,大型專案社群資源少,新項目 | API 優先設計,https://docs.payuni.com.tw/,2026-08-08,推論
+LINE Pay 整合,newebpay,HIGH,原生支援 LINE Pay | 整合簡單,單一支付方式不需要,LINE 生態系 | 年輕族群,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,推論
+Apple Pay / Google Pay,newebpay,HIGH,完整支援行動支付 | 多種電子錢包,桌面為主不需要,行動優先 | App 支付,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,推論
+ATM 轉帳,ecpay,HIGH,虛擬帳號配發 | 自動對帳,即時性要求高,大額交易 | B2B 付款,https://developers.ecpay.com.tw/,2026-08-08,推論
+超商代碼,ecpay,HIGH,四大超商支援 | 廣泛通路,數位原生族群,無卡族群 | 學生市場,https://developers.ecpay.com.tw/,2026-08-08,推論
+定期定額,ecpay,HIGH,週期扣款 | 彈性設定,單次交易不需要,訂閱制服務 | SaaS,https://developers.ecpay.com.tw/,2026-08-08,推論
+BNPL 先買後付,ecpay,MEDIUM,BNPL 無卡分期,風險控管需評估,年輕族群 | 高單價商品,https://developers.ecpay.com.tw/,2026-08-08,推論
+跨境支付,newebpay,MEDIUM,支援國際卡 | 多元貨幣,國內為主不需要,跨境電商 | 國際客戶,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,推論
+測試開發,ecpay,HIGH,測試帳號完整 | 測試卡可用,正式環境,開發階段 | 測試驗證,https://developers.ecpay.com.tw/,2026-08-08,推論
+傳統產業,ecpay,HIGH,市佔率高 | 社群支援好 | 整合商多,技術能力強的團隊,傳統轉型 | 中小企業,https://developers.ecpay.com.tw/,2026-08-08,推論
+新創公司,payuni,MEDIUM,RESTful 設計 | 統一集團,需要完整文檔參考,新創 API 設計 | 現代架構,https://docs.payuni.com.tw/,2026-08-08,推論
+PHP 開發,ecpay,HIGH,PHP SDK 完整 | 範例豐富,非 PHP 技術棧,PHP 電商系統 | WordPress,https://developers.ecpay.com.tw/,2026-08-08,推論
+Node.js 開發,payuni,MEDIUM,JSON API 友好 | RESTful,無特定框架需求,Node.js 後端 | Express,https://docs.payuni.com.tw/,2026-08-08,推論
+Python 開發,ecpay,HIGH,Python 範例完整 | 加密庫支援,無特定框架需求,Django | Flask,https://developers.ecpay.com.tw/,2026-08-08,推論
+行動 App,newebpay,HIGH,行動支付完整 | Apple/Google Pay,網頁為主,iOS | Android App,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,推論
+小額付款,ecpay,HIGH,支援超商條碼 | 代碼繳費,大額交易,小額商品 | 虛擬商品,https://developers.ecpay.com.tw/,2026-08-08,推論
+大額交易,ecpay,HIGH,ATM 轉帳 | 穩定性高 | 安全,小額即時,B2B | 高單價商品,https://developers.ecpay.com.tw/,2026-08-08,推論
+會員制,newebpay,HIGH,信用卡記憶 | 快速結帳 | 定期扣款,一次性交易,會員訂閱 | 定期服務,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,推論
+分期付款,ecpay,HIGH,支援 3/6/12/18/24 期 | 銀行合作完整,小額交易,高單價商品 | 3C 電商,https://developers.ecpay.com.tw/,2026-08-08,推論
+即時到帳,ecpay,HIGH,網路 ATM | 信用卡即時,延遲可接受,需要即時確認訂單,https://developers.ecpay.com.tw/,2026-08-08,推論
+批次對帳,ecpay,HIGH,API 查詢完整 | CSV 下載,手動對帳,大量訂單處理,https://developers.ecpay.com.tw/,2026-08-08,推論
+後台管理,ecpay,HIGH,商店後台功能完整 | 報表齊全,API 自動化,需要人工管理,https://developers.ecpay.com.tw/,2026-08-08,推論
+發票整合,ecpay,HIGH,同時支援金流發票 | 整合簡單,已有發票系統,一站式服務,https://developers.ecpay.com.tw/,2026-08-08,推論
+物流整合,ecpay,HIGH,同時支援金流物流 | 整合簡單,已有物流系統,一站式服務,https://developers.ecpay.com.tw/,2026-08-08,推論
+API 文檔,ecpay,HIGH,官方文檔完整 | 中英文,不需文檔參考,學習階段 | 整合開發,https://developers.ecpay.com.tw/,2026-08-08,推論
+社群支援,ecpay,HIGH,使用者多 | 問題解決快,技術能力強,遇到問題需支援,https://developers.ecpay.com.tw/,2026-08-08,推論
+成本考量,三家比較,MEDIUM,費率需個別洽談 | 交易量影響,成本非主要考量,費率敏感 | 高毛利商品,,,推論
+街口訂閱扣款,jkopay,HIGH,街口官方公開文件站 | 授權扣款(定期/訂閱)模組 | 聚合商多半不支援街口定期扣款,只是結帳頁想多一個街口按鈕（走 ECPay DigitalPayment + ChooseSubPayment=Jkopay 更省事）,訂閱制 | 街口定期扣款 | 街口幣行銷 | 街口 inApp OAuth,https://open-doc.jkos.com/,2026-08-08,推論
+街口實體店POS,jkopay,MEDIUM,街口線下交易(POS)模組 | 亦可改用 TWQR 一碼收全部電支,純線上電商,實體門市 | POS 收款,https://open-doc.jkos.com/,2026-08-08,推論
+歐付寶多元支付,opay,HIGH,與 ECPay 同源架構可沿用 CheckMacValue 程式碼 | 獨有 AccountLink 銀行快付/TopUpUsed 儲值消費/WeiXinpay/TWQR | 文件全公開免登入,已深度綁定 ECPay 且無跨境或微信需求,微信支付 | 銀行快付 | 儲值消費 | 從 ECPay 遷移 | 金流+發票同一家,https://developers.opay.tw/download/document,2026-08-08,推論
+延遲撥款/擔保交易,opay,HIGH,HoldTradeAMT=1 延遲撥款 | 款項先留在歐付寶待確認出貨後再申請撥款 | 適合代收代付情境,信用卡付款不適用延遲撥款,平台型電商 | 代收代付 | 擔保交易 | C2C 市集,https://developers.opay.tw/download/document,2026-08-08,推論
+WooCommerce/Magento/OpenCart 官方模組,sunpay,MEDIUM,三大自架購物車皆有官方模組 | 金流+發票+超商代收+物流(超商取貨付款;官網物流頁另列全家大宗與C2C 7-11/全家/萊爾富)一家包辦,需要極高市佔與社群資源者請選 ECPay,自架購物車 | WooCommerce | Magento 2 | OpenCart,https://www.sunpay.com.tw/logistics,2026-10-24,推論
+金流+發票同一家且行動支付齊全,gomypay,MEDIUM,行動支付涵蓋台灣PAY/悠遊付/Apple Pay/Google Pay | 自營電子發票加值中心 | 有官方購物車模組,需要公開 API 文件自行串接者不適合(規格需申請);大型電商建議選市佔更高者,悠遊付 | 台灣PAY | 微信線上線下,https://n.gomypay.asia/MDocuments_downloads.aspx,2026-09-24,推論
+電子支付錢包選型,ecpay,HIGH,DigitalPayment 收街口與一卡通 MONEY，其他電子支付走 TWQR（歐付寶 TWQR）| 最省事,需要指定特定錢包做行銷者請改用 PAYUNi 直送代碼或 TapPay,多錢包收款 | 不在意消費者選哪個錢包,https://developers.ecpay.com.tw/,2026-08-08,推論
+指定特定電子支付錢包,tappay,HIGH,每個錢包有獨立文件與 Prime 流程 | 可精確指定街口/全支付/全盈+PAY/悠遊付/一卡通,只想接一次就好者請用 ECPay（DigitalPayment 收街口／一卡通，其餘走 TWQR）,錢包別行銷 | 分錢包對帳 | 指定錢包,https://docs.tappaysdk.com/,2026-08-08,推論
+電子錢包訂閱制,jkopay,HIGH,街口授權扣款支援定期定額(regular)與不定期不定額(limited)兩種綁定 | 同一auth_no扣款不可併發 | 週期次數上限week/month/quarter各7次 year 12次,需要跨錢包一次涵蓋者請改用 TWQR 或聚合商 umbrella,電子錢包訂閱 | 街口定期定額 | 按用量計費 | 課金儲值,https://open-doc.jkos.com/,2026-08-08,推論
+不定期不定額授權,jkopay,HIGH,limited 模式授權後可在額度內隨時扣款 | 適合用量計費與儲值加值 | 額度上限由消費者在App自行設定商家不可控,固定金額訂閱請改用 regular 模式,按用量計費 | 儲值加值 | 變動金額扣款,https://open-doc.jkos.com/,2026-08-08,推論
+RSA加密金流,sunpay,MEDIUM,紅陽為本 skill 14 家中唯一使用 RSA 分段加密者 | 加密117byte解密128byte | check_value 為 ASCII 排序後尾接 SHA2 密鑰的 SHA256,團隊已熟悉 ECPay CheckMacValue 或 AES 家族且不想再導入 RSA,既有系統已用 RSA | 需要非對稱加密,https://www.sunpay.com.tw/logistics,2026-10-24,推論
+金流發票物流一家包辦,sunpay,MEDIUM,金流+電子發票+超商代收+物流(超商取貨付款;官網物流頁另列全家大宗與C2C 7-11/全家/萊爾富)同一家 | 支援隨交易自動開立發票,已自行串接發票系統者請勿啟用隨交易開立以免重複開立,一站式整合 | 減少廠商數量,https://www.sunpay.com.tw/logistics,2026-10-24,推論
+街口幣行銷發放,jkopay,HIGH,街口幣發放 API 可直接發幣給指定用戶做行銷 為聚合商完全無法提供的能力,需自行處理重試冪等 收到 internal error 必須以同一 exchangeId 重送否則重複發幣,街口幣 行銷發放 會員獎勵 積分,https://open-doc.jkos.com/,2026-08-08,推論
+街口實體店POS完整串接,jkopay,HIGH,POS 模組含付款 取消 退款 查詢四支與 33 個統一錯誤碼,簽章與線上支付不同須另寫;折抵金額正負與線上支付相反,POS 實體店 收銀機 條碼收款,https://open-doc.jkos.com/,2026-08-08,推論

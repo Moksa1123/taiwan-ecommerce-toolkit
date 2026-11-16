@@ -20,7 +20,7 @@ from typing import List, Dict, Tuple
 # 添加父目錄到 path
 sys.path.insert(0, str(Path(__file__).parent))
 
-from core import search, search_all, CSV_CONFIG
+from core import search, search_all, CSV_CONFIG, dataset_stats, use_utf8_stdout
 
 
 def format_ascii_box(title: str, content: List[str], width: int = 80, style: str = 'double') -> str:
@@ -145,7 +145,7 @@ def main():
         '''
     )
 
-    parser.add_argument('query', type=str, help='搜索查詢')
+    parser.add_argument('query', type=str, nargs='?', help='搜索查詢')
     parser.add_argument(
         '--domain', '-d',
         type=str,
@@ -164,8 +164,21 @@ def main():
         default=5,
         help='最大結果數'
     )
+    parser.add_argument('--stats', action='store_true', help='列出每個搜尋域的筆數')
 
     args = parser.parse_args()
+    use_utf8_stdout()
+    if args.stats:
+        stats = dataset_stats()
+        if args.format == 'json':
+            print(json.dumps(stats, ensure_ascii=False, indent=2))
+        else:
+            for name, count in stats.items():
+                print(f'{name:16s} {count}')
+            print(f'{"total":16s} {sum(stats.values())}')
+        return
+    if not args.query:
+        parser.error('要給查詢字串，或用 --stats')
 
     # 執行搜索
     if args.domain == 'all':

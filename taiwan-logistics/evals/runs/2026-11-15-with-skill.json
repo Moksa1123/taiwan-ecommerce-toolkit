@@ -1,0 +1,22 @@
+{
+  "meta": {
+    "date": "2026-11-15",
+    "model": "claude-opus-5-5",
+    "how": "subagent 讀 SKILL.md、用 search.py 查"
+  },
+  "answers": {
+    "paynow-3des-key": "金鑰 = \"1234567890\" + 物流密碼(Password) + \"123456\"，組成 24 bytes（例：123456789070828783123456）；用 3DES/ECB/Zero-Padding 後 Base64，ECB 不使用 IV，與金流端的動態 AES-256 不同。",
+    "lalamove-quote-ttl": "POST /v3/quotations 取得的報價（quotationId）有效期為 5 分鐘，須在 5 分鐘內下單，逾時要重新報價。",
+    "lalamove-change-driver": "須在媒合到司機後 15 分鐘以上，才可呼叫 DELETE /v3/orders/{id}/drivers/{driverId} 更換司機。",
+    "ezship-param-naming": "不一樣：電子地圖用 camelCase 的 suID（另有 rtURL、webPara），傳送訂單與貨況查詢用 snake_case 的 su_id（另有 rtn_url、web_para），同一次串接要兩種寫法。",
+    "ecpay-status-7020": "綠界物流狀態 7020 是「包裹遺失，進入賠償程序」，適用物流商 UNIMARTC2C（7-11 店到店）。",
+    "payuni-lgr03014": "LGR03014 代表「商店未啟用B2C常溫物流服務」，需先開通該物流服務。",
+    "payuni-shipstatus-81": "ShipStatus 81 是「門市關轉」：取件或退貨（僅 C2C）門市因裝修、搬遷、改店號等暫歇，須在期限內以 Tag=4 重選門市（B2C 通知日 +2 天 23:59、C2C +6 天 23:59），通知會帶 PickupStoreType（1 取件、2 退件門市）。",
+    "pchomepay-ssnd": "SSND 是物流通知 logistic_status 的「商品已至『寄件門店』」（運送中）。",
+    "smilepay-00022": "00022 是速買配黑貓宅配配送異常 DetailStatus 的「超重」。",
+    "paynow-7204": "PayNow 7204 是 C2C（7-11）貨態「退件門市臨時關轉店」，屬退貨途中狀態。",
+    "newebpay-1111": "藍新物流 API 回應代碼 1111 表示「該筆物流單狀態已無法修改內容」。",
+    "ezship-s06": "ezShip 貨況 S06 是「配送異常（刪單／門市閉店／貨故）」。",
+    "ezship-711": "不行，ezShip 支援 OK、萊爾富、全家，不含 7-ELEVEN；要寄 7-11 需改用 ECPay、SmilePay、PayNow、PChomePay 等聚合商。"
+  }
+}

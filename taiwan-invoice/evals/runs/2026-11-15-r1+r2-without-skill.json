@@ -1,0 +1,22 @@
+{
+  "meta": {
+    "date": "2026-11-15 現行題組（第 1 輪留下 5 題＋第 2 輪新題 7 題）",
+    "model": "claude-opus-5-5",
+    "how": "subagent 不用任何工具查資料，憑記憶作答",
+    "file": "evals/runs/2026-11-15-r1+r2-without-skill.json"
+  },
+  "answers": {
+    "sunpay-inv-prod-domain": "正式環境 API 網域應為 einvoice.sunpay.com.tw（測試環境為 test-einvoice.sunpay.com.tw）；inv.sunpay.com.tw 是商家後台網站，不能拿來打 API。",
+    "amego-error-3050131": "3050131 表示該發票已經作廢（或已作廢過），不能重複作廢。",
+    "smilepay-error-10033": "-10033 代表發票開立日期超過可開立期限（例如只能開立當期或前 N 天內的發票），日期不在允許範圍內。",
+    "ezpay-error-key10007": "KEY10007 表示 PostData_ 解密失敗或 HashKey／HashIV 錯誤，常見原因是加密金鑰不符或加密資料格式不正確。",
+    "smilepay-error-10022": "-10022 代表載具類別（CarrierType）與載具編號（CarrierID）組合不合法，例如手機條碼格式與載具類別不符或與捐贈／統編同時使用。",
+    "amego-error-4040133": "推測是折讓金額超過原發票可折讓的剩餘金額（累計折讓金額不可大於發票金額）的限制。",
+    "ezpay-error-lib10009": "推測是該發票已經作廢過（或狀態不允許作廢），因此無法重複作廢。",
+    "ezpay-error-clc10004": "推測是發票相關資料不存在或查無此發票／商店資料，屬於檢查（CLC）類的資料驗證錯誤。",
+    "smilepay-error-10057": "推測是買方統一編號（Buyer_id）欄位格式有誤。",
+    "smilepay-error-100411": "推測是載具號碼（手機條碼 CarrierID）驗證失敗或格式錯誤。",
+    "ecpay-inv-4000004": "是失敗；推測代表資料重複，例如該 RelateNumber（自訂編號）已經開過發票。",
+    "paynow-pos-invoice-numbers": "推測端點為 /api/v1/Invoice/GetInvoiceNumber（POS 批次取號）。"
+  }
+}

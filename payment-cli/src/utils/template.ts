@@ -125,6 +125,19 @@ async function copyTaiwanPaymentAssets(targetSkillDir: string, sections: Platfor
     await mkdir(dataTarget, { recursive: true });
     await cp(join(sourceDir, 'data'), dataTarget, { recursive: true });
   }
+
+  // scripts/test_skill.py 會檢查 evals/ 題庫，SKILL.md 的回答品質檢查也用到；作答紀錄 runs/ 不打包
+  if (sections.scripts && await exists(join(sourceDir, 'evals'))) {
+    await cp(join(sourceDir, 'evals'), join(targetSkillDir, 'evals'), {
+      recursive: true,
+      filter: (src) => !src.includes('__pycache__'),
+    });
+  }
+
+  // 選用相依套件清單（AES 已知答案測試用）
+  if (sections.scripts && await exists(join(sourceDir, 'requirements.txt'))) {
+    await cp(join(sourceDir, 'requirements.txt'), join(targetSkillDir, 'requirements.txt'));
+  }
 }
 
 export async function generatePlatformFiles(
