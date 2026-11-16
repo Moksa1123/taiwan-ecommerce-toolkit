@@ -1,6 +1,6 @@
 date,question,why_not_found,asked_by,status
 2026-11-15,tax-rules.csv 8 列（B2C／B2B 應稅、零稅率、免稅的金額公式）沒有登記官方來源,公式由 test-invoice-amounts.py 驗算過但沒對到財政部或廠商文件的條文；標推論,taiwan-toolkit（SOP 第 5 項補出處）,open
 2026-11-15,troubleshooting.csv 6 列通用規則（載具與捐贈衝突、B2B 不可用載具或捐贈、已作廢、折讓超額、列印錯誤服務商）沒有服務商與出處,這些是跨廠商的共通規則，還沒對到財政部電子發票規格的條文；標推論,taiwan-toolkit（SOP 第 5 項補出處）,open
-2026-11-15,npm 套件的平台樣板（<cli>/assets/templates/base/skill-content.md）仍是舊內容，樣板還寫「七家」「3 on-demand」等舊數字,這些是 npm 使用者 init 後拿到的產出，改了等於改對外介面，要使用者決定；skill 本體 SKILL.md 已改成指令產生的數字,taiwan-toolkit（6-1 補齊時）,等使用者
-2026-11-15,下次 npm run build 時 sync-assets 會把 evals/（含 runs/ 答案檔）一起打包進 npm,sync-assets.mjs 沒有排除 evals/；要不要排除是發版決定，這次沒有動 CLI assets,taiwan-toolkit（同步時發現）,等使用者
+2026-11-15,npm 套件的平台樣板（<cli>/assets/templates/base/skill-content.md）仍是舊內容，樣板還寫「七家」「3 on-demand」等舊數字,這些是 npm 使用者 init 後拿到的產出，改了等於改對外介面，要使用者決定；skill 本體 SKILL.md 已改成指令產生的數字,taiwan-toolkit（6-1 補齊時）,已解決 2026-11-16
+2026-11-15,下次 npm run build 時 sync-assets 會把 evals/（含 runs/ 答案檔）一起打包進 npm,sync-assets.mjs 沒有排除 evals/；要不要排除是發版決定，這次沒有動 CLI assets,taiwan-toolkit（同步時發現）,已解決 2026-11-16
 2026-11-15,安裝版獨有的 evals/basic（只有 TODO 樣板 prompt.md）要不要刪,規則是不刪安裝版獨有的檔；原始碼的 evals/ 已有真題，這份樣板沒有用處,taiwan-toolkit（同步安裝版時）,等使用者

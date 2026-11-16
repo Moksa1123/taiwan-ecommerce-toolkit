@@ -1,0 +1,667 @@
+# Taiwan Logistics Implementation Guide
+
+> Moved out of SKILL.md: core concepts, NewebPay logistics API walkthrough, encryption, status/error code excerpts, PAYUNi operations, best practices.
+> Code blocks marked `<!-- verify: ... -->` are checked against official test vectors by `scripts/verify-examples.py` (repo root).
+> The status and error code tables below are **excerpts**. The full set is in `data/status-codes.csv`; query it with `python scripts/search.py "<code>" --domain status` before answering.
+
+## Quick Reference
+
+### Core Concepts
+
+**Logistics Types:**
+- **B2C (大宗寄倉)**: Bulk warehouse shipping - Merchant ships to logistics center, then distributed to stores
+- **C2C (店到店)**: Store-to-store - Merchant ships to convenience store, then delivered to pickup store
+
+**Trade Types:**
+- **取貨付款 (Cash on Delivery)**: Customer pays when picking up
+- **取貨不付款 (No Payment)**: Customer only picks up (payment already completed)
+
+**Supported Convenience Stores:**
+1. 7-ELEVEN
+2. FamilyMart (全家)
+3. Hi-Life (萊爾富)
+4. OK Mart
+
+**Key APIs:**
+1. Store Map Query - Select pickup/sender store
+2. Create Shipment - Create logistics order
+3. Get Shipment Number - Get shipping code
+4. Print Label - Print shipping label
+5. Query Shipment - Check order status
+6. Modify Shipment - Update order details
+7. Track Shipment - Track delivery history
+8. Status Notification - Real-time status updates
+
+---
+
+## Service Providers
+
+### NewebPay Logistics (藍新物流)
+
+**Encryption**: AES-256-CBC + SHA256 (same as NewebPay payment)
+
+**API Style**: Form POST with AES encryption
+
+**Supported Services:**
+- C2C Store-to-Store: 4 convenience stores (7-11, FamilyMart, Hi-Life, OK Mart)
+- B2C Bulk Warehouse: 7-ELEVEN only
+
+**Test Environment:**
+- Store Map: `https://ccore.newebpay.com/API/Logistic/storeMap`
+- Create Shipment: `https://ccore.newebpay.com/API/Logistic/createShipment`
+- Get Shipment No: `https://ccore.newebpay.com/API/Logistic/getShipmentNo`
+- Print Label: `https://ccore.newebpay.com/API/Logistic/printLabel`
+- Query Shipment: `https://ccore.newebpay.com/API/Logistic/queryShipment`
+- Modify Shipment: `https://ccore.newebpay.com/API/Logistic/modifyShipment`
+- Track Shipment: `https://ccore.newebpay.com/API/Logistic/trace`
+
+**Production Environment:**
+- Replace `ccore.newebpay.com` with `core.newebpay.com`
+
+---
+
+### ECPay Logistics (綠界物流)
+
+**Encryption**: MD5 CheckMacValue
+
+**API Style**: Form POST with URL-encoded parameters
+
+**Supported Services:**
+- B2C 超商取貨：7-11（常溫／冷凍）、全家、萊爾富
+- C2C 店到店：7-11 交貨便、全家、萊爾富、OK
+- 宅配：黑貓（常溫／冷藏／冷凍）、中華郵政（僅常溫）
+
+**Test Environment:**
+- Base URL: `https://logistics-stage.ecpay.com.tw`
+- Create: `POST /Express/Create`
+- Query: `POST /Helper/QueryLogisticsTradeInfo/V2`
+- Print: `POST /helper/printTradeDocument`
+- Map: `POST /Express/map`
+
+**Production Environment:**
+- Base URL: `https://logistics.ecpay.com.tw`
+
+**Logistics SubTypes (`LogisticsType=CVS`):**
+- B2C：`FAMI` 全家、`UNIMART` 7-11、`UNIMARTFREEZE` 7-11 冷凍店取、`HILIFE` 萊爾富
+- C2C：`FAMIC2C` 全家、`UNIMARTC2C` 7-11 交貨便、`HILIFEC2C` 萊爾富、`OKMARTC2C` OK
+- B2C 合約只能用 B2C 代碼，C2C 合約只能用 C2C 代碼；OK 只有 C2C
+
+**Logistics SubTypes (`LogisticsType=HOME`):**
+- `TCAT` - 黑貓宅急便（代收貨款時商品金額上限 20,000）
+- `POST` - 中華郵政（`Temperature` 只能 `0001`，不可代收）
+
+**Temperature Control (Home Delivery, TCAT):**
+- `0001` - Normal temperature (常溫)
+- `0002` - Refrigerated (冷藏)
+- `0003` - Frozen (冷凍)
+
+**Specification (Package Size):**
+- `0001` - 60cm
+- `0002` - 90cm
+- `0003` - 120cm
+- `0004` - 150cm
+
+**Distance (Delivery Range):**
+- `00` - Same district
+- `01` - Same city
+- `02` - Cross city
+- `03` - Outlying islands
+
+**Test Credentials:**
+- B2C 及宅配：MerchantID `2000132`、HashKey `5294y06JbISpM5x9`、HashIV `v77hoKGq4kWxNNIS`
+- C2C：MerchantID `2000933`、HashKey `XBERn1YOvpM9nfZc`、HashIV `h1ONHk4P4yqbl5LK`
+
+---
+
+### PAYUNi Logistics (統一物流)
+
+**Encryption**: AES-256-GCM + SHA256 (same as PAYUNi payment):
+`EncryptInfo = hex(base64(ciphertext) + ":::" + base64(tag))`, `HashInfo = SHA256(HashKey + EncryptInfo + HashIV)`
+
+**API Style**: form POST (`MerID`, `Version`, `EncryptInfo`, `HashInfo`), JSON response with an encrypted `EncryptInfo`.
+Source: official docs docs.payuni.com.tw/web/#/7; details in `references/payuni-logistics-api.md`.
+
+**Supported Services:** 7-ELEVEN B2C bulk / C2C store-to-store / C2B return (normal + frozen); T-Cat home delivery (normal, frozen, refrigerated)
+
+**Endpoints** (base `https://sandbox-api.payuni.com.tw/api` / `https://api.payuni.com.tw/api`):
+
+| Purpose | Path | Version |
+|---|---|---|
+| Store map (browser form) | `/logistics/ship_map` | 1.1 |
+| Query shipment | `/logistics/query` | 1.1 |
+| Print 7-11 label (browser form) | `/logistics/print_label` | 1.0 |
+| T-Cat label PDF (browser form) | `/home_delivery/get_obt_number_pdf` | 1.0 |
+| T-Cat label re-download | `/home_delivery/download_pdf` | 1.0 |
+
+Shipments are created inside a payment request: UPP with `ShipTag=1` (+ `Ship=1` for COD), or the backend
+ATM / CVS / credit-token / LINE Pay / JKoPay / AFTEE APIs with `ServiceType=3` (no COD).
+
+**Codes:** `ShipType` 1=7-ELEVEN 2=T-Cat · `LgsType` B2C / C2C / HOME / C2B · `GoodsType` 1=normal 2=frozen 3=refrigerated ·
+`DeliveryTimeTag` 01 / 02 / 04(not set)
+
+---
+
+## NewebPay Transaction Flows
+
+### 1. B2C Bulk Warehouse - Cash on Delivery
+
+1. **Create Order**: Customer selects store, merchant calls Create Shipment API
+2. **Get Shipping Code**: Merchant calls Get Shipment Number API & Print Label API
+3. **Merchant Ships**: Merchant delivers goods to logistics center
+4. **Logistics Distributes**: Logistics center verifies and distributes to pickup store
+5. **Customer Picks Up**: Customer picks up and pays, NewebPay notifies merchant
+
+### 2. C2C Store-to-Store - Cash on Delivery
+
+1. **Create Order**: Customer selects store, merchant calls Create Shipment API
+2. **Get Shipping Code**: Merchant calls Get Shipment Number API & Print Label API
+3. **Merchant Ships**: Merchant delivers goods to sender store
+4. **Store Ships**: Sender store ships to logistics center, then to pickup store
+5. **Customer Picks Up**: Customer picks up and pays, NewebPay notifies merchant
+
+### 3. B2C Bulk Warehouse - No Payment
+
+1. **Create Order**: Customer selects store (payment already completed)
+2. **Get Shipping Code**: Merchant calls Get Shipment Number API & Print Label API
+3. **Merchant Ships**: Merchant delivers goods to logistics center
+4. **Logistics Distributes**: Logistics center verifies and distributes to pickup store
+5. **Customer Picks Up**: Customer picks up, NewebPay notifies merchant
+
+### 4. C2C Store-to-Store - No Payment
+
+1. **Create Order**: Customer selects store (payment already completed)
+2. **Get Shipping Code**: Merchant calls Get Shipment Number API & Print Label API
+3. **Merchant Ships**: Merchant delivers goods to sender store
+4. **Store Ships**: Sender store ships to logistics center, then to pickup store
+5. **Customer Picks Up**: Customer picks up, NewebPay notifies merchant
+
+---
+
+## NewebPay API Operations
+
+### 1. Store Map Query API [NPA-B51]
+
+Query convenience store locations for pickup or sender.
+
+**Endpoint:**
+- Test: `https://ccore.newebpay.com/API/Logistic/storeMap`
+- Production: `https://core.newebpay.com/API/Logistic/storeMap`
+
+**Request Parameters:**
+
+| Field | Description | Type | Required |
+|-------|-------------|------|----------|
+| UID_ | Merchant ID | Varchar(15) | V |
+| EncryptData_ | Encrypted data | Text | V |
+| HashData_ | Hash data | Text | V |
+| Version_ | API version | Varchar(5) | V |
+| RespondType_ | Response format | Varchar(6) | V |
+
+**EncryptData_ Parameters:**
+
+| Field | Description | Type | Required | Notes |
+|-------|-------------|------|----------|-------|
+| MerchantOrderNo | Merchant order number | Varchar(30) | V | Unique order ID |
+| LgsType | Logistics type | Varchar(15) | V | B2C or C2C |
+| ShipType | Logistics provider | Varchar(15) | V | 1=7-11, 2=FamilyMart, 3=Hi-Life, 4=OK Mart |
+| ReturnURL | Return URL | Varchar(50) | V | URL after store selection |
+| TimeStamp | Unix timestamp | Text | V | Current time in seconds |
+| ExtraData | Extra data | Varchar(20) | - | Returned as-is |
+
+**Response EncryptData_ Parameters:**
+
+| Field | Description | Type | Notes |
+|-------|-------------|------|-------|
+| LgsType | Logistics type | Varchar(15) | B2C or C2C |
+| ShipType | Logistics provider | Varchar(15) | 1=7-11, 2=FamilyMart, 3=Hi-Life, 4=OK Mart |
+| MerchantOrderNo | Merchant order number | Varchar(30) | Order ID |
+| StoreName | Store name | Varchar(10) | Selected store name |
+| StoreTel | Store phone | Varchar(12) | Store phone number |
+| StoreAddr | Store address | Varchar(100) | Store address |
+| StoreID | Store code | Varchar(8) | Store ID (use this for shipment) |
+| ExtraData | Extra data | Varchar(20) | Original value returned |
+
+---
+
+### 2. Create Shipment API [NPA-B52]
+
+Create logistics shipment order after payment order is established.
+
+**Endpoint:**
+- Test: `https://ccore.newebpay.com/API/Logistic/createShipment`
+- Production: `https://core.newebpay.com/API/Logistic/createShipment`
+
+**EncryptData_ Parameters:**
+
+| Field | Description | Type | Required | Notes |
+|-------|-------------|------|----------|-------|
+| MerchantOrderNo | Merchant order number | Varchar(30) | V | Unique order ID |
+| TradeType | Trade type | Int(1) | V | 1=COD, 3=No Payment |
+| UserName | Recipient name | Varchar(20) | V | Pickup person name |
+| UserTel | Recipient phone | Varchar(10) | V | Mobile number |
+| UserEmail | Recipient email | Varchar(50) | V | Email address |
+| StoreID | Pickup store ID | Varchar(10) | V | From store map query |
+| Amt | Transaction amount | Int(10) | V | Order amount |
+| NotifyURL | Notification URL | Varchar(100) | - | Pickup completion callback |
+| ItemDesc | Product description | Varchar(100) | - | Product name |
+| LgsType | Logistics type | Varchar(3) | V | B2C or C2C |
+| ShipType | Logistics provider | Varchar(15) | V | 1=7-11, 2=FamilyMart, 3=Hi-Life, 4=OK Mart |
+| TimeStamp | Unix timestamp | Varchar(50) | V | Current time in seconds |
+
+**Response EncryptData_ Parameters:**
+
+| Field | Description | Type | Notes |
+|-------|-------------|------|-------|
+| MerchantID | Merchant ID | Varchar(15) | NewebPay merchant ID |
+| Amt | Transaction amount | Int(10) | Order amount |
+| MerchantOrderNo | Merchant order number | Varchar(30) | Order ID |
+| TradeNo | NewebPay trade number | Varchar(20) | Platform transaction ID |
+| LgsType | Logistics type | Varchar(15) | B2C or C2C |
+| ShipType | Logistics provider | Varchar(15) | 1=7-11, 2=FamilyMart, 3=Hi-Life, 4=OK Mart |
+| StoreID | Pickup store ID | Varchar(10) | Store code |
+| TradeType | Trade type | Int(1) | 1=COD, 3=No Payment |
+
+---
+
+### 3. Get Shipment Number API [NPA-B53]
+
+Get shipping code before shipment. Merchants can print labels at convenience store Kiosk.
+
+**Endpoint:**
+- Test: `https://ccore.newebpay.com/API/Logistic/getShipmentNo`
+- Production: `https://core.newebpay.com/API/Logistic/getShipmentNo`
+
+**EncryptData_ Parameters:**
+
+| Field | Description | Type | Required | Notes |
+|-------|-------------|------|----------|-------|
+| MerchantOrderNo | Merchant order numbers | Json_array | V | Max 10 orders at once |
+| TimeStamp | Unix timestamp | Varchar(50) | V | Current time in seconds |
+
+**Response EncryptData_ Parameters:**
+
+| Field | Description | Type | Notes |
+|-------|-------------|------|-------|
+| SUCCESS | Success array | Json_array | Multiple records |
+| ERROR | Error array | Json_array | Multiple records |
+| MerchantOrderNo | Merchant order number | Varchar(30) | Order ID |
+| ErrorCode | Error code | Varchar(20) | SUCCESS or error code |
+| LgsNo | Shipment number | Varchar(20) | Logistics tracking number |
+| StorePrintNo | Store print code | Varchar(20) | Code for Kiosk printing |
+| ShipType | Logistics provider | Varchar(15) | 1=7-11, 2=FamilyMart, 3=Hi-Life, 4=OK Mart |
+| LgsType | Logistics type | Varchar(15) | B2C or C2C |
+
+---
+
+### 4. Print Label API [NPA-B54]
+
+Print shipping labels to attach to products.
+
+**Endpoint:**
+- Test: `https://ccore.newebpay.com/API/Logistic/printLabel`
+- Production: `https://core.newebpay.com/API/Logistic/printLabel`
+
+**Important**: Must use Form POST method (not JSON API call)
+
+**EncryptData_ Parameters:**
+
+| Field | Description | Type | Required | Notes |
+|-------|-------------|------|----------|-------|
+| LgsType | Logistics type | Varchar(15) | V | B2C or C2C |
+| ShipType | Logistics provider | Varchar(15) | V | 1=7-11, 2=FamilyMart, 3=Hi-Life, 4=OK Mart |
+| MerchantOrderNo | Merchant order numbers | json_array | V | Max: 7-11(18), FamilyMart(8), Hi-Life(18), OK Mart(18) |
+| TimeStamp | Unix timestamp | Varchar(50) | V | Current time in seconds |
+
+**Response**: Returns HTML page with printable shipping label
+
+---
+
+### 5. Query Shipment API [NPA-B55]
+
+Query logistics order information and status.
+
+**Endpoint:**
+- Test: `https://ccore.newebpay.com/API/Logistic/queryShipment`
+- Production: `https://core.newebpay.com/API/Logistic/queryShipment`
+
+**EncryptData_ Parameters:**
+
+| Field | Description | Type | Required | Notes |
+|-------|-------------|------|----------|-------|
+| MerchantOrderNo | Merchant order number | Varchar(30) | V | Order ID |
+| TimeStamp | Unix timestamp | Varchar(50) | V | Current time in seconds |
+
+**Response EncryptData_ Parameters:**
+
+| Field | Description | Type | Notes |
+|-------|-------------|------|-------|
+| MerchantID | Merchant ID | Varchar(15) | NewebPay merchant ID |
+| LgsType | Logistics type | Varchar(15) | B2C or C2C |
+| TradeNo | NewebPay trade number | Varchar(20) | Platform transaction ID |
+| MerchantOrderNo | Merchant order number | Varchar(30) | Order ID |
+| Amt | Transaction amount | Int(10) | Order amount |
+| ItemDesc | Product description | Varchar(100) | Product name |
+| NotifyURL | Notification URL | Varchar(50) | Callback URL |
+| LgsNo | Shipment number | Varchar(20) | Logistics tracking number |
+| StorePrintNo | Store print code | Varchar(20) | Kiosk print code |
+| collectionAmt | Collection amount | Int(10) | COD amount |
+| TradeType | Trade type | Int(1) | 1=COD, 3=No Payment |
+| Type | Order type | Int(1) | 1=Normal, 3=Return |
+| ShopDate | Ship date | Date | Shipping date |
+| UserName | Recipient name | Varchar(20) | Pickup person |
+| UserTel | Recipient phone | Varchar(10) | Mobile number |
+| UserEmail | Recipient email | Varchar(50) | Email |
+| StoreID | Pickup store ID | Varchar(10) | Store code |
+| ShipType | Logistics provider | Varchar(15) | 1=7-11, 2=FamilyMart, 3=Hi-Life, 4=OK Mart |
+| StoreName | Store name | Varchar(20) | Store name |
+| RetId | Status code | Varchar(10) | See status code table |
+| RetString | Status description | Varchar(30) | See status description |
+
+---
+
+### 6. Modify Shipment API [NPA-B56]
+
+Modify shipment order details (only for orders not yet shipped or expired).
+
+**Endpoint:**
+- Test: `https://ccore.newebpay.com/API/Logistic/modifyShipment`
+- Production: `https://core.newebpay.com/API/Logistic/modifyShipment`
+
+**Modifiable Conditions:**
+- Not yet obtained shipping number
+- Shipment expired
+- Store reselection
+
+**EncryptData_ Parameters:**
+
+| Field | Description | Type | Required | Notes |
+|-------|-------------|------|----------|-------|
+| MerchantOrderNo | Merchant order number | Varchar(30) | V | Order ID |
+| LgsType | Logistics type | Varchar(15) | V | B2C or C2C |
+| ShipType | Logistics provider | Varchar(15) | V | 1=7-11, 2=FamilyMart, 3=Hi-Life, 4=OK Mart |
+| UserName | Recipient name | Varchar(20) | - | New recipient name |
+| UserTel | Recipient phone | Varchar(10) | - | New phone number |
+| UserEmail | Recipient email | Varchar(50) | - | New email |
+| StoreID | Pickup store ID | Varchar(10) | + | New store ID |
+| TimeStamp | Unix timestamp | Varchar(50) | V | Current time in seconds |
+
+**Response EncryptData_ Parameters:**
+
+| Field | Description | Type | Notes |
+|-------|-------------|------|-------|
+| MerchantID | Merchant ID | Varchar(15) | NewebPay merchant ID |
+| MerchantOrderNo | Merchant order number | Varchar(30) | Order ID |
+| LgsType | Logistics type | Varchar(15) | B2C or C2C |
+| ShipType | Logistics provider | Varchar(15) | 1=7-11, 2=FamilyMart, 3=Hi-Life, 4=OK Mart |
+
+---
+
+### 7. Track Shipment API [NPA-B57]
+
+Track complete logistics delivery history.
+
+**Endpoint:**
+- Test: `https://ccore.newebpay.com/API/Logistic/trace`
+- Production: `https://core.newebpay.com/API/Logistic/trace`
+
+**EncryptData_ Parameters:**
+
+| Field | Description | Type | Required | Notes |
+|-------|-------------|------|----------|-------|
+| MerchantOrderNo | Merchant order number | Varchar(30) | V | Order ID |
+| TimeStamp | Unix timestamp | Varchar(50) | V | Current time in seconds |
+
+**Response EncryptData_ Parameters:**
+
+| Field | Description | Type | Notes |
+|-------|-------------|------|-------|
+| LgsType | Logistics type | Varchar(15) | B2C or C2C |
+| MerchantOrderNo | Merchant order number | Varchar(30) | Order ID |
+| LgsNo | Shipment number | Varchar(20) | Tracking number |
+| TradeType | Trade type | Int(1) | 1=COD, 3=No Payment |
+| ShipType | Logistics provider | Varchar(15) | 1=7-11, 2=FamilyMart, 3=Hi-Life, 4=OK Mart |
+| History | History array | json_array | Tracking history |
+| RetId | Status code | Varchar(10) | See status code table |
+| RetString | Status description | Varchar(30) | See status description |
+| EventTime | Event time | Varchar(20) | Timestamp |
+
+---
+
+### 8. Status Notification [NPA-B58]
+
+Real-time notification when shipment status changes.
+
+**Merchant provides NotifyURL to receive notifications**
+
+**POST Parameters:**
+
+| Field | Description | Type | Notes |
+|-------|-------------|------|-------|
+| Status | Response status | Varchar(10) | SUCCESS or error code |
+| Message | Response message | Varchar(30) | Status description |
+| EncryptData_ | Encrypted data | Text | - |
+| HashData_ | Hash data | Text | - |
+| UID_ | Merchant ID | Varchar(15) | NewebPay merchant ID |
+| Version_ | API version | Varchar(5) | Fixed: 1.0 |
+
+**EncryptData_ Parameters:**
+
+| Field | Description | Type | Notes |
+|-------|-------------|------|-------|
+| LgsType | Logistics type | Varchar(15) | B2C or C2C |
+| MerchantOrderNo | Merchant order number | Varchar(30) | Order ID |
+| LgsNo | Shipment number | Varchar(20) | Tracking number |
+| TradeType | Trade type | Int(1) | 1=COD, 3=No Payment |
+| ShipType | Logistics provider | Varchar(15) | 1=7-11, 2=FamilyMart, 3=Hi-Life, 4=OK Mart |
+| RetId | Status code | Varchar(10) | See status code table |
+| RetString | Status description | Varchar(30) | See status description |
+| EventTime | Event time | Varchar(20) | Timestamp |
+
+---
+
+## NewebPay Encryption
+
+### Hash Data Processing
+
+NewebPay Logistics uses the same encryption method as NewebPay Payment:
+
+1. **AES-256-CBC Encryption**: Encrypt data using merchant's HashKey and HashIV
+2. **SHA256 Hash**: `HashKey=` + key + `&` + AES result + `&HashIV=` + iv, then SHA256 and uppercase
+
+**Process:**
+```
+EncryptData = hex(AES-256-CBC(JSON, HashKey, HashIV))
+HashData    = SHA256("HashKey={HashKey}&{EncryptData}&HashIV={HashIV}").toUpperCase()
+```
+
+Spec NDNS 1.0.0 appendix (1) gives a worked example:
+`SHA256("HashKey=12345678901234567890123456789012&AAAABBBBCCCCDDDD&HashIV=12345678")`
+= `5C6C504A2F2B2E3EB5CA80998F626307ACD327AC6DCE4FF84F86B021988B2576`.
+
+Field names: requests use a trailing underscore (`UID_`, `EncryptData_`, `HashData_`, `Version_`, `RespondType_`);
+API responses and the store-map callback use `EncryptData` / `HashData` **without** underscore;
+the status push (NPA-B58) uses the underscored names.
+
+---
+
+## NewebPay Status Codes (excerpt)
+
+### RetId Status Codes & RetString Descriptions
+
+| RetId | RetString | Category |
+|-------|-----------|----------|
+| 0_1 | Order not processed | Pending |
+| 0_2 | Shipment number expired, please get new number | Pending |
+| 0_3 | Shipment canceled | Pending |
+| 1 | Order processing | Processing |
+| 2 | Store received shipment | In Transit |
+| 3 | Store reselected, waiting for re-shipment | In Transit |
+| 4 | Arrived at logistics center | In Transit |
+| 11 | Pickup store closed, please reselect | In Transit |
+| 5 | Arrived at pickup store | Ready for Pickup |
+| 6 | Customer picked up | Completed |
+| -1 | Returned to merchant | Completed |
+| -6 | Home delivery return requested | Completed |
+| -9 | Logistics inspection error | Completed |
+| -2 | Returned to sender/designated return store | Return/Compensation |
+| -3 | Returned to logistics center | Return/Compensation |
+| -4 | Returning to logistics center (customer did not pickup) | Return/Compensation |
+| -5 | Soon to be returned (customer did not pickup) | Return/Compensation |
+| -7 | Error compensation approved | Return/Compensation |
+| -10 | Product destroyed/discarded | Return/Compensation |
+| -11 | Product destroyed/discarded | Return/Compensation |
+| 10 | Soon to be returned | Return/Compensation |
+| 12 | Return store closed, please reselect | Return/Compensation |
+| 13 | Returning to logistics center (merchant did not pickup) | Return/Compensation |
+| 14 | Please request home delivery return | Return/Compensation |
+| 15 | Product destroyed/discarded | Return/Compensation |
+| 16 | Please confirm bank account | Return/Compensation |
+
+---
+
+## NewebPay Error Codes (excerpt)
+
+### Common Error Codes
+
+| Code | Message | Notes |
+|------|---------|-------|
+| SUCCESS | Success | - |
+| 1101 | Failed to create logistics order | - |
+| 1102 | Merchant not found | - |
+| 1103 | Duplicate merchant order number | - |
+| 1104 | Logistics service not enabled | - |
+| 1105 | Store information invalid or empty | - |
+| 1106 | IP not allowed | - |
+| 1107 | Payment order not found | - |
+| 1108 | System error, cannot query logistics order | - |
+| 1109 | Logistics order not found | - |
+| 1110 | System error, cannot modify logistics order | - |
+| 1111 | Order status cannot be modified | - |
+| 1112 | Failed to modify logistics order | - |
+| 1113 | System error, cannot query tracking history | - |
+| 1114 | Insufficient prepaid balance | - |
+| 1115 | Failed to get shipment number | - |
+| 1116 | Shipment already created for this transaction | - |
+| 2100 | Data format error | - |
+| 2101 | Version error | - |
+| 2102 | UID_ cannot be empty | - |
+| 2103 | COD amount limit: 20000 NTD | - |
+| 2104 | No payment amount limit: 20000 NTD | - |
+| 2105 | Max 10 shipment numbers per request | - |
+| 2106 | Max labels per request: 7-11(18), FamilyMart(8), Hi-Life(18), OK Mart(18) | - |
+| 4101 | IP restricted | - |
+| 4103 | HashData_ verification failed | - |
+| 4104 | Encryption error, check Hash_Key and Hash_IV | - |
+
+---
+
+## NewebPay Important Notes
+
+### Amount Limits
+- **COD (Cash on Delivery)**: Maximum 20,000 NTD
+- **No Payment**: Maximum 20,000 NTD
+
+### Batch Limits
+- **Get Shipment Number**: Maximum 10 orders per request
+- **Print Label**:
+  - 7-ELEVEN: Maximum 18 labels
+  - FamilyMart: Maximum 8 labels
+  - Hi-Life: Maximum 18 labels
+  - OK Mart: Maximum 18 labels
+
+### Store Code Notes
+- For FamilyMart and OK Mart, the store code displayed on the map may not be the real code
+- Always use the store code returned in the API response (StoreID field)
+
+### Timestamp
+- Must use Unix timestamp (seconds since 1970-01-01 00:00:00 GMT)
+- Tolerance: 120 seconds
+- Incorrect timestamp will cause transaction failure
+
+---
+
+## PAYUNi API Operations
+
+All requests: form POST `MerID`, `Version`, `EncryptInfo`, `HashInfo`. Verify `HashInfo` on every
+response and notification before decrypting.
+
+### 1. Create shipment (inside the payment request)
+
+| EncryptInfo field | UPP | Backend API | Notes |
+|---|:-:|:-:|---|
+| ShipTag | 1 | | enable logistics |
+| Ship | 1 = COD | | |
+| ServiceType | | 3 | backend APIs support no-COD only |
+| LgsType / ShipType / GoodsType | ● | ● | |
+| Consignee / ConsigneeMobile | ● | ● | real name, 09xxxxxxxx |
+| StoreID | | ● (7-11) | from the store map |
+| ConsigneeAddress / DeliveryTimeTag | ○ | ● (T-Cat) | |
+
+The payment response includes **`ShipTradeNo`** (used for query / print / notifications).
+
+### 2. Query shipment
+
+`POST /api/logistics/query`, Version `1.1`, EncryptInfo: `MerID`, `Timestamp`, `LgsType`, and `ShipTradeNo`
+or `ReturnOdno` (C2B). Response: `Odno`, `PartnerId`, `ValidationNo` (C2C), `FileNo` (T-Cat), `ShipStatus`,
+`ShipStatusDesc`, `ShipStatusTime`, `PickupStoreType` (status 81).
+
+**ShipStatus codes** (official page 120):
+
+| Code | Meaning | Code | Meaning |
+|---|---|---|---|
+| 91 | Not processed | 11 | Picked up |
+| 92 | Processing (CVS) | 41 | Cancelled |
+| 98 | Processing, received (B2C) | 43 | Compensation |
+| 21 | Waiting for shipment | 44 | Lost |
+| 22 | Logistics-center check-in (CVS) | 46 | Discarded (C2C) |
+| 31 | In delivery | 51 | Return |
+| 32 | At pickup store (CVS) | 52 | Not collected by buyer |
+| 33 | Exception | 53 | Returned to warehouse (CVS) |
+| 81 | Store closed, reselect | 55 | Not collected by seller (C2C) |
+| 82 | Awaiting home-delivery return (C2C) | 56 | Returned by home delivery (C2C) |
+
+### 3. Notifications
+
+The notify URL is set in the PAYUNi back office (logistics settings). Decrypted `ApiType` is `ShipStatus`
+(`ShipTradeNo`, `ShipStatus`, `ShipStatusDesc`, `ShipStatusTime`; T-Cat adds `OBTNumber`, `FileNo`)
+or `Print` (label result). Match orders by `ShipTradeNo`.
+
+---
+
+## Best Practices
+
+1. **Store Selection**: Always use the StoreID from the Store Map API response, not the displayed code
+2. **Error Handling**: Implement proper error handling for all API calls with retry logic
+3. **Status Tracking**: Use Status Notification webhook for real-time updates instead of polling
+4. **Encryption**: Securely store HashKey and HashIV, never expose in client-side code
+5. **Order Numbers**: Ensure MerchantOrderNo is unique across all orders
+6. **Timestamp**: Always generate fresh timestamp for each API call
+7. **Testing**: Use test environment extensively before going to production
+8. **Validation**: Validate all user input (name, phone, email) before API calls
+9. **Logging**: Log all API requests and responses for debugging and auditing
+10. **Notification URL**: Ensure NotifyURL is accessible from NewebPay servers (not localhost)
+
+---
+
+## Use Cases
+
+### E-commerce Platform
+- Integrate store map for customers to select pickup location
+- Create shipment automatically after order confirmation
+- Send tracking updates to customers via email/SMS
+- Handle returns and exchanges through modify shipment API
+
+### Marketplace
+- Support multiple vendors shipping to convenience stores
+- Provide unified logistics tracking interface
+- Automate shipment number retrieval and label printing
+- Handle COD payment collection and settlement
+
+### Subscription Service
+- Schedule recurring shipments to same pickup store
+- Automatic label generation for regular deliveries
+- Batch shipment creation for multiple orders
+- Track delivery success rate and optimize logistics
+
+---
+

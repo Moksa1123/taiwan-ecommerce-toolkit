@@ -42,6 +42,8 @@ export const PACKAGES = [
 // 這些是本機產物或作業系統垃圾檔，不該進入發布包
 const EXCLUDE_DIRS = new Set(['__pycache__', '.pytest_cache', 'node_modules', '.git']);
 const EXCLUDE_FILES = /\.(pyc|pyo|pyd)$|^\.DS_Store$|^Thumbs\.db$/;
+// evals/runs/ 是有／沒有 skill 的作答紀錄，只供維護者評分，不隨套件發布
+const EXCLUDE_PATHS = new Set(['evals/runs']);
 
 function walk(dir, base = dir, out = []) {
   if (!existsSync(dir)) return out;
@@ -49,6 +51,7 @@ function walk(dir, base = dir, out = []) {
     const full = join(dir, name);
     if (statSync(full).isDirectory()) {
       if (EXCLUDE_DIRS.has(name)) continue;
+      if (EXCLUDE_PATHS.has(relative(base, full).split('\\').join('/'))) continue;
       walk(full, base, out);
     } else {
       if (EXCLUDE_FILES.test(name)) continue;

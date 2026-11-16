@@ -1,0 +1,4 @@
+# examples/ 與 test_payment.py --live 用到的第三方套件。
+# search.py、recommend.py、check_numbers.py、test_skill.py 只用標準函式庫，不需要安裝。
+pycryptodome>=3.20   # AES-256-CBC／GCM（藍新、PAYUNi、ezPay 等）
+requests>=2.31       # 範例的 HTTP 呼叫、test_payment.py --live
