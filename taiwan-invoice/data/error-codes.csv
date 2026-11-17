@@ -227,6 +227,21 @@ Amego,4050141,指定折讓單號 等待 折讓開立/作廢折讓,,折讓-作廢
 Amego,9000111,手機條碼不可為空,,其他-手機條碼查詢,見光貿 API 錯誤代碼（invoice.amego.tw/info_detail?mid=71）,https://invoice.amego.tw/info_detail?mid=71,2026-10-24,官方文件
 Amego,9000112,手機條碼格式錯誤,,其他-手機條碼查詢,見光貿 API 錯誤代碼（invoice.amego.tw/info_detail?mid=71）,https://invoice.amego.tw/info_detail?mid=71,2026-10-24,官方文件
 Amego,9000113,手機條碼不存在,,其他-手機條碼查詢,見光貿 API 錯誤代碼（invoice.amego.tw/info_detail?mid=71）,https://invoice.amego.tw/info_detail?mid=71,2026-10-24,官方文件
+Amego,41,InvoiceNumber 不可為空或格式錯誤,,發票-發票修改(自動配號),見光貿 API 錯誤代碼（invoice.amego.tw/info_detail?mid=71）,https://invoice.amego.tw/info_detail?mid=71,2026-11-17,官方文件
+Amego,42,查無此發票號碼,,發票-發票修改(自動配號),見光貿 API 錯誤代碼（invoice.amego.tw/info_detail?mid=71）,https://invoice.amego.tw/info_detail?mid=71,2026-11-17,官方文件
+Amego,43,此發票日期超過180天,,發票-發票修改(自動配號),見光貿 API 錯誤代碼（invoice.amego.tw/info_detail?mid=71）,https://invoice.amego.tw/info_detail?mid=71,2026-11-17,官方文件
+Amego,44,此發票的型態不是開立,,發票-發票修改(自動配號),見光貿 API 錯誤代碼（invoice.amego.tw/info_detail?mid=71）,https://invoice.amego.tw/info_detail?mid=71,2026-11-17,官方文件
+Amego,45,此發票未上傳完成,,發票-發票修改(自動配號),見光貿 API 錯誤代碼（invoice.amego.tw/info_detail?mid=71）,https://invoice.amego.tw/info_detail?mid=71,2026-11-17,官方文件
+Amego,46,此發票已超過修改期限,,發票-發票修改(自動配號),見光貿 API 錯誤代碼（invoice.amego.tw/info_detail?mid=71）,https://invoice.amego.tw/info_detail?mid=71,2026-11-17,官方文件
+Amego,47,此發票尚有未處理的異動紀錄,,發票-發票修改(自動配號),見光貿 API 錯誤代碼（invoice.amego.tw/info_detail?mid=71）,https://invoice.amego.tw/info_detail?mid=71,2026-11-17,官方文件
+Amego,48,未打統編且已列印的發票，請作廢重開，無法修改,,發票-發票修改(自動配號),見光貿 API 錯誤代碼（invoice.amego.tw/info_detail?mid=71）,https://invoice.amego.tw/info_detail?mid=71,2026-11-17,官方文件
+Amego,49,特種稅率發票不可修改,,發票-發票修改(自動配號),見光貿 API 錯誤代碼（invoice.amego.tw/info_detail?mid=71）,https://invoice.amego.tw/info_detail?mid=71,2026-11-17,官方文件
+Amego,50,此發票已開立折讓單，無法修改,,發票-發票修改(自動配號),見光貿 API 錯誤代碼（invoice.amego.tw/info_detail?mid=71）,https://invoice.amego.tw/info_detail?mid=71,2026-11-17,官方文件
+Amego,91,發票修改失敗,,發票-發票修改(自動配號),見光貿 API 錯誤代碼（invoice.amego.tw/info_detail?mid=71）,https://invoice.amego.tw/info_detail?mid=71,2026-11-17,官方文件
+Amego,3040113,ProductItem 資料應為陣列,,發票-發票修改(自動配號),見光貿 API 錯誤代碼（invoice.amego.tw/info_detail?mid=71）,https://invoice.amego.tw/info_detail?mid=71,2026-11-17,官方文件
+Amego,3040165,第n品項 Unit 過長,,發票-發票修改(自動配號),見光貿 API 錯誤代碼（invoice.amego.tw/info_detail?mid=71）,https://invoice.amego.tw/info_detail?mid=71,2026-11-17,官方文件
+Amego,3040189,零稅率原因必填,,發票-發票修改(自動配號),見光貿 API 錯誤代碼（invoice.amego.tw/info_detail?mid=71）,https://invoice.amego.tw/info_detail?mid=71,2026-11-17,官方文件
+Amego,3040190,零稅率原因錯誤,,發票-發票修改(自動配號),見光貿 API 錯誤代碼（invoice.amego.tw/info_detail?mid=71）,https://invoice.amego.tw/info_detail?mid=71,2026-11-17,官方文件
 ezPay,KEY10002,資料解密錯誤,,發票,確認 HashKey/HashIV、Padding、加密演算法（AES-256-CBC）,https://inv.ezpay.com.tw/Invoice_index/download,2026-08-08,官方文件
 ezPay,KEY10004,資料不齊全,,發票,確認 `PostData_` 解密後欄位是否完整,https://inv.ezpay.com.tw/Invoice_index/download,2026-08-08,官方文件
 ezPay,KEY10006,商店未申請啟用電子發票,,發票,後台確認電子發票服務狀態,https://inv.ezpay.com.tw/Invoice_index/download,2026-08-08,官方文件

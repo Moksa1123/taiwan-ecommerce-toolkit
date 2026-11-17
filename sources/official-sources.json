@@ -458,6 +458,36 @@
   "notes": "import_invoice_error_codes.py 解析來源"
  },
  {
+  "id": "amego-info-member-carrier",
+  "provider": "amego",
+  "skills": [
+   "invoice"
+  ],
+  "title": "光貿「光貿會員載具規則」頁（info_detail mid=73）",
+  "url": "https://invoice.amego.tw/info_detail?mid=73",
+  "format": "html",
+  "fetch": "get",
+  "access": "public",
+  "covers": [
+   "taiwan-invoice/references/AMEGO_API_REFERENCE.md"
+  ]
+ },
+ {
+  "id": "amego-info-checks",
+  "provider": "amego",
+  "skills": [
+   "invoice"
+  ],
+  "title": "光貿「統一編號、載具、捐贈碼檢查」頁（info_detail mid=74）",
+  "url": "https://invoice.amego.tw/info_detail?mid=74",
+  "format": "html",
+  "fetch": "get",
+  "access": "public",
+  "covers": [
+   "taiwan-invoice/references/AMEGO_API_REFERENCE.md"
+  ]
+ },
+ {
   "id": "ecpay-10075",
   "provider": "ecpay",
   "skills": [
@@ -3446,6 +3476,150 @@
   "notes": "綠界官方 AI skill 的 AIO 指南；2026-11-17 仍列永豐 30N，與 developers 網站衝突時以網站為準"
  },
  {
+  "id": "ecpay-invoice-63356",
+  "provider": "ecpay",
+  "skills": [
+   "invoice"
+  ],
+  "title": "《B2C 電子發票介接技術文件》 發送通知 / 取得發票通知方式設定",
+  "url": "https://developers.ecpay.com.tw/63356.md",
+  "format": "md",
+  "fetch": "get",
+  "access": "public",
+  "covers": [
+   "taiwan-invoice/references/ECPAY_API_REFERENCE.md"
+  ],
+  "notes": "綠界開發者網站頁面加 .md 取得 Markdown 版；頁碼即 reference 內的 /NNNN 引用"
+ },
+ {
+  "id": "ecpay-invoice-64067",
+  "provider": "ecpay",
+  "skills": [
+   "invoice"
+  ],
+  "title": "《B2C 電子發票介接技術文件》 發送通知 / 發票通知方式設定",
+  "url": "https://developers.ecpay.com.tw/64067.md",
+  "format": "md",
+  "fetch": "get",
+  "access": "public",
+  "covers": [
+   "taiwan-invoice/references/ECPAY_API_REFERENCE.md"
+  ],
+  "notes": "綠界開發者網站頁面加 .md 取得 Markdown 版；頁碼即 reference 內的 /NNNN 引用"
+ },
+ {
+  "id": "ecpay-invoice-64079",
+  "provider": "ecpay",
+  "skills": [
+   "invoice"
+  ],
+  "title": "《B2C 電子發票介接技術文件》 發送通知 / 取得字軌配號剩餘量提醒設定",
+  "url": "https://developers.ecpay.com.tw/64079.md",
+  "format": "md",
+  "fetch": "get",
+  "access": "public",
+  "covers": [
+   "taiwan-invoice/references/ECPAY_API_REFERENCE.md"
+  ],
+  "notes": "綠界開發者網站頁面加 .md 取得 Markdown 版；頁碼即 reference 內的 /NNNN 引用"
+ },
+ {
+  "id": "ecpay-invoice-64088",
+  "provider": "ecpay",
+  "skills": [
+   "invoice"
+  ],
+  "title": "《B2C 電子發票介接技術文件》 發送通知 / 設定字軌配號剩餘量提醒",
+  "url": "https://developers.ecpay.com.tw/64088.md",
+  "format": "md",
+  "fetch": "get",
+  "access": "public",
+  "covers": [
+   "taiwan-invoice/references/ECPAY_API_REFERENCE.md"
+  ],
+  "notes": "綠界開發者網站頁面加 .md 取得 Markdown 版；頁碼即 reference 內的 /NNNN 引用"
+ },
+ {
+  "id": "ecpay-invoice-64106",
+  "provider": "ecpay",
+  "skills": [
+   "invoice"
+  ],
+  "title": "《B2C 電子發票介接技術文件》 發送通知 / 查詢空白未使用發票",
+  "url": "https://developers.ecpay.com.tw/64106.md",
+  "format": "md",
+  "fetch": "get",
+  "access": "public",
+  "covers": [
+   "taiwan-invoice/references/ECPAY_API_REFERENCE.md"
+  ],
+  "notes": "綠界開發者網站頁面加 .md 取得 Markdown 版；頁碼即 reference 內的 /NNNN 引用"
+ },
+ {
+  "id": "ecpay-invoice-64122",
+  "provider": "ecpay",
+  "skills": [
+   "invoice"
+  ],
+  "title": "《B2C 電子發票介接技術文件》 發送通知 / 設定空白發票是否自動上傳",
+  "url": "https://developers.ecpay.com.tw/64122.md",
+  "format": "md",
+  "fetch": "get",
+  "access": "public",
+  "covers": [
+   "taiwan-invoice/references/ECPAY_API_REFERENCE.md"
+  ],
+  "notes": "綠界開發者網站頁面加 .md 取得 Markdown 版；頁碼即 reference 內的 /NNNN 引用"
+ },
+ {
+  "id": "ecpay-invoice-64133",
+  "provider": "ecpay",
+  "skills": [
+   "invoice"
+  ],
+  "title": "《B2C 電子發票介接技術文件》 發送通知 / 下載空白發票清單",
+  "url": "https://developers.ecpay.com.tw/64133.md",
+  "format": "md",
+  "fetch": "get",
+  "access": "public",
+  "covers": [
+   "taiwan-invoice/references/ECPAY_API_REFERENCE.md"
+  ],
+  "notes": "綠界開發者網站頁面加 .md 取得 Markdown 版；頁碼即 reference 內的 /NNNN 引用"
+ },
+ {
+  "id": "ecpay-invoice-62730",
+  "provider": "ecpay",
+  "skills": [
+   "invoice"
+  ],
+  "title": "《B2B 電子發票 API 技術文件（存證）》 查詢特定多筆發票",
+  "url": "https://developers.ecpay.com.tw/62730.md",
+  "format": "md",
+  "fetch": "get",
+  "access": "public",
+  "covers": [
+   "taiwan-invoice/references/ECPAY_API_REFERENCE.md"
+  ],
+  "notes": "綠界開發者網站頁面加 .md 取得 Markdown 版；頁碼即 reference 內的 /NNNN 引用"
+ },
+ {
+  "id": "ecpay-invoice-66505",
+  "provider": "ecpay",
+  "skills": [
+   "invoice"
+  ],
+  "title": "《B2B 電子發票 API 技術文件（交換）》 查詢特定多筆發票",
+  "url": "https://developers.ecpay.com.tw/66505.md",
+  "format": "md",
+  "fetch": "get",
+  "access": "public",
+  "covers": [
+   "taiwan-invoice/references/ECPAY_API_REFERENCE.md"
+  ],
+  "notes": "綠界開發者網站頁面加 .md 取得 Markdown 版；頁碼即 reference 內的 /NNNN 引用"
+ },
+ {
   "id": "ezpay-api-document",
   "provider": "ezpay",
   "skills": [
@@ -4526,7 +4700,7 @@
   "skills": [
    "invoice"
   ],
-  "title": "財政部 應用 API 申請（BTC605W）",
+  "title": "財政部 應用 API 申請",
   "url": "https://einvoice.nat.gov.tw/APCONSUMER/BTC605W/",
   "format": "html",
   "fetch": "manual",
@@ -4534,7 +4708,7 @@
   "covers": [
    "taiwan-invoice/references/MOF_EINVOICE_API_REFERENCE.md"
   ],
-  "notes": "AppID／APIKey 需申請"
+  "notes": "AppID／APIKey 需申請；V2.1 p.10 申請路徑：登入 → 電子發票 API 申請 → 電子發票 API 申請"
  },
  {
   "id": "mof-einvoice-api-spec-v1-9",
@@ -4550,7 +4724,7 @@
   "covers": [
    "taiwan-invoice/references/MOF_EINVOICE_API_REFERENCE.md"
   ],
-  "notes": "新版會換附件檔名"
+  "notes": "已過時：2025-04-30 起現行版為 V2.1（見 mof-einvoice-api-spec-v2-1），保留作歷史版本"
  },
  {
   "id": "mof-open-data-api",
@@ -4583,6 +4757,72 @@
    "taiwan-invoice/references/MOF_EINVOICE_API_REFERENCE.md"
   ],
   "notes": "WAF：需帶瀏覽器 User-Agent 與 Accept: text/html、Accept-Language，否則 403（2026-09-24 以此確認 200）"
+ },
+ {
+  "id": "mof-download-business",
+  "provider": "mof",
+  "skills": [
+   "invoice"
+  ],
+  "title": "財政部電子發票整合服務平台 營業人文件下載",
+  "url": "https://www.einvoice.nat.gov.tw/download/ptl003w/AC20000002",
+  "format": "html",
+  "fetch": "browser",
+  "access": "public",
+  "covers": [
+   "taiwan-invoice/references/MOF_EINVOICE_API_REFERENCE.md",
+   "taiwan-invoice/data/operations.csv",
+   "taiwan-invoice/data/providers.csv",
+   "taiwan-invoice/data/carrier-types.csv"
+  ],
+  "notes": "SPA；清單 API：POST https://service-mc.einvoice.nat.gov.tw/ptl/portal/api/ptl003w/getFileDownloadList?fileLanguage=0&categoryId=AC20000002（回 fileSubject、fileId、lastModifiedDate），規格改版看這裡"
+ },
+ {
+  "id": "mof-einvoice-api-spec-v2-1",
+  "provider": "mof",
+  "skills": [
+   "invoice"
+  ],
+  "title": "《電子發票應用 API 規格》V2.1（財政部財政資訊中心，114 年 4 月 23 日）",
+  "url": "https://service-mc.einvoice.nat.gov.tw/ptl/portal/api/ptl003w/ptl003wDownloadFile?fileId=5160&fileExtension=PDF&fileName=",
+  "format": "pdf",
+  "fetch": {
+   "method": "POST",
+   "data": {}
+  },
+  "headers": {
+   "Origin": "https://www.einvoice.nat.gov.tw",
+   "Referer": "https://www.einvoice.nat.gov.tw/"
+  },
+  "access": "public",
+  "covers": [
+   "taiwan-invoice/references/MOF_EINVOICE_API_REFERENCE.md"
+  ],
+  "notes": "營業人文件下載第 4 項；新版會換 fileId，先查 mof-download-business 清單"
+ },
+ {
+  "id": "mof-einvoice-biz-api-spec-v1-9",
+  "provider": "mof",
+  "skills": [
+   "invoice"
+  ],
+  "title": "《電子發票營業人應用 API 規格》V1.9（財政部財政資訊中心，113 年 5 月 31 日）",
+  "url": "https://service-mc.einvoice.nat.gov.tw/ptl/portal/api/ptl003w/ptl003wDownloadFile?fileId=5161&fileExtension=PDF&fileName=",
+  "format": "pdf",
+  "fetch": {
+   "method": "POST",
+   "data": {}
+  },
+  "headers": {
+   "Origin": "https://www.einvoice.nat.gov.tw",
+   "Referer": "https://www.einvoice.nat.gov.tw/"
+  },
+  "access": "public",
+  "covers": [
+   "taiwan-invoice/references/MOF_EINVOICE_API_REFERENCE.md",
+   "taiwan-invoice/data/operations.csv"
+  ],
+  "notes": "營業人文件下載第 8 項；手機條碼驗證 bcv、捐贈碼驗證 preserveCodeCheck 的出處"
  },
  {
   "id": "newebpay-download-api",
@@ -9332,7 +9572,7 @@
   "covers": [
    "taiwan-invoice/references/VAC_LANDSCAPE.md"
   ],
-  "notes": "原 neinv.tradevan.com.tw 於 2026-10 公告移轉至 E-HUB，舊網址 10 月底失效"
+  "notes": "原 neinv.tradevan.com.tw 已移轉至 E-HUB；舊網址 2026-11-17 回 404"
  },
  {
   "id": "twqr-fisc",
@@ -9476,13 +9716,29 @@
    "invoice"
   ],
   "title": "e首發票 方案價格",
-  "url": "https://www.youshop.com.tw/pricing.html",
+  "url": "https://serv.einv.tw/pricing.html",
   "format": "html",
   "fetch": "get",
   "access": "public",
   "covers": [
    "taiwan-invoice/references/VAC_LANDSCAPE.md"
   ]
+ },
+ {
+  "id": "einv-tw-api-docs",
+  "provider": "vac",
+  "skills": [
+   "invoice"
+  ],
+  "title": "e首發票 API 技術文件（矽聯科技）",
+  "url": "https://docs.einv.tw/developer/",
+  "format": "html",
+  "fetch": "get",
+  "access": "public",
+  "covers": [
+   "taiwan-invoice/references/VAC_LANDSCAPE.md"
+  ],
+  "notes": "e首發票原網址 youshop.com.tw 已轉到 serv.einv.tw"
  },
  {
   "id": "uber-direct-tw-merchants",

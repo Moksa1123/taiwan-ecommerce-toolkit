@@ -12,3 +12,12 @@ date,question,why_not_found,asked_by,status
 2026-11-17,PayNow SOAP 發票 API（PayNow_EInvoice V1.5）是否有新版或已停用,文件需向 PayNow 申請、無公開下載網址,taiwan-toolkit（官方文件稽核 2026-11-17）,open
 2026-11-17,PayNow 發票 REST API 的 status／type 代碼意義與錯誤代碼表,官方 REST 文件只列 status int32、type、message 欄位，沒有代碼表,taiwan-toolkit（官方文件稽核 2026-11-17）,open
 2026-11-17,紅陽 B2B 開立（CreateInvoiceb2b）與 B2B 註銷重開是否接受 isprint 參數（參數表未列但回應表寫 isprint=1 才回 barcode 與 QRCode）,手冊 V2.3 p.15–21 與 p.59–65 參數表與回應表不一致,taiwan-toolkit（官方文件稽核 2026-11-17）,open
+2026-11-17,綠界空白發票 3 支 API（QueryBlankInvoiceList／BlankInvAutoUploadSetting／DownLoadBlankInvList）正式網址是否有 /B2CInvoice/ 前綴,官方頁 /64106 /64122 /64133 測試網址有前綴、正式網址沒有；開發者網站與 ecpay-api-skill 無其他出處,taiwan-toolkit（官方文件稽核 2026-11-17）,open
+2026-11-17,綠界 B2B 發票 RqHeader 的 RqID 與 Revision 1.0.0 是否必填,開發者網站 B2B 參數頁只列 Timestamp；只有 SDK_PHP 範例與 ecpay-api-skill guides/05 帶這兩個欄位,taiwan-toolkit（官方文件稽核 2026-11-17）,open
+2026-11-17,光貿 reference「載具與捐贈互斥規則」（有統編不可用載具或捐贈等 4 條）的出處,光貿 API bundle 與補充說明頁 mid=70/73/74 都沒有；綠界 /7896 允許有統編時存載具,taiwan-toolkit（官方文件稽核 2026-11-17）,open
+2026-11-17,光貿 MIG 3.2.1 舊路徑（/json/c0401 等）在 115/1/1 之後是否仍可呼叫,官方 bundle 仍寫「舊版 API 目前尚可繼續使用」但同段寫 MIG 3.2.1 於 115/1/1 停用,taiwan-toolkit（官方文件稽核 2026-11-17）,open
+2026-11-17,財政部載具發票表頭查詢 startDate／endDate 是否必須同月份,reference 寫「起訖須同月份」但 v1.9 與 V2.1 規格都沒有這句；只寫單月 9 個月、雙月 8 個月的可查區間,taiwan-toolkit（官方文件稽核 2026-11-17）,open
+2026-11-17,財政部「查詢手機條碼」getBarcode 是否需要 serial／signature,V2.1 p.41–42 需求參數表沒有 signature，但同類需帶驗證碼的 API（qryCarrierAgg）要簽章；規格未明示,taiwan-toolkit（官方文件稽核 2026-11-17）,open
+2026-11-17,財政部電子發票應用程式介面(API)流量管制作業注意事項的具體門檻,V2.1 p.14 只指向平台〔相關法規注意事項〕頁，本次未取得該文件,taiwan-toolkit（官方文件稽核 2026-11-17）,open
+2026-11-17,關貿 TradeVAN 電子發票 API 規格,產品頁只寫提供完整串接文件與專人支援，未公開；需洽關貿,taiwan-toolkit（官方文件稽核 2026-11-17）,open
+2026-11-17,e首發票（矽聯科技）是否收錄為第 8 家加值中心 reference,docs.einv.tw/developer 為公開 API 文件，本次只確認可取得，未逐項比對,taiwan-toolkit（官方文件稽核 2026-11-17）,open

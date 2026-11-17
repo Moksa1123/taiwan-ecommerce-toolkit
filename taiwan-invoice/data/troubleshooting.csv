@@ -8,7 +8,7 @@ B2C列印需隨機碼,列印失敗或顯示錯誤,未儲存開立時回傳的ran
 隨機碼未儲存,列印時出錯,未儲存開立時回傳的random_number,開立成功後儲存randomNumber欄位,amego,列印,HIGH,https://invoice.amego.tw/api_doc/,2026-08-08,推論
 B2B金額計算錯誤,稅額不正確,未正確區分含稅/未稅價格,使用DetailVat區分: B2B=0未稅 B2C=1含稅,amego,開立,HIGH,https://invoice.amego.tw/api_doc/,2026-08-08,推論
 列印錯誤服務商,查詢不到發票,用其他服務商的API查光貿開的發票,開立時儲存invoiceProvider 列印時優先使用,All,列印,HIGH,,,推論
-加密驗證失敗,TransCode非1或code=2,HashKey/HashIV錯誤或加密流程問題,確認加密流程: URL Encode→AES-128-CBC(ecpay) 或 MD5簽章(amego),ecpay/amego,認證,HIGH,https://developers.ecpay.com.tw/ https://invoice.amego.tw/api_doc/,2026-08-08,推論
+加密驗證失敗,TransCode非1(ecpay) 或 code=16(amego),HashKey/HashIV錯誤或加密流程問題,確認加密流程: URL Encode→AES-128-CBC(ecpay) 或 MD5簽章(amego),ecpay/amego,認證,HIGH,https://developers.ecpay.com.tw/ https://invoice.amego.tw/api_doc/,2026-08-08,推論
 時間戳逾時,10分鐘或60秒誤差,伺服器時間與本地時間不同步,使用API查詢伺服器時間 或同步本地時間,ecpay/amego,認證,MEDIUM,https://developers.ecpay.com.tw/ https://invoice.amego.tw/api_doc/,2026-08-08,推論
 載具與捐贈衝突,不可同時存在,同時設定載具和捐贈,二擇一: 有載具則捐贈=0 有捐贈則載具為空,All,開立,MEDIUM,,,推論
 B2B不可使用載具,統編發票不可用載具,打統編發票設定了載具,B2B發票移除載具設定,All,開立,MEDIUM,,,推論
@@ -21,8 +21,8 @@ RelateNumber 重複,10000006錯誤,同一訂單編號重複開立,使用timestam
 金額計算不符,10000016錯誤,SalesAmount + TaxAmount ≠ TotalAmount,確認B2C: TaxAmount=0 | B2B: 正確計算稅額 | 檢查四捨五入,ecpay,開立,MEDIUM,https://developers.ecpay.com.tw/,2026-08-08,推論
 字軌未配置,-10071錯誤 | 無可用字軌,測試環境字軌未配置,聯繫速買配客服配置測試字軌,smilepay,開立,HIGH,https://www.smilepay.net/,2026-08-08,推論
 B2C 開立逾時,-10033錯誤,開立時間超過48小時,確保B2C發票在48小時內開立 | 調整InvoiceDate,smilepay,開立,MEDIUM,https://www.smilepay.net/,2026-08-08,推論
-MD5 簽章錯誤,code=2 | 簽章驗證失敗,簽章計算順序錯誤 | 欄位缺失,按官方文件排序欄位 | 檢查HashKey拼接 | 移除空值欄位,amego,認證,HIGH,https://invoice.amego.tw/api_doc/,2026-08-08,推論
-BuyerName 不合法,code=1004,填入0/00/000/0000等無效值,BuyerName不可為純數字0 | 使用真實姓名或公司名,amego,開立,MEDIUM,https://invoice.amego.tw/api_doc/,2026-08-08,推論
+MD5 簽章錯誤,code=16 簽名驗證錯誤,簽章字串與實際送出的 data 不一致,sign = md5(data 的 JSON 字串 + time + App Key)；用同一個 JSON 字串簽章與送出（送出前再 URL Encode）；time 與伺服器差 ±60 秒內,amego,認證,HIGH,https://invoice.amego.tw/api_doc/,2026-11-17,官方文件
+BuyerName 不合法,code=3040123（BuyerName 不可為空或過長）,填入0/00/000/0000等無效值或空值,BuyerName不可為純數字0 | 使用真實姓名或公司名,amego,開立,MEDIUM,https://invoice.amego.tw/api_doc/,2026-08-08,推論
 紅陽發票 Token 驗證失敗,回傳 ERROR 且訊息指向 Token 或時間,TimeStamp 定義為台灣時間(UTC+8)自1970/1/1的總秒數 比標準 Unix epoch 多 28800 秒 用 time.time() 會差 8 小時,以 UTC 時間加 8 小時再換算 epoch;超過 300 秒即失敗需校時,SunPay,認證,HIGH,https://www.sunpay.com.tw/developers/,2026-09-29,推論
 紅陽發票連不上或 404,API 呼叫失敗,正式環境 API 網域是 einv.sunpay.com.tw 不是 inv.sunpay.com.tw(後者僅為管理後台),測試用 testinv.sunpay.com.tw 正式用 einv.sunpay.com.tw,SunPay,設定,HIGH,https://www.sunpay.com.tw/developers/,2026-09-29,推論
 紅陽發票拿不到隨機碼與 QRCode,result 缺少 randomNumber barcode leftQrCode rightQrCode,這四個欄位僅在 isprint=1 時提供,需自行產生發票證明聯時 isprint 必須帶 1,SunPay,開立,MEDIUM,https://www.sunpay.com.tw/developers/,2026-09-29,推論

@@ -49,29 +49,31 @@
 
 ### 加密步驟
 
-#### 1. 準備 Data JSON 資料
+#### 1. 準備 Data JSON 資料（B2C `Issue`，/7896）
 ```json
 {
     "MerchantID": "2000132",
     "RelateNumber": "TEST20240101001",
-    "CustomerIdentifier": "12345678",
+    "CustomerIdentifier": "",
+    "CustomerEmail": "test@example.com",
+    "Print": "0",
+    "Donation": "0",
     "InvType": "07",
     "TaxType": "1",
-    "SalesAmount": 9524,
-    "TaxAmount": 476,
-    "TotalAmount": 10000,
+    "SalesAmount": 10000,
     "Items": [
         {
             "ItemSeq": 1,
             "ItemName": "測試商品",
             "ItemCount": 1,
-            "ItemPrice": 9524,
-            "ItemAmount": 9524,
-            "ItemTax": 476
+            "ItemWord": "式",
+            "ItemPrice": 10000,
+            "ItemAmount": 10000
         }
     ]
 }
 ```
+B2C 的 `SalesAmount`、`ItemAmount` 一律含稅，沒有 `TotalAmount`、`ItemTax`（那是 B2B 欄位，見下方 B2B 章節）。
 
 #### 2. URL Encode
 將 JSON 字串進行 URL Encode（大寫格式）：
@@ -143,7 +145,7 @@ function decryptData(encryptedData, hashKey, hashIV) {
 | 查詢字軌 | `GetInvoiceWordSetting` | /7881 |
 | 手機條碼驗證 | `CheckBarcode` | /7886 |
 | 捐贈碼驗證 | `CheckLoveCode` | /7891 |
-| 統一編號驗證 | `GetCompanyNameByTaxID` | /32089 |
+| 統一編號驗證（帶 `UnifiedBusinessNo`） | `GetCompanyNameByTaxID` | /32089 |
 | 開立發票 | `Issue` | /7896 |
 | 延遲開立（預約開立） | `DelayIssue` | /15369 |
 | 編輯延遲開立 | `EditDelayIssue` | /47979 |
@@ -162,6 +164,15 @@ function decryptData(encryptedData, hashKey, hashIV) {
 | 查詢作廢折讓明細 | `GetAllowanceInvalid` | /7943 |
 | 發送發票通知 | `InvoiceNotify` | /7938 |
 | 發票列印 | `InvoicePrint` | /7949 |
+| 取得發票通知方式設定 | `GetInvoiceNotifySetting` | /63356 |
+| 發票通知方式設定 | `InvoiceNotifySetting` | /64067 |
+| 取得字軌配號剩餘量提醒設定 | `GetRemainNotifySetting` | /64079 |
+| 設定字軌配號剩餘量提醒 | `RemainNotifySetting` | /64088 |
+| 查詢空白未使用發票 | `QueryBlankInvoiceList` | /64106 |
+| 設定空白發票是否自動上傳 | `BlankInvAutoUploadSetting` | /64122 |
+| 下載空白發票清單 | `DownLoadBlankInvList` | /64133 |
+
+後 7 支為 2026-06-23 新增（更新歷程 /36050）。空白發票 3 支的官方頁，測試網址有 `/B2CInvoice/` 前綴、正式網址沒有（例：`https://einvoice.ecpay.com.tw/QueryBlankInvoiceList`），上線前向綠界確認。
 
 ### 1. 開立發票 `Issue`
 
@@ -282,7 +293,7 @@ function decryptData(encryptedData, hashKey, hashIV) {
 | `CustomerName` | String(60) | | 客戶名稱 |
 | `NotifyMail` | String(100) | | 通知信箱 |
 | `NotifyPhone` | String(20) | | 通知手機 |
-| `AllowanceAmount` | Number | Y | 折讓單總金額（含稅） |
+| `AllowanceAmount` | Number | Y | 折讓單總金額（含稅），須大於 0 且不超過原發票金額或折讓剩餘金額 |
 | `Reason` | String(50) | | 折讓原因 |
 | `Items[].ItemSeq` | Int | Y | 商品序號 |
 | `Items[].ItemName` | String(500) | Y | 商品名稱 |
@@ -290,9 +301,11 @@ function decryptData(encryptedData, hashKey, hashIV) {
 | `Items[].ItemWord` | String(6) | Y | 商品單位 |
 | `Items[].ItemPrice` | Number | Y | 商品單價 |
 | `Items[].ItemTaxType` | String(1) | | 商品課稅別 |
-| `Items[].ItemAmount` | Number | Y | 商品合計 |
+| `Items[].ItemAmount` | Number | Y | 含稅小計，與 單價 × 數量 差距 1 元內；加總須等於 `AllowanceAmount` |
 
-線上折讓 `AllowanceByCollegiate`（/15391）欄位大致相同（無 `NotifyPhone`、`ItemSeq` 非必填），另帶 `ReturnURL`；消費者同意後綠界回傳結果，回傳參數含 `CheckMacValue`（檢查碼機制見 /38242）。
+回傳 `IA_Allow_No`（折讓單號）、`IA_Invoice_No`、`IA_Date`、`IA_Remain_Allowance_Amt`（折讓剩餘金額）。
+
+線上折讓 `AllowanceByCollegiate`（/15391）欄位大致相同（無 `NotifyPhone`、`ItemSeq` 非必填、`AllowanceNotify` 固定 `E`），另帶 `ReturnURL`；消費者同意後綠界回傳結果，回傳參數含 `CheckMacValue`（檢查碼機制見 /38242）。
 
 ---
 
@@ -372,7 +385,11 @@ function decryptData(encryptedData, hashKey, hashIV) {
 
 B2B 分**存證**（/24230 起）與**交換**（/14850 起）兩種模式，端點前綴都是 `/B2BInvoice/`。
 開立前須先用 `MaintainMerchantCustomerData`（/24201、/14830）建立交易對象並設定模式。
-請求外層與 B2C 相同，官方參數頁的 `RqHeader` 只列 `Timestamp`。
+請求外層同 B2C（`MerchantID` + `RqHeader` + `Data`），但 `RqHeader` 不同：官方參數頁只列 `Timestamp`，官方 SDK_PHP 的 B2B 範例與綠界 ecpay-api-skill `guides/05-invoice-b2b.md` 都帶 `RqID`（UUID v4，每次請求唯一）與 `Revision: "1.0.0"`（B2C 是 `3.0.0`），guides/05 寫明缺 `RqID` 會 `TransCode ≠ 1`。
+
+```json
+{"MerchantID": "2000132", "RqHeader": {"Timestamp": 1640000000, "RqID": "701b3264-a538-437e-ad45-2505eb7dde39", "Revision": "1.0.0"}, "Data": "..."}
+```
 
 | 功能 | 端點 | 存證 | 交換 |
 |------|------|------|------|
@@ -386,8 +403,10 @@ B2B 分**存證**（/24230 起）與**交換**（/14850 起）兩種模式，端
 | 發送發票通知 | `Notify` | /24306 | /14988 |
 | 發票列印 | `InvoicePrint` | /24311 | /14993 |
 | 發票 PDF | `DownloadB2BPdf` | /52123 | /53383 |
+| 查詢特定多筆發票 | `GetIssueList` | /62730 | /66505 |
+| 註銷重開 | `VoidWithReIssue` | /49927 | — |
 
-交換模式另有退回、各項確認與對應查詢 API（/14865–/14983）。
+交換模式另有退回、各項確認與對應查詢 API（/14865–/14983）。`GetIssueList` 為 2026-08-05 新增（更新歷程 /36057、/36064）；交易對象維護的 `SalesName` 自 2026-09-01 起為 String(30)。
 
 ### 1. 開立發票 `Issue`（/24230）
 
@@ -395,7 +414,7 @@ B2B 分**存證**（/24230 起）與**交換**（/14850 起）兩種模式，端
 |------|------|------|------|
 | `MerchantID` | String(10) | Y | 特店編號 |
 | `RelateNumber` | String(50) | Y | 廠商自訂編號 |
-| `InvoiceTime` | String(20) | | 發票開立時間 `yyyy-mm-dd hh:mm:ss` |
+| `InvoiceTime` | String(20) | | 發票開立時間 `yyyy-mm-dd hh:mm:ss`；有值時只接受過去 6 天內，建議不帶（系統以當下開立） |
 | `CustomerIdentifier` | String(8) | Y | 買方統編 |
 | `CustomerEmail` | String(200) | | 未帶時使用交易對象維護的設定，多組以分號分隔 |
 | `CustomerAddress` | String(100) | | 買方地址 |
@@ -403,7 +422,7 @@ B2B 分**存證**（/24230 起）與**交換**（/14850 起）兩種模式，端
 | `ClearanceMark` | Number | 條件 | 零稅率時帶 `1` 非經海關出口或 `2` 經海關出口 |
 | `InvType` | String(2) | Y | `07` 一般稅額、`08` 特種稅額 |
 | `TaxType` | String(1) | Y | `07`：`1` 應稅、`2` 零稅率、`3` 免稅；`08`：`3`、`4` |
-| `TaxRate` | Number | | 稅率 |
+| `TaxRate` | Number | | 稅率；不需傳入，系統依課稅別帶預設值（應稅 0.05） |
 | `ZeroTaxRateReason` | String(2) | 條件 | 自 115 年 1 月 1 日起零稅率必填或後台設定 |
 | `SpecialTaxType` | Number | 條件 | 免稅帶 `8`；特種應稅帶 `1`–`8` |
 | `Items[].ItemSeq` | Int | Y | 明細排列序號 |
@@ -472,7 +491,8 @@ AES JSON API，不是表單跳轉。
 
 ### B2B `InvoicePrint`（/24311）與 `DownloadB2BPdf`（/52123）
 
-B2B 列印端點為 `/B2BInvoice/InvoicePrint`；PDF 下載為 `/B2BInvoice/DownloadB2BPdf`。
+B2B 列印端點為 `/B2BInvoice/InvoicePrint`；PDF 下載為 `/B2BInvoice/DownloadB2BPdf`。兩者 Data 欄位：`MerchantID`、`InvoiceCategory`（`0` 銷項，預設；`1` 進項）、`InvoiceNo`、`InvoiceDate`、`PrintStyle`（`1` A4，預設；`2` A5）。
+`InvoicePrint` 回傳 `InvoiceHtml`（1 小時內有效）；`DownloadB2BPdf` 成功時直接回 `application/pdf` 二進位檔，失敗才回 JSON（`RtnCode`、`RtnMsg`）。
 
 ---
 
