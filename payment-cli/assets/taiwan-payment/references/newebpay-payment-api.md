@@ -2,7 +2,7 @@
 
 藍新金流 (NewebPay) 金流 API 完整參考文件。
 
-依據：《線上交易─幕前支付技術串接手冊》NDNF-1.2.5（2026-09-01）、《信用卡定期定額串接技術手冊》NDNP-1.0.8（2026-08-19），官方下載頁 https://www.newebpay.com/website/Page/content/download_api
+依據：《線上交易─幕前支付技術串接手冊》NDNF-1.2.6（2026-10-01）、《信用卡定期定額串接技術手冊》NDNP-1.0.8（2026-08-19），官方下載頁 https://www.newebpay.com/website/Page/content/download_api
 
 ---
 
@@ -70,11 +70,12 @@
 
 | 卡號 | 說明 |
 |------|------|
-| `4000-2211-1111-1111` | 一般測試卡 |
-| `4761-5311-1111-1114` | 美國運通測試卡 |
+| `4000-2211-1111-1111` | 一次付清、分期付款 |
+| `4003-5511-1111-1111` | 紅利折抵 |
+| `3760-000000-00006` | 美國運通卡 |
 
-- **有效期限**: 任意未過期日期 (格式 MMYY)
-- **CVV/CVC**: 任意 3 碼
+- 有效月年與背面末三碼任意填寫；測試區以測試授權碼模擬，不送收單機構
+- 銀聯卡不開放測試（NDNF 附錄 1）
 
 ---
 
@@ -285,8 +286,8 @@ POST /MPG/mpg_gateway
 | `TradeLimit` | Int(3) | 否 | 交易秒數限制 (60-900) |
 | `ExpireDate` | String(10) | 否 | 繳費期限 `Ymd`，預設 7 天，最大 180 天 |
 | `ExpireTime` | String(6) | 否 | 繳費截止時間 `His`，預設 `235959`；僅超商代碼（≥ 1 小時）與凱基銀行 ATM（≥ 5 分鐘） |
-| `ReturnURL` | String(200) | 否 | 付款完成返回網址 |
-| `NotifyURL` | String(200) | 否 | 背景通知網址 |
+| `ReturnURL` | String(200) | 否 | 付款完成後 Form Post 導回；前景導頁不保證送達，不可據以判定交易成立；只接受 80／443 port |
+| `NotifyURL` | String(200) | 否 | 幕後通知；**交易結果以此為準**；只接受 80／443 port |
 | `CustomerURL` | String(200) | 否 | 取號結果網址 |
 | `ClientBackURL` | String(200) | 否 | 返回商店按鈕網址 |
 | `Email` | String(50) | 否 | 付款人 Email |
@@ -312,7 +313,7 @@ POST /MPG/mpg_gateway
 | `BARCODE` | Int(1) | 超商條碼 `1`=啟用 (20-40,000 元) |
 | `ESUNWALLET` | Int(1) | 玉山 Wallet `1`=啟用 |
 | `TAIWANPAY` | Int(1) | 台灣 Pay `1`=啟用 (限 49,999 元以下) |
-| `BITOPAY` | Int(1) | BitoPay `1`=啟用 (100-49,999 元)；回傳 `CryptoCurrency` 為 `USDT` 或 `USDC`（1.2.3 起移除 BTC、ETH） |
+| `BITOPRO` | Int(1) | BitoPro `1`=啟用 (100-49,999 元)；回傳 `CryptoCurrency` 為 `USDT` 或 `USDC`。NDNF-1.2.6 起參數與 `PaymentType` 由 `BITOPAY` 更名為 `BITOPRO` |
 | `AFTEE` | Int(1) | AFTEE 先享後付 `1`=一般支付 `2`=一般支付+分期（申請制） |
 | `AFTEE_Inst` | String(21) | `AFTEE=2` 時指定期數：空或 `1`=全部，`3,6,9,12,15,18,21,24` |
 | `AFTEE_ExpireTime` | DateTime | 結帳模組失效時間 `YYYY-MM-DD HH:MM:SS`，1–24 小時 |
@@ -320,6 +321,7 @@ POST /MPG/mpg_gateway
 | `BNPL_Capture` | Int(1) | BNPL 請款方式 `0`／未帶=依後台設定 `1`=自動 `2`=手動；API 設定優先 |
 | `CVSCOM` | Int(1) | 超商物流 `1`=取貨不付款 `2`=取貨付款 `3`=兩者 |
 | `TWQR` | Int(1) | TWQR/簡單付 `1`=啟用 |
+| `TWQR_LifeTime` | Int(7) | TWQR 有效秒數，預設 300，上限 2678400（31 天） |
 | `EZPWECHAT` | Int(1) | 簡單付微信 `1`=啟用 |
 | `EZPALIPAY` | Int(1) | 簡單付支付寶 `1`=啟用 |
 
@@ -332,6 +334,7 @@ POST /MPG/mpg_gateway
 
 記憶付款人電子信箱（NDNF-1.2.4 起，4.2.1）：須帶 `TokenTerm`，且 `EmailModify=1` 或未帶；付款頁才顯示「記憶付款人電子信箱」。
 信箱屬記憶卡號的附屬資料，不能單獨啟用；`EmailModify=0` 或未帶 `TokenTerm` 時不新增、更新或刪除已記憶的信箱。
+記憶持卡人姓名、電話（NDNF-1.2.6）：須帶 `TokenTerm`、商店已啟用 Passkey，且付款頁含持卡人姓名與電話欄位；付款人同意後綁定於同一 `TokenTerm`，之後交易以遮罩方式帶出。記憶資料只在交易成功後建立。
 
 ### 訂單細項 OrderDetail
 
@@ -404,6 +407,7 @@ POST /API/QueryTradeInfo
 | `TimeStamp` | String(50) | ● | Unix 時間戳 |
 | `MerchantOrderNo` | String(30) | ● | 商店訂單編號 |
 | `Amt` | Int(10) | ● | 訂單金額 |
+| `Gateway` | String(10) | 複合式商店● | 複合式商店（`MS5` 開頭）固定帶 `Composite`；未帶則查一般商店 |
 
 ### CheckValue 產生規則
 
@@ -440,11 +444,14 @@ function generateCheckValue(string $amt, string $merchantID, string $merchantOrd
 | `TradeNo` | 藍新交易序號 |
 | `MerchantOrderNo` | 商店訂單編號 |
 | `TradeStatus` | 交易狀態 `0`=未付款 `1`=成功 `2`=失敗 `3`=取消 `6`=退款 |
-| `PaymentType` | 支付方式：`CREDIT` `VACC` `WEBATM` `BARCODE` `CVS` `LINEPAY` `ESUNWALLET` `TAIWANPAY` `CVSCOM` `AFTEE` `OPPAY` `TWQR` `EZPALIPAY` `EZPWECHAT` |
+| `PaymentType` | 支付方式：`CREDIT` `VACC` `WEBATM` `BARCODE` `CVS` `LINEPAY` `ESUNWALLET` `TAIWANPAY` `CVSCOM` `AFTEE` `OPPAY` `TWQR` `EZPALIPAY` `EZPWECHAT` `BITOPRO` |
 | `CreateTime` | 建立時間 |
 | `PayTime` | 付款時間 |
 | `CheckCode` | 檢核碼 |
 | `FundTime` | 預計撥款日 |
+| `ShopMerchantID` | 實際交易商店代號（僅複合式商店） |
+
+超商代碼、條碼、超商取貨付款、LINE Pay、ATM、WebATM 另回 `PayInfo`、`ExpireDate`、`OrderStatus`（`0` 未付款 `1` 已付款 `2` 訂單失敗 `3` 訂單取消 `6` 已退款 `9` 付款中待銀行確認；Version 1.3 以上才回傳），智慧 ATM 2.0 另回 `SourceBankId`、`SourceAccountNo`。
 
 ### 信用卡專屬欄位
 
@@ -572,15 +579,19 @@ POST /API/EWallet/refund
 | TWQR | 89 天 | ● | 從請款日起算 |
 | 支付寶/微信 | 89 天 | ● | |
 
+退款一經發動即執行，無法取消。
+
 ### 請求參數
 
 | 參數 | 類型 | 必填 | 說明 |
 |------|------|------|------|
 | `UID_` | String(15) | ● | 商店代號 |
-| `Version_` | String(5) | ● | `1.1` |
+| `Version_` | String(5) | ● | `1.0` |
 | `EncryptData_` | Text | ● | AES 加密資料 |
 | `RespondType_` | String(15) | ● | `JSON` |
 | `HashData_` | Text | ● | SHA256 雜湊 |
+
+`EncryptData_` 的明文是 **JSON**（`json_encode`），不是其他 API 用的 query string；加密與 `HashData_` 算法同 TradeInfo／TradeSha。
 
 ### EncryptData_ 內容
 
@@ -602,18 +613,24 @@ POST /API/EWallet/refund
 | 支付寶 | `EZPALIPAY` |
 | 微信 | `EZPWECHAT` |
 
+回應：`Status`（成功為 `1000`，不是 `SUCCESS`）、`Message`、`EncryptData`、`HashData`、`UID`、`Version`。
+`EncryptData` 解密後為 JSON：`TradeNo`、`BankMessage`、`BankCode`、`MerchantOrderNo`、`RefundAmount`、`RefundDate`。
+
 ---
 
 ## BNPL 先買後付
 
-AFTEE 先享後付、大哥付你分期（`OPPAY`）。規格書 NDNF-1.2.5 4.7、4.8。
+AFTEE 先享後付、大哥付你分期（`OPPAY`）。規格書 NDNF-1.2.6 4.7、4.8。
 
 | 功能 | 端點 | 期限 |
 |------|------|------|
 | 取消交易／退款 [NPA-B07] | `POST /API/Bnpl/refund` | 交易成立後一年內；取消須整筆，退款可部分、多次 |
 | 請款 [NPA-B62] | `POST /API/Bnpl/settle` | 整筆請款；AFTEE 89 天內、大哥付你分期 365 天內 |
 
-Post 參數：`UID_`、`Version_`=`1.1`、`EncryptData_`、`RespondType_`（`JSON`／`String`）、`HashData_`。
+Post 參數：`UID_`、`Version_`=`1.1`、`EncryptData_`、`RespondType_`（`JSON`／`String`，須與明文格式一致）、`HashData_`。
+
+MPG 付款結果（4.2.2）的 BNPL 欄位：`Inst`、`PayAmt`、`TradeStatus`（`0` 未付款 `1` 付款成功 `2` 付款失敗，須以此判斷結果）。
+BNPL 轉人工審核時只有 ReturnURL 回 `Status=SUCCESS`（`Message` 表示待付款），交易尚未完成；NotifyURL 不送待付款通知，審核完成後才通知結果。
 `EncryptData_`／`HashData_` 與 MPG 的 TradeInfo／TradeSha 算法相同。
 
 | EncryptData_ 欄位 | 類型 | 必填 | 說明 |
@@ -707,7 +724,11 @@ Visa、Mastercard。續卡時系統自動更新效期；換卡、掛失等卡號
 
 ### 通知流程
 
-藍新會 POST 加密資料到 `NotifyURL` 和 `ReturnURL`。
+藍新會 POST 加密資料到 `NotifyURL`（幕後）和 `ReturnURL`（前景導頁）。兩者不要設同一網址，否則同一筆付款會收到兩次。
+
+- 交易成立、出貨、帳務一律以 **NotifyURL** 為準；ReturnURL 可能因消費者關閉瀏覽器或斷線而收不到
+- NotifyURL 須回 HTTP 200 才算送達；失敗會重送，三次都沒收到 200 即放棄並寄「Notify 觸發失敗通知信」
+- 非即時支付（ATM、超商）在繳費且銀行銷帳後才送 Notify；BNPL 轉人工審核時，審核完成才送
 
 ### 通知參數
 
@@ -720,6 +741,8 @@ Visa、Mastercard。續卡時系統自動更新效期；換卡、掛失等卡號
 | `Version` | 串接版本 |
 
 ### TradeInfo 解密後內容
+
+`RespondType=JSON` 時外層為 `Status`、`Message`、`Result`，以下交易欄位在 `Result` 內。
 
 | 參數 | 說明 |
 |------|------|
@@ -748,21 +771,24 @@ $tradeSha = $_POST['TradeSha'] ?? '';
 $encryption = new NewebPayEncryption($hashKey, $hashIV);
 $calculatedSha = $encryption->tradeSha($tradeInfo);
 
-if ($tradeSha !== $calculatedSha) {
-    echo 'TradeSha Error';
+if (!hash_equals($calculatedSha, strtoupper($tradeSha))) {
+    http_response_code(400);
     exit;
 }
 
-// 解密
+// 解密（RespondType=JSON 時交易欄位在 Result 內）
 $data = $encryption->decrypt($tradeInfo);
+$result = $data['Result'] ?? $data;
 
-// 檢查交易狀態
-if ($data['Status'] === 'SUCCESS') {
-    // 交易成功，更新訂單狀態
-    updateOrderStatus($data['MerchantOrderNo'], 'paid', $data);
+// BNPL 另以 TradeStatus 判斷（1=付款成功）
+$paid = $data['Status'] === 'SUCCESS'
+    && (!isset($result['TradeStatus']) || (string) $result['TradeStatus'] === '1');
+if ($paid) {
+    updateOrderStatus($result['MerchantOrderNo'], 'paid', $result);
 }
 
-// 回應 (藍新不要求特定回應)
+// 藍新只看 HTTP 200，內容不限
+http_response_code(200);
 echo 'OK';
 ```
 
@@ -772,7 +798,7 @@ echo 'OK';
 
 ### 常見錯誤碼
 
-> 依規格書 NDNF-1.2.5 與 NDNP-1.0.8 錯誤代碼表；完整清單見 `data/error-codes.csv`（`PER` 開頭為定期定額錯誤代碼表）。查詢 API 的 CheckValue 錯誤為 `TRA10054`。
+> 依規格書 NDNF-1.2.6 與 NDNP-1.0.8 錯誤代碼表；完整清單見 `data/error-codes.csv`（`PER` 開頭為定期定額錯誤代碼表）。查詢 API 的 CheckValue 錯誤為 `TRA10054`。
 
 | 錯誤碼 | 說明 | 備註 |
 |--------|------|------|
@@ -782,12 +808,12 @@ echo 'OK';
 | `MPG01015` | 金額錯誤 | Amt |
 | `MPG01023` | TradeInfo 不可空白 | |
 | `MPG01024` | TradeSha 不可空白 | |
-| `MPG02001` | 檢查碼錯誤 | TradeSha 不符 |
+| `MPG02001` | 檢查碼錯誤 | 規格書備註為 CheckValue |
 | `MPG02002` | 未啟用金流服務 | |
 | `MPG02003` | 支付方式未啟用 | |
 | `MPG03004` | 商店已暫停 | |
 | `MPG03008` | 訂單編號重複 | |
-| `MPG03009` | 交易失敗 | 依 Message 判斷原因 |
+| `MPG03009` | 交易失敗 | TradeSha 檢查不符、TradeInfo 解密失敗、EncryptType 錯誤或銀行拒絕授權；依 Message 判斷 |
 | `MPG05002` | 信用卡卡號長度不足 | |
 | `MPG05005` | 警示交易 | |
 
@@ -801,7 +827,7 @@ echo 'OK';
 | `3` | 取消付款 |
 | `6` | 退款 |
 
-> 規格書 NDNF-1.2.5 只定義以上五種狀態。
+> 單筆查詢的 `TradeStatus` 只有以上五種；`OrderStatus` 另有 `9`＝付款中待銀行確認。MPG 付款結果的 BNPL `TradeStatus` 只有 `0`／`1`／`2`。
 
 ### 收單機構代碼 (AuthBank)
 
@@ -826,4 +852,4 @@ echo 'OK';
 
 - **官方網站**: https://www.newebpay.com/
 - **API 文件**: https://www.newebpay.com/website/Page/content/download_api
-- **技術客服**: 02-2162-2005
+- **客服**: 02-2786-3655、cs@newebpay.com

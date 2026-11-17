@@ -1,6 +1,6 @@
-# PChomePay (拍錢包) Payment API Reference
+# PChomePay 支付連 Payment API Reference
 
-拍錢包 (PChomePay) 金流 API 完整參考文件。本文件僅涵蓋金流 (建立訂單、付款通知、退款、餘額、提領、對帳)；超商取貨物流 (`/v1/logistic/*`) 屬於物流範疇，請參閱 taiwan-logistics 對應文件。
+PChomePay 支付連金流 API 完整參考文件（依官方 [PChomePay API document](https://docs.google.com/document/d/1dPIPJc4xfyjkJ1i2yxaja4OP0G-iGFRXM08NDMuttZE/) 1.7.4，2026-09-01；2026-11-17 查核）。「拍錢包」是其中一種付款方式（`PI`）。本文件僅涵蓋金流 (建立訂單、付款通知、退款、餘額、提領、對帳)；超商取貨物流 (`/v1/logistic/*`) 屬於物流範疇，請參閱 taiwan-logistics 對應文件。
 
 ---
 
@@ -34,7 +34,7 @@
 
 ### 服務簡介
 
-PChomePay (拍錢包) 是 PChome 集團推出的第三方支付服務，提供下列特色：
+PChomePay 支付連是 PChome 集團推出的第三方支付服務，提供下列特色：
 
 - **採 REST + JSON 規格**：請求／回應皆為 JSON，串接門檻低
 - **手續費內扣制**：交易成功後，金額扣除手續費再進入合作方代收帳戶
@@ -57,7 +57,7 @@ PChomePay (拍錢包) 是 PChome 集團推出的第三方支付服務，提供�
 
 | 付款方式 | pay_type 代碼 | 金額範圍 | 退款支援 |
 |---------|--------------|---------|---------|
-| 信用卡 (一次付清 / 分期 0 利率) | `CARD` | 30 ~ 199,999 | 全額 / 部分 (分期僅全額) |
+| 信用卡 (一次付清 / 分期 0 利率) | `CARD` | 1 ~ 199,999（含 3 期以上分期時 ≥ 30） | 全額 / 部分 (分期僅全額) |
 | 拍錢包 (PChomePay 錢包) | `PI` | 1 ~ 199,999 | 全額 / 部分 |
 | ATM 虛擬帳號 | `ATM` | 1 ~ 49,999 | 全額 / 部分 (退款手續費 15 元) |
 | 超商取貨付款 (7-11) | `IPL7` | 65 ~ 20,000 | 僅全額 (退款手續費 15 元) |
@@ -243,7 +243,7 @@ pcpay-token: <token>
 | `buyer_email` |  | String(50) | 付款人電子郵件 |
 | `atm_info` |  | Object | ATM 訂單進階設定，見下方說明 |
 | `bcode_info` |  | Object | 超商代碼訂單進階設定，見下方說明 |
-| `card_installment` |  | String | 信用卡分期期數 (`1,3,6,12,18,24` 以逗號分隔) |
+| `card_installment` |  | String | 信用卡分期期數 (`1,3,6,12,18,24` 以逗號分隔)，預設一次付清；含 3 期以上時 `amount` 須 ≥ 30 |
 | `return_timer` |  | String(1) | 訂單成功 / 失敗自動跳轉設定。`Y`：倒數 10 秒後跳轉 (預設) / `N`：立即跳轉。對 ATM 不生效 |
 | `member_key` |  | String(30) | 平台會員 ID，用於記憶信用卡或超商收件資訊 |
 | `platform_code` |  | String(64) | 平台代碼 (區分多平台來源) |
@@ -608,6 +608,7 @@ pcpay-token: <token>
 | `buyer_account_last5` | String(5) | 用戶轉出帳戶之帳號末 5 碼 (ATM) |
 | `installment` | String | 信用卡分期期數 |
 | `rate` | Float | 信用卡金流手續費率 |
+| `pp_rate` | Float | 已停用（通知中為 `null`） |
 | `card_last_number` | String | 信用卡卡號末 4 碼 |
 | `pp_fee` | Int | 信用卡金流手續費 |
 | `logistic_id` | String(11) | 超商物流代號 |
@@ -692,7 +693,7 @@ pcpay-token: <token>
 | `order_confirm` | 訂單付款成功 (款項已入合作方代收帳戶) |
 | `order_expired` | 訂單未在時效內完成付款 |
 | `order_failed` | 訂單付款失敗 |
-| `refund_success` | 退款成功 (款項已從代收帳戶扣除) |
+| `refund_success` | 退款成功 (款項與手續費已從代收帳戶扣除)；以匯款退回者，要到款項返還用戶 (`actual_refund_date` 有值) 才發送 |
 | `seller_dispatched` | 商品已至「寄件門店」(超商取貨) |
 | `pickup_shipped` | 商品已至「取件門店」(超商取貨) |
 | `return_shipped` | 商品已至「退件門店」(超商取貨) |
@@ -906,7 +907,7 @@ pcpay-token: <token>
 | `transfer_fee` | ● | String | 退款手續費 |
 | `refund_date` | ● | String(14) | 退款建立時間 (`YYYYMMDDHH24MISS`) |
 | `cover_transfee` | ● | String(1) | 是否收取退款手續費 (`Y`/`N`) |
-| `actual_refund_date` | ● | String(8) | 實際退款時間 (`YYYYMMDD`) |
+| `actual_refund_date` | ● | String(8) | 實際退款時間 (`YYYYMMDD`)；以匯款退回者，款項返還用戶後才有值 |
 
 ### 範例回應
 
@@ -1141,7 +1142,7 @@ PChomePay 失敗時會回傳：
 | `10003` | invalid token | token 錯誤 |
 | `10004` | token expired | token 逾期 |
 | `10006` | api client has not set notifyURL or returnURL yet | 未設定 notifyURL 或 returnURL |
-| `10007` | function not available | 會員帳號暫時無法使用此功能 |
+| `10007` | you are temporarily unable to perform this function, please contact customer service | 會員帳號無法使用功能服務 |
 
 ### 訂單類 (20xxx)
 
@@ -1151,10 +1152,10 @@ PChomePay 失敗時會回傳：
 | `20002` | order not exists | 訂單不存在 |
 | `20003` | pay type not support | 付款類別錯誤 |
 | `20005` | params is not valid | 參數錯誤 |
-| `20006` | credit installment amount must >= 30 | 信用卡分期商品金額須 ≥ 30 元 |
-| `20007` | not allow to check today's data | 目前無法查詢當日資料 |
+| `20006` | When the credit card installments, the amount of orders can not be less than 30 | 信用卡分期商品金額須 ≥ 30 元 |
+| `20007` | It not allow to check today's data | 目前無法查詢當日資料 |
 | `20008` | order items string too long | 商品名稱超過字數限制 |
-| `20009` | not a JSON structure | 請求格式不是 JSON |
+| `20009` | Request data is not a json structure data | 請求格式不是 JSON |
 | `20011` | bank code or bank account not exists | 銀行代號或銀行帳戶不存在 |
 | `20013` | ATM bank code invalid | ATM 銀行代碼錯誤 |
 | `20014` | cvs setting error | 未設定超商退貨門市 |
@@ -1165,6 +1166,8 @@ PChomePay 失敗時會回傳：
 | `20025` | remove card info fail | 移除記憶信用卡失敗 |
 | `20030` | platform code not accept | 平台代碼錯誤 |
 | `20031` | currently unable to create installment payment orders | 暫時無法建立信用卡分期付款訂單 |
+| `20032` | Your account has been suspended for receiving payments due to prolonged inactivity. | 靜止戶須重新認證後才可恢復收款 |
+| `20037` | member did not pass verify. | 認證未通過 |
 
 ### ATM 類 (40xxx)
 
@@ -1182,7 +1185,7 @@ PChomePay 失敗時會回傳：
 | `50002` | order is not confirm yet | 訂單未成功付款，無法退款 |
 | `50003` | order not found | 訂單編號不存在 |
 | `50004` | refund amount must bigger than 0 | 退款金額需大於 0 |
-| `50005` | balance not enough to refund | 帳戶餘額不足以退款 |
+| `50005` | Refund amount exceeds the remaining balance of the order. | 退款金額超過訂單可退金額 |
 | `50006` | can not find the refund id | 查無此退款編號 |
 | `50007` | installment can only full refund | 信用卡分期僅能全額退款 |
 | `50009` | atm refund data is not ready | ATM 退款資訊未備齊，請隔日再試 |
@@ -1193,12 +1196,15 @@ PChomePay 失敗時會回傳：
 | `50014` | pay type is not allow to refund | 訂單不支援此退款方式 |
 | `50015` | call Pi refund API error | 建立拍錢包退款失敗 |
 | `50016` | bank code not support atm refund | 原付款行不支援退回原帳戶 |
+| `50017` | Refund amount exceeds the original order amount. | 退款金額超過訂單金額 |
+| `50018` | Your balance is not enough to refund | 可用餘額不足，無法退款 |
 
 ### 提領類 (70xxx)
 
 | 代碼 | 英文描述 | 中文描述 |
 |------|----------|---------|
 | `70001` | withdraw must be bigger than 10 dollars | 本行提領 > 1 元、他行提領 ≥ 11 元 |
+| `70002` | member did not pass verify. | 認證未通過 |
 | `70003` | withdraw amount over available balance | 提領金額超過可提領餘額 |
 | `70004` | over daily limit | 提領金額超過本日提領額度上限 |
 | `70005` | bank to withdraw is not set yet | 提領銀行尚未設定 |
@@ -1211,6 +1217,7 @@ PChomePay 失敗時會回傳：
 | `90001` | invalid status | 物流狀態錯誤 |
 | `90002` | logistic status history not found | 物流狀態歷程不存在 |
 | `90004` | print delivery note fail | 列印交寄單失敗 |
+| `90008` | Arrears is too much. | 待繳運費超過上限 200 元 |
 
 ---
 
@@ -1230,20 +1237,15 @@ PChomePay 失敗時會回傳：
 
 ### ATM 銀行代碼 (常用)
 
+官方說明付款頁可選 3 家銀行的虛擬帳號；文件範例出現的代碼：
+
 | 代碼 | 銀行名稱 |
 |------|---------|
-| `004` | 臺灣銀行 |
-| `005` | 土地銀行 |
-| `007` | 第一銀行 |
-| `008` | 華南銀行 |
 | `011` | 上海商業儲蓄銀行 (預設) |
 | `013` | 國泰世華 |
-| `017` | 兆豐銀行 |
-| `808` | 玉山銀行 |
 | `812` | 台新國際商業銀行 |
-| `822` | 中國信託 |
 
-> 完整支援銀行清單請呼叫 `GET /v1/payment/atm/banks` 動態查詢。
+> 實際支援清單以 `GET /v1/payment/atm/banks` 動態查詢為準。
 
 ### 信用卡分期支援期數
 
@@ -1254,7 +1256,7 @@ PChomePay 支援的分期期數為 `1`、`3`、`6`、`12`、`18`、`24` 期 (各
 
 | pay_type | 最低 | 最高 | 預設效期 |
 |----------|------|------|---------|
-| `CARD` | 30 | 199,999 | 即時 |
+| `CARD` | 1（3 期以上分期 30） | 199,999 | 即時 |
 | `PI` | 1 | 199,999 | 5 分鐘 |
 | `ATM` | 1 | 49,999 | 5 天 (`atm_info.expire_days` 1 ~ 5) |
 | `IPL7` / `IPLFM` / `IPLHL` | 65 | 20,000 | 依超商規範 |
@@ -1381,7 +1383,8 @@ def handle_notify(notify_type, notify_message):
 
 **常見錯誤**：
 
-- `50005 balance not enough` → 帳戶須有 `退款金額 + 退款手續費`
+- `50018 Your balance is not enough to refund` → 帳戶須有 `退款金額 + 退款手續費`
+- `50005` / `50017` → 退款金額超過訂單剩餘可退金額／訂單金額
 - `50007 installment can only full refund` → 信用卡分期僅能全額退款
 - `50009 atm refund data is not ready` → ATM 退款資料尚未備齊，隔日再試
 - `50016 bank code not support atm refund` → 原匯款銀行不支援退回原帳戶
@@ -1400,7 +1403,7 @@ def handle_notify(notify_type, notify_message):
 
 | pay_type | 最低 | 最高 |
 |----------|------|------|
-| `CARD` | 30 | 199,999 |
+| `CARD` | 1（3 期以上分期 30） | 199,999 |
 | `PI` | 1 | 199,999 |
 | `ATM` | 1 | 49,999 |
 | 超商取貨 | 65 | 20,000 |

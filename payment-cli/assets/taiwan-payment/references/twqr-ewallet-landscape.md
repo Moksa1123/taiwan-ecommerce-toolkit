@@ -22,7 +22,7 @@
 
 | # | 公司全名 | 品牌 | 我們的 `payment-methods.csv` 代碼 | 自家公開商家文件 |
 |---|---|---|---|---|
-| 1 | 街口電子支付股份有限公司 | 街口支付 JKOPAY | `jkopay` | ✅ [open-doc.jkos.com](https://open-doc.jkos.com/)（見 [jkopay-payment-api.md](jkopay-payment-api.md)） |
+| 1 | 街口電子支付股份有限公司 | 街口支付 JKOPAY | `jkopay` | ✅ [open-doc.jkos.com](https://open-doc.jkos.com/)（2026-11-17 起網域無法解析；見 [jkopay-payment-api.md](jkopay-payment-api.md)） |
 | 2 | 全支付電子支付股份有限公司 | 全支付 PX Pay Plus | `pxpay_plus` | ❌ 需簽約；文件由聚合商提供 |
 | 3 | 全盈支付金融科技股份有限公司 | 全盈+PAY | `plus_pay` | ⚠️ 部分公開：[TapPay Plus Pay Docs](https://docs.tappaysdk.com/plus-pay/zh/home.html) |
 | 4 | 悠遊卡股份有限公司 | 悠遊付 EasyWallet | `easywallet` | ❌ 需簽約 |
@@ -50,7 +50,7 @@
 
 > ezPay 簡單付不在本表：它是電支機構，街口、全支付、全盈+PAY、一卡通、悠遊付、icash Pay 等都以 **TWQR 跨機構交易**收款（`PaymentType=TWQR`），不分錢包代碼（ezPay 電子支付平台手冊 W1.0.2「規格介紹」）。
 
-NewebPay 的 MPG（NDNF-1.2.5）沒有個別錢包參數，這些錢包都以 `TWQR=1` 收款；PayNow 現代版 `allowedPaymentMethods` 不含這些錢包。
+NewebPay 的 MPG（NDNF-1.2.6）沒有個別錢包參數，這些錢包都以 `TWQR=1` 收款；PayNow 現代版 `allowedPaymentMethods` 不含這些錢包。
 
 | 錢包 | ECPay | PAYUNi | NewebPay | PayNow | TapPay |
 |---|---|---|---|---|---|

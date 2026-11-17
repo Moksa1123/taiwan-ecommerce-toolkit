@@ -8,19 +8,16 @@ PayNow 立吉富 Python 完整範例 (現代版 PaymentIntent API)
 API 文件: https://docs.paynow.com.tw/
 參考文件: taiwan-payment/references/paynow-payment-api.md
 
-⚠ 重要提醒 (請於上線前確認):
-    PayNow 現代版 API 文件聚焦於 request schemas，部分回應的 result 欄位
-    僅以 "依場景變化" 描述，並未列出完整鍵名。本檔 dataclass / 解析邏輯
-    中的 result_xxx 欄位係依文件示意推導 (例如 auth_code / last4 /
-    payment_code / virtual_account / redirect_url / tokenized_card_id /
-    deferred_payment_id 等)，正式上線前請以 PayNow 業務窗口提供之
-    完整回應規格為準，並依需要調整本範例的欄位名稱。
+回應欄位 (官方 Checkout / Retrieve 範例):
+    付款明細在 result.payment (paymentNo、paymentMethod、transactionNo、status、
+    meta.approvalCode、meta.lastFourDigitsOfCard、meta.cardToken)；
+    3DS 轉址 result.meta.threeDomainSecureUrl；ATM result.meta.atmInfo；
+    超商代碼 result.meta.convenienceStoreInfo (JSON 字串)。
 
-API Base URL:
-    PayNow 現代版的實際 API 主機由 PayNow 業務窗口提供 (常見候選網域:
-    https://api.paynow.com.tw 或 https://gateway.paynow.com.tw)；
-    PayNow 文件範例顯示為 docs.paynow.com.tw，那是文件站，非實際 API host。
-    本範例採用 https://api.paynow.com.tw 作為預設，請依實際開通信件確認。
+API Base URL (https://docs.paynow.com.tw/developer/docs/understanding-paynow/url):
+    Sandbox    https://sandboxapi.paynow.com.tw
+    Production https://api.paynow.com.tw
+    apidoc cURL 範例中的 docs.paynow.com.tw 是文件站，不是 API 主機。
 
 依賴:
     pip install requests
@@ -188,10 +185,9 @@ class PayNowModernService:
         本範例對 result 採 raw dict 透傳，請依實測回應再封裝專屬 dataclass。
     """
 
-    # PayNow 業務窗口會提供實際 production base URL；以下為文件展示用網域。
-    # 文件 base URL 為 https://docs.paynow.com.tw/api/v1，那是文件站。
-    DEFAULT_BASE_URL = 'https://api.paynow.com.tw'              # 待 PayNow 確認
-    ALTERNATE_BASE_URL = 'https://gateway.paynow.com.tw'         # 傳統版 cashflow 主域
+    SANDBOX_BASE_URL = 'https://sandboxapi.paynow.com.tw'
+    PRODUCTION_BASE_URL = 'https://api.paynow.com.tw'
+    DEFAULT_BASE_URL = SANDBOX_BASE_URL
 
     def __init__(
         self,
@@ -316,15 +312,14 @@ class PayNowModernService:
 
         ⚠ 此 API 需另行向 PayNow 業務申請開通；通常用於商家自建表單流程。
 
-        result 依 paymentMethodType 不同會帶不同欄位 (依文件示意):
-            CreditCard 成功:        result.auth_code, result.last4
-            CreditCard With Token:  result.tokenized_card_id (後續可重複使用)
-            CreditCard 3D Secure:   result.redirect_url (需轉址完成 3DS)
-            ATM Pending Review:     result.bank_code, result.virtual_account, result.expire_at
-            ConvenienceStore Ibon:  result.payment_code, result.expire_at
-            LINE Pay Online:        result.redirect_url
-            ApplePay 成功:           result.auth_code, result.last4
-            ApplePay Deferred:      result.deferred_payment_id
+        result 依 paymentMethodType 不同會帶不同欄位 (官方回應範例):
+            CreditCard 成功:        result.payment.meta.approvalCode, .lastFourDigitsOfCard
+            記卡 (cardMode=build_token): result.payment.meta.cardToken
+            CreditCard 3D Secure:   result.meta.threeDomainSecureUrl (status=processing)
+            ATM Pending Review:     result.meta.atmInfo.{bankCode, virtualAccountNo, expiredAt}
+            ConvenienceStore:       result.meta.convenienceStoreInfo (JSON: CodeType, PayCodeNo, ExpiredAt)
+            LINE Pay Online:        result.payment.meta.webPaymentUrl / appPaymentUrl
+            ApplePay Deferred:      result.payment.meta.deferredPaymentDate, billingAgreement
         """
         body: Dict[str, Any] = {
             'key': data.key,
@@ -489,7 +484,7 @@ class PayNowModernService:
         """
         查詢 Customer 名下的記憶卡片  GET /api/v1/customers/{uuid}/card-tokens
 
-        result 為 array，每個元素含 id / last4 / bin / brand / expire_month / expire_year
+        result 為 array，每個元素含 token / card_type / suffix / created_at
         """
         return self._request(
             'GET', f'/api/v1/customers/{customer_uuid}/card-tokens'
@@ -621,9 +616,9 @@ def example_checkout(service: PayNowModernService) -> None:
     print(f'  paymentMethodType: {checkout.payment_method_type}')
     print(f'  usePayNowSdk: {checkout.use_paynow_sdk}')
     print('  -> service.checkout(checkout)')
-    print('     回應 result.auth_code / .last4 (一次扣款成功) 或')
-    print('              result.redirect_url (3DS 轉址) 或')
-    print('              result.tokenized_card_id (有開啟 tokenize)')
+    print('     回應 result.payment.meta.approvalCode / .lastFourDigitsOfCard (成功) 或')
+    print('              result.meta.threeDomainSecureUrl (3DS 轉址) 或')
+    print('              result.payment.meta.cardToken (card.cardMode=build_token)')
     print()
 
 
@@ -707,8 +702,8 @@ def example_customer_and_card_token(service: PayNowModernService) -> None:
     print(f'    address: {customer.address.address1}')
     print()
     print('  retrieve_card_token("cus_01h8hxxxxxxxxxxxxxxxxx")')
-    print('  -> result 為 array，每個元素含 id / last4 / brand / expire_month/year')
-    print('  -> 將 Card Token id 放到 paymentMethodData 中即可重複扣款')
+    print('  -> result 為 array，每個元素含 token / card_type / suffix / created_at')
+    print('  -> 以 paymentMethodData.card = {cardMode: "token", cardToken: token} 重複扣款')
     print()
 
 
@@ -734,11 +729,8 @@ if __name__ == '__main__':
     print('=' * 60)
     print()
     print('[注意] PayNow 不公開固定測試金鑰；')
-    print('       請至 https://test.paynow.com.tw 註冊取得 API Key (現代版)')
+    print('       現代版私鑰 / 公鑰請依 docs.paynow.com.tw「金鑰」頁向 PayNow 申請')
     print('       或賣場交易密碼 (傳統版)。')
-    print()
-    print('[Caveat] result 欄位名稱 (auth_code / last4 / virtual_account / ...) 為')
-    print('         依文件示意推導，正式上線前請以 PayNow 提供之完整回應規格為準。')
     print()
 
     if not HAS_REQUESTS:
@@ -748,10 +740,10 @@ if __name__ == '__main__':
         example_legacy_passcode()
         exit(0)
 
-    # 替換為 PayNow 業務窗口提供之 API Key 與 base URL
+    # 替換為 PayNow 核發的私鑰；正式環境改用 PRODUCTION_BASE_URL
     service = PayNowModernService(
-        api_key='YOUR_PAYNOW_API_KEY',
-        base_url='https://api.paynow.com.tw',     # 上線前向 PayNow 確認
+        api_key='YOUR_PAYNOW_PRIVATE_KEY',
+        base_url=PayNowModernService.SANDBOX_BASE_URL,
     )
 
     example_create_payment_intent(service)

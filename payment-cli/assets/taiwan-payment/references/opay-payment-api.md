@@ -1,6 +1,6 @@
 # 歐付寶 O'Pay 全方位金流 API 參考
 
-> Source:《歐付寶全方位金流介接技術文件》(O_Pay_011.pdf, 56 頁)
+> Source:《歐付寶全方位金流介接技術文件》V1.2.37（O_Pay_011.pdf，2026-08-04，56 頁；以下頁碼為 PDF 頁尾的頁碼）
 > 文件總覽: https://developers.opay.tw/download/document
 > 文件公開程度：public（PDF 免登入直連下載）
 
@@ -30,19 +30,23 @@
 | 訂單查詢 | `https://payment.opay.tw/Cashier/QueryTradeInfo/V5` | `https://payment-stage.opay.tw/Cashier/QueryTradeInfo/V5` |
 | 定期定額查詢 | `https://payment.opay.tw/Cashier/QueryCreditCardPeriodInfo` | `https://payment-stage.opay.tw/Cashier/QueryCreditCardPeriodInfo` |
 | 通知退款 | `https://payment.opay.tw/Cashier/AioChargeback` | `https://payment-stage.opay.tw/Cashier/AioChargeback` |
-| 信用卡關帳/退刷/取消/放棄 | `https://payment.opay.tw/CreditDetail/DoAction` | — |
-| 請款 | `https://payment.opay.tw/Cashier/Capture` | `https://payment-stage.opay.tw/Cashier/Capture` |
-| 信用卡交易查詢 | `https://payment.opay.tw/CreditDetail/QueryTrade/V2` | — |
-| 撥款對帳明細 | `https://payment.opay.tw/CreditDetail/FundingReconDetail` | — |
+| 信用卡關帳/退刷/取消/放棄 | `https://payment.opay.tw/CreditDetail/DoAction` | 不提供（無法實際授權） |
+| 會員申請撥款／退款（延遲撥款用） | `https://payment.opay.tw/Cashier/Capture` | `https://payment-stage.opay.tw/Cashier/Capture` |
+| 信用卡單筆明細查詢 | `https://payment.opay.tw/CreditDetail/QueryTrade/V2` | 不提供 |
+| 下載信用卡撥款對帳資料檔 | `https://payment.opay.tw/CreditDetail/FundingReconDetail` | 不提供 |
+| 下載會員對帳媒體檔 | `https://vendor.opay.tw/PaymentMedia/TradeNoAio` | `https://vendor-stage.opay.tw/PaymentMedia/TradeNoAio` |
 | 廠商後台 | `https://vendor.opay.tw/` | `https://vendor-stage.opay.tw` |
 
 ### 測試金鑰
 
-```
-HashKey: 5294y06JbISpM5x9   (另一組 bkuAEQufy2bpEng1)
-HashIV:  v77hoKGq4kWxNNIS   (另一組 B0lzARI9ZSdhW9jg)
-MerchantID: 2000132
-```
+| | 一般商家 | 平台商（帶 `PlatformID`） |
+|---|---|---|
+| `MerchantID` | `2000132` | `2012441` |
+| HashKey | `5294y06JbISpM5x9` | `bkuAEQufy2bpEng1` |
+| HashIV | `v77hoKGq4kWxNNIS` | `B0lzARI9ZSdhW9jg` |
+| 廠商後台帳號／密碼 | `StageTest` / `test1234` | `stagetest2` / `test1234` |
+
+測試卡 `4311-9522-2222-2222`、安全碼 `222`，有效月年須晚於當月（p.10）。
 
 測試買家帳號（商務會員）：`stageuser002` / 統編 `04792433` / 密碼 `test1234` / 支付密碼 `121212`
 個人會員需以測試環境 App 掃碼登入（Android/iOS 下載連結見文件 §測試資訊）。
@@ -139,6 +143,7 @@ MerchantID=2000132&MerchantTradeNo=TEST8477&PayAmt=300&PaymentDate=2016/11/02 11
 3. 處理完成後**回應純文字 `1|OK`** 給歐付寶。
 4. `SimulatePaid=1` 表示此筆是**廠商後台按「模擬付款」發出的**，不是真實付款——測試期間必須靠這個欄位排除假交易。
 5. 若使用 `UseRedeem`，訂單金額檢查請以 `TradeAmt`（交易金額）為準，不是 `PayAmt`。
+6. 未收到正確回應時，隔 5～15 分鐘重送，三次後改隔天再送；定期定額 `PeriodReturnURL` 為隔 3 分鐘重送（p.24、p.26）。
 
 ### 主要回傳欄位
 
@@ -213,7 +218,9 @@ def gen_check_mac_value(params: dict, hash_key: str, hash_iv: str) -> str:
 
 ### 訂單查詢 `QueryTradeInfo/V5`
 
-必填：`MerchantID`、`MerchantTradeNo`、`TimeStamp`（Unix timestamp）、`CheckMacValue`。
+必填：`MerchantID`、`MerchantTradeNo`、`TimeStamp`（Unix timestamp，3 分鐘內有效）、`CheckMacValue`；平台商會員另帶 `PlatformID`（p.27）。
+
+回傳 `參數=值&…`；`TradeStatus`：`0` 成立未付款、`1` 已付款、`v342` 超過繳費時間訂單失敗（p.28）。
 
 ### 會員通知退款 `AioChargeback`
 
@@ -255,12 +262,19 @@ def gen_check_mac_value(params: dict, hash_key: str, hash_iv: str) -> str:
 
 | 功能 | 路徑 |
 |---|---|
-| 信用卡關帳/退刷/取消/放棄 | `/CreditDetail/DoAction` |
-| 請款 | `/Cashier/Capture` |
-| 信用卡交易查詢 | `/CreditDetail/QueryTrade/V2` |
-| 撥款對帳明細 | `/CreditDetail/FundingReconDetail` |
-| 取號 | `/PaymentMedia/TradeNoAio`（vendor 網域） |
+| 信用卡關帳/退刷/取消/放棄 | `/CreditDetail/DoAction`（`Action`：`C` 關帳、`R` 退刷、`E` 取消、`N` 放棄；p.37） |
+| 會員申請撥款／退款 | `/Cashier/Capture`（見上） |
+| 信用卡單筆明細查詢 | `/CreditDetail/QueryTrade/V2`（p.46） |
+| 下載信用卡撥款對帳資料檔 | `/CreditDetail/FundingReconDetail`（p.50） |
+| 下載會員對帳媒體檔 | `/PaymentMedia/TradeNoAio`（vendor 網域，見下） |
 | 定期定額查詢 | `/Cashier/QueryCreditCardPeriodInfo` |
+
+### 下載會員對帳媒體檔 `PaymentMedia/TradeNoAio`（p.43–45）
+
+- 正式：`https://vendor.opay.tw/PaymentMedia/TradeNoAio`；測試：`https://vendor-stage.opay.tw/PaymentMedia/TradeNoAio`
+- 限制 IP（廠商後台「基本資料查詢 → 廠商基本資料」設定）；一分鐘只能下載一個檔；回傳 CSV
+- 必填：`MerchantID`、`DateType`（`2` 付款日、`4` 撥款日、`5` 退款日、`6` 訂單日）、`BeginDate`／`EndDate`（`yyyy-MM-dd`）、`MediaFormated`（`0` 舊版、`1` 新版）、`CheckMacValue`
+- 選填：`PaymentType`（`01` 信用卡、`02` 網路 ATM、`03` ATM、`04` 超商代碼、`08` 信用卡 OTP、`09` 歐付寶帳戶、`11` 銀行快付、`12` TWQR；不帶為全部）、`PlatformStatus`（`1` 一般、`2` 平台）、`PaymentStatus`（`0` 未付款、`1` 已付款、`2` 訂單失敗）、`AllocateStatus`（`0` 未撥款、`1` 已撥款）
 
 ### 快速測試表單
 
@@ -547,7 +561,8 @@ JSON：
 | 文件 | 連結 |
 |---|---|
 | 全方位金流 API（本文件來源） | https://www.opay.tw/Content/files/O_Pay_011.pdf |
-| All-In-One API (EN) | https://www.opay.tw/Content/files/O_Pay_043.pdf |
+| All-In-One API (EN)，V1.2.31（2023-08-22），比中文版舊、沒有 TWQR | https://www.opay.tw/Content/files/O_Pay_043.pdf |
+| 官方 SDK（PHP / Java / .NET / Node.js / RoR） | https://github.com/o-pay/Payment_PHP 等（`o-pay` 組織）；SDK 文件 O_Pay_047／048／049（2017） |
 | 信用卡退款與取消授權 | https://www.opay.tw/Content/files/O_Pay_012.pdf |
 | 信用卡快速參考 | https://developers.opay.tw/Content/Doc/O_Pay_011_Credit01.pdf |
 | 超商代碼 / ATM / WebATM / 儲值消費 | `O_Pay_011_CVS.pdf` / `_ATM.pdf` / `_WEBATM.pdf` / `_TopUpUsed.pdf` |
@@ -562,4 +577,4 @@ JSON：
 ## 11. 備註與待驗證
 
 - POS、微信公眾號文件標註「若要串接使用請洽歐付寶客服」，可能需額外開通
-- 歐付寶沒有公開物流 API：官方文件總覽（2026-09-21 修訂版，2026-09-24 查核）只列金流、電子發票、Open ID、平台綁定、直播主收款網址
+- 歐付寶沒有公開物流 API：官方文件總覽（2026-11-14 修訂版，2026-11-17 查核）只列金流、電子發票、Open ID、平台綁定、直播主收款網址

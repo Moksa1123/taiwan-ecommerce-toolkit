@@ -10,7 +10,7 @@ PAYUNi 統一金流 Python 完整範例
   並以 tests/vectors/payuni.json 逐位元組驗證
 - UPP 欄位與付款方式開關：官方外掛 uppOnePointHandler()、$paymentArr
 - 端點路徑：官方 PHP SDK UniversalTrade() 對照表（例如操作名 trade_query → 路徑 trade/query）
-- 通知 / 查詢欄位與代碼：wpbr-payuni-payment 1.7.1
+- 通知 / 查詢欄位與代碼：官方文件 page 164（單筆交易查詢）、page 34（UPP）、page 73–75（Notify）
 
 API 文件: https://docs.payuni.com.tw/web/
 """
@@ -182,7 +182,7 @@ class PAYUNiPaymentService:
         for method in data.payment_methods:
             encrypt_info[method] = 1
 
-        return {'action': f'{self.base_url}/upp', 'fields': self._envelope(encrypt_info, '1.0')}
+        return {'action': f'{self.base_url}/upp', 'fields': self._envelope(encrypt_info, '2.0')}
 
     def parse_callback(self, callback_data: Dict[str, str]) -> PaymentCallbackData:
         """
@@ -244,7 +244,7 @@ class PAYUNiPaymentService:
         """
         交易查詢（POST /api/trade/query）
 
-        以 Version 2.0 呼叫（同 wpbr-payuni-payment），結果在 Result 陣列內，
+        以 Version 2.0 呼叫（官方 page 164），結果在 Result 陣列內，
         每筆含 MerTradeNo / TradeNo / TradeStatus / PaymentType / CreateDay / PaymentDay /
         CloseStatus（信用卡）。
         """

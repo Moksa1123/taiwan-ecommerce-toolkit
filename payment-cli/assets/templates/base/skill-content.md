@@ -87,7 +87,7 @@ python scripts/search.py --stats                     # 每個域有幾筆
 | 藍新 NewebPay | `references/newebpay-payment-api.md` |
 | 統一 PAYUNi | `references/payuni-payment-api.md` |
 | 速買配 SmilePay | `references/smilepay-payment-api.md` |
-| 拍錢包 PChomePay | `references/pchomepay-payment-api.md` |
+| PChomePay 支付連 | `references/pchomepay-payment-api.md` |
 | ezPay 簡單付 | `references/ezpay-payment-api.md` |
 | 立吉富 PayNow | `references/paynow-payment-api.md` |
 | SHOPLINE Payments | `references/shopline-payment-api.md` |
@@ -99,6 +99,7 @@ python scripts/search.py --stats                     # 每個域有幾筆
 | GoMyPay | `references/gomypay-payment-api.md`（完整規格要向 GoMyPay 申請） |
 | 電子支付生態、TWQR | `references/twqr-ewallet-landscape.md` |
 | 加密實作、訂單流程、常見問題、測試帳號、檢查清單 | `references/implementation-guide.md` |
+| 官方文件稽核紀錄（各家改了什麼、依據網址） | `references/audit-20261117.md` |
 
 ## 使用
 

@@ -19,7 +19,7 @@ python scripts/recommend.py "多元支付 LINE Pay Apple Pay"
 
 # API 設計優先
 python scripts/recommend.py "API RESTful JSON"
-# → 推薦 PAYUNi (RESTful JSON API)
+# → 推薦 PAYUNi (JSON 回應、AES-GCM)
 
 # JSON 輸出
 python scripts/recommend.py "新創公司 快速整合" --format json
@@ -32,10 +32,10 @@ python scripts/recommend.py "會員制 定期扣款" --format simple
 - **ECPay**: 穩定、市佔、高交易量、電商、ATM、超商、定期、訂閱、分期、發票、物流
 - **NewebPay**: 多元、支付方式、電子錢包、LINE、行動、記憶、會員、跨境
 - **PAYUNi**: API、JSON、RESTful、統一、新創、AFTEE、iCash
-- **SmilePay**: 速買配、簡單、便宜、台灣老牌、PHP、ibon、FamiPort、聯合信用卡
+- **SmilePay**: 速買配、簡單、便宜、台灣老牌、PHP、ibon、FamiPort、銀聯卡
 - **PChomePay**: 拍錢包、PChome、P 幣、Basic Auth、Token、虛擬帳號、超商代碼條碼、物流二合一
 - **ezPay**: 簡單付、電子支付、ezPay 錢包、約定連結帳戶、TWQR、跨機構、跨境、支付寶、微信
-- **PayNow**: 立吉富、Apple Pay、PaymentIntent、Stripe-like、JWT、票券、mPOS、現代+傳統雙 API
+- **PayNow**: 立吉富、Apple Pay、PaymentIntent、Stripe-like、Bearer 私鑰、票券、mPOS、現代+傳統雙 API
 - **Shopline**: SHOPLINE 商店、Redirect、Embedded SDK、街口、中租 BNPL、cents、HMAC-SHA256
 - **LINE Pay**: LINE、自動扣款、Preapproved、Capture、Void、跨國、Channel Secret、Nonce
 - **TapPay**: PCI 隔離、Prime、自製結帳頁、card_secret、CherryTech、Apple Pay、Google Pay
@@ -92,7 +92,7 @@ python scripts/recommend.py "會員制 定期扣款" --format simple
 
 | 特性 | ECPay | NewebPay | PAYUNi | SmilePay | PChomePay | ezPay | PayNow |
 |------|-------|----------|--------|----------|-----------|-------|--------|
-| 加密方式 | SHA256 | AES-256-CBC + SHA256 | AES-256-GCM + SHA256 | Verify_key + Mid_smilepay 加權 | HTTP Basic Auth → pcpay-token | AES-256-CBC（32-byte padding）+ SHA256 HashData | 傳統: 動態 AES-256 (GP/GK 鑰); 現代: JWT Bearer |
+| 加密方式 | SHA256 | AES-256-CBC + SHA256 | AES-256-GCM + SHA256 | Verify_key + Mid_smilepay 加權 | HTTP Basic Auth → pcpay-token | AES-256-CBC（32-byte padding）+ SHA256 HashData | 傳統: 動態 AES-256 (GP/GK 鑰); 現代: Bearer 私鑰 + webhook HMAC-SHA256 |
 | API 風格 | Form POST | Form POST + AES | RESTful JSON | Form POST (回 XML) | RESTful JSON | Server POST（APIID + UID + EncryptData + HashData）；跨境為 MPG Form POST | 傳統: Form POST; 現代: RESTful JSON |
 | 測試/正式 URL | 不同 URL | 不同 URL | 不同 URL | 同 URL | 不同 URL | 不同 URL | 不同 URL |
 | 市佔率 | 最高 | 高 | 中等 | 中（老牌） | 中（PChome 生態） | 電子支付機構 | 中小（多角化） |
@@ -113,16 +113,16 @@ python scripts/recommend.py "會員制 定期扣款" --format simple
 - **特色**: LINE Pay、Apple Pay、Google Pay 原生支援
 
 ### PAYUNi 特性
-- **優勢**: RESTful JSON API、統一集團背景、AES-GCM 現代加密
+- **優勢**: 統一集團背景、AES-GCM 加密、回應為 JSON
 - **加密**: AES-256-GCM 加密 + SHA256 簽章
-- **傳輸**: RESTful JSON，application/json
-- **特色**: AFTEE 先享後付、iCash 愛金卡（獨家）
+- **傳輸**: UPP 為瀏覽器表單 POST；其他 API 為 HTTP POST 表單欄位（MerID、Version、EncryptInfo、HashInfo），回應 JSON
+- **特色**: AFTEE 先享後付、icash Pay、街口支付、LINE Pay 幕後
 
 ### SmilePay 特性
 - **優勢**: 老牌穩定、整合簡單、無 AES 加密門檻、ibon / FamiPort 直接打單
 - **認證**: `Dcvc` + `Verify_key` 共享密鑰；通知時用反推的 `Mid_smilepay` 加權檢核碼驗證
 - **傳輸**: Form POST，回 XML（部分欄位 BIG-5 編碼）
-- **特色**: 七種付款方式（ATM / Barcode / ibon / FamiPort / 信用卡含分期 / 聯合信用卡 / Union），公開文件需向官方索取
+- **特色**: 七種付款方式（ATM / Barcode / ibon / FamiPort / 信用卡含分期 / 銀聯卡 Union），公開文件需向官方索取
 
 ### PChomePay 特性
 - **優勢**: PChome 生態整合、拍錢包 5% P 幣回饋、金物流二合一、文件公開完整
@@ -134,6 +134,7 @@ python scripts/recommend.py "會員制 定期扣款" --format simple
 - **定位**: 電子支付機構（簡單行動支付，藍新金融科技集團）；收款方須為 ezPay 會員並開啟商店
 - **境內 API**: 電子支付平台 7 支 API（`/API/Twqr/SCreateTWQR` 等），外層 `APIID` + `UID` + `EncryptData` + `HashData`，回應解密後為 urlencoded（`Result[...]`）
 - **跨境 API**: 支付寶 / 微信走 MPG（`payment.ezpay.com.tw/MPG/mpg_gateway`，TradeInfo / TradeSha，Version 1.0）
+- **跨境實體**: 門市掃碼走 `o2o.ezpay.com.tw/APIS/Trade`（Version 2.0，退款 3.0）
 - **加密**: AES-256-CBC，**PKCS#7 以 32 bytes 補齊**（16 bytes 會與官方範例不符）＋ SHA256（`HashKey=..&密文&HashIV=..`）
 - **注意**: 與藍新 NewebPay **不是同一套 API**（網域、欄位、Version、支付工具都不同）；要 ATM、超商代碼、分期請用 NewebPay
 
@@ -141,9 +142,9 @@ python scripts/recommend.py "會員制 定期扣款" --format simple
 - **優勢**: 雙 API 並行（傳統 + 現代）、現代版 PaymentIntent 設計接近 Stripe、Apple Pay 完整支援（含延遲扣款）、自帶票券系統
 - **加密**:
   - **傳統版（cashflow）**: 動態 AES-256（每次以 GP/GK 檢核碼即時取得 Key/IV）+ 自訂 10 位 TimeStr + Bootstrap key `paynowencryptpaynowcomtw28229955` + SHA-1 PassCode
-  - **現代版（apidoc）**: JWT Bearer Token + RESTful JSON
+  - **現代版（apidoc）**: Bearer 私鑰（PrivateKey）+ RESTful JSON；webhook 以 HMAC-SHA256 驗章
 - **傳輸**: 傳統用 Form POST；現代用 application/json
-- **特色**: 13 種付款方式（含 LINE Pay 線上線下、Apple Pay v1/v2、Apple Pay Deferred 延遲扣款）、Customer / Card Token 會員記憶、`webhookUrl` 推送回呼。**新專案應優先採用現代版 PaymentIntent**
+- **特色**: 傳統版 PayType 8 種、現代版 paymentMethodType 8 種（含 LINE Pay 線上線下、Apple Pay、Apple Pay Deferred 延遲扣款）、Customer / Card Token 會員記憶、`webhookUrl` 推送回呼。**新專案應優先採用現代版 PaymentIntent**
 
 ### Shopline Payments 特性
 - **優勢**: SHOPLINE 集團官方金流、RESTful JSON 設計、Redirect + Embedded SDK 雙模式
@@ -152,14 +153,14 @@ python scripts/recommend.py "會員制 定期扣款" --format simple
 - **特色**: Embedded SDK 適合自訂 UI 與 PCI 隔離；Redirect 模式快速上線；6 種主流支付（信用卡/Apple Pay/LINE Pay/街口/ATM/中租 BNPL）
 
 ### LINE Pay 特性
-- **優勢**: LINE 生態系直連、跨國（TW/JP/TH/TW）、自動扣款（Preapproved Pay）、Capture/Void 雙階段授權
+- **優勢**: LINE 生態系直連、幣別 USD/TWD/THB（日本已終止服務）、自動扣款（Preapproved Pay）、Capture/Void 雙階段授權
 - **認證**: Channel ID + Channel Secret；每次請求需產生 Nonce 並用 HMAC-SHA256 簽章 (`X-LINE-Authorization`)
 - **傳輸**: RESTful JSON v4 規格
-- **特色**: Request → Confirm 兩段式流程；Capture 可手動請款（autoCapture=false）；19 位 transactionId（JS 需用字串避免精度遺失）；不支援 Apple Pay / Google Pay（這是 LINE Pay 自身就是支付工具）
+- **特色**: Request → Confirm 兩段式流程；Capture 可手動請款（options.payment.capture=false）；19 位 transactionId（JS 需用字串避免精度遺失）；不支援 Apple Pay / Google Pay（這是 LINE Pay 自身就是支付工具）
 
 ### TapPay 特性
 - **優勢**: PCI 隔離設計（前端 SDK 取 Prime → 後端付款）、支援多元電子錢包（Apple Pay / Google Pay / LINE Pay / 街口）、適合自製結帳頁
-- **認證**: Partner Key（後端）+ App Key（前端）+ Merchant ID 三段式金鑰；Prime 60 秒過期
+- **認證**: Partner Key（後端）+ App Key（前端）+ Merchant ID 三段式金鑰；Prime 90 秒過期
 - **傳輸**: RESTful JSON
 - **特色**: 兩段式架構 (Prime → pay-by-prime)；`card_secret` 機制可記憶卡片做重複扣款 (pay-by-token)；`result_url` 雙網址回調；無自家結帳頁，UI 完全在商家自管
 
@@ -551,8 +552,10 @@ CVV: 任意 3 碼
 有效期: 任意未來月年
 CVV: 任意 3 碼
 
-# PAYUNi 測試卡
-請至後台查詢官方測試卡號
+# PAYUNi 測試卡（官方 page 374）
+卡號: 4147631000000001
+有效期: 任意
+CVV: 任意 3 碼
 ```
 
 ### 問題 6: AES 加密 / 解密失敗
@@ -576,14 +579,14 @@ CVV: 任意 3 碼
 **原因：**
 1. 未設定 ChoosePayment=ATM
 2. ExpireDate 格式錯誤
-3. ExpireDate 超過範圍（3-60 天）
+3. ExpireDate 超過範圍（ECPay 1-60 天，預設 3）
 
 **解決方案：**
 ```typescript
 // * ECPay ATM 設定
 const params = {
     ChoosePayment: 'ATM',
-    ExpireDate: 3,  // 3-60 天
+    ExpireDate: 3,  // 1-60 天，預設 3
     PaymentInfoURL: 'https://yourdomain.com/api/payment/atm-info',  // 接收帳號通知
     // ...
 }

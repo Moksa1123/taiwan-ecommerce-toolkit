@@ -52,7 +52,7 @@ class PChomePayItem:
 class PChomePayCreditOrder:
     """跳轉付款頁訂單 (POST /v1/payment) — 信用卡情境"""
     order_id: str                                     # <=50, 英數 + - _
-    amount: int                                       # CARD: 30 ~ 199,999
+    amount: int                                       # CARD: 1 ~ 199,999（含 3 期以上分期時 ≥ 30）
     items: List[PChomePayItem]
     return_url: Optional[str] = None
     fail_return_url: Optional[str] = None
@@ -276,8 +276,11 @@ class PChomePayService:
             PChomePayResponse.data 內含 order_id / payment_url
             -> 將消費者導頁至 payment_url 完成付款
         """
-        if order.amount < 30 or order.amount > 199_999:
-            raise ValueError('CARD 金額需介於 30 ~ 199,999')
+        if order.amount < 1 or order.amount > 199_999:
+            raise ValueError('CARD 金額需介於 1 ~ 199,999')
+        if order.card_installment and order.amount < 30 and any(
+                p.strip() != '1' for p in order.card_installment.split(',')):
+            raise ValueError('含 3 期以上分期時金額須 ≥ 30（錯誤碼 20006）')
 
         body: Dict[str, Any] = {
             'order_id': order.order_id,

@@ -23,6 +23,7 @@ LINE Pay 為全球性電子錢包服務，台灣為其主要市場之一。本�
 13. [錯誤代碼](#錯誤代碼)
 14. [支付方式對照表](#支付方式對照表)
 15. [常見問題排解](#常見問題排解)
+16. [官方來源](#官方來源)
 
 ---
 
@@ -30,7 +31,16 @@ LINE Pay 為全球性電子錢包服務，台灣為其主要市場之一。本�
 
 ### 什麼是 LINE Pay Online API v4
 
-LINE Pay 是 LINE Corporation 提供的電子支付服務，整合了信用卡、LINE Points、LINE Pay Money 等多種支付來源。v4 為目前推薦的線上 API 版本。
+LINE Pay 是 LINE Corporation 提供的電子支付服務，整合了信用卡、LINE Points、LINE Pay Money 等多種支付來源。
+
+### 版本
+
+| 版本 | 狀態（官方 API change log，2025-11） |
+|------|------|
+| Online API v4 | 2025-11 新增，因應台灣電子支付機構（EPI）規範。與 v3 相比：`info.paymentProvider`（`TSP` / `EPI`）加進 confirm、capture、查詢、自動扣款的回應；payment request 新增 `options.regPayRequest` |
+| Online API v3 | 仍為現行版本（官方：不需要知道 payment provider 類型可繼續用 v3）；官方文件未公布停用日期 |
+
+兩版端點路徑只差 `/v3` ↔ `/v4` 前綴，簽章方式相同。線上付款的 `paymentProvider` 目前一律為 `"TSP"`（官方：EPI 交易不適用於線上付款情境）。
 
 ### 整合特性
 
@@ -39,15 +49,15 @@ LINE Pay 是 LINE Corporation 提供的電子支付服務，整合了信用卡�
 | **協定** | RESTful HTTPS + JSON |
 | **認證** | HMAC-SHA256 簽章（標頭 `X-LINE-Authorization`） |
 | **HTTP 狀態碼** | API **永遠回傳 HTTP 200**，實際結果由 JSON 中的 `returnCode` 判斷 |
-| **TransactionId** | 19 位數整數，建議以 64 位 `long`/`int64` 儲存（避免 JS `Number` 精度遺失） |
-| **語系** | 透過 `Accept-Language` 標頭控制錯誤訊息語系 |
+| **TransactionId** | 19 位數整數，以 64 位 `long`/`int64` 處理；無法處理 64 位整數的平台改用字串 |
+| **幣別** | `USD` / `TWD` / `THB` |
 
 ### 商務面前置作業
 
 1. 申請 LINE Pay 商家帳號（Merchant Account）
 2. 開通 Online API 服務
 3. 自商家後台取得 **Channel ID** 與 **Channel Secret**
-4. 設定支付完成回調網址（`confirmUrl`、`cancelUrl`）
+4. 準備導回頁面（`confirmUrl`、`cancelUrl`），每次 payment request 時於 `redirectUrls` 帶入
 
 > 簽章公式與 LINE Pay 官方 developers-pay.line.me/online/prerequisites 相同（v3、v4 一致，只有路徑前綴不同），並與 yidas/line-pay-sdk-php、wpbr-linepay-tw 1.3.3 的實際輸出逐字比對（`tests/vectors/linepay.json`）。
 
@@ -70,7 +80,10 @@ https://{host}/{apiPath}?{queryString}
 
 ### 沙箱測試
 
-- 沙箱環境需向 LINE Pay 申請開通（與正式環境憑證**不同**）
+- 尚未成為 LINE Pay 商家：在 developers-pay.line.me/sandbox 申請沙箱帳號，再到商家後台「Developer Tools > Manage Link Key」取得沙箱用 Channel ID / Channel Secret
+- 已是正式商家：**直接用正式的 Channel ID / Channel Secret 打沙箱**，不必另外申請
+- 沙箱不支援 `info.paymentUrl.app`（App 跳轉），測試請用 `info.paymentUrl.web`
+- 沙箱商品圖片 `imageUrl` 非 HTTPS 可能顯示不出來（正式環境不受影響）
 - 沙箱可模擬付款流程，不會實際扣款
 - 商家後台網址：`https://pay.line.me/portal/global/auth/login`
 
@@ -88,30 +101,32 @@ https://{host}/{apiPath}?{queryString}
 
 ## API 端點總覽
 
+read timeout 為官方各端點頁面的建議下限。
+
 ### 一般付款流程
 
-| 功能 | Method | Path |
-|------|--------|------|
-| **建立付款請求** | POST | `/v4/payments/request` |
-| **查詢付款請求狀態** | GET | `/v4/payments/requests/{transactionId}/check` |
-| **付款確認（授權）** | POST | `/v4/payments/{transactionId}/confirm` |
-| **訂單查詢** | GET | `/v4/payments` |
+| 功能 | Method | Path | read timeout |
+|------|--------|------|------|
+| **建立付款請求** | POST | `/v4/payments/request` | 10 秒 |
+| **查詢付款請求狀態** | GET | `/v4/payments/requests/{transactionId}/check` | 20 秒 |
+| **付款確認（授權）** | POST | `/v4/payments/{transactionId}/confirm` | 40 秒 |
+| **訂單查詢** | GET | `/v4/payments` | 20 秒 |
 
 ### 授權後操作
 
-| 功能 | Method | Path |
-|------|--------|------|
-| **請款（Capture）** | POST | `/v4/payments/authorizations/{transactionId}/capture` |
-| **取消授權（Void）** | POST | `/v4/payments/authorizations/{transactionId}/void` |
-| **退款（Refund）** | POST | `/v4/payments/{transactionId}/refund` |
+| 功能 | Method | Path | read timeout |
+|------|--------|------|------|
+| **請款（Capture）** | POST | `/v4/payments/authorizations/{transactionId}/capture` | 60 秒 |
+| **取消授權（Void）** | POST | `/v4/payments/authorizations/{transactionId}/void` | 20 秒 |
+| **退款（Refund）** | POST | `/v4/payments/{transactionId}/refund` | 20 秒 |
 
 ### 自動扣款（Preapproved Pay）
 
-| 功能 | Method | Path |
-|------|--------|------|
-| **檢查 RegKey 狀態** | GET | `/v4/payments/preapprovedPay/{regKey}/check` |
-| **扣款** | POST | `/v4/payments/preapprovedPay/{regKey}/payment` |
-| **解除（Expire）** | POST | `/v4/payments/preapprovedPay/{regKey}/expire` |
+| 功能 | Method | Path | read timeout |
+|------|--------|------|------|
+| **檢查 RegKey 狀態** | GET | `/v4/payments/preapprovedPay/{regKey}/check` | 20 秒 |
+| **扣款** | POST | `/v4/payments/preapprovedPay/{regKey}/payment` | 20 秒 |
+| **解除（Expire）** | POST | `/v4/payments/preapprovedPay/{regKey}/expire` | 20 秒 |
 
 ---
 
@@ -240,31 +255,38 @@ Content-Type: application/json
 
 | 參數 | 類型 | 必填 | 說明 |
 |------|------|------|------|
-| `amount` | Integer | ● | 訂單總金額（須等於 `packages[].amount` 加總） |
-| `currency` | String(3) | ● | 幣別 ISO-4217，台灣使用 `TWD` |
-| `orderId` | String(100) | ● | 商家訂單編號，需唯一 |
-| `packages` | Array | ● | 商品包裝陣列，**至少一筆** |
+| `amount` | Number | ● | 付款金額（須等於 `packages[].amount` 加總） |
+| `currency` | String(3) | ● | 幣別 ISO 4217：`USD` / `TWD` / `THB` |
+| `orderId` | String(100) | ● | 商家訂單編號，需唯一（重複會回 `1172`） |
+| `packages[]` | Array | ● | 商品包裝陣列（依出貨單位或店家區分） |
 | `packages[].id` | String(50) | ● | 包裝 ID |
-| `packages[].amount` | Integer | ● | 該包裝小計 |
-| `packages[].name` | String(100) | ○ | 包裝名稱（顯示在 LINE Pay 結帳頁） |
-| `packages[].userFee` | Integer | ○ | 該包裝中的手續費 |
-| `packages[].products` | Array | ● | 商品陣列 |
+| `packages[].amount` | Number | ● | 該包裝小計＝Σ `products[].price` × `products[].quantity` |
+| `packages[].name` | String(100) | ○ | 包裝名稱或出貨商家名稱 |
+| `packages[].products[]` | Array | ● | 商品陣列 |
 | `packages[].products[].name` | String(4000) | ● | 商品名稱 |
-| `packages[].products[].quantity` | Integer | ● | 數量 |
-| `packages[].products[].price` | Integer | ● | 單價 |
-| `packages[].products[].imageUrl` | String(500) | ○ | 商品圖片 URL（建議 84×84） |
+| `packages[].products[].quantity` | Number | ● | 數量 |
+| `packages[].products[].price` | Number | ● | 單價 |
+| `packages[].products[].originalPrice` | Number | ○ | 原價 |
+| `packages[].products[].imageUrl` | String(500) | ○ | 商品圖片 URL |
 | `packages[].products[].id` | String(50) | ○ | 商家自訂商品 ID |
-| `redirectUrls.confirmUrl` | String(500) | ● | 付款後導回網址 |
-| `redirectUrls.cancelUrl` | String(500) | ● | 取消付款導回網址 |
-| `redirectUrls.confirmUrlType` | String(20) | ○ | `CLIENT`（預設）或 `SERVER` |
-| `options.payment.capture` | Boolean | ○ | `true`（預設，confirm 時直接請款）；`false` 為先授權後請款 |
-| `options.payment.payType` | String(20) | ○ | `NORMAL`（預設）/ `PREAPPROVED`（自動扣款註冊） |
-| `options.display.locale` | String(5) | ○ | 介面語系 `zh_TW` / `en` / `ja` / `ko` |
-| `options.display.checkConfirmUrlBrowser` | Boolean | ○ | 是否驗證 `confirmUrl` 開啟瀏覽器 |
-| `options.shipping.feeAmount` | Integer | ○ | 運費 |
-| `options.shipping.feeInquiryUrl` | String | ○ | 運費試算 URL |
-| `options.extra.branchName` | String(100) | ○ | 分店名稱 |
-| `options.extra.branchId` | String(32) | ○ | 分店 ID |
+| `redirectUrls` | Object | ● | 導回網址設定 |
+| `redirectUrls.confirmUrl` | String(500) | ● | 消費者完成 LINE Pay 認證後的導回網址 |
+| `redirectUrls.cancelUrl` | String(500) | ● | 消費者取消付款的導回網址 |
+| `redirectUrls.confirmUrlType` | String | ○ | `CLIENT`（預設，由 LINE App／彈出視窗導回）/ `SERVER`（LINE Pay 伺服器直接呼叫 confirmUrl）/ `NONE`（不導回，商家自行輪詢 check API） |
+| `redirectUrls.appPackageName` | String(4000) | ○ | Android App 間切換時要返回的 App package name（防釣魚） |
+| `options` | Object | ● | 付款請求設定（官方欄位表標為必填） |
+| `options.payment.capture` | Boolean | ○ | `true`（預設，confirm 時同時請款）；`false` 為先授權後請款 |
+| `options.payment.payType` | String | ○ | `NORMAL`（一般付款）/ `PREAPPROVED`（自動扣款） |
+| `options.display.locale` | String | ○ | 付款等待頁語系（BCP-47），預設 `en`；可用 `en` / `ja` / `ko` / `th` / `zh_TW` / `zh_CN` |
+| `options.display.checkConfirmUrlBrowser` | Boolean | ○ | 預設 `false`；`true` 時若消費者不在原本發起付款的瀏覽器，會提示回到原瀏覽器 |
+| `options.extra.branchName` | String(200) | ○ | 分店名稱（僅英數與特殊字元） |
+| `options.extra.branchId` | String(32) | ○ | 分店 ID（超長會被截斷顯示） |
+| `options.extra.promotionRestriction.rewardLimit` | Number | ● (物件存在時) | 依法規不能套用回饋的金額（僅台灣） |
+| `options.extra.promotionRestriction.useLimit` | Number | ○ | 不能折抵或用點數的金額（僅台灣） |
+| `options.events[].code` | String(30) | ○ | 與 LINE Pay 約定的促銷活動代碼 |
+| `options.events[].totalAmount` | Number | ○ | 固定比例回饋活動的適用金額 |
+| `options.events[].productQuantity` | Number | ○ | 固定金額回饋活動的適用數量 |
+| `options.regPayRequest` | Object | ○ | 自動扣款設定（v4 新增），見[自動扣款](#自動扣款--一鍵付款preapproved-pay) |
 
 ### 請求範例
 
@@ -312,20 +334,27 @@ Content-Type: application/json
   "returnCode": "0000",
   "returnMessage": "Success.",
   "info": {
-    "transactionId": 2026050712345678910,
-    "paymentAccessToken": "187b6e9fe61a44e1a9e6a4e7c7a3fae1",
     "paymentUrl": {
-      "web": "https://sandbox-pay.line.me/web/payment/wait?transactionReserveId=...",
-      "app": "line://pay/payments/..."
-    }
+      "web": "https://sandbox-web-pay.line.me/web/payment/wait?transactionReserveId=...",
+      "app": "line://pay/payment/..."
+    },
+    "transactionId": 2026050712345678910,
+    "paymentAccessToken": "056579816895"
   }
 }
 ```
 
+| 回應欄位 | 說明 |
+|------|------|
+| `info.paymentUrl.web` | LINE Pay 付款等待頁；以彈出視窗開啟時建議 700 × 546 px |
+| `info.paymentUrl.app` | 從商家 App 跳到 LINE Pay App 的 deep link（沙箱不支援） |
+| `info.transactionId` | 交易編號（19 位數） |
+| `info.paymentAccessToken` | 消費者在 LINE Pay App 改用手動輸入代碼（不掃碼）時的代碼 |
+
 ### 處理流程
 
 1. 商家後端呼叫 `POST /v4/payments/request`
-2. 取得 `info.paymentUrl.web`（桌面瀏覽器）或 `info.paymentUrl.app`（行動裝置 LINE App）
+2. 取得 `info.paymentUrl.web`（瀏覽器）或 `info.paymentUrl.app`（App 跳轉）
 3. 將消費者導向上述 URL
 4. 消費者在 LINE Pay 介面中授權
 5. LINE Pay 將消費者導回 `redirectUrls.confirmUrl`，並附上 `transactionId` 與 `orderId` 的 query string
@@ -354,7 +383,7 @@ Content-Type: application/json
 
 | 參數 | 類型 | 必填 | 說明 |
 |------|------|------|------|
-| `amount` | Integer | ● | 須與 request 階段相同 |
+| `amount` | Number | ● | 須與 request 階段相同 |
 | `currency` | String(3) | ● | 須與 request 階段相同 |
 
 ### 請求範例
@@ -375,15 +404,13 @@ Content-Type: application/json
   "info": {
     "orderId": "ORD20260507123456",
     "transactionId": 2026050712345678910,
-    "authorizationExpireDate": "2026-05-21T14:30:00Z",
-    "regKey": null,
     "payInfo": [
       {
         "method": "CREDIT_CARD",
         "amount": 900,
-        "creditCardName": "VISA",
+        "creditCardBrand": "VISA",
         "creditCardNickname": "我的信用卡",
-        "maskedCreditCardNumber": "************1234"
+        "maskedCreditCardNumber": "**** **** **** 1234"
       },
       {
         "method": "POINT",
@@ -393,32 +420,41 @@ Content-Type: application/json
     "packages": [
       {
         "id": "pkg-001",
-        "amount": 1000,
-        "userFeeAmount": 0
+        "amount": 1000
       }
-    ]
+    ],
+    "paymentProvider": "TSP"
   }
 }
 ```
 
-### `payInfo[].method` 對照
+### 回應 `info` 欄位
 
-| 代碼 | 說明 |
+| 欄位 | 說明 |
 |------|------|
-| `CREDIT_CARD` | 信用卡 |
-| `BALANCE` | LINE Pay 餘額（LINE Pay Money） |
-| `POINT` | LINE Points |
+| `orderId` | 商家訂單編號 |
+| `transactionId` | 交易編號（19 位數） |
+| `authorizationExpireDate` | 授權到期時間（ISO 8601）；只有先授權後請款時回傳，到期前要 capture |
+| `regKey` | 自動扣款金鑰；只有 `payType=PREAPPROVED` 時回傳 |
+| `payInfo[].method` | `CREDIT_CARD`（含簽帳金融卡）/ `BALANCE`（LINE Pay Money）/ `POINT`（LINE POINTS） |
+| `payInfo[].amount` | 該付款方式金額 |
+| `payInfo[].creditCardBrand` | `VISA` / `MASTER` / `AMEX` / `DINERS` / `JCB` |
+| `payInfo[].creditCardNickname` | 消費者在 LINE Pay 設定的卡片暱稱；未設定為空字串 |
+| `payInfo[].maskedCreditCardNumber` | 遮罩卡號；僅台灣、需另外申請 |
+| `packages[].id` / `packages[].amount` | 包裝 ID 與金額 |
+| `merchantReference.affiliateCards[]` | 電子發票載具或聯名卡資訊（`cardType="MOBILE_CARRIER"` 時 `cardId` 為手機條碼）；僅台灣、需向 LINE Pay 申請 |
+| `paymentProvider` | v4 新增：`TSP` / `EPI`；`null` 視同 `TSP` |
 
 ### 重要注意事項
 
-- `confirm` 必須在授權有效期間內呼叫，否則會收到 `1133`（授權過期）類別錯誤
-- 若 request 時設定 `options.payment.capture = false`，則 confirm 後僅完成「授權」，須再呼叫 capture 才會請款
+- 若 request 時設定 `options.payment.capture = false`，則 confirm 後僅完成「授權」，須在 `authorizationExpireDate` 前呼叫 capture（或 void）
+- 消費者認證後逾時才 confirm 可能收到 `1180`（Payment time expired）
 
 ---
 
 ## 付款狀態查詢
 
-用於查詢付款請求的當前狀態（建議在 confirm 前呼叫，避免重複 confirm）。
+查詢消費者是否已完成 LINE Pay 認證。主要用於 `confirmUrlType=NONE`（不導回）的流程：每隔至少 1 秒呼叫一次，拿到 `0110` 再 confirm。
 
 ### 端點
 
@@ -443,9 +479,10 @@ GET /v4/payments/requests/{transactionId}/check
 
 | 代碼 | 說明 |
 |------|------|
-| `0000` | 等待付款 / 可進行 confirm |
-| `0110` | 已完成驗證，可進行 confirm |
-| `0121` | 消費者取消 / 驗證逾時 |
+| `0000` | 消費者尚未完成 LINE Pay 認證 |
+| `0110` | 已完成認證，可進行 confirm |
+| `0121` | 消費者取消 / 認證等待逾時 |
+| `0122` | 付款失敗 |
 | `0123` | 付款已完成（不可重複 confirm） |
 
 ---
@@ -464,8 +501,8 @@ POST /v4/payments/authorizations/{transactionId}/capture
 
 | 參數 | 類型 | 必填 | 說明 |
 |------|------|------|------|
-| `amount` | Integer | ● | 須與授權金額相同（不支援部分請款） |
-| `currency` | String(3) | ● | 與授權幣別相同 |
+| `amount` | Number | ● | 請款金額（官方：可與 payment request 時的金額不同） |
+| `currency` | String(3) | ● | `USD` / `TWD` / `THB` |
 
 #### 請求範例
 
@@ -476,17 +513,25 @@ POST /v4/payments/authorizations/{transactionId}/capture
 }
 ```
 
+#### 回應
+
+`info` 含 `orderId`、`transactionId`、`payInfo[]`（`method`、`amount`）、`paymentProvider`（v4 新增）。
+
+回 `1199` 或 `1280`–`1298` 時，該筆付款會**自動取消**，不要再重試 capture。
+
 ### Void（取消授權）
 
 ```
 POST /v4/payments/authorizations/{transactionId}/void
 ```
 
-授權後尚未請款，可呼叫 void 釋放授權額度。
+授權後尚未請款，可呼叫 void 取消授權。已請款（含自動請款）的交易不能 void，只能退款。
 
 #### 請求參數
 
-無 body 內容（或可送空 JSON `{}`）。
+無 body。
+
+回 `1900`、`1902`、`1999` 時可重試。
 
 ### 適用場景
 
@@ -511,7 +556,7 @@ Content-Type: application/json
 
 | 參數 | 類型 | 必填 | 說明 |
 |------|------|------|------|
-| `refundAmount` | Integer | ○ | 退款金額；不傳則為全額退款 |
+| `refundAmount` | Number | ○ | 部分退款金額；不傳則為全額退款 |
 
 ### 請求範例
 
@@ -544,32 +589,30 @@ Content-Type: application/json
 
 ### 退款規則
 
-- 部分退款支援多次，但累積金額不可超過原交易金額
-- 退款後會產生新的 `refundTransactionId`，建議於商家系統儲存以便對帳
-- 退款不可逆，請於商家後台完整驗證後再呼叫
-- 信用卡退款依各發卡行規定，款項通常 1-3 個工作天內返還
+- 退款會產生新的 `refundTransactionId`，請儲存以便對帳
+- 相關代碼：`1163` 已過退款期限、`1164` 超過可退金額、`1165` 已退過款、`2042` 商家退款準備金不足致 EPI 交易無法退款
+- 回 `1900`、`1902`、`1999` 時可重試
 
 ---
 
 ## 訂單查詢（Payment Details）
 
-查詢一筆或多筆交易的詳細資料，可用於對帳與客服查詢。
+查詢已 confirm 或已請款交易的詳細資料，可用於對帳與客服查詢。
 
 ### 端點
 
 ```
-GET /v4/payments?transactionId=xxx&orderId=xxx&fields=ALL
+GET /v4/payments?transactionId=xxx&orderId=xxx
 ```
 
 ### Query 參數
 
-| 參數 | 類型 | 必填 | 說明 |
-|------|------|------|------|
-| `transactionId` | String / Array | ※ | 交易編號，多筆以逗號分隔，最多 100 筆 |
-| `orderId` | String / Array | ※ | 商家訂單編號，多筆以逗號分隔，最多 100 筆 |
-| `fields` | String | ○ | `TRANSACTION` / `ORDER` / `ALL`（預設 `ALL`） |
+| 參數 | 必填 | 說明 |
+|------|------|------|
+| `transactionId[]` | ※ | 一或多個交易編號 |
+| `orderId[]` | ※ | 一或多個商家訂單編號 |
 
-> ※：`transactionId` 和 `orderId` 至少需提供一個。
+> ※：`transactionId` 和 `orderId` 至少需提供一個。一次查詢超過 100 筆回 `1177`。
 
 ### 回應範例
 
@@ -580,13 +623,13 @@ GET /v4/payments?transactionId=xxx&orderId=xxx&fields=ALL
   "info": [
     {
       "transactionId": 2026050712345678910,
+      "orderId": "ORD20260507123456",
       "transactionDate": "2026-05-07T14:00:00Z",
       "transactionType": "PAYMENT",
       "payStatus": "CAPTURE",
       "productName": "美式咖啡",
       "merchantName": "範例咖啡店",
       "currency": "TWD",
-      "authorizationExpireDate": null,
       "payInfo": [
         { "method": "CREDIT_CARD", "amount": 900 },
         { "method": "POINT", "amount": 100 }
@@ -595,10 +638,13 @@ GET /v4/payments?transactionId=xxx&orderId=xxx&fields=ALL
         {
           "id": "pkg-001",
           "amount": 1000,
-          "userFeeAmount": 0,
-          "name": "經典咖啡組合"
+          "name": "經典咖啡組合",
+          "products": [
+            { "id": "prod-001", "name": "美式咖啡", "quantity": 2, "price": 500 }
+          ]
         }
       ],
+      "paymentProvider": "TSP",
       "refundList": [
         {
           "refundTransactionId": 2026050712345678999,
@@ -606,21 +652,22 @@ GET /v4/payments?transactionId=xxx&orderId=xxx&fields=ALL
           "refundAmount": 500,
           "refundTransactionDate": "2026-05-07T15:30:45Z"
         }
-      ],
-      "originalTransactionId": null
+      ]
     }
   ]
 }
 ```
 
+`originalTransactionId`（原付款交易編號）、`payInfo[]`、`refundList[]` 只在查詢有退款紀錄的交易時回傳；`authorizationExpireDate` 為授權到期時間。
+
 ### `payStatus` 對照
 
 | 狀態 | 說明 |
 |------|------|
-| `AUTHORIZATION` | 已授權，尚未請款 |
+| `AUTHORIZATION` | 已 confirm（授權），尚未請款 |
 | `CAPTURE` | 已請款 |
 | `VOIDED_AUTHORIZATION` | 授權已取消 |
-| `EXPIRED_AUTHORIZATION` | 授權已過期 |
+| `EXPIRED_AUTHORIZATION` | 授權已過期（未在期限內請款） |
 
 ### `transactionType` 對照
 
@@ -652,6 +699,18 @@ GET /v4/payments?transactionId=xxx&orderId=xxx&fields=ALL
 
 confirm 完成後，回應的 `info.regKey` 即為後續扣款用的金鑰，**請妥善儲存**。
 
+v4 可在 payment request 加上 `options.regPayRequest` 描述扣款方式：
+
+| 欄位 | 類型 | 說明 |
+|------|------|------|
+| `regPayPeriodType` | String | `RECURRING`（定期）/ `NON_RECURRING`（不定期，一般自動扣款） |
+| `productPrice` | Number | 自動扣款金額 |
+| `perTransactionLimit` | Number | 不定期扣款的單筆上限（`NON_RECURRING` 時用） |
+| `recurringPeriod` | String | 定期扣款週期：`WEEK` / `MONTH` / `YEAR` |
+| `recurringDayOfWeek` | String | `WEEK` 時的星期：`SUN`…`SAT`；其他週期須為 `null` |
+| `recurringDay` | Number | `MONTH` / `YEAR` 時的日期 1–31；其他週期須為 `null` |
+| `recurringMonth` | Number | `YEAR` 時的月份 1–12；其他週期須為 `null` |
+
 ### 檢查 RegKey 狀態
 
 ```
@@ -660,7 +719,7 @@ GET /v4/payments/preapprovedPay/{regKey}/check?creditCardAuth=true
 
 | Query 參數 | 必填 | 說明 |
 |------------|------|------|
-| `creditCardAuth` | ○ | `true` 時會對綁定卡片進行 NTD 1 元授權測試（並立即取消） |
+| `creditCardAuth` | ○ | `true`：除 LINE Pay 驗證外，再對信用卡做最低金額授權驗證（需 LINE Pay 核准才能用）；`false`：只做 LINE Pay 驗證 |
 
 ### 執行扣款
 
@@ -683,11 +742,15 @@ Content-Type: application/json
 
 | 參數 | 類型 | 必填 | 說明 |
 |------|------|------|------|
-| `productName` | String | ● | 商品名稱 |
-| `amount` | Integer | ● | 扣款金額 |
-| `currency` | String(3) | ● | 幣別 |
-| `orderId` | String | ● | 訂單編號（需唯一） |
+| `amount` | Number | ● | 扣款金額 |
+| `orderId` | String(100) | ● | 訂單編號（需唯一） |
+| `productName` | String(4000) | ○ | 商品名稱（官方欄位表標選填，範例有帶） |
+| `currency` | String(3) | ○ | `USD` / `TWD` / `THB`（官方欄位表標選填，範例有帶） |
 | `capture` | Boolean | ○ | 是否同時請款，預設 `true` |
+
+回應 `info`：`transactionId`、`transactionDate`、`orderId`、`authorizationExpireDate`（`capture=false` 時）、`paymentProvider`（v4 新增）。
+
+回 `1141`、`1282`–`1287`、`1290`–`1295` 表示 regKey 已失效，需請消費者重新綁定。
 
 ### 解除綁定
 
@@ -720,12 +783,14 @@ POST /v4/payments/preapprovedPay/{regKey}/expire
 
 ### confirmUrl 接收參數
 
-LINE Pay 將消費者導回時，會以 GET query string 附上：
+LINE Pay 以 HTTP GET 呼叫 confirmUrl（連線逾時 5 秒、讀取逾時 20 秒），並自動附上 query string：
 
 | 參數 | 說明 |
 |------|------|
-| `transactionId` | LINE Pay 交易編號（19 位） |
+| `transactionId` | LINE Pay 交易編號（19 位），依平台可能要當字串處理 |
 | `orderId` | 商家訂單編號（與 request 階段相同） |
+
+不要自己把這兩個參數寫進 confirmUrl；若網址已含 `orderId`，LINE Pay 只會補上其餘參數。
 
 範例：
 
@@ -733,13 +798,24 @@ LINE Pay 將消費者導回時，會以 GET query string 附上：
 GET https://merchant.example.com/payment/confirm?transactionId=2026050712345678910&orderId=ORD20260507123456
 ```
 
+頁面須使用受信任憑證的 HTTPS（官方：建議），支援 TLS 1.2 以上。
+
 ### cancelUrl 接收參數
 
-消費者於 LINE Pay 取消付款時，會被導回 `cancelUrl`，同樣帶有 `transactionId` 與 `orderId`。
+消費者於 LINE Pay 取消付款時，會被導回 `cancelUrl`（GET，逾時同上）；`transactionId` 與 `orderId` 為**視情況**附帶，不保證一定有。
 
-### Server-side Confirm（confirmUrlType=SERVER）
+### confirmUrlType=SERVER
 
-若於 request 階段設定 `redirectUrls.confirmUrlType = "SERVER"`，則 LINE Pay 會直接 POST 至 confirmUrl（而非由消費者瀏覽器導回）。此模式適用於**完全 server-to-server** 的整合，但消費者體驗上會看到 LINE Pay 自己的成功頁面。
+由 LINE Pay 伺服器直接呼叫 confirmUrl，而不是從 LINE App／彈出視窗把消費者導回。此模式需在防火牆允許 LINE Pay 的來源 IP：
+
+| 環境 | 來源 IP |
+|------|------|
+| 沙箱 | `147.92.159.209`、`147.92.159.21`、`147.92.159.68`、`147.92.216.167` |
+| 正式 | `211.249.40.1`～`211.249.40.30`、`147.92.220.5`～`147.92.220.8` |
+
+### confirmUrlType=NONE
+
+不導回；LINE Pay 伺服器不會對商家發出任何 HTTP 請求。商家每隔至少 1 秒呼叫 `GET /v4/payments/requests/{transactionId}/check`，拿到 `0110` 再 confirm。
 
 ### 回應 LINE Pay
 
@@ -749,66 +825,96 @@ GET https://merchant.example.com/payment/confirm?transactionId=20260507123456789
 
 ## 錯誤代碼
 
-LINE Pay v4 的回應永遠為 HTTP 200，實際結果在 JSON 的 `returnCode`（成功流程）或 `resultCode`（部分錯誤回應）中。
+回應永遠是 HTTP 200。正常回應的結果在 `returnCode` / `returnMessage`（失敗時不帶 `info`）；官方另列錯誤回應範例為 `{"resultCode": 1104, "statusMessage": "Merchant not found."}`，解析時兩組欄位都要接。沒有對應訊息時 `returnMessage` 為 `-`。
 
-> 以下為來源文件擷取的代碼，**完整代碼表請以官方 v4 PDF 為準**。
+> 依 LINE Pay Online API v4 官方結果代碼表（developers-pay.line.me/online-api-v4#result-code，2026-11-17 擷取）。完整清單見 `data/error-codes.csv`。
 
-### 成功類
-
-| 代碼 | 說明 |
-|------|------|
-| `0000` | 成功 |
-| `0110` | 消費者已驗證，可進行付款授權 |
-| `0123` | 付款已完成 |
-
-### 流程相關
-
-| 代碼 | 說明 | 處理建議 |
-|------|------|----------|
-| `0121` | 消費者取消 / 驗證逾時 | 顯示取消頁，引導重新下單 |
-| `1145` | 付款進行中 | 等待數秒後重新查詢狀態 |
-| `1198` | 重複 API 請求 | 檢查是否已成功，避免重送 |
-
-### 商家相關
-
-| 代碼 | 說明 | 處理建議 |
-|------|------|----------|
-| `1101` | 非 LINE Pay 用戶 | 引導消費者改用其他支付方式 |
-| `1104` | 商家未註冊 | 確認 ChannelId 與環境（沙箱/正式）是否正確 |
-| `1105` | 該商家無法使用 LINE Pay | 聯繫 LINE Pay 客服確認帳號狀態 |
-| `1124` | 金額錯誤 | 檢查 amount 與 packages 加總是否一致 |
-
-### 查詢相關
-
-| 代碼 | 說明 |
-|------|------|
-| `1150` | 查無交易紀錄 |
-| `1177` | 超過單次最多可查詢筆數（100 筆） |
-
-### 系統 / 格式相關
-
-| 代碼 | 說明 | 處理建議 |
-|------|------|----------|
-| `1199` | 內部錯誤 | 等待後重試；持續失敗請聯繫 LINE Pay |
-| `2101` | 參數錯誤 | 檢查必填欄位、長度、格式 |
-| `2102` | JSON 格式錯誤 | 確認 body 為合法 JSON、編碼為 UTF-8 |
-
-### 其他常見代碼
-
-> 依 LINE Pay Online API v3 官方結果代碼表（developers-pay.line.me/online-api-v3，2026-09 擷取）。
-> 簽章錯誤沒有專屬代碼可推論；完整清單見 `data/error-codes.csv`（59 筆）。
+### 狀態類
 
 | 代碼 | 官方說明 |
-|------|----------|
-| `1102` | 消費者目前無法以 LINE Pay 交易 |
-| `1106` | Request header 資訊有誤 |
-| `1141` | 帳戶狀態有問題（EPI：商家可能未啟用 EPI；自動扣款：使用者可能已解除 regKey，需重新取得） |
-| `1142` | 餘額不足 |
-| `1170` | 會員帳戶餘額已變動 |
-| `1172` | 已存在相同 orderId 的交易 |
-| `1183` | 付款金額須高於設定的最低金額 |
+|------|------|
+| `0000` | 成功；用於付款請求狀態查詢時，表示消費者尚未完成 LINE Pay 認證 |
+| `0110` | 消費者已完成認證，可進行 confirm |
+| `0121` | 消費者取消付款，或認證等待逾時 |
+| `0122` | 付款失敗 |
+| `0123` | 付款已完成 |
 
-`1133` 不在官方代碼表中。
+### 認證 / 商家設定
+
+| 代碼 | 官方說明 | 處理建議 |
+|------|------|------|
+| `1104` | 商家未在商家後台註冊，請確認憑證 | 確認 ChannelId 與環境（沙箱/正式） |
+| `1105` | 該商家目前無法使用 LINE Pay | 聯繫 LINE Pay 確認帳號狀態 |
+| `1106` | Request header 資訊有誤 | 官方 FAQ：Online API 簽章（MAC）錯誤即回此碼，見[簽章驗證失敗](#簽章驗證失敗) |
+| `1178` | 商家不支援該幣別 | |
+| `1194` | 該商家不能使用自動扣款 | |
+| `2024` | 超過商家單筆、每日或每月收款上限 | 僅英文版代碼表列出 |
+
+### 消費者 / 付款
+
+| 代碼 | 官方說明 |
+|------|------|
+| `1101` | 消費者不是 LINE Pay 用戶 |
+| `1102` | 消費者目前無法以 LINE Pay 交易 |
+| `1110` | 信用卡無法使用 |
+| `1141` | 帳戶狀態有問題（EPI 交易：商家可能未啟用 EPI 付款方式；自動扣款：消費者可能已解除 regKey，需重新取得） |
+| `1142` | 餘額不足 |
+| `1169` | 需在 LINE Pay 選擇付款方式並輸入密碼 |
+| `1170` | 會員帳戶餘額已變動 |
+| `1180` | 付款時間已過期 |
+| `1280`–`1298` | 信用卡付款錯誤（暫時錯誤、授權失敗、疑似盜刷、卡片停用、超過額度、CVN 錯誤、黑名單卡等）；capture 時回這些碼，付款會被自動取消 |
+
+### 金額 / 訂單
+
+| 代碼 | 官方說明 | 處理建議 |
+|------|------|------|
+| `1124` | 金額資訊錯誤 | 檢查 amount 與 packages 加總、confirm 金額是否與 request 一致 |
+| `1145` | 付款進行中 | 稍後以 check API 查詢 |
+| `1152` | 重複交易 | |
+| `1153` | 付款請求金額與請款金額不同 | |
+| `1172` | 已存在相同 orderId 的交易 | orderId 需唯一 |
+| `1183` | 付款金額須高於設定的最低金額 | |
+| `1184` | 付款金額不可超過設定的最高金額 | |
+
+### 查詢 / 交易狀態
+
+| 代碼 | 官方說明 |
+|------|------|
+| `1150` | 查無交易紀錄 |
+| `1155` | 無效的交易編號 |
+| `1159` | 查無付款請求資訊 |
+| `1177` | 超過單次最多可查詢筆數（100） |
+
+### 退款
+
+| 代碼 | 官方說明 |
+|------|------|
+| `1163` | 無法退款（已過退款期限） |
+| `1164` | 超過可退款金額 |
+| `1165` | 該交易已退款 |
+| `2042` | 商家退款準備金不足，EPI 交易無法退款（僅中文版代碼表列出；英文版退款端點的相關錯誤也列此碼） |
+
+### 自動扣款
+
+| 代碼 | 官方說明 |
+|------|------|
+| `1154` | 自動扣款所選付款方式無法使用 |
+| `1190` | 沒有該自動扣款金鑰 |
+| `1193` | 自動扣款金鑰已過期 |
+
+### 系統 / 格式
+
+| 代碼 | 官方說明 | 處理建議 |
+|------|------|------|
+| `1179` | 目前無法處理 | 稍後重試 |
+| `1198` | 重複的 API 請求 | 先查詢是否已成功，避免重送 |
+| `1199` | 請求處理時發生內部錯誤 | 等待後重試；capture 時回此碼付款會被自動取消 |
+| `190X` | 暫時錯誤，請稍後重試 | void / refund 回 `1900`、`1902`、`1999` 可重試 |
+| `2101` | 參數錯誤 | 檢查必填欄位、長度、格式 |
+| `2102` | JSON 格式錯誤 | 確認 body 為合法 JSON、UTF-8 |
+| `9000` | 內部錯誤 | |
+
+`1133` 不在 Online API 代碼表中（官方 FAQ 只在 Offline API 沙箱情境提到）。
 
 ---
 
@@ -818,21 +924,17 @@ LINE Pay 內部會自動依消費者選擇與綁定狀態組合金流來源：
 
 | 支付方式 | `payInfo[].method` | 說明 |
 |----------|--------------------|------|
-| 信用卡 | `CREDIT_CARD` | 消費者於 LINE Pay 內綁定的信用卡 |
-| LINE Pay 餘額 | `BALANCE` | LINE Pay Money（一卡通帳戶餘額） |
-| LINE Points | `POINT` | LINE Points 點數折抵 |
+| 信用卡 | `CREDIT_CARD` | 消費者於 LINE Pay 內綁定的信用卡（含簽帳金融卡） |
+| LINE Pay 餘額 | `BALANCE` | LINE Pay Money |
+| LINE POINTS | `POINT` | LINE POINTS 點數折抵 |
 
 ### 不適用的支付方式
 
 LINE Pay v4 **不直接整合** Apple Pay 或 Google Pay。消費者使用 LINE Pay 時所看到的「信用卡」即為其於 LINE Pay 內綁定的卡片，並非透過 Apple/Google 錢包扣款。
 
-### 各市場差異
+### 市場
 
-- **台灣**：支援信用卡、LINE Pay Money（一卡通）、LINE Points
-- **日本**：支援信用卡、LINE Pay 餘額、LINE Points
-- **泰國**：支援信用卡、Rabbit LINE Pay 等
-
-本文件以**台灣 TWD** 整合情境為主。
+API 幣別只有 `USD` / `TWD` / `THB`。LINE Pay 日本已終止服務（官方 API change log 2025-05），日本專用欄位與 Deposit API 已移除。本文件以**台灣 TWD** 整合情境為主。
 
 ---
 
@@ -840,35 +942,34 @@ LINE Pay v4 **不直接整合** Apple Pay 或 Google Pay。消費者使用 LINE 
 
 ### 簽章驗證失敗
 
-**問題**：收到 `1102` 或類似認證錯誤。
+**問題**：收到 `1106`（官方 FAQ：Online API 的 MAC 不正確時回此碼）。
 
 **檢查項目**：
 
-1. `X-LINE-ChannelId` 是否與 ChannelSecret 為同一組（沙箱與正式不可混用）
-2. `X-LINE-Authorization-Nonce` 是否每次都產生新的 UUID（**不可重複使用**）
-3. 簽章時的 body 字串是否與實際 HTTP 送出的 body **完全一致**（不要在簽章後再次 stringify）
-4. ApiPath 是否含 query string（GET 不含 `?`，但 query 字串需加在 path 之後）
+1. `X-LINE-ChannelId` 是否與 ChannelSecret 為同一組
+2. `X-LINE-Authorization-Nonce` 是否每次都產生新的 UUID（v1/v4）或時間戳
+3. 簽章時的 body 字串是否與實際 HTTP 送出的 body **完全一致**；序列化時多出的空白或欄位順序不同都會讓 MAC 不同
+4. GET 的簽章字串是 `ChannelSecret + ApiPath + QueryString + Nonce`，QueryString 不含 `?`
 5. 編碼是否為 UTF-8
 
 ### TransactionId 精度遺失
 
 **問題**：JavaScript 收到 `transactionId` 後變成 `2026050712345679000`（末尾被改寫）。
 
-**原因**：JS `Number` 為 64-bit 浮點，安全整數上限為 `Number.MAX_SAFE_INTEGER = 9007199254740991`，而 LINE Pay transactionId 為 19 位整數會超過。
+**原因**：JS `Number` 為 64-bit 浮點，安全整數上限為 `Number.MAX_SAFE_INTEGER = 9007199254740991`，而 LINE Pay transactionId 為 19 位整數會超過。`refundTransactionId`、`originalTransactionId` 也一樣。
 
-**解法**：
+**解法**（官方 online-api-v4#transaction-id 的做法：先當純文字，把 16 位以上的數字轉成字串再 parse）：
 
 ```javascript
-// 將 JSON 中的大整數先解析為字串
-const text = await response.text();
-const data = JSON.parse(text.replace(
-  /"transactionId":\s*(\d+)/g,
-  '"transactionId":"$1"'
-));
-// 後續以字串處理
+function handleBigInteger(text) {
+  const largeNumberRegex = /:\s*(\d{16,})\b/g;
+  return JSON.parse(text.replace(largeNumberRegex, ': "$1"'));
+}
+
+const data = handleBigInteger(await response.text());
 ```
 
-或使用 `bigint-json-native` / `json-bigint` 套件。Python 不會有此問題（原生支援任意精度整數）。
+或使用 `json-bigint` 等支援大整數的解析器。Python 不會有此問題（原生支援任意精度整數）。
 
 ### 重複 confirm
 
@@ -880,51 +981,37 @@ const data = JSON.parse(text.replace(
 2. confirm 前先查詢狀態（GET `/v4/payments/requests/{transactionId}/check`）
 3. 若狀態為 `0123`（已完成），改為查詢交易詳情（GET `/v4/payments?transactionId=...`）
 
-### 沙箱與正式環境憑證不通用
-
-**問題**：使用沙箱憑證打到正式環境（或反之），收到 `1104`。
-
-**解法**：
+### 沙箱與正式環境
 
 - 沙箱：`https://sandbox-api-pay.line.me`
 - 正式：`https://api-pay.line.me`
-- 兩組環境的 ChannelId / ChannelSecret **完全不同**，請於程式中以環境變數區分。
+- 沙箱帳號申請的 Channel ID / Secret 只能打沙箱；正式商家的 Channel ID / Secret 可同時用於沙箱與正式（官方 FAQ）
+- 收到 `1104` 時先確認憑證與環境是否對應
 
 ### confirmUrl 沒有收到回調
 
 **檢查項目**：
 
-1. `confirmUrl` 是否為 HTTPS（HTTP 不被接受）
-2. 是否從外網可存取（不可為 `localhost` 或內網 IP）
-3. 域名是否於 LINE Pay 商家後台登錄
-4. 防火牆是否阻擋 LINE Pay 來源 IP
+1. 是否從外網可存取（不可為 `localhost` 或內網 IP）
+2. 是否為受信任憑證的 HTTPS、支援 TLS 1.2 以上
+3. `confirmUrlType=SERVER` 時，防火牆是否允許 LINE Pay 來源 IP（見[confirmUrlType=SERVER](#confirmurltypeserver)）
+4. 是否設成 `confirmUrlType=NONE`（此模式 LINE Pay 不會呼叫任何網址）
 
 ### 退款失敗
 
-**常見原因**：
-
-1. 已超過退款期限（信用卡通常 180 天內，依發卡行而異）
-2. 退款金額大於剩餘可退金額
-3. 已使用 LINE Points 折抵的部分不可退至原 Points 帳戶（會以餘額退回）
+依 `returnCode` 判斷：`1163` 已過退款期限、`1164` 超過可退金額、`1165` 已退過款、`2042` 退款準備金不足（EPI 交易）。
 
 ---
 
-## 來源資料缺口（Source Gaps）
+## 官方來源
 
-本文件標示為 ⚠️ 的內容為依據 LINE Pay v3 慣例「推論」而來，**正式上線前須對照官方 v4 PDF 驗證**：
+2026-11-17 對照：
 
-| 項目 | 來源狀態 | 建議動作 |
-|------|----------|----------|
-| HMAC `string-to-sign` 組合公式 | 推論自 v3 | 對照官方 v4 PDF 第「Authentication」章節 |
-| 完整錯誤代碼表 | 來源僅含 15 組 | 取得官方 PDF 完整 result code 表 |
-| Capture / Void 完整 schema | 端點路徑確認，schema 為依慣例補上 | 對照官方 PDF |
-| Preapproved Pay 詳細欄位 | 端點路徑確認，schema 為依慣例補上 | 對照官方 PDF |
-| Server-side confirm 實際 payload 範例 | 未於來源中明確列出 | 對照官方 PDF |
-| 簽章類錯誤代碼（1102, 1106 等） | 推論自常見 LINE Pay 文件 | 對照官方 PDF 完整代碼表 |
-
-**官方資源**：
-
-- 開發者中心：https://developers-pay.line.me/zh/online-api-v4
-- LINE Pay 商家後台：https://pay.line.me/portal/global/auth/login
-- 客服信箱：依各市場為準（台灣為 LINE Pay Taiwan）
-
+- Online API v4 總覽（端點、標頭、結果代碼、Transaction ID）：https://developers-pay.line.me/online-api-v4
+- 各端點欄位：https://developers-pay.line.me/online-api-v4/request-payment （其餘端點同一路徑下：`check-payment-request-status`、`confirm-payment`、`capture`、`void`、`retrieve-payment-details`、`refund`、`check-preapproved-payment-key-status`、`request-preapproved-payment`、`discard-preapproved-payment-key`）
+- 導回頁面（confirmUrl / cancelUrl、SERVER 模式來源 IP）：https://developers-pay.line.me/online-api-v4/merchant/redirection-pages
+- 簽章：https://developers-pay.line.me/online/prerequisites
+- 版本變更：https://developers-pay.line.me/api-change-log
+- 沙箱：https://developers-pay.line.me/sandbox
+- FAQ（1106 簽章錯誤、沙箱憑證）：https://developers-pay.line.me/faq
+- 中文版：https://developers-pay.line.me/zh/online-api-v4

@@ -2,7 +2,10 @@
 
 立吉富線上金流（PayNow）金流 API 完整參考文件。
 
-> ⚠ **重要說明**：PayNow 同時維運兩套金流 API。新接商家請優先採用「現代版 PaymentIntent API」，舊版 (一般網路商店購物車) 僅供既有整合參考。
+> **重要說明**：PayNow 同時維運兩套金流 API。新接商家請優先採用「現代版 PaymentIntent API」，舊版 (一般網路商店購物車) 僅供既有整合參考。
+>
+> 官方文件：<https://docs.paynow.com.tw/developer/>（現代版 `docs/apidoc/*`、`docs/understanding-paynow/*`；傳統版 `docs/apipdf/cashflow/*`），
+> 傳統版 PDF 在 `paynow-public.s3.ap-northeast-1.amazonaws.com/docs/`。2026-11-17 核對。
 
 ---
 
@@ -36,7 +39,8 @@
 
 ## 基本說明
 
-PayNow（立吉富）為臺灣本土的全方位電商金流／物流／發票整合服務商，運作生產流量網域為 `gateway.paynow.com.tw` 與 `www.paynow.com.tw`。OwlPay 為其姊妹品牌（B2B 跨境匯款），這也是部分 PayNow 文件鏡像出現在 `owlting.github.io/paynow-guideline` 的原因。
+PayNow（立吉富）為臺灣本土的全方位電商金流／物流／發票整合服務商。傳統版走 `www.paynow.com.tw`，現代版 REST API 走 `api.paynow.com.tw`（測試 `sandboxapi.paynow.com.tw`）。
+`paynow-co.github.io/paynow-guideline` 與 `owlting.github.io/paynow-guideline` 是同一份舊版 Docusaurus 文件的兩個鏡像（2026-11-17 皆可連線、PDF 連結相同），主要文件站為 `docs.paynow.com.tw/developer/`。
 
 ### 服務範疇
 
@@ -55,7 +59,7 @@ PayNow 並存兩個技術世代的金流 API，且短期內兩者皆會繼續運
 
 **新專案建議**：直接採用現代版 PaymentIntent API。具備：
 - 統一 JSON request / response
-- Bearer Token 認證（透過後台申請 API Key）
+- Bearer 認證（私鑰 PrivateKey，向 PayNow 申請）
 - Customer / Card Token 物件，原生支援卡片代碼化（saved card）
 - Apple Pay 流程整合在 PaymentIntent 內，免另行串接 SOAP WSDL
 - 對應 PayNow Component（站內金流元件）的 `usePayNowSdk` 模式
@@ -71,17 +75,17 @@ PayNow 並存兩個技術世代的金流 API，且短期內兩者皆會繼續運
 
 | 項目 | 傳統版 (cashflow) | 現代版 (PaymentIntent) |
 |------|-------------------|------------------------|
-| 主要端點 | `POST https://www.paynow.com.tw/service/etopm.aspx` | `POST https://docs.paynow.com.tw/api/v1/payment-intents` |
+| 主要端點 | `POST https://www.paynow.com.tw/service/etopm.aspx` | `POST https://api.paynow.com.tw/api/v1/payment-intents` |
 | 通訊方式 | HTTP Form POST + URL Encode | HTTP JSON REST |
-| 認證 | 商家代號 (`WebNo`) + 賣場交易密碼 + SHA-1 PassCode | `Authorization: Bearer <API_KEY>` |
+| 認證 | 商家代號 (`WebNo`) + 賣場交易密碼 + SHA-1 PassCode | `Authorization: Bearer <PrivateKey>` |
 | 資料加密 | 動態 AES-256-CBC（Key/IV 每次呼叫 GP/GK 取得）+ Zeros padding | TLS 即可，欄位明文 |
-| 訂單編號 | `OrderNo` (商家自訂) + `BuysafeNo` (PayNow 19 碼) | `paymentNo` (商家自訂) + `id` (PayNow UUID) |
-| 卡片代碼化 | 透過 `CIFID` / `CIFPW` 的「預存授權」 | 透過 `Customer` + `card-tokens` |
-| Apple Pay | 自行串 ApplePaySession + `mpay.paynow.com.tw/api/ApplePay/GetTransactionSession` | `POST /api/v1/apple-pay-session` 或 `paymentMethodType=ApplePay` |
+| 訂單編號 | `OrderNo` (商家自訂) + `BuysafeNo` (PayNow 19 碼) | `paymentNo` (商家自訂) + `id`（PayNow 編號，如 `pp_…`） |
+| 卡片代碼化 | 透過 `CIFID` / `CIFPW` 的「預存授權」 | Checkout 時 `card.cardMode=build_token`；之後 `cardMode=token` + `cardToken` |
+| Apple Pay | 自行串 ApplePaySession + `mpay.paynow.com.tw/api/ApplePay/GetTransactionSession` | `POST /api/v2/apple-pay-session`（v1 為 Confirm）＋ Checkout `paymentMethodType=ApplePay` |
 | 退款 | `OP=R_gp`，需 GP/GK 取 Key/IV + AES 加密 | `POST /api/v1/payment-intents/:id/refunds` |
 | 訂單查詢 | `OP=PQS_gp` | `GET /api/v1/payment-intents/:id` |
 | 對帳 | SFTP XML 檔（每日 01:00） | API + 商家後台（仍可保留 SFTP） |
-| 發票通知 | 隨 PassCode/PassCode2 回傳 | 由 webhook 推送 |
+| 付款結果通知 | POST 至後台設定的回傳網址，以 SHA-1 `PassCode` 驗證 | `webhookUrl`（topic `payment_result`），以 `X-Payment-Center-Hmac-Sha256` 驗證 |
 | 推薦使用 | 維護用 | **新接、新功能** |
 
 ---
@@ -99,24 +103,24 @@ PayNow 並存兩個技術世代的金流 API，且短期內兩者皆會繼續運
 | Apple Pay 商家驗證 | （測試 / 正式皆使用同一網址） | `https://mpay.paynow.com.tw/api/ApplePay/GetTransactionSession` |
 | SFTP 對帳檔 | （無獨立測試 SFTP） | `SFTP://61.216.8.41/`（每日 01:00 推送） |
 
-> ⚠ 測試環境與正式環境完全獨立，帳號需個別申請。測試平台所有交易（除虛擬帳號取號流程外）皆會回傳 **F (失敗)**，無實際扣款。請勿在正式平台執行測試交易。
+> 測試環境與正式環境完全獨立，帳號需個別申請。測試平台所有交易（除虛擬帳號取號流程外）皆會回傳 **F (失敗)**，無實際扣款。請勿在正式平台執行測試交易。
 
 ### 現代版 (apidoc / PaymentIntent)
 
-| 用途 | 端點 |
-|------|------|
-| API Base | `https://docs.paynow.com.tw/api/v1/` ※ 文件展示用網域，實際以 PayNow 配發為準 |
-| 編碼 | `application/json`，UTF-8 |
-| 通訊協定 | HTTPS / TLS 1.2 以上 |
+| 用途 | 測試 | 正式 |
+|------|------|------|
+| API Base | `https://sandboxapi.paynow.com.tw` | `https://api.paynow.com.tw` |
+| Component SDK | `<script src="https://js.paynow.com.tw/sdk/v2/index.js">`，`env: 'sandbox'` | 同一支 script，`env: 'production'` |
 
-> 📌 上線時實際的 API 主機網域請以 PayNow 業務開通信件為準，並非 `docs.paynow.com.tw`（該網域為文件站，cURL 範例顯示為文件 base path）。
+- 編碼 `application/json`，UTF-8；路徑皆為 `/api/v1/...`（Apple Pay session 請求為 `/api/v2/apple-pay-session`）
+- 官方「API 網址」頁：<https://docs.paynow.com.tw/developer/docs/understanding-paynow/url>；apidoc 各頁 cURL 範例的 `docs.paynow.com.tw` 只是文件站網域，不是 API 主機
 
 ### 測試帳號
 
 PayNow 不公開像 ECPay 那樣的固定測試金鑰，所有測試帳號需至 [https://test.paynow.com.tw](https://test.paynow.com.tw) 註冊取得：
 - **賣家登入帳號**（`WebNo`）：身分證 / 統一編號（個人帳號 ID 開頭請大寫）
 - **賣場交易密碼**（傳統版）：後台「商家專區」自行設定
-- **API Key**（現代版）：聯繫業務取得 Bearer Token
+- **金鑰**（現代版）：私鑰 PrivateKey（呼叫 API 用，不可公開）與公鑰 PublicKey（前端 Component 與 Checkout `key` 用）；依「金鑰」頁向 PayNow 申請，主旨寫「申請 PayNow 串接私鑰 (PrivateKey)」（<https://docs.paynow.com.tw/developer/docs/understanding-paynow/key>）
 
 ### 測試卡號（傳統版 / 現代版皆適用）
 
@@ -232,10 +236,14 @@ def generate_paynow_timestr(now=None):
 3. 加權權數前 15 碼 + 加權檢查碼 1 碼 = 「加權檢核碼」16 碼。
 
 **範例 (GP)**：
-- `mem_cid = 028229955`，`TimeStr = 9328005018`
-- 加權權數 = `029955932800501893280282`
-- 個位相加 = 104，10 − (104 mod 10) = 10 − 4 = 6
+- `mem_cid = 028229955`（不足 9 碼左補 0），`TimeStr = 9328005018`
+- 加權權數 = `02822` + `9328005018` + `9328` + `9955` = `02822932800501893289955`
+- 個位相加 = 114，10 − (114 mod 10) = 10 − 4 = 6
 - 加權檢核碼 = `0282293280050186`
+
+**範例 (GK)**：加權權數 = `29955932800501893280282`，個位相加 = 104，檢查碼 6，加權檢核碼 = `2995593280050186`。
+
+> 官方附錄 GP 範例把加權權數印成 `029955932800501893280282`（24 碼，與 GK 權數混用），相加也寫 104；依規則組出的 23 碼權數相加是 114，檢查碼同為 6，最後的加權檢核碼與官方一致。
 
 #### PassCode 組成 (GP / GK)
 
@@ -255,33 +263,56 @@ def generate_paynow_timestr(now=None):
 - 兩者皆為 ASCII 字串，加密時直接以該字串做 UTF-8 bytes 餵入 AES。
 
 ```python
+import base64
 from Crypto.Cipher import AES
 
 def aes256_encrypt(plain_text, key, iv):
-    """AES-256-CBC + Zeros padding，回傳 base64 字串"""
+    """AES-256-CBC + Zeros padding，回傳 Base64 字串（官方附錄 C# 範例 Convert.ToBase64String）"""
     raw = plain_text.encode("utf-8")
     pad_len = (16 - len(raw) % 16) % 16
     padded = raw + b"\x00" * pad_len
     cipher = AES.new(key.encode("utf-8"), AES.MODE_CBC, iv.encode("utf-8"))
-    return cipher.encrypt(padded).hex()  # 部分 SDK 回傳 base64，請對應 PayNow 規範
+    return base64.b64encode(cipher.encrypt(padded)).decode()
 ```
 
-> ⚠ PayNow 的 AES 範例使用 `Convert.ToBase64String` 回傳 base64，但部分背景 API 採 hex 拆分後再 URL Encode。實作前請以 PayNow 提供之 SDK / 範例為準。
+送出時：Base64 密文（背景 API 再對半拆成 `JStr1`／`JStr2`）→ URL Encode。回應：URL Decode → Base64 decode → AES 解密 → 去掉尾端 `\x00`
+（官方附錄「1.AES256加解密」：<https://docs.paynow.com.tw/developer/docs/apipdf/cashflow/appendix>）。
 
-### 現代版 — Bearer Token
-
-現代版採用標準的 OAuth-style Bearer Token：
+### 現代版 — Bearer 私鑰
 
 ```
 POST /api/v1/payment-intents HTTP/1.1
-Authorization: Bearer <YOUR_API_KEY>
+Host: sandboxapi.paynow.com.tw
+Authorization: Bearer <PrivateKey>
 Content-Type: application/json
 Accept: application/json
 ```
 
-API Key 由 PayNow 業務窗口提供。所有 `Path Parameters`、`Query Parameters`、Request Body 均為標準 JSON / URL 樣式，**無需** 自行加密。
+私鑰（PrivateKey）向 PayNow 申請；公鑰（PublicKey）給前端 Component SDK 與 Checkout 的 `key` 欄位。Request / Response 都是明文 JSON，**無需** 自行加密。
+回應外層固定為 `{status, type, message, result, requestId, paginate}`。
 
-> 📝 **與 PayNow 發票 API 的差異**：PayNow 發票 API 使用 JWT 簽章，而本金流現代版使用單純 Bearer Token。請勿混用。
+> **與 PayNow 發票 API 的差異**：PayNow 發票 API 使用 JWT 簽章，而本金流現代版使用 Bearer 私鑰。請勿混用。
+
+### 現代版 — Webhook 驗證
+
+建立 PaymentIntent 時帶 `webhookUrl` 即訂閱 topic `payment_result`（另有 `merchant_file_review` 商家檔案審核）。
+來源：<https://docs.paynow.com.tw/developer/docs/understanding-paynow/webhook>
+
+| Header | 範例 |
+|--------|------|
+| `X-Payment-Center-Topic` | `payment_result` |
+| `X-Payment-Center-Webhook-Id` | `999` |
+| `X-Payment-Center-Hmac-Sha256` | `F9E1AB66…`（大寫十六進位） |
+| `X-Payment-Center-API-Version` | `v1` |
+| `X-Payment-Center-Triggered-At` | `2023-12-25T18:00:00+00:00` |
+
+- 簽章：以**私鑰**為金鑰，對請求 payload 做 HMAC-SHA256，與 `X-Payment-Center-Hmac-Sha256` 比對；不符就拒絕
+- 收到後回 HTTP `200`
+- `payment_result` payload（PascalCase）：`ConnectId`、`RequestId`、`Status`（`Success`／`Failed`）、`OrderNo`、`PaymentNo`、`PaymentIntentId`、
+  `TransactionNo`、`PaidAt`、`CreatedAt`（ISO 8601）、`Amount`、`Currency`（`TWD`）、`PaymentType`、`PaymentSubtype`、`PayLink.uuid`、
+  `Meta`（信用卡：`LastFourDigitsOfCard`、`ApprovalCode`、`CardType`、`Installments`、`CardMode`、`CardToken`）
+
+官方沒有寫明 payload 序列化方式（原始 body 位元組或重新序列化），請直接對收到的原始 body 計算。
 
 ---
 
@@ -293,7 +324,7 @@ API Key 由 PayNow 業務窗口提供。所有 `Path Parameters`、`Query Parame
 
 ```
 POST /api/v1/payment-intents
-Authorization: Bearer <API_KEY>
+Authorization: Bearer <PrivateKey>
 Content-Type: application/json
 ```
 
@@ -329,7 +360,7 @@ Content-Type: application/json
 | `ApplePay` | Apple Pay 即時付款 |
 | `ApplePayDeferred` | Apple Pay 延遲付款 |
 
-> ⚠ `ApplePayDeferred` 不可與其他付款方式並列。
+> `ApplePayDeferred` 不可與其他付款方式並列。
 
 #### `linePayOnlineInfo` 結構
 
@@ -394,20 +425,45 @@ Content-Type: application/json
 {
   "status": 200,
   "type": "success",
-  "message": "Success",
-  "result": { /* PaymentIntent 物件 */ },
-  "requestId": "uuid",
+  "message": "",
+  "result": {
+    "id": "pp_1a304818ced44e5cbeab6107400da3c4",
+    "secret": "pp_1a304818ced44e5cbeab6107400da3c4_st_04895990e31b4cefbd59d494ae420392",
+    "module": "iframe",
+    "allowPaymentMethodTypes": ["CreditCard", "ATM", "CreditCardInstallment"],
+    "amount": 199,
+    "currency": "TWD",
+    "description": null,
+    "status": "draft",
+    "createdAt": "2023-08-15T11:46:03+00:00",
+    "payment": null,
+    "meta": {"allowInstallments": [{"installments": 3, "rate": 3, "extra": false, "enabled": true}]}
+  },
+  "requestId": "09020f76-1405-4db2-b30a-ba30de629c05",
   "paginate": null
 }
 ```
 
-`result` 內含本次建立的 PaymentIntent 編號（`id`）、`paymentNo`、付款連結（`checkout_url`，由 PayNow 提供之 hosted page）等欄位。
+（官方 Getting Started 範例：<https://docs.paynow.com.tw/developer/docs/getting-started>）`result` 沒有付款網址欄位；
+`id` 是後續 Checkout／Retrieve／Refund 用的編號，`secret` 交給前端 Component SDK（`PayNow.createPayment({publicKey, secret, env})`）或 Checkout API。
+
+PaymentIntent `status`（<https://docs.paynow.com.tw/developer/docs/understanding-paynow/payment-intent>）：
+
+| status | 說明 |
+|--------|------|
+| `draft` | 已建立、尚未付款 |
+| `processing` | 交易進行中，失敗時回到 `draft` |
+| `pending_review` | 已發起付款，信用卡待 3DS 驗證；ATM／超商代碼為待繳費 |
+| `success` | 交易完成 |
+| `canceled` | 取消（只有 `draft` 可取消） |
+
+`result.payment.status` 另以 `Draft`／`Processing`／`Pending`／`Success` 表示（Checkout／Retrieve 範例）。
 
 #### 範例：信用卡分期 PaymentIntent
 
 ```bash
-curl -X POST 'https://docs.paynow.com.tw/api/v1/payment-intents' \
-  -H 'Authorization: Bearer <API_KEY>' \
+curl -X POST 'https://sandboxapi.paynow.com.tw/api/v1/payment-intents' \
+  -H 'Authorization: Bearer <PrivateKey>' \
   -H 'Content-Type: application/json' \
   --data-raw '{
     "paymentNo": "ORD20260507001",
@@ -424,8 +480,8 @@ curl -X POST 'https://docs.paynow.com.tw/api/v1/payment-intents' \
 #### 範例：指定 Customer + ATM
 
 ```bash
-curl -X POST 'https://docs.paynow.com.tw/api/v1/payment-intents' \
-  -H 'Authorization: Bearer <API_KEY>' \
+curl -X POST 'https://sandboxapi.paynow.com.tw/api/v1/payment-intents' \
+  -H 'Authorization: Bearer <PrivateKey>' \
   -H 'Content-Type: application/json' \
   --data-raw '{
     "paymentNo": "ORD20260507002",
@@ -433,7 +489,7 @@ curl -X POST 'https://docs.paynow.com.tw/api/v1/payment-intents' \
     "currency": "TWD",
     "allowedPaymentMethods": ["ATM"],
     "expireDays": 7,
-    "customer": "cus_01h8hxxxxxxxxxxxxxxxxx"
+    "customer": "cus-25ebdf326b924fcba2d57154ad9791e3"
   }'
 ```
 
@@ -441,13 +497,13 @@ curl -X POST 'https://docs.paynow.com.tw/api/v1/payment-intents' \
 
 ### 付款執行 (PaymentIntent Checkout)
 
-> 📌 此 API 需另行向 PayNow 業務申請開通；通常用於商家自建 Hosted Form / SDK 流程，非透過 PayNow Checkout 頁面時。
+> 此 API 需聯繫業務人員開通；須先完成 PaymentIntent 建立。使用 PayNow Component SDK 時改由前端 `PayNow.checkout()` 送出，伺服器端再以 Retrieve 確認結果。
 
 #### 端點
 
 ```
 POST /api/v1/payment-intents/{id}/checkout
-Authorization: Bearer <API_KEY>
+Authorization: Bearer <PrivateKey>
 Content-Type: application/json
 ```
 
@@ -461,7 +517,7 @@ Content-Type: application/json
 |------|------|------|------|
 | `paymentNo` | string | 否 | 自訂付款編號 |
 | `usePayNowSdk` | boolean | 否 | 是否使用 PayNow Component / JS SDK 蒐集敏感資料（如卡號） |
-| `key` | string | ● | 公鑰 |
+| `key` | string | ● | 公鑰（PublicKey） |
 | `secret` | string | ● | PaymentIntent secret |
 | `paymentMethodType` | string | ● | 付款方式（值同 `allowedPaymentMethods`） |
 | `paymentMethodData` | object | 視情況 | 付款資料；隨 `paymentMethodType` 不同而異 |
@@ -481,41 +537,58 @@ Content-Type: application/json
 | `ApplePay` | `applePayPayload` |
 | `ApplePayDeferred` | `applePayDeferredPayload` |
 
-> 🔒 **PCI-DSS 注意**：當 `paymentMethodType=CreditCard` 並走自建表單時，建議搭配 `usePayNowSdk: true`，由 PayNow Component 接手卡號 / CVV 蒐集，避免商家伺服器接觸到原始 PAN（卡號），降低合規負擔。
+`paymentMethodData` 欄位（官方各 Body 範例）：
 
-#### 範例 (信用卡 + PayNow SDK token)
+| 欄位 | 內容 |
+|------|------|
+| `card` | `cardNumber`、`expirationMonth`、`expirationYear`（2 碼）、`csc`；記卡時加 `cardMode: "build_token"`；用已存卡改為 `cardMode: "token"` + `cardToken`（不帶卡號） |
+| `installments` | 分期期數（`CreditCardInstallment`） |
+| `billTo` | `firstName`、`lastName`、`email`、`phoneCode`、`phoneNumber`、`country`、`locality`、`address1`、`address2`、`administrativeArea`、`postalCode`（範例中 ATM、ConvenienceStore、LINEPayOnline 也帶） |
+| `codeType` | `ibon` 或 `fami_port` |
+| `oneTimeKey` | LINE Pay 實體付款條碼 |
+| `applePayPayload` / `applePayDeferredPayload` | `merchantIdentifier`、`paymentToken`（Apple Pay token JSON 字串） |
+
+> **PCI-DSS 注意**：自建表單直接送 `card.cardNumber` 會讓伺服器接觸卡號；可改用 PayNow Component SDK 在前端收卡號。
+
+#### 範例 (信用卡，建立卡片代碼)
 
 ```bash
-curl -X POST 'https://docs.paynow.com.tw/api/v1/payment-intents/{id}/checkout' \
-  -H 'Authorization: Bearer <API_KEY>' \
+curl -X POST 'https://sandboxapi.paynow.com.tw/api/v1/payment-intents/{id}/checkout' \
+  -H 'Authorization: Bearer <PrivateKey>' \
   -H 'Content-Type: application/json' \
   --data-raw '{
-    "usePayNowSdk": true,
-    "key": "pk_live_xxxxxxxx",
-    "secret": "pi_secret_xxxxxxxxxxxxxxxx",
+    "paymentNo": "ORD20260507001",
+    "usePayNowSdk": false,
+    "key": "<PublicKey>",
+    "secret": "pp_ad38783beb30483bba3e60cf1457e478_st_3ee0fafe3d554c1fba2ee882204b721b",
     "paymentMethodType": "CreditCard",
-    "otpFlag": true,
-    "meta": {
-      "client": {"height": 768, "width": 1024},
-      "iframe": {"height": 600, "width": 480}
-    }
+    "paymentMethodData": {
+      "billTo": {"firstName": "first", "lastName": "last", "email": "test@example.com",
+                 "phoneCode": "886", "phoneNumber": "0912345678", "country": "TW",
+                 "locality": "臺北市", "address1": "文承路28號", "address2": "七樓",
+                 "administrativeArea": "北投區", "postalCode": "112037"},
+      "card": {"cardMode": "build_token", "cardNumber": "4242424242424242",
+               "expirationMonth": "12", "expirationYear": "99", "csc": "123"}
+    },
+    "otpFlag": false
   }'
 ```
 
-#### Checkout 回應狀態
+#### Checkout / Retrieve 回應
 
-`result` 物件依付款方式不同會帶不同欄位，以下列舉常見場景：
+`result` 是 PaymentIntent 物件（`id`、`secret`、`module`、`status`、`amount`…），付款明細在 `result.payment`
+（`paymentNo`、`paymentMethod`、`transactionNo`、`status`、`paidAt`、`meta`…），取號／轉址資訊在 `result.meta`。官方回應範例的欄位：
 
-| 場景 | result 重點欄位 |
-|------|------------------|
-| `CreditCard Default Success` | `status=success`、`auth_code`、`last4` |
-| `CreditCard With Token` | `tokenized_card_id`（後續可重複使用） |
-| `CreditCard Default 3D Secure` | `redirect_url`（需轉址完成 3DS） |
-| `ConvenienceStore Ibon Pending Review` | `payment_code`、`expire_at` |
-| `ATM Pending Review` | `bank_code`、`virtual_account`、`expire_at` |
-| `LINE Pay Online Pending Review` | `redirect_url`（轉至 LINE Pay 完成扣款）|
-| `Apple Pay Success` | `auth_code`、`last4` |
-| `Apple Pay Deferred Pending Review` | `deferred_payment_id` |
+| 場景 | 欄位 |
+|------|------|
+| 信用卡／分期成功 | `result.status=success`；`result.payment.meta.approvalCode`、`lastFourDigitsOfCard`、`cardType`、`respCode`、`installments`、`cardMode` |
+| 記卡（`build_token`） | `result.payment.meta.cardToken`（之後以 `cardMode=token` 帶入） |
+| 3D Secure | `result.status=processing`；`result.meta.threeDomainSecureUrl`（導向完成 3DS） |
+| ATM 待繳 | `result.status=pending_review`；`result.meta.atmInfo.{bankCode, bankName, bankBranchCode, bankBranchName, virtualAccountNo, expiredAt}` |
+| 超商代碼待繳 | `result.meta.convenienceStoreInfo`（JSON 字串：`CodeType`、`PayCodeNo`、`ExpiredAt`） |
+| LINE Pay 線上 | `result.payment.meta.webPaymentUrl`、`appPaymentUrl`、`paymentAccessToken`、`transactionID` |
+| LINE Pay 實體成功 | `result.payment.meta.transactionID`、`payInfo[]`、`balance` |
+| Apple Pay 延遲付款 | `result.payment.meta.billingAgreement`、`deferredPaymentDate`、`freeCancellationDate`、`managementUrl`、`paymentDescription` |
 
 ---
 
@@ -525,7 +598,7 @@ curl -X POST 'https://docs.paynow.com.tw/api/v1/payment-intents/{id}/checkout' \
 
 ```
 GET /api/v1/payment-intents/{id}
-Authorization: Bearer <API_KEY>
+Authorization: Bearer <PrivateKey>
 ```
 
 | Path Parameter | 說明 |
@@ -538,9 +611,20 @@ Authorization: Bearer <API_KEY>
 - 處理 Webhook 失敗的補單作業
 
 ```bash
-curl -X GET 'https://docs.paynow.com.tw/api/v1/payment-intents/pi_01h8hxxxxxxxxxxxx' \
-  -H 'Authorization: Bearer <API_KEY>'
+curl -X GET 'https://sandboxapi.paynow.com.tw/api/v1/payment-intents/pp_1a304818ced44e5cbeab6107400da3c4' \
+  -H 'Authorization: Bearer <PrivateKey>'
 ```
+
+### 其他現代版端點
+
+| 端點 | 用途 |
+|------|------|
+| `GET /api/v1/fingerprint-session` | 取得 fingerprint session（回傳 `orgId`、`SessionId`） |
+| `POST /sessions/{sessionID}/device-information` | 裝置收集完成後的資料（multipart：`browser_height`、`browser_width`） |
+| `POST /sessions/{sessionID}/confirm` | OTP 回傳接收（multipart：`TransactionId`、`Response`、`MD`） |
+| `GET /api/v1/partner/merchants` | Partner 取得所屬商戶（`merchant_no`、`Page`、`Limit`） |
+
+來源：apidoc「Session」「PaymentIntent」「Partner」分類（<https://docs.paynow.com.tw/developer/docs/category/apidoc>）。
 
 ---
 
@@ -552,7 +636,7 @@ PayNow 現代版以「Customer」物件管理可重複扣款的消費者實體�
 
 ```
 POST /api/v1/customers
-Authorization: Bearer <API_KEY>
+Authorization: Bearer <PrivateKey>
 ```
 
 | 參數 | 類型 | 必填 | 說明 |
@@ -578,45 +662,46 @@ Authorization: Bearer <API_KEY>
 }
 ```
 
-回應的 `result` 中包含 `customer_uuid`，後續可帶入 PaymentIntent 的 `customer` 欄位。
+回應 `result` 為 Customer 物件：`uuid`（如 `cus-403af1f2133541dbadbc52594c5389f3`）、`first_name`、`last_name`、`email`、`phone_code`、`phone_number`、
+`address`、`is_completed`。`uuid` 即 PaymentIntent 的 `customer` 欄位與下列路徑中的 `{customer_uuid}`。
 
 #### Customer Retrieve
 
 ```
 GET /api/v1/customers/{customer_uuid}
-Authorization: Bearer <API_KEY>
+Authorization: Bearer <PrivateKey>
 ```
 
 #### Customer Card Token Retrieve
 
 ```
 GET /api/v1/customers/{customer_uuid}/card-tokens
-Authorization: Bearer <API_KEY>
+Authorization: Bearer <PrivateKey>
 ```
 
-回傳該 Customer 名下已 Tokenize 的卡片清單；`result` 為陣列，每個元素含：
+回傳該 Customer 名下已存的卡片；`result` 為陣列，每個元素含：
 
 | 欄位 | 說明 |
 |------|------|
-| `id` | Card Token ID（用於後續扣款） |
-| `last4` | 卡號末四碼 |
-| `bin` | 卡號前六碼 |
-| `brand` | 卡別（VISA / Mastercard / JCB...） |
-| `expire_month` / `expire_year` | 卡片效期 |
+| `token` | 卡片代碼（UUID，Checkout 時放 `paymentMethodData.card.cardToken`） |
+| `card_type` | 卡別（如 `Visa`） |
+| `suffix` | 卡號末四碼 |
+| `created_at` | 建立時間（ISO 8601） |
 
-> 💡 **卡片代碼建立流程**：在 PaymentIntent Checkout 階段，於 `paymentMethodData.card` 加入 `tokenize: true`（或對應旗標）即可在交易成功後同步建立 Card Token，並關聯至指定 Customer。
+**卡片代碼建立流程**：PaymentIntent 指定 `customer`，Checkout 時 `paymentMethodData.card.cardMode = "build_token"`；成功後
+`result.payment.meta.cardToken` 回傳代碼。之後扣款用 `cardMode = "token"` + `cardToken`，不再帶卡號（官方 Checkout「With Build Token」「With Token」範例）。
 
 ---
 
 ### Apple Pay 系列
 
-PayNow 現代版提供 **兩個版本** 的 Apple Pay session 端點，新整合請優先使用 v2：
+兩支 session 端點用途不同（文件標題分別為 Request／Confirm），不是新舊版本；付款本身走 Checkout `paymentMethodType=ApplePay`，`applePayPayload` 帶 `merchantIdentifier` 與 `paymentToken`：
 
 #### Request Apple Pay session (v2)
 
 ```
 POST /api/v2/apple-pay-session
-Authorization: Bearer <API_KEY>
+Authorization: Bearer <PrivateKey>
 Content-Type: application/json
 ```
 
@@ -631,7 +716,7 @@ Content-Type: application/json
 
 ```
 POST /api/v1/apple-pay-session
-Authorization: Bearer <API_KEY>
+Authorization: Bearer <PrivateKey>
 Content-Type: application/json
 ```
 
@@ -646,7 +731,7 @@ Content-Type: application/json
 
 ```
 POST /api/v1/payment-intents/apple-pay-deferreds/{uuid}/cancel
-Authorization: Bearer <API_KEY>
+Authorization: Bearer <PrivateKey>
 ```
 
 | 參數 | 必填 | 說明 |
@@ -658,7 +743,7 @@ Authorization: Bearer <API_KEY>
 
 ```
 GET /api/v1/payment-intents/apple-pay-deferreds?Status=<status>&Page=<n>&Limit=<n>
-Authorization: Bearer <API_KEY>
+Authorization: Bearer <PrivateKey>
 ```
 
 | Query | 必填 | 說明 |
@@ -682,7 +767,7 @@ Authorization: Bearer <API_KEY>
 
 ```
 POST /api/v1/payment-intents/{id}/refunds
-Authorization: Bearer <API_KEY>
+Authorization: Bearer <PrivateKey>
 Content-Type: application/json
 ```
 
@@ -704,11 +789,17 @@ Content-Type: application/json
 | `processing` | 退款處理中 |
 | `validation_error` | request 驗證資料錯誤 |
 
+成功回應 `result`（Refund 物件，Refund Retrieve 相同）：`uuid`（如 `rf_7cb3c64f…`）、`paymentNo`、`paymentIntentId`、`amount`、`currency`、
+`status`、`reason`、`initiator`（如 `seller`）、`isReady`、`rejectReason`（如 `退款失敗：R018`，代碼見下方 R 系列）、`refundedAt`、`createdAt`。
+
+失敗回應：HTTP `400` `type=failed`（如 `Refund amount must be less than or equal to than payment amount.`）；
+HTTP `422` `type=parameter_validation_error`，`result` 為欄位錯誤（如 `{"Amount": [...]}`）。
+
 #### 範例：信用卡部分退款
 
 ```bash
-curl -X POST 'https://docs.paynow.com.tw/api/v1/payment-intents/pi_01h8h.../refunds' \
-  -H 'Authorization: Bearer <API_KEY>' \
+curl -X POST 'https://sandboxapi.paynow.com.tw/api/v1/payment-intents/pp_1a304818ced44e5cbeab6107400da3c4/refunds' \
+  -H 'Authorization: Bearer <PrivateKey>' \
   -H 'Content-Type: application/json' \
   --data-raw '{
     "amount": 500,
@@ -719,8 +810,8 @@ curl -X POST 'https://docs.paynow.com.tw/api/v1/payment-intents/pi_01h8h.../refu
 #### 範例：ATM 退款
 
 ```bash
-curl -X POST 'https://docs.paynow.com.tw/api/v1/payment-intents/pi_01h8h.../refunds' \
-  -H 'Authorization: Bearer <API_KEY>' \
+curl -X POST 'https://sandboxapi.paynow.com.tw/api/v1/payment-intents/pp_1a304818ced44e5cbeab6107400da3c4/refunds' \
+  -H 'Authorization: Bearer <PrivateKey>' \
   -H 'Content-Type: application/json' \
   --data-raw '{
     "amount": 1500,
@@ -735,23 +826,23 @@ curl -X POST 'https://docs.paynow.com.tw/api/v1/payment-intents/pi_01h8h.../refu
 
 ```
 GET /api/v1/refunds?Page=<n>&Limit=<n>
-Authorization: Bearer <API_KEY>
+Authorization: Bearer <PrivateKey>
 ```
 
 #### Refund Retrieve
 
 ```
 GET /api/v1/refunds/{uuid}
-Authorization: Bearer <API_KEY>
+Authorization: Bearer <PrivateKey>
 ```
 
-回傳指定 Refund 的詳細狀態，欄位包含 `status`、`amount`、`reason`、`rejectReason` 等。
+回傳指定 Refund 物件（欄位同上）；狀態為 `success`／`failed`／`rejected`／`processing`。
 
 ---
 
 ## 傳統版 一般網路商店購物車 API
 
-> ⚠ 傳統版適用於既有商家維護；新接商家請優先採用 PaymentIntent。
+> 傳統版適用於既有商家維護；新接商家請優先採用 PaymentIntent。
 
 ### 訂單建立 (傳統版)
 
@@ -798,7 +889,7 @@ Content-Type: application/x-www-form-urlencoded
 | `11` | 信用卡分期 |
 | `13` | 自動扣款 / 預存授權 |
 
-> 📌 服務設定後，請至「商家專區」更改每一個服務對應的「交易成功回傳網址」與「交易失敗回傳網址」，PayNow 將依照不同服務分別回傳到對應網址。
+> 服務設定後，請至「商家專區」更改每一個服務對應的「交易成功回傳網址」與「交易失敗回傳網址」，PayNow 將依照不同服務分別回傳到對應網址。
 
 ---
 
@@ -829,7 +920,7 @@ PayNow POST 至商家設定之回呼網址（URL Encoded、UTF-8）：
 |------|------|
 | `BuysafeNo` | PayNow 訂單編號 |
 | `OrderNo` | 商家訂單編號 |
-| `PassCode` | `SHA1(WebNo + OrderNo + TotalPrice + 賣場交易密碼)` |
+| `PassCode` | `SHA1(WebNo + OrderNo + TotalPrice + 賣場交易密碼 + TranStatus)`；成功交易回傳才加上 `TranStatus`（`AtmRespost=1` 的取號當下回傳不含） |
 | `TotalPrice` | 交易金額 |
 | `PayType` | `03` |
 | `ATMNo` | 虛擬帳號號碼（繳款唯一編號）|
@@ -838,7 +929,7 @@ PayNow POST 至商家設定之回呼網址（URL Encoded、UTF-8）：
 | `TranStatus` | `S`：繳款成功；`F`：未繳款 |
 | `BankCode` / `BranchCode` | 銀行 / 分行代碼 |
 
-> ℹ 預設為「離線回傳」（消費者實際繳費後才通知）。如希望取號當下立即通知，請於送出時帶 `AtmRespost=1`。
+> 預設為「離線回傳」（消費者實際繳費後才通知）。如希望取號當下立即通知，請於送出時帶 `AtmRespost=1`。
 
 #### 1.3 超商條碼回傳
 
@@ -955,7 +1046,7 @@ GK 回傳：
 }
 ```
 
-> 🔁 取得 `EncryptionKey` / `EncryptionIV` 後即可呼叫業務 API（請款 / 退款 / 查詢 / 取消授權 / 預存授權）。Key/IV 與 `TimeStr` / `CheckNum` 為單次有效，每次業務呼叫皆需重新走 GP → GK 流程。
+> 取得 `EncryptionKey` / `EncryptionIV` 後即可呼叫業務 API（請款 / 退款 / 查詢 / 取消授權 / 預存授權）。Key/IV 與 `TimeStr` / `CheckNum` 為單次有效，每次業務呼叫皆需重新走 GP → GK 流程。
 
 ---
 
@@ -1044,7 +1135,7 @@ POST https://test.paynow.com.tw/service/PayNowAPI_JS.aspx
 | `refundprice` | ● | 退款金額 |
 | `buyerid` / `buyername` / `buyeremail` | 否 | 與原交易消費者不同時才需填入 |
 
-> ⚠ **退款須知**：請慎用退款機制。連續退款、異常退款等行為可能被銀行視為信用 / 異常交易，PayNow 將會停止帳號服務。請勿在正式平台執行測試退款，違者將被停用。
+> **退款須知**：請慎用退款機制。連續退款、異常退款等行為可能被銀行視為信用 / 異常交易，PayNow 將會停止帳號服務。請勿在正式平台執行測試退款，違者將被停用。
 
 #### 取消自動授權 (`OP=CPA_gp`)
 
@@ -1135,6 +1226,10 @@ Content-Type: application/x-www-form-urlencoded
 4. 加密後字串再轉成全部小寫，放入 Signature 參數
 ```
 
+官方範例（交易密碼 `1234567890`）：送出 `613b0106b509b252c3d9468723fc7a75dd69101624353646e608f3e3c44e3a31`；
+回傳（`errmsgmemcid28229955merchantidentifiermerchant.tw.com.paynow.paytradestatuss`）`184ea4be92c23ff2b5fea71929616098e22e651fa26d6aa1bd0fb57aa16c82f0`。
+簽章錯誤時 PayNow 直接回 HTTP 400；回傳失敗時 `Signature` 原值退回。
+
 回傳：
 
 | 參數 | 說明 |
@@ -1216,7 +1311,7 @@ POST https://test.paynow.com.tw/WS_CardAuthorise_JS.asmx
 | `CIFPW` | ● | UserPW（最少 6 碼，大小寫有別）|
 | `CIFID_SN` | 否 | 預存卡號流水號（系統預設 `1`） |
 
-> ℹ 若 `CIFID_SN` 既存且不同卡號，會以本次內容覆蓋；若該流水號原儲存卡片已過期，亦會被覆蓋。
+> 若 `CIFID_SN` 既存且不同卡號，會以本次內容覆蓋；若該流水號原儲存卡片已過期，亦會被覆蓋。
 
 ### 取得預存卡號授權 (`OP=WSC_DLP`)
 
@@ -1255,7 +1350,7 @@ POST https://test.paynow.com.tw/WS_CardAuthorise_JS.asmx
 | `CIFID_SN` | 預存授權帳號流水號 |
 | `ErrorMessage` | 錯誤描述 |
 
-> 💡 特約商家可進行「1 元交易授權驗證」：系統授權確認後會自動取消授權，不會向消費者刷卡銀行請款。
+> 特約商家可進行「1 元交易授權驗證」：系統授權確認後會自動取消授權，不會向消費者刷卡銀行請款。
 
 ---
 
@@ -1513,12 +1608,14 @@ PayNow 傳統版使用首字母區分模組：
 
 | 狀態碼 | 說明 |
 |--------|------|
-| `200` | 成功 |
-| `400` | Bad Request（參數驗證失敗） |
-| `401` | Unauthorized（API Key 失效或未提供） |
+| `200` | 成功（`type=success`） |
+| `400` | 業務規則拒絕（`type=failed`，原因在 `message`，如退款金額超過付款金額） |
+| `401` | Unauthorized（私鑰失效或未提供） |
 | `404` | 資源不存在 |
-| `422` | Unprocessable Entity（業務規則拒絕） |
+| `422` | 參數驗證失敗（`type=parameter_validation_error`，`result` 為各欄位錯誤） |
 | `500` | 伺服器錯誤 |
+
+400／422 的 `type` 依 PaymentIntent Refund 頁回應範例；401／404／500 官方文件未列。
 
 ---
 
@@ -1606,9 +1703,10 @@ PayNow 傳統版使用首字母區分模組：
 
 **檢查項目**：
 1. `webhookUrl` 是否為 HTTPS 公網可達
-2. 是否有正確回應 `2xx` HTTP 狀態
+2. 是否回應 HTTP `200`
 3. 防火牆是否允許 PayNow 出口 IP
-4. 可改用 `GET /api/v1/payment-intents/{id}` 主動輪詢
+4. 驗章是否用私鑰對原始 body 做 HMAC-SHA256（比對 `X-Payment-Center-Hmac-Sha256`）
+5. 可改用 `GET /api/v1/payment-intents/{id}` 主動輪詢
 
 ### 退款失敗
 
@@ -1619,18 +1717,18 @@ PayNow 傳統版使用首字母區分模組：
 - `R033`：今日請款金額（+30）必須大於退款金額（避免請款金額過小）
 - `R037`：已撥款超過 180 天，退款需 2-3 個工作天
 
-> ⚠ **重要警告**：請慎用退款機制。連續退款、異常退款等行為可能被銀行視為信用 / 異常交易，PayNow 可能停用您的帳號服務。**請勿在正式平台執行測試退款交易**。
+> **重要警告**：請慎用退款機制。連續退款、異常退款等行為可能被銀行視為信用 / 異常交易，PayNow 可能停用您的帳號服務。**請勿在正式平台執行測試退款交易**。
 
 ### 從傳統版遷移到現代版
 
 **建議遷移步驟**：
 
-1. 向 PayNow 業務申請 API Key（現代版 Bearer Token）
+1. 向 PayNow 申請私鑰 PrivateKey／公鑰 PublicKey（現代版 Bearer 認證）
 2. 評估現有付款方式是否在現代版皆有對應（請參考[支付方式對照表](#支付方式對照表)）
 3. 建立 Customer 物件，將既有預存授權 (CIFID/CIFPW) 用戶映射為 Customer + Card Token
 4. 訂單建立改為 `POST /api/v1/payment-intents`
-5. 支付頁面改用 PayNow 提供的 Hosted Checkout Page，或自建 + `usePayNowSdk: true` 的 PayNow Component
-6. Webhook 處理改為解析 JSON（無 PassCode 驗證，但仍建議檢查 `requestId` 與後台對帳）
+5. 支付頁面改用 PayNow Component SDK（`js.paynow.com.tw/sdk/v2/index.js`，以 PaymentIntent `secret` 初始化），或經業務開通後自建表單呼叫 Checkout API
+6. Webhook 處理改為解析 JSON，並以私鑰 HMAC-SHA256 驗證 `X-Payment-Center-Hmac-Sha256`（取代傳統版 PassCode）
 7. 退款改為 `POST /api/v1/payment-intents/{id}/refunds`
 8. 並行運作期間同時處理兩套訂單，逐步切換流量
 
@@ -1638,8 +1736,11 @@ PayNow 傳統版使用首字母區分模組：
 
 ## 官方資源
 
-- **技術文件首頁**：https://paynow-co.github.io/paynow-guideline/docs/
-- **API Reference**：https://paynow-co.github.io/paynow-guideline/docs/api-reference/
+- **開發者文件**：https://docs.paynow.com.tw/developer/（現代版 apidoc、背景資訊、傳統版 apipdf）
+- **Component SDK 文件**：https://docs.paynow.com.tw/component/
+- **現代版 API**：https://api.paynow.com.tw（測試 https://sandboxapi.paynow.com.tw）
+- **傳統版 PDF 下載頁**：https://paynow-co.github.io/paynow-guideline/docs/api-reference/（同內容鏡像 owlting.github.io/paynow-guideline）；
+  PDF 本體在 `https://paynow-public.s3.ap-northeast-1.amazonaws.com/docs/`（技術文件 FV1.7.1.1、RefundAPI FV1.6、DoubleCheck FV1.1、ApplePay v1.0.5）
 - **測試平台**：https://test.paynow.com.tw
 - **正式平台**：https://www.paynow.com.tw
 - **Gateway 主機**：https://gateway.paynow.com.tw

@@ -1,6 +1,10 @@
 # PayUni Payment API Reference
 
-統一金流 (PAYUNi) 金流 API 完整參考文件。
+統一金流 (PAYUNi) 金流 API 參考文件。
+
+> 依據：PAYUNi 官方文件 https://docs.payuni.com.tw/web/#/7 （ShowDoc item 7，各節標註 page id，
+> 網頁版為 `https://docs.payuni.com.tw/web/#/7/<page_id>`），以及官方 PHP SDK（github.com/payuni/PHP_SDK）、
+> 官方外掛 PAYUNi_for_WooCommerce（github.com/payuni/PAYUNi_for_WooCommerce）。查核日 2026-11-17。
 
 ---
 
@@ -11,113 +15,100 @@
 3. [加密機制](#加密機制)
 4. [通用參數](#通用參數)
 5. [整合式支付頁 (UPP)](#整合式支付頁-upp)
-6. [信用卡幕後](#信用卡幕後)
-7. [ATM 虛擬帳號](#atm-虛擬帳號)
-8. [超商代碼](#超商代碼)
-9. [LINE Pay](#line-pay)
-10. [AFTEE 先享後付](#aftee-先享後付)
-11. [Apple Pay / Google Pay / Samsung Pay](#apple-pay--google-pay--samsung-pay)
-12. [愛金卡 iCash](#愛金卡-icash)
-13. [交易查詢](#交易查詢)
-14. [交易請退款](#交易請退款)
-15. [交易取消授權](#交易取消授權)
-16. [信用卡約定 (Token)](#信用卡約定-token)
-17. [付款結果通知](#付款結果通知)
-18. [錯誤碼對照表](#錯誤碼對照表)
-19. [常見問題排解](#常見問題排解)
+6. [信用卡幕後 Token 交易](#信用卡幕後-token-交易)
+7. [ATM 虛擬帳號幕後](#atm-虛擬帳號幕後)
+8. [超商代碼幕後](#超商代碼幕後)
+9. [LINE Pay／AFTEE／街口支付幕後](#line-payaftee街口支付幕後)
+10. [交易查詢](#交易查詢)
+11. [交易請退款 (信用卡)](#交易請退款-信用卡)
+12. [交易取消授權 (信用卡)](#交易取消授權-信用卡)
+13. [非信用卡退款、AFTEE 確認、超商代碼取消](#非信用卡退款aftee-確認超商代碼取消)
+14. [信用卡約定 (Token)](#信用卡約定-token)
+15. [付款結果通知 (Notify)](#付款結果通知-notify)
+16. [狀態與錯誤碼](#狀態與錯誤碼)
+17. [常見問題排解](#常見問題排解)
 
 ---
 
 ## API 端點總覽
-
-> **端點路徑依據**：統一金流官方 PHP SDK（github.com/payuni/PHP_SDK）`PayuniApi::UniversalTrade()` 的對照表，
-> 並與 wpbr-payuni-payment 1.7.1 實際呼叫的網址一致。SDK 的操作名稱（如 `trade_query`）**不是**網址路徑，
-> 實際路徑是 `trade/query`。
-
-### 基礎 API 路徑
 
 | 環境 | 基礎路徑 |
 |------|----------|
 | **測試環境** | `https://sandbox-api.payuni.com.tw/api/` |
 | **正式環境** | `https://api.payuni.com.tw/api/` |
 
-### 支付相關端點
+- 外層欄位一律為 `MerID`、`Version`、`EncryptInfo`、`HashInfo`（皆必填），`Version` 依各 API 固定值。
+- UPP 由消費者瀏覽器表單 POST；其他 API 為伺服器端 HTTP POST，回應為 JSON。官方建議 header 帶 `User-Agent`（建議值 `payuni`），TLS 1.2 以上。
+- 幕後 API（信用卡 Token、LINE Pay、AFTEE、街口）須向 PAYUNi 申請開通並綁定 IP。
 
-| 功能 | 端點路徑 | 說明 |
-|------|----------|------|
-| 整合式支付頁 | `/upp` | 導向 PayUni 支付頁面 |
-| ATM 虛擬帳號 | `/atm` | 幕後取得虛擬帳號 |
-| 超商代碼 | `/cvs` | 幕後取得繳費代碼 |
-| 信用卡幕後 Token 交易 | `/credit` | 以既有 `CreditHash` 授權（不收卡號；舊版帶卡號幕後已於 2026-07-01 移除） |
-| LINE Pay | `/linepay` | LINE Pay 支付 |
-| AFTEE 先享後付 | `/aftee_direct` | AFTEE 支付 |
+### 交易建立
 
-### 交易管理端點
+| 功能 | 路徑 | Version | 官方 page |
+|------|------|---------|-----------|
+| 整合式支付頁 UPP | `upp` | `2.0`（`1.0` 仍可用） | 34 |
+| 信用卡幕後 Token 交易 | `credit` | `1.3`（`1.2` 仍可用） | 522 |
+| ATM 虛擬帳號幕後 | `atm` | `1.3`（`1.2` 仍可用） | 36 |
+| 超商代碼幕後 | `cvs` | `1.3`（`1.2` 仍可用） | 37 |
+| LINE Pay 幕後 | `linepay` | `1.2`（`1.1` 仍可用） | 326 |
+| AFTEE 幕後 | `aftee_direct` | `1.1`（`1.0` 仍可用） | 350 |
+| 街口支付幕後 | `jkopay` | `1.1`（`1.0` 仍可用） | 386 |
+| 信用卡免跳轉元件 UNi Embed：取得 SDK Token | `iframe/token_get` | `3.0` | 512 |
+| 信用卡免跳轉元件 UNi Embed：幕後授權 | `iframe/merchant_trade` | `1.0` | 512 |
 
-| 功能 | 端點路徑 | 說明 |
-|------|----------|------|
-| 交易查詢 | `/trade/query` | 查詢交易狀態 |
-| 請退款 | `/trade/close` | 信用卡請款/退款 |
-| 取消授權 | `/trade/cancel` | 取消信用卡授權 |
-| CVS 取消 | `/cancel_cvs` | 取消超商代碼 |
+「仍可用」的舊版依官方修改記錄（page 25，2026-01-05 優惠券功能升版）；新功能（優惠券、電子發票）只在新版。
 
-### 信用卡約定 (Token) 端點
+### 交易管理
 
-| 功能 | 端點路徑 | 說明 |
-|------|----------|------|
-| Token 查詢 | `/credit_bind/query` | 查詢約定信用卡 |
-| Token 取消 | `/credit_bind/cancel` | 取消約定信用卡 |
+| 功能 | 路徑 | Version | 官方 page |
+|------|------|---------|-----------|
+| 單筆交易查詢 | `trade/query` | `2.0` | 164 |
+| 多筆交易查詢 | `trade/finite_query` | `1.0` | 172 |
+| 信用卡請退款 | `trade/close` | `1.0` | 38 |
+| 信用卡取消授權 | `trade/cancel` | `1.0` | 39 |
+| 超商代碼取消 | `cancel_cvs` | `1.0` | 333 |
+| 信用卡 Token 查詢 | `credit_bind/query` | `1.0` | 40 |
+| 信用卡 Token 取消 | `credit_bind/cancel` | `1.0` | 41 |
+| 愛金卡退款 | `trade/common/refund/icash` | `1.0` | 72 |
+| AFTEE 退款 | `trade/common/refund/aftee` | `1.0` | 84 |
+| AFTEE 交易確認 | `trade/common/confirm/aftee` | `1.0` | 85 |
+| LINE Pay 退款 | `trade/common/refund/linepay` | `1.0` | 300 |
+| 街口支付退款 | `trade/common/refund/jkopay` | `1.0` | 377 |
 
-### 特殊退款端點
-
-| 功能 | 端點路徑 | 說明 |
-|------|----------|------|
-| 愛金卡退款 | `/trade/common/refund/icash` | iCash 退款 |
-| AFTEE 退款 | `/trade/common/refund/aftee` | AFTEE 退款 |
-| AFTEE 確認 | `/trade/common/confirm/aftee` | AFTEE 確認交易 |
-| LINE Pay 退款 | `/trade/common/refund/linepay` | LINE Pay 退款 |
+官方 PHP SDK 的 `UniversalTrade()` 以操作名（如 `trade_query`）對應路徑（`trade/query`）；SDK 對照表未收錄 `jkopay`、`trade/common/refund/jkopay`、`trade/finite_query` 與 UNi Embed。
 
 ---
 
 ## 測試環境
 
-### 測試帳號
-
-測試帳號請至 PayUni 後台申請：
-
-```
-後台網址: https://www.payuni.com.tw/
-路徑: 會員 > 商店清單 > 指定商店名稱 > 串接設定
-```
-
-取得以下資訊：
-- **商店代號 (MerID)**
-- **Hash Key**
-- **Hash IV**
-
-### 測試信用卡
-
-| 卡號 | 說明 |
+| 項目 | 值 |
 |------|------|
-| `4000-2211-1111-1111` | 測試用信用卡 |
+| 測試後台 | `https://sandbox.payuni.com.tw` |
+| 正式後台 | `https://www.payuni.com.tw` |
+| 金鑰 | 登入後台檢視商店串接資訊取得 `MerID`、Hash Key、Hash IV |
 
-- **有效期限**: 任意未過期日期
-- **CVV/CVC**: 任意 3 碼
+### 測試卡號與測試資料（官方 page 374）
 
-### 測試環境端點
+| 用途 | 卡號／資料 |
+|------|------|
+| 一次付清 | `4147631000000001`、`3560511000000001` |
+| 一次付清（模擬 3D ECI 不符主動取消授權） | `4147631000000002`、`3560511000000002` |
+| 分期付款 | `4147632000000001`（不支援 9 期）、`4741502000000001` |
+| 銀聯卡 | `6200000000000001` |
+| Apple Pay／Google Pay／Samsung Pay | 不限卡號，測試區皆模擬成功 |
+| LINE Pay | Channel ID 與 Channel Secret Key 可填任意數字；不限卡號皆模擬成功 |
+| AFTEE | 非會員 `0909999981`；會員 `0909999991`，密碼 `Password1234` |
+| ATM／超商代碼付款完成 | 測試後台「交易動態明細」點「模擬繳費」 |
 
-```
-https://sandbox-api.payuni.com.tw/api/{endpoint}
-```
+卡片到期日與背面末三碼可任意填。
 
 ---
 
 ## 加密機制
 
-PayUni 採用 **AES-256-GCM** 加密與 **SHA256** 驗證碼（HashInfo）。
+PayUni 採用 **AES-256-GCM** 加密與 **SHA256** 驗證碼（HashInfo）。官方說明見 page 29（PHP 範例）、page 56（資料加密陣列）。
 
 > 以下演算法已與統一金流官方外掛 PAYUNi_for_WooCommerce 1.2.8 `class-payuni.php` 的
-> `Encrypt()` / `Decrypt()` / `HashInfo()` 逐位元組比對（repo 的 `tests/vectors/payuni.json`）。
+> `Encrypt()` / `Decrypt()` / `HashInfo()` 逐位元組比對（repo 的 `tests/vectors/payuni.json`）；1.2.9 這三個函式相同。
 
 ### 格式
 
@@ -242,95 +233,120 @@ class PayuniEncryption:
 
 ## 通用參數
 
-### 請求參數
+### 外層參數
 
-所有 API 請求都需要以下參數：
+| 參數 | 必填 | 說明 |
+|------|------|------|
+| `MerID` | ● | 商店代號，需與 EncryptInfo 內的 `MerID` 一致 |
+| `Version` | ● | 各 API 固定值，見[端點總覽](#api-端點總覽) |
+| `EncryptInfo` | ● | AES-256-GCM 加密字串 |
+| `HashInfo` | ● | SHA256 驗證碼 |
+
+### 交易建立類 API 的共同 EncryptInfo 參數
 
 | 參數 | 類型 | 必填 | 說明 |
 |------|------|------|------|
-| `MerID` | String | ● | 商店代號 |
-| `Version` | String | 否 | API 版本，預設 `1.0` (LINE Pay 預設 `1.1`) |
-| `EncryptInfo` | String | ● | AES-256-GCM 加密後的參數 |
-| `HashInfo` | String | ● | SHA256 驗證碼 |
+| `MerID` | string | ● | 商店代號 |
+| `MerTradeNo` | string | ● | 商店訂單編號，長度 25，`[A-Za-z0-9_-]`，10 分鐘內不可重複 |
+| `TradeAmt` | int | ● | 訂單金額（整數），各支付工具上下限見下表 |
+| `Timestamp` | int | ● | `time()`（Unix 秒） |
+| `ProdDesc` | string | ● | 商品說明，長度 550（超出自動截斷），可用半形 `;` 分隔多項 |
+| `NotifyURL` | string | 否 | 背景通知網址，完整網址，僅限 80 與 443 port |
+| `ReturnURL` | string | 否 | 前景返回網址（Form Post）；交易結果以 NotifyURL 為準 |
+| `UsrMail` | string | 條件 | 消費者信箱；開啟物流時必填，電子發票 `CarrierType=amego` 時必填 |
 
-### EncryptInfo 內容參數
+### 訂單金額限制（官方 page 170）
 
-以下參數需加密放入 `EncryptInfo`：
+| 支付工具 | 金額範圍 |
+|------|------|
+| 信用卡 | 1～199,999 元 |
+| ATM 轉帳 | 15～49,999 元 |
+| 超商代碼 | 30～20,000 元 |
+| AFTEE | 20～49,999 元 |
+| 超商取貨付款 | 1～20,000 元 |
+| 黑貓宅配到付 | 30～20,000 元 |
+| icash Pay／LINE Pay／街口支付 | 依各錢包公告 |
 
-| 參數 | 類型 | 長度 | 必填 | 說明 |
-|------|------|------|------|------|
-| `MerID` | String | 20 | ● | 商店代號 |
-| `MerTradeNo` | String | 50 | ● | 商店訂單編號，需唯一 |
-| `TradeAmt` | Integer | - | ● | 交易金額 (整數) |
-| `Timestamp` | Integer | - | ● | Unix 時間戳 |
-| `ProdDesc` | String | 100 | 否 | 商品描述 |
-| `UsrMail` | String | 100 | 否 | 消費者 Email |
-| `ReturnURL` | String | 500 | 否 | 前台返回網址 |
-| `NotifyURL` | String | 500 | 否 | 背景通知網址 |
-| `Lang` | String | 5 | 否 | 語系 `zh-tw` / `en` |
-
-### API 回應格式
+### 回應格式
 
 ```json
 {
   "Status": "SUCCESS",
-  "Message": "成功",
+  "MerID": "商店代號",
+  "Version": "版本",
   "EncryptInfo": "加密後的回應資料",
   "HashInfo": "SHA256 驗證碼"
 }
 ```
 
-### Status 狀態碼
-
-| 狀態 | 說明 |
-|------|------|
-| `SUCCESS` | 成功 |
-| `ERROR` | 失敗 |
+`Status` 為 `SUCCESS`、`UNKNOWN`、`UNAPPROVED`、`OK`（AFTEE）或錯誤代碼（如 `UPP01007`），見[狀態與錯誤碼](#狀態與錯誤碼)。
+EncryptInfo 解密後內另有 `Status`、`Message`。
 
 ---
 
 ## 整合式支付頁 (UPP)
 
-導向 PayUni 整合式支付頁面，消費者可選擇付款方式。
+官方 page 34。導向 PAYUNi 整合式支付頁，消費者選擇付款方式。
 
 ### 端點
 
 ```
-POST /api/upp
+POST https://sandbox-api.payuni.com.tw/api/upp   # 測試
+POST https://api.payuni.com.tw/api/upp           # 正式
 ```
+
+外層 `MerID`、`Version`（`2.0`）、`EncryptInfo`、`HashInfo` 由**消費者瀏覽器**以表單 POST 送出（官方 SDK 的 `HtmlApi()` 即自動送出的表單），不是伺服器端呼叫。
 
 ### EncryptInfo 參數
 
 | 參數 | 類型 | 必填 | 說明 |
 |------|------|------|------|
-| `MerID` | String | ● | 商店代號 |
-| `MerTradeNo` | String | ● | 訂單編號 |
-| `TradeAmt` | Integer | ● | 交易金額 |
-| `Timestamp` | Integer | ● | Unix 時間戳 |
-| `ExpireDate` | String | 否 | 繳費期限日期 `YYYY-MM-DD`（官方外掛以「今天 + 後台設定天數」計算），不是天數 |
-| `ProdDesc` | String | 否 | 商品描述 |
-| `UsrMail` | String | 否 | 消費者 Email |
-| `ReturnURL` | String | 否 | 前台返回網址 |
-| `NotifyURL` | String | 否 | 背景通知網址 |
-| `Lang` | String | 否 | 語系 `zh-tw` / `en` |
+| `MerID` | string | ● | 商店代號 |
+| `MerTradeNo` | string | ● | 長度 25，`[A-Za-z0-9_-]`，10 分鐘內不可重複 |
+| `TradeAmt` | int | ● | 訂單金額 |
+| `Timestamp` | int | ● | `time()` |
+| `ProdDesc` | string | ● | 商品說明，長度 550 |
+| `ReturnURL` | string | 否 | 付款完成導回（Form Post）；空值則顯示 PAYUNi 結果頁 |
+| `NotifyURL` | string | 否 | 背景通知網址，僅限 80/443 port |
+| `BackURL` | string | 否 | 付款頁「返回商店」按鈕網址 |
+| `DeepLinkURL` | string | 否 | 有值時不觸發 ReturnURL；僅 icash Pay、LINE Pay、街口、AFTEE 生效；測試環境忽略此欄 |
+| `UsrMail` | string | 否 | 付款頁帶入信箱 |
+| `UsrMailFix` | int | 否 | `1` = 信箱不可修改 |
+| `Cardholder` | int | 否 | `1` = 3D 交易時需輸入持卡人英文名稱 |
+| `ExpireDate` | string | 否 | ATM／超商代碼繳費期限 `YYYY-MM-DD`：最少當日；超商代碼最多當日 +7 天，ATM 最多 +180 天；大於 +7 天時付款頁不顯示超商代碼；未帶預設當日 +7 天；設當日須至少留 2 小時繳費時間 |
+| `AtmBankType` | string | 否 | 指定 ATM 銀行代碼，逗號分隔（如 `822,004,013`） |
+| `TradeLExpireSec` | int | 否 | 付款頁截止秒數 `60`～`600`，預設 `600` |
+| `API3D` | int | 否 | `1` = 指定 3D |
+| `Union3D` | int | 否 | `1` = 銀聯指定 Unionpay |
+| `TradeInvoice` | int | 否 | `1` = 啟用電子發票 |
+| `Lang` | string | 否 | `zh-tw`（預設）／`en` |
+| 付款方式開關 | int | 否 | 見文末「UPP 開關欄位」；都不帶則依後台商店設定 |
 
-| `Credit` / `ATM` / `CVS` / … | Integer | 否 | 付款方式開關，值為 `1`；欄位名稱見文末「UPP 開關欄位」 |
+首次信用卡 Token 交易另帶 `CreditToken`（長度 200，`[A-Za-z0-9@.#$%_-+]`）、`UseTokenType`（`1` 約定，消費者可取消／`2` 記憶卡號／`3` 強制約定）、
+`CreditShowType`、`CreditTokenType`（`1` 會員（預設）／`2` 商店）、`CreditTokenExpired`（`MMYY`）；買方 Token 帶 `BuyerToken`／`BuyerTokenType`，後續交易帶 `BuyerHash`。
+優惠券帶 `Coupon=1`、`CouponNotifyURL`；物流帶 `ShipTag`、`Ship`、`LgsType`、`ShipType`、`GoodsType`、`Consignee`、`ConsigneeMobile` 等（見 `taiwan-logistics`）。
 
-外層表單欄位為 `MerID`、`Version`（`1.0`）、`EncryptInfo`、`HashInfo`，由**消費者瀏覽器**以表單 POST 送出（官方 SDK 的 `HtmlApi()` 即自動送出的表單），不是伺服器端呼叫。
+### 回應（ReturnURL／NotifyURL 收到的內容）
+
+外層 `Status`（`SUCCESS`／`UNKNOWN`／`UNAPPROVED` 或錯誤代碼，page 44）、`MerID`、`Version`、`EncryptInfo`、`HashInfo`。EncryptInfo 內：
+
+| 參數 | 說明 |
+|------|------|
+| `Status` / `Message` | 狀態代碼與說明 |
+| `MerTradeNo` / `TradeNo` / `TradeAmt` | 商店訂單編號／UNi 序號／金額 |
+| `TradeStatus` | `0` 取號成功、`1` 已付款、`2` 付款失敗、`3` 付款取消、`8` 訂單待確認 |
+| `PaymentType` | `1` 信用卡、`2` ATM、`3` 超商代碼、`5` 超商取貨付款、`6` 愛金卡、`7` AFTEE、`9` LINE Pay、`10` 宅配到付、`11` 街口支付 |
+| `Gateway` | 固定 `2`（UPP） |
+| 信用卡 | `Card6No`、`Card4No`、`CardInst`、`FirstAmt`、`EachAmt`、`ResCode`、`AuthCode`、`AuthBank`、`AuthType`（`1` 一次、`2` 分期、`4` Apple Pay、`5` Google Pay、`6` Samsung Pay、`7` 銀聯）、`AuthDay`、`AuthTime`、`CreditHash`、`CreditLife`、`CardBank`、`CoBrandCode` |
+| ATM | `BankType`、`PayNo`、`PaySet`、`ExpireDate`（`YYYY-MM-DD HH:II:SS`） |
+| 超商代碼 | `Store`、`PayNo`、`ExpireDate` |
+
+`UNKNOWN`：60 秒未收到銀行回應；之後有結果會 Notify，或 15 分鐘後以交易查詢確認。
 
 ### 支援的付款方式
 
-整合式支付頁可顯示以下付款方式 (依商店設定)：
-
-- 信用卡 (一次付清、分期、紅利折抵)
-- ATM 虛擬帳號
-- 超商代碼
-- Apple Pay
-- Google Pay
-- Samsung Pay
-- LINE Pay
-- AFTEE 先享後付
-- 愛金卡 iCash
+信用卡（一次付清、分期 3/6/9/12/18/24/30 期、銀聯）、Apple Pay、Google Pay、Samsung Pay、ATM 虛擬帳號（僅一次性帳號）、超商代碼、icash Pay、AFTEE、LINE Pay、街口支付、超商取貨付款、黑貓宅配到付。
+信用卡紅利折抵已於 2025-09-01 下架。
 
 ### PHP 範例
 
@@ -356,7 +372,7 @@ $hashInfo = $encryption->hashInfo($encryptInfo);
 $html = <<<HTML
 <form method="post" action="https://api.payuni.com.tw/api/upp">
     <input type="hidden" name="MerID" value="{$params['MerID']}">
-    <input type="hidden" name="Version" value="1.0">
+    <input type="hidden" name="Version" value="2.0">
     <input type="hidden" name="EncryptInfo" value="{$encryptInfo}">
     <input type="hidden" name="HashInfo" value="{$hashInfo}">
     <button type="submit">前往付款</button>
@@ -368,7 +384,7 @@ echo $html;
 
 ---
 
-## 信用卡幕後
+## 信用卡幕後 Token 交易
 
 > **官方已於 2026-07-01 移除舊版「信用卡幕後(CREDIT)」**（直接帶卡號的幕後授權），改為「信用卡幕後 Token 交易(CREDIT)」
 > （官方文件 page 522、修改記錄 page 25）。現行 `/api/credit` **不收卡號**，只能以既有信用卡 Token 授權。
@@ -379,7 +395,7 @@ echo $html;
 ### 端點
 
 ```
-POST /api/credit          # Version 固定 1.3
+POST /api/credit          # Version 1.3
 ```
 
 ### EncryptInfo 參數
@@ -400,8 +416,9 @@ POST /api/credit          # Version 固定 1.3
 | `NotifyURL` | String | 否 | 僅補觸發或回覆 `UNKNOWN` 後通知結果使用；限 80/443 port |
 | `UserIP` | String | 否 | 消費者 IP（IPv4/IPv6），列入風險管控 |
 | `BuyerHash` | String | 條件 | 買方會員 Token Hash；開放交易金額上限且金額超過訂單金額限制時必填 |
-| `CarrierType` / `CarrierInfo` / `InvBuyerName` | String | 條件 | 需開立發票時帶入（`3J0002`、`CQ0001`、`amego`、`Donate`、`Company`） |
+| `CarrierType` / `CarrierInfo` / `InvBuyerName` | String | 條件 | 需開立發票時帶入（`3J0002`、`CQ0001`、`amego`、`Donate`、`Company`）；`InvBuyerName` 不可填 `0`、`00`、`000`、`0000` |
 
+優惠碼折抵另帶 `PromoCode`、`DiscountAmt`、`OrderAmt`（皆必填）與 `CouponNotifyURL`。
 開啟物流功能時可做取貨不付款（`ServiceType=3`），另帶 `Consignee`、`ConsigneeMobile`、`LgsType`（`B2C`/`C2C`/`HOME`）、
 `GoodsType`、`ShipType`（`1` 7-ELEVEN、`2` 黑貓），以及 `StoreID`（超商）或 `ConsigneeAddress`、`DeliveryTimeTag`（黑貓）。
 
@@ -413,82 +430,156 @@ EncryptInfo 內含 `TradeNo`、`TradeStatus`（`1` 已付款、`2` 失敗、`3` 
 
 ---
 
-## ATM 虛擬帳號
+## ATM 虛擬帳號幕後
 
-取得 ATM 繳費虛擬帳號。
+官方 page 36。伺服器端取得 ATM 繳費虛擬帳號。
 
 ### 端點
 
 ```
-POST /api/atm
+POST /api/atm             # Version 1.3
 ```
 
 ### EncryptInfo 參數
 
 | 參數 | 類型 | 必填 | 說明 |
 |------|------|------|------|
-| `MerID` | String | ● | 商店代號 |
-| `MerTradeNo` | String | ● | 訂單編號 |
-| `TradeAmt` | Integer | ● | 交易金額 |
-| `Timestamp` | Integer | ● | Unix 時間戳 |
-| `ExpireDate` | Integer | 否 | 繳費期限 (天)，`1`~`60`，預設 `3` |
-| `BankType` | String | 否 | 指定銀行 (參見下表) |
-| `NotifyURL` | String | 否 | 背景通知網址 |
+| `MerID` | string | ● | 商店代號 |
+| `MerTradeNo` | string | ● | 長度 25，`[A-Za-z0-9_-]`，10 分鐘內不可重複 |
+| `TradeAmt` | int | ● | 15～49,999 元 |
+| `Timestamp` | int | ● | `time()` |
+| `BankType` | string | ● | 銀行代碼：`004` 臺灣銀行、`013` 國泰世華、`822` 中國信託（page 50） |
+| `ProdDesc` | string | ● | 商品說明，長度 550 |
+| `PaySet` | int | 否 | `1` 單繳帳號（一次性，預設） |
+| `ExpireDate` | string | 否 | 繳費截止日 `YYYY-MM-DD`，最少當日、最多當日 +180 天，未帶預設當日 +7 天 |
+| `NotifyURL` | string | 否 | 付款完成通知網址，僅限 80/443 port |
+| `UsrMail` | string | 條件 | 開啟物流或 `CarrierType=amego` 時必填 |
+| `BuyerHash` | string | 條件 | 開放交易金額上限且金額超過限制時必填 |
+| `CarrierType` / `CarrierInfo` / `InvBuyerName` | string | 條件 | 需開立發票時帶入 |
 
-### BankType 銀行代碼（回應欄位）
+另可帶優惠碼參數（`PromoCode`、`DiscountAmt`、`OrderAmt`、`CouponNotifyURL`）與物流取貨不付款參數（同信用卡幕後）。
 
-虛擬帳號所屬銀行，以**銀行代碼**回傳（依 wpbr-payuni-payment 1.7.1 `Utils/BankType.php`）：
-
-| 代碼 | 銀行 |
-|------|------|
-| `004` | 臺灣銀行 |
-| `013` | 國泰世華 |
-| `822` | 中國信託 |
-
-### Version 與回應格式
-
-wpbr-payuni-payment 1.7.1 以 `Version: 2.0` 呼叫本端點，解密後交易資料在 **`Result` 陣列**內
-（PHP `parse_str` 解出 `Result[0][MerTradeNo]` 這類巢狀欄位；Python 需自行處理巢狀 key）。
-官方 PHP SDK 預設帶 `Version: 1.0`。
-
-### 回應參數 (解密後，`Result[0]` 內)
+### 回應參數（EncryptInfo）
 
 | 參數 | 說明 |
 |------|------|
-| `MerTradeNo` | 商店訂單編號 |
-| `TradeNo` | UNi 交易序號 |
+| `Status` / `Message` | `SUCCESS`／`(ATM)建立成功`；失敗見錯誤代碼 page 46 |
+| `MerTradeNo` / `TradeNo` / `TradeAmt` | 訂單資料 |
+| `TradeStatus` | `0` 取號成功 |
+| `PaymentType` | `2` |
+| `BankType` / `PayNo` | 銀行代碼／繳費虛擬帳號 |
+| `PaySet` | `1` 一次性 |
+| `ExpireDate` | 繳費截止時間 `YYYY-MM-DD HH:II:SS` |
+
+付款完成後 PAYUNi 送 ATM Notify 到 `NotifyURL`（見[付款結果通知](#付款結果通知-notify)）。
+
+---
+
+## 超商代碼幕後
+
+官方 page 37。伺服器端取得 7-ELEVEN 繳費代碼。
+
+### 端點
+
+```
+POST /api/cvs             # Version 1.3
+```
+
+### EncryptInfo 參數
+
+| 參數 | 類型 | 必填 | 說明 |
+|------|------|------|------|
+| `MerID` | string | ● | 商店代號 |
+| `MerTradeNo` | string | ● | 長度 25，`[A-Za-z0-9_-]`，10 分鐘內不可重複 |
+| `TradeAmt` | int | ● | 30～20,000 元 |
+| `Timestamp` | int | ● | `time()` |
+| `ProdDesc` | string | ● | 商品說明，長度 550 |
+| `ExpireDate` | string | 否 | 繳費截止日 `YYYY-MM-DD`，最少當日、最多當日 +7 天；設當日須至少留 2 小時 |
+| `NotifyURL` | string | 否 | 僅限 80/443 port |
+| `UsrMail` | string | 條件 | 開啟物流或 `CarrierType=amego` 時必填 |
+| `CarrierType` / `CarrierInfo` / `InvBuyerName` | string | 條件 | 需開立發票時帶入 |
+
+回應 EncryptInfo 含 `TradeNo`、`TradeStatus`（`0` 取號成功）、`PaymentType`（`3`）、`Store`、`PayNo`、`ExpireDate`。錯誤代碼見 page 47。
+
+---
+
+## LINE Pay／AFTEE／街口支付幕後
+
+皆須向 PAYUNi 申請開通並綁定 IP。共同必填：`MerID`、`MerTradeNo`、`TradeAmt`、`Timestamp`、`ProdDesc`；可帶 `NotifyURL`、`ReturnURL`、`DeepLinkURL`（有值時不觸發 ReturnURL）。
+
+| 支付 | 路徑 | Version | 主要回應欄位 | 錯誤代碼 page |
+|------|------|---------|-------------|------|
+| LINE Pay（page 326） | `linepay` | `1.2` | `TradeStatus`（`0` 建立、`1` 成功、`2` 失敗）、`PaymentType=9`、`PayNo`、`MethodCode`（`BALANCE`/`CREDIT_CARD`/`POINT`）、`QRToken`（導頁網址）、`QRExpiredTime` | 325 |
+| AFTEE（page 350） | `aftee_direct` | `1.1` | `Status`：`SUCCESS` 付款成功、`OK` 審核通過（不代表付款成功）、`UNAPPROVED` 待確認；可帶 `BuyerHash`、`CustName`、`PhoneNo`、`ItemName` 等 | 81 |
+| 街口支付（page 386） | `jkopay` | `1.1` | `TradeStatus`（`0`/`1`/`2`）、`PaymentType=11`、`JKoTradeNo`、`JKoStrCupAmt`、`JKoChannel`（`account`/`bank`/`creditcard`） | 387 |
+
+愛金卡（icash Pay）沒有幕後建立 API，經 UPP（`ICash=1`）付款；退款見下節。
+
+---
+
+## 交易查詢
+
+官方 page 164（單筆）、page 172（多筆 `trade/finite_query`）。
+
+### 端點
+
+```
+POST /api/trade/query     # Version 2.0（1.0 仍可用）
+```
+
+### EncryptInfo 參數
+
+| 參數 | 類型 | 必填 | 說明 |
+|------|------|------|------|
+| `MerID` | string | ● | 商店代號 |
+| `MerTradeNo` | string | 二擇一 | 商店訂單編號 |
+| `TradeNo` | string | 二擇一 | UNi 序號 |
+| `Timestamp` | int | ● | `time()` |
+
+### 回應
+
+可能多筆，解密後資料一律在 **`Result` 陣列**（從 0 開始；PHP `parse_str` 解出 `Result[0][MerTradeNo]`，Python 需自行處理巢狀 key）。
+
+| 參數 | 說明 |
+|------|------|
+| `MerTradeNo` / `TradeNo` / `TradeAmt` | 訂單資料 |
+| `TradeFee` | 手續費；`DataSource=A` 且 `TradeStatus=1` 才正確 |
 | `TradeStatus` | 交易狀態（見下表） |
 | `PaymentType` | 付款方式代碼（見下表） |
-| `CreateDay` | 訂單建立時間 |
-| `PaymentDay` | 付款時間 |
-| `CloseStatus` | 請款狀態（信用卡才有，見下表） |
+| `CreateDay` / `PaymentDay` | 建立／支付日期 `YYYY-MM-DD HH:II:SS` |
+| `Gateway` | `1` 單串、`2` UPP、`3` 一頁式 UOP |
+| `DataSource` | `A` 完整資料、`B` 處理中未完整（建議 10 分鐘後再查） |
+| 信用卡 | `Card6No`、`Card4No`、`CardExp`、`AuthCode`、`AuthType`、`CloseStatus`、`CloseAmt`、`RefundType`、`RefundStatus`、`RefundAmt`、`RemainAmt` 等 |
+| ATM／超商代碼 | `OffChannel`、`OffPayChannel`、`OffPayNo`、`OffExpireTime`、`RefundStatus`（退款轉匯） |
 
-### TradeStatus 交易狀態
+#### TradeStatus 交易狀態
 
 | 狀態 | 說明 |
 |------|------|
-| `0` | 取號成功（ATM / 超商代碼）或信用審查正常（AFTEE） |
+| `0` | 取號成功 |
 | `1` | 已付款 |
 | `2` | 付款失敗 |
 | `3` | 付款取消 |
-| `4` | 交易逾期（ATM / 超商代碼 / AFTEE） |
-| `8` | 待確認 |
+| `4` | 交易逾期 |
+| `8` | 訂單待確認 |
 | `9` | 未付款 |
 
-### PaymentType 付款方式代碼
+#### PaymentType 付款方式代碼
 
 | 代碼 | 說明 |
 |------|------|
 | `1` | 信用卡 |
 | `2` | ATM 轉帳 |
-| `3` | 超商代碼 |
+| `3` | 超商代碼／條碼 |
 | `5` | 超商取貨付款 |
 | `6` | 愛金卡 iCash |
 | `7` | AFTEE |
+| `8` | 退貨代收（C2B 退貨便） |
 | `9` | LINE Pay |
 | `10` | 宅配到付 |
+| `11` | 街口支付 |
 
-### CloseStatus 請款狀態
+#### CloseStatus 請款狀態（信用卡）
 
 | 狀態 | 說明 |
 |------|------|
@@ -498,7 +589,8 @@ wpbr-payuni-payment 1.7.1 以 `Version: 2.0` 呼叫本端點，解密後交易�
 | `7` | 請款處理中 |
 | `9` | 未申請 |
 
-> 以上代碼表依 wpbr-payuni-payment 1.7.1 `Utils/TradeStatus.php`、`PayType.php`、`CloseStatus.php`。
+`AuthType`：`1` 一次、`2` 分期、`3` 紅利（2025-09-01 起不支援）、`4` Apple Pay、`5` Google Pay、`6` Samsung Pay、`7` 銀聯。
+`RefundStatus`（信用卡）：`1` 退款申請中、`2` 退款成功、`3` 退款取消、`8` 退款處理中；只提供最後一筆退款紀錄。
 
 ### PHP 範例
 
@@ -519,10 +611,10 @@ $hashInfo = $encryption->hashInfo($encryptInfo);
 $response = file_get_contents('https://api.payuni.com.tw/api/trade/query', false, stream_context_create([
     'http' => [
         'method' => 'POST',
-        'header' => 'Content-Type: application/x-www-form-urlencoded',
+        'header' => "Content-Type: application/x-www-form-urlencoded\r\nUser-Agent: payuni",
         'content' => http_build_query([
             'MerID' => $params['MerID'],
-            'Version' => '1.0',
+            'Version' => '2.0',
             'EncryptInfo' => $encryptInfo,
             'HashInfo' => $hashInfo,
         ]),
@@ -533,70 +625,85 @@ $result = json_decode($response, true);
 
 if ($result['Status'] === 'SUCCESS') {
     $data = $encryption->decrypt($result['EncryptInfo']);
-    print_r($data);
+    print_r($data['Result'][0]);
 }
 ```
 
 ---
 
-## 交易請退款
+## 交易請退款 (信用卡)
 
-信用卡請款或退款。
+官方 page 38。信用卡請款或退款（平台預設自動請款）。
 
 ### 端點
 
 ```
-POST /api/trade/close
+POST /api/trade/close     # Version 1.0
 ```
 
 ### EncryptInfo 參數
 
 | 參數 | 類型 | 必填 | 說明 |
 |------|------|------|------|
-| `MerID` | String | ● | 商店代號 |
-| `TradeNo` | String | ● | PayUni 交易編號 |
-| `CloseType` | Integer | ● | 操作類型 |
-| `CloseAmt` | Integer | 否 | 請退款金額 (部分退款時使用) |
-| `Timestamp` | Integer | ● | Unix 時間戳 |
+| `MerID` | string | ● | 商店代號 |
+| `TradeNo` | string | ● | UNi 序號 |
+| `Timestamp` | int | ● | `time()` |
+| `CloseType` | int | ● | `1` 請款、`2` 退款、`-1` 取消請款、`-2` 取消退款 |
+| `TradeAmt` | int | 條件 | 請退款金額；請款、退款時必填 |
 
-### CloseType 操作類型
+回應 EncryptInfo 含 `Status`、`Message`、`MerID`、`TradeNo`、`CloseType`。錯誤代碼見 page 43。
 
-| 代碼 | 說明 |
-|------|------|
-| `1` | 請款 (Capture) |
-| `2` | 退款 (Refund) |
+### 限制
 
-### 退款限制
-
-- 支援部分退款
-- 退款金額需小於等於原交易金額
-- 信用卡退款期限：請款後 1 年內
+- 一次付清、國外卡可全額或部分請退款；分期付款、銀聯卡僅全額
+- 授權成功後需於 3 天內請款
+- 請款完成後需於 180 天內退款
+- 同一筆尚有請款或退款處理中時，新的退款先記為「預計退款」（查詢的 `RefundType=3`）
 
 ---
 
-## 交易取消授權
+## 交易取消授權 (信用卡)
 
-取消信用卡授權 (尚未請款)。
+官方 page 39。已授權、尚未請款的信用卡交易取消授權（一次付清、分期、國外卡）。
 
 ### 端點
 
 ```
-POST /api/trade/cancel
+POST /api/trade/cancel    # Version 1.0
 ```
 
 ### EncryptInfo 參數
 
 | 參數 | 類型 | 必填 | 說明 |
 |------|------|------|------|
-| `MerID` | String | ● | 商店代號 |
-| `TradeNo` | String | ● | PayUni 交易編號 |
-| `Timestamp` | Integer | ● | Unix 時間戳 |
+| `MerID` | string | ● | 商店代號 |
+| `TradeNo` | string | ● | UNi 序號 |
+| `Timestamp` | int | ● | `time()` |
+
+錯誤代碼見 page 42。
+
+---
+
+## 非信用卡退款、AFTEE 確認、超商代碼取消
+
+Version 皆為 `1.0`。
+
+| 功能 | 路徑 | EncryptInfo 必填 | 說明 |
+|------|------|------|------|
+| 愛金卡退款（page 72） | `trade/common/refund/icash` | `MerID`、`TradeNo`、`TradeAmt`、`Timestamp` | 僅全額退款；回 `RefundNo`、`RefundDT` |
+| AFTEE 退款（page 84） | `trade/common/refund/aftee` | 同上 | 全額或部分 |
+| LINE Pay 退款（page 300） | `trade/common/refund/linepay` | 同上 | 全額或部分 |
+| 街口支付退款（page 377） | `trade/common/refund/jkopay` | 同上 | 全額或部分 |
+| AFTEE 交易確認（page 85） | `trade/common/confirm/aftee` | `MerID`、`TradeNo`、`Timestamp` | 回 `ConfirmDT` |
+| 超商代碼取消（page 333） | `cancel_cvs` | `MerID`、`Timestamp`、`PayNo`（8 或 12 碼） | 消費者已列印繳費單則仍可繳費成功 |
 
 ---
 
 ## 信用卡約定 (Token)
 
 ### 查詢約定信用卡
+
+官方 page 40。
 
 #### 端點
 
@@ -618,6 +725,8 @@ Version 固定 `1.0`。可能有多筆，解密後資料在 `Result` 陣列（`C
 
 ### 取消約定信用卡
 
+官方 page 41。
+
 #### 端點
 
 ```
@@ -636,134 +745,90 @@ POST /api/credit_bind/cancel
 
 ---
 
-## 付款結果通知
+## 付款結果通知 (Notify)
 
-### 通知流程
+PAYUNi 以 **Form Post** 將結果送到 `NotifyURL`（僅限 80/443 port）。外層欄位：`Status`、`MerID`、`Version`、`EncryptInfo`、`HashInfo`；先驗 HashInfo 再解密。
 
-```
-┌─────────────┐     ┌─────────────┐     ┌─────────────┐
-│   消費者    │────▶│   PayUni    │────▶│    商店     │
-│   付款     │     │    處理     │     │ NotifyURL  │
-└─────────────┘     └─────────────┘     └─────────────┘
-                          │
-                          │ POST (加密資料)
-                          ▼
-                    ┌─────────────┐
-                    │    商店     │
-                    │  解密處理   │
-                    └─────────────┘
-                          │
-                          │ 回應 "SUCCESS"
-                          ▼
-                    ┌─────────────┐
-                    │   PayUni    │
-                    │  確認收到   │
-                    └─────────────┘
-```
+| 通知 | 官方 page | Version | EncryptInfo 重點欄位 |
+|------|------|------|------|
+| UPP Notify | 80 | 同交易 | 同 UPP 回應欄位（依 `PaymentType`） |
+| ATM 付款完成 | 73 | 依交易版本號 | `TradeNo`、`MerTradeNo`、`NewMerTradeNo`（錯帳或金額不符產生的新單號）、`TradeAmt`、`PayNo`、`PayBank`、`Account5No`、`Gateway`、`TradeStatus`（固定 `1`）、`PayTime` |
+| 超商代碼付款完成 | 74 | 依交易版本號 | `TradeNo`、`MerTradeNo`、`NewMerTradeNo`、`TradeAmt`、`PayNo`、`PayStore`、`Gateway`、`TradeStatus`（固定 `1`）、`PayTime` |
+| 訂單失效 | 75 | 依交易版本號 | `PaymentType`（`2`/`3`/`6`/`7`/`11`）、`TradeStatus`（固定 `4`）、`PayNo`、`CreateTime` |
+| LINE Pay 幕後 | 520 | `1.1` | 同 LINE Pay 幕後回應 |
+| 街口支付幕後 | 521 | `1.1` | 同街口支付幕後回應 |
+| UNi Embed 3D 交易結果 | 514 | — | 信用卡欄位同信用卡幕後回應 |
 
-### 通知參數
-
-PayUni 會 POST 加密資料到 `NotifyURL`：
-
-| 參數 | 說明 |
-|------|------|
-| `MerID` | 商店代號 |
-| `EncryptInfo` | 加密的交易結果 |
-| `HashInfo` | SHA256 驗證碼 |
-
-### 解密後的通知內容
-
-| 參數 | 說明 |
-|------|------|
-| `MerID` | 商店代號 |
-| `MerTradeNo` | 商店訂單編號 |
-| `TradeNo` | PayUni 交易編號 |
-| `TradeAmt` | 交易金額 |
-| `TradeStatus` | 交易狀態 (`0`:處理中 `1`:成功) |
-| `PaymentType` | 付款方式 |
-| `CreateTime` | 訂單建立時間 |
-| `PayTime` | 付款時間 |
-| `Message` | 交易訊息 |
-| `Card4No` | 信用卡末四碼 (信用卡交易) |
-| `AuthCode` | 銀行授權碼 (信用卡交易) |
+- ATM／超商代碼在取號成功時（UPP `TradeStatus=0`）尚未付款；入帳以 `TradeStatus=1` 為準，並比對金額與訂單。
+- 官方文件未規定商店回應內容；官方 WooCommerce 外掛處理完直接結束、不輸出特定字串。
 
 ### 處理範例
 
 ```php
 <?php
 
-// 接收通知
 $encryptInfo = $_POST['EncryptInfo'] ?? '';
 $hashInfo = $_POST['HashInfo'] ?? '';
-$merID = $_POST['MerID'] ?? '';
 
-// 驗證 HashInfo
 $encryption = new PayuniEncryption($merKey, $merIV);
-$calculatedHash = $encryption->hashInfo($encryptInfo);
 
-if ($hashInfo !== $calculatedHash) {
-    echo 'HashInfo Error';
+if (!hash_equals($encryption->hashInfo($encryptInfo), strtoupper($hashInfo))) {
+    http_response_code(400);
     exit;
 }
 
-// 解密
 $data = $encryption->decrypt($encryptInfo);
 
-// 檢查交易狀態
-if ($data['TradeStatus'] === '1') {
-    // 交易成功，更新訂單狀態
+if (($_POST['Status'] ?? '') === 'SUCCESS' && ($data['TradeStatus'] ?? '') === '1') {
+    // 比對金額後入帳
     updateOrderStatus($data['MerTradeNo'], 'paid', $data);
 }
-
-// 回應 SUCCESS
-echo 'SUCCESS';
 ```
 
 ---
 
-## 錯誤碼對照表
+## 狀態與錯誤碼
 
-### 交易狀態 (TradeStatus)
+完整錯誤代碼見 `data/error-codes-payuni-*.csv`（`search.py "<代碼>" --domain error`），來源為官方「錯誤代碼」各頁（page 156 為所有 API 通用）。
 
-| 狀態 | 說明 |
+### Status 值
+
+| 值 | 說明 |
 |------|------|
-| `0` | 未付款 / 處理中 |
-| `1` | 已付款 / 成功 |
-| `2` | 付款失敗 |
-| `3` | 已退款 |
+| `SUCCESS` | 成功 |
+| `UNKNOWN` | 等待授權結果逾期（信用卡、LINE Pay、街口） |
+| `UNAPPROVED` | 訂單待確認，買家會員資格審查中 |
+| `OK` | AFTEE 審核通過（不代表付款成功） |
+| 其他 | 錯誤代碼，如 `UPP01007` |
 
-### 常見錯誤訊息
+### 常見錯誤代碼
 
-| 錯誤碼 | 說明 | 處理方式 |
-|--------|------|----------|
-| `參數錯誤` | 必填參數缺失或格式錯誤 | 檢查參數格式 |
-| `商店代號錯誤` | MerID 不存在 | 確認商店代號 |
-| `訂單編號重複` | MerTradeNo 已使用 | 使用新的訂單編號 |
-| `HashInfo 驗證失敗` | 加密資料不正確 | 重新計算 HashInfo |
-| `交易金額錯誤` | 金額超出範圍 | 確認金額限制 |
-| `卡片授權失敗` | 信用卡交易被拒 | 請客戶聯繫發卡銀行 |
-| `餘額不足` | 信用卡額度不足 | 請客戶確認額度 |
-| `卡片過期` | 信用卡已過期 | 請客戶使用有效卡片 |
+| 代碼 | 說明 | 處理方式 |
+|------|------|----------|
+| `DEF01002` | 資料解密失敗 | 檢查 HashKey/HashIV 與 EncryptInfo 格式 |
+| `DEF01005` | 商店不存在 | 確認 MerID 與測試／正式環境 |
+| `DEF01007` | Hash 比對不符合 | 重新計算 HashInfo（HashKey 在前） |
+| `API00002` | 無 API 版本號 | 外層帶 `Version` |
+| `API00010` / `API00011` | EncryptInfo／HashInfo 格式錯誤 | 檢查 hex 與 `:::` 格式 |
+| `UPP01007` | 已存在相同商店訂單編號 | 使用新的 `MerTradeNo` |
+| `UPP02003` / `UPP02004` | 商店訂單編號超過長度／格式錯誤 | 長度 25，`[A-Za-z0-9_-]` |
+| `UPP02010` | 時間戳記已過期 | `Timestamp` 用當下 `time()` |
 
 ---
 
 ## 常見問題排解
 
-### HashInfo 驗證失敗
+### HashInfo 驗證失敗（`DEF01007`）
 
-**問題**: 收到 `HashInfo 驗證失敗`
-
-**檢查項目**:
 1. Hash Key 和 Hash IV 是否正確
 2. AES-256-GCM 加密是否正確實作
-3. **⚠️ SHA256 計算順序**: 必須是 `SHA256(HashKey + EncryptInfo + HashIV)` 而非 `SHA256(EncryptInfo + HashKey + HashIV)` — **Key 必須在前**
-4. 測試/正式環境金鑰是否混用
+3. **SHA256 計算順序**：必須是 `SHA256(HashKey + EncryptInfo + HashIV)` 而非 `SHA256(EncryptInfo + HashKey + HashIV)`，**Key 必須在前**
+4. 測試／正式環境金鑰是否混用
 
-### 訂單編號重複
+### 訂單編號重複（`UPP01007`）
 
-**問題**: 收到 `訂單編號重複`
+`MerTradeNo` 長度上限 25，10 分鐘內不可重複：
 
-**解決**:
 ```python
 import time
 import random
@@ -772,69 +837,39 @@ order_id = f"ORD{int(time.time())}{random.randint(100, 999)}"
 
 ### 付款通知未收到
 
-**問題**: 付款成功但沒收到 NotifyURL 通知
+1. `NotifyURL` 是否為完整網址且使用 80 或 443 port
+2. 伺服器是否能被外網存取、防火牆是否阻擋
+3. 信用卡幕後 Token 交易的 `NotifyURL` 只在補觸發或 `UNKNOWN` 後使用，正常結果直接在 API 回應
 
-**檢查項目**:
-1. NotifyURL 是否為 HTTPS
-2. 伺服器是否能被外網存取
-3. 是否正確回應 `SUCCESS`
-4. 防火牆是否阻擋 PayUni IP
+### 加密／解密問題
 
-### 加密/解密問題
-
-**問題**: 加密資料無法解密
-
-**檢查項目**:
-1. AES-256-GCM 參數是否正確 (Key 32 bytes, IV 16 bytes)
+1. AES-256-GCM 參數是否正確（Key 32 bytes、IV 16 bytes）
 2. Tag 長度是否為 16 bytes
-3. **⚠️ EncryptInfo 格式**: 必須是 `base64(密文) + ":::" + base64(Tag)` 而非 `hex(密文 + tag)` — 密文和 tag **分別 base64 編碼並用 ":::" 分隔**
+3. **EncryptInfo 格式**：必須是 `hex( base64(密文) + ":::" + base64(Tag) )`，不是 `hex(密文 + tag)`
 
 ---
 
 ## SDK 資源
 
-### 官方 SDK
+| 語言 | GitHub | 備註 |
+|------|--------|------|
+| PHP | https://github.com/payuni/PHP_SDK | `composer require payuni/sdk`，PHP 7.1+ |
+| .NET | https://github.com/payuni/NET_SDK | .NET Framework 4.7.2；NuGet 安裝 Newtonsoft.Json 13.0.1、Portable.BouncyCastle 1.9.0 |
+| WooCommerce | https://github.com/payuni/PAYUNi_for_WooCommerce | 官方外掛 |
 
-| 語言 | GitHub |
-|------|--------|
-| PHP | https://github.com/payuni/PHP_SDK |
-| .NET | https://github.com/payuni/NET_SDK |
-
-### 安裝方式
-
-#### PHP (Composer)
-
-```bash
-composer require payuni/sdk
-```
-
-#### .NET (NuGet)
-
-需要安裝以下套件：
-- Newtonsoft.Json (13.0.1+)
-- Portable.BouncyCastle (1.9.0+)
-
----
-
-## 官方資源
-
-- **官方網站**: https://www.payuni.com.tw/
-- **API 文件**: https://www.payuni.com.tw/docs/web/
-- **GitHub**: https://github.com/payuni
-- **WooCommerce 外掛**: https://github.com/payuni/PAYUNi_for_WooCommerce
+官方網站 https://www.payuni.com.tw/ ，API 文件 https://docs.payuni.com.tw/web/#/7 ，修改記錄 https://docs.payuni.com.tw/web/#/7/25 。
 
 ---
 
 ## PAYUNi 支援的付款方式（UPP 開關欄位）
 
 UPP 以「付款方式名稱 = 1」的旗標啟用付款方式（例如 `Credit=1&ATM=1&CVS=1`），**沒有**單一的 `PayType` 參數。
-以下欄位名稱取自統一金流官方外掛 PAYUNi_for_WooCommerce 1.2.8 的 `$paymentArr`，大小寫須完全相同：
+欄位名稱依官方 page 34，大小寫須完全相同：
 
 | 欄位 | 說明 |
 |---|---|
 | `Credit` | 信用卡一次付清 |
-| `CreditInst` | 信用卡分期 |
-| `CreditRed` | 信用卡紅利 |
+| `CreditInst` | 信用卡分期，值為期數字串（如 `3,6,9,12`），不是 `1` |
 | `CreditUnionPay` | 銀聯卡 |
 | `ApplePay` / `GooglePay` / `SamsungPay` | 行動支付 |
 | `ATM` | ATM 虛擬帳號（不是 `VACC`） |
@@ -843,5 +878,6 @@ UPP 以「付款方式名稱 = 1」的旗標啟用付款方式（例如 `Credit=
 | `Aftee` | AFTEE 先享後付 |
 | `LinePay` | LINE Pay |
 | `JKoPay` | 街口支付 |
+| `Ship` | 超商取貨付款（搭配物流參數） |
 
-另有幕後（伺服器對伺服器）建立交易的獨立端點：`/atm`、`/cvs`、`/credit`、`/linepay`（Version `1.1`）、`/aftee_direct`。
+信用卡紅利（`CreditRed`）已於 2025-09-01 下架，官方 page 34 已不列此欄（官方外掛 1.2.9 的 `$paymentArr` 仍保留）。
