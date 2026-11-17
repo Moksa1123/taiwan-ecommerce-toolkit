@@ -12,3 +12,7 @@ date,question,why_not_found,asked_by,status
 2026-11-17,非 TWD 訂單的 debit_amount 是用哪個幣別？,代碼意義頁 JPY 範例 final_price 1230、debit_amount 249，看起來像 TWD，但 Entry/Inquiry 頁寫「with payment currency」,taiwan-toolkit（官方文件稽核 2026-11-17）,open
 2026-11-17,OnlinePay 2.1.1（2026-02-02）「調整 Refund API 必要欄位」實際改了什麼？,只在搜尋引擎快取看到版本說明；Refund 頁目前三欄皆必填，看不出改動前的狀態,taiwan-toolkit（官方文件稽核 2026-11-17）,open
 2026-11-17,Windsurf（現為 Devin 文件）把 .windsurf/skills/ 標為 legacy，主路徑改為 .devin/skills/（也讀 .agents/skills/）；CLI 要不要改安裝路徑,舊路徑目前仍會被讀取；改安裝路徑會影響三個 CLI 的對外行為，要使用者決定,taiwan-toolkit（Issue #65 處理時）,等使用者
+2026-11-17,藍新 MPG 的 TradeSha 不符實際回 MPG02001 還是 MPG03009？規格書 MPG02001 備註寫 CheckValue、MPG03009 備註含「交易資料 SHA 256 檢查不符合」，兩者在 MPG 情境重疊,規格書錯誤代碼表只有備註沒有情境；需測試區實測或問藍新客服,taiwan-toolkit（官方文件稽核 2026-11-17）,open
+2026-11-17,藍新服務公告（https://www.newebpay.com/info/news/list_news）是否有 API 停用／改版公告,頁面由 JavaScript 載入，urllib 抓不到內容；共用瀏覽器被其他代理占用未能渲染。最新消息頁（/website/Page/news）已查，至 2026-09-16 無 API 停用公告,taiwan-toolkit（官方文件稽核 2026-11-17）,open
+2026-11-17,field-mappings 的 NewebPay card_token 原寫 TokenValue，是否出自非公開的信用卡幕後授權／約定信用卡 API,公開規格書 NDNF-1.2.6、NDNP-1.0.8 都沒有 TokenValue；幕後授權手冊需申請才提供,taiwan-toolkit（官方文件稽核 2026-11-17）,open
+2026-11-17,MPG 程式版本 2.0 現在是否仍被接受,NDNF-1.2.6 參數表寫 2.3，但同書 PHP 範例與回傳範例仍用 Version=2.0，錯誤代碼 MPG02010 為「此版本不支援，請升級至 v2.3」；未說明哪些功能觸發,taiwan-toolkit（官方文件稽核 2026-11-17）,open

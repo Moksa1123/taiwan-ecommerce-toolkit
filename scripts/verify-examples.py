@@ -175,7 +175,7 @@ def test_newebpay():
         check(f'[{label}] CheckValue 與規格書 4.1.6 相同',
               lambda: svc_cv.generate_check_value(cv['Amt'], cv['MerchantOrderNo']) == cv['expected'])
 
-    # BNPL 取消交易／退款、請款（NDNF-1.2.5 4.7、4.8 的 PHP 範例）
+    # BNPL 取消交易／退款、請款（NDNF-1.2.6 4.7、4.8 的 PHP 範例，與 1.2.5 相同）
     b = v['bnpl']
     svc_b = neweb.NewebPayMPGService(b['merchant_id'], b['hash_key'], b['hash_iv'])
     rq = b['refund_request']

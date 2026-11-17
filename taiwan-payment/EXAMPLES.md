@@ -1165,7 +1165,7 @@ console.assert(got === 'D5499ADD6F1D331B09D196D56C672A3A6E0D4FE31C1B19E10378B67A
 
 ### 錯誤 2: AES 加解密錯誤
 
-**錯誤訊息：** NewebPay 回傳 `MPG02001`（檢查碼錯誤）；PAYUNi 解密失敗或 HashInfo 不符
+**錯誤訊息：** NewebPay 回傳 `MPG03009`（交易資料 SHA256 檢查不符或 TradeInfo 解密失敗）；PAYUNi 解密失敗或 HashInfo 不符
 
 **NewebPay 常見錯誤：**
 

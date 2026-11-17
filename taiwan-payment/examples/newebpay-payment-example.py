@@ -125,6 +125,7 @@ class MPGCallbackData:
     barcode_2: Optional[str] = None
     barcode_3: Optional[str] = None
     expire_date: Optional[str] = None
+    trade_status: Optional[str] = None  # BNPL：0 未付款 1 成功 2 失敗；轉人工審核時 Status 仍為 SUCCESS
     raw: Dict = field(default_factory=dict)
 
 
@@ -307,7 +308,7 @@ class NewebPayMPGService:
         raw = f"IV={self.hash_iv.decode('utf-8')}&{query}&Key={self.hash_key.decode('utf-8')}"
         return hashlib.sha256(raw.encode('utf-8')).hexdigest().upper()
 
-    # BNPL 先買後付（AFTEE 先享後付、OPPAY 大哥付你分期），規格書 NDNF-1.2.5 §4.7、§4.8
+    # BNPL 先買後付（AFTEE 先享後付、OPPAY 大哥付你分期），規格書 NDNF-1.2.6 §4.7、§4.8
     BNPL_PATHS = {'refund': '/API/Bnpl/refund', 'settle': '/API/Bnpl/settle'}
 
     def build_bnpl_request(self, action: Literal['refund', 'settle'], merchant_order_no: str, amt: int,
@@ -489,7 +490,7 @@ class NewebPayMPGService:
             >>> callback = request.form.to_dict()
             >>> result = service.parse_callback(callback)
             >>> if result.status == 'SUCCESS':
-            ...     print(f"付款成功: {result.trade_no}")
+            ...     print(f"付款成功: {result.trade_no}")  # BNPL 另須 trade_status == '1'；以 NotifyURL 為準
         """
         # 驗證 TradeSha
         trade_info = callback_data.get('TradeInfo', '')
@@ -534,6 +535,7 @@ class NewebPayMPGService:
             barcode_2=result_dict.get('Barcode_2'),
             barcode_3=result_dict.get('Barcode_3'),
             expire_date=result_dict.get('ExpireDate'),
+            trade_status=(str(result_dict['TradeStatus']) if result_dict.get('TradeStatus') is not None else None),
             raw=decrypted,
         )
 

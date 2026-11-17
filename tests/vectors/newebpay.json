@@ -3,9 +3,9 @@
     "algorithm": "TradeInfo = hex(AES-256-CBC(query)); TradeSha = upper(sha256(\"HashKey={key}&{TradeInfo}&HashIV={iv}\"))",
     "sources": {
         "plugin": "newebpay-payment 1.0.12 (Neweb Technologies Co., Ltd.) includes/nwpenc/encProcess.php",
-        "spec": "線上交易─幕前支付技術串接手冊 NDNF-1.2.2（Step 2、4.1.4、4.1.5、4.1.6；NDNF-1.2.5 同章範例未變）",
+        "spec": "線上交易─幕前支付技術串接手冊 NDNF-1.2.2（Step 2、4.1.4、4.1.5、4.1.6；NDNF-1.2.6 同章範例未變）",
         "logistics_spec": "物流服務技術串接手冊 NDNS 1.0.0（6.附錄(一) Hash Data 處理方式）",
-        "bnpl_spec": "線上交易─幕前支付技術串接手冊 NDNF-1.2.5（4.7 BNPL 取消交易／退款、4.8 BNPL 請款的 PHP 範例）",
+        "bnpl_spec": "線上交易─幕前支付技術串接手冊 NDNF-1.2.6（4.7 BNPL 取消交易／退款、4.8 BNPL 請款的 PHP 範例，與 1.2.5 相同）",
         "period_spec": "信用卡定期定額串接技術手冊 NDNP-1.0.8（4.1 加密範例；4.3.2、4.4.2、4.5.2、4.6.2 回傳範例）"
     },
     "generator": "php 8.2.33 / OpenSSL 3.5.6 7 Apr 2026",

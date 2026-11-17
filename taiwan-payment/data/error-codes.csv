@@ -24,131 +24,132 @@ ecpay,10300024,資料驗證錯誤，請回到原廠商頁面重新操作,,paymen
 ecpay,5100070,建立訂單失敗：金額超出上下限或無可用付款方式,,api,error,例：1 元訂單只開 ATM；測試環境請用 2 元以上（/5740）,https://developers.ecpay.com.tw/,2026-08-08,官方文件
 ecpay,5100071,建立訂單失敗：無權限使用,,config,error,服務未開通，請聯繫業務（/5740）,https://developers.ecpay.com.tw/,2026-08-08,官方文件
 newebpay,SUCCESS,成功,Success,success,info,,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,MPG01002,時間戳記不可空白,,validation,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,MPG01005,TokenTerm 不可空白/設定錯誤,,validation,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,MPG01008,分期參數設定錯誤,,validation,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,MPG01009,商店代號不可空白,,validation,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,MPG01010,程式版本設定錯誤,,validation,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,MPG01011,回傳規格設定錯誤,,validation,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,MPG01012,商店訂單編號不可空白/設定錯誤,,validation,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,MPG01013,付款人電子信箱設定錯誤,,validation,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,MPG01014,網址設定錯誤,,validation,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,MPG01015,訂單金額不可空白/設定錯誤,,validation,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,MPG01016,檢查碼不可空白,,validation,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,MPG01017,商品資訊不可空白,,validation,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,MPG01018,繳費有效期限設定錯誤,,validation,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,MPG01023,交易加密資料不可空白,,validation,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,MPG01024,交易加密SHA 資料不可空白,,validation,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,MPG01025,金融機構格式錯誤,,validation,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,MPG01026,金融機構格式錯誤，不接受XXX 參數,,validation,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,MPG01027,一銀維護中，請選擇其他金融機構,,validation,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,MPG01028,訂單細項格式錯誤,,validation,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,1000,退款申請完成,,success,info,電子錢包退款 [NPA-B06] 成功時 Status=1000（不是 SUCCESS）,https://www.newebpay.com/website/Page/content/download_api,2026-11-17,官方文件
+newebpay,MPG01002,時間戳記不可空白,,validation,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,MPG01005,TokenTerm 不可空白/設定錯誤,,validation,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,MPG01008,分期參數設定錯誤,,validation,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,MPG01009,商店代號不可空白,,validation,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,MPG01010,程式版本設定錯誤,,validation,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,MPG01011,回傳規格設定錯誤,,validation,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,MPG01012,商店訂單編號不可空白/設定錯誤,,validation,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,MPG01013,付款人電子信箱設定錯誤,,validation,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,MPG01014,網址設定錯誤,,validation,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,MPG01015,訂單金額不可空白/設定錯誤,,validation,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,MPG01016,檢查碼不可空白,,validation,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,MPG01017,商品資訊不可空白,,validation,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,MPG01018,繳費有效期限設定錯誤,,validation,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,MPG01023,交易加密資料不可空白,,validation,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,MPG01024,交易加密SHA 資料不可空白,,validation,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,MPG01025,金融機構格式錯誤,,validation,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,MPG01026,金融機構格式錯誤，不接受XXX 參數,,validation,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,MPG01027,一銀維護中，請選擇其他金融機構,,validation,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,MPG01028,訂單細項格式錯誤,,validation,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
 newebpay,MPG01029,訂單金額與訂單細項總金額不相符,,validation,error,Amt 須等於訂單細項總金額,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,MPG01030,訂單細項品項編號不可重複,,validation,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,MPG02001,檢查碼錯誤,,auth,error,"TradeSha 錯誤：SHA256(""HashKey={key}&{TradeInfo}&HashIV={iv}"") 轉大寫；確認 HashKey/HashIV",https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,MPG02002,查無商店開啟任何金流服務,,auth,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,MPG02003,支付方式未啟用，請洽客服中心,,auth,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,MPG02004,匯率時間戳記不存在，請確認,,auth,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,MPG02005,驗證資料錯誤(來源不合法),,auth,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,MPG02006,信用卡收單機構系統發生異常，請洽客服中心,,auth,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,MPG02007,本商店強制指定需檢核轉出行，請先啟用智慧,,auth,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,MPG02008,SourceType 參數錯誤，本商店強制指定需檢核,,auth,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,MPG02009,不可修改銀行代號與帳號時，須提供指定轉帳,,auth,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,MPG02010,此版本不支援，請升級至v2.3,,auth,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,MPG03001,FormPost 加密失敗,,system,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,MPG03002,拒絕交易 IP,,system,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,MPG03003,IP 交易次數限制,,system,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,MPG03004,商店狀態已被暫停或是關閉，無法進行交易,,system,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,MPG03005,回傳參數資料不存在/解密失敗,,system,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,MPG03006,回傳參數資料不存在/解密失敗,,system,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,MPG03007,該筆訂單交易資訊不存在，請重新交易,,system,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,MPG01030,訂單細項品項編號不可重複,,validation,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,MPG02001,檢查碼錯誤,,auth,error,規格書備註為 CheckValue；MPG 的 TradeSha 不符回 MPG03009（見藍新規格書 NDNF-1.2.6 錯誤代碼表）,https://www.newebpay.com/website/Page/content/download_api,2026-11-17,官方文件
+newebpay,MPG02002,查無商店開啟任何金流服務,,auth,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,MPG02003,支付方式未啟用，請洽客服中心,,auth,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,MPG02004,匯率時間戳記不存在，請確認,,auth,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,MPG02005,驗證資料錯誤(來源不合法),,auth,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,MPG02006,信用卡收單機構系統發生異常，請洽客服中心,,auth,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,MPG02007,本商店強制指定需檢核轉出行，請先啟用智慧,,auth,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,MPG02008,SourceType 參數錯誤，本商店強制指定需檢核,,auth,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,MPG02009,不可修改銀行代號與帳號時，須提供指定轉帳,,auth,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,MPG02010,此版本不支援，請升級至v2.3,,auth,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,MPG03001,FormPost 加密失敗,,system,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,MPG03002,拒絕交易 IP,,system,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,MPG03003,IP 交易次數限制,,system,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,MPG03004,商店狀態已被暫停或是關閉，無法進行交易,,system,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,MPG03005,回傳參數資料不存在/解密失敗,,system,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,MPG03006,回傳參數資料不存在/解密失敗,,system,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,MPG03007,該筆訂單交易資訊不存在，請重新交易,,system,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
 newebpay,MPG03008,已存在相同的商店訂單編號,,system,error,MerchantOrderNo 不可重複,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,MPG03009,交易失敗,,system,error,交易失敗，依 Message 判斷原因,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,MPG03010,驗證資料不存在或錯誤,,system,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,MPG03011,訂單資料已不存在，請重新交易,,system,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,MPG05001,未有信用卡驗證資料,,payment,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,MPG05002,信用卡卡號長度不足,,payment,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,MPG05003,此信用卡不支援一次付清，請改用可一次付清,,payment,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,MPG05004,發卡行暫時無法提供信用卡分期付款服務,,payment,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,MPG05005,警示交易,,payment,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,MPG05006,物流設定參數[LgsType]錯誤,,payment,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,MPG05007,請開啟其他支付方式,,payment,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,MPG05008,因金額限制關係，無法使用物流服務,,payment,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,TRA10001,商店資料取得失敗,,request,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,TRA10003,金額必須為數字,,request,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,TRA10008,資料加密錯誤,,request,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,TRA10009,商店代號不可空白,,request,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,TRA10012,商店代號停用,,request,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,TRA10013,商店信用卡資格停用,,request,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,TRA10015,網路連線失敗,,request,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,TRA10018,資料不足,,request,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,TRA10021,查無該筆交易或該筆交易不為信用卡交易,,request,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,TRA10026,此訂單非授權成功狀態，不可請款,,request,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,TRA10027,此訂單已申請過請款，不可重覆請款,,request,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,TRA10028,請退款金額超過授權金額，請確認,,request,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,TRA10029,請款超過授權日N 天，已不得請(退)款,,request,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,TRA10030,請款/退款資料新增失敗,,request,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,TRA10031,銀聯卡交易只接受全額請退款,,request,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,TRA10032,單號類型只能為數字1 或2,,request,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,TRA10033,選擇使用商店自訂單號不可空白,,request,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,TRA10035,該交易非授權成功或已請款完成狀態，請確認,,request,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,TRA10036,RespondType 欄位資料格式錯誤,,request,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,TRA10037,商家自訂單號錯誤，只允許英數字及_符號,,request,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,TRA10038,選擇使用系統單號格式錯誤,,request,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,TRA10039,退款金額已超過請款金額，請確認,,request,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,TRA10041,網址格式錯誤,,request,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,TRA10045,該筆交易正在退款中或退款失敗,,request,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,TRA10046,該筆交易撥款狀態異常，無法執行退款,,request,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,TRA10047,該交易不為授權成功狀態，不可放棄授權,,request,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,TRA10048,該交易正在請款狀態,,request,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,TRA10049,該交易正在退款狀態,,request,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,TRA10050,金額不符,,request,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,TRA10051,取消授權失敗,,request,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,MPG03009,交易失敗,,system,error,"交易資料 SHA256 檢查不符（TradeSha：SHA256(""HashKey={key}&{TradeInfo}&HashIV={iv}"") 轉大寫）、TradeInfo 解密失敗、EncryptType 錯誤或銀行拒絕授權；依 Message 判斷",https://www.newebpay.com/website/Page/content/download_api,2026-11-17,官方文件
+newebpay,MPG03010,驗證資料不存在或錯誤,,system,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,MPG03011,訂單資料已不存在，請重新交易,,system,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,MPG05001,未有信用卡驗證資料,,payment,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,MPG05002,信用卡卡號長度不足,,payment,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,MPG05003,此信用卡不支援一次付清，請改用可一次付清,,payment,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,MPG05004,發卡行暫時無法提供信用卡分期付款服務,,payment,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,MPG05005,警示交易,,payment,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,MPG05006,物流設定參數[LgsType]錯誤,,payment,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,MPG05007,請開啟其他支付方式,,payment,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,MPG05008,因金額限制關係，無法使用物流服務,,payment,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,TRA10001,商店資料取得失敗,,request,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,TRA10003,金額必須為數字,,request,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,TRA10008,資料加密錯誤,,request,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,TRA10009,商店代號不可空白,,request,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,TRA10012,商店代號停用,,request,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,TRA10013,商店信用卡資格停用,,request,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,TRA10015,網路連線失敗,,request,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,TRA10018,資料不足,,request,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,TRA10021,查無該筆交易或該筆交易不為信用卡交易,,request,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,TRA10026,此訂單非授權成功狀態，不可請款,,request,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,TRA10027,此訂單已申請過請款，不可重覆請款,,request,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,TRA10028,請退款金額超過授權金額，請確認,,request,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,TRA10029,請款超過授權日N 天，已不得請(退)款,,request,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,TRA10030,請款/退款資料新增失敗,,request,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,TRA10031,銀聯卡交易只接受全額請退款,,request,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,TRA10032,單號類型只能為數字1 或2,,request,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,TRA10033,選擇使用商店自訂單號不可空白,,request,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,TRA10035,該交易非授權成功或已請款完成狀態，請確認,,request,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,TRA10036,RespondType 欄位資料格式錯誤,,request,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,TRA10037,商家自訂單號錯誤，只允許英數字及_符號,,request,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,TRA10038,選擇使用系統單號格式錯誤,,request,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,TRA10039,退款金額已超過請款金額，請確認,,request,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,TRA10041,網址格式錯誤,,request,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,TRA10045,該筆交易正在退款中或退款失敗,,request,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,TRA10046,該筆交易撥款狀態異常，無法執行退款,,request,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,TRA10047,該交易不為授權成功狀態，不可放棄授權,,request,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,TRA10048,該交易正在請款狀態,,request,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,TRA10049,該交易正在退款狀態,,request,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,TRA10050,金額不符,,request,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,TRA10051,取消授權失敗,,request,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
 newebpay,TRA10054,檢查碼CheckValue 有錯誤,,request,error,"CheckValue 錯誤：SHA256(""IV={iv}&Amt=..&MerchantID=..&MerchantOrderNo=..&Key={key}"") 轉大寫",https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,TRA10058,動態貨幣轉換交易只接授全額請款,,request,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,TRA10070,銀聯卡交易無需請款,,request,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,TRA10071,因查無交易資料次數已達上限，已鎖定交易查,,request,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,TRA10077,只能退未撥金額,,request,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,TRA10094,資料取消失敗,,request,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,TRA10095,此筆交易已過關帳時間，不可取消,,request,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,TRA10678,銀聯卡退款失敗,,request,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,TRA10675,紅利交易只接授全額請退款,,request,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,TRA10702,因達到執行請退款筆數上限，您的商店暫時無,,request,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,TRA11002,因失敗過多您的商店暫時無法使用本功能,,request,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,TRA10058,動態貨幣轉換交易只接授全額請款,,request,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,TRA10070,銀聯卡交易無需請款,,request,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,TRA10071,因查無交易資料次數已達上限，已鎖定交易查,,request,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,TRA10077,只能退未撥金額,,request,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,TRA10094,資料取消失敗,,request,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,TRA10095,此筆交易已過關帳時間，不可取消,,request,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,TRA10678,銀聯卡退款失敗,,request,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,TRA10675,紅利交易只接授全額請退款,,request,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,TRA10702,因達到執行請退款筆數上限，您的商店暫時無,,request,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,TRA11002,因失敗過多您的商店暫時無法使用本功能,,request,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
 newebpay,TRA20001,金融機構取消授權批次處理中,,request,info,非錯誤：取消授權需由金融機構批次處理，稍後以查詢確認,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,TRA20002,查無交易資料,,request,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,TRA20004,商店訂單編號重覆,,request,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,TRA20011,該筆交易已請款,,request,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,TRA20027,此訂單已申請過退款，退款中,,request,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,TRA20028,可退款金額不足，請查看常見問題 https://,,request,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,TRA40014,TimeStamp 欄位錯誤,,request,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,MPG05009,超商取貨服務未啟用[服務型態]請洽客服中心,,payment,error,服務型態：取貨付款、取貨不付款；見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,ACC10005,會員已被暫時停權/永久停權，請洽藍新金流客服中心查詢,,auth,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,MEM40008,必填欄位資料不可空白,,validation,error,會提示空白欄位；見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,MEM40012,必填欄位資料傳遞錯誤,,validation,error,PostData_ 空白；見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,MEM40013,必填欄位資料不齊全,,validation,error,會提示空白欄位；見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,MEM40014,傳送時間錯誤,,request,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,NOR1001,連線異常,,system,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,1101,退款失敗,,request,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,1102,查無商店,,request,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,1103,查無訂單資料,,request,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,1104,訂單狀態不為可請/退款狀態,,request,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,1105,可退金額不足,,request,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,1106,錢包類型不符,,request,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,1107,尚未請款,,request,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,1108,僅支援全額退款,,request,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,1109,退款交易申請中，請稍後,,request,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,1110,商店支付方式未啟用,,request,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,1111,查詢商店閘道設定，查無資料,,request,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,1116,可退款金額不足,,request,error,見 https://www.newebpay.com/website/Page/content/faq；見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,2100,最低金額為 1,,validation,error,The Amount minimum is 1；見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,4101,EncryptData_ 不可為空白,,validation,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,4102,HashData_ 不可為空白,,validation,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,4103,HashData_ 資料檢查不符合,,auth,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,4104,加密資料有誤，請確認 Hash_Key 與 Hash_IV 是否正確,,auth,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,4105,TimeStamp 為空,,validation,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,4106,UID_ 不可為空白,,validation,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,9000,網路連線失敗,,system,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,TRA20002,查無交易資料,,request,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,TRA20004,商店訂單編號重覆,,request,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,TRA20011,該筆交易已請款,,request,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,TRA20027,此訂單已申請過退款，退款中,,request,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,TRA20028,可退款金額不足，請查看常見問題 https://,,request,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,TRA40014,TimeStamp 欄位錯誤,,request,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,MPG05009,超商取貨服務未啟用[服務型態]請洽客服中心,,payment,error,服務型態：取貨付款、取貨不付款；見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,ACC10005,會員已被暫時停權/永久停權，請洽藍新金流客服中心查詢,,auth,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,MEM40008,必填欄位資料不可空白,,validation,error,會提示空白欄位；見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,MEM40012,必填欄位資料傳遞錯誤,,validation,error,PostData_ 空白；見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,MEM40013,必填欄位資料不齊全,,validation,error,會提示空白欄位；見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,MEM40014,傳送時間錯誤,,request,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,NOR1001,連線異常,,system,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,1101,退款失敗,,request,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,1102,查無商店,,request,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,1103,查無訂單資料,,request,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,1104,訂單狀態不為可請/退款狀態,,request,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,1105,可退金額不足,,request,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,1106,錢包類型不符,,request,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,1107,尚未請款,,request,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,1108,僅支援全額退款,,request,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,1109,退款交易申請中，請稍後,,request,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,1110,商店支付方式未啟用,,request,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,1111,查詢商店閘道設定，查無資料,,request,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,1116,可退款金額不足,,request,error,見 https://www.newebpay.com/website/Page/content/faq；見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,2100,最低金額為 1,,validation,error,The Amount minimum is 1；見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,4101,EncryptData_ 不可為空白,,validation,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,4102,HashData_ 不可為空白,,validation,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,4103,HashData_ 資料檢查不符合,,auth,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,4104,加密資料有誤，請確認 Hash_Key 與 Hash_IV 是否正確,,auth,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,4105,TimeStamp 為空,,validation,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,4106,UID_ 不可為空白,,validation,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,9000,網路連線失敗,,system,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
 newebpay,NOR10001,連線異常,,system,error,見藍新規格書 NDNP-1.0.8（信用卡定期定額）錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
 newebpay,PER10001,商店資料取得失敗,,request,error,見藍新規格書 NDNP-1.0.8（信用卡定期定額）錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
 newebpay,PER10002,資料解密錯誤,,validation,error,見藍新規格書 NDNP-1.0.8（信用卡定期定額）錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件

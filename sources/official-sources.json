@@ -4301,8 +4301,8 @@
   "skills": [
    "payment"
   ],
-  "title": "線上交易─幕前支付技術串接手冊 NDNF-1.2.5（2026-09-01）",
-  "url": "https://www.newebpay.com/website/Page/download_file?name=%E7%B7%9A%E4%B8%8A%E4%BA%A4%E6%98%93%E2%94%80%E5%B9%95%E5%89%8D%E6%94%AF%E4%BB%98%E6%8A%80%E8%A1%93%E4%B8%B2%E6%8E%A5%E6%89%8B%E5%86%8A_NDNF-1.2.5.pdf",
+  "title": "線上交易─幕前支付技術串接手冊 NDNF-1.2.6（2026-10-01）",
+  "url": "https://www.newebpay.com/website/Page/download_file?name=%E7%B7%9A%E4%B8%8A%E4%BA%A4%E6%98%93%E2%94%80%E5%B9%95%E5%89%8D%E6%94%AF%E4%BB%98%E6%8A%80%E8%A1%93%E4%B8%B2%E6%8E%A5%E6%89%8B%E5%86%8A_NDNF-1.2.6.pdf",
   "format": "pdf",
   "fetch": "get",
   "access": "public",
@@ -4389,6 +4389,23 @@
    "taiwan-payment/examples/newebpay-payment-example.py"
   ],
   "notes": "向量取自 1.0.12 includes/nwpenc/encProcess.php（32 bytes padding 行為）"
+ },
+ {
+  "id": "newebpay-news",
+  "provider": "newebpay",
+  "skills": [
+   "payment"
+  ],
+  "title": "藍新金流 最新消息",
+  "url": "https://www.newebpay.com/website/Page/news",
+  "format": "html",
+  "fetch": "browser",
+  "access": "public",
+  "covers": [
+   "taiwan-payment/references/newebpay-payment-api.md",
+   "taiwan-payment/data/payment-methods.csv"
+  ],
+  "notes": "列表由 JavaScript 載入，需瀏覽器渲染；服務上線／下架公告（如 AFTEE、大哥付你分期、Passkey）在此"
  },
  {
   "id": "opay-backoffice-error-codes",
