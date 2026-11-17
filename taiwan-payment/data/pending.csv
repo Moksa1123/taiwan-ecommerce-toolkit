@@ -32,3 +32,14 @@ date,question,why_not_found,asked_by,status
 2026-11-17,TapPay 超商取貨付款（Cash On Delivery）pay-by-prime 的 merchant_id、回應與門市欄位規格,docs.tappaysdk.com 無專頁，只有 GitHub 範例,taiwan-toolkit（官方文件稽核 2026-11-17）,open
 2026-11-17,TapPay Web SDK 是否依 Portal 網域白名單拒絕 setupSDK、沙箱是否強制,官方 Frontend 與 Portal 文件未提網域白名單行為,taiwan-toolkit（官方文件稽核 2026-11-17）,open
 2026-11-17,TapPay Record API filters.time 是否必帶,Backend 頁寫 time*、time(filter) 寫必填，但 filters 頁又寫「每個皆非必帶」，官方自相矛盾；reference 依兩處必填寫法,taiwan-toolkit（官方文件稽核 2026-11-17）,open
+2026-11-17,LINE Pay v4 payment request 的 options 是否真的必填？官方欄位表標必填，但官方 curl 範例沒帶 options,官方欄位表與範例互相矛盾；需沙箱實測或問 LINE Pay,taiwan-toolkit（官方文件稽核 2026-11-17）,open
+2026-11-17,LINE Pay 結果代碼 2024（英文版：超過商家收款上限）與 2042（中文版：退款準備金不足致 EPI 交易無法退款）是兩個不同代碼，還是其中一版打錯？,英文版代碼表只列 2024、中文版只列 2042；英文版 refund 端點 Related errors 列 2042,taiwan-toolkit（官方文件稽核 2026-11-17）,open
+2026-11-17,LINE Pay GET /v4/payments 一次查多筆時 orderId[]／transactionId[] 的 query 寫法（重複 key 還是逗號分隔）與簽章用的 queryString 如何組,官方只寫 one or more 並以 [] 標示，範例只示範各一筆,taiwan-toolkit（官方文件稽核 2026-11-17）,open
+2026-11-17,LINE Pay capture 是否可對同一筆授權分批多次請款？,官方只寫請款金額可與請求金額不同，未說明可否多次 capture,taiwan-toolkit（官方文件稽核 2026-11-17）,open
+2026-11-17,LINE Pay Online API v3（及更早的 v2）停用日期,API change log 只寫 v4 為新增、可繼續用 legacy API，沒有停用時程；網站已無 Online v2 文件,taiwan-toolkit（官方文件稽核 2026-11-17）,open
+2026-11-17,LINE Pay 自動扣款 payment 的 currency 與 productName 是否真的可省略,官方欄位表標選填，但範例都有帶；未見省略時的預設值,taiwan-toolkit（官方文件稽核 2026-11-17）,open
+2026-11-17,LINE Pay void／refund 說可重試的 1900、1902、1999 與代碼表的 190X 關係（1999 是否屬 190X）,代碼表只列 190X，未逐一列出 1900、1902、1999,taiwan-toolkit（官方文件稽核 2026-11-17）,open
+2026-11-17,LINE Pay 退款期限（天數）,官方只有代碼 1163（已過退款期限），未寫期限,taiwan-toolkit（官方文件稽核 2026-11-17）,open
+2026-11-17,LINE Pay 台灣商家後台登入網址,官方文件站只連到泰國後台 pay.line.me/portal/th/auth/login，台灣網址未寫,taiwan-toolkit（官方文件稽核 2026-11-17）,open
+2026-11-17,LINE Pay confirmUrlType=SERVER 時 LINE Pay 伺服器呼叫 confirmUrl 後期待商家回應什麼（HTTP 狀態、body）,導回頁文件只寫呼叫方式與逾時，未寫商家應回應的內容,taiwan-toolkit（官方文件稽核 2026-11-17）,open
+2026-11-17,examples/linepay-payment-example.py 的 void_auth() 送 {} 當 body；官方寫 void 沒有 body,要改成空 body 並一起簽章，需實測確認簽章字串,taiwan-toolkit（官方文件稽核 2026-11-17）,open

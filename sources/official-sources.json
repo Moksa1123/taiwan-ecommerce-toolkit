@@ -4258,7 +4258,8 @@
   "access": "public",
   "covers": [
    "taiwan-payment/references/linepay-payment-api.md",
-   "tests/vectors/linepay.json"
+   "tests/vectors/linepay.json",
+   "taiwan-payment/data/error-codes.csv"
   ]
  },
  {
@@ -4312,6 +4313,135 @@
    "taiwan-payment/references/linepay-payment-api.md",
    "taiwan-payment/data/providers.csv",
    "taiwan-payment/examples/linepay-payment-example.py"
+  ]
+ },
+ {
+  "id": "linepay-online-api-v4-request-payment",
+  "provider": "linepay",
+  "skills": [
+   "payment"
+  ],
+  "title": "LINE Pay Developers：Online API v4 Payment request",
+  "url": "https://developers-pay.line.me/online-api-v4/request-payment",
+  "format": "html",
+  "fetch": "get",
+  "access": "public",
+  "covers": [
+   "taiwan-payment/references/linepay-payment-api.md",
+   "taiwan-payment/data/operations.csv",
+   "taiwan-payment/data/field-mappings.csv",
+   "taiwan-payment/examples/linepay-payment-example.py"
+  ]
+ },
+ {
+  "id": "linepay-online-api-v4-confirm-payment",
+  "provider": "linepay",
+  "skills": [
+   "payment"
+  ],
+  "title": "LINE Pay Developers：Online API v4 Payment confirmation",
+  "url": "https://developers-pay.line.me/online-api-v4/confirm-payment",
+  "format": "html",
+  "fetch": "get",
+  "access": "public",
+  "covers": [
+   "taiwan-payment/references/linepay-payment-api.md",
+   "taiwan-payment/data/operations.csv",
+   "taiwan-payment/data/field-mappings.csv"
+  ]
+ },
+ {
+  "id": "linepay-online-api-v4-capture",
+  "provider": "linepay",
+  "skills": [
+   "payment"
+  ],
+  "title": "LINE Pay Developers：Online API v4 Capture",
+  "url": "https://developers-pay.line.me/online-api-v4/capture",
+  "format": "html",
+  "fetch": "get",
+  "access": "public",
+  "covers": [
+   "taiwan-payment/references/linepay-payment-api.md",
+   "taiwan-payment/data/operations.csv",
+   "taiwan-payment/EXAMPLES.md"
+  ]
+ },
+ {
+  "id": "linepay-online-api-v4-retrieve-payment-details",
+  "provider": "linepay",
+  "skills": [
+   "payment"
+  ],
+  "title": "LINE Pay Developers：Online API v4 Retrieve payment details",
+  "url": "https://developers-pay.line.me/online-api-v4/retrieve-payment-details",
+  "format": "html",
+  "fetch": "get",
+  "access": "public",
+  "covers": [
+   "taiwan-payment/references/linepay-payment-api.md"
+  ]
+ },
+ {
+  "id": "linepay-online-api-v4-request-preapproved-payment",
+  "provider": "linepay",
+  "skills": [
+   "payment"
+  ],
+  "title": "LINE Pay Developers：Online API v4 Pre-approved payment request",
+  "url": "https://developers-pay.line.me/online-api-v4/request-preapproved-payment",
+  "format": "html",
+  "fetch": "get",
+  "access": "public",
+  "covers": [
+   "taiwan-payment/references/linepay-payment-api.md",
+   "taiwan-payment/data/operations.csv"
+  ]
+ },
+ {
+  "id": "linepay-online-api-v4-redirection-pages",
+  "provider": "linepay",
+  "skills": [
+   "payment"
+  ],
+  "title": "LINE Pay Developers：Online API v4 導回頁面（confirmUrl／cancelUrl、SERVER 模式來源 IP）",
+  "url": "https://developers-pay.line.me/online-api-v4/merchant/redirection-pages",
+  "format": "html",
+  "fetch": "get",
+  "access": "public",
+  "covers": [
+   "taiwan-payment/references/linepay-payment-api.md"
+  ]
+ },
+ {
+  "id": "linepay-sandbox",
+  "provider": "linepay",
+  "skills": [
+   "payment"
+  ],
+  "title": "LINE Pay Developers：Sandbox",
+  "url": "https://developers-pay.line.me/sandbox",
+  "format": "html",
+  "fetch": "get",
+  "access": "public",
+  "covers": [
+   "taiwan-payment/references/linepay-payment-api.md"
+  ]
+ },
+ {
+  "id": "linepay-faq",
+  "provider": "linepay",
+  "skills": [
+   "payment"
+  ],
+  "title": "LINE Pay Developers：FAQ（1106 簽章錯誤、沙箱憑證）",
+  "url": "https://developers-pay.line.me/faq",
+  "format": "html",
+  "fetch": "get",
+  "access": "public",
+  "covers": [
+   "taiwan-payment/references/linepay-payment-api.md",
+   "taiwan-payment/data/error-codes.csv"
   ]
  },
  {

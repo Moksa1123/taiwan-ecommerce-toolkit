@@ -1309,7 +1309,7 @@ LINE Pay 採 **兩段式流程**：`Request → Confirm`。每次請求需產生
 1. **HMAC string-to-sign 公式**：`ChannelSecret + ApiPath + Body + Nonce` (POST) / `ChannelSecret + ApiPath + QueryString + Nonce` (GET)，結果 Base64。v3、v4 相同（官方 developers-pay.line.me/online/prerequisites；API 變更紀錄亦寫「same as online API v3, v4」）。
 2. **transactionId 是 19 位數字**：在 JS 直接用 number 會被 IEEE-754 截斷，**永遠用字串處理**。
 3. **Confirm 的 amount/currency 必須與 Request 完全一致**：官方 v4 Confirm 的相關錯誤碼含 `1124`（金額資訊錯誤）；`1183` 是「低於最低金額」，不在 Confirm 的錯誤清單。
-4. **Capture 兩階段授權**：建立時 `options.payment.capture=false` 只授權；之後手動呼叫 `/capture` 請款，可分批請款多次。
+4. **Capture 兩階段授權**：建立時 `options.payment.capture=false` 只授權；之後在 `authorizationExpireDate` 前呼叫 `/capture` 請款（金額可與請求金額不同），回 `1199` 或 `1280`–`1298` 時付款會自動取消。
 5. **Preapproved Pay 自動扣款**：建立時帶 `payType=PREAPPROVED` 取得 `regKey`，之後用 `/preapprovedPay/{regKey}/payment` 直接扣款，免使用者再次確認。
 
 ---

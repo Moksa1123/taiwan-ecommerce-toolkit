@@ -8,7 +8,7 @@
 |---|---|
 | 來源 | 各服務商官方文件、官方 PDF 規格書、官方 SDK／外掛原始碼；每個來源登記在 repo 的 `sources/official-sources.json`（網址、取得方式、影響哪些檔） |
 | 服務商 | 共 14 家（`data/providers.csv`，每家附 `doc_url` 與 `doc_verified`） |
-| 筆數 | 共 **3178 筆**，分 7 個搜尋域；各域筆數用 `python scripts/search.py --stats` 看，不在這裡手寫 |
+| 筆數 | 共 **3181 筆**，分 7 個搜尋域；各域筆數用 `python scripts/search.py --stats` 看，不在這裡手寫 |
 | 出處欄 | 每筆都有 `doc_url`（官方文件）與 `trust`（實測／官方文件／推論）；`retrieved_on` 是官方來源最近一次比對的日期 |
 | 加密實作 | 由官方 SDK、外掛或規格書範例原封不動執行產生標準答案（`tests/vectors/`），範例與文件程式碼逐位元組比對 |
 | 驗證 | 2026-11-15：自我測試全過、`verify-examples.py` 全過；已知落差記在 `data/pending.csv` |

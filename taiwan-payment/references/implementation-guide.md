@@ -152,10 +152,10 @@ python scripts/recommend.py "會員制 定期扣款" --format simple
 - **特色**: Embedded SDK 適合自訂 UI 與 PCI 隔離；Redirect 模式快速上線；6 種主流支付（信用卡/Apple Pay/LINE Pay/街口/ATM/中租 BNPL）
 
 ### LINE Pay 特性
-- **優勢**: LINE 生態系直連、跨國（TW/JP/TH/TW）、自動扣款（Preapproved Pay）、Capture/Void 雙階段授權
+- **優勢**: LINE 生態系直連、幣別 USD/TWD/THB（日本已終止服務）、自動扣款（Preapproved Pay）、Capture/Void 雙階段授權
 - **認證**: Channel ID + Channel Secret；每次請求需產生 Nonce 並用 HMAC-SHA256 簽章 (`X-LINE-Authorization`)
 - **傳輸**: RESTful JSON v4 規格
-- **特色**: Request → Confirm 兩段式流程；Capture 可手動請款（autoCapture=false）；19 位 transactionId（JS 需用字串避免精度遺失）；不支援 Apple Pay / Google Pay（這是 LINE Pay 自身就是支付工具）
+- **特色**: Request → Confirm 兩段式流程；Capture 可手動請款（options.payment.capture=false）；19 位 transactionId（JS 需用字串避免精度遺失）；不支援 Apple Pay / Google Pay（這是 LINE Pay 自身就是支付工具）
 
 ### TapPay 特性
 - **優勢**: PCI 隔離設計（前端 SDK 取 Prime → 後端付款）、支援多元電子錢包（Apple Pay / Google Pay / LINE Pay / 街口）、適合自製結帳頁
