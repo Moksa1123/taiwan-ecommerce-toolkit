@@ -16,3 +16,8 @@ date,question,why_not_found,asked_by,status
 2026-11-17,藍新服務公告（https://www.newebpay.com/info/news/list_news）是否有 API 停用／改版公告,頁面由 JavaScript 載入，urllib 抓不到內容；共用瀏覽器被其他代理占用未能渲染。最新消息頁（/website/Page/news）已查，至 2026-09-16 無 API 停用公告,taiwan-toolkit（官方文件稽核 2026-11-17）,open
 2026-11-17,field-mappings 的 NewebPay card_token 原寫 TokenValue，是否出自非公開的信用卡幕後授權／約定信用卡 API,公開規格書 NDNF-1.2.6、NDNP-1.0.8 都沒有 TokenValue；幕後授權手冊需申請才提供,taiwan-toolkit（官方文件稽核 2026-11-17）,open
 2026-11-17,MPG 程式版本 2.0 現在是否仍被接受,NDNF-1.2.6 參數表寫 2.3，但同書 PHP 範例與回傳範例仍用 Version=2.0，錯誤代碼 MPG02010 為「此版本不支援，請升級至 v2.3」；未說明哪些功能觸發,taiwan-toolkit（官方文件稽核 2026-11-17）,open
+2026-11-17,綠界永豐 30 期（CreditInstallment=30N、PaymentType=Flexible_Installment）是服務停止還是只移除文件？已開通的特店是否仍會收到 Flexible_Installment,開發者網站更新歷程只寫「移除文件中永豐30期文字」；綠界 ecpay-api-skill guides/01 仍列 30N 與 Flexible_Installment，兩份官方來源不一致,taiwan-toolkit（官方文件稽核 2026-11-17）,open
+2026-11-17,綠界 BNPL 錯誤碼 10200105 的金額下限是多少,ecpay-api-skill guides/20 寫 3000 元；開發者網站 /36659 寫裕富 1000、中租 50；需後台「交易狀態代碼查詢」或洽綠界確認,taiwan-toolkit（官方文件稽核 2026-11-17）,open
+2026-11-17,綠界 Apple Pay 在非 Safari 瀏覽器是否顯示（QR Code 流程是否已上線）,/7328 寫第三方瀏覽器顯示 QR Code（2025-11-04 上線、iOS 18 以上），/2862 仍寫非 Safari 不顯示 Apple Pay；需實測或洽綠界,taiwan-toolkit（官方文件稽核 2026-11-17）,open
+2026-11-17,綠界 AIO 是否仍接受 InvoiceMark 參數（examples/ecpay-payment-example.py 預設送 InvoiceMark=N）,現行 /2862 參數表沒有 InvoiceMark，也沒有說明多送未列參數的行為；需測試環境實測,taiwan-toolkit（官方文件稽核 2026-11-17）,open
+2026-11-17,payment-methods.csv 綠界 ATM 1-49999、CVS 30-20000、BARCODE 20-40000 的金額上下限出處,全方位金流 API 文件未列固定上下限（/5740 指向依特店申請的費率方案），只有收費頁可能有；未找到可引用的官方頁,taiwan-toolkit（官方文件稽核 2026-11-17）,open

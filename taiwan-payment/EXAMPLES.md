@@ -982,7 +982,7 @@ export async function POST(request: Request) {
             status: 'PENDING',
             amount: plan.price,
             frequency: plan.frequency, // 'M' = 月, 'Y' = 年
-            totalTimes: plan.totalTimes || 999, // 999 = 無限次
+            totalTimes: plan.totalTimes || (plan.frequency === 'Y' ? 99 : 999), // ECPay 上限：D、M 999 次，Y 99 次，沒有無限次
         }
     })
 
@@ -1031,6 +1031,7 @@ export async function POST(request: Request) {
 // app/api/subscription/callback/route.ts
 
 import { prisma } from '@/lib/prisma'
+import { ECPayPaymentService } from '@/lib/services/ecpay-payment-service'
 
 export async function POST(request: Request) {
     const formData = await request.formData()
@@ -1038,15 +1039,18 @@ export async function POST(request: Request) {
 
     console.log('[INFO] 收到訂閱授權通知:', params)
 
-    const merchantTradeNo = params.MerchantTradeNo
-    const isPaid = params.RtnCode === '1'
+    if (!new ECPayPaymentService(false).verifyCallback(params)) {
+        return new Response('0|CheckMacValue Error', { status: 400 })
+    }
 
-    // 更新訂閱狀態
+    const merchantTradeNo = params.MerchantTradeNo
+    const isPaid = params.RtnCode === '1' && params.SimulatePaid !== '1'
+
+    // 第 1 次授權結果送 ReturnURL；第 2 次起送 PeriodReturnURL，MerchantTradeNo 每期相同
     await prisma.subscription.update({
         where: { merchantTradeNo },
         data: {
-            status: isPaid ? 'ACTIVE' : 'FAILED',
-            gwsr: params.gwsr, // 綠界週期編號（重要：後續扣款需要）
+            status: isPaid ? 'ACTIVE' : 'FAILED', // 第 1 次失敗不會進排程，須重建訂單
             firstPaidAt: isPaid ? new Date() : null,
         }
     })
@@ -1063,6 +1067,7 @@ export async function POST(request: Request) {
 // app/api/subscription/periodic-callback/route.ts
 
 import { prisma } from '@/lib/prisma'
+import { ECPayPaymentService } from '@/lib/services/ecpay-payment-service'
 
 export async function POST(request: Request) {
     const formData = await request.formData()
@@ -1070,13 +1075,16 @@ export async function POST(request: Request) {
 
     console.log('[INFO] 收到週期扣款通知:', params)
 
-    const gwsr = params.gwsr // 綠界週期編號
-    const isPaid = params.RtnCode === '1'
-    const execTimes = parseInt(params.ExecTimes) // 當前第幾次扣款
+    if (!new ECPayPaymentService(false).verifyCallback(params)) {
+        return new Response('0|CheckMacValue Error', { status: 400 })
+    }
 
-    // 1. 更新訂閱記錄
+    const isPaid = params.RtnCode === '1' && params.SimulatePaid !== '1'
+    const execTimes = parseInt(params.TotalSuccessTimes) // 已成功次數；ExecTimes 是訂單設定的總次數
+
+    // 1. 用 MerchantTradeNo 找訂閱（每期相同；gwsr 是本次授權單號，每期不同）
     const subscription = await prisma.subscription.findFirst({
-        where: { gwsr }
+        where: { merchantTradeNo: params.MerchantTradeNo }
     })
 
     if (subscription) {
@@ -1086,7 +1094,8 @@ export async function POST(request: Request) {
                 subscriptionId: subscription.id,
                 merchantTradeNo: params.MerchantTradeNo,
                 tradeNo: params.TradeNo,
-                amount: parseInt(params.amount),
+                amount: parseInt(params.Amount), // PeriodReturnURL 欄位是大寫 Amount
+                gwsr: params.gwsr,               // 本次授權交易單號
                 execTimes: execTimes,
                 status: isPaid ? 'PAID' : 'FAILED',
                 paidAt: isPaid ? new Date() : null,

@@ -4,7 +4,7 @@ ecpay,2,ATM 取號成功,ATM number issued,success,info,不是錯誤；等消費
 ecpay,10100073,CVS／BARCODE 取號成功,CVS/Barcode number issued,success,info,不是錯誤；等消費者繳費後會再收到付款通知（/2881）,https://developers.ecpay.com.tw/,2026-08-08,官方文件
 ecpay,10100001,超商代碼已失效,CVS code expired,payment,error,重新取號（出處：綠界官方 skill guides/20，developers.ecpay.com.tw 未列，以後台「交易狀態代碼查詢」為準）,https://developers.ecpay.com.tw/,2026-08-08,官方文件
 ecpay,10100058,Pay fail（3D 驗證未完成）,Pay fail.,payment,error,請消費者更換瀏覽器或裝置、關閉 VPN、切換網路取得新 IP；定期定額時手機號碼須與銀行資料一致（/5740）,https://developers.ecpay.com.tw/,2026-08-08,官方文件
-ecpay,10100248,信用卡被銀行拒絕,Wrong merchant account,payment,error,資料錯誤、額度不足等，請消費者洽發卡行（/5740）,https://developers.ecpay.com.tw/,2026-08-08,官方文件
+ecpay,10100248,信用卡被銀行拒絕,Wrong merchant account,payment,error,資料錯誤、額度不足等，請消費者洽發卡行（/5740、/2878）,https://developers.ecpay.com.tw/,2026-08-08,官方文件
 ecpay,10200009,訂單已過期,Order expired,payment,error,檢查 ExpireDate 設定，重新建立訂單（出處：綠界官方 skill guides/20，developers.ecpay.com.tw 未列，以後台「交易狀態代碼查詢」為準）,https://developers.ecpay.com.tw/,2026-08-08,官方文件
 ecpay,10200043,3D 驗證失敗,3D Secure failed,payment,error,請消費者重新進行 3D 驗證（出處：綠界官方 skill guides/20，developers.ecpay.com.tw 未列，以後台「交易狀態代碼查詢」為準）,https://developers.ecpay.com.tw/,2026-08-08,官方文件
 ecpay,10200047,MerchantTradeNo 重複,Duplicate MerchantTradeNo,validation,error,使用不同的訂單編號（最長 20 字元，僅英數字）（出處：綠界官方 skill guides/20，developers.ecpay.com.tw 未列，以後台「交易狀態代碼查詢」為準）,https://developers.ecpay.com.tw/,2026-08-08,官方文件
@@ -12,7 +12,7 @@ ecpay,10200050,TotalAmount 超出範圍（金額不符）,TotalAmount out of ran
 ecpay,10200058,信用卡授權失敗,Card authorization failed,payment,error,請消費者確認卡片資訊或更換信用卡（出處：綠界官方 skill guides/20，developers.ecpay.com.tw 未列，以後台「交易狀態代碼查詢」為準）,https://developers.ecpay.com.tw/,2026-08-08,官方文件
 ecpay,10200073,CheckMacValue 驗證失敗,CheckMacValue verify fail,auth,error,不分大小寫排序、PHP urlencode 後轉小寫並還原 ( ) ! *、金流 SHA256 / 物流 MD5；確認 HashKey/HashIV（出處：綠界官方 skill guides/20，developers.ecpay.com.tw 未列，以後台「交易狀態代碼查詢」為準）,https://developers.ecpay.com.tw/,2026-08-08,官方文件
 ecpay,10200095,訂單未成立，消費者未完成付款,Transaction not completed (customer did not finish payment),payment,warning,查詢 API 的 TradeStatus；不是已付款或已退款（/2890）,https://developers.ecpay.com.tw/,2026-08-08,官方文件
-ecpay,10200105,BNPL 金額未達最低,BNPL amount below minimum,validation,error,"TotalAmount 需 >= 3,000 元（出處：綠界官方 skill guides/20，developers.ecpay.com.tw 未列，以後台「交易狀態代碼查詢」為準）",https://developers.ecpay.com.tw/,2026-08-08,官方文件
+ecpay,10200105,BNPL 金額未達最低,BNPL amount below minimum,validation,error,"開發者網站 /36659 的下限：裕富 URICH 1,000 元、中租 ZINGALA 50 元（上限皆 500,000）；綠界 skill guides/20 寫 3,000 元，兩者不一致，以後台「交易狀態代碼查詢」為準",https://developers.ecpay.com.tw/36659.md,2026-11-17,官方文件
 ecpay,10200115,信用卡授權逾時,Card authorization timeout,payment,error,請消費者重新付款（出處：綠界官方 skill guides/20，developers.ecpay.com.tw 未列，以後台「交易狀態代碼查詢」為準）,https://developers.ecpay.com.tw/,2026-08-08,官方文件
 ecpay,10300006,超商繳費期限已過（國內物流中為物流訂單已過期）,CVS payment expired,payment,error,重新建立訂單；同一代碼在物流服務含意不同（出處：綠界官方 skill guides/20，developers.ecpay.com.tw 未列，以後台「交易狀態代碼查詢」為準）,https://developers.ecpay.com.tw/,2026-08-08,官方文件
 ecpay,10400011,WAF 關鍵字攔截,Blocked by WAF keyword,validation,error,ItemName / TradeDesc 含 echo、python、curl 等系統指令關鍵字，移除即可（出處：綠界官方 skill guides/20，developers.ecpay.com.tw 未列，以後台「交易狀態代碼查詢」為準）,https://developers.ecpay.com.tw/,2026-08-08,官方文件
@@ -23,6 +23,14 @@ ecpay,10300023,本次交易未提供任何付款方式,,config,error,MerchantID 
 ecpay,10300024,資料驗證錯誤，請回到原廠商頁面重新操作,,payment,warning,消費者於簡訊驗證時返回上一頁再送出所致（/5740）,https://developers.ecpay.com.tw/,2026-08-08,官方文件
 ecpay,5100070,建立訂單失敗：金額超出上下限或無可用付款方式,,api,error,例：1 元訂單只開 ATM；測試環境請用 2 元以上（/5740）,https://developers.ecpay.com.tw/,2026-08-08,官方文件
 ecpay,5100071,建立訂單失敗：無權限使用,,config,error,服務未開通，請聯繫業務（/5740）,https://developers.ecpay.com.tw/,2026-08-08,官方文件
+ecpay,10300066,交易付款結果待確認中，請勿出貨,,payment,warning,不是付款成功；到廠商後台確認已付款再出貨（/2878）,https://developers.ecpay.com.tw/2878.md,2026-11-17,官方文件
+ecpay,10100251,卡片過期,,payment,error,請消費者檢查卡片後重新交易（/2878）,https://developers.ecpay.com.tw/2878.md,2026-11-17,官方文件
+ecpay,10100252,額度不足,,payment,error,請消費者檢查卡片額度或餘額（/2878）,https://developers.ecpay.com.tw/2878.md,2026-11-17,官方文件
+ecpay,10100254,交易失敗（發卡行交易限制）,,payment,error,請消費者聯繫發卡行確認交易限制（/2878）,https://developers.ecpay.com.tw/2878.md,2026-11-17,官方文件
+ecpay,10100255,報失卡,,payment,error,請消費者更換卡片重新交易（/2878）,https://developers.ecpay.com.tw/2878.md,2026-11-17,官方文件
+ecpay,10100256,被盜用卡,,payment,error,請消費者更換卡片重新交易（/2878）,https://developers.ecpay.com.tw/2878.md,2026-11-17,官方文件
+ecpay,10200163,BNPL 申請失敗,,payment,error,查詢訂單 API 的 TradeStatus；BNPL 另有 0＝申請已受理、1＝申請成功（/2890）,https://developers.ecpay.com.tw/2890.md,2026-11-17,官方文件
+ecpay,90100149,定期定額訂單已停用,,api,error,CreditCardPeriodAction 回傳；訂單已停用，補授權或終止作業失敗（/2900）,https://developers.ecpay.com.tw/2900.md,2026-11-17,官方文件
 newebpay,SUCCESS,成功,Success,success,info,,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
 newebpay,1000,退款申請完成,,success,info,電子錢包退款 [NPA-B06] 成功時 Status=1000（不是 SUCCESS）,https://www.newebpay.com/website/Page/content/download_api,2026-11-17,官方文件
 newebpay,MPG01002,時間戳記不可空白,,validation,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件

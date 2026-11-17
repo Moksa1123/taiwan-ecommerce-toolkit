@@ -576,14 +576,14 @@ CVV: 任意 3 碼
 **原因：**
 1. 未設定 ChoosePayment=ATM
 2. ExpireDate 格式錯誤
-3. ExpireDate 超過範圍（3-60 天）
+3. ExpireDate 超過範圍（ECPay 1-60 天，預設 3）
 
 **解決方案：**
 ```typescript
 // * ECPay ATM 設定
 const params = {
     ChoosePayment: 'ATM',
-    ExpireDate: 3,  // 3-60 天
+    ExpireDate: 3,  // 1-60 天，預設 3
     PaymentInfoURL: 'https://yourdomain.com/api/payment/atm-info',  // 接收帳號通知
     // ...
 }

@@ -1617,7 +1617,8 @@
   "id": "ecpay-api-skill-error-guide",
   "provider": "ecpay",
   "skills": [
-   "invoice"
+   "invoice",
+   "payment"
   ],
   "title": "綠界官方 ecpay-api-skill guides/20-error-codes-reference.md",
   "url": "https://raw.githubusercontent.com/ECPay/ecpay-api-skill/master/guides/20-error-codes-reference.md",
@@ -1625,7 +1626,8 @@
   "fetch": "get",
   "access": "public",
   "covers": [
-   "taiwan-invoice/data/error-codes.csv"
+   "taiwan-invoice/data/error-codes.csv",
+   "taiwan-payment/data/error-codes.csv"
   ],
   "notes": "速查表為 2026-03 快照，與 developers 網站衝突時以網站為準"
  },
@@ -3338,6 +3340,106 @@
    "taiwan-logistics/examples/ecpay-logistics-cvs-example.py"
   ],
   "notes": "產生 MD5 CheckMacValue 標準答案用；版本見 https://api.wordpress.org/plugins/info/1.0/ecpay-ecommerce-for-woocommerce.json"
+ },
+ {
+  "id": "ecpay-aio-2856",
+  "provider": "ecpay",
+  "skills": [
+   "payment"
+  ],
+  "title": "綠界全方位金流API技術文件 /準備事項 / 測試介接資訊",
+  "url": "https://developers.ecpay.com.tw/2856.md",
+  "format": "md",
+  "fetch": "get",
+  "access": "public",
+  "covers": [
+   "taiwan-payment/references/ecpay-payment-api.md",
+   "taiwan-payment/data/providers.csv",
+   "taiwan-payment/data/troubleshooting.csv"
+  ],
+  "notes": "developers.ecpay.com.tw/{id}.md 直接回傳 Markdown；測試帳號、測試卡號"
+ },
+ {
+  "id": "ecpay-aio-35196",
+  "provider": "ecpay",
+  "skills": [
+   "payment"
+  ],
+  "title": "綠界全方位金流API技術文件 / 更新歷程",
+  "url": "https://developers.ecpay.com.tw/35196.md",
+  "format": "md",
+  "fetch": "get",
+  "access": "public",
+  "covers": [
+   "taiwan-payment/references/ecpay-payment-api.md",
+   "taiwan-payment/data/payment-methods.csv"
+  ],
+  "notes": "官方改版紀錄；有新條目時逐頁核對全方位金流文件"
+ },
+ {
+  "id": "ecpay-aio-2864",
+  "provider": "ecpay",
+  "skills": [
+   "payment"
+  ],
+  "title": "綠界全方位金流API技術文件 /付款方式 / 全方位金流付款（ChoosePayment=ALL）",
+  "url": "https://developers.ecpay.com.tw/2864.md",
+  "format": "md",
+  "fetch": "get",
+  "access": "public",
+  "covers": [
+   "taiwan-payment/references/ecpay-payment-api.md"
+  ],
+  "notes": "developers.ecpay.com.tw/{id}.md 直接回傳 Markdown"
+ },
+ {
+  "id": "ecpay-aio-11031",
+  "provider": "ecpay",
+  "skills": [
+   "payment"
+  ],
+  "title": "綠界全方位金流API技術文件 /付款方式 / WebATM",
+  "url": "https://developers.ecpay.com.tw/11031.md",
+  "format": "md",
+  "fetch": "get",
+  "access": "public",
+  "covers": [
+   "taiwan-payment/references/ecpay-payment-api.md"
+  ],
+  "notes": "developers.ecpay.com.tw/{id}.md 直接回傳 Markdown"
+ },
+ {
+  "id": "ecpay-ecpg-39086",
+  "provider": "ecpay",
+  "skills": [
+   "payment"
+  ],
+  "title": "綠界站內付 / 超商代碼CVS轉三段式條碼",
+  "url": "https://developers.ecpay.com.tw/39086.md",
+  "format": "md",
+  "fetch": "get",
+  "access": "public",
+  "covers": [
+   "taiwan-payment/references/ecpay-payment-api.md"
+  ],
+  "notes": "AIO 2874 引用的轉條碼 API；JSON 格式，屬站內付規格"
+ },
+ {
+  "id": "ecpay-api-skill-payment-aio-guide",
+  "provider": "ecpay",
+  "skills": [
+   "payment"
+  ],
+  "title": "綠界官方 ecpay-api-skill guides/01-payment-aio.md",
+  "url": "https://raw.githubusercontent.com/ECPay/ECPay-API-Skill/master/guides/01-payment-aio.md",
+  "format": "md",
+  "fetch": "get",
+  "access": "public",
+  "covers": [
+   "taiwan-payment/references/ecpay-payment-api.md",
+   "taiwan-payment/EXAMPLES.md"
+  ],
+  "notes": "綠界官方 AI skill 的 AIO 指南；2026-11-17 仍列永豐 30N，與 developers 網站衝突時以網站為準"
  },
  {
   "id": "ezpay-api-document",

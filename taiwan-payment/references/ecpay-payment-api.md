@@ -64,9 +64,8 @@
 | 一般信用卡 | `4311-9511-1111-1111`、`4311-9522-2222-2222` |
 | 海外信用卡 | `4000-2011-1111-1111` |
 | 美國運通（限閘道商） | 國內 `3403-532780-80900`、國外 `3712-222222-22222` |
-| 永豐 30 期 | `4938-1777-7777-7777` |
 | 金融卡 | `4831-3888-8888-8888` |
-| 銀聯卡 | `6213-1111-1111-1`、`6216-1111-1111-1111`、`6219-1111-1111-1111-111` 等 |
+| 銀聯卡 | `6213-1111-1111-1`、`6216-1111-1111-1111`、`6219-1111-1111-1111-111`、`8113-1111-1111-1`、`8116-1111-1111-1111`、`8119-1111-1111-1111-111` |
 
 - 安全碼任意三碼；有效月年須晚於當月
 - 3D 驗證簡訊碼固定 `1234`
@@ -101,10 +100,11 @@
 | `ClientBackURL` | String(200) | 付款頁「返回特店」按鈕網址 |
 | `Remark` | String(100) | 備註 |
 | `ChooseSubPayment` | String(20) | 付款子項目，設定後無法選其他子項目 |
-| `OrderResultURL` | String(200) | 付款完成後 Client 端導回並 POST 結果的網址 |
+| `OrderResultURL` | String(200) | 付款完成後 Client 端導回並 POST 結果的網址；銀聯卡與 ATM／CVS／BARCODE 不支援 |
 | `NeedExtraPaidInfo` | String(1) | `Y` 回傳額外付款資訊（/5675） |
 | `IgnorePayment` | String(100) | `ChoosePayment=ALL` 時隱藏的付款方式，多筆以 `#` 分隔 |
-| `PlatformID` | String(10) | 特約合作平台商代號，一般特店放空值 |
+| `ItemURL` | String(200) | 商品銷售網址 |
+| `PlatformID` | String(10) | 特約合作平台商代號，一般特店放空值；帶 `PlatformID` 時用平台商的 HashKey／HashIV 計算 CheckMacValue（/2858） |
 | `CustomField1`～`4` | String(50) | 自訂欄位，原值回傳 |
 | `Language` | String(3) | `CHT`（預設）、`ENG`、`KOR`、`JPN`、`CHI` |
 
@@ -152,13 +152,16 @@
 
 | 參數 | 型別 | 說明 |
 |------|------|------|
-| `CreditInstallment` | String(20) | 一般分期 `3,6,12,18,24`；永豐 30 期 `30N`（須達最低金額，後台可查）；閘道商另支援 `5,8,9,10` |
+| `CreditInstallment` | String(20) | 一般分期 `3,6,12,18,24`；閘道商另支援 `5,8,9,10`（須在後台設定對應銀行分期閘道） |
 
-- 期數須先申請開通
-- 不可與定期定額、紅利折抵一起設定
+- 期數須先申請開通；未開通分期時交易自動改為一次付清
+- 不可與定期定額、紅利折抵一起設定；銀聯卡不支援分期
 - 帶訂單總金額即可，除不盡的金額由第一期收取
+- 永豐 30 期（`30N`、回傳 `Flexible_Installment`）已於 2026-11-02 自官方文件移除，勿再使用（/35196）
 
-消費者自費分期：消費金額 1,000 元以上可用（/41284）。
+信用卡彈性分期（/41284）：消費金額 1,000 元以上可用，6、12、24、30 期，處理費由消費者支付；為一次付清與分期的附加服務，不能單獨使用；簽帳金融卡會被擋。
+
+部分海外卡不支援 3D 驗證；2025-08-01 起採 3DS 2.0，是否要 3D 驗證由銀行決定。需要每筆都過 3D 可請業務開啟「強制 3D」（/2866、/35196）。
 
 ### 額外付款資訊（`NeedExtraPaidInfo=Y`，/5675）
 
@@ -169,15 +172,18 @@
 | `auth_code` | 授權碼 |
 | `amount` | 金額 |
 | `stage` | 分期期數 |
-| `stast` | 頭期金額（永豐 30 期為第一階段各期金額） |
-| `staed` | 各期金額（永豐 30 期為第二階段各期金額） |
+| `stast` | 頭期金額 |
+| `staed` | 各期金額 |
 | `eci` | 3D 驗證值；`5`、`6`、`2`、`1` 代表 3D 交易 |
 | `card4no`／`card6no` | 卡號末 4／前 6 碼；銀聯卡不回傳，Apple Pay 回傳裝置綁定號碼 |
 | `red_dan`／`red_de_amt`／`red_ok_amt`／`red_yet` | 紅利扣點、折抵金額、實際扣款金額、剩餘點數 |
-| `ATMAccBank`／`ATMAccNo` | ATM 付款人銀行代碼、帳號 |
+| `ATMAccBank`／`ATMAccNo` | ATM 付款人銀行代碼、帳號後 5 碼（`ChooseSubPayment` 為 FIRST、CATHAY、PANHSIN、KGI 時回傳完整帳號，/2872） |
 | `WebATMAccBank`／`WebATMAccNo`／`WebATMBankName` | WebATM 付款人資訊 |
 | `PaymentNo`／`PayFrom` | 超商繳費代碼、繳費超商（`family`／`hilife`／`okmart`／`ibon`） |
 | `TWQRTradeNo` | 行動支付交易編號 |
+| `PeriodType`／`Frequency`／`ExecTimes`／`PeriodAmount`／`TotalSuccessTimes`／`TotalSuccessAmount` | 定期定額訂單設定與目前成功次數、金額 |
+
+額外回傳的參數全部要納入 CheckMacValue 驗證（/5675）。
 
 ---
 
@@ -205,13 +211,15 @@
 
 | 參數 | 型別 | 說明 |
 |------|------|------|
-| `StoreExpireDate` | Int | 繳費截止時間（**分鐘**），預設 10080，上限 43200（30 天） |
+| `StoreExpireDate` | Int | 超商繳款單**列印期限**（**分鐘**），預設 10080，上限 43200（30 天）；列印後的繳費期限依各超商規定，以繳款單標示為準 |
 | `PaymentInfoURL` | String(200) | 取號完成後 Server 端回傳 |
 | `ClientRedirectURL` | String(200) | 取號完成後 Client 端回傳 |
 | `Desc_1`～`Desc_4` | String(20) | 交易描述；繳費超商為全家或 7-11 時顯示在超商繳費平台螢幕 |
 | `ChooseSubPayment` | String(20) | `CVS` 不指定、`OK`、`FAMILY`、`HILIFE`、`IBON` |
 
-**取號結果（/2881）**：`RtnCode=10100073` 為取號成功，其餘失敗。回傳 `PaymentNo`、`ExpireDate`。
+**取號結果（/2881）**：`RtnCode=10100073` 為取號成功，其餘失敗。回傳 `PaymentNo`、`ExpireDate`；CVS 的 `ExpireDate` 是繳款單列印期限，不是繳費期限。
+
+要把超商代碼轉成三段式條碼，用站內付的「超商代碼 CVS 轉三段式條碼」API（/39086，JSON 格式，與 AIO 規格不同）。
 
 ---
 
@@ -224,7 +232,7 @@
 | `StoreExpireDate` | Int | 繳費期限（**天**），預設 7，1～30 |
 | `PaymentInfoURL`／`ClientRedirectURL`／`Desc_1`～`4` | | 同超商代碼 |
 
-取號成功同為 `RtnCode=10100073`，回傳 `Barcode1`～`3` 三段號碼（不含條碼圖，須自行轉成 Code39）。
+取號成功同為 `RtnCode=10100073`，回傳 `Barcode1`～`3` 三段號碼（不含條碼圖，須自行轉成 Code39）。超商條碼的付款結果通知在消費者付款完成約兩天後才送到 `ReturnURL`（/2878）。
 
 ---
 
@@ -247,8 +255,11 @@
 | `OrderResultURL` | Client 端付款結果 |
 
 - 金額：裕富 1,000～500,000；中租 50～500,000
-- 付款結果只透過 `ReturnURL` 通知（/2890）；申請結果通知見 /37517
+- 付款結果只透過 `ReturnURL` 通知（/2890），審核通過後 1～3 個工作天送出；逾時未收到用查詢訂單 API 確認（/36659）
+- 申請結果通知（`PaymentInfoURL`，/37517）：`RtnCode=2` 為申請中，不代表付款成功
+- 查詢訂單的 `TradeStatus`：`0` 申請已受理、`1` 申請成功、`10200163` 申請失敗（/2890）
 - 未指定 `ChooseSubPayment` 時，付款畫面依後台「無卡分期切換設定」顯示
+- 退款：中租可在綠界廠商後台操作；裕富須由特店直接向裕富申請（/36659）
 
 ---
 
@@ -257,7 +268,7 @@
 `ChoosePayment=ApplePay`（/7328）。
 
 - iOS 16 以上任何瀏覽器可用；iOS 16 以下與 macOS 僅 Safari
-- 非 Safari 時付款頁不顯示 Apple Pay（/2862）
+- Chrome、Edge、Firefox 等第三方瀏覽器點 Apple Pay 會顯示 QR Code，由 iOS 18 以上裝置掃碼付款（/7328，官方標示 2025-11-04 上線；/2862 仍寫「非 Safari 不顯示 Apple Pay」，兩頁未同步）
 - 回傳的卡號前六後四為裝置綁定號碼
 - 測試環境模擬付款不向銀行授權
 
@@ -272,13 +283,13 @@
 | `MerchantID` | String(10) | |
 | `MerchantTradeNo` | String(20) | |
 | `StoreID` | String(20) | |
-| `RtnCode` | Int | `1` 付款成功 |
+| `RtnCode` | Int | `1` 付款成功；其他值一律不可出貨（如 `10300066` 付款結果待確認，見[錯誤碼](#錯誤碼)） |
 | `RtnMsg` | String(200) | |
 | `TradeNo` | String(20) | 綠界交易編號 |
 | `TradeAmt` | Int | |
 | `PaymentDate` | String(20) | |
-| `PaymentType` | String(50) | 見下表 |
-| `PaymentTypeChargeFee` | Number | 手續費 |
+| `PaymentType` | String(50) | 見下表；官方會因新服務不定期新增值，程式不要寫死白名單 |
+| `PaymentTypeChargeFee` | Number | 2025-04-01 起為交易手續費＋交易處理費的總額 |
 | `TradeDate` | String(20) | |
 | `PlatformID` | String(10) | |
 | `SimulatePaid` | Int | `1` 為後台模擬付款，**不可出貨** |
@@ -292,7 +303,6 @@
 | 回傳值 | 說明 |
 |--------|------|
 | `Credit_CreditCard` | 信用卡 |
-| `Flexible_Installment` | 永豐 30 期 |
 | `ATM_BOT`、`ATM_CHINATRUST`、`ATM_FIRST`、`ATM_LAND`、`ATM_CATHAY`、`ATM_PANHSIN`、`ATM_KGI` | ATM |
 | `WebATM_BOT`、`WebATM_CHINATRUST`、`WebATM_FIRST`、`WebATM_LAND` | WebATM |
 | `CVS_CVS`、`CVS_OK`、`CVS_FAMILY`、`CVS_HILIFE`、`CVS_IBON` | 超商代碼 |
@@ -322,13 +332,16 @@
 | `CheckMacValue` | String | |
 | `PlatformID` | String(10) | |
 
-回應：`MerchantID`、`MerchantTradeNo`、`StoreID`、`TradeNo`、`TradeAmt`、`PaymentDate`、`PaymentType`、`HandlingCharge`、`PaymentTypeChargeFee`、`TradeDate`、`TradeStatus`、`ItemName`、`CustomField1`～`4`、`CheckMacValue`。
+回應：`MerchantID`、`MerchantTradeNo`、`StoreID`、`TradeNo`、`TradeAmt`、`PaymentDate`、`PaymentType`、`HandlingCharge`、`PaymentTypeChargeFee`（2025-04-01 起含處理費）、`TradeDate`、`TradeStatus`、`ItemName`、`CustomField1`～`4`、`CheckMacValue`。
 
 | TradeStatus | 說明 |
 |-------------|------|
-| `0` | 訂單成立未付款 |
-| `1` | 訂單成立已付款 |
+| `0` | 訂單成立未付款（BNPL：申請已受理） |
+| `1` | 訂單成立已付款（BNPL：申請成功） |
 | `10200095` | 訂單未成立，消費者未完成付款，交易失敗 |
+| `10200163` | BNPL 申請失敗 |
+
+未收到付款通知時：信用卡、TWQR 付款後 10 分鐘再查，`TradeStatus=0` 表示銀行未回覆，隔 10 分鐘再查（或 40 分鐘後一次查）；ATM、CVS、BARCODE、BNPL 為離線付款，等通知即可。
 
 ---
 
@@ -355,7 +368,8 @@
 
 注意事項（/2885）：
 - 開啟「每日自動關帳」時，20:15～20:30 勿呼叫
-- 關閉自動關帳後，訂單須在 21 天內關帳，逾期無法以 API 處理
+- 關閉自動關帳後，訂單須在 21 天內關帳，逾期無法以 API 處理；第 80 天發未關帳通知，超過 90 天系統自動放棄、不請款
+- 關帳回 `error_overDate` 須請客服協助
 - 退刷上限為訂單金額；**分期與紅利折抵交易只能全額退刷**
 - 綠界帳戶餘額低於退刷金額時無法退刷
 - 銀聯卡授權完成即自動關帳，「要關帳」狀態不可取消關帳
@@ -374,8 +388,31 @@
 | `PeriodType` | String(1) | `D` 天、`M` 月、`Y` 年 |
 | `Frequency` | Int | `D`：1～365；`M`：1～12；`Y`：只能 1 |
 | `ExecTimes` | Int | 至少 2 次；`D`、`M` 最多 999，`Y` 最多 99 |
-| `PeriodReturnURL` | String(200) | 每次授權結果通知網址（格式同 /5631），請用網域名稱勿用 IP |
+| `PeriodReturnURL` | String(200) | 第 2 次起每次授權結果通知網址（/5631），請用網域名稱勿用 IP |
 | `BindingCard`／`MerchantMemberID` | | 記憶卡號 |
+
+- `TotalAmount` 必須等於 `PeriodAmount`
+- 第 1 次授權結果送 `ReturnURL`，失敗則訂單不進排程，須重建訂單
+- 扣款失敗累計 6 次自動取消後續扣款；從第 2 次扣款起算，`ReAuth` 補授權失敗也計入（/2868）
+- 銀聯卡不支援定期定額
+
+### 定期定額授權通知（`PeriodReturnURL`，/5631）
+
+| 參數 | 型別 | 說明 |
+|------|------|------|
+| `MerchantID`／`MerchantTradeNo`／`StoreID` | | 每期相同，用 `MerchantTradeNo` 對應訂閱 |
+| `RtnCode`／`RtnMsg` | Int／String | `1` 成功 |
+| `PeriodType`／`Frequency`／`ExecTimes` | | 訂單建立時的設定值（`ExecTimes` 是總次數，不是第幾期） |
+| `Amount` | Int | 本次授權金額（大寫 A） |
+| `gwsr` | Int | 本次授權交易單號，每期不同 |
+| `ProcessDate` | String(20) | 處理時間 |
+| `AuthCode` | String(6) | 授權碼 |
+| `FirstAuthAmount` | Int | 第一次授權金額 |
+| `TotalSuccessTimes` | Int | 目前已成功次數 |
+| `SimulatePaid` | Int | 只有後台模擬付款才回傳，`1` 不可出貨 |
+| `CustomField1`～`4`、`CheckMacValue` | | 必須驗證 |
+
+回應 `1|OK`。每期只通知一次，沒收到用 `QueryCreditCardPeriodInfo` 查。
 
 ### 查詢 `QueryCreditCardPeriodInfo`（/2892）
 
@@ -386,6 +423,7 @@
 | `0` | 已終止 |
 | `1` | 執行中 |
 | `2` | 執行完成 |
+| `3` | 暫停執行 |
 
 ### 作業 `CreditCardPeriodAction`（/2900）
 
@@ -393,8 +431,11 @@
 
 | Action | 說明 |
 |--------|------|
-| `ReAuth` | 最新一筆授權失敗時補授權（測試環境無法測試） |
-| `Cancel` | 終止後續授權 |
+| `ReAuth` | 最新一筆授權失敗時補授權（測試環境無法測試）；結果由排程送到 `PeriodReturnURL` |
+| `Cancel` | 終止後續授權，終止後無法重新啟用 |
+
+- 暫停、終止狀態不能補授權
+- `RtnCode=90100149`：訂單已停用，作業失敗
 
 ---
 
@@ -443,7 +484,15 @@ def generate_check_mac_value(params, hash_key, hash_iv):
 | `10200095` | 訂單未成立，消費者未完成付款（`TradeStatus`） | /2890 |
 | `10100058` | Pay fail：3D 驗證未完成，常見於瀏覽器版本、VPN、IP 不符銀行規範；定期定額時手機號碼與銀行資料不一致也會失敗 | /5740 |
 | `10800001` | 觸發綠界風控（連續刷卡、可疑電話等） | /5740 |
-| `10100248` | 信用卡被銀行拒絕，請消費者洽發卡行 | /5740 |
+| `10300066` | 交易付款結果待確認中，**請勿出貨**；到廠商後台確認已付款再出貨 | /2878 |
+| `10100248` | 信用卡被銀行拒絕，請消費者洽發卡行 | /5740、/2878 |
+| `10100251` | 卡片過期，請消費者檢查卡片後重新交易 | /2878 |
+| `10100252` | 額度不足，請消費者檢查卡片額度或餘額 | /2878 |
+| `10100254` | 交易失敗，請消費者洽發卡行確認交易限制 | /2878 |
+| `10100255` | 報失卡，請消費者更換卡片 | /2878 |
+| `10100256` | 被盜用卡，請消費者更換卡片 | /2878 |
+| `10200163` | BNPL 申請失敗（`TradeStatus`） | /2890 |
+| `90100149` | 定期定額訂單已停用，`CreditCardPeriodAction` 作業失敗 | /2900 |
 | `10200141` | 商店未開啟收款服務（測試／正式環境金鑰混用，或未完成申請） | /5740 |
 | `10200146` | 商店不支援信用卡分期 | /5740 |
 | `10300023` | 本次交易未提供任何付款方式（MerchantID 錯誤或服務未開通） | /5740 |
@@ -498,5 +547,6 @@ def generate_check_mac_value(params, hash_key, hash_iv):
 ## 官方資源
 
 - 開發者文件：https://developers.ecpay.com.tw/
+- 全方位金流更新歷程：https://developers.ecpay.com.tw/35196.md
 - 測試後台：https://vendor-stage.ecpay.com.tw/
 - 正式後台：https://vendor.ecpay.com.tw/
