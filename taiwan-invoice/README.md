@@ -13,7 +13,7 @@ This is an unofficial project. It is not affiliated with or endorsed by ECPay, S
 
 - Covers 7 e-invoice value-added service providers that can issue invoices (ECPay, SmilePay, Amego, ezPay, PayNow, O'Pay, SunPay), plus the Ministry of Finance (MOF) E-Invoice platform for queries.
 - Gives Claude each provider's request format and encryption (AES-128-CBC, AES-256-CBC, MD5, JWT) with runnable Python examples.
-- Searches 408 rows of data offline with `scripts/search.py`: error codes, API operations, field mappings, tax rules, troubleshooting notes and selection advice.
+- Searches 424 rows of data offline with `scripts/search.py`: error codes, API operations, field mappings, tax rules, troubleshooting notes and selection advice.
 - Generates a service skeleton for a provider (`scripts/generate-invoice-service.py`) and suggests a provider from plain-language requirements (`scripts/recommend.py`).
 - Covers B2C and B2B invoices, void, allowance, printing, mobile barcode carriers, donation codes and POS batch number allocation.
 

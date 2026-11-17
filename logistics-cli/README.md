@@ -13,7 +13,7 @@ This is an unofficial project. It is not affiliated with or endorsed by ECPay, N
 
 - Covers 7 aggregators with a logistics API (ECPay, NewebPay, PAYUNi, SmilePay, PChomePay, PayNow, ezShip), the HCT direct carrier API, and on-demand delivery (Lalamove, pandago).
 - Gives Claude each provider's signing and encryption rules (MD5 CheckMacValue, AES-256-CBC, AES-256-GCM, 3DES) with runnable Python examples.
-- Searches 1111 rows of data offline with `scripts/search.py`: providers, API operations, logistics types, field mappings and shipment status codes.
+- Searches 1126 rows of data offline with `scripts/search.py`: providers, API operations, logistics types, field mappings and shipment status codes.
 - Generates a service module for a provider (`scripts/generate-logistics-service.py`) and suggests a provider from plain-language requirements (`scripts/recommend.py`).
 - Covers convenience-store pickup (7-ELEVEN, FamilyMart, Hi-Life, OK mart), home delivery, cold chain, store-map selectors, cash on delivery and tracking.
 

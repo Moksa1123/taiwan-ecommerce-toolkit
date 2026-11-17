@@ -7,15 +7,15 @@
 
 | 業者 | 有對外公開 API 嗎 | 你該怎麼做 |
 |---|---|---|
-| 新竹物流 HCT | ⚠️ 有直連 API，需申請 | 已收錄 [hct-logistics-api.md](hct-logistics-api.md) |
-| 黑貓宅急便 t-cat | ❌ 無公開規格 | 走聚合商，或簽約後取得 |
-| 嘉里大榮 KTJ | ❌ 無公開規格 | 走聚合商 |
-| 宅配通 Pelican | ❌ 無公開規格 | 走聚合商 |
-| 中華郵政 | ❌ **物流面完全沒有 Open API** | 走聚合商（ECPay 有郵政宅配） |
-| 7-ELEVEN 交貨便／賣貨便 | ❌ 賣家自助平台，無對外 API | 走聚合商 |
-| 全家 好賣+ | ❌ 同上 | 走聚合商 |
-| 萊爾富 / OK | ❌ 無獨立對外 API | 走聚合商 |
-| 蝦皮店到店 | ❌ 無對外 API | 無替代路徑 |
+| 新竹物流 HCT | 有直連 API，需申請 | 已收錄 [hct-logistics-api.md](hct-logistics-api.md) |
+| 黑貓宅急便 t-cat | 無公開規格 | 走聚合商，或簽約後取得 |
+| 嘉里大榮 KTJ | 無公開規格 | 走聚合商 |
+| 宅配通 Pelican | 無公開規格 | 走聚合商 |
+| 中華郵政 | 無：**物流面完全沒有 Open API** | 走聚合商（ECPay 有郵政宅配） |
+| 7-ELEVEN 交貨便／賣貨便 | 無：賣家自助平台，無對外 API | 走聚合商 |
+| 全家 好賣+ | 無：同上 | 走聚合商 |
+| 萊爾富 / OK | 無獨立對外 API | 走聚合商（綠界 OK 店到店已於 2026-07-01 終止） |
+| 蝦皮店到店 | 無對外 API | 無替代路徑 |
 
 **「走聚合商」= 用本 skill 已收錄的 ECPay / ezShip / SmilePay / NewebPay / PAYUNi / PChomePay / PayNow。**
 
@@ -24,9 +24,9 @@
 **現況**：官方沒有公開的 API 技術規格。
 
 **官方提供的是**：
-- **ezcat 印單軟體**——整合性託運單列印軟體，提供契約客戶貨物查詢、託運單號自動配號、收/寄件人資料維護與批次匯入。這是**桌面軟體，不是 API**。
+- **ezcat 印單軟體**——給與統一速達、統一客樂得簽約的契約客戶使用的託運單列印軟體，提供貨物查詢、託運單號自動配號、收/寄件人資料維護與批次匯入、檢貨單，離線可用。這是**桌面軟體，不是 API**。
   https://www.t-cat.com.tw/contract/ezcat.aspx
-- **iCat 系統／API 授權**——需先成為契約客戶，向黑貓提出 API 串接需求，由對方核發授權資料。
+- **icat 網路宅急便**——個人會員的網頁／App 預約寄件（單筆、多筆），不是對外 API。官網沒有公開的 API 申請管道或規格，契約客戶要直連需自行洽黑貓業務。
 
 **實務路徑**：
 1. 多數開店平台（SHOPLINE、CYBERBIZ、91APP）已內建黑貓串接，可批次匯入訂單、列印託運單
@@ -37,7 +37,7 @@
 
 ## 2. 嘉里大榮 KTJ
 
-**現況**：官網 https://www.kerrytj.com/zh/checking 僅提供**貨態查詢網頁**，未見公開 API 規格。
+**現況**：官網 https://www.kerrytj.com/zh/checking 僅提供**貨態查詢網頁**（先選常溫或低溫，一次最多 5 筆託運單號，只查一個月內），未見公開 API 規格。
 
 **替代**：第三方追蹤聚合服務（17TRACK 等）可查貨態，但那是爬取/合作資料，不是官方 API，不建議用於正式出貨流程。
 
@@ -47,9 +47,9 @@
 
 **現況**：無公開 API 規格。已列於 `providers.csv` 是因為它是**可用的配送通路**（部分聚合商支援），不是因為可直連。
 
-**已知**：紅陽科技（SunPay）舊文件站 doc.esafe.com.tw 列有「宅配通」，但官網物流頁（sunpay.com.tw/logistics，2026-09-24 查核）已未列，也沒有對應的 API 規格；可用的聚合路徑需向業者確認。紅陽也確認目前不支援物流 API 串接（紅陽客服回覆 2026-09-29）。
+**已知**：紅陽科技（SunPay）舊文件站 doc.esafe.com.tw 列有「宅配通」，但官網物流頁（sunpay.com.tw/logistics，2026-09-24 查核）已未列，也沒有對應的 API 規格；可用的聚合路徑需向業者確認。紅陽沒有獨立的物流 API；超商物流（7-11／全家／萊爾富，不含宅配通）是併在金流 API 用 `lgs_flag`／`store_type` 開啟（金流手冊 V1.1.2 p.23–24、p.49，詳見 taiwan-payment 的 sunpay-payment-api.md）。
 
-## 4. 中華郵政 ⚠️ 常見誤解
+## 4. 中華郵政（常見誤解）
 
 **這是本次盤點最重要的一項更正。**
 
@@ -66,6 +66,8 @@
 
 公告：https://www.post.gov.tw/post/internet/Message/index.jsp?ID=1584329354372
 
+官網「招標資訊 > API 規格書」（https://www.post.gov.tw/post/internet/Message/index.jsp?ID=15021202）是郵儲窗口周邊設備的硬體介面規格，供採購測試用，與包裹或物流無關。
+
 **流傳的「中華郵政包裹查詢 API」**（GitHub gist 等）是**非官方逆向**，無 SLA、隨時可能失效，不應用於正式系統。
 
 **實務路徑**：郵政宅配走 ECPay 物流（其宅配服務含中華郵政）。
@@ -75,12 +77,12 @@
 **性質**：這是**賣家自助平台**，不是可串接的物流服務。
 
 - 7-ELEVEN 交貨便 https://myship.7-11.com.tw/ ／賣貨便：結合統一超商既有交貨便，建構下單→出貨→付款→取貨一條龍。免手續費、**無須自行開發系統**——因為它本來就不打算讓你開發。
-- 全家 好賣+：同性質，賣家數已逾 10 萬。
+- 全家 好賣+：同性質。
 
 **含意**：它們的目標客群是微型賣家（社群電商、個人賣家），商業模式是「你來我的後台操作」，不是「你來串我的 API」。
 
 **實務路徑**：程式串接 7-11／全家店到店，一律走聚合商：
-- ECPay：B2C `UNIMART` / `UNIMARTFREEZE` / `FAMI` / `HILIFE`；C2C `UNIMARTC2C` / `FAMIC2C` / `HILIFEC2C` / `OKMARTC2C`
+- ECPay：B2C `UNIMART` / `UNIMARTFREEZE` / `FAMI` / `HILIFE`；C2C `UNIMARTC2C` / `FAMIC2C` / `HILIFEC2C`（`OKMARTC2C` 已於 2026-07-01 終止，https://developers.ecpay.com.tw/36099/）
 - ezShip：OK／萊爾富／全家三通路（首家串接三通路者）
 - SmilePay：`Pay_zg` 矩陣 51/52/55/56
 - PayNow：`Logistic_service` 01–05、10、21–24 涵蓋四大超商（含冷凍）
@@ -96,7 +98,7 @@
 
 兩家皆無獨立對外 API。`providers.csv` 中的 `hilife`、`okmart` 條目代表**取貨通路可用性**，串接一律經聚合商。
 
-覆蓋率參考：萊爾富約 1500+ 門市、OK 約 900+ 門市（相對 7-11 5000+、全家 3500+）。若目標客群在中南部或非六都，補這兩家的邊際效益比想像中高。
+綠界的 OK 店到店（`OKMARTC2C`）已於 2026-07-01 終止（https://developers.ecpay.com.tw/36099/）；要收 OK 取貨，先向其他聚合商確認仍有提供。萊爾富官網（hilife.com.tw）會擋自動化存取，無法定期查核。
 
 ## 8. 有直連 API 的：新竹物流 HCT
 
@@ -122,12 +124,14 @@
 | `doc_url` | URL | 文件入口 |
 | `doc_verified` | YYYY-MM-DD | 最後查證日期 |
 
-`doc_access=none` 者（黑貓、嘉里、宅配通、中華郵政物流、超商賣家平台）一律 `api_available=false`，並在 `features` 欄註明替代路徑。
+`doc_access=contract`（黑貓、嘉里、宅配通：規格不公開，須簽約洽業務）與 `doc_access=none`（中華郵政物流、超商賣家平台）者一律 `api_available=false`，並在 `features` 欄註明替代路徑。
 
 ## 10. 來源
 
 - 黑貓 ezcat — https://www.t-cat.com.tw/contract/ezcat.aspx
 - 嘉里大榮貨態查詢 — https://www.kerrytj.com/zh/checking
 - 中華郵政 Open API 合作公告 — https://www.post.gov.tw/post/internet/Message/index.jsp?ID=1584329354372
+- 中華郵政 API 規格書（郵儲窗口周邊設備，非物流）— https://www.post.gov.tw/post/internet/Message/index.jsp?ID=15021202
+- 綠界物流更新歷程（OK 店到店終止）— https://developers.ecpay.com.tw/36099/
 - 7-ELEVEN 交貨便 — https://myship.7-11.com.tw/MyShip/Index
 - ECPay 物流 API — https://developers.ecpay.com.tw/7380/ ／全方位物流 — https://developers.ecpay.com.tw/10075/

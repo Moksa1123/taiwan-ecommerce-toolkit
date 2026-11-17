@@ -1088,7 +1088,10 @@ const logistics = new NewebPayLogistics({
  */
 app.post('/callback/shipment-status', async (req, res) => {
   try {
-    const { Status, Message, EncryptData_, HashData_, UID_, Version_ } = req.body;
+    const { Status, Message, UID_, Version_ } = req.body;
+    // 規格書表格帶底線，官方範例 notify_url.php 讀無底線，兩種都讀
+    const EncryptData_ = req.body.EncryptData_ ?? req.body.EncryptData;
+    const HashData_ = req.body.HashData_ ?? req.body.HashData;
 
     console.log('Received notification:', {
       Status,
@@ -1099,7 +1102,7 @@ app.post('/callback/shipment-status', async (req, res) => {
 
     if (Status !== 'SUCCESS') {
       console.error('Notification error:', Message);
-      return res.send('0|Error');
+      return res.sendStatus(200);
     }
 
     // Decrypt data
@@ -1119,11 +1122,11 @@ app.post('/callback/shipment-status', async (req, res) => {
       eventTime: data.EventTime,
     });
 
-    // Return success
-    res.send('1|OK');
+    // 規格書未規定回應內容，回 HTTP 200 即可
+    res.sendStatus(200);
   } catch (error) {
     console.error('Callback error:', error);
-    res.send('0|Error');
+    res.sendStatus(500);
   }
 });
 
@@ -1199,14 +1202,15 @@ def shipment_status_callback():
 
         status = data.get('Status')
         message = data.get('Message')
-        encrypt_data = data.get('EncryptData_')
-        hash_data = data.get('HashData_')
+        # 規格書表格帶底線，官方範例 notify_url.php 讀無底線，兩種都讀
+        encrypt_data = data.get('EncryptData_') or data.get('EncryptData')
+        hash_data = data.get('HashData_') or data.get('HashData')
 
         app.logger.info(f'Received notification: {status} - {message}')
 
         if status != 'SUCCESS':
             app.logger.error(f'Notification error: {message}')
-            return '0|Error'
+            return '', 200
 
         # Decrypt data
         decrypted = logistics.decrypt_data(encrypt_data, hash_data)
@@ -1216,12 +1220,12 @@ def shipment_status_callback():
         # Process the notification
         process_shipment_status_update(decrypted)
 
-        # Return success
-        return '1|OK'
+        # 規格書未規定回應內容，回 HTTP 200 即可
+        return '', 200
 
     except Exception as e:
         app.logger.error(f'Callback error: {str(e)}')
-        return '0|Error'
+        return '', 500
 
 
 def process_shipment_status_update(data: Dict[str, any]):
@@ -1507,7 +1511,7 @@ import axios from 'axios';
 
 interface CreateCVSShipmentRequest {
   merTradeNo: string;
-  logisticsSubType: 'FAMIC2C' | 'UNIMARTC2C' | 'HILIFEC2C' | 'OKMARTC2C';
+  logisticsSubType: 'FAMIC2C' | 'UNIMARTC2C' | 'HILIFEC2C';
   goodsAmount: number;
   goodsName: string;
   senderName: string;
@@ -1564,9 +1568,13 @@ class ECPayCVSLogistics extends ECPayLogistics {
       }
     );
 
-    // Parse response (1=key&value format)
+    // Parse response: "1|key=value&key=value" on success, "0|ErrorMessage" on failure
+    const [flag, body = ''] = String(response.data).split(/\|(.*)/s);
+    if (flag !== '1') {
+      throw new Error(`Create shipment failed: ${body}`);
+    }
     const result: Record<string, string> = {};
-    response.data.split('&').forEach((item: string) => {
+    body.split('&').forEach((item: string) => {
       const [key, value] = item.split('=');
       if (key && value) {
         result[key] = decodeURIComponent(value);
@@ -1632,7 +1640,7 @@ from dataclasses import dataclass
 class CVSShipmentData:
     """CVS C2C 物流訂單資料"""
     mer_trade_no: str
-    logistics_sub_type: Literal['FAMIC2C', 'UNIMARTC2C', 'HILIFEC2C', 'OKMARTC2C']
+    logistics_sub_type: Literal['FAMIC2C', 'UNIMARTC2C', 'HILIFEC2C']
     goods_amount: int
     goods_name: str
     sender_name: str
@@ -1665,11 +1673,10 @@ class ECPayCVSLogistics(ECPayLogistics):
     - FAMIC2C: 全家店到店
     - UNIMARTC2C: 7-11 交貨便
     - HILIFEC2C: 萊爾富店到店
-    - OKMARTC2C: OK 店到店（OK 只有 C2C）
 
     回傳碼:
     - 300: 訂單建立成功 (尚未寄貨)
-    - 2001: 訂單建立成功 (門市已出貨)
+    - 2001: 訂單傳送超商成功
     """
 
     def create_cvs_shipment(
@@ -1740,9 +1747,12 @@ class ECPayCVSLogistics(ECPayLogistics):
         except requests.RequestException as e:
             raise Exception(f"API 請求失敗: {str(e)}")
 
-        # 解析回應 (格式: key1=value1&key2=value2)
+        # 解析回應（成功：1|key1=value1&key2=value2；失敗：0|錯誤訊息）
+        flag, _, body = response.text.partition('|')
+        if flag != '1':
+            return CVSShipmentResponse(success=False, rtn_code='', rtn_msg=body, raw={})
         result = {}
-        for item in response.text.split('&'):
+        for item in body.split('&'):
             if '=' in item:
                 key, value = item.split('=', 1)
                 result[key] = urllib.parse.unquote(value)
@@ -1966,7 +1976,7 @@ class ECPayQueryLogistics extends ECPayLogistics {
     data['CheckMacValue'] = this.generateCheckMacValue(data);
 
     const response = await axios.post(
-      `${this.baseUrl}/Helper/QueryLogisticsTradeInfo/V2`,
+      `${this.baseUrl}/Helper/QueryLogisticsTradeInfo/V5`,
       new URLSearchParams(data),
       {
         headers: {
@@ -1987,9 +1997,10 @@ class ECPayQueryLogistics extends ECPayLogistics {
       merchantTradeNo: result.MerchantTradeNo,
       goodsAmount: result.GoodsAmount,
       logisticsStatus: result.LogisticsStatus,
-      receiverName: result.ReceiverName,
-      receiverStoreID: result.ReceiverStoreID,
-      updateStatusDate: result.UpdateStatusDate,
+      logisticsType: result.LogisticsType,
+      shipmentNo: result.ShipmentNo,
+      bookingNote: result.BookingNote,
+      tradeDate: result.TradeDate,
     };
   }
 }
@@ -2541,12 +2552,12 @@ SmilePay 透過 `Pay_zg` 矩陣編碼涵蓋 7-11/全家 + 黑貓三大配送：
 ### 三大要點
 
 1. **Pay_subzg**：`7NET` 對應 7-11、`FAMI` 對應全家。
-2. **回應是 XML**：用 `xml.etree.ElementTree` parse；常用欄位 `Status` / `PaymentNo` / `Smseid` / `Storeid`。
-3. **電子地圖選店**：先導轉到 `LogisticsEmap.asp`，客戶選完門市後 SmilePay 會 redirect 回 RtURL 並帶 storeid/storename。
+2. **回應是 XML**：用 `xml.etree.ElementTree` parse；取號回 `Status` / `Desc` / `SmilePayNO`，C2C 第二階段回 `paymentno` + `validationno`（根元素 `<SmilePayC2C>`），失敗時 `Status` 為負數。
+3. **電子地圖選店**：導轉到 `LogisticsEmap.asp?method=GET&TypesServer=…&TypesInterface=…&tempvar=…&url=…`，選完門市後 SmilePay 帶 `storeid`/`storename`/`storeaddress`/`typesserver`（全小寫）回到 `url`。
 
 ---
 
-## PChomePay 拍錢包物流範例
+## PChomePay支付連物流範例
 
 ⚠️ Notify IP 必加白名單：**`113.196.231.190`**。
 

@@ -1,6 +1,6 @@
 # 電子發票加值中心生態地圖與選型
 
-> 財政部核准之電子發票系統／加值服務業者約 **134～168 家**（不同來源統計基準不同）。
+> 經稽徵機關核准的電子發票系統及加值服務業者共 **135 家**（財政部加值服務中心頁，每日更新，2026-11-17 查）。
 > 本文件說明這個生態怎麼分層、我們收錄哪些、以及沒收錄的怎麼辦。
 
 ## 0. 三層架構
@@ -14,7 +14,7 @@
       批次上傳 │              自建 │ Turnkey
               │                    │
 ┌─────────────┴────────────┐  ┌────┴─────────┐
-│ 加值中心（134~168 家）     │  │ 大型企業自建   │
+│ 加值中心（135 家）         │  │ 大型企業自建   │
 │ ECPay / O'Pay / ezPay /  │  │ 直接對接大平台 │
 │ Amego / SmilePay / …     │  │              │
 └─────────────┬────────────┘  └──────────────┘
@@ -47,13 +47,14 @@
 
 | 加值中心 | 說明 | doc_access | 為何未收錄 |
 |---|---|---|---|
-| **關貿網路 TradeVAN** | 最大加值中心之一。蝦皮供應商電子發票平台走它。另有 EzSign 數位簽章平台 | apply/contract | 文件需申請；市佔重要，**列為後續優先** |
-| **精誠 Systex 金融科技** | 大型系統整合商體系 | contract | 無公開文件 |
-| **中華電信** | invoice.cht.com.tw、einvoice.hisales.hinet.net | contract | 無公開文件 |
-| **GoMyPay** | einvoice.gomypay.asia | apply | 已在金流端建檔 |
-| **訊航科技** | einvoice.net.tw | contract | 無公開文件 |
-| **e首發票** | youshop.com.tw，支援多電商平台 API 串接、Email/SMS/LINE 通知 | apply | 小型 |
-| 其餘 ~120+ 家 | 長尾，多為區域性或垂直產業 | contract | — |
+| **關貿網路 TradeVAN** | 最大加值中心之一，115 年度財政部評比優良加值中心。蝦皮供應商電子發票平台走它。另有 EzSign 數位簽章平台 | apply/contract | 產品頁寫「完整串接文件、專人技術支援」但文件不公開；市佔重要，**列為後續優先** |
+| **精誠 Systex 金融科技** | 大型系統整合商體系（精誠金融科技、精誠資訊兩個統編都在名單） | contract | 無公開文件 |
+| **中華電信** | invoice.cht.com.tw（導向登入頁）、einvoice.hisales.hinet.net | contract | 無公開文件 |
+| **GoMyPay（均鼎科技）** | einvoice.gomypay.asia，加值中心本體是均鼎科技（統編 80013554） | public（下載頁免登入，內文標「機密文件」） | 已在金流端建檔；《電子發票系統串接文件 API v2.1》見 n.gomypay.asia 下載頁，因標機密不收錄內容 |
+| **e首發票（矽聯科技）** | 網址已改 serv.einv.tw（youshop.com.tw 轉址過去），支援多電商平台 API 串接、Email/SMS/LINE 通知 | public（docs.einv.tw/developer，線上申請 API 測試帳號） | 小型，尚未收錄 |
+| 其餘 ~125 家 | 長尾，多為區域性或垂直產業 | contract | — |
+
+**訊航科技**（einvoice.net.tw，統編 80129529）就是速買配 SmilePay 的加值中心，已由 [SMILEPAY_API_REFERENCE.md](SMILEPAY_API_REFERENCE.md) 涵蓋。
 
 完整名單查詢：https://www.einvoice.nat.gov.tw/ptl008w
 
@@ -91,9 +92,9 @@
 
 1. **開立 ≠ 上傳**。多數中心是隔日批次上傳財政部。未上傳的發票不能作廢（只能等），跨期就只能開折讓。
 2. **暫存狀態**。ezPay 的 `Status=0`、O'Pay 的 `DelayIssue` 都是「先建資料不開立」。若沒呼叫觸發 API，發票**永遠不會存在**。
-3. **手機條碼／捐贈碼驗證**。各家都提供 `CheckBarcode` / `CheckLoveCode`，上游都是財政部。**別自己寫格式檢查就當驗證過**——手機條碼格式對不代表存在。
-4. **字軌用罄**。要設餘量通知（O'Pay `RemainNotifySetting`、其他家有對應機制），不然月底開不出來。
-5. **MIG 版本**。MIG 3.2.1 已於 2025/01/01 停用，全面走 **MIG 4.0**。舊系統若還在 3.2.1 會被退件。
+3. **手機條碼／捐贈碼驗證**。各家都提供 `CheckBarcode` / `CheckLoveCode`；財政部端的對應 API 是《營業人應用 API 規格》的 `bcv`／`preserveCodeCheck`（見 MOF reference 6A 節）。**別自己寫格式檢查就當驗證過**——手機條碼格式對不代表存在。
+4. **字軌用罄**。要設餘量通知（O'Pay、ECPay 都有 `RemainNotifySetting`，綠界 2026-06-23 起，其他家有對應機制），不然月底開不出來。
+5. **MIG 版本**。財政部 MIG 3.2.1 自 115 年 1 月 1 日停止使用，全面走 **MIG 4.0**（光貿 API 文件）。舊系統若還在 3.2.1 會被退件。
 
 ## 5. 相關文件
 
@@ -104,9 +105,9 @@
 ## 6. 來源
 
 - 財政部加值中心查詢 — https://www.einvoice.nat.gov.tw/ptl008w
-- 關貿網路電子發票 — https://services.tradevan.com.tw/e-commerce/e-invoice/ ／ 平台登入 E-HUB https://lgc.tradevan.com.tw/tln-bin/APTLN/welcome.do（舊網址 neinv.tradevan.com.tw 已移轉，官方公告 2026 年 10 月底失效）
+- 關貿網路電子發票 — https://services.tradevan.com.tw/e-commerce/e-invoice/ ／ 平台登入 E-HUB https://lgc.tradevan.com.tw/tln-bin/APTLN/welcome.do（舊網址 neinv.tradevan.com.tw 已失效，2026-11-17 回 404）
 - 中華電信電子發票 — https://invoice.cht.com.tw/
-- 訊航科技 — https://einvoice.net.tw/
-- e首發票 — https://www.youshop.com.tw/pricing.html
-- GoMyPay 發票加值中心 — https://einvoice.gomypay.asia/
+- 訊航科技（速買配加值中心） — https://einvoice.net.tw/
+- e首發票 — https://serv.einv.tw/pricing.html ／ API 文件 https://docs.einv.tw/developer/
+- GoMyPay 發票加值中心（均鼎科技） — https://einvoice.gomypay.asia/ ／ 文件下載 https://n.gomypay.asia/MDocuments_downloads.aspx
 - 紅陽電子發票 — https://inv.sunpay.com.tw/

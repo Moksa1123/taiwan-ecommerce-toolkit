@@ -130,7 +130,7 @@ When modifying files:
 | NewebPay 藍新 | AES-256-CBC + SHA256 | HashData = SHA256(`HashKey=..&EncryptData&HashIV=..`)；送出欄位帶 `_`，回應不帶 |
 | PAYUNi 統一 | AES-256-GCM + SHA256 | EncryptInfo = hex(base64(密文) + `:::` + base64(tag))；HashInfo = SHA256(HashKey + EncryptInfo + HashIV) |
 | SmilePay 速買配 | Verify_key + Mid_smilepay 加權檢核碼 | No AES; shared secret |
-| PChomePay 拍錢包 | HTTP Basic Auth → 8h pcpay-token | Same as payment side |
+| PChomePay支付連 | HTTP Basic Auth → 8h pcpay-token；Notify 須 3 秒內回 `success` | Same as payment side |
 | PayNow 立吉富 | **3DES (TripleDES) / ECB / Zero-Padding → Base64** | Key = `1234567890` + Password + `123456`（24 bytes）；ECB 不使用 IV；PassCode = SHA1；**不同於金流端的動態 AES-256** |
 | HCT 直連 | 自訂加密（金鑰申請後提供） | C# sample code only |
 

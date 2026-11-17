@@ -2,7 +2,13 @@
 
 **Complete API specification for NewebPay Logistics Services**
 
-依 NDNS 1.0.0（物流服務技術串接手冊）。
+依 NDNS 1.0.0（物流服務技術串接手冊，下載頁標示 2024-05-16，2026-11-17 仍是最新版）與官方程式範例 v1。
+
+- 規格書：https://www.newebpay.com/website/Page/download_file?name=%E7%89%A9%E6%B5%81%E6%9C%8D%E5%8B%99%E6%8A%80%E8%A1%93%E4%B8%B2%E6%8E%A5%E6%89%8B%E5%86%8A_NDNSv1.0.0.pdf
+- 程式範例：https://www.newebpay.com/website/Page/download_file?name=%E7%89%A9%E6%B5%81%E6%9C%8D%E5%8B%99%E6%8A%80%E8%A1%93%E4%B8%B2%E6%8E%A5%E6%89%8B%E5%86%8A_%E7%A8%8B%E5%BC%8F%E7%AF%84%E4%BE%8Bv1.zip
+- 下載頁：https://www.newebpay.com/website/Page/content/download_api
+
+藍新物流只有超商（C2C 四大超商、B2C 7-ELEVEN），沒有宅配（官網「宅配」選單為「敬請期待」）。
 
 ---
 
@@ -31,6 +37,17 @@
 - Merchant ships goods to sender convenience store
 - Store ships to logistics center, then to pickup store
 - Available for: 7-ELEVEN, FamilyMart, Hi-Life, OK Mart
+
+| 項目 | C2C 店到店（四大超商） | B2C 大宗寄倉（7-ELEVEN） |
+|------|------------------------|--------------------------|
+| 啟用審核 | 不需要 | 需要 |
+| 測標 | 不需要 | 需要 |
+| 列印方式 | 商店直接列印／超商 Kiosk 列印 | 商店直接列印黏貼後出貨 |
+| 寄送地點 | 商店到四大超商門市寄件 | 商店直接送貨到物流倉庫驗收 |
+| 運費 | 從商店預付費用扣款，買家不需付運費 | 同左 |
+| 退貨 | 退至原寄件門市 | 物流中心宅配退貨 |
+
+（NDNS 1.0.0 p.4「1. 簡介」）
 
 ### Trade Types
 
@@ -61,25 +78,39 @@ NewebPay Logistics uses AES-256-CBC + SHA256 encryption (same as NewebPay Paymen
 - HashKey (32 characters)
 - HashIV (16 characters)
 
+### Data Exchange
+
+- 以標準 Form Post（`application/x-www-form-urlencoded`）送出，UTF-8（NDNS p.8「(四) 資料交換方式」）。
+- 送出的外層參數名稱後方有底線：`UID_`、`EncryptData_`、`HashData_`、`Version_`、`RespondType_`。
+- API 回應為 JSON：`Status`、`Message`、`EncryptData`、`HashData`、`UID`、`Version`、`Encoding`（保留欄位，固定空值），回應欄位不帶底線。
+- 門市地圖（storeMap）與列印寄貨單（printLabel）是瀏覽器前景 Form Post；其餘為伺服器端 POST。
+
 ### Encryption Process
 
 #### 1. Encrypt Data (AES-256-CBC)
 
 ```
-EncryptData = AES-256-CBC(JSON.stringify(data), HashKey, HashIV)
+EncryptData_ = hex( AES-256-CBC( json_encode(data), HashKey, HashIV ) )
 ```
 
 **Parameters:**
-- Algorithm: AES-256-CBC
+- Plaintext: EncryptData_ 內含參數組成的 JSON（官方範例 `json_encode($_POST)`）
+- Algorithm: AES-256-CBC，PKCS7 padding
 - Key: HashKey (32 bytes)
 - IV: HashIV (16 bytes)
-- Mode: CBC
-- Padding: PKCS7
+- Output: 密文轉小寫 hex（官方範例 `bin2hex(openssl_encrypt(..., OPENSSL_RAW_DATA, $iv))`）
 
 #### 2. Generate Hash (SHA256)
 
 ```
-HashData = SHA256(HashKey + EncryptData + HashIV).toUpperCase()
+HashData_ = SHA256("HashKey=" + HashKey + "&" + EncryptData_ + "&HashIV=" + HashIV).toUpperCase()
+```
+
+規格書範例（NDNS p.13「Hash Data 處理方式」）：
+
+```
+SHA256("HashKey=12345678901234567890123456789012&AAAABBBBCCCCDDDD&HashIV=12345678")
+= 5C6C504A2F2B2E3EB5CA80998F626307ACD327AC6DCE4FF84F86B021988B2576
 ```
 
 ### Decryption Process
@@ -87,14 +118,14 @@ HashData = SHA256(HashKey + EncryptData + HashIV).toUpperCase()
 #### 1. Verify Hash
 
 ```
-CalculatedHash = SHA256(HashKey + EncryptData + HashIV).toUpperCase()
-if (CalculatedHash !== HashData) throw Error('Hash verification failed')
+CalculatedHash = SHA256("HashKey=" + HashKey + "&" + EncryptData + "&HashIV=" + HashIV).toUpperCase()
+if (!timingSafeEqual(CalculatedHash, HashData)) throw Error('Hash verification failed')
 ```
 
 #### 2. Decrypt Data
 
 ```
-DecryptedJSON = AES-256-CBC-Decrypt(EncryptData, HashKey, HashIV)
+DecryptedJSON = AES-256-CBC-Decrypt( hex2bin(EncryptData), HashKey, HashIV )  // 移除 PKCS7 padding
 Data = JSON.parse(DecryptedJSON)
 ```
 
@@ -134,7 +165,7 @@ Query convenience store locations for customer to select pickup or sender store.
 
 ### Request
 
-**URL:** `POST /API/Logistic/storeMap`
+**URL:** `POST /API/Logistic/storeMap`（瀏覽器前景 Form Post，導向超商地圖；選店後藍新以 Form Post 把結果送到 `ReturnURL`）
 
 **Parameters:**
 
@@ -173,6 +204,8 @@ Query convenience store locations for customer to select pickup or sender store.
 | HashData | Text | SHA256 hash |
 | UID | Varchar(15) | Merchant ID |
 | Version | Varchar(5) | API version |
+
+官方範例 `return_url.php` 讀 `$_POST['EncryptData']`（不帶底線）。
 
 **Decrypted EncryptData Content (Callback):**
 
@@ -222,7 +255,7 @@ Create logistics shipment order after payment order is established.
 | UserEmail | Varchar(50) | ● | Recipient email |
 | StoreID | Varchar(10) | ● | Pickup store code (from store map) |
 | Amt | Int(10) | ● | Transaction amount (max: 20000 NTD) |
-| NotifyURL | Varchar(100) | - | Status notification callback URL |
+| NotifyURL | Varchar(100) | - | 取貨完成／貨態更新通知網址 |
 | ItemDesc | Varchar(100) | - | Product description |
 | LgsType | Varchar(3) | ● | "B2C" or "C2C" |
 | ShipType | Varchar(15) | ● | "1"=7-11, "2"=FamilyMart, "3"=Hi-Life, "4"=OK Mart |
@@ -303,7 +336,7 @@ Print shipping labels to attach to products.
 
 **URL:** `POST /API/Logistic/printLabel`
 
-**Important:** This API requires **Form POST** method (not JSON API call). The response is an HTML page for printing.
+**Important:** 限使用前景表單方式送出（Form Post，由瀏覽器送出），回應是可列印的 HTML 寄貨單頁面。
 
 **EncryptData_ Content:**
 
@@ -474,6 +507,8 @@ Real-time notification when shipment status changes. NewebPay will POST to the N
 | UID_ | Varchar(15) | Merchant ID |
 | Version_ | Varchar(5) | API version |
 
+規格書此表欄位帶底線，但官方範例 `notify_url.php` 讀 `$_POST['EncryptData']`（不帶底線）；兩種都要能讀。
+
 **Decrypted EncryptData_ Content:**
 
 | Field | Type | Description |
@@ -489,14 +524,11 @@ Real-time notification when shipment status changes. NewebPay will POST to the N
 
 ### Callback Response
 
-Merchant must respond with:
-- Success: `1|OK`
-- Error: `0|Error` or `0|[Error Message]`
+NDNS 1.0.0 未規定商店的回應內容與重送機制；官方範例 `notify_url.php` 只寫 log、不輸出任何內容。回 HTTP 200 即可，不要依賴特定回應字串。
 
 **Important:**
-- NotifyURL must be accessible from NewebPay servers (not localhost)
-- Must respond within timeout period
-- NewebPay will retry if no response received
+- NotifyURL 必須能從藍新伺服器連線（不能是 localhost）
+- 先驗 HashData 再解密（官方範例未驗章，正式環境應補上）
 
 ---
 
@@ -519,19 +551,18 @@ timestamp = str(int(time.time()))
 
 ### Date Format
 
-Date fields use `yyyy-MM-dd` format:
-- Example: `2026-01-29`
+`ShopDate` 型態為 Date；規格書未給格式範例，解析時不要寫死格式。
 
 ### MerchantOrderNo Format
 
 - Length: Up to 30 characters
 - Allowed characters: Alphanumeric (A-Z, a-z, 0-9) and underscore (_)
-- Must be unique across all orders
+- 同一商店中不可重覆
 - Example: `ORD_20260129_001`
 
 ### Phone Number Format
 
-- Format: 10 digits starting with 09
+- `UserTel` 為取件人手機號碼，Varchar(10)
 - Example: `0912345678`
 - No spaces or dashes
 
@@ -631,10 +662,13 @@ Date fields use `yyyy-MM-dd` format:
 
 ### Test Credentials
 
-Contact NewebPay to obtain test credentials:
-- Test Merchant ID (UID)
-- Test HashKey
-- Test HashIV
+自行在測試平台申請（NDNS p.6–7「3. 使用規則」）：
+1. 到 https://cwww.newebpay.com/ 註冊測試區會員並建立測試商店
+2. 會員中心 → 商店管理／商店資料設定 → 詳細資料：取得 HashKey、HashIV
+3. 商店資料設定／物流設定：啟用物流服務、勾選服務型態並填寫退貨門市資訊
+4. 帳務中心 → 預付費用／預付費用異動紀錄：按「模擬存入」存入預付費用（物流費從預付費用扣，餘額不足回 `1114`）
+
+正式環境在 https://www.newebpay.com/ 註冊，金鑰、物流設定路徑相同；正式區預付費用需轉帳到專屬帳號。
 
 ### Test Environment
 
@@ -642,6 +676,8 @@ Contact NewebPay to obtain test credentials:
 ```
 https://ccore.newebpay.com/API/Logistic
 ```
+
+測試環境只能測建立物流訂單、取得寄件代碼、列印寄貨單等，無法完整測試貨態（NDNS p.7「(二) 環境說明」）。
 
 ### Testing Checklist
 
@@ -761,11 +797,12 @@ https://ccore.newebpay.com/API/Logistic
 
 ### NewebPay Technical Support
 
-**Phone:** 02-2655-8938
+**客服電話：** 02-2786-3655（每日 08:00–23:00）
+**客服信箱：** cs@newebpay.com
 
 **Official Website:** https://www.newebpay.com
 
 ### API Documentation
 
-For the latest API documentation and updates, visit NewebPay's developer portal or contact technical support.
+API 文件下載頁：https://www.newebpay.com/website/Page/content/download_api （「物流服務技術串接手冊」與程式範例）
 

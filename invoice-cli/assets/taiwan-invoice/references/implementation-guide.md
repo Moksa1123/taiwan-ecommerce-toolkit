@@ -104,7 +104,7 @@ invoice-config/
 |------|-----------|-----------------|------------|--------------|----------------|------|------|
 | 測試/正式 URL | 不同 URL | 不同 URL | **相同 URL** | 不同 URL (cinv/inv) | 不同 URL (dev/prod) | 不同 URL（`einvoice-stage.opay.tw`／`einvoice.opay.tw`） | 不同 URL（`testinv.sunpay.com.tw`／`einv.sunpay.com.tw`；`inv.` 是後台不是 API） |
 | 認證方式 | AES-128-CBC + HashKey/HashIV | Grvc + Verify_key | MD5 簽章 + App Key | AES-256-CBC + 32 碼 HashKey + 16 碼 HashIV + SHA256 CheckCode | JWT Bearer Token | AES-128-CBC（先 URL Encode 再加密）+ HashKey/HashIV，與綠界同源 | `Token` 欄位：AES-128-CBC/PKCS7，HashKey、HashIV 各 16 碼，加密前先 .NET 風格 URLEncode |
-| 列印方式 | POST 表單提交 | GET URL 參數 | API 取得 PDF URL | 無列印 API（`/Api/invoice_touch_issue` 是觸發「待開立」發票，不是列印） | REST 無列印 API；SOAP 用 `Get_InvoiceURL_I` 取得發票連結 | 開立時帶 `Print=1`（與 `Donation`、`CarrierType` 互斥規則見 reference） | 開立時 `isprint=1`，回應附條碼、QRCode 資料，自行列印 |
+| 列印方式 | AES JSON API `InvoicePrint` 回傳 `InvoiceHtml` 網址（1 小時有效） | GET URL 參數 | API 取得 PDF URL | 無列印 API（`/Api/invoice_touch_issue` 是觸發「待開立」發票，不是列印） | REST 無列印 API；SOAP 用 `Get_InvoiceURL_I` 取得發票連結 | 開立時帶 `Print=1`（與 `Donation`、`CarrierType` 互斥規則見 reference） | 開立時 `isprint=1`，回應附條碼、QRCode 資料，自行列印 |
 | B2B 金額欄位 | SalesAmount (未稅) | UnitTAX=N | DetailVat=0 | `Category=B2B` + `Amt`/`TaxAmt` 拆分 | `BuyerIdentifier` + `TaxType` 切換 | B2B 自己算稅：`SalesAmount`／`TaxAmount`／`TotalAmount` 分開帶；B2C 只帶含稅 `SalesAmount` | `salesAmount`（未稅）、`zeroTaxSalesAmount`、`freeTaxSalesAmount` 三個都必填 + `totalAmount`（含稅） |
 | 傳輸格式 | JSON (AES 加密) | URL Parameters | JSON (URL Encode) | Form Post (`MerchantID_`/`PostData_` 後綴底線) | JSON (Bearer Header) | JSON 三層信封（`MerchantID` + `RqHeader` + 加密 `Data`） | JSON（`Token` + 業務欄位） |
 | 與其他系統共用加密 | 獨立 | 獨立 | 獨立 | AES-256-CBC（與藍新同演算法、金鑰獨立） | 與 PayNow 金流不同（金流端用動態 AES-256） | 與綠界發票同架構（金鑰獨立） | 與紅陽金流不同（金流用 RSA 分段 + SHA256） |
@@ -234,8 +234,8 @@ const service = record.invoiceProvider
 interface InvoicePrintResponse {
     success: boolean
     type?: 'html' | 'redirect' | 'form'
-    htmlContent?: string      // 綠界
-    printUrl?: string          // 速買配/光貿
+    htmlContent?: string
+    printUrl?: string          // 綠界 InvoiceHtml／速買配／光貿 file_url
     formUrl?: string
     formParams?: Record<string, string>
 }

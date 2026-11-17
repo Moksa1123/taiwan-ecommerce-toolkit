@@ -76,7 +76,7 @@ HCT 直連 API 共分為**兩大類**：
 |----------|------|------|
 | `TransData()` | 上傳託運資料 (列印託運單) | 傳入託運資料、取得貨號、到著站、標籤圖片 |
 | `TransData_Json()` | 同上 (JSON 格式) | |
-| `TransData_XML()` | 同上 (XML 格式) | |
+| `TransData_Xml()` | 同上 (XML 格式) | |
 | `UpdData()` | 修改重量 | 傳入新竹貨號 + 訂單編號修改重量 |
 | `UpdData_Json()` | 同上 (JSON) | |
 | `UpdData_Xml()` | 同上 (XML) | |
@@ -87,6 +87,15 @@ HCT 直連 API 共分為**兩大類**：
 | `QueryEDELNO_Json()` | 同上 (JSON) | |
 | `QueryEDELNO_Xml()` | 同上 (XML) | |
 | `R_TransData_Json()` | 逆物流託運資料 | 退貨/取件 |
+
+方法名稱與參數名稱區分大小寫，以 WSDL 為準（規格書 PDF 有幾處大小寫寫錯）：方法名寫錯回 HTTP 500 SOAP Fault「伺服器無法辨認 HTTP 標頭 SOAPAction 的值」；參數名寫錯則該參數收到 null，回 `資料錯誤請確認`。
+
+| 方法 | 參數名稱 |
+|---|---|
+| `TransData*`、`UpdData*`、`QueryEDELNO*`、`R_TransData_Json` | `company`、`password`，資料參數 `data`／`json`／`xml` |
+| `TransReport*` | `sCompany`、`sPassword`，資料參數 `dsCus`／`dsCusJson`／`dsCusXML` |
+
+WSDL 另列出規格書沒有說明的方法：`TransData2_Json`、`TransDataCancel_Json`、`TransDispatchOrder_Json`、`GetImage_Json`、`onlyImage`、`FrightQuery`、`FamiQueryData`、`TransPINCode`、`UniSelect`、`Edelno`、`outputTXT`。沒有官方規格，使用前向新竹物流索取說明。
 
 ---
 
@@ -134,8 +143,8 @@ HCT 與多數 aggregator 不同，**沒有自助開發者後台**；服務必須
 
 | 欄位 | 值 |
 |------|-----|
-| Company | `test` |
-| password | `test1` |
+| `company`（`TransReport*` 為 `sCompany`） | `test` |
+| `password`（`TransReport*` 為 `sPassword`） | `test1` |
 
 > ⚠️ **注意**：HCT **沒有獨立 sandbox 環境**。所有 API 端點都是**正式系統**，僅以測試帳號 `test/test1` 隔離測試資料。實作時請務必區分 production / staging 帳號，避免污染真實貨況。
 
@@ -383,9 +392,9 @@ https://Hctrt.hct.com.tw/EDI_WebService2/Service1.asmx
 #### SOAP 方法簽章
 
 ```csharp
-DataSet TransData(string Company, string password, DataSet data)
-string  TransData_Json(string Company, string password, string json)
-string  TransData_XML(string Company, string password, string xml)
+DataSet TransData(string company, string password, DataSet data)
+string  TransData_Json(string company, string password, string json)
+string  TransData_Xml(string company, string password, string xml)
 ```
 
 #### 傳入欄位 (Data 欄位、說明、長度)
@@ -428,6 +437,8 @@ string  TransData_XML(string Company, string password, string xml)
 | `eqamt` | 重量 |
 | `image` | 標籤圖片字串 (Hex 字串，需轉 byte → Bitmap) |
 | `ErrMsg` | 異常錯誤訊息 |
+
+`TransData_Json`／`TransData_Xml` 實際回應另有規格書未列的欄位：`NewOutArea`、`eqmny`、`CODE1`–`CODE5`、`CODE7`、`AREAS`、`MDCODE1`–`MDCODE3`，解析時要容許多出的欄位。
 
 #### JSON 範例
 
@@ -601,9 +612,9 @@ Bitmap image(byte[] b)
 #### SOAP 方法簽章
 
 ```csharp
-DataSet UpdData(string Company, string password, DataSet data)
-string  UpdData_Json(string Company, string password, string json)
-string  UpdData_XML(string Company, string password, string xml)
+DataSet UpdData(string company, string password, DataSet data)
+string  UpdData_Json(string company, string password, string json)
+string  UpdData_Xml(string company, string password, string xml)
 ```
 
 #### 傳入欄位
@@ -634,9 +645,9 @@ string  UpdData_XML(string Company, string password, string xml)
 #### SOAP 方法簽章
 
 ```csharp
-DataSet TransReport(string Company, string password, DataSet dsCus)
-string  TransReport_Json(string Company, string password, string dsCusJson)
-string  TransReport_XML(string Company, string password, string dsCusXML)
+DataSet TransReport(string sCompany, string sPassword, DataSet dsCus)
+string  TransReport_Json(string sCompany, string sPassword, string dsCusJson)
+string  TransReport_XML(string sCompany, string sPassword, string dsCusXML)
 ```
 
 #### 傳入欄位
@@ -752,7 +763,7 @@ string  QueryEDELNO_Xml(string company, string password, string xml)
 
 > `data` / `json` / `xml`：欲查詢貨號的訂單編號 (多筆可用 **`,` 逗號分隔**，**訂單編號中不能有逗號**)
 
-範例輸入：`P002,S444` 或 `A001,P003,S444,P001`
+訂單編號放在 `epino` 欄位，外層照其他方法的格式包：`_Json` 傳 `[{"epino":"P002,S444"}]`（或每筆一個物件），`_Xml` 傳 `<info><DataRow><epino>A001,P003,S444,P001</epino></DataRow></info>`。直接傳裸字串 `P002,S444` 會回 `success=N`、`ErrMsg=資料錯誤請確認`。
 
 #### 回傳欄位
 
@@ -826,7 +837,7 @@ string  QueryEDELNO_Xml(string company, string password, string xml)
 #### SOAP 方法簽章
 
 ```csharp
-string R_TransData_Json(string Company, string password, string json)
+string R_TransData_Json(string company, string password, string json)
 ```
 
 #### 傳入欄位
@@ -932,6 +943,8 @@ string R_TransData_Json(string Company, string password, string json)
   }
 ]
 ```
+
+規格書範例的鍵首字大寫（`Success`、`Edelno`…），但實際回應（帳密錯誤時）是小寫 `success`、`edelno`、`epino`、`erstno`、`eqamt`，與回傳欄位表一致；解析時鍵名不分大小寫比較保險。
 
 ---
 
@@ -1064,7 +1077,7 @@ string R_TransData_Json(string Company, string password, string json)
 
 - **Java / Kotlin / Go / Python / Node.js**：直接使用 `*_Json` / `*_XML` 變體方法，避免處理 .NET DataSet 序列化
 - **PHP**：可用 SOAP Extension 或直接 HTTP POST 至 `?wsdl` 端點
-- **WSDL 取得**：`https://Hctrt.hct.com.tw/EDI_WebService2/Service1.asmx?wsdl`
+- **WSDL 取得**：`https://Hctrt.hct.com.tw/EDI_WebService2/Service1.asmx?wsdl`（命名空間 `http://tempuri.org/`，`SOAPAction` 為 `http://tempuri.org/<方法名>`）
 
 ---
 
