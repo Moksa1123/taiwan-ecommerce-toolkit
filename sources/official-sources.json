@@ -4736,7 +4736,7 @@
   "skills": [
    "payment"
   ],
-  "title": "歐付寶：全方位金流 API 介接技術文件（O_Pay_011，56 頁）",
+  "title": "歐付寶：全方位金流 API 介接技術文件（O_Pay_011 V1.2.37，56 頁）",
   "url": "https://www.opay.tw/Content/files/O_Pay_011.pdf",
   "format": "pdf",
   "fetch": "get",
@@ -5010,6 +5010,48 @@
    "taiwan-invoice/references/OPAY_API_REFERENCE.md"
   ],
   "notes": "PDF 直連"
+ },
+ {
+  "id": "opay-o-pay-048",
+  "provider": "opay",
+  "skills": [
+   "payment"
+  ],
+  "title": "歐付寶：金流整合 SDK 技術文件（Java）（O_Pay_048）",
+  "url": "https://www.opay.tw/Content/files/O_Pay_048.pdf",
+  "format": "pdf",
+  "fetch": "get",
+  "access": "public",
+  "covers": []
+ },
+ {
+  "id": "opay-o-pay-049",
+  "provider": "opay",
+  "skills": [
+   "payment"
+  ],
+  "title": "歐付寶：金流整合 SDK 技術文件（.NET）（O_Pay_049）",
+  "url": "https://www.opay.tw/Content/files/O_Pay_049.pdf",
+  "format": "pdf",
+  "fetch": "get",
+  "access": "public",
+  "covers": []
+ },
+ {
+  "id": "opay-sdk-php-github",
+  "provider": "opay",
+  "skills": [
+   "payment"
+  ],
+  "title": "歐付寶官方 SDK：Payment_PHP（GitHub o-pay）",
+  "url": "https://github.com/o-pay/Payment_PHP",
+  "format": "html",
+  "fetch": "get",
+  "access": "public",
+  "covers": [
+   "taiwan-payment/references/opay-payment-api.md"
+  ],
+  "notes": "文件總覽連結；同組織另有 Payment_Java、Payment_Net、Payment_Node.js、Payment_RoR"
  },
  {
   "id": "pandago-odr-docs",
@@ -8101,12 +8143,183 @@
   "title": "SHOPLINE Payments 文件：文件首頁",
   "url": "https://docs.shoplinepayments.com/",
   "format": "html",
+  "fetch": "browser",
+  "access": "public",
+  "covers": [
+   "taiwan-payment/references/shopline-payment-api.md",
+   "taiwan-payment/data/providers.csv"
+  ],
+  "notes": "「環境資訊」網域表為前端渲染，需瀏覽器才看得到"
+ },
+ {
+  "id": "shopline-api-trade-query",
+  "provider": "shopline",
+  "skills": [
+   "payment"
+  ],
+  "title": "SHOPLINE Payments 文件：付款交易查詢",
+  "url": "https://docs.shoplinepayments.com/api/trade/query/",
+  "format": "html",
+  "fetch": "get",
+  "access": "public",
+  "covers": [
+   "taiwan-payment/references/shopline-payment-api.md",
+   "taiwan-payment/examples/shopline-payment-example.py"
+  ]
+ },
+ {
+  "id": "shopline-api-trade-capture",
+  "provider": "shopline",
+  "skills": [
+   "payment"
+  ],
+  "title": "SHOPLINE Payments 文件：交易請款",
+  "url": "https://docs.shoplinepayments.com/api/trade/capture/",
+  "format": "html",
+  "fetch": "get",
+  "access": "public",
+  "covers": [
+   "taiwan-payment/references/shopline-payment-api.md",
+   "taiwan-payment/examples/shopline-payment-example.py"
+  ]
+ },
+ {
+  "id": "shopline-api-trade-cancel",
+  "provider": "shopline",
+  "skills": [
+   "payment"
+  ],
+  "title": "SHOPLINE Payments 文件：交易取消",
+  "url": "https://docs.shoplinepayments.com/api/trade/cancel/",
+  "format": "html",
+  "fetch": "get",
+  "access": "public",
+  "covers": [
+   "taiwan-payment/references/shopline-payment-api.md",
+   "taiwan-payment/examples/shopline-payment-example.py"
+  ]
+ },
+ {
+  "id": "shopline-api-trade-refundquery",
+  "provider": "shopline",
+  "skills": [
+   "payment"
+  ],
+  "title": "SHOPLINE Payments 文件：退款交易查詢",
+  "url": "https://docs.shoplinepayments.com/api/trade/refundQuery/",
+  "format": "html",
+  "fetch": "get",
+  "access": "public",
+  "covers": [
+   "taiwan-payment/references/shopline-payment-api.md"
+  ]
+ },
+ {
+  "id": "shopline-api-event-query",
+  "provider": "shopline",
+  "skills": [
+   "payment"
+  ],
+  "title": "SHOPLINE Payments 文件：Event 查詢",
+  "url": "https://docs.shoplinepayments.com/api/event/query/",
+  "format": "html",
+  "fetch": "get",
+  "access": "public",
+  "covers": [
+   "taiwan-payment/references/shopline-payment-api.md"
+  ]
+ },
+ {
+  "id": "shopline-appendix-orderstatus",
+  "provider": "shopline",
+  "skills": [
+   "payment"
+  ],
+  "title": "SHOPLINE Payments 文件：付款狀態碼",
+  "url": "https://docs.shoplinepayments.com/appendix/orderStatus/",
+  "format": "html",
+  "fetch": "get",
+  "access": "public",
+  "covers": [
+   "taiwan-payment/references/shopline-payment-api.md"
+  ]
+ },
+ {
+  "id": "shopline-appendix-refundstatus",
+  "provider": "shopline",
+  "skills": [
+   "payment"
+  ],
+  "title": "SHOPLINE Payments 文件：退款狀態碼",
+  "url": "https://docs.shoplinepayments.com/appendix/refundStatus/",
+  "format": "html",
+  "fetch": "get",
+  "access": "public",
+  "covers": [
+   "taiwan-payment/references/shopline-payment-api.md"
+  ]
+ },
+ {
+  "id": "shopline-appendix-sdkerrorcode",
+  "provider": "shopline",
+  "skills": [
+   "payment"
+  ],
+  "title": "SHOPLINE Payments 文件：SDK 錯誤碼",
+  "url": "https://docs.shoplinepayments.com/appendix/sdkErrorCode/",
+  "format": "html",
+  "fetch": "get",
+  "access": "public",
+  "covers": [
+   "taiwan-payment/references/shopline-payment-api.md"
+  ]
+ },
+ {
+  "id": "shopline-sandbox-resource",
+  "provider": "shopline",
+  "skills": [
+   "payment"
+  ],
+  "title": "SHOPLINE Payments 文件：沙盒環境串接資源",
+  "url": "https://docs.shoplinepayments.com/overview/sandboxResource/",
+  "format": "html",
   "fetch": "get",
   "access": "public",
   "covers": [
    "taiwan-payment/references/shopline-payment-api.md",
    "taiwan-payment/data/providers.csv"
   ]
+ },
+ {
+  "id": "shopline-supported-creditcard",
+  "provider": "shopline",
+  "skills": [
+   "payment"
+  ],
+  "title": "SHOPLINE Payments 文件：信用卡（分期期數與銀行）",
+  "url": "https://docs.shoplinepayments.com/overview/supportedPaymentMethod/CreditCard/",
+  "format": "html",
+  "fetch": "get",
+  "access": "public",
+  "covers": [
+   "taiwan-payment/references/shopline-payment-api.md"
+  ]
+ },
+ {
+  "id": "shopline-sitemap",
+  "provider": "shopline",
+  "skills": [
+   "payment"
+  ],
+  "title": "SHOPLINE Payments 文件站 sitemap（偵測新增／移除頁面）",
+  "url": "https://docs.shoplinepayments.com/sitemap.xml",
+  "format": "html",
+  "fetch": "get",
+  "access": "public",
+  "covers": [
+   "taiwan-payment/references/shopline-payment-api.md"
+  ],
+  "notes": "無 lastmod，只在頁面增刪時變動；2026-11-17 共 102 頁"
  },
  {
   "id": "smilepay-api-background",

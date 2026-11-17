@@ -1287,7 +1287,7 @@ PayNow 有**兩代 API 並行**：
 Shopline Payments (SLP) 採 **HTTP Header `merchantId` + `apiKey`** 認證，所有金額以**分**為單位（NT$1000 = 100000）。提供 Redirect 與 Embedded SDK 雙模式，Webhook 用 HMAC-SHA256 驗章。
 
 ### 完整 Python 範例
-請見 [`examples/shopline-payment-example.py`](examples/shopline-payment-example.py) — 涵蓋 sessions/create / sessionQuery / refund / Webhook 驗章。
+請見 [`examples/shopline-payment-example.py`](examples/shopline-payment-example.py) — 涵蓋 sessions/create、sessions/query、payment/get、refund、capture／cancel 與 Webhook 驗章。所有 API 皆為 POST + JSON，Header 必帶 `merchantId`、`apiKey`、`requestId`。
 
 ### 三大要點
 

@@ -49,3 +49,5 @@ date,question,why_not_found,asked_by,status
 2026-11-17,official-sources.json 的 sunpay-einvoice-skill-v2-3 仍指向 202607/sunpay-einvoice-skill-v2.3-v1.zip；開發者專區現列 v2.3-v2（202609/sunpay-einvoice-skill-v2.3-v2.zip，2026-09-29）,屬 taiwan-invoice 範圍；本次金流稽核不改 invoice 的來源與 SUNPAY_API_REFERENCE.md,taiwan-toolkit（官方文件稽核 2026-11-17）,open
 2026-11-17,GoMyPay 金流 API（ShuntClass／CallOrder 等）在官方 WooCommerce 外掛 v1.7.0 是否有端點或參數異動,公開的金流 API 規格書不存在；私有整理依外掛 v1.6.4，下載頁 2026-10-16 已改版 v1.7.0 尚未重新比對,taiwan-toolkit（官方文件稽核 2026-11-17）,open
 2026-11-17,GoMyPay 的 LINE Pay、一卡通、悠遊付、支付寶是否能經同一套金流 API 串接（或只能後台／另約）,官網費率頁只列服務與費率，未說明串接方式；金流 API 規格需申請,taiwan-toolkit（官方文件稽核 2026-11-17）,open
+2026-11-17,SHOPLINE Payments Event 查詢 API（GET {URI}/v1/api/events/query/{eventId}）的 {URI} 網域與 Header appKey、appId 從哪裡取得、是否等同 apiKey／merchantId,官方 /api/event/query/ 只列路徑與 Header 名稱，未定義 {URI}，也未說明 appKey／appId 來源；其他 API 都用 {DOMAIN_NAME} 與 apiKey／merchantId,taiwan-toolkit（官方文件稽核 2026-11-17）,open
+2026-11-17,SHOPLINE Payments 信用卡授權後可請款的期限，以及是否支援部分請款（請款金額小於授權金額）,官方 /api/trade/capture/ 只有欄位表；錯誤碼 7001／7402「請款金額大於可請款金額」暗示有上限但沒寫期限與是否可部分請款；reference 原有「授權有效期 7～30 天」「可部分請款」無出處,taiwan-toolkit（官方文件稽核 2026-11-17）,open
