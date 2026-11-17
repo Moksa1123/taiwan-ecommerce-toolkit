@@ -48,7 +48,6 @@ class ECPayLogistics:
         "UNIMARTC2C": "/Express/PrintUniMartC2COrderInfo",
         "FAMIC2C": "/Express/PrintFAMIC2COrderInfo",
         "HILIFEC2C": "/Express/PrintHILIFEC2COrderInfo",
-        "OKMARTC2C": "/Express/PrintOKMARTC2COrderInfo",
     }
 
     def __init__(self, merchant_id, hash_key, hash_iv, test_mode=True):
@@ -96,7 +95,7 @@ class ECPayLogistics:
             "MerchantTradeNo": order_id,
             "MerchantTradeDate": datetime.now().strftime("%Y/%m/%d %H:%M:%S"),
             "LogisticsType": "CVS",
-            "LogisticsSubType": logistics_sub_type,  # UNIMARTC2C, FAMIC2C, HILIFEC2C, OKMARTC2C
+            "LogisticsSubType": logistics_sub_type,  # UNIMARTC2C, FAMIC2C, HILIFEC2C
             "GoodsAmount": goods_amount,
             "GoodsName": goods_name,
             "SenderName": "測試商家",
@@ -130,7 +129,7 @@ class ECPayLogistics:
         列印 C2C 託運單（以表單 POST 開新視窗）
 
         欄位與官方外掛一致：7-ELEVEN 需 CVSPaymentNo + CVSValidationNo；
-        全家 / 萊爾富 / OK 只需 CVSPaymentNo。兩者皆為建立訂單時綠界回傳的值。
+        全家 / 萊爾富只需 CVSPaymentNo。兩者皆為建立訂單時綠界回傳的值。
         """
         if logistics_sub_type not in self.PRINT_C2C_PATHS:
             raise ValueError(f"不支援的 C2C 物流子類型: {logistics_sub_type}")

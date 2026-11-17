@@ -1507,7 +1507,7 @@ import axios from 'axios';
 
 interface CreateCVSShipmentRequest {
   merTradeNo: string;
-  logisticsSubType: 'FAMIC2C' | 'UNIMARTC2C' | 'HILIFEC2C' | 'OKMARTC2C';
+  logisticsSubType: 'FAMIC2C' | 'UNIMARTC2C' | 'HILIFEC2C';
   goodsAmount: number;
   goodsName: string;
   senderName: string;
@@ -1564,9 +1564,13 @@ class ECPayCVSLogistics extends ECPayLogistics {
       }
     );
 
-    // Parse response (1=key&value format)
+    // Parse response: "1|key=value&key=value" on success, "0|ErrorMessage" on failure
+    const [flag, body = ''] = String(response.data).split(/\|(.*)/s);
+    if (flag !== '1') {
+      throw new Error(`Create shipment failed: ${body}`);
+    }
     const result: Record<string, string> = {};
-    response.data.split('&').forEach((item: string) => {
+    body.split('&').forEach((item: string) => {
       const [key, value] = item.split('=');
       if (key && value) {
         result[key] = decodeURIComponent(value);
@@ -1632,7 +1636,7 @@ from dataclasses import dataclass
 class CVSShipmentData:
     """CVS C2C 物流訂單資料"""
     mer_trade_no: str
-    logistics_sub_type: Literal['FAMIC2C', 'UNIMARTC2C', 'HILIFEC2C', 'OKMARTC2C']
+    logistics_sub_type: Literal['FAMIC2C', 'UNIMARTC2C', 'HILIFEC2C']
     goods_amount: int
     goods_name: str
     sender_name: str
@@ -1665,11 +1669,10 @@ class ECPayCVSLogistics(ECPayLogistics):
     - FAMIC2C: 全家店到店
     - UNIMARTC2C: 7-11 交貨便
     - HILIFEC2C: 萊爾富店到店
-    - OKMARTC2C: OK 店到店（OK 只有 C2C）
 
     回傳碼:
     - 300: 訂單建立成功 (尚未寄貨)
-    - 2001: 訂單建立成功 (門市已出貨)
+    - 2001: 訂單傳送超商成功
     """
 
     def create_cvs_shipment(
@@ -1740,9 +1743,12 @@ class ECPayCVSLogistics(ECPayLogistics):
         except requests.RequestException as e:
             raise Exception(f"API 請求失敗: {str(e)}")
 
-        # 解析回應 (格式: key1=value1&key2=value2)
+        # 解析回應（成功：1|key1=value1&key2=value2；失敗：0|錯誤訊息）
+        flag, _, body = response.text.partition('|')
+        if flag != '1':
+            return CVSShipmentResponse(success=False, rtn_code='', rtn_msg=body, raw={})
         result = {}
-        for item in response.text.split('&'):
+        for item in body.split('&'):
             if '=' in item:
                 key, value = item.split('=', 1)
                 result[key] = urllib.parse.unquote(value)
@@ -1966,7 +1972,7 @@ class ECPayQueryLogistics extends ECPayLogistics {
     data['CheckMacValue'] = this.generateCheckMacValue(data);
 
     const response = await axios.post(
-      `${this.baseUrl}/Helper/QueryLogisticsTradeInfo/V2`,
+      `${this.baseUrl}/Helper/QueryLogisticsTradeInfo/V5`,
       new URLSearchParams(data),
       {
         headers: {
@@ -1987,9 +1993,10 @@ class ECPayQueryLogistics extends ECPayLogistics {
       merchantTradeNo: result.MerchantTradeNo,
       goodsAmount: result.GoodsAmount,
       logisticsStatus: result.LogisticsStatus,
-      receiverName: result.ReceiverName,
-      receiverStoreID: result.ReceiverStoreID,
-      updateStatusDate: result.UpdateStatusDate,
+      logisticsType: result.LogisticsType,
+      shipmentNo: result.ShipmentNo,
+      bookingNote: result.BookingNote,
+      tradeDate: result.TradeDate,
     };
   }
 }

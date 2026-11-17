@@ -214,6 +214,7 @@ ecpay,3315,i郵箱逾期退招領,,returning,物流商：POST,見綠界物流貨
 ecpay,7300,郵局接收資料異常,,error,物流商：POST,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）,https://developers.ecpay.com.tw/7380/,2026-08-08,官方文件
 ecpay,7301,郵件破損 - 無法投遞,,error,物流商：POST,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）,https://developers.ecpay.com.tw/7380/,2026-08-08,官方文件
 ecpay,7302,郵件遺失,,error,物流商：POST,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）,https://developers.ecpay.com.tw/7380/,2026-08-08,官方文件
+ecpay,4444,訂單建立失敗,,error,物流商：UNIMART、UNIMARTC2C、FAMI、FAMIC2C、HILIFE、HILIFEC2C、TCAT、POST,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）,https://developers.ecpay.com.tw/7380/,2026-11-17,官方文件
 ecpay,320,郵局已確認資料，可列印,,status,物流商：POST,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）,https://developers.ecpay.com.tw/7380/,2026-08-08,官方文件
 newebpay,SUCCESS,成功,,success,API 回應代碼（NDNS 1.0.0 附錄一）,,https://www.newebpay.com/website/Page/download_file?name=%E7%89%A9%E6%B5%81%E6%9C%8D%E5%8B%99%E6%8A%80%E8%A1%93%E4%B8%B2%E6%8E%A5%E6%89%8B%E5%86%8A_NDNSv1.0.0.pdf,2026-10-24,官方文件
 newebpay,1101,新增物流訂單失敗,,error,API 回應代碼（NDNS 1.0.0 附錄一）,,https://www.newebpay.com/website/Page/download_file?name=%E7%89%A9%E6%B5%81%E6%9C%8D%E5%8B%99%E6%8A%80%E8%A1%93%E4%B8%B2%E6%8E%A5%E6%89%8B%E5%86%8A_NDNSv1.0.0.pdf,2026-10-24,官方文件

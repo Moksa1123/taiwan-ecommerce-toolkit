@@ -8,7 +8,7 @@
 |---|---|
 | Origin | Official vendor API docs, PDF specs and SDKs; every source is registered in the repo's `sources/official-sources.json` (URL, how it is fetched, which files it covers) |
 | Providers | `data/providers.csv` has 20 rows: 7 aggregators with a logistics API, 1 direct carrier API (HCT), 2 on-demand services, and 10 rows with no public API (listed so the skill can say so) |
-| Rows | **1113 rows** in 5 search domains; per-domain counts come from `python scripts/search.py --stats`, not from this file |
+| Rows | **1114 rows** in 5 search domains; per-domain counts come from `python scripts/search.py --stats`, not from this file |
 | Provenance | Every row has `doc_url` (official doc) and `trust` (實測 measured / 官方文件 official doc / 推論 inferred); `retrieved_on` is the last date the source was compared |
 | Crypto | Expected values are produced by running the vendors' own SDKs or spec samples verbatim (`tests/vectors/`); examples are compared byte for byte |
 | Verified | 2026-11-15: self-test passes, `verify-examples.py` passes; known gaps are in `data/pending.csv` |

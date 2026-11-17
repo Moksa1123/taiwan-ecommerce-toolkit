@@ -538,13 +538,16 @@
   "skills": [
    "logistics"
   ],
-  "title": "綠界物流整合 / 更新歷程（查詢 V5 起始日等）",
+  "title": "綠界物流整合 / 更新歷程（查詢 V5 起始日、OK 店到店 2026-07-01 終止等）",
   "url": "https://developers.ecpay.com.tw/36099.md",
   "format": "md",
   "fetch": "get",
   "access": "public",
   "covers": [
-   "taiwan-logistics/references/ecpay-logistics-api.md"
+   "taiwan-logistics/references/ecpay-logistics-api.md",
+   "taiwan-logistics/references/carrier-direct-access.md",
+   "taiwan-logistics/data/logistics-types.csv",
+   "taiwan-logistics/data/providers.csv"
   ]
  },
  {
@@ -1611,7 +1614,7 @@
    "taiwan-payment/data/error-codes.csv",
    "taiwan-payment/references/ecpay-payment-api.md"
   ],
-  "notes": "All Rights Reserved，不可提交進 repo；guides/20-error-codes-reference.md 為 10100058（發票作業逾時）出處；以 git pull 更新；只能讀來交叉驗證，不可複製進 repo；更新以 git clone/pull；guides/20 錯誤碼速查表與官方頁有衝突時以 developers.ecpay.com.tw 為準；All Rights Reserved：只能讀來驗證，不可複製進 repo；以 git pull 取最新，看 commit 是否變動。OK C2C 列印端點 PrintOKMARTC2COrderInfo 目前只見於 guides/06；GitHub repo：更新時以 git clone／pull 比對最新 commit；GitHub repo（https://github.com/ECPay/ecpay-api-skill）：追蹤 master 的 commits Atom feed，只有新 commit 才會變動，repo 頁面的導覽列與星數不再誤報"
+  "notes": "All Rights Reserved，不可提交進 repo；guides/20-error-codes-reference.md 為 10100058（發票作業逾時）出處；以 git pull 更新；只能讀來交叉驗證，不可複製進 repo；更新以 git clone/pull；guides/20 錯誤碼速查表與官方頁有衝突時以 developers.ecpay.com.tw 為準；All Rights Reserved：只能讀來驗證，不可複製進 repo；以 git pull 取最新，看 commit 是否變動。guides/06 仍列 OKMARTC2C 與 PrintOKMARTC2COrderInfo，但開發者網站 /36099 已公告 OK 店到店 2026-07-01 終止，以開發者網站為準；GitHub repo：更新時以 git clone／pull 比對最新 commit；GitHub repo（https://github.com/ECPay/ecpay-api-skill）：追蹤 master 的 commits Atom feed，只有新 commit 才會變動，repo 頁面的導覽列與星數不再誤報"
  },
  {
   "id": "ecpay-api-skill-error-guide",
@@ -3220,7 +3223,8 @@
   "fetch": "get",
   "access": "public",
   "covers": [
-   "taiwan-logistics/data/status-codes.csv"
+   "taiwan-logistics/data/status-codes.csv",
+   "taiwan-logistics/references/ecpay-logistics-api.md"
   ],
   "notes": "301 轉址到 wp-content/uploads/YYYY/MM/logistics_status.xlsx（年月會變，請抓此固定入口並跟隨轉址）；比對時排除「異動歷程」工作表；完整代碼另見後台「物流管理 > 物流貨態代碼查詢」"
  },
@@ -8239,6 +8243,27 @@
    "\\d+年\\d+月\\d+日星期.",
    "\\d+年至\\d+月\\d+日止，.*",
    "\\d+年至\\d+月\\d+日止，[^\n]*",
+   "累計瀏覽人次：[^\n]*"
+  ]
+ },
+ {
+  "id": "post-api-spec-hardware",
+  "provider": "post",
+  "skills": [
+   "logistics"
+  ],
+  "title": "中華郵政 API 規格書（郵儲窗口周邊設備，非物流）",
+  "url": "https://www.post.gov.tw/post/internet/Message/index.jsp?ID=15021202",
+  "format": "html",
+  "fetch": "get",
+  "access": "public",
+  "covers": [
+   "taiwan-logistics/references/carrier-direct-access.md"
+  ],
+  "notes": "用來佐證官網「API 規格書」是硬體採購規格，與物流無關",
+  "ignore": [
+   "\\d+ 年 \\d+ 月 \\d+ 日星期.",
+   "\\d+年\\d+月\\d+日星期.",
    "累計瀏覽人次：[^\n]*"
   ]
  },

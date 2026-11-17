@@ -10,3 +10,7 @@ date,question,why_not_found,asked_by,status
 2026-11-17,Uber Direct 是否在台灣提供商家 API 服務,Uber 台灣商家網站有 Uber Direct 中文頁但內容為全球通用文案 未列出 24 個國家 目前排除依據只有 2026-10-03 客服信件,taiwan-toolkit（官方文件稽核 2026-11-17）,open
 2026-11-17,pandago 台灣是否提供 CARD_ON_DELIVERY 與 handover_confirmation PIN,ODR spec 只說部分國家提供 未列國家清單 需洽 ODR 窗口,taiwan-toolkit（官方文件稽核 2026-11-17）,open
 2026-11-17,pandago PUT /orders/{order_id} 停用後是否有替代的改單方式,ODR spec 只標 temporarily disabled 回 405 未說明替代方案或恢復時間,taiwan-toolkit（官方文件稽核 2026-11-17）,open
+2026-11-17,綠界萊爾富 B2C／C2C 測試環境的測試門市代號是什麼（skill 原寫 2001）,/8809 只列 7-ELEVEN 131386、冷凍店取 896539、全家 006598、OK 1328；萊爾富沒有列；需洽綠界或在測試環境電子地圖確認,taiwan-toolkit（官方文件稽核 2026-11-17）,open
+2026-11-17,綠界 OK 店到店終止後 /Express/Create 帶 OKMARTC2C 會回什麼錯誤；/8809 何時移除殘留的 OKMARTC2C 字樣,更新歷程只寫終止與移除文件；/8809 與 /7444 仍列 OK；需實測或洽綠界,taiwan-toolkit（官方文件稽核 2026-11-17）,open
+2026-11-17,萊爾富是否提供商家對外 API 或串接文件,官網 hilife.com.tw 對自動化存取回 403（Akamai WAF）；需人工用瀏覽器確認,taiwan-toolkit（官方文件稽核 2026-11-17）,open
+2026-11-17,綠界 OK 店到店終止後還有哪些聚合商提供 OK 超商取貨（藍新 ShipType=4、PayNow Logistic_service=10、ezShip TOK）,OK 終止公告只見於綠界；其他聚合商的文件不在本次範圍，需各家稽核確認,taiwan-toolkit（官方文件稽核 2026-11-17）,open
