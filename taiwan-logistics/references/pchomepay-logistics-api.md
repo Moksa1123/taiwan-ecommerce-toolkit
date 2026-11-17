@@ -1,6 +1,7 @@
 # PChomePay Logistics API Reference
 
-拍錢包 (PChomePay) 物流 API 完整參考文件。
+PChomePay支付連（PChomePay）超商取貨物流 API 參考。依 PChomePay B2C API documentation 1.7.4（2026-09-01）：
+https://docs.google.com/document/d/1dPIPJc4xfyjkJ1i2yxaja4OP0G-iGFRXM08NDMuttZE/ （查證 2026-11-17）。
 
 ---
 
@@ -27,10 +28,12 @@
 
 ### PChomePay 物流定位
 
-拍錢包 (PChomePay) 與 ECPay、PayUni 等純物流串接平台不同，主打**金流 + 物流二合一**的整合服務：
+PChomePay支付連沒有獨立的物流單 API，物流是**超商取貨付款這個付款方式的一部分**：
 
 - **金流為主軸**：所有物流訂單均由 PChomePay 金流訂單派生，需先以 `pay_type` 為超商取貨類型 (`IPL7` / `IPLFM` / `IPLHL`) 建立金流訂單
-- **超商取貨付款**：核心場景為 7-11 / 全家 / 萊爾富之 C2C 店到店服務，買家在付款頁面選擇取件門市
+- **超商取貨付款**：7-11 / 全家 / 萊爾富之 C2C 店到店，買家在付款頁面選擇取件門市；金額 65 ~ 20,000 元
+- **事前設定**：須先在後台設置退件聯繫資訊（未設定時建單回 `20014`）
+- **費用**：商品寄出後，無論用戶是否取貨付款，合作方都要負擔該筆物流手續費；超商取貨付款僅能全額退款，退款時須提供退回款項之銀行帳戶
 - **無獨立物流單建立 API**：`POST /v1/payment` 建立金流訂單後，物流訂單會自動產生；商家只需呼叫「取號列印交寄單」即可完成取號
 - **與信用卡 / ATM 等其他付款方式可共用同套金流流程**：但僅超商取貨類型訂單會觸發物流相關 API
 
@@ -39,7 +42,7 @@
 ```
 1. 建立金流訂單 (pay_type = IPL7/IPLFM/IPLHL)
    └─ 用戶在付款頁面選擇超商取件門市
-2. 取得用戶選擇門市資訊 (notify: payment_info_set)
+2. 取得用戶選擇門市資訊 (notify: order_audit，payment_info 含 logistic_id、receiver_name、receiver_mobile、store_id、store_name)
 3. 取號列印交寄單 (POST /v1/logistic/batch)
 4. 將商品交寄至超商
 5. 透過通知 / 查詢 API 監控物流狀態
@@ -56,7 +59,7 @@
 | 全家 (FamilyMart) | T + 6 日 | 須在 6/16 23:59 前交寄 |
 | 萊爾富 (Hi-Life) | T + 7 日 | 須在 6/17 23:59 前交寄 |
 
-> ⚠ 一旦逾期未交寄，該訂單之物流單將自動失效，需重新處理。
+> 文件未說明逾期未交寄的處理方式；以「查詢未出貨訂單」追蹤 `LGNO` 訂單，在期限前交寄。
 
 ---
 
@@ -409,10 +412,10 @@ else:
 
 ### 注意事項
 
-1. **必須在 30 天內完成取號**：超過則訂單失效
-2. **批次取號**：`order_id` 為陣列可一次處理多筆，但若任一筆失敗會回傳於 `error_order_id`
-3. **`print_url` 開啟即可列印**：頁面為 HTML，內含適合熱感印表機的格式
-4. **同訂單重複取號**：會回傳同一個 `print_no`，不會重複扣費
+1. **30 天內完成取號列印**：超商取貨訂單須在 30 天內完成取號交寄單列印
+2. **批次取號**：`order_id` 為陣列可一次處理多筆，取號失敗的訂單編號回傳於 `error_order_id`
+3. **`print_url`**：交寄單頁面連結，開啟後列印
+4. **同訂單重複取號**：文件未說明是否回傳同一 `print_no`、是否重複收費
 
 ---
 
@@ -751,10 +754,8 @@ for rec in result["records"]:
 
 ### 物流手續費注意事項
 
-1. **無論是否取貨成功，皆會收取物流手續費**：商品從交寄起就計算手續費
-2. **手續費為內扣**：訂單清算時自動從訂單金額中扣除，不另外請款
-3. **PChomePay 後台**：可至會員中心 > 對帳資料下載完整對帳檔
-4. **30 天保留期**：超過 30 天則無法查詢，請定期下載備份
+1. **無論是否取貨成功，皆會收取物流手續費**：商品寄出後即由合作方負擔
+2. **查詢日期**：文件原文為「此日期僅能查詢 30 天前的對帳資料」（訂單對帳 `/v1/checking` 則為「僅能查詢 120 天前（不含當日）」）；查當日資料回 `20007`
 
 ---
 
@@ -810,16 +811,19 @@ curl --location 'https://api.pchomepay.com.tw/v1/logistic/compensation/202408' \
 
 ### 賠款說明
 
-1. **觸發條件**：商品於物流運送過程中遺失或損毀，由超商物流方核定後賠付
-2. **賠款金額**：依物流商賠付規範決定（通常為訂單金額之一定比例，最高有上限）
-3. **入帳方式**：直接撥付至 PChomePay 商家餘額
-4. **查詢範圍**：以月份為單位 (`YYYYMM`)，可累積查詢
+1. **用途**：查詢貨物寄丟之賠款入帳資料
+2. **查詢單位**：以入帳年月 (`YYYYMM`) 查詢
+3. 賠款金額與核定方式文件未說明
+
+> 「查詢退件清單」`GET /v1/logistic/return_list/{date}/{type}` 文件已標示**已下線**，不要使用；未取貨改用 `/v1/logistic/store_return/{date}`，退件以 `return_shipped` 通知掌握。
 
 ---
 
 ## 物流狀態通知
 
-PChomePay 會在物流狀態變更時透過 `notify_url` 主動推送通知。
+PChomePay 會在物流狀態變更時透過 `notify_url`（建立訂單時帶入，未帶則用後台環境設定之 Notify URL）主動推送通知。
+
+**回應規則（與付款通知相同）**：收到通知後須於 **3 秒內**回傳純文字 `success`；無回應或回應不是 `success` 時，5 分鐘內送第 2 次，之後每 5 分鐘重送，最多 5 次。
 
 ### 通知格式
 
@@ -947,9 +951,8 @@ switch ($notifyType) {
         break;
 }
 
-// PChomePay 不要求特定回應，回 200 即可
-http_response_code(200);
-echo 'OK';
+// 須於 3 秒內回傳純文字 success，否則會重送（最多 5 次）
+echo 'success';
 ```
 
 ### Python 接收範例 (Flask)
@@ -980,15 +983,16 @@ def pchomepay_notify():
     elif notify_type == 'return_shipped':
         update_order(order_id, 'returned')
 
-    return 'OK', 200
+    # 須於 3 秒內回傳純文字 success，否則會重送（最多 5 次）
+    return 'success', 200
 ```
 
 ### 通知處理注意事項
 
-1. **重試機制**：PChomePay 若收到非 200 回應，會自動重試多次
-2. **驗證來源 IP**：建議白名單檢查 `113.196.231.190` 為唯一允許來源
-3. **冪等處理**：同一狀態變更可能收到多次通知，需以 `order_id + logistic_status + status_date` 去重
-4. **非阻塞處理**：建議以 queue / async 處理通知內容，避免回應延遲
+1. **回應 `success`**：3 秒內回純文字 `success`；否則 5 分鐘後重送，每 5 分鐘一次，最多 5 次
+2. **驗證來源 IP**：通知由 `113.196.231.190` 送出，可據此設白名單
+3. **冪等處理**：重送會收到重複通知，以 `order_id + logistic_status + status_date` 去重
+4. **先回應再處理**：3 秒時限很短，先回 `success`，再以 queue / async 處理
 
 ---
 
@@ -1001,6 +1005,7 @@ def pchomepay_notify():
 | `90001` | invalid status | 物流狀態錯誤 |
 | `90002` | logistic status history not found | 物流狀態歷程不存在 |
 | `90004` | Print delivery note fail. | 列印交寄單失敗 |
+| `90008` | Arrears is too much. | 待繳運費超過上限 200 元 |
 
 ### 認證 / 通用錯誤代碼
 
@@ -1011,7 +1016,7 @@ def pchomepay_notify():
 | `10003` | invalid token | token 錯誤 |
 | `10004` | token expired | token 逾期 |
 | `10006` | api client has not set notifyURL or returnURL yet | 未設定 notifyURL 或 returnURL |
-| `10007` | function unavailable | 會員帳號暫時無法使用功能服務 |
+| `10007` | you are temporarily unable to perform this function, please contact customer service | 會員帳號無法使用功能服務 |
 
 ### 訂單相關錯誤代碼
 
@@ -1022,7 +1027,7 @@ def pchomepay_notify():
 | `20003` | pay type not support | 付款類別錯誤 |
 | `20005` | params is not valid | 參數錯誤 |
 | `20007` | It not allow to check today's data | 目前無法查詢當日資料 |
-| `20009` | Request data is not a json structure data | 請求格式不是 JSON |
+| `20009` | Request data is not a json structure data | 請求格式不是 JSON 格式 |
 | `20014` | cvs setting error. | 未設定超商退貨門市 |
 
 ### 錯誤回應格式
@@ -1060,16 +1065,15 @@ def pchomepay_notify():
 
 1. **`notify_url` 設定**：在 PChomePay 後台 > 環境設定 > Notify URL 是否設定正確
 2. **IP 白名單**：是否將 `113.196.231.190` 加入防火牆白名單
-3. **HTTPS 憑證**：notify URL 須為有效的 HTTPS 端點 (建議使用 Let's Encrypt 等正式憑證)
-4. **回應狀態碼**：notify 接收端需回應 200，否則 PChomePay 會持續重試
-5. **建立訂單時 `notify_url`**：可於 `POST /v1/payment` 個別覆蓋預設值
+3. **回應內容**：須於 3 秒內回純文字 `success`，否則每 5 分鐘重送，最多 5 次
+4. **建立訂單時 `notify_url`**：可於 `POST /v1/payment` 個別覆蓋預設值
 
 ### Q3: 物流訂單可以重新取號嗎？
 
 **答**：
 
-- **同一筆訂單可重複呼叫 `/v1/logistic/batch`**：會回傳同一個 `print_no`，不會重複扣費
-- **若要更換門市**：無法透過 API，需請買家重新下單
+- 文件未說明同一訂單重複呼叫 `/v1/logistic/batch` 的行為（是否回同一 `print_no`、是否重複收費）
+- API 文件沒有更換取件門市的 API
 
 ### Q4: 如何處理「已到店但用戶未取貨」？
 
@@ -1078,7 +1082,7 @@ def pchomepay_notify():
 ```
 1. 透過 GET /v1/logistic/store_return/{date} 撈出 SATB 但未付款訂單
 2. 主動以 SMS / Email 通知買家取貨
-3. 超過 7 天後（超商保留期限），商品會自動退件
+3. 逾超商保留期限未取，商品退件（期限文件未載明）
 4. 收到 return_shipped 通知後，自動標記訂單為「退件」狀態
 5. 商家從退件門市領回商品
 ```
@@ -1087,10 +1091,10 @@ def pchomepay_notify():
 
 **答**：
 
-- **時機**：商品從寄件門店交寄起即收取
-- **金額**：依各超商之合約價（一般 7-11 / 全家為 NT$65 / 件，實際以後台公告為準）
+- **時機**：商品寄出後
+- **金額**：依合約；以 `/v1/logistic/accounting/{date}` 的 `logistic_amount` 為準
 - **無論取貨成敗皆收取**：包括買家未取貨退件
-- **退款不退手續費**：退款時手續費不會退還，且會額外收取 NT$15 退款手續費
+- **退款**：超商取貨付款僅能全額退款，須提供退回款項之銀行帳戶；退款時帳戶須有應退金額＋退款手續費
 
 ### Q6: 是否支援自有物流？
 
@@ -1104,11 +1108,11 @@ def pchomepay_notify():
 
 | 比較項目 | PChomePay | ECPay | PayUni |
 |---------|-----------|-------|--------|
-| 物流獨立串接 | ❌ 必須先建金流訂單 | ✅ 物流可獨立串接 | ✅ 物流可獨立串接 |
-| 支援超商 | 7-11 / 全家 / 萊爾富 | 4 大超商 + 黑貓 + 宅配通 | 7-11 + 黑貓 |
-| 認證方式 | OAuth-like (Basic Auth → token) | CheckMacValue (MD5) | AES-256-GCM + HMAC |
-| 物流類型 | C2C 店到店 | C2C / B2C | C2C |
-| Notify 格式 | x-www-form-urlencoded + JSON | x-www-form-urlencoded | JSON / 加密 |
+| 物流獨立串接 | ❌ 必須先建金流訂單 | ✅ 物流可獨立串接 | ❌ 須在交易 API 一併建立（2026-09-09 起） |
+| 支援超商 | 7-11 / 全家 / 萊爾富 | 見 `ecpay-logistics-api.md` | 7-11 + 黑貓 |
+| 認證方式 | Basic Auth → token | CheckMacValue (MD5) | AES-256-GCM + SHA256 HashInfo |
+| 物流類型 | C2C 店到店 | C2C / B2C | B2C / C2C / 黑貓宅配 |
+| Notify 格式 | x-www-form-urlencoded（notify_message 為 JSON 字串），回 `success` | x-www-form-urlencoded | Form Post，EncryptInfo 加密 |
 
 ### Q8: 如何測試 Sandbox 環境？
 

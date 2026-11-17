@@ -67,13 +67,28 @@
 | 門市更新 (關轉) | `/api/Orderapi/Put` | PUT |
 | 更新物流訂單 (7-11 大宗) | `/api/Bulk711Order/UpdateB2C711Order` | PUT |
 | 更新物流訂單 (7-11 冷凍 B2C) | `/api/711FreezingB2C/Update711B2COrder` | PUT |
-| 建立 7-11 退貨物流單 | `/api/Orderapi/ReturnPaymentno` | PUT |
+| 建立退貨物流單（7-11 大宗 → `12`、全家大宗 → `14`） | `/api/Orderapi/ReturnPaymentno` | 7-11 大宗頁寫 PUT，全家大宗頁寫 POST |
 | 7-11 海外配送-國家代碼 | `/api/OverSeas711Order/SelCountryID` | POST |
 | 7-11 海外配送-運費試算 | `/api/Orderapi/SelWeightChart` | POST |
 | 7-11 海外配送-費用查詢 (依訂單) | `/api/OverSeas711Order/SelBillDetail` | POST |
 | 7-11 海外配送-費用查詢 (依日期) | `/api/OverSeas711Order/SelBillDetailDate` | POST |
 | 全家 C2C 店號轉換 | `/api/OrderFamiC2C/GetFamiStoreID` | GET |
 | 全家冷凍店鋪空間保留 | `/api/FamiFreezingB2C/UpSpaceConfirm` | POST |
+| 全家大宗獲取出貨單號 | `/api/FamiB2COrder/ShipFamiB2Cpaymentno` | POST |
+| 列印全家大宗物流單 | `/Member/Order/PrintFamiB2CLabel` | POST |
+| 更新物流訂單 (全家大宗) | `/api/FamiB2COrder/UpdateFamiB2COrder` | PUT |
+| 全家冷凍大宗獲取出貨單號 | `/api/711FreezingB2C/Ship711B2Cpaymentno`（官方文件即此路徑） | POST |
+| 列印全家冷凍大宗物流單 | `/Member/Order/PrintFamiFreezingB2CLabel` | POST |
+| 更新物流訂單 (全家冷凍 B2C) | `/api/FamiFreezingB2C/UpdateB2CFamiOrder` | PUT |
+| 全家冷凍大宗重選店鋪 | `/Member/Order/ReStoreID` | POST |
+| 全家冷凍大宗查詢商家材積 | `/api/FamiFreezingB2C/GetFamiFreezingVolume` | GET |
+| 列印全家冷凍 C2C 物流單 | `/Member/Order/PrintFamiFreezingC2CLabel` | POST |
+| 全家冷凍 C2C 店號轉換 | `/api/FamiFreezingC2C/GetFamiFreezingStoreID` | GET |
+| 列印黑貓到店物流單 | `/Member/Order/PrintBlackCat711Label` | POST |
+| 黑貓查詢材積 / 查詢材積 (api 密碼) | `/api/BlackCat/GetBlackCatVolume` / `/api/BlackCat/QueryBlackCatVolume` | POST |
+| 黑貓查詢設定 | `/api/BlackCat/All_BlackCat_Setting` | GET |
+| 黑貓驗證有效地址 / 特殊偏遠地址 | `/api/BlackCat/IsValidAddress` / `/api/BlackCat/IsSpecialAddress` | GET |
+| 黑貓設定 / 更改設定 | `/api/BlackCat/Setting_BlackCat` (GET) / `/api/BlackCat/Up_BlackCat_Setting` (PUT) | |
 
 ---
 
@@ -133,6 +148,7 @@ PayNow 物流以 `Logistic_serviceID` (對應建立訂單的 `Logistic_service` 
 | `08` | 7-11 海外配送 (宅配) | 跨境宅配 |
 | `10` | OK 店到店 | C2C 常溫 |
 | `12` | 7-11 大宗退貨便 | 退貨 |
+| `14` | 全家大宗退貨通 | 退貨（`ReturnPaymentno` 建立） |
 | `21` | 7-11 交貨便 (冷凍) | C2C 冷凍 |
 | `22` | 7-11 大宗物流 (冷凍) | B2C 冷凍 |
 | `23` | 全家店到店物流 (冷凍) | C2C 冷凍 |
@@ -343,7 +359,7 @@ POST /Member/Order/Choselogistics
 | 全家大宗物流 | `04` |
 | 黑貓宅急便 | `06` |
 | 7-11 海外配送（店配 / 宅配） | `07` / `08`（額外帶 `Country`） |
-| 7-11 交貨便（冷凍） | `21` |
+| 7-11 交貨便（冷凍） | 官方表格寫 `22`（範例建單也寫 `22`），地圖回傳 `service=21`，建單 `Logistic_service` 表格寫固定 `21` |
 | 7-11 大宗物流（冷凍） | `22` |
 | 全家店到店（冷凍） | `23` |
 | 全家大宗（冷凍） | `24`（額外帶 `Length`/`Wide`/`High`/`Weight`/`StartDate`/`EndDate`） |
@@ -894,13 +910,18 @@ POST /api/OverSeas711Order/SelBillDetailDate    (依日期 yyyy-MM-dd)
 
 服務代碼：`04` / 文件版本：`FamilyBulk V2.4`
 
-流程與 7-11 大宗類似，但全家大宗：
+流程：選擇物流服務（`Logistic_serviceID=04`）→ 建立物流訂單（`Logistic_service=04`）→ 獲取出貨單號 → 列印全家大宗物流單。
 
-- 建單時 `Logistic_service=04`、`Deadline` 為 1~7
-- `Sender_Name`、`Sender_Phone` 可填空字串自動帶入「立吉富」/「0900000000」
-- 列印 API：`/api/Order711` 之外另有 `/api/OrderFamiC2C` (依產品線)
+- 建單時 `Deadline` 為 1~7；`Sender_Name`、`Sender_Phone` 可填空字串自動帶入「立吉富」/「0900000000」
+- **獲取出貨單號** `POST /api/FamiB2COrder/ShipFamiB2Cpaymentno`：`JsonOrder`（TripleDES）內含 `user_account`、`apicode`、`PassCode`=SHA-1(`user_account + apicode`)、`ShipList`[{`LogisticNumber`, `sno`=1}]；回傳陣列 `LogisticNumber`、`sno`、`paymentno`（配送編號）、`ErrorMsg`
+- **列印** `POST /Member/Order/PrintFamiB2CLabel`：`LogisticNumbers` = `物流單號_序號`，多筆以 `,` 分隔；回傳列印畫面
+- **更新物流訂單** `PUT /api/FamiB2COrder/UpdateFamiB2COrder`：`UpdateBulkFamiOrder` JSON（`LogisticNumber`、`sno`、`PassCode`、選填 `receiver_storeid`、`receiver_storename`、`Receiver_Name`、`Receiver_Phone`）
+- **重新取號**：需等物流驗收後且未取貨；配到新出貨單號後要重新列印標籤
+- **建立退貨物流單（退貨通）** `/api/Orderapi/ReturnPaymentno`（此頁寫 POST）：`JsonOrder` 內含 `user_account`、`apicode`、`LogisticNumber`、`LogisticServiceID=04`、`PassCode`=SHA-1(`user_account + LogisticNumber + apicode`)；回傳 `LogisticServiceID=14`（全家大宗退貨通）、`paynoworderno`（11 碼貨運編號＋1 碼檢核碼，於 FamiPort 輸入列印）；消費者須於 7 日內完成退貨寄件
 
-> 全家大宗的後續取出貨單號流程與 7-11 大宗一致，請依官方 SDK 接續。
+全家大宗貨態代碼（`04`）：`0000` 訂單已成立 等待出貨、`1000` 訂單檔案上傳中、`1050` 物流訂單上傳成功、`2130` 檔名錯誤、`2131` 欄位值為空、`2132` 欄位值溢位、`2133` 資料錯誤、`2134` 訂單重複、`4000` 進驗成功、`4019` 物流中心未收到貨、`4031`、`4032`、`4040`、`4067`–`4074`（同全家 C2C）、`5000` 取件門市配達、`6002` 待退貨請盡速取件、`6004` 商品退回物流中心、`8000` 買家已取件、`8001` 退貨成功、`8010`、`8020`、`9411` 貨態停滯。
+
+全家退貨通（`14`）：`0001` 訂單已成立 等待退貨、`0101` 商品已到寄件門市、`4000`、`4009` 物流中心未收到貨、`4031`、`4032`、`4040`、`4067`–`4074`、`8100` 賣家已取件、`9411`。
 
 ---
 
@@ -921,6 +942,8 @@ POST /api/OverSeas711Order/SelBillDetailDate    (依日期 yyyy-MM-dd)
 POST /api/FamiFreezingB2C/UpSpaceConfirm
 ```
 
+`JsonOrder`（TripleDES）內含 `user_account`、`apicode`、`ReservedNo`、`Flag`（`0` 保留 / `1` 取消）；回傳 `S` 或 `F,錯誤訊息`。
+
 使用情境：
 
 - 新增訂單前需先保留空間才可成功建單
@@ -936,6 +959,16 @@ POST /api/FamiFreezingB2C/UpSpaceConfirm
 | `S60` | 長+寬+高 < 60 cm |
 | `S105` | 長+寬+高 < 105 cm |
 
+### 其他 API
+
+| 功能 | 端點 | 重點 |
+|------|------|------|
+| 獲取出貨單號 | `POST /api/711FreezingB2C/Ship711B2Cpaymentno` | 官方文件寫此路徑；`JsonOrder` 同全家大宗（`PassCode` = SHA-1(`user_account + apicode`)、`ShipList`） |
+| 列印 | `POST /Member/Order/PrintFamiFreezingB2CLabel` | `LogisticNumbers` 多筆以 `,` 分隔 |
+| 更新物流訂單 | `PUT /api/FamiFreezingB2C/UpdateB2CFamiOrder` | `UpdateOrder` JSON：`LogisticNumber`、`sno`、`PassCode`、選填 `Receiver_Name`、`Receiver_Phone`；回 `S` 或 `F,錯誤訊息` |
+| 重選店鋪 | `POST /Member/Order/ReStoreID` | 先以 UpSpaceConfirm `Flag=1` 取消原保留；帶 `user_account`、`apicode`、`Logistic_serviceID=24`、`returnUrl`、材積、`StartDate`/`EndDate`、`Ecplateform`、`ReservedNo`、`LogisticNumber`；回傳新 `ReservedNo`（3 小時內確認）、`ShipDate`、已要號則含新 `paymentno`；貨態 `1000` 時不能重選 |
+| 查詢商家材積 | `GET /api/FamiFreezingB2C/GetFamiFreezingVolume` | `user_account`、`sonid`；回 `S60`／`S105`／`S60-S105` |
+
 ---
 
 ## 全家冷凍店到店 (C2C)
@@ -946,9 +979,11 @@ POST /api/FamiFreezingB2C/UpSpaceConfirm
 
 1. 電子地圖 (`Logistic_serviceID=23`) 選店，回傳 `ReservedNo` + `ShipDate`
 2. 建單帶入 `ReservedNo`、`Logistic_service=23`
-3. 列印全家店到店冷凍物流單
+3. 列印全家店到店冷凍物流單：`POST /Member/Order/PrintFamiFreezingC2CLabel`（`LogisticNumbers`），列印期限為訂單成立 D+7
 4. 依電子地圖回傳的 `ShipDate` 進行出貨
 5. 寄貨外箱須於全家購買 (My FamiPort APP 預購寄件專用紙箱)
+
+店號轉換用 `GET /api/FamiFreezingC2C/GetFamiFreezingStoreID?storeId=...&IDtype=1|2`（參數與回傳同常溫的 `/api/OrderFamiC2C/GetFamiStoreID`）。
 
 ### 建單必填差異
 
@@ -1154,6 +1189,18 @@ POST /Member/Order/PrintBlackCatLabel
 |------|------|------|
 | `LogisticNumbers` | ● | `物流單號_序號`，多筆以 `,` 分隔 |
 
+### 黑貓設定與查詢 API
+
+| 功能 | 端點 | 重點 |
+|------|------|------|
+| 查詢黑貓材積 | `POST /api/BlackCat/GetBlackCatVolume` | `user_account`、`sonid`、`Logistic_Serviece`（`06`/`36`）；回 `S60,S90,S120` 形式字串 |
+| 查詢黑貓材積 (api 密碼) | `POST /api/BlackCat/QueryBlackCatVolume` | `user_account`、`apicode`（TripleDES）、`Logistic_Serviece` |
+| 查詢黑貓設定 | `GET /api/BlackCat/All_BlackCat_Setting` | `user_account`、`sonid`；回 `eshopID`、`IsOpen`、`Logistic_Serviece`（06/36/46） |
+| 驗證有效地址 | `GET /api/BlackCat/IsValidAddress` | `Address`；回 `S`／`F`／`Error:訊息` |
+| 特殊或偏遠地區 | `GET /api/BlackCat/IsSpecialAddress` | `Address`；回 `result`、`ErrorMsg`、`check_result`（偏遠地區運費 +60） |
+| 設定黑貓資料 | `GET /api/BlackCat/Setting_BlackCat` | `SettingJson`（TripleDES）：`user_account`、`apicode`、`eshopID`（契客代號）、`ftpusername`/`ftppassword`、`IsInsurance` 1/0、`Logistic_service`、`size`（如 `S60,S90,S120`）、`PassCode`=SHA-1(`user_account + apicode + 契客代號`)；回 `S` 或 `F,錯誤訊息` |
+| 更改黑貓資料 | `PUT /api/BlackCat/Up_BlackCat_Setting` | 同上 |
+
 ---
 
 ## 黑貓店到店
@@ -1164,7 +1211,7 @@ POST /Member/Order/PrintBlackCatLabel
 
 1. 選擇物流服務 (`Logistic_serviceID=46`) 取得門市資料
 2. 完善訂單資料後組成 JSON 字串 POST 到 `/api/Orderapi/Add_Order`
-3. 成功後到列印黑貓店到店標籤
+3. 成功後到 `POST /Member/Order/PrintBlackCat711Label` 列印（`LogisticNumbers` = `物流單號_序號`，多筆以 `,` 分隔）
 4. 將商品準備好打電話給黑貓上門取貨開始配送流程
 
 ### 與宅配的差異

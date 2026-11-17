@@ -1088,7 +1088,10 @@ const logistics = new NewebPayLogistics({
  */
 app.post('/callback/shipment-status', async (req, res) => {
   try {
-    const { Status, Message, EncryptData_, HashData_, UID_, Version_ } = req.body;
+    const { Status, Message, UID_, Version_ } = req.body;
+    // 規格書表格帶底線，官方範例 notify_url.php 讀無底線，兩種都讀
+    const EncryptData_ = req.body.EncryptData_ ?? req.body.EncryptData;
+    const HashData_ = req.body.HashData_ ?? req.body.HashData;
 
     console.log('Received notification:', {
       Status,
@@ -1099,7 +1102,7 @@ app.post('/callback/shipment-status', async (req, res) => {
 
     if (Status !== 'SUCCESS') {
       console.error('Notification error:', Message);
-      return res.send('0|Error');
+      return res.sendStatus(200);
     }
 
     // Decrypt data
@@ -1119,11 +1122,11 @@ app.post('/callback/shipment-status', async (req, res) => {
       eventTime: data.EventTime,
     });
 
-    // Return success
-    res.send('1|OK');
+    // 規格書未規定回應內容，回 HTTP 200 即可
+    res.sendStatus(200);
   } catch (error) {
     console.error('Callback error:', error);
-    res.send('0|Error');
+    res.sendStatus(500);
   }
 });
 
@@ -1199,14 +1202,15 @@ def shipment_status_callback():
 
         status = data.get('Status')
         message = data.get('Message')
-        encrypt_data = data.get('EncryptData_')
-        hash_data = data.get('HashData_')
+        # 規格書表格帶底線，官方範例 notify_url.php 讀無底線，兩種都讀
+        encrypt_data = data.get('EncryptData_') or data.get('EncryptData')
+        hash_data = data.get('HashData_') or data.get('HashData')
 
         app.logger.info(f'Received notification: {status} - {message}')
 
         if status != 'SUCCESS':
             app.logger.error(f'Notification error: {message}')
-            return '0|Error'
+            return '', 200
 
         # Decrypt data
         decrypted = logistics.decrypt_data(encrypt_data, hash_data)
@@ -1216,12 +1220,12 @@ def shipment_status_callback():
         # Process the notification
         process_shipment_status_update(decrypted)
 
-        # Return success
-        return '1|OK'
+        # 規格書未規定回應內容，回 HTTP 200 即可
+        return '', 200
 
     except Exception as e:
         app.logger.error(f'Callback error: {str(e)}')
-        return '0|Error'
+        return '', 500
 
 
 def process_shipment_status_update(data: Dict[str, any]):
@@ -2553,7 +2557,7 @@ SmilePay 透過 `Pay_zg` 矩陣編碼涵蓋 7-11/全家 + 黑貓三大配送：
 
 ---
 
-## PChomePay 拍錢包物流範例
+## PChomePay支付連物流範例
 
 ⚠️ Notify IP 必加白名單：**`113.196.231.190`**。
 

@@ -7361,6 +7361,7 @@
   "id": "payuni-page-326",
   "provider": "payuni",
   "skills": [
+   "logistics",
    "payment"
   ],
   "title": "PAYUNi 官方文件：API/交易建立/LINE Pay幕後/Ver 1.2",
@@ -7374,6 +7375,7 @@
   },
   "access": "public",
   "covers": [
+   "taiwan-logistics/references/payuni-logistics-api.md",
    "taiwan-payment/references/payuni-payment-api.md"
   ],
   "json_path": "data.page_content",
@@ -7453,6 +7455,7 @@
   "id": "payuni-page-350",
   "provider": "payuni",
   "skills": [
+   "logistics",
    "payment"
   ],
   "title": "PAYUNi 官方文件：API/交易建立/AFTEE幕後/Ver 1.1",
@@ -7466,6 +7469,7 @@
   },
   "access": "public",
   "covers": [
+   "taiwan-logistics/references/payuni-logistics-api.md",
    "taiwan-payment/references/payuni-payment-api.md"
   ],
   "json_path": "data.page_content",
@@ -7589,6 +7593,7 @@
   "id": "payuni-page-386",
   "provider": "payuni",
   "skills": [
+   "logistics",
    "payment"
   ],
   "title": "PAYUNi 官方文件：API/交易建立/街口支付幕後(JKoPay)/Ver 1.1",
@@ -7602,6 +7607,7 @@
   },
   "access": "public",
   "covers": [
+   "taiwan-logistics/references/payuni-logistics-api.md",
    "taiwan-payment/references/payuni-payment-api.md"
   ],
   "json_path": "data.page_content",
