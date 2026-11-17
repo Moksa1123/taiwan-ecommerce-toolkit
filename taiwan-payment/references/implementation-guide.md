@@ -32,7 +32,7 @@ python scripts/recommend.py "會員制 定期扣款" --format simple
 - **ECPay**: 穩定、市佔、高交易量、電商、ATM、超商、定期、訂閱、分期、發票、物流
 - **NewebPay**: 多元、支付方式、電子錢包、LINE、行動、記憶、會員、跨境
 - **PAYUNi**: API、JSON、RESTful、統一、新創、AFTEE、iCash
-- **SmilePay**: 速買配、簡單、便宜、台灣老牌、PHP、ibon、FamiPort、聯合信用卡
+- **SmilePay**: 速買配、簡單、便宜、台灣老牌、PHP、ibon、FamiPort、銀聯卡
 - **PChomePay**: 拍錢包、PChome、P 幣、Basic Auth、Token、虛擬帳號、超商代碼條碼、物流二合一
 - **ezPay**: 簡單付、電子支付、ezPay 錢包、約定連結帳戶、TWQR、跨機構、跨境、支付寶、微信
 - **PayNow**: 立吉富、Apple Pay、PaymentIntent、Stripe-like、JWT、票券、mPOS、現代+傳統雙 API
@@ -122,7 +122,7 @@ python scripts/recommend.py "會員制 定期扣款" --format simple
 - **優勢**: 老牌穩定、整合簡單、無 AES 加密門檻、ibon / FamiPort 直接打單
 - **認證**: `Dcvc` + `Verify_key` 共享密鑰；通知時用反推的 `Mid_smilepay` 加權檢核碼驗證
 - **傳輸**: Form POST，回 XML（部分欄位 BIG-5 編碼）
-- **特色**: 七種付款方式（ATM / Barcode / ibon / FamiPort / 信用卡含分期 / 聯合信用卡 / Union），公開文件需向官方索取
+- **特色**: 七種付款方式（ATM / Barcode / ibon / FamiPort / 信用卡含分期 / 銀聯卡 Union），公開文件需向官方索取
 
 ### PChomePay 特性
 - **優勢**: PChome 生態整合、拍錢包 5% P 幣回饋、金物流二合一、文件公開完整

@@ -7745,11 +7745,11 @@
    "payment",
    "logistics"
   ],
-  "title": "PChomePay API document（Google Docs，申請串接後提供）",
+  "title": "PChomePay API document（Google Docs）",
   "url": "https://docs.google.com/document/d/1dPIPJc4xfyjkJ1i2yxaja4OP0G-iGFRXM08NDMuttZE/",
   "format": "html",
   "fetch": "manual",
-  "access": "apply",
+  "access": "public",
   "covers": [
    "taiwan-payment/references/pchomepay-payment-api.md",
    "taiwan-payment/data/error-codes.csv"
@@ -7855,6 +7855,23 @@
   "covers": [
    "taiwan-payment/references/pchomepay-payment-api.md"
   ]
+ },
+ {
+  "id": "pchomepay-woo-plugin-repo",
+  "provider": "pchomepay",
+  "skills": [
+   "payment"
+  ],
+  "title": "PChomePay WooCommerce 外掛版本紀錄（GitHub PChomePayPlugin/PChomePay-Cart-for-WooCommerce releases）",
+  "url": "https://github.com/PChomePayPlugin/PChomePay-Cart-for-WooCommerce/releases",
+  "format": "html",
+  "fetch": "get",
+  "access": "public",
+  "covers": [
+   "taiwan-payment/references/pchomepay-payment-api.md",
+   "taiwan-payment/examples/pchomepay-payment-example.py"
+  ],
+  "notes": "組織首頁 pchomepay-plugins 只反映 GitHub 頁面雜訊；版本說明（如 2.0.5 信用卡下限 30→1）在 releases"
  },
  {
   "id": "pelican-home",

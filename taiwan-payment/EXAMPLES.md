@@ -1213,7 +1213,7 @@ console.assert(HashInfo === '6563710212EB74701B34AB4D510DC05AC0775CFCEEB1FBE44CF
 SmilePay 採用 `Verify_key` + `mid` 共享密鑰機制，無 AES 加密，整合最簡單。回應為 XML（部分欄位可能是 BIG-5 編碼，需轉 UTF-8）。
 
 ### 完整 Python 範例
-請見 [`examples/smilepay-payment-example.py`](examples/smilepay-payment-example.py) — 涵蓋 ATM (Pay_zg=2) / Barcode (Pay_zg=3) / ibon (Pay_zg=4) / FamiPort (Pay_zg=6) / 信用卡 (Pay_zg=1) / 信用卡分期 / 聯合信用卡 (Pay_zg=11) 七種付款方式。
+請見 [`examples/smilepay-payment-example.py`](examples/smilepay-payment-example.py) — 涵蓋 ATM (Pay_zg=2) / Barcode (Pay_zg=3) / ibon (Pay_zg=4) / FamiPort (Pay_zg=6) / 信用卡 (Pay_zg=1) / 信用卡分期 / 銀聯卡 (Pay_zg=11) 七種付款方式。
 
 ### 五大踩坑
 
@@ -1225,7 +1225,7 @@ SmilePay 採用 `Verify_key` + `mid` 共享密鑰機制，無 AES 加密，整�
 
 ---
 
-## PChomePay 拍錢包範例
+## PChomePay 支付連範例
 
 PChomePay 採用 **HTTP Basic Auth → pcpay-token** 兩階段認證：先用 APP_ID + SECRET 取得 token（8 小時有效），後續 API 帶 `pcpay-token` header。
 
@@ -1234,7 +1234,7 @@ PChomePay 採用 **HTTP Basic Auth → pcpay-token** 兩階段認證：先用 AP
 
 ### 四大要點
 
-1. **白名單 IP**：PChomePay notify 的來源 IP 是 `113.196.231.190`，**必須加入後台白名單**。
+1. **白名單 IP**：PChomePay notify 的來源 IP 是 `113.196.231.190`，有防火牆時**必須放行此 IP**（後台的 IP 白名單則是限制「你的伺服器」呼叫 API 的來源）。
 2. **Token 機制**：開立 token 預設 28800 秒（8h）有效；要在程式自行 cache 並避免逾期重發。
 3. **沙箱測試靠金額尾數**：例如 ATM 訂單金額尾數 `0-7` 自動付款成功、`8` 過期、`9` 5 分鐘後過期。
 4. **退款手續費**：除信用卡免手續費外，ATM/超商等需「退款金額 + 退款手續費」共同從餘額扣除；退款手續費為 NT$15（依官方）。

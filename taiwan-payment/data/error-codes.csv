@@ -239,6 +239,8 @@ pchomepay,20023,會員帳號暫時無法使用此收款功能,function lock.,val
 pchomepay,20025,移除記憶信用卡失敗,remove card info fail.,validation,error,見 PChomePay API 文件「7. 錯誤代碼」,https://docs.google.com/document/d/1dPIPJc4xfyjkJ1i2yxaja4OP0G-iGFRXM08NDMuttZE/,,官方文件
 pchomepay,20030,平台代碼錯誤,platform code not accept,validation,error,見 PChomePay API 文件「7. 錯誤代碼」,https://docs.google.com/document/d/1dPIPJc4xfyjkJ1i2yxaja4OP0G-iGFRXM08NDMuttZE/,,官方文件
 pchomepay,20031,暫時無法建立信用卡分期付款訂單,Currently unable to create installment payment orders.,validation,error,見 PChomePay API 文件「7. 錯誤代碼」,https://docs.google.com/document/d/1dPIPJc4xfyjkJ1i2yxaja4OP0G-iGFRXM08NDMuttZE/,,官方文件
+pchomepay,20032,因靜止戶須重新認證後才可恢復收款,Your account has been suspended for receiving payments due to prolonged inactivity.,validation,error,見 PChomePay API 文件「7. 錯誤代碼」,https://docs.google.com/document/d/1dPIPJc4xfyjkJ1i2yxaja4OP0G-iGFRXM08NDMuttZE/,2026-11-17,官方文件
+pchomepay,20037,認證未通過,member did not pass verify.,validation,error,見 PChomePay API 文件「7. 錯誤代碼」,https://docs.google.com/document/d/1dPIPJc4xfyjkJ1i2yxaja4OP0G-iGFRXM08NDMuttZE/,2026-11-17,官方文件
 pchomepay,40001,ATM 逾期錯誤,invalid atm expire date,payment,error,見 PChomePay API 文件「7. 錯誤代碼」,https://docs.google.com/document/d/1dPIPJc4xfyjkJ1i2yxaja4OP0G-iGFRXM08NDMuttZE/,,官方文件
 pchomepay,40003,會員帳號暫時無法此功使用,function lock.,payment,error,見 PChomePay API 文件「7. 錯誤代碼」,https://docs.google.com/document/d/1dPIPJc4xfyjkJ1i2yxaja4OP0G-iGFRXM08NDMuttZE/,,官方文件
 pchomepay,40005,餘額不足,member balance not enough.,payment,error,見 PChomePay API 文件「7. 錯誤代碼」,https://docs.google.com/document/d/1dPIPJc4xfyjkJ1i2yxaja4OP0G-iGFRXM08NDMuttZE/,,官方文件
@@ -246,7 +248,7 @@ pchomepay,50001,退款編號不可重複,Refund id is duplicate.,refund,error,�
 pchomepay,50002,該筆訂單並未成功付款，無法退款,"The order is not confirm yet, refund can't be execute",refund,error,見 PChomePay API 文件「7. 錯誤代碼」,https://docs.google.com/document/d/1dPIPJc4xfyjkJ1i2yxaja4OP0G-iGFRXM08NDMuttZE/,,官方文件
 pchomepay,50003,訂單編號不存在,"The order is not found, order id might invalid",refund,error,見 PChomePay API 文件「7. 錯誤代碼」,https://docs.google.com/document/d/1dPIPJc4xfyjkJ1i2yxaja4OP0G-iGFRXM08NDMuttZE/,,官方文件
 pchomepay,50004,退款金額需大於 0,Refund amount must bigger than 0,refund,error,見 PChomePay API 文件「7. 錯誤代碼」,https://docs.google.com/document/d/1dPIPJc4xfyjkJ1i2yxaja4OP0G-iGFRXM08NDMuttZE/,,官方文件
-pchomepay,50005,帳戶餘額不足以退款,Your balance is not enough to refund,refund,error,見 PChomePay API 文件「7. 錯誤代碼」,https://docs.google.com/document/d/1dPIPJc4xfyjkJ1i2yxaja4OP0G-iGFRXM08NDMuttZE/,,官方文件
+pchomepay,50005,退款金額超過訂單可退金額,Refund amount exceeds the remaining balance of the order.,refund,error,見 PChomePay API 文件「7. 錯誤代碼」,https://docs.google.com/document/d/1dPIPJc4xfyjkJ1i2yxaja4OP0G-iGFRXM08NDMuttZE/,2026-11-17,官方文件
 pchomepay,50006,查無此退款編號之資料,Can not find the information of the refund id,refund,error,見 PChomePay API 文件「7. 錯誤代碼」,https://docs.google.com/document/d/1dPIPJc4xfyjkJ1i2yxaja4OP0G-iGFRXM08NDMuttZE/,,官方文件
 pchomepay,50007,信用卡分期之退款只能全額退，不支援部分退款,Order payed by credit card with installment can only refund with full order amount only.,refund,error,見 PChomePay API 文件「7. 錯誤代碼」,https://docs.google.com/document/d/1dPIPJc4xfyjkJ1i2yxaja4OP0G-iGFRXM08NDMuttZE/,,官方文件
 pchomepay,50009,ATM 退款資訊未備齊，請隔日再試,The atm refund data is not ready. Please send the refund request later,refund,error,見 PChomePay API 文件「7. 錯誤代碼」,https://docs.google.com/document/d/1dPIPJc4xfyjkJ1i2yxaja4OP0G-iGFRXM08NDMuttZE/,,官方文件
@@ -257,7 +259,10 @@ pchomepay,50013,訂單目前不能退款,The order is not allow to refund,refund
 pchomepay,50014,訂單不支援此退款方式,The pay type is not allow to refund,refund,error,見 PChomePay API 文件「7. 錯誤代碼」,https://docs.google.com/document/d/1dPIPJc4xfyjkJ1i2yxaja4OP0G-iGFRXM08NDMuttZE/,,官方文件
 pchomepay,50015,建立拍錢包退款失敗,Call Pi refund API error.,refund,error,見 PChomePay API 文件「7. 錯誤代碼」,https://docs.google.com/document/d/1dPIPJc4xfyjkJ1i2yxaja4OP0G-iGFRXM08NDMuttZE/,,官方文件
 pchomepay,50016,原付款行不支援退回原帳戶,Bank code not support atm refund.,refund,error,見 PChomePay API 文件「7. 錯誤代碼」,https://docs.google.com/document/d/1dPIPJc4xfyjkJ1i2yxaja4OP0G-iGFRXM08NDMuttZE/,,官方文件
-pchomepay,70001,本行提領金額需 > 1元,withdraw must be bigger than 10 dollars,system,error,見 PChomePay API 文件「7. 錯誤代碼」,https://docs.google.com/document/d/1dPIPJc4xfyjkJ1i2yxaja4OP0G-iGFRXM08NDMuttZE/,,官方文件
+pchomepay,50017,退款金額超過訂單金額,Refund amount exceeds the original order amount.,refund,error,見 PChomePay API 文件「7. 錯誤代碼」,https://docs.google.com/document/d/1dPIPJc4xfyjkJ1i2yxaja4OP0G-iGFRXM08NDMuttZE/,2026-11-17,官方文件
+pchomepay,50018,可用餘額不足，無法退款,Your balance is not enough to refund,refund,error,帳戶需有退款金額 + 退款手續費；見 PChomePay API 文件「7. 錯誤代碼」,https://docs.google.com/document/d/1dPIPJc4xfyjkJ1i2yxaja4OP0G-iGFRXM08NDMuttZE/,2026-11-17,官方文件
+pchomepay,70001,本行提領金額需 > 1元；他行需 ≧ 11元,withdraw must be bigger than 10 dollars,system,error,見 PChomePay API 文件「7. 錯誤代碼」,https://docs.google.com/document/d/1dPIPJc4xfyjkJ1i2yxaja4OP0G-iGFRXM08NDMuttZE/,2026-11-17,官方文件
+pchomepay,70002,認證未通過,member did not pass verify.,system,error,見 PChomePay API 文件「7. 錯誤代碼」,https://docs.google.com/document/d/1dPIPJc4xfyjkJ1i2yxaja4OP0G-iGFRXM08NDMuttZE/,2026-11-17,官方文件
 pchomepay,70003,提領金額超過可提領餘額,withdraw amount is over than available balance,system,error,見 PChomePay API 文件「7. 錯誤代碼」,https://docs.google.com/document/d/1dPIPJc4xfyjkJ1i2yxaja4OP0G-iGFRXM08NDMuttZE/,,官方文件
 pchomepay,70004,提領金額超過本日提領額度上限,withdraw amount is over than withdraw daily limit,system,error,見 PChomePay API 文件「7. 錯誤代碼」,https://docs.google.com/document/d/1dPIPJc4xfyjkJ1i2yxaja4OP0G-iGFRXM08NDMuttZE/,,官方文件
 pchomepay,70005,提領銀行尚未設定,information of bank to withdraw is not set yet,system,error,見 PChomePay API 文件「7. 錯誤代碼」,https://docs.google.com/document/d/1dPIPJc4xfyjkJ1i2yxaja4OP0G-iGFRXM08NDMuttZE/,,官方文件
@@ -265,6 +270,7 @@ pchomepay,70006,會員帳號暫時無法使用提領功能,function lock.,system
 pchomepay,90001,物流狀態錯誤,invalid status,logistics,error,見 PChomePay API 文件「7. 錯誤代碼」,https://docs.google.com/document/d/1dPIPJc4xfyjkJ1i2yxaja4OP0G-iGFRXM08NDMuttZE/,,官方文件
 pchomepay,90002,物流狀態歷程不存在,logistic status history not found,logistics,error,見 PChomePay API 文件「7. 錯誤代碼」,https://docs.google.com/document/d/1dPIPJc4xfyjkJ1i2yxaja4OP0G-iGFRXM08NDMuttZE/,,官方文件
 pchomepay,90004,列印交寄單失敗,Print delivery note fail.,logistics,error,見 PChomePay API 文件「7. 錯誤代碼」,https://docs.google.com/document/d/1dPIPJc4xfyjkJ1i2yxaja4OP0G-iGFRXM08NDMuttZE/,,官方文件
+pchomepay,90008,待繳運費超過上限 200 元,Arrears is too much.,logistics,error,見 PChomePay API 文件「7. 錯誤代碼」,https://docs.google.com/document/d/1dPIPJc4xfyjkJ1i2yxaja4OP0G-iGFRXM08NDMuttZE/,2026-11-17,官方文件
 ezpay,SCTE0001,Version 不得為空,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單建立 API）,https://www.ezpay.com.tw/info/Service_intro/api_document/member,2026-09-24,官方文件
 ezpay,SCTE0002,Version 錯誤,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單建立 API）,https://www.ezpay.com.tw/info/Service_intro/api_document/member,2026-09-24,官方文件
 ezpay,SCTE0003,APIID 不得為空,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單建立 API）,https://www.ezpay.com.tw/info/Service_intro/api_document/member,2026-09-24,官方文件

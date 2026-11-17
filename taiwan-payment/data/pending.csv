@@ -43,3 +43,5 @@ date,question,why_not_found,asked_by,status
 2026-11-17,LINE Pay 台灣商家後台登入網址,官方文件站只連到泰國後台 pay.line.me/portal/th/auth/login，台灣網址未寫,taiwan-toolkit（官方文件稽核 2026-11-17）,open
 2026-11-17,LINE Pay confirmUrlType=SERVER 時 LINE Pay 伺服器呼叫 confirmUrl 後期待商家回應什麼（HTTP 狀態、body）,導回頁文件只寫呼叫方式與逾時，未寫商家應回應的內容,taiwan-toolkit（官方文件稽核 2026-11-17）,open
 2026-11-17,examples/linepay-payment-example.py 的 void_auth() 送 {} 當 body；官方寫 void 沒有 body,要改成空 body 並一起簽章，需實測確認簽章字串,taiwan-toolkit（官方文件稽核 2026-11-17）,open
+2026-11-17,速買配 SPPayment.asp 的 Status 負數錯誤代碼表（例：-2003 Pay_zg Error）完整內容為何？,規格書（pay_help_paydc_api.ASP / Background_api.ASP）需商家登入；公開頁只能實測個別代碼,taiwan-toolkit（官方文件稽核 2026-11-17）,open
+2026-11-17,PChomePay 付款頁 ATM 可選的 3 家銀行是哪 3 家？文件範例只出現 011、013、812,API 文件只寫「3 家銀行」；/v1/payment/atm/banks 需 token 才能查,taiwan-toolkit（官方文件稽核 2026-11-17）,open
