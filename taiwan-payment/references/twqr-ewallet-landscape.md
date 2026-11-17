@@ -22,7 +22,7 @@
 
 | # | 公司全名 | 品牌 | 我們的 `payment-methods.csv` 代碼 | 自家公開商家文件 |
 |---|---|---|---|---|
-| 1 | 街口電子支付股份有限公司 | 街口支付 JKOPAY | `jkopay` | ✅ [open-doc.jkos.com](https://open-doc.jkos.com/)（見 [jkopay-payment-api.md](jkopay-payment-api.md)） |
+| 1 | 街口電子支付股份有限公司 | 街口支付 JKOPAY | `jkopay` | ✅ [open-doc.jkos.com](https://open-doc.jkos.com/)（2026-11-17 起網域無法解析；見 [jkopay-payment-api.md](jkopay-payment-api.md)） |
 | 2 | 全支付電子支付股份有限公司 | 全支付 PX Pay Plus | `pxpay_plus` | ❌ 需簽約；文件由聚合商提供 |
 | 3 | 全盈支付金融科技股份有限公司 | 全盈+PAY | `plus_pay` | ⚠️ 部分公開：[TapPay Plus Pay Docs](https://docs.tappaysdk.com/plus-pay/zh/home.html) |
 | 4 | 悠遊卡股份有限公司 | 悠遊付 EasyWallet | `easywallet` | ❌ 需簽約 |

@@ -6,3 +6,9 @@ date,question,why_not_found,asked_by,status
 2026-11-15,npm 套件的平台樣板（<cli>/assets/templates/base/skill-content.md）仍是舊內容，payment、logistics 樣板還寫「七家」「3 on-demand」等舊數字,這些是 npm 使用者 init 後拿到的產出，改了等於改對外介面，要使用者決定；skill 本體 SKILL.md 已改成指令產生的數字,taiwan-toolkit（6-1 補齊時）,已解決 2026-11-16
 2026-11-15,下次 npm run build 時 sync-assets 會把 evals/（含 runs/ 答案檔）一起打包進 npm,sync-assets.mjs 沒有排除 evals/；要不要排除是發版決定，這次沒有動 CLI assets,taiwan-toolkit（同步時發現）,已解決 2026-11-16
 2026-11-15,安裝版獨有的 evals/basic（只有 TODO 樣板 prompt.md）要不要刪,規則是不刪安裝版獨有的檔；原始碼的 evals/ 已有真題，這份樣板沒有用處,taiwan-toolkit（同步安裝版時）,等使用者
+2026-11-17,街口開放文件站 open-doc.jkos.com 是暫時下線還是永久關閉？有沒有新網址或改成簽約後才提供？,2026-11-17 權威 DNS 回 NXDOMAIN；jkopay.com 官網與常見替代網域都找不到文件站連結,taiwan-toolkit（官方文件稽核 2026-11-17）,open
+2026-11-17,線上支付 Inquiry 的 status 有沒有 100（付款失敗）？,線上支付代碼頁只列 0/101/102，授權扣款才列 100；文件站下線，無法再查 OrderStatusCode 原表,taiwan-toolkit（官方文件稽核 2026-11-17）,open
+2026-11-17,qr_timeout 的單位是什麼（秒、毫秒，還是剩餘秒數）？,官方三個範例分別是 1528447912、600、1635297229729，彼此不一致,taiwan-toolkit（官方文件稽核 2026-11-17）,open
+2026-11-17,非 TWD 訂單的 debit_amount 是用哪個幣別？,代碼意義頁 JPY 範例 final_price 1230、debit_amount 249，看起來像 TWD，但 Entry/Inquiry 頁寫「with payment currency」,taiwan-toolkit（官方文件稽核 2026-11-17）,open
+2026-11-17,OnlinePay 2.1.1（2026-02-02）「調整 Refund API 必要欄位」實際改了什麼？,只在搜尋引擎快取看到版本說明；Refund 頁目前三欄皆必填，看不出改動前的狀態,taiwan-toolkit（官方文件稽核 2026-11-17）,open
+2026-11-17,Windsurf（現為 Devin 文件）把 .windsurf/skills/ 標為 legacy，主路徑改為 .devin/skills/（也讀 .agents/skills/）；CLI 要不要改安裝路徑,舊路徑目前仍會被讀取；改安裝路徑會影響三個 CLI 的對外行為，要使用者決定,taiwan-toolkit（Issue #65 處理時）,等使用者
