@@ -214,6 +214,7 @@ ecpay,3315,i郵箱逾期退招領,,returning,物流商：POST,見綠界物流貨
 ecpay,7300,郵局接收資料異常,,error,物流商：POST,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）,https://developers.ecpay.com.tw/7380/,2026-08-08,官方文件
 ecpay,7301,郵件破損 - 無法投遞,,error,物流商：POST,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）,https://developers.ecpay.com.tw/7380/,2026-08-08,官方文件
 ecpay,7302,郵件遺失,,error,物流商：POST,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）,https://developers.ecpay.com.tw/7380/,2026-08-08,官方文件
+ecpay,4444,訂單建立失敗,,error,物流商：UNIMART、UNIMARTC2C、FAMI、FAMIC2C、HILIFE、HILIFEC2C、TCAT、POST,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）,https://developers.ecpay.com.tw/7380/,2026-11-17,官方文件
 ecpay,320,郵局已確認資料，可列印,,status,物流商：POST,見綠界物流貨態代碼表（developers.ecpay.com.tw/logistics_status/；各物流商代碼會不定時更新）,https://developers.ecpay.com.tw/7380/,2026-08-08,官方文件
 newebpay,SUCCESS,成功,,success,API 回應代碼（NDNS 1.0.0 附錄一）,,https://www.newebpay.com/website/Page/download_file?name=%E7%89%A9%E6%B5%81%E6%9C%8D%E5%8B%99%E6%8A%80%E8%A1%93%E4%B8%B2%E6%8E%A5%E6%89%8B%E5%86%8A_NDNSv1.0.0.pdf,2026-10-24,官方文件
 newebpay,1101,新增物流訂單失敗,,error,API 回應代碼（NDNS 1.0.0 附錄一）,,https://www.newebpay.com/website/Page/download_file?name=%E7%89%A9%E6%B5%81%E6%9C%8D%E5%8B%99%E6%8A%80%E8%A1%93%E4%B8%B2%E6%8E%A5%E6%89%8B%E5%86%8A_NDNSv1.0.0.pdf,2026-10-24,官方文件
@@ -822,8 +823,8 @@ smilepay,P30,超大超重,,error,黑貓配送異常 DetailStatus；來源：速�
 smilepay,P31,已回收,,error,黑貓配送異常 DetailStatus；來源：速買配官方 WooCommerce 模組 1.1.23,,https://www.smilepay.net/,2026-08-08,官方文件
 smilepay,P32,別家收走,,error,黑貓配送異常 DetailStatus；來源：速買配官方 WooCommerce 模組 1.1.23,,https://www.smilepay.net/,2026-08-08,官方文件
 smilepay,P33,商品未到,,error,黑貓配送異常 DetailStatus；來源：速買配官方 WooCommerce 模組 1.1.23,,https://www.smilepay.net/,2026-08-08,官方文件
-pchomepay,LINT,訂單建立,Order created,pending,查詢物流單 status（PChomePay API 文件）,,https://docs.google.com/document/d/1dPIPJc4xfyjkJ1i2yxaja4OP0G-iGFRXM08NDMuttZE/export?format=txt,2026-10-24,官方文件
-pchomepay,LGNO,已取號,Shipment number issued,pending,查詢物流單 status（PChomePay API 文件）,,https://docs.google.com/document/d/1dPIPJc4xfyjkJ1i2yxaja4OP0G-iGFRXM08NDMuttZE/export?format=txt,2026-10-24,官方文件
+pchomepay,LINT,訂單建立,Order created,pending,查詢未出貨訂單 /v1/logistic/yet 的 status（PChomePay API 文件）,,https://docs.google.com/document/d/1dPIPJc4xfyjkJ1i2yxaja4OP0G-iGFRXM08NDMuttZE/export?format=txt,2026-10-24,官方文件
+pchomepay,LGNO,已取號,Shipment number issued,pending,查詢未出貨訂單 /v1/logistic/yet 的 status（PChomePay API 文件）,,https://docs.google.com/document/d/1dPIPJc4xfyjkJ1i2yxaja4OP0G-iGFRXM08NDMuttZE/export?format=txt,2026-10-24,官方文件
 pchomepay,SSND,商品已至「寄件門店」,At sender store,in_transit,物流通知 logistic_status（PChomePay API 文件）,,https://docs.google.com/document/d/1dPIPJc4xfyjkJ1i2yxaja4OP0G-iGFRXM08NDMuttZE/export?format=txt,2026-10-24,官方文件
 pchomepay,SATB,商品已至「取件門店」,At pickup store,at_store,物流通知 logistic_status（PChomePay API 文件）,,https://docs.google.com/document/d/1dPIPJc4xfyjkJ1i2yxaja4OP0G-iGFRXM08NDMuttZE/export?format=txt,2026-10-24,官方文件
 pchomepay,RATC,商品已至「退件門店」,At return store,returning,物流通知 logistic_status（PChomePay API 文件）,,https://docs.google.com/document/d/1dPIPJc4xfyjkJ1i2yxaja4OP0G-iGFRXM08NDMuttZE/export?format=txt,2026-10-24,官方文件
@@ -831,87 +832,98 @@ pchomepay,WD,超商取貨等待商品交寄,Waiting for drop-off (CVS pickup),pe
 pchomepay,90001,物流狀態錯誤,invalid status,error,錯誤代碼（PChomePay API 文件）,,https://docs.google.com/document/d/1dPIPJc4xfyjkJ1i2yxaja4OP0G-iGFRXM08NDMuttZE/export?format=txt,2026-10-24,官方文件
 pchomepay,90002,物流狀態歷程不存在,logistic status history not found,error,錯誤代碼（PChomePay API 文件）,,https://docs.google.com/document/d/1dPIPJc4xfyjkJ1i2yxaja4OP0G-iGFRXM08NDMuttZE/export?format=txt,2026-10-24,官方文件
 pchomepay,90004,列印交寄單失敗,Print delivery note fail.,error,錯誤代碼（PChomePay API 文件）,,https://docs.google.com/document/d/1dPIPJc4xfyjkJ1i2yxaja4OP0G-iGFRXM08NDMuttZE/export?format=txt,2026-10-24,官方文件
-paynow,0000,訂單已成立 等待出貨,,pending,C2C 貨態代碼（通用）；PayNow 物流技術文件 v2.5「貨態代碼表」,,https://owlting.github.io/paynow-guideline/,2026-08-08,官方文件
-paynow,0101,商品已到寄件門市,,status,C2C 貨態代碼（通用）；PayNow 物流技術文件 v2.5「貨態代碼表」,,https://owlting.github.io/paynow-guideline/,2026-08-08,官方文件
-paynow,0102,門市已更新寄件中,,status,C2C 貨態代碼（通用）；PayNow 物流技術文件 v2.5「貨態代碼表」,,https://owlting.github.io/paynow-guideline/,2026-08-08,官方文件
-paynow,0103,門市已更新退件中,,returning,C2C 貨態代碼（通用）；PayNow 物流技術文件 v2.5「貨態代碼表」,,https://owlting.github.io/paynow-guideline/,2026-08-08,官方文件
-paynow,4000,進驗成功,,status,C2C 貨態代碼（通用）；PayNow 物流技術文件 v2.5「貨態代碼表」,,https://owlting.github.io/paynow-guideline/,2026-08-08,官方文件
-paynow,4031,商品破損退貨中,,error,C2C 貨態代碼（通用、OK）；PayNow 物流技術文件 v2.5「貨態代碼表」,,https://owlting.github.io/paynow-guideline/,2026-08-08,官方文件
-paynow,4032,商品超才退貨中,,returning,C2C 貨態代碼（通用、OK）；PayNow 物流技術文件 v2.5「貨態代碼表」,,https://owlting.github.io/paynow-guideline/,2026-08-08,官方文件
-paynow,4040,條碼資料錯誤,,error,C2C 貨態代碼（通用、OK）；PayNow 物流技術文件 v2.5「貨態代碼表」,,https://owlting.github.io/paynow-guideline/,2026-08-08,官方文件
-paynow,5000,取件門市配達,,at_store,C2C 貨態代碼（通用）；PayNow 物流技術文件 v2.5「貨態代碼表」,,https://owlting.github.io/paynow-guideline/,2026-08-08,官方文件
-paynow,5001,退件門市配達,,returning,C2C 貨態代碼（通用）；PayNow 物流技術文件 v2.5「貨態代碼表」,,https://owlting.github.io/paynow-guideline/,2026-08-08,官方文件
-paynow,7101,取件門市關轉店,,status,C2C 貨態代碼（通用）；PayNow 物流技術文件 v2.5「貨態代碼表」,,https://owlting.github.io/paynow-guideline/,2026-08-08,官方文件
-paynow,7201,退件門市關轉店,,returning,C2C 貨態代碼（通用）；PayNow 物流技術文件 v2.5「貨態代碼表」,,https://owlting.github.io/paynow-guideline/,2026-08-08,官方文件
-paynow,8000,買家已取件,,picked_up,C2C 貨態代碼（通用）；PayNow 物流技術文件 v2.5「貨態代碼表」,,https://owlting.github.io/paynow-guideline/,2026-08-08,官方文件
-paynow,8010,買家已取件-代收金額錯誤,,error,C2C 貨態代碼（通用）；PayNow 物流技術文件 v2.5「貨態代碼表」,,https://owlting.github.io/paynow-guideline/,2026-08-08,官方文件
-paynow,8020,買家已取件商品有誤,,picked_up,C2C 貨態代碼（通用）；PayNow 物流技術文件 v2.5「貨態代碼表」,,https://owlting.github.io/paynow-guideline/,2026-08-08,官方文件
-paynow,8100,賣家已取件,,picked_up,C2C 貨態代碼（通用）；PayNow 物流技術文件 v2.5「貨態代碼表」,,https://owlting.github.io/paynow-guideline/,2026-08-08,官方文件
-paynow,8110,賣家已取件-代收金額錯誤,,error,C2C 貨態代碼（通用）；PayNow 物流技術文件 v2.5「貨態代碼表」,,https://owlting.github.io/paynow-guideline/,2026-08-08,官方文件
-paynow,8120,賣家已取件商品有誤,,picked_up,C2C 貨態代碼（通用）；PayNow 物流技術文件 v2.5「貨態代碼表」,,https://owlting.github.io/paynow-guideline/,2026-08-08,官方文件
-paynow,9411,貨態停滯,,status,C2C 貨態代碼（通用）；PayNow 物流技術文件 v2.5「貨態代碼表」,,https://owlting.github.io/paynow-guideline/,2026-08-08,官方文件
-paynow,4019,物流中心未收到貨,,status,C2C 貨態代碼（7-11、全家）；PayNow 物流技術文件 v2.5「貨態代碼表」,,https://owlting.github.io/paynow-guideline/,2026-08-08,官方文件
-paynow,4033,違禁品進行罰款退貨中,,returning,C2C 貨態代碼（7-11）；PayNow 物流技術文件 v2.5「貨態代碼表」,,https://owlting.github.io/paynow-guideline/,2026-08-08,官方文件
-paynow,4034,同一個訂單兩包商品資料重複,,error,C2C 貨態代碼（7-11）；PayNow 物流技術文件 v2.5「貨態代碼表」,,https://owlting.github.io/paynow-guideline/,2026-08-08,官方文件
-paynow,4035,已過門市進貨日,,status,C2C 貨態代碼（7-11）；PayNow 物流技術文件 v2.5「貨態代碼表」,,https://owlting.github.io/paynow-guideline/,2026-08-08,官方文件
-paynow,4036,門市關轉請更新門市,,status,C2C 貨態代碼（7-11）；PayNow 物流技術文件 v2.5「貨態代碼表」,,https://owlting.github.io/paynow-guideline/,2026-08-08,官方文件
-paynow,4037,條碼規格錯誤,,error,C2C 貨態代碼（7-11）；PayNow 物流技術文件 v2.5「貨態代碼表」,,https://owlting.github.io/paynow-guideline/,2026-08-08,官方文件
-paynow,4038,條碼無法判讀,,error,C2C 貨態代碼（7-11）；PayNow 物流技術文件 v2.5「貨態代碼表」,,https://owlting.github.io/paynow-guideline/,2026-08-08,官方文件
-paynow,4060,物流中心理貨中,,status,C2C 貨態代碼（7-11）；PayNow 物流技術文件 v2.5「貨態代碼表」,,https://owlting.github.io/paynow-guideline/,2026-08-08,官方文件
-paynow,4061,商品遺失,,error,C2C 貨態代碼（7-11）；PayNow 物流技術文件 v2.5「貨態代碼表」,,https://owlting.github.io/paynow-guideline/,2026-08-08,官方文件
-paynow,4062,門市不配送,,status,C2C 貨態代碼（7-11）；PayNow 物流技術文件 v2.5「貨態代碼表」,,https://owlting.github.io/paynow-guideline/,2026-08-08,官方文件
-paynow,4063,包裹異常不配送,,error,C2C 貨態代碼（7-11）；PayNow 物流技術文件 v2.5「貨態代碼表」,,https://owlting.github.io/paynow-guideline/,2026-08-08,官方文件
-paynow,4064,取消寄件再次寄送(直接轉 C 店),,cancelled,C2C 貨態代碼（7-11）；PayNow 物流技術文件 v2.5「貨態代碼表」,,https://owlting.github.io/paynow-guideline/,2026-08-08,官方文件
-paynow,4065,提早轉 C 店-廠商因素(直接轉 C 店),,status,C2C 貨態代碼（7-11）；PayNow 物流技術文件 v2.5「貨態代碼表」,,https://owlting.github.io/paynow-guideline/,2026-08-08,官方文件
-paynow,4066,提早轉 C 店-超商因素(直接轉 C 店),,status,C2C 貨態代碼（7-11）；PayNow 物流技術文件 v2.5「貨態代碼表」,,https://owlting.github.io/paynow-guideline/,2026-08-08,官方文件
-paynow,5011,作業錯誤,,error,C2C 貨態代碼（7-11）；PayNow 物流技術文件 v2.5「貨態代碼表」,,https://owlting.github.io/paynow-guideline/,2026-08-08,官方文件
-paynow,5012,車輛故障,,status,C2C 貨態代碼（7-11）；PayNow 物流技術文件 v2.5「貨態代碼表」,,https://owlting.github.io/paynow-guideline/,2026-08-08,官方文件
-paynow,5013,天候不佳,,status,C2C 貨態代碼（7-11）；PayNow 物流技術文件 v2.5「貨態代碼表」,,https://owlting.github.io/paynow-guideline/,2026-08-08,官方文件
-paynow,5014,道路中斷,,status,C2C 貨態代碼（7-11）；PayNow 物流技術文件 v2.5「貨態代碼表」,,https://owlting.github.io/paynow-guideline/,2026-08-08,官方文件
-paynow,5015,門市停業,,status,C2C 貨態代碼（7-11）；PayNow 物流技術文件 v2.5「貨態代碼表」,,https://owlting.github.io/paynow-guideline/,2026-08-08,官方文件
-paynow,5016,缺件,,status,C2C 貨態代碼（7-11）；PayNow 物流技術文件 v2.5「貨態代碼表」,,https://owlting.github.io/paynow-guideline/,2026-08-08,官方文件
-paynow,5017,門市報缺,,status,C2C 貨態代碼（7-11）；PayNow 物流技術文件 v2.5「貨態代碼表」,,https://owlting.github.io/paynow-guideline/,2026-08-08,官方文件
-paynow,5018,寄件貨態異常協尋中,,error,C2C 貨態代碼（7-11）；PayNow 物流技術文件 v2.5「貨態代碼表」,,https://owlting.github.io/paynow-guideline/,2026-08-08,官方文件
-paynow,5019,取件包裹異常協尋中,,error,C2C 貨態代碼（7-11）；PayNow 物流技術文件 v2.5「貨態代碼表」,,https://owlting.github.io/paynow-guideline/,2026-08-08,官方文件
-paynow,5102,管制品取件門市配達,,at_store,C2C 貨態代碼（7-11）；PayNow 物流技術文件 v2.5「貨態代碼表」,,https://owlting.github.io/paynow-guideline/,2026-08-08,官方文件
-paynow,5103,管制品退件門市配達,,returning,C2C 貨態代碼（7-11）；PayNow 物流技術文件 v2.5「貨態代碼表」,,https://owlting.github.io/paynow-guideline/,2026-08-08,官方文件
-paynow,5201,EC 收退,,returning,C2C 貨態代碼（7-11）；PayNow 物流技術文件 v2.5「貨態代碼表」,,https://owlting.github.io/paynow-guideline/,2026-08-08,官方文件
-paynow,5202,交貨便收件,,status,C2C 貨態代碼（7-11）；PayNow 物流技術文件 v2.5「貨態代碼表」,,https://owlting.github.io/paynow-guideline/,2026-08-08,官方文件
-paynow,5203,退貨便收件,,returning,C2C 貨態代碼（7-11）；PayNow 物流技術文件 v2.5「貨態代碼表」,,https://owlting.github.io/paynow-guideline/,2026-08-08,官方文件
-paynow,5204,異常收退,,error,C2C 貨態代碼（7-11）；PayNow 物流技術文件 v2.5「貨態代碼表」,,https://owlting.github.io/paynow-guideline/,2026-08-08,官方文件
-paynow,5301,取消寄件,,cancelled,C2C 貨態代碼（7-11）；PayNow 物流技術文件 v2.5「貨態代碼表」,,https://owlting.github.io/paynow-guideline/,2026-08-08,官方文件
-paynow,5302,寄件遺失進行賠償程序,,error,C2C 貨態代碼（7-11）；PayNow 物流技術文件 v2.5「貨態代碼表」,,https://owlting.github.io/paynow-guideline/,2026-08-08,官方文件
-paynow,5303,取件遺失進行賠償作業,,error,C2C 貨態代碼（7-11）；PayNow 物流技術文件 v2.5「貨態代碼表」,,https://owlting.github.io/paynow-guideline/,2026-08-08,官方文件
-paynow,6002,待退貨請盡速取件,,returning,C2C 貨態代碼（7-11、全家）；PayNow 物流技術文件 v2.5「貨態代碼表」,,https://owlting.github.io/paynow-guideline/,2026-08-08,官方文件
-paynow,6003,退至 7 總倉,,returning,C2C 貨態代碼（7-11）；PayNow 物流技術文件 v2.5「貨態代碼表」,,https://owlting.github.io/paynow-guideline/,2026-08-08,官方文件
-paynow,7001,正常一退,,returning,C2C 貨態代碼（7-11）；PayNow 物流技術文件 v2.5「貨態代碼表」,,https://owlting.github.io/paynow-guideline/,2026-08-08,官方文件
-paynow,7011,商品瑕疵,,status,C2C 貨態代碼（7-11）；PayNow 物流技術文件 v2.5「貨態代碼表」,,https://owlting.github.io/paynow-guideline/,2026-08-08,官方文件
-paynow,7012,門市關店,,status,C2C 貨態代碼（7-11）；PayNow 物流技術文件 v2.5「貨態代碼表」,,https://owlting.github.io/paynow-guideline/,2026-08-08,官方文件
-paynow,7013,門市轉店,,status,C2C 貨態代碼（7-11）；PayNow 物流技術文件 v2.5「貨態代碼表」,,https://owlting.github.io/paynow-guideline/,2026-08-08,官方文件
-paynow,7014,廠商要求,,status,C2C 貨態代碼（7-11）；PayNow 物流技術文件 v2.5「貨態代碼表」,,https://owlting.github.io/paynow-guideline/,2026-08-08,官方文件
-paynow,7015,商品為違禁品，將進行退貨處理與罰款,,returning,C2C 貨態代碼（7-11）；PayNow 物流技術文件 v2.5「貨態代碼表」,,https://owlting.github.io/paynow-guideline/,2026-08-08,官方文件
-paynow,7021,刷 A 給 B,,status,C2C 貨態代碼（7-11）；PayNow 物流技術文件 v2.5「貨態代碼表」,,https://owlting.github.io/paynow-guideline/,2026-08-08,官方文件
-paynow,7022,消費者要求,,status,C2C 貨態代碼（7-11）；PayNow 物流技術文件 v2.5「貨態代碼表」,,https://owlting.github.io/paynow-guideline/,2026-08-08,官方文件
-paynow,7102,取件門市舊店號更新,,status,C2C 貨態代碼（7-11）；PayNow 物流技術文件 v2.5「貨態代碼表」,,https://owlting.github.io/paynow-guideline/,2026-08-08,官方文件
-paynow,7104,取件門市臨時關轉店,,status,C2C 貨態代碼（7-11）；PayNow 物流技術文件 v2.5「貨態代碼表」,,https://owlting.github.io/paynow-guideline/,2026-08-08,官方文件
-paynow,7202,退件門市舊店號更新,,returning,C2C 貨態代碼（7-11）；PayNow 物流技術文件 v2.5「貨態代碼表」,,https://owlting.github.io/paynow-guideline/,2026-08-08,官方文件
-paynow,7203,退件門市無取件門市資料,,returning,C2C 貨態代碼（7-11）；PayNow 物流技術文件 v2.5「貨態代碼表」,,https://owlting.github.io/paynow-guideline/,2026-08-08,官方文件
-paynow,7204,退件門市臨時關轉店,,returning,C2C 貨態代碼（7-11）；PayNow 物流技術文件 v2.5「貨態代碼表」,,https://owlting.github.io/paynow-guideline/,2026-08-08,官方文件
-paynow,8077,退至 7 總倉,,returning,C2C 貨態代碼（7-11）；PayNow 物流技術文件 v2.5「貨態代碼表」,,https://owlting.github.io/paynow-guideline/,2026-08-08,官方文件
-paynow,4067,小物流遺失,,error,C2C 貨態代碼（全家、萊爾富）；PayNow 物流技術文件 v2.5「貨態代碼表」,,https://owlting.github.io/paynow-guideline/,2026-08-08,官方文件
-paynow,4068,門市遺失,,error,C2C 貨態代碼（全家、萊爾富）；PayNow 物流技術文件 v2.5「貨態代碼表」,,https://owlting.github.io/paynow-guideline/,2026-08-08,官方文件
-paynow,4069,包裝廠不良 (滲漏 ),,status,C2C 貨態代碼（全家、萊爾富、OK）；PayNow 物流技術文件 v2.5「貨態代碼表」,,https://owlting.github.io/paynow-guideline/,2026-08-08,官方文件
-paynow,4070,[全家、萊爾富] 門市反應商品包裝不良(滲漏) / [OK] 門市反應商品包裝不良,,status,C2C 貨態代碼（全家、萊爾富、OK）；PayNow 物流技術文件 v2.5「貨態代碼表」,,https://owlting.github.io/paynow-guideline/,2026-08-08,官方文件
-paynow,4071,門市關店,,status,C2C 貨態代碼（全家、萊爾富）；PayNow 物流技術文件 v2.5「貨態代碼表」,,https://owlting.github.io/paynow-guideline/,2026-08-08,官方文件
-paynow,4072,條碼資料重複,,error,C2C 貨態代碼（全家）；PayNow 物流技術文件 v2.5「貨態代碼表」,,https://owlting.github.io/paynow-guideline/,2026-08-08,官方文件
-paynow,4073,7 日內未寄件單號失效,,status,C2C 貨態代碼（全家、萊爾富）；PayNow 物流技術文件 v2.5「貨態代碼表」,,https://owlting.github.io/paynow-guideline/,2026-08-08,官方文件
-paynow,4074,貨物進店後發生異常提早退貨,,error,C2C 貨態代碼（全家、萊爾富、OK）；PayNow 物流技術文件 v2.5「貨態代碼表」,,https://owlting.github.io/paynow-guideline/,2026-08-08,官方文件
-paynow,5200,商品運送中,,status,C2C 貨態代碼（全家）；PayNow 物流技術文件 v2.5「貨態代碼表」,,https://owlting.github.io/paynow-guideline/,2026-08-08,官方文件
-paynow,6004,商品退回物流中心,,returning,C2C 貨態代碼（全家）；PayNow 物流技術文件 v2.5「貨態代碼表」,,https://owlting.github.io/paynow-guideline/,2026-08-08,官方文件
-paynow,8002,退至全家總倉,,returning,C2C 貨態代碼（全家）；PayNow 物流技術文件 v2.5「貨態代碼表」,,https://owlting.github.io/paynow-guideline/,2026-08-08,官方文件
-paynow,8079,退至萊爾富總倉,,returning,C2C 貨態代碼（萊爾富）；PayNow 物流技術文件 v2.5「貨態代碼表」,,https://owlting.github.io/paynow-guideline/,2026-08-08,官方文件
-paynow,4030,無進貨資料,,status,C2C 貨態代碼（OK）；PayNow 物流技術文件 v2.5「貨態代碼表」,,https://owlting.github.io/paynow-guideline/,2026-08-08,官方文件
-paynow,8076,退至 OK 總倉,,returning,C2C 貨態代碼（OK）；PayNow 物流技術文件 v2.5「貨態代碼表」,,https://owlting.github.io/paynow-guideline/,2026-08-08,官方文件
+pchomepay,90008,待繳運費超過上限 200 元,Arrears is too much.,error,錯誤代碼（PChomePay API 文件 1.7.4 §7）,,https://docs.google.com/document/d/1dPIPJc4xfyjkJ1i2yxaja4OP0G-iGFRXM08NDMuttZE/export?format=txt,2026-11-17,官方文件
+paynow,0000,訂單已成立 等待出貨,,pending,C2C 貨態代碼（通用）；PayNow 物流技術文件 v2.5「貨態代碼表」,,https://docs.paynow.com.tw/developer/docs/apipdf/logistics/supermarketC2C,2026-08-08,官方文件
+paynow,0101,商品已到寄件門市,,status,C2C 貨態代碼（通用）；PayNow 物流技術文件 v2.5「貨態代碼表」,,https://docs.paynow.com.tw/developer/docs/apipdf/logistics/supermarketC2C,2026-08-08,官方文件
+paynow,0102,門市已更新寄件中,,status,C2C 貨態代碼（通用）；PayNow 物流技術文件 v2.5「貨態代碼表」,,https://docs.paynow.com.tw/developer/docs/apipdf/logistics/supermarketC2C,2026-08-08,官方文件
+paynow,0103,門市已更新退件中,,returning,C2C 貨態代碼（通用）；PayNow 物流技術文件 v2.5「貨態代碼表」,,https://docs.paynow.com.tw/developer/docs/apipdf/logistics/supermarketC2C,2026-08-08,官方文件
+paynow,4000,進驗成功,,status,C2C 貨態代碼（通用）；PayNow 物流技術文件 v2.5「貨態代碼表」,,https://docs.paynow.com.tw/developer/docs/apipdf/logistics/supermarketC2C,2026-08-08,官方文件
+paynow,4031,商品破損退貨中,,error,C2C 貨態代碼（通用、OK）；PayNow 物流技術文件 v2.5「貨態代碼表」,,https://docs.paynow.com.tw/developer/docs/apipdf/logistics/supermarketC2C,2026-08-08,官方文件
+paynow,4032,商品超才退貨中,,returning,C2C 貨態代碼（通用、OK）；PayNow 物流技術文件 v2.5「貨態代碼表」,,https://docs.paynow.com.tw/developer/docs/apipdf/logistics/supermarketC2C,2026-08-08,官方文件
+paynow,4040,條碼資料錯誤,,error,C2C 貨態代碼（通用、OK）；PayNow 物流技術文件 v2.5「貨態代碼表」,,https://docs.paynow.com.tw/developer/docs/apipdf/logistics/supermarketC2C,2026-08-08,官方文件
+paynow,5000,取件門市配達,,at_store,C2C 貨態代碼（通用）；PayNow 物流技術文件 v2.5「貨態代碼表」,,https://docs.paynow.com.tw/developer/docs/apipdf/logistics/supermarketC2C,2026-08-08,官方文件
+paynow,5001,退件門市配達,,returning,C2C 貨態代碼（通用）；PayNow 物流技術文件 v2.5「貨態代碼表」,,https://docs.paynow.com.tw/developer/docs/apipdf/logistics/supermarketC2C,2026-08-08,官方文件
+paynow,7101,取件門市關轉店,,status,C2C 貨態代碼（通用）；PayNow 物流技術文件 v2.5「貨態代碼表」,,https://docs.paynow.com.tw/developer/docs/apipdf/logistics/supermarketC2C,2026-08-08,官方文件
+paynow,7201,退件門市關轉店,,returning,C2C 貨態代碼（通用）；PayNow 物流技術文件 v2.5「貨態代碼表」,,https://docs.paynow.com.tw/developer/docs/apipdf/logistics/supermarketC2C,2026-08-08,官方文件
+paynow,8000,買家已取件,,picked_up,C2C 貨態代碼（通用）；PayNow 物流技術文件 v2.5「貨態代碼表」,,https://docs.paynow.com.tw/developer/docs/apipdf/logistics/supermarketC2C,2026-08-08,官方文件
+paynow,8010,買家已取件-代收金額錯誤,,error,C2C 貨態代碼（通用）；PayNow 物流技術文件 v2.5「貨態代碼表」,,https://docs.paynow.com.tw/developer/docs/apipdf/logistics/supermarketC2C,2026-08-08,官方文件
+paynow,8020,買家已取件商品有誤,,picked_up,C2C 貨態代碼（通用）；PayNow 物流技術文件 v2.5「貨態代碼表」,,https://docs.paynow.com.tw/developer/docs/apipdf/logistics/supermarketC2C,2026-08-08,官方文件
+paynow,8100,賣家已取件,,picked_up,C2C 貨態代碼（通用）；PayNow 物流技術文件 v2.5「貨態代碼表」,,https://docs.paynow.com.tw/developer/docs/apipdf/logistics/supermarketC2C,2026-08-08,官方文件
+paynow,8110,賣家已取件-代收金額錯誤,,error,C2C 貨態代碼（通用）；PayNow 物流技術文件 v2.5「貨態代碼表」,,https://docs.paynow.com.tw/developer/docs/apipdf/logistics/supermarketC2C,2026-08-08,官方文件
+paynow,8120,賣家已取件商品有誤,,picked_up,C2C 貨態代碼（通用）；PayNow 物流技術文件 v2.5「貨態代碼表」,,https://docs.paynow.com.tw/developer/docs/apipdf/logistics/supermarketC2C,2026-08-08,官方文件
+paynow,9411,貨態停滯,,status,C2C 貨態代碼（通用）；PayNow 物流技術文件 v2.5「貨態代碼表」,,https://docs.paynow.com.tw/developer/docs/apipdf/logistics/supermarketC2C,2026-08-08,官方文件
+paynow,4019,物流中心未收到貨,,status,C2C 貨態代碼（7-11、全家）；PayNow 物流技術文件 v2.5「貨態代碼表」,,https://docs.paynow.com.tw/developer/docs/apipdf/logistics/supermarketC2C,2026-08-08,官方文件
+paynow,4033,違禁品進行罰款退貨中,,returning,C2C 貨態代碼（7-11）；PayNow 物流技術文件 v2.5「貨態代碼表」,,https://docs.paynow.com.tw/developer/docs/apipdf/logistics/supermarketC2C,2026-08-08,官方文件
+paynow,4034,同一個訂單兩包商品資料重複,,error,C2C 貨態代碼（7-11）；PayNow 物流技術文件 v2.5「貨態代碼表」,,https://docs.paynow.com.tw/developer/docs/apipdf/logistics/supermarketC2C,2026-08-08,官方文件
+paynow,4035,已過門市進貨日,,status,C2C 貨態代碼（7-11）；PayNow 物流技術文件 v2.5「貨態代碼表」,,https://docs.paynow.com.tw/developer/docs/apipdf/logistics/supermarketC2C,2026-08-08,官方文件
+paynow,4036,門市關轉請更新門市,,status,C2C 貨態代碼（7-11）；PayNow 物流技術文件 v2.5「貨態代碼表」,,https://docs.paynow.com.tw/developer/docs/apipdf/logistics/supermarketC2C,2026-08-08,官方文件
+paynow,4037,條碼規格錯誤,,error,C2C 貨態代碼（7-11）；PayNow 物流技術文件 v2.5「貨態代碼表」,,https://docs.paynow.com.tw/developer/docs/apipdf/logistics/supermarketC2C,2026-08-08,官方文件
+paynow,4038,條碼無法判讀,,error,C2C 貨態代碼（7-11）；PayNow 物流技術文件 v2.5「貨態代碼表」,,https://docs.paynow.com.tw/developer/docs/apipdf/logistics/supermarketC2C,2026-08-08,官方文件
+paynow,4060,物流中心理貨中,,status,C2C 貨態代碼（7-11）；PayNow 物流技術文件 v2.5「貨態代碼表」,,https://docs.paynow.com.tw/developer/docs/apipdf/logistics/supermarketC2C,2026-08-08,官方文件
+paynow,4061,商品遺失,,error,C2C 貨態代碼（7-11）；PayNow 物流技術文件 v2.5「貨態代碼表」,,https://docs.paynow.com.tw/developer/docs/apipdf/logistics/supermarketC2C,2026-08-08,官方文件
+paynow,4062,門市不配送,,status,C2C 貨態代碼（7-11）；PayNow 物流技術文件 v2.5「貨態代碼表」,,https://docs.paynow.com.tw/developer/docs/apipdf/logistics/supermarketC2C,2026-08-08,官方文件
+paynow,4063,包裹異常不配送,,error,C2C 貨態代碼（7-11）；PayNow 物流技術文件 v2.5「貨態代碼表」,,https://docs.paynow.com.tw/developer/docs/apipdf/logistics/supermarketC2C,2026-08-08,官方文件
+paynow,4064,取消寄件再次寄送(直接轉 C 店),,cancelled,C2C 貨態代碼（7-11）；PayNow 物流技術文件 v2.5「貨態代碼表」,,https://docs.paynow.com.tw/developer/docs/apipdf/logistics/supermarketC2C,2026-08-08,官方文件
+paynow,4065,提早轉 C 店-廠商因素(直接轉 C 店),,status,C2C 貨態代碼（7-11）；PayNow 物流技術文件 v2.5「貨態代碼表」,,https://docs.paynow.com.tw/developer/docs/apipdf/logistics/supermarketC2C,2026-08-08,官方文件
+paynow,4066,提早轉 C 店-超商因素(直接轉 C 店),,status,C2C 貨態代碼（7-11）；PayNow 物流技術文件 v2.5「貨態代碼表」,,https://docs.paynow.com.tw/developer/docs/apipdf/logistics/supermarketC2C,2026-08-08,官方文件
+paynow,5011,作業錯誤,,error,C2C 貨態代碼（7-11）；PayNow 物流技術文件 v2.5「貨態代碼表」,,https://docs.paynow.com.tw/developer/docs/apipdf/logistics/supermarketC2C,2026-08-08,官方文件
+paynow,5012,車輛故障,,status,C2C 貨態代碼（7-11）；PayNow 物流技術文件 v2.5「貨態代碼表」,,https://docs.paynow.com.tw/developer/docs/apipdf/logistics/supermarketC2C,2026-08-08,官方文件
+paynow,5013,天候不佳,,status,C2C 貨態代碼（7-11）；PayNow 物流技術文件 v2.5「貨態代碼表」,,https://docs.paynow.com.tw/developer/docs/apipdf/logistics/supermarketC2C,2026-08-08,官方文件
+paynow,5014,道路中斷,,status,C2C 貨態代碼（7-11）；PayNow 物流技術文件 v2.5「貨態代碼表」,,https://docs.paynow.com.tw/developer/docs/apipdf/logistics/supermarketC2C,2026-08-08,官方文件
+paynow,5015,門市停業,,status,C2C 貨態代碼（7-11）；PayNow 物流技術文件 v2.5「貨態代碼表」,,https://docs.paynow.com.tw/developer/docs/apipdf/logistics/supermarketC2C,2026-08-08,官方文件
+paynow,5016,缺件,,status,C2C 貨態代碼（7-11）；PayNow 物流技術文件 v2.5「貨態代碼表」,,https://docs.paynow.com.tw/developer/docs/apipdf/logistics/supermarketC2C,2026-08-08,官方文件
+paynow,5017,門市報缺,,status,C2C 貨態代碼（7-11）；PayNow 物流技術文件 v2.5「貨態代碼表」,,https://docs.paynow.com.tw/developer/docs/apipdf/logistics/supermarketC2C,2026-08-08,官方文件
+paynow,5018,寄件貨態異常協尋中,,error,C2C 貨態代碼（7-11）；PayNow 物流技術文件 v2.5「貨態代碼表」,,https://docs.paynow.com.tw/developer/docs/apipdf/logistics/supermarketC2C,2026-08-08,官方文件
+paynow,5019,取件包裹異常協尋中,,error,C2C 貨態代碼（7-11）；PayNow 物流技術文件 v2.5「貨態代碼表」,,https://docs.paynow.com.tw/developer/docs/apipdf/logistics/supermarketC2C,2026-08-08,官方文件
+paynow,5102,管制品取件門市配達,,at_store,C2C 貨態代碼（7-11）；PayNow 物流技術文件 v2.5「貨態代碼表」,,https://docs.paynow.com.tw/developer/docs/apipdf/logistics/supermarketC2C,2026-08-08,官方文件
+paynow,5103,管制品退件門市配達,,returning,C2C 貨態代碼（7-11）；PayNow 物流技術文件 v2.5「貨態代碼表」,,https://docs.paynow.com.tw/developer/docs/apipdf/logistics/supermarketC2C,2026-08-08,官方文件
+paynow,5201,EC 收退,,returning,C2C 貨態代碼（7-11）；PayNow 物流技術文件 v2.5「貨態代碼表」,,https://docs.paynow.com.tw/developer/docs/apipdf/logistics/supermarketC2C,2026-08-08,官方文件
+paynow,5202,交貨便收件,,status,C2C 貨態代碼（7-11）；PayNow 物流技術文件 v2.5「貨態代碼表」,,https://docs.paynow.com.tw/developer/docs/apipdf/logistics/supermarketC2C,2026-08-08,官方文件
+paynow,5203,退貨便收件,,returning,C2C 貨態代碼（7-11）；PayNow 物流技術文件 v2.5「貨態代碼表」,,https://docs.paynow.com.tw/developer/docs/apipdf/logistics/supermarketC2C,2026-08-08,官方文件
+paynow,5204,異常收退,,error,C2C 貨態代碼（7-11）；PayNow 物流技術文件 v2.5「貨態代碼表」,,https://docs.paynow.com.tw/developer/docs/apipdf/logistics/supermarketC2C,2026-08-08,官方文件
+paynow,5301,取消寄件,,cancelled,C2C 貨態代碼（7-11）；PayNow 物流技術文件 v2.5「貨態代碼表」,,https://docs.paynow.com.tw/developer/docs/apipdf/logistics/supermarketC2C,2026-08-08,官方文件
+paynow,5302,寄件遺失進行賠償程序,,error,C2C 貨態代碼（7-11）；PayNow 物流技術文件 v2.5「貨態代碼表」,,https://docs.paynow.com.tw/developer/docs/apipdf/logistics/supermarketC2C,2026-08-08,官方文件
+paynow,5303,取件遺失進行賠償作業,,error,C2C 貨態代碼（7-11）；PayNow 物流技術文件 v2.5「貨態代碼表」,,https://docs.paynow.com.tw/developer/docs/apipdf/logistics/supermarketC2C,2026-08-08,官方文件
+paynow,6002,待退貨請盡速取件,,returning,C2C 貨態代碼（7-11、全家）；PayNow 物流技術文件 v2.5「貨態代碼表」,,https://docs.paynow.com.tw/developer/docs/apipdf/logistics/supermarketC2C,2026-08-08,官方文件
+paynow,6003,退至 7 總倉,,returning,C2C 貨態代碼（7-11）；PayNow 物流技術文件 v2.5「貨態代碼表」,,https://docs.paynow.com.tw/developer/docs/apipdf/logistics/supermarketC2C,2026-08-08,官方文件
+paynow,7001,正常一退,,returning,C2C 貨態代碼（7-11）；PayNow 物流技術文件 v2.5「貨態代碼表」,,https://docs.paynow.com.tw/developer/docs/apipdf/logistics/supermarketC2C,2026-08-08,官方文件
+paynow,7011,商品瑕疵,,status,C2C 貨態代碼（7-11）；PayNow 物流技術文件 v2.5「貨態代碼表」,,https://docs.paynow.com.tw/developer/docs/apipdf/logistics/supermarketC2C,2026-08-08,官方文件
+paynow,7012,門市關店,,status,C2C 貨態代碼（7-11）；PayNow 物流技術文件 v2.5「貨態代碼表」,,https://docs.paynow.com.tw/developer/docs/apipdf/logistics/supermarketC2C,2026-08-08,官方文件
+paynow,7013,門市轉店,,status,C2C 貨態代碼（7-11）；PayNow 物流技術文件 v2.5「貨態代碼表」,,https://docs.paynow.com.tw/developer/docs/apipdf/logistics/supermarketC2C,2026-08-08,官方文件
+paynow,7014,廠商要求,,status,C2C 貨態代碼（7-11）；PayNow 物流技術文件 v2.5「貨態代碼表」,,https://docs.paynow.com.tw/developer/docs/apipdf/logistics/supermarketC2C,2026-08-08,官方文件
+paynow,7015,商品為違禁品，將進行退貨處理與罰款,,returning,C2C 貨態代碼（7-11）；PayNow 物流技術文件 v2.5「貨態代碼表」,,https://docs.paynow.com.tw/developer/docs/apipdf/logistics/supermarketC2C,2026-08-08,官方文件
+paynow,7021,刷 A 給 B,,status,C2C 貨態代碼（7-11）；PayNow 物流技術文件 v2.5「貨態代碼表」,,https://docs.paynow.com.tw/developer/docs/apipdf/logistics/supermarketC2C,2026-08-08,官方文件
+paynow,7022,消費者要求,,status,C2C 貨態代碼（7-11）；PayNow 物流技術文件 v2.5「貨態代碼表」,,https://docs.paynow.com.tw/developer/docs/apipdf/logistics/supermarketC2C,2026-08-08,官方文件
+paynow,7102,取件門市舊店號更新,,status,C2C 貨態代碼（7-11）；PayNow 物流技術文件 v2.5「貨態代碼表」,,https://docs.paynow.com.tw/developer/docs/apipdf/logistics/supermarketC2C,2026-08-08,官方文件
+paynow,7104,取件門市臨時關轉店,,status,C2C 貨態代碼（7-11）；PayNow 物流技術文件 v2.5「貨態代碼表」,,https://docs.paynow.com.tw/developer/docs/apipdf/logistics/supermarketC2C,2026-08-08,官方文件
+paynow,7202,退件門市舊店號更新,,returning,C2C 貨態代碼（7-11）；PayNow 物流技術文件 v2.5「貨態代碼表」,,https://docs.paynow.com.tw/developer/docs/apipdf/logistics/supermarketC2C,2026-08-08,官方文件
+paynow,7203,退件門市無取件門市資料,,returning,C2C 貨態代碼（7-11）；PayNow 物流技術文件 v2.5「貨態代碼表」,,https://docs.paynow.com.tw/developer/docs/apipdf/logistics/supermarketC2C,2026-08-08,官方文件
+paynow,7204,退件門市臨時關轉店,,returning,C2C 貨態代碼（7-11）；PayNow 物流技術文件 v2.5「貨態代碼表」,,https://docs.paynow.com.tw/developer/docs/apipdf/logistics/supermarketC2C,2026-08-08,官方文件
+paynow,8077,退至 7 總倉,,returning,C2C 貨態代碼（7-11）；PayNow 物流技術文件 v2.5「貨態代碼表」,,https://docs.paynow.com.tw/developer/docs/apipdf/logistics/supermarketC2C,2026-08-08,官方文件
+paynow,4067,小物流遺失,,error,C2C 貨態代碼（全家、萊爾富）；PayNow 物流技術文件 v2.5「貨態代碼表」,,https://docs.paynow.com.tw/developer/docs/apipdf/logistics/supermarketC2C,2026-08-08,官方文件
+paynow,4068,門市遺失,,error,C2C 貨態代碼（全家、萊爾富）；PayNow 物流技術文件 v2.5「貨態代碼表」,,https://docs.paynow.com.tw/developer/docs/apipdf/logistics/supermarketC2C,2026-08-08,官方文件
+paynow,4069,包裝廠不良 (滲漏 ),,status,C2C 貨態代碼（全家、萊爾富、OK）；PayNow 物流技術文件 v2.5「貨態代碼表」,,https://docs.paynow.com.tw/developer/docs/apipdf/logistics/supermarketC2C,2026-08-08,官方文件
+paynow,4070,[全家、萊爾富] 門市反應商品包裝不良(滲漏) / [OK] 門市反應商品包裝不良,,status,C2C 貨態代碼（全家、萊爾富、OK）；PayNow 物流技術文件 v2.5「貨態代碼表」,,https://docs.paynow.com.tw/developer/docs/apipdf/logistics/supermarketC2C,2026-08-08,官方文件
+paynow,4071,門市關店,,status,C2C 貨態代碼（全家、萊爾富）；PayNow 物流技術文件 v2.5「貨態代碼表」,,https://docs.paynow.com.tw/developer/docs/apipdf/logistics/supermarketC2C,2026-08-08,官方文件
+paynow,4072,條碼資料重複,,error,C2C 貨態代碼（全家）；PayNow 物流技術文件 v2.5「貨態代碼表」,,https://docs.paynow.com.tw/developer/docs/apipdf/logistics/supermarketC2C,2026-08-08,官方文件
+paynow,4073,7 日內未寄件單號失效,,status,C2C 貨態代碼（全家、萊爾富）；PayNow 物流技術文件 v2.5「貨態代碼表」,,https://docs.paynow.com.tw/developer/docs/apipdf/logistics/supermarketC2C,2026-08-08,官方文件
+paynow,4074,貨物進店後發生異常提早退貨,,error,C2C 貨態代碼（全家、萊爾富、OK）；PayNow 物流技術文件 v2.5「貨態代碼表」,,https://docs.paynow.com.tw/developer/docs/apipdf/logistics/supermarketC2C,2026-08-08,官方文件
+paynow,5200,商品運送中,,status,C2C 貨態代碼（全家）；PayNow 物流技術文件 v2.5「貨態代碼表」,,https://docs.paynow.com.tw/developer/docs/apipdf/logistics/supermarketC2C,2026-08-08,官方文件
+paynow,6004,商品退回物流中心,,returning,C2C 貨態代碼（全家）；PayNow 物流技術文件 v2.5「貨態代碼表」,,https://docs.paynow.com.tw/developer/docs/apipdf/logistics/supermarketC2C,2026-08-08,官方文件
+paynow,8002,退至全家總倉,,returning,C2C 貨態代碼（全家）；PayNow 物流技術文件 v2.5「貨態代碼表」,,https://docs.paynow.com.tw/developer/docs/apipdf/logistics/supermarketC2C,2026-08-08,官方文件
+paynow,8079,退至萊爾富總倉,,returning,C2C 貨態代碼（萊爾富）；PayNow 物流技術文件 v2.5「貨態代碼表」,,https://docs.paynow.com.tw/developer/docs/apipdf/logistics/supermarketC2C,2026-08-08,官方文件
+paynow,4030,無進貨資料,,status,C2C 貨態代碼（OK）；PayNow 物流技術文件 v2.5「貨態代碼表」,,https://docs.paynow.com.tw/developer/docs/apipdf/logistics/supermarketC2C,2026-08-08,官方文件
+paynow,0001,訂單已成立 等待退貨,,pending,全家退貨通貨態代碼；PayNow FamilyBulk V2.4,,https://docs.paynow.com.tw/developer/docs/apipdf/logistics/famibulk,2026-11-17,官方文件
+paynow,1000,訂單檔案上傳中,,pending,大宗貨態代碼（7-11 大宗、全家大宗）；PayNow FamilyBulk V2.4,,https://docs.paynow.com.tw/developer/docs/apipdf/logistics/famibulk,2026-11-17,官方文件
+paynow,1050,物流訂單上傳成功,,pending,大宗貨態代碼（7-11 大宗、全家大宗）；PayNow FamilyBulk V2.4,,https://docs.paynow.com.tw/developer/docs/apipdf/logistics/famibulk,2026-11-17,官方文件
+paynow,2130,檔名錯誤,,error,全家大宗貨態代碼；PayNow FamilyBulk V2.4,,https://docs.paynow.com.tw/developer/docs/apipdf/logistics/famibulk,2026-11-17,官方文件
+paynow,2131,欄位值為空,,error,全家大宗貨態代碼；PayNow FamilyBulk V2.4,,https://docs.paynow.com.tw/developer/docs/apipdf/logistics/famibulk,2026-11-17,官方文件
+paynow,2132,欄位值溢位,,error,全家大宗貨態代碼；PayNow FamilyBulk V2.4,,https://docs.paynow.com.tw/developer/docs/apipdf/logistics/famibulk,2026-11-17,官方文件
+paynow,2133,資料錯誤,,error,全家大宗貨態代碼；PayNow FamilyBulk V2.4,,https://docs.paynow.com.tw/developer/docs/apipdf/logistics/famibulk,2026-11-17,官方文件
+paynow,2134,訂單重複,,error,全家大宗貨態代碼；PayNow FamilyBulk V2.4,,https://docs.paynow.com.tw/developer/docs/apipdf/logistics/famibulk,2026-11-17,官方文件
+paynow,4009,物流中心未收到貨,,error,全家退貨通貨態代碼；PayNow FamilyBulk V2.4,,https://docs.paynow.com.tw/developer/docs/apipdf/logistics/famibulk,2026-11-17,官方文件
+paynow,8001,退貨成功,,returned,大宗貨態代碼；PayNow FamilyBulk V2.4,,https://docs.paynow.com.tw/developer/docs/apipdf/logistics/famibulk,2026-11-17,官方文件
+paynow,8076,退至 OK 總倉,,returning,C2C 貨態代碼（OK）；PayNow 物流技術文件 v2.5「貨態代碼表」,,https://docs.paynow.com.tw/developer/docs/apipdf/logistics/supermarketC2C,2026-08-08,官方文件
 hct,集貨,Picked Up,Picked Up,picked_up,HCT 已收件,,https://www.hct.com.tw,2026-08-08,官方文件
 hct,卸集貨,Unloaded,Unloaded,in_transit,包裹進入轉運站,,https://www.hct.com.tw,2026-08-08,官方文件
 hct,發送,Dispatched,Dispatched,in_transit,包裹從站所發送,,https://www.hct.com.tw,2026-08-08,官方文件
@@ -948,7 +960,7 @@ ezship,E09,order_type 內容有誤或為空值,,error,建單回傳；此時 sn_i
 ezship,E10,取件人姓名內容有誤或為空值,,error,建單回傳；此時 sn_id 為 00000000,傳送訂單回傳（ezship_WebOrder_HttpRequest_v15.pdf／ezship_WebOrder_XML_v15s.pdf）,https://www.ezship.com.tw/service_doc/service_home_w18v1.jsp?vDocNo=1702,2026-08-08,官方文件
 ezship,E11,收件地址內容有誤或為空值,,error,建單回傳；此時 sn_id 為 00000000,傳送訂單回傳（ezship_WebOrder_HttpRequest_v15.pdf／ezship_WebOrder_XML_v15s.pdf）,https://www.ezship.com.tw/service_doc/service_home_w18v1.jsp?vDocNo=1702,2026-08-08,官方文件
 ezship,E13,店港澳無法使用 order_type=1（取貨付款）,,error,建單回傳；此時 sn_id 為 00000000,傳送訂單回傳（ezship_WebOrder_HttpRequest_v15.pdf／ezship_WebOrder_XML_v15s.pdf）,https://www.ezship.com.tw/service_doc/service_home_w18v1.jsp?vDocNo=1702,2026-08-08,官方文件
-ezship,E98,XML 系統發生錯誤無法載入（僅 XML 版）,,error,建單回傳；此時 sn_id 為 00000000,傳送訂單回傳（ezship_WebOrder_HttpRequest_v15.pdf／ezship_WebOrder_XML_v15s.pdf）,https://www.ezship.com.tw/service_doc/service_home_w18v1.jsp?vDocNo=1702,2026-08-08,官方文件
+ezship,E98,系統發生錯誤無法載入（XML 版：XML 系統發生錯誤無法載入）,,error,建單回傳；此時 sn_id 為 00000000,傳送訂單回傳（ezship_WebOrder_HttpRequest_v15.pdf／ezship_WebOrder_XML_v15s.pdf）,https://www.ezship.com.tw/service_doc/service_home_w18v1.jsp?vDocNo=1702,2026-08-08,官方文件
 ezship,E99,系統錯誤,,error,建單回傳；此時 sn_id 為 00000000,傳送訂單回傳（ezship_WebOrder_HttpRequest_v15.pdf／ezship_WebOrder_XML_v15s.pdf）,https://www.ezship.com.tw/service_doc/service_home_w18v1.jsp?vDocNo=1702,2026-08-08,官方文件
 ezship,S01,尚未寄件或尚未收到超商總公司提供的寄件訊息,Not yet shipped,pending,貨況查詢回傳；times 1 第一次配送／2 第二次配送／8 退還寄件人／9 非常規配送,貨況查詢回傳（ezship_status_api.pdf／ezship_status_api_byorder.pdf）,https://www.ezship.com.tw/service_doc/service_home_w18v1.jsp?vDocNo=1702,2026-08-08,官方文件
 ezship,S02,運往取件門市途中,In transit,in_transit,貨況查詢回傳；times 1 第一次配送／2 第二次配送／8 退還寄件人／9 非常規配送,貨況查詢回傳（ezship_status_api.pdf／ezship_status_api_byorder.pdf）,https://www.ezship.com.tw/service_doc/service_home_w18v1.jsp?vDocNo=1702,2026-08-08,官方文件

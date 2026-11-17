@@ -6,7 +6,7 @@ CVS,LogisticsSubType=HILIFE,萊爾富（B2C）,ecpay,cvs_b2c,true,20000,,常溫,
 CVS,LogisticsSubType=UNIMARTC2C,7-11 交貨便（C2C）,ecpay,cvs_c2c,true,20000,,常溫,C2C 合約才能用；GoodsAmount 1–20000；IsCollection=Y 代收,https://developers.ecpay.com.tw/7380/,2026-08-08,官方文件
 CVS,LogisticsSubType=FAMIC2C,全家店到店（C2C）,ecpay,cvs_c2c,true,20000,,常溫,C2C 合約才能用；GoodsAmount 1–20000；IsCollection=Y 代收,https://developers.ecpay.com.tw/7380/,2026-08-08,官方文件
 CVS,LogisticsSubType=HILIFEC2C,萊爾富店到店（C2C）,ecpay,cvs_c2c,true,20000,,常溫,C2C 合約才能用；GoodsAmount 1–20000；IsCollection=Y 代收,https://developers.ecpay.com.tw/7380/,2026-08-08,官方文件
-CVS,LogisticsSubType=OKMARTC2C,OK 店到店（C2C）,ecpay,cvs_c2c,true,20000,,常溫,C2C 合約才能用；GoodsAmount 1–20000；IsCollection=Y 代收；OK 只有 C2C，沒有 OKMART,https://developers.ecpay.com.tw/7380/,2026-08-08,官方文件
+CVS,LogisticsSubType=OKMARTC2C,OK 店到店（C2C，已終止）,ecpay,cvs_c2c,false,,,常溫,綠界 OK 超商 C2C 物流配送服務 2026-07-01 終止；物流方式一覽表已移除，不可再建單,https://developers.ecpay.com.tw/36099/,2026-11-17,官方文件
 HOME,LogisticsSubType=TCAT,黑貓宅急便,ecpay,home,true,20000,,常溫/冷藏/冷凍,LogisticsType=HOME；Temperature 0001/0002/0003；代收時商品金額上限 20000,https://developers.ecpay.com.tw/7380/,2026-08-08,官方文件
 HOME,LogisticsSubType=POST,中華郵政,ecpay,home,false,,,常溫,LogisticsType=HOME；Temperature 只能 0001；不可代收,https://developers.ecpay.com.tw/7380/,2026-08-08,官方文件
 CVS,LgsType=B2C ShipType=1,7-11 大宗寄倉（B2C）,newebpay,cvs_b2c,true,20000,,常溫,B2C 只有 7-11；TradeType 1 取貨付款／3 取貨不付款,https://www.newebpay.com/website/Page/download_file?name=%E7%89%A9%E6%B5%81%E6%9C%8D%E5%8B%99%E6%8A%80%E8%A1%93%E4%B8%B2%E6%8E%A5%E6%89%8B%E5%86%8A_NDNSv1.0.0.pdf,2026-10-24,官方文件
@@ -14,11 +14,11 @@ CVS,LgsType=C2C ShipType=1,7-11 店到店（C2C）,newebpay,cvs_c2c,true,20000,,
 CVS,LgsType=C2C ShipType=2,全家 店到店（C2C）,newebpay,cvs_c2c,true,20000,,常溫,TradeType 1 取貨付款／3 取貨不付款；藍新物流無宅配,https://www.newebpay.com/website/Page/download_file?name=%E7%89%A9%E6%B5%81%E6%9C%8D%E5%8B%99%E6%8A%80%E8%A1%93%E4%B8%B2%E6%8E%A5%E6%89%8B%E5%86%8A_NDNSv1.0.0.pdf,2026-10-24,官方文件
 CVS,LgsType=C2C ShipType=3,萊爾富 店到店（C2C）,newebpay,cvs_c2c,true,20000,,常溫,TradeType 1 取貨付款／3 取貨不付款；藍新物流無宅配,https://www.newebpay.com/website/Page/download_file?name=%E7%89%A9%E6%B5%81%E6%9C%8D%E5%8B%99%E6%8A%80%E8%A1%93%E4%B8%B2%E6%8E%A5%E6%89%8B%E5%86%8A_NDNSv1.0.0.pdf,2026-10-24,官方文件
 CVS,LgsType=C2C ShipType=4,OK 店到店（C2C）,newebpay,cvs_c2c,true,20000,,常溫,TradeType 1 取貨付款／3 取貨不付款；藍新物流無宅配,https://www.newebpay.com/website/Page/download_file?name=%E7%89%A9%E6%B5%81%E6%9C%8D%E5%8B%99%E6%8A%80%E8%A1%93%E4%B8%B2%E6%8E%A5%E6%89%8B%E5%86%8A_NDNSv1.0.0.pdf,2026-10-24,官方文件
-CVS,LgsType=B2C ShipType=1 GoodsType=1,7-11 大宗寄倉（常溫）,payuni,cvs_b2c,true,,,常溫,Ship=1 取貨付款、ShipTag=1 啟用物流,https://docs.payuni.com.tw/,2026-08-08,官方文件
-CVS,LgsType=B2C ShipType=1 GoodsType=2,7-11 大宗寄倉（冷凍）,payuni,cvs_b2c,true,,,冷凍,Ship=1 取貨付款、ShipTag=1 啟用物流；冷凍門市地圖 MapType 固定 2,https://docs.payuni.com.tw/,2026-08-08,官方文件
-CVS,LgsType=C2C ShipType=1 GoodsType=1,7-11 店到店（常溫）,payuni,cvs_c2c,true,,,常溫,Ship=1 取貨付款、ShipTag=1 啟用物流,https://docs.payuni.com.tw/,2026-08-08,官方文件
-CVS,LgsType=C2C ShipType=1 GoodsType=2,7-11 店到店（冷凍）,payuni,cvs_c2c,true,,,冷凍,Ship=1 取貨付款、ShipTag=1 啟用物流；冷凍門市地圖 MapType 固定 2,https://docs.payuni.com.tw/,2026-08-08,官方文件
-HOME,LgsType=HOME ShipType=2 GoodsType=1/2/3,黑貓宅配,payuni,home,,,,常溫/冷凍/冷藏,GoodsType 1 常溫／2 冷凍／3 冷藏；ConsigneeAddress、DeliveryTimeTag 必填,https://docs.payuni.com.tw/,2026-08-08,官方文件
+CVS,LgsType=B2C ShipType=1 GoodsType=1,7-11 大宗寄倉（常溫）,payuni,cvs_b2c,true,,,常溫,Ship=1 取貨付款、ShipTag=1 啟用物流,https://docs.payuni.com.tw/web/#/7/34,2026-11-17,官方文件
+CVS,LgsType=B2C ShipType=1 GoodsType=2,7-11 大宗寄倉（冷凍）,payuni,cvs_b2c,true,,,冷凍,Ship=1 取貨付款、ShipTag=1 啟用物流；冷凍門市地圖 MapType 固定 2,https://docs.payuni.com.tw/web/#/7/34,2026-11-17,官方文件
+CVS,LgsType=C2C ShipType=1 GoodsType=1,7-11 店到店（常溫）,payuni,cvs_c2c,true,,,常溫,Ship=1 取貨付款、ShipTag=1 啟用物流,https://docs.payuni.com.tw/web/#/7/34,2026-11-17,官方文件
+CVS,LgsType=C2C ShipType=1 GoodsType=2,7-11 店到店（冷凍）,payuni,cvs_c2c,true,,,冷凍,Ship=1 取貨付款、ShipTag=1 啟用物流；冷凍門市地圖 MapType 固定 2,https://docs.payuni.com.tw/web/#/7/34,2026-11-17,官方文件
+HOME,LgsType=HOME ShipType=2 GoodsType=1/2/3,黑貓宅配,payuni,home,true,,,常溫/冷凍/冷藏,GoodsType 1 常溫／2 冷凍／3 冷藏；UPP Ship=1 為宅配到付（PaymentType=10）；幕後 API 僅取貨不付款且 ConsigneeAddress、DeliveryTimeTag 必填,https://docs.payuni.com.tw/web/#/7/34,2026-11-17,官方文件
 CVS,Pay_zg=55/56 Pay_subzg=7NET,7-11 大宗寄倉（B2C）,smilepay,cvs_b2c,true,,,常溫,55 取貨付款／56 純取貨；通知 Classif V 取貨付款／W 純取貨,https://www.smilepay.net/,2026-08-08,官方文件
 CVS,Pay_zg=51/52 Pay_subzg=7NET,7-11 店到店（C2C）,smilepay,cvs_c2c,true,,,常溫,51 取貨付款／52 純取貨；通知 Classif T 取貨付款／U 純取貨,https://www.smilepay.net/,2026-08-08,官方文件
 CVS,Pay_zg=51/52 Pay_subzg=FAMI,全家 店到店（C2C）,smilepay,cvs_c2c,true,,,常溫,51 取貨付款／52 純取貨；通知 Classif T 取貨付款／U 純取貨；全家 B2C 速買配目前未提供（客服回覆 2026-09-30）,https://www.smilepay.net/,2026-08-08,官方文件
@@ -28,22 +28,23 @@ CVS,Pay_zg=57/58,超商 C2B 退貨便,smilepay,return,false,,,常溫,57 消費�
 CVS,pay_type=IPL7,7-11 超商取貨付款,pchomepay,cvs_c2c,true,20000,,常溫,金額 65–20000；物流單由金流訂單派生；不提供 OK／宅配,https://docs.google.com/document/d/1dPIPJc4xfyjkJ1i2yxaja4OP0G-iGFRXM08NDMuttZE/export?format=txt,2026-10-24,官方文件
 CVS,pay_type=IPLFM,全家 超商取貨付款,pchomepay,cvs_c2c,true,20000,,常溫,金額 65–20000；物流單由金流訂單派生；不提供 OK／宅配,https://docs.google.com/document/d/1dPIPJc4xfyjkJ1i2yxaja4OP0G-iGFRXM08NDMuttZE/export?format=txt,2026-10-24,官方文件
 CVS,pay_type=IPLHL,萊爾富 超商取貨付款,pchomepay,cvs_c2c,true,20000,,常溫,金額 65–20000；物流單由金流訂單派生；不提供 OK／宅配,https://docs.google.com/document/d/1dPIPJc4xfyjkJ1i2yxaja4OP0G-iGFRXM08NDMuttZE/export?format=txt,2026-10-24,官方文件
-CVS,Logistic_service=01,7-11 交貨便,paynow,cvs_c2c,true,20000,,常溫,DeliverMode 01 取貨付款／02 取貨不付款,https://owlting.github.io/paynow-guideline/,2026-08-08,官方文件
-CVS,Logistic_service=02,7-11 大宗物流,paynow,cvs_b2c,true,20000,,常溫,DeliverMode 01 取貨付款／02 取貨不付款,https://owlting.github.io/paynow-guideline/,2026-08-08,官方文件
-CVS,Logistic_service=03,全家店到店,paynow,cvs_c2c,true,20000,,常溫,DeliverMode 01 取貨付款／02 取貨不付款,https://owlting.github.io/paynow-guideline/,2026-08-08,官方文件
-CVS,Logistic_service=04,全家大宗物流,paynow,cvs_b2c,true,20000,,常溫,DeliverMode 01 取貨付款／02 取貨不付款,https://owlting.github.io/paynow-guideline/,2026-08-08,官方文件
-CVS,Logistic_service=05,萊爾富店到店,paynow,cvs_c2c,true,20000,,常溫,DeliverMode 01 取貨付款／02 取貨不付款,https://owlting.github.io/paynow-guideline/,2026-08-08,官方文件
-CVS,Logistic_service=10,OK 店到店,paynow,cvs_c2c,true,20000,,常溫,DeliverMode 01 取貨付款／02 取貨不付款,https://owlting.github.io/paynow-guideline/,2026-08-08,官方文件
-CVS,Logistic_service=21,7-11 交貨便（冷凍）,paynow,cvs_c2c,true,20000,,冷凍,DeliverMode 01 取貨付款／02 取貨不付款；電子地圖用 Logistic_serviceID=22，建單固定 21,https://owlting.github.io/paynow-guideline/,2026-08-08,官方文件
-CVS,Logistic_service=22,7-11 大宗物流（冷凍）,paynow,cvs_b2c,true,20000,,冷凍,DeliverMode 01 取貨付款／02 取貨不付款,https://owlting.github.io/paynow-guideline/,2026-08-08,官方文件
-CVS,Logistic_service=23,全家店到店（冷凍）,paynow,cvs_c2c,true,20000,,冷凍,DeliverMode 01 取貨付款／02 取貨不付款,https://owlting.github.io/paynow-guideline/,2026-08-08,官方文件
-CVS,Logistic_service=24,全家大宗物流（冷凍）,paynow,cvs_b2c,true,20000,,冷凍,DeliverMode 01 取貨付款／02 取貨不付款,https://owlting.github.io/paynow-guideline/,2026-08-08,官方文件
-HOME,Logistic_service=06,黑貓宅急便,paynow,home,true,100000,,常溫/冷藏/冷凍,DeliveryType 0001/0002/0003；長寬高合計 ≤ 150 cm,https://owlting.github.io/paynow-guideline/,2026-08-08,官方文件
-HOME,Logistic_service=36,黑貓宅急便（自動保險）,paynow,home,false,100000,,常溫/冷藏/冷凍,保險單 DeliverMode 須為 02；總金額超過 20000 自動投保,https://owlting.github.io/paynow-guideline/,2026-08-08,官方文件
-CVS,Logistic_service=46,黑貓到店,paynow,cvs_c2c,true,20000,,常溫/冷藏/冷凍,取件門市；長寬高合計 ≤ 105 cm,https://owlting.github.io/paynow-guideline/,2026-08-08,官方文件
-CROSS_BORDER,Logistic_service=07,7-11 海外店配,paynow,cross_border,,,,常溫,需帶 Country,https://owlting.github.io/paynow-guideline/,2026-08-08,官方文件
-CROSS_BORDER,Logistic_service=08,7-11 海外宅配,paynow,cross_border,,,,常溫,需帶 Country,https://owlting.github.io/paynow-guideline/,2026-08-08,官方文件
-CVS,Logistic_service=12,7-11 大宗退貨便,paynow,return,false,,,常溫,退貨用,https://owlting.github.io/paynow-guideline/,2026-08-08,官方文件
+CVS,Logistic_service=01,7-11 交貨便,paynow,cvs_c2c,true,20000,,常溫,DeliverMode 01 取貨付款／02 取貨不付款,https://docs.paynow.com.tw/developer/docs/apipdf/logistics/supermarketC2C,2026-11-17,官方文件
+CVS,Logistic_service=02,7-11 大宗物流,paynow,cvs_b2c,true,20000,,常溫,DeliverMode 01 取貨付款／02 取貨不付款,https://docs.paynow.com.tw/developer/docs/apipdf/logistics/711bulk,2026-11-17,官方文件
+CVS,Logistic_service=03,全家店到店,paynow,cvs_c2c,true,20000,,常溫,DeliverMode 01 取貨付款／02 取貨不付款,https://docs.paynow.com.tw/developer/docs/apipdf/logistics/supermarketC2C,2026-11-17,官方文件
+CVS,Logistic_service=04,全家大宗物流,paynow,cvs_b2c,true,20000,,常溫,DeliverMode 01 取貨付款／02 取貨不付款,https://docs.paynow.com.tw/developer/docs/apipdf/logistics/famibulk,2026-11-17,官方文件
+CVS,Logistic_service=05,萊爾富店到店,paynow,cvs_c2c,true,20000,,常溫,DeliverMode 01 取貨付款／02 取貨不付款,https://docs.paynow.com.tw/developer/docs/apipdf/logistics/supermarketC2C,2026-11-17,官方文件
+CVS,Logistic_service=10,OK 店到店,paynow,cvs_c2c,true,20000,,常溫,DeliverMode 01 取貨付款／02 取貨不付款,https://docs.paynow.com.tw/developer/docs/apipdf/logistics/supermarketC2C,2026-11-17,官方文件
+CVS,Logistic_service=21,7-11 交貨便（冷凍）,paynow,cvs_c2c,true,20000,,冷凍,DeliverMode 01 取貨付款／02 取貨不付款；電子地圖用 Logistic_serviceID=22，建單固定 21,https://docs.paynow.com.tw/developer/docs/apipdf/logistics/711FreezingC2C,2026-11-17,官方文件
+CVS,Logistic_service=22,7-11 大宗物流（冷凍）,paynow,cvs_b2c,true,20000,,冷凍,DeliverMode 01 取貨付款／02 取貨不付款,https://docs.paynow.com.tw/developer/docs/apipdf/logistics/freezing-bulk-B2C,2026-11-17,官方文件
+CVS,Logistic_service=23,全家店到店（冷凍）,paynow,cvs_c2c,true,20000,,冷凍,DeliverMode 01 取貨付款／02 取貨不付款,https://docs.paynow.com.tw/developer/docs/apipdf/logistics/famifreezingC2C,2026-11-17,官方文件
+CVS,Logistic_service=24,全家大宗物流（冷凍）,paynow,cvs_b2c,true,20000,,冷凍,DeliverMode 01 取貨付款／02 取貨不付款,https://docs.paynow.com.tw/developer/docs/apipdf/logistics/famifreezingbulkB2C,2026-11-17,官方文件
+HOME,Logistic_service=06,黑貓宅急便,paynow,home,true,100000,,常溫/冷藏/冷凍,DeliveryType 0001/0002/0003；長寬高合計 ≤ 150 cm,https://docs.paynow.com.tw/developer/docs/apipdf/logistics/blackcate-home-delivery,2026-11-17,官方文件
+HOME,Logistic_service=36,黑貓宅急便（自動保險）,paynow,home,false,100000,,常溫/冷藏/冷凍,保險單 DeliverMode 須為 02；總金額超過 20000 自動投保,https://docs.paynow.com.tw/developer/docs/apipdf/logistics/blackcate-home-delivery,2026-11-17,官方文件
+CVS,Logistic_service=46,黑貓到店,paynow,cvs_c2c,true,20000,,常溫/冷藏/冷凍,取件門市；長寬高合計 ≤ 105 cm,https://docs.paynow.com.tw/developer/docs/apipdf/logistics/blackcat-to-store,2026-11-17,官方文件
+CROSS_BORDER,Logistic_service=07,7-11 海外店配,paynow,cross_border,,,,常溫,需帶 Country,https://docs.paynow.com.tw/developer/docs/apipdf/logistics/711over-sea,2026-11-17,官方文件
+CROSS_BORDER,Logistic_service=08,7-11 海外宅配,paynow,cross_border,,,,常溫,需帶 Country,https://docs.paynow.com.tw/developer/docs/apipdf/logistics/711over-sea,2026-11-17,官方文件
+CVS,Logistic_service=12,7-11 大宗退貨便,paynow,return,false,,,常溫,退貨用,https://docs.paynow.com.tw/developer/docs/apipdf/logistics/711bulk,2026-11-17,官方文件
+CVS,Logistic_service=14,全家大宗退貨通,paynow,return,false,,,常溫,退貨用；ReturnPaymentno 帶 LogisticServiceID=04 建立，FamiPort 輸入 12 碼列印,https://docs.paynow.com.tw/developer/docs/apipdf/logistics/famibulk,2026-11-17,官方文件
 CVS,stCate=TFM,全家 店到店,ezship,cvs_c2c,true,10000,,常溫,order_status A01–A04；order_type 1 取貨付款（代收 10–10000）／3 取貨不付款；不含 7-11,https://www.ezship.com.tw/service_doc/service_home_w18v1.jsp?vDocNo=1702,2026-08-08,官方文件
 CVS,stCate=TLF,萊爾富 店到店,ezship,cvs_c2c,true,10000,,常溫,order_status A01–A04；order_type 1 取貨付款（代收 10–10000）／3 取貨不付款；不含 7-11,https://www.ezship.com.tw/service_doc/service_home_w18v1.jsp?vDocNo=1702,2026-08-08,官方文件
 CVS,stCate=TOK,OK 店到店,ezship,cvs_c2c,true,10000,,常溫,order_status A01–A04；order_type 1 取貨付款（代收 10–10000）／3 取貨不付款；不含 7-11,https://www.ezship.com.tw/service_doc/service_home_w18v1.jsp?vDocNo=1702,2026-08-08,官方文件
@@ -54,4 +55,4 @@ HOME,order_status=A05/A06,ezShip 宅配,ezship,home,true,8000,,常溫,order_type
 CROSS_BORDER,stCate=TSF,店港澳,ezship,cross_border,false,,,常溫,order_status A11/A12；無代收,https://www.ezship.com.tw/service_doc/service_home_w18v1.jsp?vDocNo=1702,2026-08-08,官方文件
 HOME,eprdcl2=001/003/008,新竹物流（直連）,hct_direct,home,true,,,常溫/冷凍/冷藏,eprdcl2 001 一般／003 冷凍／008 冷藏；eqmny 代收貨款,https://www.hct.com.tw,2026-08-08,官方文件
 ONDEMAND,LALAMOVE,Lalamove 即時配送,lalamove,ondemand,false,依方案,依車型,常溫,先報價後下單;報價效期5分鐘;同城/當日;可換司機;非批次物流,https://developers.lalamove.com/,2026-10-24,官方文件
-ONDEMAND,PANDAGO,pandago 即時配送,pandago,ondemand,false,依報價,34x34x36cm/20kg,常溫,費用與時間為兩支獨立端點;公開Sandbox僅新加坡(台灣另有Stage環境);不需成為foodpanda餐廳夥伴,https://on-demand-rider-docs.deliveryhero.io/,2026-08-08,官方文件
+ONDEMAND,PANDAGO,pandago 即時配送,pandago,ondemand,false,依報價,34x34x36cm/20kg,常溫,費用與時間估算為兩支獨立端點(/quotes 可一次取得);公開Sandbox僅新加坡(台灣另有Stage環境);不需成為foodpanda餐廳夥伴,https://on-demand-rider-docs.deliveryhero.io/,2026-08-08,官方文件

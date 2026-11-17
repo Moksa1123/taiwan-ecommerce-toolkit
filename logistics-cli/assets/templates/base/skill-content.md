@@ -8,7 +8,7 @@
 |---|---|
 | Origin | Official vendor API docs, PDF specs and SDKs; every source is registered in the repo's `sources/official-sources.json` (URL, how it is fetched, which files it covers) |
 | Providers | `data/providers.csv` has 20 rows: 7 aggregators with a logistics API, 1 direct carrier API (HCT), 2 on-demand services, and 10 rows with no public API (listed so the skill can say so) |
-| Rows | **1111 rows** in 5 search domains; per-domain counts come from `python scripts/search.py --stats`, not from this file |
+| Rows | **1126 rows** in 5 search domains; per-domain counts come from `python scripts/search.py --stats`, not from this file |
 | Provenance | Every row has `doc_url` (official doc) and `trust` (實測 measured / 官方文件 official doc / 推論 inferred); `retrieved_on` is the last date the source was compared |
 | Crypto | Expected values are produced by running the vendors' own SDKs or spec samples verbatim (`tests/vectors/`); examples are compared byte for byte |
 | Verified | 2026-11-15: self-test passes, `verify-examples.py` passes; known gaps are in `data/pending.csv` |
@@ -89,7 +89,7 @@ Then read the provider's reference:
 | NewebPay 藍新 | `references/NEWEBPAY_LOGISTICS_REFERENCE.md` |
 | PAYUNi 統一 | `references/payuni-logistics-api.md` |
 | SmilePay 速買配 | `references/smilepay-logistics-api.md` |
-| PChomePay 拍錢包 | `references/pchomepay-logistics-api.md` |
+| PChomePay支付連 | `references/pchomepay-logistics-api.md` |
 | PayNow 立吉富 | `references/paynow-logistics-api.md` |
 | ezShip 台灣便利配 | `references/ezship-logistics-api.md` |
 | HCT 新竹物流 (direct) | `references/hct-logistics-api.md` |
@@ -97,6 +97,7 @@ Then read the provider's reference:
 | pandago and on-demand overview | `references/ondemand-delivery.md` |
 | Carriers without a public API | `references/carrier-direct-access.md` |
 | Concepts, NewebPay walkthrough, PAYUNi operations, best practices | `references/implementation-guide.md` |
+| 官方文件稽核紀錄（各家改了什麼、依據網址） | `references/audit-20261117.md` |
 
 ## Tasks
 

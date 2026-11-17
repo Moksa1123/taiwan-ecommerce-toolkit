@@ -176,6 +176,9 @@ class SunpayInvoiceClient:
         tax_type: int = 1,
         tax_rate: float = 0.05,
         customs_clearance_mark: int = 0,
+        poban: str = '',
+        is_send_message: int = 0,
+        buyer_telephone: str = '',
     ) -> Dict[str, Any]:
         """B2C 開立。
 
@@ -194,6 +197,7 @@ class SunpayInvoiceClient:
             'carrierType': carrier_type,
             'carrierId1': carrier_id1,
             'donateMark': donate_mark,
+            'IsSendMessage': is_send_message,
             'buyerAddress': buyer_address,
             'invoiceType': invoice_type,
             'taxType': tax_type,
@@ -207,6 +211,14 @@ class SunpayInvoiceClient:
             'isprint': isprint,
             'productItems': product_items,
         }
+        if donate_mark == 1:
+            if not (poban.isdigit() and 3 <= len(poban) <= 7):
+                raise ValueError('donateMark=1 時 poban 必填，3~7 碼純數字')
+            body['poban'] = poban
+        if is_send_message == 1:
+            if not buyer_telephone:
+                raise ValueError('IsSendMessage=1 時 buyerTelephoneNumber 必填')
+            body['buyerTelephoneNumber'] = buyer_telephone
         # 無載具時才需要（也才可以）指定發票提供方式
         if carrier_type == 0 and donate_mark == 0 and paper_invoice_option is not None:
             body['PaperInvoiceOption'] = paper_invoice_option

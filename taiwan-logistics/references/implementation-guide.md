@@ -68,13 +68,13 @@
 
 **Supported Services:**
 - B2C 超商取貨：7-11（常溫／冷凍）、全家、萊爾富
-- C2C 店到店：7-11 交貨便、全家、萊爾富、OK
+- C2C 店到店：7-11 交貨便、全家、萊爾富（OK 店到店 2026-07-01 終止）
 - 宅配：黑貓（常溫／冷藏／冷凍）、中華郵政（僅常溫）
 
 **Test Environment:**
 - Base URL: `https://logistics-stage.ecpay.com.tw`
 - Create: `POST /Express/Create`
-- Query: `POST /Helper/QueryLogisticsTradeInfo/V2`
+- Query: `POST /Helper/QueryLogisticsTradeInfo/V5`
 - Print: `POST /helper/printTradeDocument`
 - Map: `POST /Express/map`
 
@@ -83,8 +83,8 @@
 
 **Logistics SubTypes (`LogisticsType=CVS`):**
 - B2C：`FAMI` 全家、`UNIMART` 7-11、`UNIMARTFREEZE` 7-11 冷凍店取、`HILIFE` 萊爾富
-- C2C：`FAMIC2C` 全家、`UNIMARTC2C` 7-11 交貨便、`HILIFEC2C` 萊爾富、`OKMARTC2C` OK
-- B2C 合約只能用 B2C 代碼，C2C 合約只能用 C2C 代碼；OK 只有 C2C
+- C2C：`FAMIC2C` 全家、`UNIMARTC2C` 7-11 交貨便、`HILIFEC2C` 萊爾富（`OKMARTC2C` 已於 2026-07-01 終止）
+- B2C 合約只能用 B2C 代碼，C2C 合約只能用 C2C 代碼
 
 **Logistics SubTypes (`LogisticsType=HOME`):**
 - `TCAT` - 黑貓宅急便（代收貨款時商品金額上限 20,000）
@@ -121,7 +121,7 @@
 **API Style**: form POST (`MerID`, `Version`, `EncryptInfo`, `HashInfo`), JSON response with an encrypted `EncryptInfo`.
 Source: official docs docs.payuni.com.tw/web/#/7; details in `references/payuni-logistics-api.md`.
 
-**Supported Services:** 7-ELEVEN B2C bulk / C2C store-to-store / C2B return (normal + frozen); T-Cat home delivery (normal, frozen, refrigerated)
+**Supported Services:** 7-ELEVEN B2C bulk / C2C store-to-store (normal + frozen), C2B return (query and notify only, normal); T-Cat home delivery (normal, frozen, refrigerated; UPP supports cash on delivery)
 
 **Endpoints** (base `https://sandbox-api.payuni.com.tw/api` / `https://api.payuni.com.tw/api`):
 
@@ -133,7 +133,7 @@ Source: official docs docs.payuni.com.tw/web/#/7; details in `references/payuni-
 | T-Cat label PDF (browser form) | `/home_delivery/get_obt_number_pdf` | 1.0 |
 | T-Cat label re-download | `/home_delivery/download_pdf` | 1.0 |
 
-Shipments are created inside a payment request: UPP with `ShipTag=1` (+ `Ship=1` for COD), or the backend
+Shipments are created inside a payment request: UPP with `ShipTag=1` (+ `Ship=1` for COD: 7-11 pickup payment, or T-Cat cash on delivery with `LgsType=HOME` → `PaymentType=10`), or the backend
 ATM / CVS / credit-token / LINE Pay / JKoPay / AFTEE APIs with `ServiceType=3` (no COD).
 
 **Codes:** `ShipType` 1=7-ELEVEN 2=T-Cat · `LgsType` B2C / C2C / HOME / C2B · `GoodsType` 1=normal 2=frozen 3=refrigerated ·

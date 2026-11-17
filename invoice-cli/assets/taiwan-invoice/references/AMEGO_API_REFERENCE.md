@@ -94,7 +94,7 @@ params.append('sign', sign)
 
 ## 2025 年 MIG 4.0 重要異動
 
-財政部公告的電子發票資料交換標準訊息建置指引 (MIG) 3.2.1 版本已於 2025/01/01 停用，光貿已升級為 MIG 4.0。
+財政部 MIG 3.2.1 自 115 年 1 月 1 日停止使用；光貿已於 2025/01/01 升級為 MIG 4.0，API 路徑改為：
 
 | 功能 | 舊版路徑 (MIG 3.2.1) | **新版路徑 (MIG 4.0)** |
 |------|---------------------|----------------------|
@@ -104,7 +104,7 @@ params.append('sign', sign)
 | 作廢折讓 | `/json/d0501` | `/json/g0501` |
 | 開立發票 (API 配號) | `/json/c0401_custom` | `/json/f0401_custom` |
 
-> 舊版 API 目前尚可繼續使用，但建議盡快升級至新版。
+> 官方文件仍寫「舊版 API 目前尚可繼續使用」，新串接一律用新版路徑。
 
 ---
 
@@ -123,12 +123,12 @@ params.append('sign', sign)
 | `OrderId` | String | Y | 訂單編號，不可重複，不可超過 40 字 |
 | `TrackApiCode` | String | N | 指定字軌開立 (需在後台設定 API 指定代碼) |
 | `BuyerIdentifier` | String | Y | 買方統編，無則填 `0000000000` |
-| `BuyerName` | String | Y | 買方名稱 (不可填 0/00/000/0000) |
+| `BuyerName` | String | Y | 買方名稱；不打統編可填「客人」，打統編填公司名稱或買方統編；不可填 0/00/000/0000 |
 | `BuyerAddress` | String | N | 買方地址 |
 | `BuyerTelephoneNumber` | String | N | 買方電話 |
-| `BuyerEmailAddress` | String | N | 買方電子信箱 (寄送通知用) |
+| `BuyerEmailAddress` | String | N | 買方電子信箱 (寄送通知用；測試環境不寄信，要在測試後台按「補發發票開立通知」) |
 | `MainRemark` | String | N | 總備註，不可超過 200 字 |
-| `CarrierType` | String | N | 載具類別：`3J0002` 手機條碼、`CQ0001` 自然人憑證、`amego` 光貿會員載具 |
+| `CarrierType` | String | N | 載具類別：`3J0002` 手機條碼、`CQ0001` 自然人憑證、`amego` 光貿會員載具，也可帶自家申請的會員載具類別 |
 | `CarrierId1` | String | N | 載具顯碼 |
 | `CarrierId2` | String | N | 載具隱碼 |
 | `NPOBAN` | String | N | 捐贈碼 |
@@ -143,11 +143,12 @@ params.append('sign', sign)
 | `CustomsClearanceMark` | Number | N | 通關方式：1 非經海關出口、2 經海關出口 (零稅率必填) |
 | `ZeroTaxRateReason` | Number | N | 零稅率原因 71-79 (零稅率必填) |
 | `BrandName` | String | N | 品牌名稱 |
-| `DetailVat` | Number | N | 單價含稅或未稅：0 未稅、1 含稅 (預設 1) |
+| `DetailVat` | Number | N | 單價含稅或未稅：0 未稅、1 含稅 (預設 1)；只有打統編的發票可設 0 |
 | `DetailAmountRound` | Number | N | 小計處理：0 精準到 7 位、1 四捨五入 (預設 0) |
+| `TaxAdjustment` | Number | N | 稅額調整：0 不調整 (預設)、1 營業稅額減 1；限打統編、`DetailVat=0`，且 `SalesAmount` 尾數為 10/30/50/70/90 |
 | `PrinterType` | Number | N | 熱感應機型號代碼 (需列印時填入) |
 | `PrinterLang` | Number | N | 熱感應機編碼：1 BIG5、2 GBK、3 UTF-8 |
-| `PrintDetail` | Number | N | 是否列印明細：1 列印、0 不列印 (僅 PrinterType=2) |
+| `PrintDetail` | Number | N | 是否列印明細：0 不列印、1 列印並裁切 (預設)、2 列印不裁切；打統編一律列印；限 `PrinterType >= 2` |
 
 #### ProductItem 商品陣列欄位
 
@@ -158,7 +159,7 @@ params.append('sign', sign)
 | `Unit` | String | N | 單位，不可超過 6 字 |
 | `UnitPrice` | Number | Y | 單價，小數精準度到 7 位數 |
 | `Amount` | Number | Y | 小計，小數精準度到 7 位數 |
-| `Remark` | String | N | 備註，不可超過 40 字 |
+| `Remark` | String | N | 備註，不可超過 120 字 |
 | `TaxType` | Number | Y | 課稅別：1 應稅、2 零稅率、3 免稅 |
 
 #### 零稅率原因代碼
@@ -279,12 +280,13 @@ TotalAmount = SalesAmount + FreeTaxSalesAmount + ZeroTaxSalesAmount + TaxAmount
 ```json
 [
     {
-        "CancelInvoiceNumber": "AB00001111"
+        "CancelInvoiceNumber": "AB00001111",
+        "CancelReason": "作廢原因"
     }
 ]
 ```
 
-支援單張或多張發票同時作廢。
+支援單張或多張發票同時作廢。`CancelReason` 選填，最多 20 字。
 
 #### 回應格式
 
@@ -325,8 +327,10 @@ TotalAmount = SalesAmount + FreeTaxSalesAmount + ZeroTaxSalesAmount + TaxAmount
 |------|------|------|
 | `invoice_number` | String | 發票號碼 |
 | `type` | String | 發票類型 (NOT_FOUND/C0401/C0501/C0701/TYPE_ERROR) |
-| `status` | Number | 1:待處理 2:上傳中 3:已上傳 31:處理中 32:處理完成 91:錯誤 99:完成 |
+| `status` | Number | 1:待處理 2:上傳中 3:已上傳 31:處理中 32:處理完成／待確認 91:錯誤 99:完成；查無時 -1 |
 | `total_amount` | Number | 發票金額 |
+
+官方範例有新舊兩種回應：新版 `data` 是陣列（每筆含 `invoice_number`），舊版 `data` 是以發票號碼為鍵的物件；解析時兩種都要能處理。折讓狀態 `allowance_status` 同理（另多 `tax_amount`）。
 
 **發票類型說明：**
 - `NOT_FOUND`: 查無發票
@@ -447,6 +451,7 @@ TotalAmount = SalesAmount + FreeTaxSalesAmount + ZeroTaxSalesAmount + TaxAmount
 | `1` | 有統編 | A4 (地址+A5) |
 | `2` | 有統編 | A4 (A5x2) |
 | `3` | 有統編 | A5 |
+| `5` | 有統編 | QRcode_A4 |
 
 #### 回應格式
 
@@ -491,8 +496,10 @@ TotalAmount = SalesAmount + FreeTaxSalesAmount + ZeroTaxSalesAmount + TaxAmount
 | `invoice_number` | String | 發票號碼 |
 | `printer_type` | Number | 熱感應機型號代碼 |
 | `printer_lang` | Number | 熱感應機編碼 (1:BIG5 2:GBK 3:UTF-8) |
-| `print_invoice_type` | Number | 1:發票正本 2:發票補印 3:單印明細 |
-| `print_invoice_detail` | Number | 1:列印明細 0:不列印 (打統編一律列印) |
+| `print_invoice_type` | Number | 1:發票正本 2:發票補印 3:單印明細 (3 限芯燁 Xprinter 以後機型的 B2C 發票) |
+| `print_invoice_detail` | Number | 正本／補印是否印明細：0 不列印、1 列印並裁切 (預設)、2 列印不裁切；打統編一律列印 |
+
+`order_id`／`invoice_number` 只查發票日期 180 天內，超過回 `51`。
 
 #### 回應格式
 
@@ -505,6 +512,28 @@ TotalAmount = SalesAmount + FreeTaxSalesAmount + ZeroTaxSalesAmount + TaxAmount
     }
 }
 ```
+
+### 8. 發票修改 (自動配號)
+
+**端點：** `POST /json/invoice_modify`
+
+修改已上傳完成的發票內容，僅限原本用 `/json/f0401` 開立的發票。`data` 為單一物件：`InvoiceNumber`（必填，系統只查 180 天內）加上與 `f0401` 相同的全部欄位（`OrderId`、`BuyerIdentifier`、`BuyerName`、`ProductItem`、各金額欄位…）。回應同 `f0401`。
+
+不可修改的情況（回應代碼）：
+
+| 代碼 | 說明 |
+|------|------|
+| `41` | InvoiceNumber 不可為空或格式錯誤 |
+| `42` | 查無此發票號碼 |
+| `43` | 發票日期超過 180 天 |
+| `44` | 發票型態不是開立（須為 C0401） |
+| `45` | 發票未上傳完成（須為 99） |
+| `46` | 已超過修改期限（依發票日期及關帳日判斷） |
+| `47` | 尚有未處理的異動紀錄（如註銷重開中、準備作廢） |
+| `48` | 未打統編且已列印過，請作廢重開 |
+| `49` | 特種稅率發票 (tax_type = 4) |
+| `50` | 已開立折讓單 |
+| `91` | 發票修改失敗 |
 
 ---
 
@@ -551,7 +580,7 @@ TotalAmount = SalesAmount + FreeTaxSalesAmount + ZeroTaxSalesAmount + TaxAmount
 |------|------|------|------|
 | `AllowanceNumber` | String | Y | 折讓單編號，不可重複，不可超過 16 字 |
 | `AllowanceDate` | String | Y | 折讓單日期 (Ymd) |
-| `AllowanceType` | Number | Y | 1:買方開立折讓證明單 2:賣方折讓證明通知單 |
+| `AllowanceType` | Number | Y | 固定 `2`（賣方折讓證明通知單）；官方已刪除 `1`（買方開立折讓證明單）：自 114 年 1 月 1 日起，雙方合意的退回或折讓由賣方開立電子折讓單上傳 |
 | `BuyerIdentifier` | String | Y | 買方統編，無則填 `0000000000` |
 | `BuyerName` | String | Y | 買方名稱 |
 | `BuyerAddress` | String | N | 買方地址 |
@@ -622,7 +651,7 @@ TotalAmount = SalesAmount + FreeTaxSalesAmount + ZeroTaxSalesAmount + TaxAmount
 
 **端點：** `POST /json/allowance_file`
 
-下載折讓單 PDF 檔案 (可無限次下載)。
+下載折讓單 PDF 檔案 (可無限次下載)。參數 `allowance_number`、`download_style`（0 A4 整張 (預設)、1 A4(地址+A5)、3 A5），回 `data.file_url`（10 分鐘有效）。
 
 ---
 
@@ -692,7 +721,7 @@ TotalAmount = SalesAmount + FreeTaxSalesAmount + ZeroTaxSalesAmount + TaxAmount
 
 **端點：** `POST /json/track_all`
 
-取得該公司在加值中心的所有字軌資料 (三層結構)。
+取得該公司在加值中心的所有字軌資料 (三層結構：1 財政部配給、2 給光貿用、3 發票字軌列表)。參數 `Year`（西元年）、`Period`（0–5，同中獎查詢期別）。
 
 ---
 
@@ -777,6 +806,8 @@ TotalAmount = SalesAmount + FreeTaxSalesAmount + ZeroTaxSalesAmount + TaxAmount
 
 > 注意: 若有傳入熱感應機型號代碼，一次只限制上傳一張。
 
+`data` 是陣列（可多張）。與 `f0401` 的差異：訂單編號欄位是小寫的 `order_id`（選填），不是 `OrderId`；`ProductItem[].TaxType` 選填（預設應稅），另有 `ProductItem[].RelateNumber`（相關號碼，50 字）；另有 `SellerPersonInCharge`、`ExchangeRate`、`Currency`、`GroupMark`、`BondedAreaConfirm`；`PrinterType` 1 Star mC-Print3、2 芯燁 XP-Q90EC。回應 `data[]` 每筆含 `invoice_number`、`barcode`、`qrcode_left`、`qrcode_right`、`base64_data`。
+
 #### 額外必填欄位
 
 | 欄位 | 類型 | 描述 |
@@ -791,8 +822,8 @@ TotalAmount = SalesAmount + FreeTaxSalesAmount + ZeroTaxSalesAmount + TaxAmount
 
 ## 錯誤代碼
 
-> 依光貿官方「API 錯誤代碼」頁（invoice.amego.tw/info_detail?mid=71，2026-09 擷取）節錄；
-> 完整 148 個代碼見 `data/error-codes.csv`。二位數代碼在不同 API 意義不同（例如 `31` 在發票查詢是
+> 依光貿官方「API 錯誤代碼」頁（invoice.amego.tw/info_detail?mid=71）節錄；官方頁分 18 個 API 區段，
+> 不重複代碼見 `data/error-codes.csv`。二位數代碼在不同 API 意義不同（例如 `31` 在發票查詢是
 > 「type 查詢類型不存在」、在發票列表是「date_select 參數錯誤」），判讀時要搭配呼叫的 API。
 
 ### 通用錯誤代碼（所有 API）
@@ -842,9 +873,16 @@ TotalAmount = SalesAmount + FreeTaxSalesAmount + ZeroTaxSalesAmount + TaxAmount
 
 使用光貿會員載具 (CarrierType = `amego`) 時：
 
-1. **載具顯碼/隱碼格式：**
-   - `a` + 手機號碼，例如：`a0912345678`
-   - 電子信箱，例如：`test@example.com`
+1. **載具顯碼/隱碼格式**（官方「光貿會員載具規則」invoice.amego.tw/info_detail?mid=73）：
+
+   | 名稱 | 顯碼／隱碼 | 檢查規則 |
+   |------|-----------|---------|
+   | 手機 | `a` + 手機號碼 | `^a09[0-9]{8}$` |
+   | 信箱 | 電子信箱 | 電子信箱格式 |
+   | 蝦皮 | `shopee_` + 蝦皮帳號 | `^shopee_[A-Za-z0-9_\.]{5,30}$` |
+   | 露天 | `ruten_` + 露天帳號 | `^ruten_[a-z0-9_\-]{4,24}$` |
+   | Yahoo 拍賣 | `yahoo_` + Y 拍代號 | `^yahoo_[Yy][0-9]{10}$` |
+   | 8591 | `8591_` + 買家編號 | `^8591_\d{5,7}$` |
 
 2. **注意事項：**
    - 載具顯碼或隱碼帶入電子信箱，並不會發送信件
@@ -863,11 +901,15 @@ TotalAmount = SalesAmount + FreeTaxSalesAmount + ZeroTaxSalesAmount + TaxAmount
 - 載具：不可捐贈
 
 **手機條碼格式：**
-- 以 `/` 開頭，共 8 碼
+- `^\/[0-9A-Z\+\-\.]{7}$`（官方 mid=74）
 - 可使用 `/json/barcode` API 驗證
 
 **自然人憑證格式：**
-- 2 碼英文大寫 + 14 碼數字，共 16 碼
+- 光貿檢查規則 `^TP[0-9]{14}$`（官方 mid=74）
+
+**捐贈碼：** 光貿無捐贈碼查詢 API，官方建議用財政部開放資料的受捐贈機關清單（mid=74）。
+
+**統編名稱：** `/json/ban_query` 查不到名稱時回空字串，不代表統編錯誤或不存在。
 
 ---
 
@@ -1090,12 +1132,4 @@ if (result.type === 'redirect' && result.url) {
 
 ---
 
-### 7. 實作檔案參考
-
-| 檔案 | 說明 |
-|------|------|
-| `lib/services/amego-service.ts` | 光貿 API 服務實作 |
-| `lib/services/invoice-service-factory.ts` | 發票服務工廠 |
-| `app/api/v1/financials/[id]/issue-invoice/route.ts` | 開立發票 API |
-| `app/api/v1/financials/[id]/print-invoice/route.ts` | 列印發票 API |
 

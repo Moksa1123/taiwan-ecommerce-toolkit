@@ -1,7 +1,7 @@
 # ezPay 簡單付電子發票 API 完整技術規格 (ezPay Invoice API)
 
 > 官方文檔：https://inv.ezpay.com.tw/Invoice_index/download
-> 技術手冊版本：EZP_INVI v1.2.2（標準版）、EZP_Track v1.0.0（字軌管理）、EZP_BDV v1.0.0（手機條碼／捐贈碼驗證）、ezPay_invoice_by_batch_file v1.0.3（批次開立）、EZP_CES v1.0.0（境外電商）
+> 技術手冊版本：EZP_INVI v1.2.2（標準版）、EZP_Track v1.0.0（字軌管理）、EZP_BDV v1.0.0（手機條碼／捐贈碼驗證）、ezPay_invoice_by_batch_file v1.0.5（批次開立）、折讓與作廢查詢手冊（標準版）v1.0.1（2026-11-05）、EZP_CES v1.0.0（境外電商）
 > 平台運營者：簡單行動支付股份有限公司（原 Pay2Go，後更名為 ezPay；目前為藍新金流集團旗下產品）
 > 支援 B2C（二聯式）與 B2B（三聯式）電子發票，與藍新 Newebpay 共用同一加密／簽章邏輯
 
@@ -608,6 +608,52 @@ MerchantID_=3622183
 
 ---
 
+### 8. 查詢折讓／作廢發票／作廢折讓明細
+
+**官方文檔：** 折讓與作廢查詢手冊（標準版）v1.0.1（2026-11-05）
+
+三支查詢 API，加密與最外層欄位同開立（`MerchantID_` + `PostData_`，AES-256-CBC + 32-byte PKCS7 + Hex）。`RespondType` 固定 `JSON`，`Version` 皆帶 `1.0`。
+
+| API | 測試 | 正式 |
+|-----|------|------|
+| 查詢折讓明細 | `POST https://cinv.ezpay.com.tw/Api/allowance_search` | `POST https://inv.ezpay.com.tw/Api/allowance_search` |
+| 查詢作廢發票明細 | `POST https://cinv.ezpay.com.tw/Api/invoice_invalid_search` | `POST https://inv.ezpay.com.tw/Api/invoice_invalid_search` |
+| 查詢作廢折讓明細 | `POST https://cinv.ezpay.com.tw/Api/allowance_invalid_search` | `POST https://inv.ezpay.com.tw/Api/allowance_invalid_search` |
+
+#### `allowance_search` PostData_
+
+| 欄位 | 必填 | 型態 | 說明 |
+|------|------|------|------|
+| `RespondType` | Y | Varchar(5) | 固定 `JSON` |
+| `Version` | Y | Varchar(5) | `1.0` |
+| `TimeStamp` | Y | Varchar(30) | Unix 時間戳，10 分鐘內有效 |
+| `SearchType` | Y | Varchar(1) | `0` 折讓單號；`1` 發票號碼 + 發票開立日期；`2` 發票號碼 + 折讓開立日期 |
+| `AllowanceNo` | C | Varchar(20) | `SearchType=0` 時必填 |
+| `InvoiceNumber` | C | Varchar(10) | `SearchType=1`／`2` 時必填 |
+| `Date` | C | Varchar(10) | `YYYY-MM-DD`；`SearchType=1` 帶發票開立日、`=2` 帶折讓開立日 |
+
+Result：`MerchantID`、`Page`、`PageSize`、`AllowanceList[]`（`AllowanceNo`、`InvoiceNumber`、`MerchantOrderNo`、`AllowanceDate`、`InvoiceDate`、`TaxType`、`Amt`、`TaxAmt`、`TotalAmt`、`Items[]`：`ItemName`／`ItemCount`／`ItemWord`／`ItemPrice`／`ItemRateAmt`／`ItemAmt`／`ItemAmount`）、`CheckCode`。不含消費者尚未同意的線上折讓單。
+
+#### `invoice_invalid_search` PostData_
+
+`RespondType`、`Version`（`1.0`）、`TimeStamp`、`InvoiceNumber`（必填）、`InvoiceDate`（必填，原發票開立日 `YYYY-MM-DD`）、`MerchantOrderNo`（選填，Varchar(30)）。
+
+Result：`MerchantID`、`InvoiceNumber`、`MerchantOrderNo`、`SellerUBN`、`BuyerUBN`（無統編回 `0000000000`）、`BuyerName`、`InvoiceDate`、`InvalidDate`、`InvalidReason`、`TotalAmt`、`CheckCode`。
+
+#### `allowance_invalid_search` PostData_
+
+`RespondType`、`Version`（`1.0`）、`TimeStamp`、`AllowanceNo`（必填，Varchar(20)）、`InvoiceNumber`（必填）、`MerchantOrderNo`（選填）。
+
+Result：`MerchantID`、`AllowanceNo`、`InvoiceNumber`、`MerchantOrderNo`、`SellerUBN`、`BuyerUBN`、`AllowanceDate`、`InvoiceDate`、`InvalidDate`、`InvalidReason`、`TotalAmt`、`Amt`、`TaxAmt`、`CheckCode`。
+
+#### ⚠️ 這三支的 CheckCode 欄位不同
+
+不是開立用的 5 個欄位，而是 `MerchantID`、`InvoiceNumber`、`TimeStamp`（**請求時送出的 TimeStamp**），A→Z 排序後前後加 `HashIV=`／`HashKey=`，SHA256 轉大寫。`allowance_search` 以 `SearchType=0` 查詢且回傳多筆時，`InvoiceNumber` 取 `AllowanceList` 第一筆。
+
+金額欄位型態為 Decimal(13,7)，範例回傳為字串（如 `"Amt":"388"`）。
+
+---
+
 ## B2B 電子發票（三聯式）
 
 ezPay 並無獨立的 B2B 端點，僅在開立發票時將 `Category` 設為 `B2B`，並依下述差異填寫欄位。
@@ -675,6 +721,7 @@ ezPay 並無獨立的 B2B 端點，僅在開立發票時將 `Category` 設為 `B
 | 觸發確認/取消折讓 | `POST /Api/allowance_touch_issue` |
 | 作廢折讓 | `POST /Api/allowanceInvalid` |
 | 查詢 | `POST /Api/invoice_search` |
+| 查詢折讓／作廢發票／作廢折讓明細 | `POST /Api/allowance_search`、`/Api/invoice_invalid_search`、`/Api/allowance_invalid_search` |
 
 ---
 
@@ -707,21 +754,27 @@ PostData_ 內含：
 | `EndNumber` | Y | Varchar(8) | 結束號（如 `00009999`）|
 | `Type` | Y | Varchar(2) | `07` 一般稅額 / `08` 特種稅額 |
 
+回應 Result：`ManagementNo`（字軌管理編號，後續管理用）、`Year`、`Term`、`AphabeticLetter`、`StartNumber`、`EndNumber`、`Type`、`CreateDatetime`、`LastNumber`（剩餘張數）、`Flag`、`CheckCode`。`Year` 只可輸入今年與明年；`Term` 不可小於目前期別。
+
 #### 1.2 字軌資料管理（啟用 / 暫停 / 停用）
 
-**端點：** `POST /Api_number_management/[資料管理路徑]`（透過 `ManagementNo` 切換狀態）
+**端點：** `POST /Api_number_management/manageNumber`（最外層同為 `CompanyID_` + `PostData_`）
 
-| 狀態 | 說明 |
-|------|------|
-| 啟用 | 目前發票開立使用此組字軌（同期別僅能啟用一組）|
-| 暫停 | 字軌待用，可再啟用 |
-| 停用 | 永久停用，不可再啟用 |
+PostData_ 內含 `RespondType`、`Version`（`1.0`）、`TimeStamp`、`ManagementNo`（必填）、`Year`（必填）、`Flag`（必填，欲變更的狀態）：
+
+| `Flag` | 狀態 | 說明 |
+|------|------|------|
+| `1` | 啟用 | 目前發票開立使用此組字軌（只能啟用一組未過期別字軌；首次新增的字軌自動啟用）|
+| `0` | 暫停 | 待用；啟用中字軌用完時，系統依同期別建立順序切換下一組暫停字軌 |
+| `2` | 停用 | 永久停用，不可再啟用 |
 
 #### 1.3 字軌資料查詢
 
-**端點：** `POST /Api_number_management/[查詢路徑]`
+**端點：** `POST /Api_number_management/searchNumber`
 
-可查詢字軌建立時間、起訖號碼、剩餘張數、目前狀態。
+PostData_ 內含 `RespondType`、`Version`（`1.0`）、`TimeStamp`、`Year`（必填，前兩年至明年）、`Term`（必填）、`ManagementNo`（選填，不帶＝不限定）、`Flag`（選填，不帶＝不限定）。Result 為陣列（String 格式時多組以逗號串接），欄位同新增回應另加 `UsedNumber`（使用中的發票號碼）。
+
+字軌 API 錯誤碼為 `INM`／`MOD`／`LIB`／`SET` 系列（如 `LIB10004` 字軌已存在或在範圍內、`LIB10016` 相同字軌已存在、`SET10006` 無法變更），見 EZP_Track 第七章。
 
 ---
 
@@ -799,7 +852,7 @@ PostData_ 內含：
 
 ### 5. 批次開立發票
 
-**官方文檔：** ezPay_invoice_by_batch_file v1.0.3
+**官方文檔：** ezPay_invoice_by_batch_file v1.0.5（2026-05-06）
 
 不透過 API，改用上傳檔案方式：
 
@@ -812,8 +865,10 @@ PostData_ 內含：
 
 #### 檔案內容結構
 
-- **首錄 (H)**：每檔僅 1 筆，欄位包含 `H`、執行類別 `INVO`、會員編號、商店代號、執行開立日期。
-- **明細錄 (S)**：每張發票 1 筆，包含商店自訂編號、發票種類、買受人資訊、載具、稅別、稅率、銷售額、稅額、發票金額、商品明細、備註等共 17+ 個欄位。
+- **首錄 (H)**：每檔僅 1 筆，5 欄：`H`、執行類別 `INVO`、會員編號、商店代號、執行開立日期（`yyyymmdd`）。
+- **明細錄 (S)**：每張發票 1 筆，18 欄：`S`、商店自訂編號、發票種類、買受人統編、買受人名稱、買受人信箱、買受人地址、載具類別、載具編號、捐贈碼、索取紙本、稅別（含 `4` 應稅特種、`9` 混合限 B2C）、稅率、**報關標記**（零稅率時必填，v1.0.5 新增）、銷售額合計、稅額、發票金額、備註（不得含半形逗號）。
+- **品項錄 (I)**：每個品項 1 列，8 欄：`I`、商店自訂編號（須與 S 相同）、商品名稱、數量、單位、單價、小計、**商品課稅別**（稅別 `9` 時必填，v1.0.5 新增）。
+- 結果回覆檔：`ezPay_Apply_Invoice_{商店代號}_{YYYYMMDD}.csv`，含開立狀態（`SUCCESS` 或錯誤碼）與發票號碼；批次專屬錯誤碼 `INV70006`／`INV70007`／`INV70008` 為 H／S／I 欄位數量錯誤。
 
 > 批次開立等同即時開立（`Status=1`），無延遲機制。
 
@@ -867,7 +922,7 @@ PostData_ 內含：
 | `KEY10011` | PostData_ 欄位空白 | 確認 `PostData_`（含底線）已填 |
 | `KEY10012` | 資料傳遞錯誤 | 檢查 Form Post 格式、Content-Type |
 | `KEY10013` | 資料空白 | 檢查必填欄位 |
-| `KEY10014` | TimeOut | 檢查 `TimeStamp` 是否在合理區間（建議 ±10 分鐘）|
+| `KEY10014` | TimeOut | 檢查主機校時與 `TimeStamp`（EZP_INVI 未寫容許範圍；折讓與作廢查詢手冊寫 10 分鐘內有效）|
 | `KEY10015` | 發票金額格式錯誤 | `Amt`、`TaxAmt`、`TotalAmt` 必須為純數字 |
 
 ### 開立發票相關
@@ -913,6 +968,20 @@ PostData_ 內含：
 | `IAI10004` | 參數錯誤 | 對照欄位格式 |
 | `IAI10005` | 新增失敗 | 重試 |
 | `IAI10006` | 異常終止 | 聯繫客服 |
+
+### 折讓／作廢查詢 API 錯誤碼（折讓與作廢查詢手冊 v1.0.1 第五章）
+
+同一代碼在這三支查詢 API 的意義與 EZP_INVI 不同，依呼叫的端點判讀。
+
+| 代碼 | 說明 |
+|------|------|
+| `KEY10010` | 商店代號空白 |
+| `KEY10011` | PostData_ 欄位空白 |
+| `KEY10002` | 資料解密失敗（檢查 HashKey/HashIV 與 32-byte padding）|
+| `INV10013` | 欄位資料空白－{欄位} |
+| `INV10002` | 欄位資料格式錯誤－{欄位} |
+| `INV20006` | 折讓單號錯誤（長度或字元格式不符）|
+| `IAI10004` | 查無資料－{欄位} |
 
 ### 手機條碼／捐贈碼驗證錯誤碼
 
@@ -993,6 +1062,7 @@ ezPay 平台會於發票開立、作廢、折讓時自動寄送 Email 通知至 
 | 觸發折讓 (`allowance_touch_issue`) | `1.0` |
 | 作廢折讓 (`allowanceInvalid`) | `1.0` |
 | 查詢發票 (`invoice_search`) | `1.3` |
+| 查詢折讓／作廢發票／作廢折讓明細 | `1.0` |
 | 字軌新增 / 管理 / 查詢 | `1.0` |
 | 手機條碼 / 捐贈碼驗證 | `1.0` |
 
@@ -1038,7 +1108,7 @@ ezPay 沒有獨立的 B2B 路徑（不像綠界 `/B2BInvoice/Issue`），改用 
 
 ### 10. CheckCode 驗證僅針對 5 個指定欄位
 
-回傳的 `CheckCode` 只用 `InvoiceTransNo`、`MerchantID`、`MerchantOrderNo`、`RandomNum`、`TotalAmt` 計算（A→Z 排序）。其他欄位（如 `BuyerName`、`InvoiceNumber`）**不在驗證範圍**，這是平台設計，需注意。
+回傳的 `CheckCode` 只用 `InvoiceTransNo`、`MerchantID`、`MerchantOrderNo`、`RandomNum`、`TotalAmt` 計算（A→Z 排序）。其他欄位（如 `BuyerName`、`InvoiceNumber`）**不在驗證範圍**，這是平台設計，需注意。例外：折讓／作廢查詢三支 API 改用 `MerchantID`、`InvoiceNumber`、請求的 `TimeStamp`（見 B2C §8）。
 
 ### 11. 載具代碼編號與綠界相反
 

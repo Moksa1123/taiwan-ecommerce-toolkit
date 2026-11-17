@@ -76,7 +76,7 @@
  },
  "ai-qoder": {
   "sha256": "9681bc00aea3608466b892731d53affafe37cf8acda9c2cff21b6e9b39e49f3d",
-  "size": 798574,
+  "size": 799172,
   "checked": "2026-11-17"
  },
  "ai-trae": {
@@ -92,212 +92,222 @@
  "amego-api-doc": {
   "sha256": "860ddd3a645e34701da917c84b1d02a73553387de096dc4503916c89ac2434b6",
   "size": 72945,
-  "checked": "2026-10-24"
+  "checked": "2026-11-17"
  },
  "amego-api-doc-bundle": {
   "sha256": "48a3fd4ad4d2ed4f61bf8b8a7510f4c666893975ef45e52f6d022bc3beef1662",
   "size": 580172,
-  "checked": "2026-10-24"
+  "checked": "2026-11-17"
  },
  "amego-api-site": {
   "sha256": "ca00fccfb408989eddc401062c4d1219a6aceb6b9b55412357f1790862e8f178",
   "size": 5,
-  "checked": "2026-10-24"
+  "checked": "2026-11-17"
  },
  "amego-error-codes": {
   "sha256": "39268bb666a78b22526980dd4e55852a6c444b8cdede5c7103d0037837e3c754",
   "size": 59093,
-  "checked": "2026-10-24"
+  "checked": "2026-11-17"
+ },
+ "amego-info-checks": {
+  "sha256": "2f374b74211a0c0479a9bb56c14663b40cfe759dae3d4e1656a0376e9a383d1e",
+  "size": 18277,
+  "checked": "2026-11-17"
+ },
+ "amego-info-member-carrier": {
+  "sha256": "6eef05a40f443f3662339a09e0db351ea6fd63a8ec5d335ac559fd8a7d9c707f",
+  "size": 16817,
+  "checked": "2026-11-17"
  },
  "cht-einvoice": {
   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
   "size": 115,
-  "checked": "2026-10-24"
+  "checked": "2026-11-17"
  },
  "ecpay-10075": {
   "sha256": "6c11950054aa26b73bd0e7844a7e1489cf4baef10b01dd09506644a991aad9a9",
   "size": 2504,
-  "checked": "2026-10-24"
+  "checked": "2026-11-17"
  },
  "ecpay-10200": {
   "sha256": "8183fbc9d16f88bf353cbd166dba35f48ef5dd597ddbdc6959d5cb4da729665b",
   "size": 467,
-  "checked": "2026-10-24"
+  "checked": "2026-11-17"
  },
  "ecpay-10419": {
   "sha256": "78f22eef075c636ec866b0766e39bf30a51aa6a339d3e9edee8c8c15be076d76",
   "size": 2679,
-  "checked": "2026-10-24"
+  "checked": "2026-11-17"
  },
  "ecpay-10429": {
   "sha256": "de484fbd1379b4e99f931e1e4a438fcb1ab7392983315771988c3e29033ebc56",
   "size": 2897,
-  "checked": "2026-10-24"
+  "checked": "2026-11-17"
  },
  "ecpay-10442": {
   "sha256": "b6859e76080622a9ced4574063b6272de78454096f7d504b8ba8e51271888f0a",
   "size": 2090,
-  "checked": "2026-10-24"
+  "checked": "2026-11-17"
  },
  "ecpay-36099": {
   "sha256": "d2217fa65af934b66d469cbfa7236b059e67c7552b1991a2328fa83fe1fd5ce4",
   "size": 2110,
-  "checked": "2026-10-24"
+  "checked": "2026-11-17"
  },
  "ecpay-47496": {
   "sha256": "0e6a50c2fec774d6df1dec63b15e46d080f30715cb2bdee230fb052b0db392d3",
   "size": 2760,
-  "checked": "2026-10-24"
+  "checked": "2026-11-17"
  },
  "ecpay-62208": {
   "sha256": "56754ad138ddac964dcbdfe89ed1fe51d0c10c3c07b02163a7201b02e5fb7cdc",
   "size": 8111,
-  "checked": "2026-10-24"
+  "checked": "2026-11-17"
  },
  "ecpay-7380": {
   "sha256": "9391e045c2a6315bea72d7ba68dc22d90b57430ab7427f9a0a234cc8aa046e6e",
   "size": 2263,
-  "checked": "2026-10-24"
+  "checked": "2026-11-17"
  },
  "ecpay-7396": {
   "sha256": "e028fbb72ee6275d2de1600376dc1d5c04a111f7e9f97244032aa14f2f719efa",
   "size": 1195,
-  "checked": "2026-10-24"
+  "checked": "2026-11-17"
  },
  "ecpay-7398": {
   "sha256": "825d7ace7881a4ae74c39e8c433a6181ddebb43acfe0856ae3b9eba77bef11b7",
   "size": 803,
-  "checked": "2026-10-24"
+  "checked": "2026-11-17"
  },
  "ecpay-7400": {
   "sha256": "ca0b73d561b43cb341495d724f776bcc5acd9c7d1c9c8f42824610b0876d2ed0",
   "size": 4102,
-  "checked": "2026-10-24"
+  "checked": "2026-11-17"
  },
  "ecpay-7402": {
-  "sha256": "8279cbcf6e39b8602f11092d97c6ecacf93a85c624b3a421cea65dbfcbcf3123",
-  "size": 4433,
-  "checked": "2026-10-24"
+  "sha256": "5cb8b0faf2f37f405a16dcf08db9b92262f7692a71c80be6599dcda06cc8fcbd",
+  "size": 4438,
+  "checked": "2026-11-17"
  },
  "ecpay-7406": {
   "sha256": "148c2452e3f3456239fc4c6cfbb3f08fae510b41e840a834f4b58ac67940ae21",
   "size": 2264,
-  "checked": "2026-10-24"
+  "checked": "2026-11-17"
  },
  "ecpay-7408": {
   "sha256": "30d95263782dfa391789ea670d29ffff516b859e629de89c568d73b9a24671a7",
   "size": 2519,
-  "checked": "2026-10-24"
+  "checked": "2026-11-17"
  },
  "ecpay-7410": {
   "sha256": "f545b353d52d31182b1f97463a8cab5cbec6050e3f3427d004d737bc2a4e2833",
   "size": 2632,
-  "checked": "2026-10-24"
+  "checked": "2026-11-17"
  },
  "ecpay-7412": {
   "sha256": "d9775889bbae058d7c6f94ccb42f6012ae97dd5d2f83a8d9bd4cda4fef097108",
   "size": 1273,
-  "checked": "2026-10-24"
+  "checked": "2026-11-17"
  },
  "ecpay-7414": {
   "sha256": "204f6485c0b2a2b89cb8d0586131a504a463b937feeb11a8587e103e5acc1357",
   "size": 11361,
-  "checked": "2026-10-24"
+  "checked": "2026-11-17"
  },
  "ecpay-7416": {
   "sha256": "58381ed05638e1dbbbb9ad39d01d15b46a0c1ef65408e98fb4918bbfb6577e1e",
   "size": 11992,
-  "checked": "2026-10-24"
+  "checked": "2026-11-17"
  },
  "ecpay-7418": {
-  "sha256": "26468f256ecf4a95b8483e58e694e9ecd5c0859a8a9ad67946279f9eb1fb9c05",
-  "size": 5485,
-  "checked": "2026-10-24"
+  "sha256": "7a97fa2be7e3958894d3f54c15fa7ce655ab98a04c552ebb0b40503e23834138",
+  "size": 5486,
+  "checked": "2026-11-17"
  },
  "ecpay-7420": {
   "sha256": "b09fc478473ae33b4232d270bb589cc1ceb925a2d40edb53a8e633516e690f70",
   "size": 4437,
-  "checked": "2026-10-24"
+  "checked": "2026-11-17"
  },
  "ecpay-7422": {
   "sha256": "e79fadbd363a2ed09d3fbd649f1cd19545eaa22546eae2d0752dc539a50ce359",
   "size": 2155,
-  "checked": "2026-10-24"
+  "checked": "2026-11-17"
  },
  "ecpay-7424": {
   "sha256": "968aca854180e034671c3b7637d0e80899834c8504b8e841ed685aa37fd9a028",
   "size": 5717,
-  "checked": "2026-10-24"
+  "checked": "2026-11-17"
  },
  "ecpay-7426": {
   "sha256": "22519cd8414e25075542467287ace41f0f23482a852a561552640a213f2f0f17",
   "size": 4558,
-  "checked": "2026-10-24"
+  "checked": "2026-11-17"
  },
  "ecpay-7440": {
   "sha256": "564d369f548d9fead4222df32e4ccbdb27572396d9683de8670601a1a46f5d52",
   "size": 426,
-  "checked": "2026-10-24"
+  "checked": "2026-11-17"
  },
  "ecpay-7442": {
   "sha256": "92a117b24a764240c26fb6ebed6322c9bfa289fb546452520c275e760421ad51",
   "size": 537,
-  "checked": "2026-10-24"
+  "checked": "2026-11-17"
  },
  "ecpay-7444": {
-  "sha256": "b4fa11b16f70672de6e7eef60ab0377e2c1f9b7a2295c1f54d13ba694c1485be",
-  "size": 3629,
-  "checked": "2026-10-24"
+  "sha256": "144223bef613b6fdb16fc08d5197eeb1d8c7718c14d6b4d9132648c37387334e",
+  "size": 4426,
+  "checked": "2026-11-17"
  },
  "ecpay-7446": {
   "sha256": "9b8cd8e7c46bc3f884f60e8c3bcc31a10063df0047852a296cdf679da6cc4402",
   "size": 776,
-  "checked": "2026-10-24"
+  "checked": "2026-11-17"
  },
  "ecpay-7448": {
   "sha256": "b08f9af0c5c92f52012dbde8f738623a7f190172bee47a8ec0246c3c5175240b",
   "size": 131,
-  "checked": "2026-10-24"
+  "checked": "2026-11-17"
  },
  "ecpay-8795": {
   "sha256": "d6df392ef6a29b6321cf8eee4dcae1f74df8ce8360f5d5965edd03ef9d785fdb",
   "size": 4663,
-  "checked": "2026-10-24"
+  "checked": "2026-11-17"
  },
  "ecpay-8809": {
   "sha256": "81081595591b83045fb1b56e9e2700c20e1d76486153adbcac1d7cda835b2c6f",
   "size": 10515,
-  "checked": "2026-10-24"
+  "checked": "2026-11-17"
  },
  "ecpay-8848": {
   "sha256": "0f21bb65691d8f467df4f93f0c085ea21593f76776227ac31f794504f032e029",
   "size": 1537,
-  "checked": "2026-10-24"
+  "checked": "2026-11-17"
  },
  "ecpay-8858": {
   "sha256": "f33977f34c21b402163ad8353e9eca84a66ca2ac97ccd0e9c60659ca643c155b",
   "size": 1543,
-  "checked": "2026-10-24"
+  "checked": "2026-11-17"
  },
  "ecpay-8875": {
   "sha256": "05006477ada753ea1911da2b92295899309b10f82421c9eb2dfa1e968ad03f25",
   "size": 2136,
-  "checked": "2026-10-24"
+  "checked": "2026-11-17"
  },
  "ecpay-8894": {
   "sha256": "bfcf16c5a6a4842da039f7a1f52942cbe7a9aee11b35f35055d1e75a250d4f2e",
   "size": 2682,
-  "checked": "2026-10-24"
+  "checked": "2026-11-17"
  },
  "ecpay-8896": {
   "sha256": "46082202e9805118353e26423c9e438d729f0559cf171d1c7552f6b29f0f7ce9",
   "size": 2529,
-  "checked": "2026-10-24"
+  "checked": "2026-11-17"
  },
  "ecpay-8907": {
   "sha256": "d09a7b07395335f304f6fe488a5f39ab57ec7e2eea9c1d421423162fbcd31b5e",
   "size": 2210,
-  "checked": "2026-10-24"
+  "checked": "2026-11-17"
  },
  "ecpay-aio-11031": {
   "sha256": "ae2b9f5e3a5d804a99561d162ca41ba7ec916207ff8aca2778606012c37ba207",
@@ -512,512 +522,557 @@
  "ecpay-invoice-14808": {
   "sha256": "f34b902a183222b8ca21c067630ee1a544d3e87729e7b27c343059e562d497eb",
   "size": 1301,
-  "checked": "2026-10-24"
+  "checked": "2026-11-17"
  },
  "ecpay-invoice-14815": {
   "sha256": "335c9e2d72d0fc46a3c3308e928f7324a7ebfc227d751b7b3aa16995ef8bb2a2",
   "size": 969,
-  "checked": "2026-10-24"
+  "checked": "2026-11-17"
  },
  "ecpay-invoice-14820": {
   "sha256": "c05c33ad5995fa2952599f112b2f5a9384191fd01d7bae69466d88eda76a083b",
   "size": 1847,
-  "checked": "2026-10-24"
+  "checked": "2026-11-17"
  },
  "ecpay-invoice-14825": {
   "sha256": "a8d2b10adee85b7e5cba552a87ea33b28c2be36bb85c3b0001b6334761c0da02",
   "size": 2213,
-  "checked": "2026-10-24"
+  "checked": "2026-11-17"
  },
  "ecpay-invoice-14830": {
   "sha256": "5c0d17428af9fad60e3c3d552216b6d8213ee19527784780e94af84e6d37eabb",
   "size": 6250,
-  "checked": "2026-10-24"
+  "checked": "2026-11-17"
  },
  "ecpay-invoice-14835": {
   "sha256": "4163246ce0bb4775771f4751053a64682bc874e38f4d8063a920df1b9b51e3e5",
   "size": 4749,
-  "checked": "2026-10-24"
+  "checked": "2026-11-17"
  },
  "ecpay-invoice-14840": {
   "sha256": "233502844bc1d37b376e1d8ee62c0c2b7f4c57404e5cee1e06e42c2877e8a87a",
   "size": 3616,
-  "checked": "2026-10-24"
+  "checked": "2026-11-17"
  },
  "ecpay-invoice-14845": {
   "sha256": "df5514b9cfe8c00dbefb5e132649eb3dd4dc240028927ab2ce987ec6750c15bd",
   "size": 5394,
-  "checked": "2026-10-24"
+  "checked": "2026-11-17"
  },
  "ecpay-invoice-14850": {
   "sha256": "76bd5978233d3fa3584ed0f874f6266c70e235a1f47ada351a97bb2e9d0ac7f9",
   "size": 13489,
-  "checked": "2026-10-24"
+  "checked": "2026-11-17"
  },
  "ecpay-invoice-14855": {
   "sha256": "4176a572d8bcefd88eb23aa4c3a93edfb6e18f1e940d2cd4cba35d8e99c47c99",
   "size": 3568,
-  "checked": "2026-10-24"
+  "checked": "2026-11-17"
  },
  "ecpay-invoice-14860": {
   "sha256": "9bebd06506552d5f9c7f6e6795c5b1f45d54f10ac39b03728aa4ec6fa5484326",
   "size": 4229,
-  "checked": "2026-10-24"
+  "checked": "2026-11-17"
  },
  "ecpay-invoice-14865": {
   "sha256": "b81ebe797a377366ab092f3c48e9a883317065094743754eed3aedcb65b1d60a",
   "size": 3635,
-  "checked": "2026-10-24"
+  "checked": "2026-11-17"
  },
  "ecpay-invoice-14870": {
   "sha256": "d2c1e60e5cb732a0b0c2a7ce5937898f6ffadb5a4d70e9073c1911fc02f71da2",
   "size": 3661,
-  "checked": "2026-10-24"
+  "checked": "2026-11-17"
  },
  "ecpay-invoice-14875": {
   "sha256": "a517c7b746360d2a5ececa781f08bd7a155f4bdb094af21fd5713ae006326c60",
   "size": 3672,
-  "checked": "2026-10-24"
+  "checked": "2026-11-17"
  },
  "ecpay-invoice-14880": {
   "sha256": "96c934de926472c6ddb44dda1b169447e4abcb3ce05abb561aa749cf766e19b6",
   "size": 3584,
-  "checked": "2026-10-24"
+  "checked": "2026-11-17"
  },
  "ecpay-invoice-14889": {
   "sha256": "15c63b9414d60488c8ca8f9fc34e1b8dfe54aa9ab8c0fbd7e503555383426aaf",
   "size": 4305,
-  "checked": "2026-10-24"
+  "checked": "2026-11-17"
  },
  "ecpay-invoice-14894": {
   "sha256": "397fab6f8bc8731331c354c9518f8092bb41e07f34253aa684ab13820c22e261",
   "size": 3697,
-  "checked": "2026-10-24"
+  "checked": "2026-11-17"
  },
  "ecpay-invoice-14923": {
   "sha256": "f9e94e78df85ebb57faad10642710a0b0fafcba628ce24979f3620e673e8503d",
   "size": 8641,
-  "checked": "2026-10-24"
+  "checked": "2026-11-17"
  },
  "ecpay-invoice-14935": {
   "sha256": "3be5204b2ea29a979e399686dc0ba75b035129db7322e2cf8c3e71da959ecebd",
   "size": 10908,
-  "checked": "2026-10-24"
+  "checked": "2026-11-17"
  },
  "ecpay-invoice-14940": {
   "sha256": "33e120173d5efdd89bd22f7158187ce13d7d00fcba494c73f840d58654f3651a",
   "size": 6571,
-  "checked": "2026-10-24"
+  "checked": "2026-11-17"
  },
  "ecpay-invoice-14948": {
   "sha256": "0329d3c3ae9cd47ef51774973dd8f1669c2ec6de37c32c7d00372262b44b2619",
   "size": 5386,
-  "checked": "2026-10-24"
+  "checked": "2026-11-17"
  },
  "ecpay-invoice-14953": {
   "sha256": "58d7ac3f81a0856ba344825ae0edd82a3d8d4d957fff4adba41f0de67e0920ee",
   "size": 5346,
-  "checked": "2026-10-24"
+  "checked": "2026-11-17"
  },
  "ecpay-invoice-14958": {
   "sha256": "cce0049ed72e28fad7e1fadbfc2a3634b42582c1976d8e62ff719cb57fe4f98b",
   "size": 5181,
-  "checked": "2026-10-24"
+  "checked": "2026-11-17"
  },
  "ecpay-invoice-14963": {
   "sha256": "166fb3e00a3d80ea6ce7bfc40057dfe91c0427e01ea1d96ebd0ddafcc6739067",
   "size": 5178,
-  "checked": "2026-10-24"
+  "checked": "2026-11-17"
  },
  "ecpay-invoice-14968": {
   "sha256": "56de532b9b7f8bfd4fd03363382555d5ef071b96851fcad9410d8d38e0eb3fa3",
   "size": 7269,
-  "checked": "2026-10-24"
+  "checked": "2026-11-17"
  },
  "ecpay-invoice-14973": {
   "sha256": "ecf523e680b785f3a706e233f2904b1345712fda6a6fc1778e51410b13659158",
   "size": 4362,
-  "checked": "2026-10-24"
+  "checked": "2026-11-17"
  },
  "ecpay-invoice-14978": {
   "sha256": "f602830ee2b2ed41fe73b31ffbdac77dcc7428c0beb378ff3bb656b2037ab442",
   "size": 4855,
-  "checked": "2026-10-24"
+  "checked": "2026-11-17"
  },
  "ecpay-invoice-14983": {
   "sha256": "446dea4bbdd4951538da519be0f6470372869e621a42417c91caa38c0b5fba9e",
   "size": 4258,
-  "checked": "2026-10-24"
+  "checked": "2026-11-17"
  },
  "ecpay-invoice-14988": {
   "sha256": "2be97149d1922461e9c994928f2e3bbd71da3dbe6bc86b2838436efea8d43fd6",
   "size": 5229,
-  "checked": "2026-10-24"
+  "checked": "2026-11-17"
  },
  "ecpay-invoice-14993": {
   "sha256": "5ae93eb29efe65dff4bff98243bfdf2e5f9cbd41e14502c4ef5c13cff39e9154",
   "size": 3633,
-  "checked": "2026-10-24"
+  "checked": "2026-11-17"
  },
  "ecpay-invoice-14998": {
   "sha256": "4fb93486a70bc19c7ee891bafd075235c42f5bb02723aedb76870164930a1e23",
   "size": 339,
-  "checked": "2026-10-24"
+  "checked": "2026-11-17"
  },
  "ecpay-invoice-15008": {
   "sha256": "e27bb43adf014594b64c2515fc718b1bd8c3a85e7f500e76e50eb8760583b0a6",
   "size": 2458,
-  "checked": "2026-10-24"
+  "checked": "2026-11-17"
  },
  "ecpay-invoice-15369": {
   "sha256": "c5235b25b0ec79cbc66a5d60ce2340109a691419f52b7b2a0d0f11efa7fce35e",
   "size": 30597,
-  "checked": "2026-10-24"
+  "checked": "2026-11-17"
  },
  "ecpay-invoice-15371": {
   "sha256": "5665200b993b8be865b2afc85e1dfbab07ce7aa9ad2d5d92fb3a80c9761b3011",
   "size": 7405,
-  "checked": "2026-10-24"
+  "checked": "2026-11-17"
  },
  "ecpay-invoice-15382": {
   "sha256": "64ac0aa5dc34ec08ffdadc9365f450f431b5a249945ef2b2fe679b248561869f",
   "size": 5749,
-  "checked": "2026-10-24"
+  "checked": "2026-11-17"
  },
  "ecpay-invoice-15391": {
   "sha256": "87a05d80672d9cfbcd479c3b6bcf7cc6f510147d55c73b82df1ed566d1c37d4d",
   "size": 17237,
-  "checked": "2026-10-24"
+  "checked": "2026-11-17"
  },
  "ecpay-invoice-17229": {
   "sha256": "092962d99bac386e173e50c758fa9da7ab0f369d96fb0b5c03e93ac289fe1211",
   "size": 38050,
-  "checked": "2026-10-24"
+  "checked": "2026-11-17"
  },
  "ecpay-invoice-24139": {
   "sha256": "a0188920aa0702bb662a50544d893bf9686ddc5f17c12a80de09db91845edc14",
   "size": 1633,
-  "checked": "2026-10-24"
+  "checked": "2026-11-17"
  },
  "ecpay-invoice-24172": {
   "sha256": "335c9e2d72d0fc46a3c3308e928f7324a7ebfc227d751b7b3aa16995ef8bb2a2",
   "size": 969,
-  "checked": "2026-10-24"
+  "checked": "2026-11-17"
  },
  "ecpay-invoice-24174": {
   "sha256": "f8c76d60aa467170a7137caee0c702b6109587c53bd7505fe7d346525e1230dc",
   "size": 1673,
-  "checked": "2026-10-24"
+  "checked": "2026-11-17"
  },
  "ecpay-invoice-24176": {
   "sha256": "477a38c5e0bd1a35ffac295c66f55b23ec35b85bdb62c46b397b3228c16861c9",
   "size": 2207,
-  "checked": "2026-10-24"
+  "checked": "2026-11-17"
  },
  "ecpay-invoice-24201": {
   "sha256": "4172bbd143295a95d779633a6d397f380d74211f2d38a84ea39becd961f5d68c",
   "size": 6250,
-  "checked": "2026-10-24"
+  "checked": "2026-11-17"
  },
  "ecpay-invoice-24206": {
   "sha256": "6f8108a0d040b796e31af9c63ba7c25346529ef9d466c9ff9925bda1d073b8e4",
   "size": 4735,
-  "checked": "2026-10-24"
+  "checked": "2026-11-17"
  },
  "ecpay-invoice-24211": {
   "sha256": "aee201d71693f29ee1ed48ad8c4ce005039ed34d170997dadbbe8065792c2111",
   "size": 3839,
-  "checked": "2026-10-24"
+  "checked": "2026-11-17"
  },
  "ecpay-invoice-24219": {
   "sha256": "8d81dec45611c672593fed9258aa277ecd12e02972616743108f4363d6f17158",
   "size": 5400,
-  "checked": "2026-10-24"
+  "checked": "2026-11-17"
  },
  "ecpay-invoice-24230": {
   "sha256": "10101875ea8121bec370a7581a695070e2f5f9e017efaa2e9a64b83beed098d8",
   "size": 13359,
-  "checked": "2026-10-24"
+  "checked": "2026-11-17"
  },
  "ecpay-invoice-24235": {
   "sha256": "87e4ece828e50acbf8f73e40c1cd550c02b3f4590530657c7123892343293bb3",
   "size": 4153,
-  "checked": "2026-10-24"
+  "checked": "2026-11-17"
  },
  "ecpay-invoice-24245": {
   "sha256": "af1134b30e1aafbb64303cbef7a2d40d5ff72e7d94c3f5bc2272b34a09488db3",
   "size": 8534,
-  "checked": "2026-10-24"
+  "checked": "2026-11-17"
  },
  "ecpay-invoice-24253": {
   "sha256": "3c9ebabd62548e4a16797a6d7ee0403f6f930f26f54e3ac442f167278dd5f8b0",
   "size": 4165,
-  "checked": "2026-10-24"
+  "checked": "2026-11-17"
  },
  "ecpay-invoice-24271": {
   "sha256": "76878e30056e740e80f72980221cfd7cb68eb6e3adbb9e18926139ba89e87a54",
   "size": 11019,
-  "checked": "2026-10-24"
+  "checked": "2026-11-17"
  },
  "ecpay-invoice-24276": {
   "sha256": "fd5ad14d6eed05e34ceabf94c96855ab3d9894e23c040dd7ae35491604e22184",
   "size": 5246,
-  "checked": "2026-10-24"
+  "checked": "2026-11-17"
  },
  "ecpay-invoice-24286": {
   "sha256": "81b6ca5ed9303bf9f4e5d67f867c66b5b54f3f628e307b6f81274b5327db961e",
   "size": 7296,
-  "checked": "2026-10-24"
+  "checked": "2026-11-17"
  },
  "ecpay-invoice-24291": {
   "sha256": "7d2c49353fd06ba00f6e1d9b012349e3728d342ea9616b84001351df8a181240",
   "size": 4633,
-  "checked": "2026-10-24"
+  "checked": "2026-11-17"
  },
  "ecpay-invoice-24306": {
   "sha256": "dc84bb45d06274840585373154528ac30be175ebab6a9d7f157503eeef96eb51",
   "size": 5443,
-  "checked": "2026-10-24"
+  "checked": "2026-11-17"
  },
  "ecpay-invoice-24311": {
   "sha256": "4b55ffeec896a209526c56d4d7581cab173210d2d775c3b080d10789782dd1b4",
   "size": 3660,
-  "checked": "2026-10-24"
+  "checked": "2026-11-17"
  },
  "ecpay-invoice-24319": {
   "sha256": "01660a7bc69a8c5241e527cf30c91cdde86768c4c88a03ad0d9be2b972243424",
   "size": 874,
-  "checked": "2026-10-24"
+  "checked": "2026-11-17"
  },
  "ecpay-invoice-24329": {
   "sha256": "e27bb43adf014594b64c2515fc718b1bd8c3a85e7f500e76e50eb8760583b0a6",
   "size": 2458,
-  "checked": "2026-10-24"
+  "checked": "2026-11-17"
  },
  "ecpay-invoice-25200": {
   "sha256": "ee77cf34336947f8c576b08695b2d1393a233682c98bf3187fa656311440af31",
   "size": 4755,
-  "checked": "2026-10-24"
+  "checked": "2026-11-17"
  },
  "ecpay-invoice-25206": {
   "sha256": "7aad3b4af6418499a46be1d6e8ec692b8d3e0dd7d2f31d8eb30a13649ee210e0",
   "size": 4624,
-  "checked": "2026-10-24"
+  "checked": "2026-11-17"
  },
  "ecpay-invoice-25218": {
   "sha256": "400a0b23f7b40362d487a3684b94b889249b2caf3810b34d18136eae097ade7a",
   "size": 261,
-  "checked": "2026-10-24"
+  "checked": "2026-11-17"
  },
  "ecpay-invoice-25224": {
   "sha256": "53edf2c43561b90c4511df2a67744649583ffc74db1d32641af670364c355f82",
   "size": 438,
-  "checked": "2026-10-24"
+  "checked": "2026-11-17"
  },
  "ecpay-invoice-32089": {
   "sha256": "26d17d1821e08aa824002a27f9212e8ef2518e405c41c29e1b2fa507ee4caac4",
   "size": 9531,
-  "checked": "2026-10-24"
+  "checked": "2026-11-17"
  },
  "ecpay-invoice-36050": {
   "sha256": "59fcbaa545dc88165de68238f6d1e838b29f153d3eb8b0b216d99aded2bd1cbf",
   "size": 3180,
-  "checked": "2026-10-24"
+  "checked": "2026-11-17"
  },
  "ecpay-invoice-36057": {
   "sha256": "bc9d18801faab87d6d90d1a985156d7d468ac0fc6086fbd13675cfe2f2f9c446",
   "size": 1213,
-  "checked": "2026-10-24"
+  "checked": "2026-11-17"
  },
  "ecpay-invoice-36064": {
   "sha256": "0e7eb871ffa92416ada156982356a81610e0fd6da479a8bd279488d2fc3b1d11",
   "size": 1212,
-  "checked": "2026-10-24"
+  "checked": "2026-11-17"
  },
  "ecpay-invoice-38242": {
   "sha256": "d9f7b1b5609b1f26fdd126082ffed04cabf409534d7c199c3724f0a3b873b5e0",
   "size": 3647,
-  "checked": "2026-10-24"
+  "checked": "2026-11-17"
  },
  "ecpay-invoice-38406": {
   "sha256": "9b8cd8e7c46bc3f884f60e8c3bcc31a10063df0047852a296cdf679da6cc4402",
   "size": 776,
-  "checked": "2026-10-24"
+  "checked": "2026-11-17"
  },
  "ecpay-invoice-47979": {
   "sha256": "ef0af5b83191c71a1827b7c5b8a37092cdce140988151486bdf7d6c4a0881505",
   "size": 22101,
-  "checked": "2026-10-24"
+  "checked": "2026-11-17"
  },
  "ecpay-invoice-49927": {
   "sha256": "49b0e4b1f20e8b5210f99eac0d49e769978c3e6619a5f1d3027dbd0a36738139",
   "size": 21977,
-  "checked": "2026-10-24"
+  "checked": "2026-11-17"
  },
  "ecpay-invoice-52123": {
   "sha256": "5705f773870d4bf6d97fedaff1c16d2a164a47daebcc928dfd71c696e131284f",
   "size": 3836,
-  "checked": "2026-10-24"
+  "checked": "2026-11-17"
  },
  "ecpay-invoice-53383": {
   "sha256": "5705f773870d4bf6d97fedaff1c16d2a164a47daebcc928dfd71c696e131284f",
   "size": 3836,
-  "checked": "2026-10-24"
+  "checked": "2026-11-17"
  },
  "ecpay-invoice-62004": {
   "sha256": "dd95b5d9b85c96e5d0379d162ad07bd00002aede99ac515445df74e9eb4ebd5d",
   "size": 3963,
-  "checked": "2026-10-24"
+  "checked": "2026-11-17"
+ },
+ "ecpay-invoice-62730": {
+  "sha256": "0cca6d15319aa8b812e9f3b5492b8d5a73ff3695c7e4080ff443cce53c055c61",
+  "size": 17188,
+  "checked": "2026-11-17"
+ },
+ "ecpay-invoice-63356": {
+  "sha256": "90b95c4a6cc8f7db1408b4be0335dc9452bceb324d706c9361cf85d81f113fc7",
+  "size": 7336,
+  "checked": "2026-11-17"
+ },
+ "ecpay-invoice-64067": {
+  "sha256": "185f9a7c44ac4abe7f6bf63768361e7f1b333481dca61b8f8413358b084608c6",
+  "size": 7400,
+  "checked": "2026-11-17"
+ },
+ "ecpay-invoice-64079": {
+  "sha256": "cc93497df48a1e834308425ef67b8f74196418ae9396683b3b60a5b90bdd644e",
+  "size": 6337,
+  "checked": "2026-11-17"
+ },
+ "ecpay-invoice-64088": {
+  "sha256": "a2700b6f568043c470dfc3152467d99bb581ec81dc46491955d087b0191f02ac",
+  "size": 6436,
+  "checked": "2026-11-17"
+ },
+ "ecpay-invoice-64106": {
+  "sha256": "4f0e6aeb2fdec2843d250e552caac45fd1df83f35b9ed1a5ebf6a33a00684550",
+  "size": 9107,
+  "checked": "2026-11-17"
+ },
+ "ecpay-invoice-64122": {
+  "sha256": "8c20fe5e404f4b63dc5c0650dfec0031f0cde60c3b317a911424d58e616c2477",
+  "size": 6215,
+  "checked": "2026-11-17"
+ },
+ "ecpay-invoice-64133": {
+  "sha256": "849ec31d869ea125a89f6a64111849d280541c77ac86d1c0a712cf94fa80977a",
+  "size": 5785,
+  "checked": "2026-11-17"
+ },
+ "ecpay-invoice-66505": {
+  "sha256": "22872b3b97807145a10fa814bc639b3af400921cb3ec8b922feacfec1075bdfc",
+  "size": 16986,
+  "checked": "2026-11-17"
  },
  "ecpay-invoice-7809": {
   "sha256": "cd4fdc6723e9b046111d9f1b5a38da91979a7ddfc74f1bf272fcd2af428d152b",
   "size": 1272,
-  "checked": "2026-10-24"
+  "checked": "2026-11-17"
  },
  "ecpay-invoice-7824": {
   "sha256": "fa4e57f3cca02b7750a7ec3a3d5976e324c87129a8e6525e570254b9da760e60",
   "size": 859,
-  "checked": "2026-10-24"
+  "checked": "2026-11-17"
  },
  "ecpay-invoice-7829": {
   "sha256": "1a2138fe665f93318874c5653a25133065b817bbf04973c0a828502310427210",
   "size": 419,
-  "checked": "2026-10-24"
+  "checked": "2026-11-17"
  },
  "ecpay-invoice-7849": {
   "sha256": "55d13a40de3057afe536c77359cb09fa3cda2f8801f0446707fefa78ad83faa7",
   "size": 1626,
-  "checked": "2026-10-24"
+  "checked": "2026-11-17"
  },
  "ecpay-invoice-7854": {
   "sha256": "f1c0ab84dc1a22a8fd9973eb6781ab077e3fa3793480b9a2ebc760282f156b4f",
   "size": 2326,
-  "checked": "2026-10-24"
+  "checked": "2026-11-17"
  },
  "ecpay-invoice-7859": {
   "sha256": "bc3853de27736d80571c1c9e4e8b80717a5c9971478ab70dcb9357a8593d727c",
   "size": 7644,
-  "checked": "2026-10-24"
+  "checked": "2026-11-17"
  },
  "ecpay-invoice-7870": {
   "sha256": "e9909701314f46a771ef42a9ccfa26bcb84dedc3943884d446d08522070241aa",
   "size": 9393,
-  "checked": "2026-10-24"
+  "checked": "2026-11-17"
  },
  "ecpay-invoice-7875": {
   "sha256": "09ff5f659256c7385772cdc8b4f44feec3571016e925a651334c2b31a7f9f842",
   "size": 6623,
-  "checked": "2026-10-24"
+  "checked": "2026-11-17"
  },
  "ecpay-invoice-7881": {
   "sha256": "a36f09d8861daa74dcd8a8a8bd89d411b4b525d990c77971f8ee62b2474521a1",
   "size": 9578,
-  "checked": "2026-10-24"
+  "checked": "2026-11-17"
  },
  "ecpay-invoice-7886": {
   "sha256": "2dc05072dd8e321090ae08908fdf9505b0eecfa80f9ef8416fe371ec4bd4bdc9",
   "size": 7137,
-  "checked": "2026-10-24"
+  "checked": "2026-11-17"
  },
  "ecpay-invoice-7891": {
   "sha256": "b20029ae725154ffb8a469e1aff13de8047d9f0b367516b3a3cc7775e175bbc8",
   "size": 6638,
-  "checked": "2026-10-24"
+  "checked": "2026-11-17"
  },
  "ecpay-invoice-7896": {
   "sha256": "b7dbf5ddefcd2709813770b801951a9721c5c829ccf1ddb309ed33e9978b62de",
   "size": 26171,
-  "checked": "2026-10-24"
+  "checked": "2026-11-17"
  },
  "ecpay-invoice-7901": {
   "sha256": "8f7bed17ff9148e901c71600d5434c1d7a2b1f8c766c16b57601fbf21a7d5bd6",
   "size": 13103,
-  "checked": "2026-10-24"
+  "checked": "2026-11-17"
  },
  "ecpay-invoice-7906": {
   "sha256": "bb498244a5b602aa6d314c97f88fbeaeebb5980a04cd5d300df3be17ebfda427",
   "size": 7063,
-  "checked": "2026-10-24"
+  "checked": "2026-11-17"
  },
  "ecpay-invoice-7911": {
   "sha256": "bbf74ad4c1117e60015cfd45701e921562f6c3d35ae64c013ea4e9852eb116ed",
   "size": 7047,
-  "checked": "2026-10-24"
+  "checked": "2026-11-17"
  },
  "ecpay-invoice-7913": {
   "sha256": "840ef48ae81cc9980d9ed3e2cb3fdc3503413f1b9d69a7f68593253eb39fc0ab",
   "size": 6875,
-  "checked": "2026-10-24"
+  "checked": "2026-11-17"
  },
  "ecpay-invoice-7918": {
   "sha256": "dc058856420f44f05e1bb666ed55c04c2dabe57a0ec89a8ce90abeb7a4ab2f75",
   "size": 25324,
-  "checked": "2026-10-24"
+  "checked": "2026-11-17"
  },
  "ecpay-invoice-7923": {
   "sha256": "37bec6f83de4bd1c39597b918812be97ce70dd49ffc6a8c37d39f3d3854e4e2e",
   "size": 24292,
-  "checked": "2026-10-24"
+  "checked": "2026-11-17"
  },
  "ecpay-invoice-7928": {
   "sha256": "971933d0bd02a71537a759a761cb659473cffaff297f900edb7d30f0f6050174",
   "size": 15616,
-  "checked": "2026-10-24"
+  "checked": "2026-11-17"
  },
  "ecpay-invoice-7933": {
   "sha256": "b99ee749636b388c5df340aebbe3841f523b980ac6bb33ed69259bb5d007a91c",
   "size": 8161,
-  "checked": "2026-10-24"
+  "checked": "2026-11-17"
  },
  "ecpay-invoice-7938": {
   "sha256": "a8089e5f0973427b4f085cf969fe6361cc2a5e02421026c531c68da0643a6431",
   "size": 10461,
-  "checked": "2026-10-24"
+  "checked": "2026-11-17"
  },
  "ecpay-invoice-7943": {
   "sha256": "852d3ed64abaf89c8032b9b744b54dfd82c4ab28c5febddf1dfd044d31b6240d",
   "size": 7960,
-  "checked": "2026-10-24"
+  "checked": "2026-11-17"
  },
  "ecpay-invoice-7949": {
   "sha256": "41f6a3b5ad154761fc81366d9a35fecdea6e531b856dd6dcfb789ddf86d220be",
   "size": 7827,
-  "checked": "2026-10-24"
+  "checked": "2026-11-17"
  },
  "ecpay-invoice-7954": {
   "sha256": "40af33d117265eb78b36c2d84e4e6676ebde945fdab08cd994451c0ec1f89757",
   "size": 868,
-  "checked": "2026-10-24"
+  "checked": "2026-11-17"
  },
  "ecpay-invoice-7958": {
   "sha256": "df35690f5ff063fe5f39c881423d2813cfcb1217b3e76e09745fcccdd48c9588",
   "size": 2457,
-  "checked": "2026-10-24"
+  "checked": "2026-11-17"
  },
  "ecpay-logistics-status-xlsx": {
-  "sha256": "16bddad1c85b91ba5decd148d60dc0143b62a1d7ff693b568e9148cfdf45bef3",
-  "size": 39405,
-  "checked": "2026-10-24"
+  "sha256": "96f2517ba8b3f43d2a20237c3f8fe787a4e89b0ee0e0ce92d8b7fdccb143a102",
+  "size": 40267,
+  "checked": "2026-11-17"
  },
  "ecpay-sdk-php": {
   "sha256": "14e7a75e74ed3ed5870ee9636ac7d774a76134b3bdf990100d21ae8c45bef6e2",
   "size": 15734,
-  "checked": "2026-10-24"
+  "checked": "2026-11-17"
  },
  "ecpay-skill-index-b2b-exchange": {
   "sha256": "8a8cb9330236b7508c5b67920ed4d330c05112ba021d1f7cb325ce2f974181d3",
   "size": 3693,
-  "checked": "2026-10-24"
+  "checked": "2026-11-17"
  },
  "ecpay-skill-index-b2b-storage": {
   "sha256": "56a38b39cb16548e13deb99fa4f58522e4cd5653418b4c164c163e905cc95098",
   "size": 2397,
-  "checked": "2026-10-24"
+  "checked": "2026-11-17"
  },
  "ecpay-skill-index-b2c": {
   "sha256": "db776df2827c63c3e9b20095761203e4c7b94fce51bfa7a3089a43d7fbe7c91b",
   "size": 3455,
-  "checked": "2026-10-24"
+  "checked": "2026-11-17"
  },
  "ecpay-woocommerce-plugin": {
   "sha256": "69b04f7c75336429aae564c8265d3244bd801cb9c0b724e5ffe174a97226ef29",
@@ -1027,12 +1082,22 @@
  "ecpay-woocommerce-plugin-logistics": {
   "sha256": "643de8c4ad98df477a0a4800a1cfb45616b80238f711718d5275fb4d44219075",
   "size": 620337,
-  "checked": "2026-10-24"
+  "checked": "2026-11-17"
+ },
+ "einv-tw-api-docs": {
+  "sha256": "0576bccfb4d576ac3e533de41e69f8d529c110b13eeb1958187972dd8dfdebf5",
+  "size": 35556,
+  "checked": "2026-11-17"
  },
  "einvoice-net-tw": {
   "sha256": "59daa7a546f56bf1cbf6eb45918ab615722d60cec92fc9054fc542051fe8c2b2",
   "size": 26437,
-  "checked": "2026-10-24"
+  "checked": "2026-11-17"
+ },
+ "ezpay-allowance-void-search-1-0-1": {
+  "sha256": "1250d51f46a1c0b3885ef221897d958a2f21df824cc5458be55dd41c1fb9489d",
+  "size": 1133107,
+  "checked": "2026-11-17"
  },
  "ezpay-api-document": {
   "sha256": "577220cf81c5fa9e4f3cf731b50114576c40337a5bfeef1f9a9d974cb9dc0137",
@@ -1042,7 +1107,7 @@
  "ezpay-bdv-1-0-0": {
   "sha256": "6acaa4b873be6b752a2bde61f60cf436391037f91c8ff31721aef258b345bc14",
   "size": 331357,
-  "checked": "2026-10-24"
+  "checked": "2026-11-17"
  },
  "ezpay-cross-physical": {
   "sha256": "840338a41b097b98c8cb0abd744c3285de8e056dc53b9fe88035c5ffcd4cbd6b",
@@ -1072,72 +1137,72 @@
  "ezpay-ezp-ces-1-0-0": {
   "sha256": "c13bc8888624c7cc908541950282e3fb662fd59a1998a4da889788ac0907aebc",
   "size": 1953605,
-  "checked": "2026-10-24"
+  "checked": "2026-11-17"
  },
  "ezpay-ezp-invi-1-2-2": {
   "sha256": "1294b9d167e752198c1b657c496d85e2042ad86a9cb81cfd7f5138d5fa727b29",
   "size": 2101145,
-  "checked": "2026-10-24"
+  "checked": "2026-11-17"
  },
  "ezpay-ezp-track-1-0-0": {
   "sha256": "d32475aef8cc00641b2452a096d2b736bafc279a6c3ea2033590bf1da921c15d",
   "size": 1226165,
-  "checked": "2026-10-24"
+  "checked": "2026-11-17"
  },
  "ezpay-ezpay-invoice-by-batch-file-v1-0-3": {
-  "sha256": "eba8eb1bb106bc15fb62a770b3f90f1508894b38bfd1572e5d1f9d61d1bb8c8b",
-  "size": 750252,
-  "checked": "2026-10-24"
+  "sha256": "f8e8d34366aac2a98d756dbf72d0ce2804e0396fc59a0a0208a1a0be4e4c0817",
+  "size": 847911,
+  "checked": "2026-11-17"
  },
  "ezpay-invoice-download": {
   "sha256": "95361a8285d58436f1edf28683043c3b8221e9aaee6b0d6b8a898c4a212b2cf1",
-  "size": 47569,
-  "checked": "2026-10-24"
+  "size": 47595,
+  "checked": "2026-11-17"
  },
  "ezship-about": {
   "sha256": "c0afe0295cf2152e5e194319bc941f8fcba469fa7f26469d54a6de6537f9f881",
   "size": 8533,
-  "checked": "2026-10-24"
+  "checked": "2026-11-17"
  },
  "ezship-doc-1702": {
   "sha256": "eb207e36403bf7bb7717c565722ceed095e6036e4681a221895ed1e02e53182c",
   "size": 13030,
-  "checked": "2026-10-24"
+  "checked": "2026-11-17"
  },
  "ezship-doc-170221": {
   "sha256": "9d4449bdacdc3a0416052907610e639ca3eddcb2c79a2387b2d5fd183e793b43",
   "size": 1071,
-  "checked": "2026-10-24"
+  "checked": "2026-11-17"
  },
  "ezship-doc-2501": {
   "sha256": "dbc0523255ba9beeaaabc47c25adcc753ad1ddf6a2d47d9843fce625fbbf3606",
   "size": 12070,
-  "checked": "2026-10-24"
+  "checked": "2026-11-17"
  },
  "ezship-ezship-status-api": {
   "sha256": "538974550211bc2b920bf3cc66edcc81293fcddca433be7c4408faa0a24fc4ed",
   "size": 59411,
-  "checked": "2026-10-24"
+  "checked": "2026-11-17"
  },
  "ezship-ezship-status-api-byorder": {
   "sha256": "a99ce8b94913860715889a199da906266c120ebffaff7bd4dee09324dbf6da42",
   "size": 112486,
-  "checked": "2026-10-24"
+  "checked": "2026-11-17"
  },
  "ezship-ezship-weborder-httprequest-v15": {
   "sha256": "8d048f88557005dff21c92a23cc456d2e8028d42899d957b8da279bbfd89890d",
   "size": 183374,
-  "checked": "2026-10-24"
+  "checked": "2026-11-17"
  },
  "ezship-ezship-weborder-xml-v15s": {
   "sha256": "2bba56a26b8c27b63fccc8b912653369d41b858f11aa34db4005a014f484c079",
   "size": 196387,
-  "checked": "2026-10-24"
+  "checked": "2026-11-17"
  },
  "fami-famiport": {
   "sha256": "b85617edc608a78b502f048c167953d63ec97ac19a3ad79569047df0141376db",
   "size": 536,
-  "checked": "2026-10-24"
+  "checked": "2026-11-17"
  },
  "gomypay-cashflow-page": {
   "sha256": "be265ada816aeff9d92f98002fb92d74d34c1c4655efc78509a1a23678deb551",
@@ -1151,18 +1216,23 @@
  },
  "gomypay-einvoice-site": {
   "sha256": "4acb11bb7c36e4bc3ec662eb3e29b229ad6a4967b0ec38cae8e49c7aaae6581a",
-  "size": 26386,
-  "checked": "2026-10-24"
+  "size": 26291,
+  "checked": "2026-11-17"
  },
  "gomypay-rate-list": {
   "sha256": "28052e8748cc823e6fafdbff763177b1186b3f8dd898fcb8e31c82ce92043239",
   "size": 109463,
   "checked": "2026-11-17"
  },
+ "hct-edi-wsdl": {
+  "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "size": 45699,
+  "checked": "2026-11-17"
+ },
  "hct-home": {
-  "sha256": "322d2f46fbd673ce1ef11b35fce6780eca24443f47a2ef395511fbfcaf9281b9",
-  "size": 258768,
-  "checked": "2026-10-24"
+  "sha256": "b337d4490e82aaaeedfcae2f5763644598a938b2c137647ac82c49df02e782b6",
+  "size": 257083,
+  "checked": "2026-11-17"
  },
  "jkopay-authorized-payment": {
   "sha256": "17d53bf245040aac8c595d0a67989012815afa621652d4a59912d9f52ee626ac",
@@ -1230,29 +1300,29 @@
   "checked": "2026-10-24"
  },
  "kerrytj-checking": {
-  "sha256": "b7912fa71d3d9daf3ea91e3127a5180a73ada2d3ce02c5078dc88843f0f3c2c7",
-  "size": 26753,
-  "checked": "2026-10-24"
+  "sha256": "e314d67c8a2db0ef96fc467aaf50dadb1290ce7f5de7e2ddda8f274b0b4a72b5",
+  "size": 24162,
+  "checked": "2026-11-17"
  },
  "lalamove-api-examples": {
   "sha256": "c28cd98a78c5935a8cb4970c52ed468586947e964a8ce373dfd1bc635eb59045",
   "size": 13200,
-  "checked": "2026-10-24"
+  "checked": "2026-11-17"
  },
  "lalamove-api-reference": {
   "sha256": "d2cadc89940a7d32b5d3ce4e2c1cc71f5d6e1b1033d1a79120ee42fc3771abf4",
   "size": 173814,
-  "checked": "2026-10-24"
+  "checked": "2026-11-17"
  },
  "lalamove-tw-api-solutions": {
   "sha256": "e86090ba16e4220c70c6f82bacd06221410605d5c52d2157273e8502da4228ad",
   "size": 85292,
-  "checked": "2026-10-24"
+  "checked": "2026-11-17"
  },
  "lalamove-tw-faq": {
   "sha256": "d21435d82cf5c8f3fd3193b0b82ac04006ecf4ff0e7dea878963456ec5ca7abe",
-  "size": 409624,
-  "checked": "2026-10-24"
+  "size": 409665,
+  "checked": "2026-11-17"
  },
  "linepay-api-change-log": {
   "sha256": "957f78cd782d435fb5d8a8f2ce978db3300979ce6d5e504d1f1c9b11cffada72",
@@ -1324,30 +1394,45 @@
   "size": 61205,
   "checked": "2026-11-17"
  },
+ "mof-download-business": {
+  "sha256": "e6aa39cf0c4a041a8527cb04afb2062be4389b52c90f7ef051dd27610b9f3c16",
+  "size": 3376,
+  "checked": "2026-11-17"
+ },
  "mof-einvoice-api-spec-v1-9": {
   "sha256": "c777ceb00f80abc210e36beba0c11f1cbdfa290058afe30d98a332c1b6f444f4",
   "size": 982524,
-  "checked": "2026-10-24"
+  "checked": "2026-11-17"
+ },
+ "mof-einvoice-api-spec-v2-1": {
+  "sha256": "d421fec0a3a7a5963f8f1130572b8a75754558b08a991756c385af88f7006878",
+  "size": 615605,
+  "checked": "2026-11-17"
+ },
+ "mof-einvoice-biz-api-spec-v1-9": {
+  "sha256": "59e1c5b98daa418340f73f3397551e6491d9f9e4487ff8e259cac63f72e771a0",
+  "size": 673915,
+  "checked": "2026-11-17"
  },
  "mof-open-data-api": {
   "sha256": "ddf21e2104abf1bf1467129c2e8c6d15e4a4b93e2a827a8144f7584685a2b961",
   "size": 1316,
-  "checked": "2026-10-24"
+  "checked": "2026-11-17"
  },
  "mof-portal": {
   "sha256": "ddf21e2104abf1bf1467129c2e8c6d15e4a4b93e2a827a8144f7584685a2b961",
   "size": 1379,
-  "checked": "2026-10-24"
+  "checked": "2026-11-17"
  },
  "mof-vac-list": {
   "sha256": "ddf21e2104abf1bf1467129c2e8c6d15e4a4b93e2a827a8144f7584685a2b961",
   "size": 1379,
-  "checked": "2026-10-24"
+  "checked": "2026-11-17"
  },
  "mof-vac-list-pdf": {
   "sha256": "22cce47bebbeb1911e0791571b8fc31f839a0ec21df8157f50d9134b313f9016",
   "size": 262601,
-  "checked": "2026-10-24"
+  "checked": "2026-11-17"
  },
  "newebpay-download-api": {
   "sha256": "941764fd3c184120eae919da7cebec83c7d57d1374fdb9ec8972bac2ef4b1f22",
@@ -1367,12 +1452,12 @@
  "newebpay-ndns": {
   "sha256": "7a3d781b48f75638e9eab2231427775af7ca28fa383240623fe906839e44bd6a",
   "size": 1344446,
-  "checked": "2026-10-24"
+  "checked": "2026-11-17"
  },
  "newebpay-ndns-sample": {
   "sha256": "de16d15415556b5219ab5a54ae156d76027210d62a39870fe44a25089aa1efbf",
   "size": 2079719,
-  "checked": "2026-10-24"
+  "checked": "2026-11-17"
  },
  "newebpay-woocommerce-plugin": {
   "sha256": "33555972ca2394fbd7898cf8e4768322db8e8ab10dc2ce0f4c677894fc13f435",
@@ -1387,7 +1472,7 @@
  "opay-einvoice-manual": {
   "sha256": "79066554a417f94df79f3af589eb6f0ad3d4f180927f8fc34fe18bb716144203",
   "size": 5231863,
-  "checked": "2026-10-24"
+  "checked": "2026-11-17"
  },
  "opay-o-pay-011": {
   "sha256": "473b0d0330a09f750e47f701b75681e2bb17c57eb0a480f49f04fa1f2ffed370",
@@ -1477,17 +1562,17 @@
  "opay-opay-i100": {
   "sha256": "c6f87e18cea9d2921435131c615bebef72dcc0a7d2522c559d4fe39832a8dcb8",
   "size": 3307661,
-  "checked": "2026-10-24"
+  "checked": "2026-11-17"
  },
  "opay-opay-i200": {
   "sha256": "82de730079228a6480508254d00c3f7dd9bd5e8f28aea18e2a911d0b59e50293",
   "size": 2779372,
-  "checked": "2026-10-24"
+  "checked": "2026-11-17"
  },
  "opay-opay-i301": {
   "sha256": "874c839b992ae2e2b82f1ea2f33da6ebcf68ad3ba2463dc10363a2fc16060293",
   "size": 1376122,
-  "checked": "2026-10-24"
+  "checked": "2026-11-17"
  },
  "opay-sdk-php-github": {
   "sha256": "3a4a265029918023aa6bec7b39d7b722107a782bb936a1efe2eeb33c1d29147a",
@@ -1496,18 +1581,18 @@
  },
  "pandago-odr-docs": {
   "sha256": "f2dbfda9e8f53d01f8343e00af54365cdf9e192f1d327d80fa124a4c40ae1cf4",
-  "size": 787256,
-  "checked": "2026-10-24"
+  "size": 787562,
+  "checked": "2026-11-17"
  },
  "pandago-tw": {
   "sha256": "b4840f35a9deadae9f05e3c9c89b62612651801cdfc1923f6734f1d5cccae924",
   "size": 1788,
-  "checked": "2026-10-24"
+  "checked": "2026-11-17"
  },
  "pandago-vendor-tw": {
   "sha256": "27b5ee005712762a112451c0034168a82bc3280c8e8e27608708347866addcc9",
   "size": 113302,
-  "checked": "2026-10-24"
+  "checked": "2026-11-17"
  },
  "paynow-apidoc-api-external": {
   "sha256": "76263bbf82f714bce09adb937a4e5ed45e34e432425f70a61e27dd3de7cd732e",
@@ -1657,122 +1742,122 @@
  "paynow-invoice-allowance": {
   "sha256": "5d365e38c71c0e4127281fa6c90295ae97f1c2e00f881aca9120a50f7b7bd9be",
   "size": 1633,
-  "checked": "2026-10-24"
+  "checked": "2026-11-17"
  },
  "paynow-invoice-allowance-void": {
   "sha256": "74ad91b2c8f0205d31c472d6205bd4e0a66153e3a42a0e1ed375bf1a7a8ea3ee",
   "size": 1133,
-  "checked": "2026-10-24"
+  "checked": "2026-11-17"
  },
  "paynow-invoice-external": {
   "sha256": "519eace61ef345272f572931e0ce8f3f7b07baea12180b74fd9feac9a3296405",
   "size": 350,
-  "checked": "2026-10-24"
+  "checked": "2026-11-17"
  },
  "paynow-invoice-issue": {
   "sha256": "f7fc032fc60bd4638ca997fa26aac3543b2f1da8993de6d499d6d47042eb473b",
   "size": 5411,
-  "checked": "2026-10-24"
+  "checked": "2026-11-17"
  },
  "paynow-invoice-overview": {
   "sha256": "c0e26da74f98fd145933133a8808ba5abe76d98ba5ae2084de01c763731999f2",
   "size": 1776,
-  "checked": "2026-10-24"
+  "checked": "2026-11-17"
  },
  "paynow-invoice-pos-issue": {
   "sha256": "8b98b76718bff19ce8020fe0bd113ec185220af4d9c0574d6f82688a5212f691",
   "size": 5633,
-  "checked": "2026-10-24"
+  "checked": "2026-11-17"
  },
  "paynow-invoice-pos-numbers": {
   "sha256": "f9ef9595a53ba8038fedef49ccf51bdd48de1e1e3d413312ba5444f83ee1df5a",
   "size": 1213,
-  "checked": "2026-10-24"
+  "checked": "2026-11-17"
  },
  "paynow-invoice-query": {
   "sha256": "23a5926d3f28ad0523cca0c94303c0466478bfa64cf372e494d86ab1dfa61bff",
   "size": 961,
-  "checked": "2026-10-24"
+  "checked": "2026-11-17"
  },
  "paynow-invoice-void": {
   "sha256": "8aef7a9d8ce42413bf436fbcd4b1858c8f1325bd5628789e28d4de44904ac0ef",
   "size": 1107,
-  "checked": "2026-10-24"
+  "checked": "2026-11-17"
  },
  "paynow-logistics-711-freezing-bulk-b2c": {
   "sha256": "fed225e22b94a82597e6f0c83fe8895991eb7815cdaa9f52301579c1ae6bcd97",
   "size": 22936,
-  "checked": "2026-10-24"
+  "checked": "2026-11-17"
  },
  "paynow-logistics-711bulk": {
   "sha256": "c731a0dff2101a7706f6cd67451be8330b5125b4ad4e857f74ee6ee16ee221ea",
   "size": 22560,
-  "checked": "2026-10-24"
+  "checked": "2026-11-17"
  },
  "paynow-logistics-711freezingc2c": {
   "sha256": "db729aaab99a4d92e616396546c39be26782b53a07064aef5e58c4a6bfe7b47f",
   "size": 16535,
-  "checked": "2026-10-24"
+  "checked": "2026-11-17"
  },
  "paynow-logistics-711over-sea": {
   "sha256": "d9ee0bad133dfc2574bd4da2c6777017d215ebe1a7589e3bdfb7c7868dd1328b",
   "size": 27661,
-  "checked": "2026-10-24"
+  "checked": "2026-11-17"
  },
  "paynow-logistics-appendix": {
   "sha256": "6d0298ef1dcc620c872cd8450e0984e2653c15835367de07aae3d5387764fcf9",
   "size": 2761,
-  "checked": "2026-10-24"
+  "checked": "2026-11-17"
  },
  "paynow-logistics-authentication": {
   "sha256": "50b7bb191a98d1460756acd185d11b58dcb93333d93cbc7c026f917685855dc6",
   "size": 2186,
-  "checked": "2026-10-24"
+  "checked": "2026-11-17"
  },
  "paynow-logistics-blackcat-to-store": {
   "sha256": "0359829e36b5f923705edb33059a97b5b5b099ec7458ae5545f5a0949e37a054",
   "size": 13980,
-  "checked": "2026-10-24"
+  "checked": "2026-11-17"
  },
  "paynow-logistics-blackcate-home-delivery": {
   "sha256": "9d6bf31dfd619c78cabc90f73eeea6381da38d86b9815ab461f1341f6085bce4",
   "size": 17404,
-  "checked": "2026-10-24"
+  "checked": "2026-11-17"
  },
  "paynow-logistics-famibulk": {
   "sha256": "8d081b5528fe84d814e43550c471afb9d946c39c2df0fcae02577dfbdf06a408",
   "size": 18482,
-  "checked": "2026-10-24"
+  "checked": "2026-11-17"
  },
  "paynow-logistics-famifreezingbulkb2c": {
   "sha256": "9086ad2d636c006a452514e9f5905c9941efe96b28cd8e07331a319354061bfb",
   "size": 19736,
-  "checked": "2026-10-24"
+  "checked": "2026-11-17"
  },
  "paynow-logistics-famifreezingc2c": {
   "sha256": "09088d96394e3aec9cefa5cea06effbed7817153d0e018fd1303c730864c130a",
   "size": 15187,
-  "checked": "2026-10-24"
+  "checked": "2026-11-17"
  },
  "paynow-logistics-freezing-bulk-b2c": {
   "sha256": "fed225e22b94a82597e6f0c83fe8895991eb7815cdaa9f52301579c1ae6bcd97",
   "size": 22936,
-  "checked": "2026-10-24"
+  "checked": "2026-11-17"
  },
  "paynow-logistics-index": {
   "sha256": "4bc20c31b1a128125ee137afe344d2d4c74770cabdc303d75940fe83879980bd",
   "size": 442,
-  "checked": "2026-10-24"
+  "checked": "2026-11-17"
  },
  "paynow-logistics-supermarketc2c": {
   "sha256": "b8ce379b35866e325e20e2684366041cf9caa5a2735fc1ef7262a072ef0cbb06",
   "size": 19326,
-  "checked": "2026-10-24"
+  "checked": "2026-11-17"
  },
  "paynow-owlting-guideline": {
   "sha256": "c623cbda8a5f952b06122b2c1f0bed2a035b439fcbfee95f44db7dd93f9dee52",
   "size": 3899,
-  "checked": "2026-10-24"
+  "checked": "2026-11-17"
  },
  "paynow-partner-merchants": {
   "sha256": "6170aea6e16edccb98596778b96f19fd6c9ed7b6812b2c7f85805aa4f3f11343",
@@ -1987,27 +2072,27 @@
  "payuni-page-103": {
   "sha256": "83f50cb843e3040718003e10a3392ef9d23c9d57833cded411a16547c39cc147",
   "size": 9460,
-  "checked": "2026-10-24"
+  "checked": "2026-11-17"
  },
  "payuni-page-119": {
   "sha256": "14b4a9861f4f6eb96646ca3de8162e35208d9e0279b5237363c50d557efab286",
   "size": 44741,
-  "checked": "2026-10-24"
+  "checked": "2026-11-17"
  },
  "payuni-page-120": {
   "sha256": "250f23a2ae53e333c8df1e1a700b4004498197733eb74501a3f1443695bda60c",
   "size": 4751,
-  "checked": "2026-10-24"
+  "checked": "2026-11-17"
  },
  "payuni-page-123": {
   "sha256": "197947fa17daecd8281662a374b6975a80db2d00356eab83a66564dff3e72611",
   "size": 6042,
-  "checked": "2026-10-24"
+  "checked": "2026-11-17"
  },
  "payuni-page-124": {
   "sha256": "50eb562cc3d5575a5383f87e02664edb8829a0f6032c824a9c977deee22410b0",
   "size": 11873,
-  "checked": "2026-10-24"
+  "checked": "2026-11-17"
  },
  "payuni-page-153": {
   "sha256": "d1162e8afb4c53c738a61976fe8e97cb8e542b49f2d65dcf48028092b6b7c10c",
@@ -2042,17 +2127,17 @@
  "payuni-page-269": {
   "sha256": "4f93fabf1364b69626b61dc87541379d97b4768e89f73c002953e0509097465e",
   "size": 4809,
-  "checked": "2026-10-24"
+  "checked": "2026-11-17"
  },
  "payuni-page-270": {
   "sha256": "43e7b1f087592ab637220ebef9a2ddeb783a2523e90a5ad317a499dfe9405882",
   "size": 4492,
-  "checked": "2026-10-24"
+  "checked": "2026-11-17"
  },
  "payuni-page-274": {
   "sha256": "7a7c6216152b9be76a96c5e3c7449c548ac8e5d4bb51fbf7da9f86346d76b706",
   "size": 2925,
-  "checked": "2026-10-24"
+  "checked": "2026-11-17"
  },
  "payuni-page-29": {
   "sha256": "730da48b30a55fc4d4a637a04f484629f56ba26ed77960504dfbfe8518ee33c6",
@@ -2062,7 +2147,7 @@
  "payuni-page-291": {
   "sha256": "58e7456c480383b1118f9a72668d3efd80c80293d868a262ab107834ed440c3f",
   "size": 5290,
-  "checked": "2026-10-24"
+  "checked": "2026-11-17"
  },
  "payuni-page-300": {
   "sha256": "20afba05b7272ecc8deb057cbe99290f2c11fc8e069fb268b248af76341824a1",
@@ -2226,7 +2311,7 @@
  },
  "payuni-php-sdk": {
   "sha256": "3c96375fadf194536ecd0809f819ff04d28b4a173a6b515980a10075438a7e9d",
-  "size": 232382,
+  "size": 232387,
   "checked": "2026-11-17"
  },
  "payuni-showdoc-index": {
@@ -2242,7 +2327,7 @@
  "pchomepay-api-doc-logistics": {
   "sha256": "402db2f9162b880b14fc8e28cacd605173b2c8aa6dc2b679b7d8bee1a053cf05",
   "size": 61340,
-  "checked": "2026-10-24"
+  "checked": "2026-11-17"
  },
  "pchomepay-api-setting": {
   "sha256": "73cebb8a1704b13de1ca7b73d773116cb8263f04aebc0aa28f57fb2cd5a84e60",
@@ -2251,7 +2336,7 @@
  },
  "pchomepay-plugins": {
   "sha256": "d9a69af91a9ffb9289019fd99c59b5a0f8f7989e45fb7c0369a82b5a6b609301",
-  "size": 156932,
+  "size": 156933,
   "checked": "2026-11-17"
  },
  "pchomepay-refund-faq": {
@@ -2262,7 +2347,7 @@
  "pchomepay-woo-guide": {
   "sha256": "b5bd6ee95799f378cd9931d4e75023fdd8e486e05f4f884ed7b2ad16c42db5ba",
   "size": 5091,
-  "checked": "2026-10-24"
+  "checked": "2026-11-17"
  },
  "pchomepay-woo-plugin-repo": {
   "sha256": "b4a53221ce07e1078a6f26b8834613ab73be924b99a95500a71e06e2b2e7b6c5",
@@ -2276,13 +2361,18 @@
  },
  "pelican-home": {
   "sha256": "1159c40ac25ac61fbfc4bdea04e3ea4ceb639c4bd59da4ec73cfc849630b341b",
-  "size": 45587,
-  "checked": "2026-10-24"
+  "size": 45558,
+  "checked": "2026-11-17"
+ },
+ "post-api-spec-hardware": {
+  "sha256": "179867e4cb113c5d57ca20b77b02315c67b620ba9800905118ac3f7b2fe0b45f",
+  "size": 189016,
+  "checked": "2026-11-17"
  },
  "post-open-api-notice": {
   "sha256": "e6c03e8d8481a2d9d86d5c9ba44793abe2d42a201e79e70e1c3202aad6154b2b",
-  "size": 174077,
-  "checked": "2026-10-24"
+  "size": 174349,
+  "checked": "2026-11-17"
  },
  "shopline-api-event": {
   "sha256": "9c293cd6d4c4cf10a09d1665802afa3eb3e157f028fb62836226b5727eed5969",
@@ -2397,7 +2487,7 @@
  "smilepay-home": {
   "sha256": "fc6ff2a271a5e0a2e22df8159c1109225b75796f64df41dc13b8b19b2174ac6a",
   "size": 25429,
-  "checked": "2026-10-24"
+  "checked": "2026-11-17"
  },
  "smilepay-test-card-page": {
   "sha256": "fe9874e002c07cf98996a9aa92592eefa9b3a6a82084298a5c4901c6163bf9c5",
@@ -2412,12 +2502,12 @@
  "sunpay-einvoice-manual-v2-3": {
   "sha256": "aae3030ba100be933e882fc99818385c02f860a23e7b96f425902813f3731ef5",
   "size": 1089370,
-  "checked": "2026-10-24"
+  "checked": "2026-11-17"
  },
  "sunpay-einvoice-skill-v2-3": {
-  "sha256": "b10e43eb79336af2ac964ec860332af4fa694c0b350242f87ed20ca90fa97a10",
-  "size": 8327,
-  "checked": "2026-10-24"
+  "sha256": "222c67492d2843e466a16861da37e42ce00a8dc3c8ad332387c62e71912fd8fe",
+  "size": 8170,
+  "checked": "2026-11-17"
  },
  "sunpay-esafe-doc": {
   "sha256": "c0344a33744ac18946a6e3048f74c59ca531f9b075efc2fb0466dc53e108bebd",
@@ -2430,8 +2520,8 @@
   "checked": "2026-11-17"
  },
  "sunpay-payment-manual": {
-  "sha256": "850e9c01f3c2bd0abc6d92894b15872c6c22eaf809f8fcf4ff6e24afa7f1e33c",
-  "size": 1772779,
+  "sha256": "13dbccf456a868923592163b9f651d13213e8b0e141da30ead156c402986f4c7",
+  "size": 1772763,
   "checked": "2026-11-17"
  },
  "sunpay-payment-skill": {
@@ -2527,17 +2617,17 @@
  "tcat-ezcat": {
   "sha256": "53eb1e2abd4d94bcf7406a553a45cd32a80a780118b87e9ad19d81be257b3e2b",
   "size": 21362,
-  "checked": "2026-10-24"
+  "checked": "2026-11-17"
  },
  "tradevan-einvoice": {
   "sha256": "b59c22dcf182f23bb844ff5f469fd017fa83d5e7132829e8c7a03cc1cdc26719",
-  "size": 98062,
-  "checked": "2026-10-24"
+  "size": 98133,
+  "checked": "2026-11-17"
  },
  "tradevan-neinv": {
   "sha256": "cfb069d6eecd960528f0e18190c88602236ef215e4f1039db1b2b37b5242bae2",
   "size": 9408,
-  "checked": "2026-10-24"
+  "checked": "2026-11-17"
  },
  "twqr-fisc": {
   "sha256": "72c02e35eed2194a9e23a40edc0417ec20ecbd2975205a54c7ebfc5859549d07",
@@ -2554,14 +2644,19 @@
   "size": 199275,
   "checked": "2026-10-24"
  },
+ "uber-direct-tw-merchants": {
+  "sha256": "894fe7f1279f8b8650dd2c85eff60aadb005573cf9ee6316c8d16ced5614b456",
+  "size": 580535,
+  "checked": "2026-11-17"
+ },
  "unimart-myship": {
   "sha256": "837478adbd538dcba03550a88366dc03c20003191cfda72bc17af3f99c89a0d7",
   "size": 12399,
-  "checked": "2026-10-24"
+  "checked": "2026-11-17"
  },
  "youshop-pricing": {
-  "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-  "size": 89,
-  "checked": "2026-10-24"
+  "sha256": "eabf903cc0da586031bbe1912f16b2fd014eb23251cb3a5064ba18e6eaa82311",
+  "size": 191967,
+  "checked": "2026-11-17"
  }
 }

@@ -13,7 +13,7 @@
 
 - 涵蓋 7 家可開立發票的加值中心（ECPay、SmilePay、Amego、ezPay、PayNow、O'Pay、SunPay），另含財政部電子發票整合服務平台（大平台）的查詢。
 - 讓 Claude 知道每一家的請求格式與加密方式（AES-128-CBC、AES-256-CBC、MD5、JWT），並附可執行的 Python 範例。
-- 用 `scripts/search.py` 離線查詢 408 筆資料：錯誤碼、API 操作、欄位對照、稅額規則、疑難排解、選型建議。
+- 用 `scripts/search.py` 離線查詢 424 筆資料：錯誤碼、API 操作、欄位對照、稅額規則、疑難排解、選型建議。
 - 產生服務骨架（`scripts/generate-invoice-service.py`），並依白話需求推薦加值中心（`scripts/recommend.py`）。
 - 涵蓋 B2C 與 B2B 發票、作廢、折讓、列印、手機條碼載具、捐贈碼、POS 機批次取號。
 

@@ -4,7 +4,8 @@ NewebPay 藍新物流 CVS 超商物流 Python 完整範例
 
 支援: C2C 店到店 (7-11, 全家, 萊爾富, OK)、B2C 大宗寄倉
 
-API 文件: https://www.newebpay.com
+API 文件: 物流服務技術串接手冊 NDNS 1.0.0
+https://www.newebpay.com/website/Page/download_file?name=%E7%89%A9%E6%B5%81%E6%9C%8D%E5%8B%99%E6%8A%80%E8%A1%93%E4%B8%B2%E6%8E%A5%E6%89%8B%E5%86%8A_NDNSv1.0.0.pdf
 """
 
 import json
@@ -45,34 +46,30 @@ def strip_padding(data: bytes) -> bytes:
 
 @dataclass
 class CVSShipmentData:
-    """CVS 超商物流訂單資料"""
+    """建立物流寄貨單（NPA-B52）資料"""
     merchant_order_no: str
+    trade_type: Literal[1, 3]          # 1=超商取貨付款, 3=超商取貨不付款
+    user_name: str                     # 取件人姓名 Varchar(20)
+    user_tel: str                      # 取件人手機 Varchar(10)
+    user_email: str                    # 取件人信箱 Varchar(50)
+    store_id: str                      # 門市地圖回傳的 StoreID
+    amt: int                           # 交易金額，上限 20000
     lgs_type: Literal['B2C', 'C2C']
-    ship_type: Literal['1', '2', '3', '4']  # 1=7-11, 2=FamilyMart, 3=Hi-Life, 4=OK
-    receiver_store_code: str
-    receiver_name: str
-    receiver_cell_phone: str
-    receiver_tel: Optional[str] = None
-    goods_amount: int = 0
-    goods_name: str = ''
-    sender_name: Optional[str] = None
-    sender_cell_phone: Optional[str] = None
-    is_collection: Literal['Y', 'N'] = 'N'
-    collection_amount: int = 0
-    note: Optional[str] = None
+    ship_type: Literal['1', '2', '3', '4']  # 1=7-11, 2=全家, 3=萊爾富, 4=OK
+    notify_url: Optional[str] = None
+    item_desc: Optional[str] = None
 
 
 @dataclass
 class CVSShipmentResponse:
-    """CVS 超商物流訂單回應"""
+    """建立物流寄貨單回應"""
     success: bool
     status: str
     message: str
     merchant_order_no: str
-    logistics_no: Optional[str] = None
-    cvs_payment_no: Optional[str] = None
-    cvs_validation_no: Optional[str] = None
-    booking_note: Optional[str] = None
+    trade_no: Optional[str] = None
+    store_id: Optional[str] = None
+    amt: Optional[int] = None
     raw: Dict = field(default_factory=dict)
 
 
@@ -118,7 +115,7 @@ class NewebPayCVSLogistics:
     - B2C: 大宗寄倉 (僅 7-11)
 
     測試環境:
-    - 需至藍新金流申請測試帳號
+    - 至 https://cwww.newebpay.com/ 註冊測試商店，後台取得 HashKey / HashIV
     - API URL: https://ccore.newebpay.com/API/Logistic
     """
 
@@ -334,49 +331,42 @@ class NewebPayCVSLogistics:
         Example:
             >>> shipment_data = CVSShipmentData(
             ...     merchant_order_no='SHIP123',
+            ...     trade_type=3,
+            ...     user_name='王小明',
+            ...     user_tel='0912345678',
+            ...     user_email='buyer@example.com',
+            ...     store_id='123456',
+            ...     amt=500,
             ...     lgs_type='C2C',
             ...     ship_type='1',
-            ...     receiver_store_code='123456',
-            ...     receiver_name='王小明',
-            ...     receiver_cell_phone='0912345678',
-            ...     goods_amount=500,
-            ...     goods_name='測試商品',
-            ...     is_collection='N',
+            ...     item_desc='測試商品',
             ... )
             >>> result = service.create_shipment(shipment_data)
-            >>> print(result.logistics_no)
+            >>> print(result.trade_no)
         """
         # 參數驗證
         if len(data.merchant_order_no) > 30:
             raise ValueError('訂單編號不可超過 30 字元')
+        if data.amt > 20000:
+            raise ValueError('金額上限 20000 元（錯誤碼 2103／2104）')
 
-        # 準備加密資料
+        # 準備加密資料（NDNS 5.2 EncryptData_ 內含參數）
         encrypt_data_obj = {
             'MerchantOrderNo': data.merchant_order_no,
+            'TradeType': data.trade_type,
+            'UserName': data.user_name,
+            'UserTel': data.user_tel,
+            'UserEmail': data.user_email,
+            'StoreID': data.store_id,
+            'Amt': data.amt,
             'LgsType': data.lgs_type,
             'ShipType': data.ship_type,
-            'ReceiverStoreCode': data.receiver_store_code,
-            'ReceiverName': data.receiver_name,
-            'ReceiverCellPhone': data.receiver_cell_phone,
             'TimeStamp': str(int(time.time())),
         }
-
-        # 可選參數
-        if data.receiver_tel:
-            encrypt_data_obj['ReceiverTel'] = data.receiver_tel
-        if data.goods_amount:
-            encrypt_data_obj['GoodsAmount'] = data.goods_amount
-        if data.goods_name:
-            encrypt_data_obj['GoodsName'] = data.goods_name
-        if data.sender_name:
-            encrypt_data_obj['SenderName'] = data.sender_name
-        if data.sender_cell_phone:
-            encrypt_data_obj['SenderCellPhone'] = data.sender_cell_phone
-        if data.is_collection == 'Y':
-            encrypt_data_obj['IsCollection'] = 'Y'
-            encrypt_data_obj['CollectionAmount'] = data.collection_amount
-        if data.note:
-            encrypt_data_obj['Note'] = data.note
+        if data.notify_url:
+            encrypt_data_obj['NotifyURL'] = data.notify_url
+        if data.item_desc:
+            encrypt_data_obj['ItemDesc'] = data.item_desc
 
         # JSON 序列化並加密
         json_str = json.dumps(encrypt_data_obj, ensure_ascii=False)
@@ -442,10 +432,9 @@ class NewebPayCVSLogistics:
             status=result.get('Status', ''),
             message=result.get('Message', ''),
             merchant_order_no=data.merchant_order_no,
-            logistics_no=decrypted.get('LogisticsNo'),
-            cvs_payment_no=decrypted.get('CVSPaymentNo'),
-            cvs_validation_no=decrypted.get('CVSValidationNo'),
-            booking_note=decrypted.get('BookingNote'),
+            trade_no=decrypted.get('TradeNo'),
+            store_id=decrypted.get('StoreID'),
+            amt=decrypted.get('Amt'),
             raw=result,
         )
 
@@ -503,16 +492,15 @@ if __name__ == '__main__':
 
     shipment_data = CVSShipmentData(
         merchant_order_no=f'SHIP{int(time.time())}',
+        trade_type=3,  # 3=超商取貨不付款
+        user_name='王小明',
+        user_tel='0912345678',
+        user_email='buyer@example.com',
+        store_id='123456',  # 門市地圖回傳的 StoreID
+        amt=500,
         lgs_type='C2C',
         ship_type='1',  # 7-ELEVEN
-        receiver_store_code='123456',  # 收件門市代號 (從電子地圖取得)
-        receiver_name='王小明',
-        receiver_cell_phone='0912345678',
-        goods_amount=500,
-        goods_name='測試商品',
-        sender_name='賣家',
-        sender_cell_phone='0987654321',
-        is_collection='N',  # 不代收貨款
+        item_desc='測試商品',
     )
 
     try:
@@ -521,10 +509,9 @@ if __name__ == '__main__':
         if result.success:
             print(f'✓ 物流訂單建立成功')
             print(f'  訂單編號: {result.merchant_order_no}')
-            print(f'  物流編號: {result.logistics_no}')
-            print(f'  寄貨編號: {result.cvs_payment_no}')
-            print(f'  驗證碼: {result.cvs_validation_no}')
-            print(f'  托運單號: {result.booking_note}')
+            print(f'  藍新交易序號 TradeNo: {result.trade_no}')
+            print(f'  取件門市 StoreID: {result.store_id}')
+            print('  寄件代碼 LgsNo／StorePrintNo 要再呼叫 /getShipmentNo 取得')
         else:
             print(f'✗ 物流訂單建立失敗')
             print(f'  狀態: {result.status}')

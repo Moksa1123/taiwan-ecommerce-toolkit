@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """
-PChomePay 拍錢包物流 Python 範例
+PChomePay支付連物流 Python 範例
 
-PChomePay 物流走 7-11 / 全家 / 萊爾富 / OK 四大超商，金物流二合一設計。
+PChomePay 物流走 7-11 / 全家 / 萊爾富超商取貨付款（pay_type IPL7 / IPLFM / IPLHL），物流單由金流訂單派生。
 
 支援:
 - 取號列印交寄單 (/v1/logistic/batch)
@@ -11,7 +11,7 @@ PChomePay 物流走 7-11 / 全家 / 萊爾富 / OK 四大超商，金物流二�
 - 物流手續費對帳 (/v1/logistic/accounting/{date} - NDJSON 格式)
 - 賠款入帳查詢 (/v1/logistic/compensation/{date})
 
-Notify IP 白名單: 113.196.231.190（必加）
+Notify 來源 IP: 113.196.231.190（有防火牆時加入白名單）；Notify 須 3 秒內回純文字 success
 
 API 文件: 參見 references/pchomepay-logistics-api.md
 
@@ -67,7 +67,7 @@ class PChomePayLogisticService:
     SANDBOX_BASE = 'https://sandbox-api.pchomepay.com.tw'
     PROD_BASE = 'https://api.pchomepay.com.tw'
 
-    NOTIFY_IP = '113.196.231.190'  # 白名單必加
+    NOTIFY_IP = '113.196.231.190'  # Notify 來源 IP
 
     def __init__(self, app_id: str, secret: str, is_test: bool = True):
         self.app_id = app_id

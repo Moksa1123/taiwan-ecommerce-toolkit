@@ -2,8 +2,8 @@
 
 統一金流 (PAYUNi) 物流：7-ELEVEN 大宗寄倉 (B2C)／店到店 (C2C)、黑貓宅配 (HOME)；退貨便 (C2B) 僅能查詢與接收貨態，要號 API 已移除。
 
-來源：PAYUNi 官方文件 <https://docs.payuni.com.tw/web/#/7>（物流工具、Notify、物流貨態狀態碼 120、物流錯誤代碼 119）。
-加解密另以官方外掛 PAYUNi_for_WooCommerce 1.2.8 與官方 PHP SDK 逐位元組比對（`tests/vectors/payuni.json`）。
+來源：PAYUNi 官方文件 <https://docs.payuni.com.tw/web/#/7>（頁碼即網址 `#/7/{page}`：UPP 34、ATM 36、CVS 37、信用卡 Token 522、門市地圖 103、出貨單列印 123、物流單查詢 124、黑貓 269／270、超商貨態 Notify 291、黑貓貨態 Notify 274、物流貨態狀態碼 120、物流錯誤代碼 119、修改記錄 25）。
+加解密另以官方外掛 PAYUNi_for_WooCommerce 1.2.8 與官方 PHP SDK 逐位元組比對（`tests/vectors/payuni.json`；1.2.9 的 `Encrypt`／`Decrypt`／`HashInfo` 與 1.2.8 相同）。
 
 ---
 
@@ -155,17 +155,20 @@ EncryptInfo 加入：
 | 欄位 | 說明 |
 |------|------|
 | `ShipTag` | `1` = 啟用物流（含取貨不付款與取貨付款） |
-| `Ship` | `1` = 取貨付款；只帶 `Ship=1` 不帶 `ShipTag` 時僅有取貨付款 |
+| `Ship` | `1` = 貨到付款（7-ELEVEN 取貨付款；`LgsType=HOME` 時為黑貓宅配到付）；只帶 `Ship=1` 不帶 `ShipTag` 時僅有貨到付款 |
 | `LgsType` | `B2C` 大宗寄倉、`C2C` 店到店、`HOME` 黑貓宅配 |
 | `ShipType` | `1` 7-ELEVEN（B2C／C2C）、`2` 黑貓（HOME） |
 | `GoodsType` | `1` 常溫、`2` 冷凍、`3` 冷藏（僅黑貓） |
-| `Consignee` | 取件人姓名，2–5 個中文字或至少 4 個英文字，超商取件核對身分 |
-| `ConsigneeMobile` | `09` 開頭手機 |
-| `ConsigneeAddress` | 黑貓收件地址，最長 120 |
+| `Consignee` | 取件人姓名，長度 10：最長 5 個中文字、最短 2 個中文字或 4 個英文字，超商取件核對身分 |
+| `ConsigneeMobile` | `09` 開頭手機，半形數字 |
+| `ConsigneeAddress` | 黑貓收件地址，最長 120，縣市＋鄉鎮市區＋路街＋號(＋樓) |
 | `ConsigneeFix`／`ConsigneeMobileFix`／`ConsigneeAddressFix` | `1` = 支付頁不可修改 |
 
-啟用物流（`Ship=1` 或 `ShipTag=1`）時 `LgsType`、`ShipType`、`GoodsType`、`Consignee`、`ConsigneeMobile` 必填。
-回傳 `PaymentType=5`（超商取貨付款）或純取貨時另含 `ShipTradeNo`、`PartnerId`、`ServiceType`、`ShipAmt`、`StoreID`、`StoreName`、`StoreAddr`。
+啟用物流（`Ship=1` 或 `ShipTag=1`）時 `LgsType`、`ShipType`、`GoodsType`、`Consignee`、`ConsigneeMobile` 必填。貨到付款與宅配貨到付款需先在 PAYUNi 平台申請物流審核開通。
+
+回傳依付款方式：
+- `PaymentType=5`（超商取貨付款）或純取貨（`ShipTag=1`）：`PartnerId`（B2C，3 碼）、`ShipTradeNo`、`GoodsType`、`LgsType`、`ShipType`、`ServiceType`（`1` 取貨付款／`3` 取貨不付款）、`ShipAmt`、`StoreID`、`StoreName`、`StoreAddr`、`Consignee`、`ConsigneeMobile`、`ConsigneeMail`
+- `PaymentType=10`（宅配到付）：`TradeType`（固定 `1` 正物流）、`ShipTradeNo`、`GoodsType`、`LgsType=HOME`、`ShipType=2`、`ServiceType`、`ShipAmt`、`Consignee`、`ConsigneeMobile`、`ConsigneeTel`（有帶回 `00-00000000`，沒帶回 `-`）、`ConsigneeAddress`、`DeliveryTimeTag`、`ProductTypeId`（`0001` 一般食品…`0015` 其他）、`ProdDesc`
 
 ### 幕後交易 API（取貨不付款）
 
@@ -174,7 +177,8 @@ EncryptInfo 加入：
 | 欄位 | 說明 |
 |------|------|
 | `ServiceType` | 固定 `3`（取貨不付款） |
-| `Consignee`／`ConsigneeMobile` | 同上 |
+| `Consignee` | 長度 10（中文 5 字、英文 10 字），真實姓名 |
+| `ConsigneeMobile` | 同上 |
 | `LgsType`／`GoodsType`／`ShipType` | 同上 |
 | `StoreID` | 超商（`ShipType=1`）取件門市代碼 |
 | `ConsigneeAddress`、`DeliveryTimeTag` | 黑貓（`ShipType=2`）必填；配達時段 `01` 13 時前、`02` 14–18 時、`04` 不指定 |
@@ -182,8 +186,8 @@ EncryptInfo 加入：
 
 有物流時 `UsrMail` 必填（視為收件人信箱）。
 
-> 官方已於 2026-09-09 移除獨立的「建立超商物流單」「退貨便要號」「店到店物流單轉宅配資料提供」「建立宅配單」「呼叫黑貓」API
-> （修改記錄 page 25），現行只能如上在交易 API 一併建立。第三方外掛 wpbr-payuni-shipping 1.6.4 使用的
+> 官方已於 2026-09-09 移除獨立的「建立超商物流單」「退貨便要號」「店到店物流單轉宅配資料提供」「建立宅配單」「呼叫黑貓」API，
+> 「物流單修改」也一併從目錄移除（修改記錄 page 25），現行只能如上在交易 API 一併建立；改取件門市用門市地圖 `Tag=4`。第三方外掛 wpbr-payuni-shipping 1.6.4 使用的
 > `/logistics/trade`、`/home_delivery/trade` 屬已移除的流程，不要再用。
 
 ---
@@ -222,9 +226,12 @@ EncryptInfo 加入：
 | `TradeType` | 黑貓：`1` 正物流（預設）、`2` 逆物流 |
 | `ReturnOdno` | C2B 必填，12 碼（8 碼退貨便單號 + 4 碼驗證碼） |
 
-回傳：`PartnerId`、`MerTradeNo`、`TradeNo`、`ShipTradeNo`、`Odno`（超商 8 碼／黑貓 12 碼）、`GoodsType`、`LgsType`、`ShipType`、
+`ShipTradeNo` 與 `ReturnOdno` 二擇一。以 `ShipTradeNo` 查詢的回傳：`PartnerId`（黑貓固定 `CAT`）、`MerTradeNo`、`TradeNo`、`ShipTradeNo`、`Odno`（超商 8 碼／黑貓 12 碼）、`GoodsType`、`LgsType`、`ShipType`、
 `ServiceType`、`ShipAmt`、`Consignee`（隱碼）、`ConsigneeMobile`（隱碼）、`ShipStatus`、`PickupStoreType`（貨態 81 時：`1` 取件、`2` 退件門市）、
 `ShipStatusDesc`、`ShipStatusTime`；B2C／C2C 另有 `StoreID`、`StoreName`，C2C 有 `ValidationNo`，黑貓有 `FileNo`（24 小時內有效）、`TradeType`、`ConsigneeAddress`。
+
+以 `ReturnOdno`（C2B 退貨便）查詢的回傳：`PartnerId`、`RefundODNO`(8)、`ValidationNo`(4)、`LgsType=C2B`、`ShipType=1`、
+`ServiceType`（`4` 退貨付款、`5` 退貨不付款）、`TradeAmt`（訂單價值）、`ShipAmt`（退貨付款金額）、`DeadlineDate`（繳費期限）、`ShipStatus`、`ShipStatusDesc`、`ShipStatusTime`。
 
 7-ELEVEN 配送編號：B2C = `PartnerId`(3) + `Odno`(8)；C2C = `Odno`(8) + `ValidationNo`(4)；C2B = `RefundODNO`(8) + `ValidationNo`(4)。
 
@@ -248,7 +255,8 @@ C2C 會跳轉至 7-ELEVEN 列印；B2C 由 PAYUNi 直接顯示。列印成功後
 
 `/home_delivery/get_obt_number_pdf`（Version `1.0`）：`ShipTradeNo`（逗號分隔）、`GoodsType`、`LgsType=HOME`、`ShipType=2`、
 `ShipDate`、`DeliveryDate`（皆 `YYYYMMDD`，須晚於今日且非週日與國定假日）、`Spec`（`1` 60、`2` 90、`3` 120、`4` 150，低溫不支援 150）、
-`HideProdDesc`、`Memo`（≤100 位）。`/home_delivery/download_pdf` 以 `FileNo` 補下載（24 小時內）。
+`HideProdDesc`（`Y`／`N`，預設 `N`）、`Memo`（≤100 位，中文與全形字算 2 位）；選填 `PostType`（`1` 前景）、`PrintType`（固定 `1`）。
+`/home_delivery/download_pdf` 以 `FileNo` 補下載（24 小時內）；可帶 `ShipTradeNo`（逗號分隔）只取檔內特定幾筆。
 
 ---
 
@@ -260,7 +268,7 @@ Notify URL 在 PAYUNi 後台「物流設定」填寫（超商與黑貓各自設�
 |------|-----------|
 | 超商 B2C／C2C | `Status`、`Message`、`MerID`、`PartnerId`、`ShipTradeNo`、`LgsType`、`GoodsType`、`ShipType`、`Odno`（出貨單編號 8 碼；交貨便查詢系統 B2C 11 碼、C2C 12 碼）、`ShipStatus`、`PickupStoreType`（僅 81）、`ShipStatusDesc`、`ShipStatusTime`、`ApiType=ShipStatus` |
 | 退貨便 C2B | 同上，以 `RefundODNO`、`ValidationNo` 取代 `ShipTradeNo` |
-| 黑貓 | `Status`、`Message`、`MerID`、`TradeType`、`ShipTradeNo`、`OBTNumber`、`GoodsType`、`LgsType=HOME`、`ShipType=2`、`FileNo`、`ShipStatus` |
+| 黑貓 | `Status`、`Message`、`MerID`、`TradeType`（`1` 正物流／`2` 逆物流）、`ShipTradeNo`、`OBTNumber`、`GoodsType`、`LgsType=HOME`、`ShipType=2`、`FileNo`、`ShipStatus`、`ShipStatusDesc`、`ShipStatusTime`、`ApiType=ShipStatus` |
 
 ---
 

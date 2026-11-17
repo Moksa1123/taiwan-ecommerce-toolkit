@@ -121,7 +121,7 @@ ezShip 是本 skill 收錄的**唯一非金流商的超商取貨聚合商**。�
 
 **`order_amount` 範圍**：`order_type=1` 代收時，店配 10–10,000、宅配 10–8,000；`order_type=3` 為報值金額（含運費），商務會員 0–4,000、一般會員 0–2,000。
 
-**建單失敗代碼**（回傳於 `order_status`）：`E00` 參數短缺、`E01` 帳號不存在、`E02` 無代收／串接／宅配／店港澳權限、`E03` 無可用輕鬆袋或迷你袋、`E04` 門市有誤、`E05` 金額有誤、`E06` email 格式、`E07` 手機格式、`E08` `order_status` 有誤、`E09` `order_type` 有誤、`E10` `rv_name` 有誤、`E11` `rv_addr` 有誤、`E13` 店港澳無法使用；成功為 `S01`。
+**建單失敗代碼**（回傳於 `order_status`）：`E00` 參數短缺、`E01` 帳號不存在、`E02` 無代收／串接／宅配／店港澳權限、`E03` 無可用輕鬆袋或迷你袋、`E04` 門市有誤、`E05` 金額有誤、`E06` email 格式、`E07` 手機格式、`E08` `order_status` 有誤、`E09` `order_type` 有誤、`E10` `rv_name` 有誤、`E11` `rv_addr` 有誤、`E13` 店港澳無法使用、`E98` 系統發生錯誤無法載入、`E99` 系統錯誤；成功為 `S01`。
 
 > ⚠️ **`rv_name` 超過四個中英文字，超商取貨單會印不完整**，可能導致取貨問題。官方特別提醒。
 > 💡 **港澳配送**（`A11`/`A12`）：ezShip 是本 skill 少數支援港澳店配的聚合商；店港澳只能 `order_type=3`，報值金額商務會員 0–2,500（XML 版欄位定義）。
@@ -143,7 +143,7 @@ ezShip 是本 skill 收錄的**唯一非金流商的超商取貨聚合商**。�
 
 送出：`su_id`、`sn_id`（依店到店編號）或 `order_no`（依訂單編號，≤25）、`rtn_url`、`web_para`。
 
-回傳：`sn_id`、`order_no`（僅依訂單編號查詢）、`order_status`、`webPara`，另有三個時序欄位：
+回傳：`sn_id`、`order_no`（僅依訂單編號查詢）、`order_status`、識別欄位（文件站寫 `webPara`，貨況 PDF 寫 `web_para`，兩種名稱都要能讀），另有三個時序欄位：
 
 | 參數 | 說明 |
 |---|---|
@@ -295,7 +295,7 @@ ezShip 是本 skill 收錄的**唯一非金流商的超商取貨聚合商**。�
 
 **步驟二** `https://www.ezship.com.tw/myezship_label/myezship_order_label_api.jsp` — 取得 PDF 網址
 
-請求 `ezship_id`、`file_id`；回應 `errorCode`、`file_list[].file_url`、`file_count`、`request_id`。每 100 筆切一個檔案，製作約 1 分鐘／百筆。
+請求 `ezship_id`、`file_id`；回應 `errorCode`、`ezship_id`、`file_id`、`file_list[].file_url`、`file_count`、`request_id`（失敗時只有 `errorCode`、`request_id`）。每 100 筆切一個檔案，製作約 1 分鐘／百筆。
 
 | `errorCode` | 意義 |
 |---|---|
@@ -377,7 +377,7 @@ ezShip 是本 skill 收錄的**唯一非金流商的超商取貨聚合商**。�
 - 購物網站串接 — https://www.ezship.com.tw/service_doc/service_home_w18v1.jsp?vDocNo=1702
 - EasyStore 串接說明 — https://support.easystore.co/zh-tw/article/ezship-1mchswf/
 - CYBERBIZ 超商物流教學 — https://www.cyberbiz.io/helpcenter/?p=2524
-- 程式碼說明：連結電子地圖 — `…/2017_service_doc_home.jsp?vDocNo=1702&vDefPage=07`
+- 程式碼說明：連結電子地圖 — https://www.ezship.com.tw/service_doc/service_home_w18v1.jsp?vDocNo=1702&vDefPage=07
 - 程式碼說明：傳送訂單 — `…&vDefPage=08`
 - 貨況串接（依訂單編號查詢）— `…&vDefPage=22`
 - B2C 寄件服務說明 — https://www.ezship.com.tw/service_doc/service_home_w18v1.jsp?vDocNo=2501&vDefPage=19（內容頁 `service_doc/250101_doc.jsp`–`250123_doc.jsp`，2026-09-24 查核）

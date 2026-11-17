@@ -458,6 +458,36 @@
   "notes": "import_invoice_error_codes.py 解析來源"
  },
  {
+  "id": "amego-info-member-carrier",
+  "provider": "amego",
+  "skills": [
+   "invoice"
+  ],
+  "title": "光貿「光貿會員載具規則」頁（info_detail mid=73）",
+  "url": "https://invoice.amego.tw/info_detail?mid=73",
+  "format": "html",
+  "fetch": "get",
+  "access": "public",
+  "covers": [
+   "taiwan-invoice/references/AMEGO_API_REFERENCE.md"
+  ]
+ },
+ {
+  "id": "amego-info-checks",
+  "provider": "amego",
+  "skills": [
+   "invoice"
+  ],
+  "title": "光貿「統一編號、載具、捐贈碼檢查」頁（info_detail mid=74）",
+  "url": "https://invoice.amego.tw/info_detail?mid=74",
+  "format": "html",
+  "fetch": "get",
+  "access": "public",
+  "covers": [
+   "taiwan-invoice/references/AMEGO_API_REFERENCE.md"
+  ]
+ },
+ {
   "id": "ecpay-10075",
   "provider": "ecpay",
   "skills": [
@@ -538,13 +568,16 @@
   "skills": [
    "logistics"
   ],
-  "title": "綠界物流整合 / 更新歷程（查詢 V5 起始日等）",
+  "title": "綠界物流整合 / 更新歷程（查詢 V5 起始日、OK 店到店 2026-07-01 終止等）",
   "url": "https://developers.ecpay.com.tw/36099.md",
   "format": "md",
   "fetch": "get",
   "access": "public",
   "covers": [
-   "taiwan-logistics/references/ecpay-logistics-api.md"
+   "taiwan-logistics/references/ecpay-logistics-api.md",
+   "taiwan-logistics/references/carrier-direct-access.md",
+   "taiwan-logistics/data/logistics-types.csv",
+   "taiwan-logistics/data/providers.csv"
   ]
  },
  {
@@ -1611,7 +1644,7 @@
    "taiwan-payment/data/error-codes.csv",
    "taiwan-payment/references/ecpay-payment-api.md"
   ],
-  "notes": "All Rights Reserved，不可提交進 repo；guides/20-error-codes-reference.md 為 10100058（發票作業逾時）出處；以 git pull 更新；只能讀來交叉驗證，不可複製進 repo；更新以 git clone/pull；guides/20 錯誤碼速查表與官方頁有衝突時以 developers.ecpay.com.tw 為準；All Rights Reserved：只能讀來驗證，不可複製進 repo；以 git pull 取最新，看 commit 是否變動。OK C2C 列印端點 PrintOKMARTC2COrderInfo 目前只見於 guides/06；GitHub repo：更新時以 git clone／pull 比對最新 commit；GitHub repo（https://github.com/ECPay/ecpay-api-skill）：追蹤 master 的 commits Atom feed，只有新 commit 才會變動，repo 頁面的導覽列與星數不再誤報"
+  "notes": "All Rights Reserved，不可提交進 repo；guides/20-error-codes-reference.md 為 10100058（發票作業逾時）出處；以 git pull 更新；只能讀來交叉驗證，不可複製進 repo；更新以 git clone/pull；guides/20 錯誤碼速查表與官方頁有衝突時以 developers.ecpay.com.tw 為準；All Rights Reserved：只能讀來驗證，不可複製進 repo；以 git pull 取最新，看 commit 是否變動。guides/06 仍列 OKMARTC2C 與 PrintOKMARTC2COrderInfo，但開發者網站 /36099 已公告 OK 店到店 2026-07-01 終止，以開發者網站為準；GitHub repo：更新時以 git clone／pull 比對最新 commit；GitHub repo（https://github.com/ECPay/ecpay-api-skill）：追蹤 master 的 commits Atom feed，只有新 commit 才會變動，repo 頁面的導覽列與星數不再誤報"
  },
  {
   "id": "ecpay-api-skill-error-guide",
@@ -3220,7 +3253,8 @@
   "fetch": "get",
   "access": "public",
   "covers": [
-   "taiwan-logistics/data/status-codes.csv"
+   "taiwan-logistics/data/status-codes.csv",
+   "taiwan-logistics/references/ecpay-logistics-api.md"
   ],
   "notes": "301 轉址到 wp-content/uploads/YYYY/MM/logistics_status.xlsx（年月會變，請抓此固定入口並跟隨轉址）；比對時排除「異動歷程」工作表；完整代碼另見後台「物流管理 > 物流貨態代碼查詢」"
  },
@@ -3442,6 +3476,150 @@
   "notes": "綠界官方 AI skill 的 AIO 指南；2026-11-17 仍列永豐 30N，與 developers 網站衝突時以網站為準"
  },
  {
+  "id": "ecpay-invoice-63356",
+  "provider": "ecpay",
+  "skills": [
+   "invoice"
+  ],
+  "title": "《B2C 電子發票介接技術文件》 發送通知 / 取得發票通知方式設定",
+  "url": "https://developers.ecpay.com.tw/63356.md",
+  "format": "md",
+  "fetch": "get",
+  "access": "public",
+  "covers": [
+   "taiwan-invoice/references/ECPAY_API_REFERENCE.md"
+  ],
+  "notes": "綠界開發者網站頁面加 .md 取得 Markdown 版；頁碼即 reference 內的 /NNNN 引用"
+ },
+ {
+  "id": "ecpay-invoice-64067",
+  "provider": "ecpay",
+  "skills": [
+   "invoice"
+  ],
+  "title": "《B2C 電子發票介接技術文件》 發送通知 / 發票通知方式設定",
+  "url": "https://developers.ecpay.com.tw/64067.md",
+  "format": "md",
+  "fetch": "get",
+  "access": "public",
+  "covers": [
+   "taiwan-invoice/references/ECPAY_API_REFERENCE.md"
+  ],
+  "notes": "綠界開發者網站頁面加 .md 取得 Markdown 版；頁碼即 reference 內的 /NNNN 引用"
+ },
+ {
+  "id": "ecpay-invoice-64079",
+  "provider": "ecpay",
+  "skills": [
+   "invoice"
+  ],
+  "title": "《B2C 電子發票介接技術文件》 發送通知 / 取得字軌配號剩餘量提醒設定",
+  "url": "https://developers.ecpay.com.tw/64079.md",
+  "format": "md",
+  "fetch": "get",
+  "access": "public",
+  "covers": [
+   "taiwan-invoice/references/ECPAY_API_REFERENCE.md"
+  ],
+  "notes": "綠界開發者網站頁面加 .md 取得 Markdown 版；頁碼即 reference 內的 /NNNN 引用"
+ },
+ {
+  "id": "ecpay-invoice-64088",
+  "provider": "ecpay",
+  "skills": [
+   "invoice"
+  ],
+  "title": "《B2C 電子發票介接技術文件》 發送通知 / 設定字軌配號剩餘量提醒",
+  "url": "https://developers.ecpay.com.tw/64088.md",
+  "format": "md",
+  "fetch": "get",
+  "access": "public",
+  "covers": [
+   "taiwan-invoice/references/ECPAY_API_REFERENCE.md"
+  ],
+  "notes": "綠界開發者網站頁面加 .md 取得 Markdown 版；頁碼即 reference 內的 /NNNN 引用"
+ },
+ {
+  "id": "ecpay-invoice-64106",
+  "provider": "ecpay",
+  "skills": [
+   "invoice"
+  ],
+  "title": "《B2C 電子發票介接技術文件》 發送通知 / 查詢空白未使用發票",
+  "url": "https://developers.ecpay.com.tw/64106.md",
+  "format": "md",
+  "fetch": "get",
+  "access": "public",
+  "covers": [
+   "taiwan-invoice/references/ECPAY_API_REFERENCE.md"
+  ],
+  "notes": "綠界開發者網站頁面加 .md 取得 Markdown 版；頁碼即 reference 內的 /NNNN 引用"
+ },
+ {
+  "id": "ecpay-invoice-64122",
+  "provider": "ecpay",
+  "skills": [
+   "invoice"
+  ],
+  "title": "《B2C 電子發票介接技術文件》 發送通知 / 設定空白發票是否自動上傳",
+  "url": "https://developers.ecpay.com.tw/64122.md",
+  "format": "md",
+  "fetch": "get",
+  "access": "public",
+  "covers": [
+   "taiwan-invoice/references/ECPAY_API_REFERENCE.md"
+  ],
+  "notes": "綠界開發者網站頁面加 .md 取得 Markdown 版；頁碼即 reference 內的 /NNNN 引用"
+ },
+ {
+  "id": "ecpay-invoice-64133",
+  "provider": "ecpay",
+  "skills": [
+   "invoice"
+  ],
+  "title": "《B2C 電子發票介接技術文件》 發送通知 / 下載空白發票清單",
+  "url": "https://developers.ecpay.com.tw/64133.md",
+  "format": "md",
+  "fetch": "get",
+  "access": "public",
+  "covers": [
+   "taiwan-invoice/references/ECPAY_API_REFERENCE.md"
+  ],
+  "notes": "綠界開發者網站頁面加 .md 取得 Markdown 版；頁碼即 reference 內的 /NNNN 引用"
+ },
+ {
+  "id": "ecpay-invoice-62730",
+  "provider": "ecpay",
+  "skills": [
+   "invoice"
+  ],
+  "title": "《B2B 電子發票 API 技術文件（存證）》 查詢特定多筆發票",
+  "url": "https://developers.ecpay.com.tw/62730.md",
+  "format": "md",
+  "fetch": "get",
+  "access": "public",
+  "covers": [
+   "taiwan-invoice/references/ECPAY_API_REFERENCE.md"
+  ],
+  "notes": "綠界開發者網站頁面加 .md 取得 Markdown 版；頁碼即 reference 內的 /NNNN 引用"
+ },
+ {
+  "id": "ecpay-invoice-66505",
+  "provider": "ecpay",
+  "skills": [
+   "invoice"
+  ],
+  "title": "《B2B 電子發票 API 技術文件（交換）》 查詢特定多筆發票",
+  "url": "https://developers.ecpay.com.tw/66505.md",
+  "format": "md",
+  "fetch": "get",
+  "access": "public",
+  "covers": [
+   "taiwan-invoice/references/ECPAY_API_REFERENCE.md"
+  ],
+  "notes": "綠界開發者網站頁面加 .md 取得 Markdown 版；頁碼即 reference 內的 /NNNN 引用"
+ },
+ {
   "id": "ezpay-api-document",
   "provider": "ezpay",
   "skills": [
@@ -3620,8 +3798,8 @@
   "skills": [
    "invoice"
   ],
-  "title": "《批次開立》ezPay_invoice_by_batch_file 1.0.3",
-  "url": "https://inv.ezpay.com.tw/dw_files/info_api/ezPay_invoice_by_batch_file_V1_0_3.pdf",
+  "title": "《批次開立》ezPay_invoice_by_batch_file 1.0.5",
+  "url": "https://inv.ezpay.com.tw/dw_files/info_api/ezPay_invoice_by_batch_file_V1_0_5_pdf_pdf.pdf",
   "format": "pdf",
   "fetch": "get",
   "access": "public",
@@ -3663,6 +3841,23 @@
   "notes": "第三方付費外掛（RY，非 ezPay 官方，不在 wordpress.org）；只用來交叉比對加密結果，本機副本版本 2.1.5"
  },
  {
+  "id": "ezpay-allowance-void-search-1-0-1",
+  "provider": "ezpay",
+  "skills": [
+   "invoice"
+  ],
+  "title": "《折讓與作廢查詢手冊》標準版 V1.0.1",
+  "url": "https://inv.ezpay.com.tw/dw_files/info_api/ezpay_invoice_allowance_void_manual_standard_V1_0_1.pdf",
+  "format": "pdf",
+  "fetch": "get",
+  "access": "public",
+  "covers": [
+   "taiwan-invoice/references/EZPAY_API_REFERENCE.md",
+   "taiwan-invoice/data/error-codes.csv"
+  ],
+  "notes": "PDF 直連；新版會換檔名，需同時比對下載頁；allowance_search、invoice_invalid_search、allowance_invalid_search 三支查詢 API"
+ },
+ {
   "id": "ezship-about",
   "provider": "ezship",
   "skills": [
@@ -3692,7 +3887,7 @@
    "taiwan-logistics/references/ezship-logistics-api.md",
    "taiwan-logistics/data/providers.csv"
   ],
-  "notes": "Big5 編碼；內容由 service_doc/1702NN_doc.jsp 載入（04–09 參數版、10–16 XML 版、17–18 簡易版、19–22 貨況）"
+  "notes": "UTF-8；內容由 service_doc/1702NN_doc.jsp 載入（04–09 參數版、10–16 XML 版、17–18 簡易版、19–22 貨況）"
  },
  {
   "id": "ezship-doc-170221",
@@ -3708,7 +3903,7 @@
   "covers": [
    "taiwan-logistics/references/ezship-logistics-api.md"
   ],
-  "notes": "Big5；status PDF 只從這頁連出"
+  "notes": "UTF-8；status PDF 只從這頁連出"
  },
  {
   "id": "ezship-doc-2501",
@@ -3725,7 +3920,7 @@
    "taiwan-logistics/references/ezship-logistics-api.md",
    "taiwan-logistics/data/logistics-types.csv"
   ],
-  "notes": "Big5；內容頁 service_doc/250101_doc.jsp–250123_doc.jsp"
+  "notes": "UTF-8；內容頁 service_doc/250101_doc.jsp–250123_doc.jsp"
  },
  {
   "id": "ezship-ezship-status-api",
@@ -3912,6 +4107,26 @@
   "covers": [
    "taiwan-logistics/data/providers.csv"
   ]
+ },
+ {
+  "id": "hct-edi-wsdl",
+  "provider": "hct",
+  "skills": [
+   "logistics"
+  ],
+  "title": "新竹物流 EDI Web Service WSDL（出貨／託運單 SOAP 方法與參數名）",
+  "url": "https://hctrt.hct.com.tw/EDI_WebService2/Service1.asmx?wsdl",
+  "format": "html",
+  "fetch": "get",
+  "access": "public",
+  "covers": [
+   "taiwan-logistics/references/hct-logistics-api.md",
+   "taiwan-logistics/examples/hct-logistics-example.py",
+   "taiwan-logistics/data/operations.csv",
+   "taiwan-logistics/data/field-mappings.csv",
+   "taiwan-logistics/data/providers.csv"
+  ],
+  "notes": "實為 WSDL（XML）；方法名與參數名大小寫以此為準（TransData_Xml、company、sCompany）；規格書 PDF 需向站所申請"
  },
  {
   "id": "hilife-home",
@@ -4485,7 +4700,7 @@
   "skills": [
    "invoice"
   ],
-  "title": "財政部 應用 API 申請（BTC605W）",
+  "title": "財政部 應用 API 申請",
   "url": "https://einvoice.nat.gov.tw/APCONSUMER/BTC605W/",
   "format": "html",
   "fetch": "manual",
@@ -4493,7 +4708,7 @@
   "covers": [
    "taiwan-invoice/references/MOF_EINVOICE_API_REFERENCE.md"
   ],
-  "notes": "AppID／APIKey 需申請"
+  "notes": "AppID／APIKey 需申請；V2.1 p.10 申請路徑：登入 → 電子發票 API 申請 → 電子發票 API 申請"
  },
  {
   "id": "mof-einvoice-api-spec-v1-9",
@@ -4509,7 +4724,7 @@
   "covers": [
    "taiwan-invoice/references/MOF_EINVOICE_API_REFERENCE.md"
   ],
-  "notes": "新版會換附件檔名"
+  "notes": "已過時：2025-04-30 起現行版為 V2.1（見 mof-einvoice-api-spec-v2-1），保留作歷史版本"
  },
  {
   "id": "mof-open-data-api",
@@ -4542,6 +4757,72 @@
    "taiwan-invoice/references/MOF_EINVOICE_API_REFERENCE.md"
   ],
   "notes": "WAF：需帶瀏覽器 User-Agent 與 Accept: text/html、Accept-Language，否則 403（2026-09-24 以此確認 200）"
+ },
+ {
+  "id": "mof-download-business",
+  "provider": "mof",
+  "skills": [
+   "invoice"
+  ],
+  "title": "財政部電子發票整合服務平台 營業人文件下載",
+  "url": "https://www.einvoice.nat.gov.tw/download/ptl003w/AC20000002",
+  "format": "html",
+  "fetch": "browser",
+  "access": "public",
+  "covers": [
+   "taiwan-invoice/references/MOF_EINVOICE_API_REFERENCE.md",
+   "taiwan-invoice/data/operations.csv",
+   "taiwan-invoice/data/providers.csv",
+   "taiwan-invoice/data/carrier-types.csv"
+  ],
+  "notes": "SPA；清單 API：POST https://service-mc.einvoice.nat.gov.tw/ptl/portal/api/ptl003w/getFileDownloadList?fileLanguage=0&categoryId=AC20000002（回 fileSubject、fileId、lastModifiedDate），規格改版看這裡"
+ },
+ {
+  "id": "mof-einvoice-api-spec-v2-1",
+  "provider": "mof",
+  "skills": [
+   "invoice"
+  ],
+  "title": "《電子發票應用 API 規格》V2.1（財政部財政資訊中心，114 年 4 月 23 日）",
+  "url": "https://service-mc.einvoice.nat.gov.tw/ptl/portal/api/ptl003w/ptl003wDownloadFile?fileId=5160&fileExtension=PDF&fileName=",
+  "format": "pdf",
+  "fetch": {
+   "method": "POST",
+   "data": {}
+  },
+  "headers": {
+   "Origin": "https://www.einvoice.nat.gov.tw",
+   "Referer": "https://www.einvoice.nat.gov.tw/"
+  },
+  "access": "public",
+  "covers": [
+   "taiwan-invoice/references/MOF_EINVOICE_API_REFERENCE.md"
+  ],
+  "notes": "營業人文件下載第 4 項；新版會換 fileId，先查 mof-download-business 清單"
+ },
+ {
+  "id": "mof-einvoice-biz-api-spec-v1-9",
+  "provider": "mof",
+  "skills": [
+   "invoice"
+  ],
+  "title": "《電子發票營業人應用 API 規格》V1.9（財政部財政資訊中心，113 年 5 月 31 日）",
+  "url": "https://service-mc.einvoice.nat.gov.tw/ptl/portal/api/ptl003w/ptl003wDownloadFile?fileId=5161&fileExtension=PDF&fileName=",
+  "format": "pdf",
+  "fetch": {
+   "method": "POST",
+   "data": {}
+  },
+  "headers": {
+   "Origin": "https://www.einvoice.nat.gov.tw",
+   "Referer": "https://www.einvoice.nat.gov.tw/"
+  },
+  "access": "public",
+  "covers": [
+   "taiwan-invoice/references/MOF_EINVOICE_API_REFERENCE.md",
+   "taiwan-invoice/data/operations.csv"
+  ],
+  "notes": "營業人文件下載第 8 項；手機條碼驗證 bcv、捐贈碼驗證 preserveCodeCheck 的出處"
  },
  {
   "id": "newebpay-download-api",
@@ -5070,7 +5351,7 @@
    "taiwan-logistics/data/logistics-types.csv",
    "taiwan-logistics/data/field-mappings.csv"
   ],
-  "notes": "redoc；OpenAPI spec 內嵌在頁面 __redoc_state，比對時取 spec 部分"
+  "notes": "redoc；OpenAPI spec 內嵌在頁面 __redoc_state，比對時取 spec 部分；token 端點在 sts.deliveryhero.io／sts-st.deliveryhero.io（path 層級 servers）"
  },
  {
   "id": "pandago-tw",
@@ -5086,7 +5367,7 @@
   "covers": [
    "taiwan-logistics/references/ondemand-delivery.md"
   ],
-  "notes": "2026-09-24 程式與 curl 皆無法連線（Cloudflare 520／連線失敗）；主要內容以 pandago-odr-docs、pandago-vendor-tw 為準"
+  "notes": "2026-11-17 curl 可連線但只回 SPA 外殼（無實質內容），需瀏覽器渲染；主要內容以 pandago-odr-docs、pandago-vendor-tw 為準"
  },
  {
   "id": "pandago-vendor-tw",
@@ -7320,6 +7601,7 @@
   "id": "payuni-page-326",
   "provider": "payuni",
   "skills": [
+   "logistics",
    "payment"
   ],
   "title": "PAYUNi 官方文件：API/交易建立/LINE Pay幕後/Ver 1.2",
@@ -7333,6 +7615,7 @@
   },
   "access": "public",
   "covers": [
+   "taiwan-logistics/references/payuni-logistics-api.md",
    "taiwan-payment/references/payuni-payment-api.md"
   ],
   "json_path": "data.page_content",
@@ -7412,6 +7695,7 @@
   "id": "payuni-page-350",
   "provider": "payuni",
   "skills": [
+   "logistics",
    "payment"
   ],
   "title": "PAYUNi 官方文件：API/交易建立/AFTEE幕後/Ver 1.1",
@@ -7425,6 +7709,7 @@
   },
   "access": "public",
   "covers": [
+   "taiwan-logistics/references/payuni-logistics-api.md",
    "taiwan-payment/references/payuni-payment-api.md"
   ],
   "json_path": "data.page_content",
@@ -7548,6 +7833,7 @@
   "id": "payuni-page-386",
   "provider": "payuni",
   "skills": [
+   "logistics",
    "payment"
   ],
   "title": "PAYUNi 官方文件：API/交易建立/街口支付幕後(JKoPay)/Ver 1.1",
@@ -7561,6 +7847,7 @@
   },
   "access": "public",
   "covers": [
+   "taiwan-logistics/references/payuni-logistics-api.md",
    "taiwan-payment/references/payuni-payment-api.md"
   ],
   "json_path": "data.page_content",
@@ -8243,6 +8530,27 @@
   ]
  },
  {
+  "id": "post-api-spec-hardware",
+  "provider": "post",
+  "skills": [
+   "logistics"
+  ],
+  "title": "中華郵政 API 規格書（郵儲窗口周邊設備，非物流）",
+  "url": "https://www.post.gov.tw/post/internet/Message/index.jsp?ID=15021202",
+  "format": "html",
+  "fetch": "get",
+  "access": "public",
+  "covers": [
+   "taiwan-logistics/references/carrier-direct-access.md"
+  ],
+  "notes": "用來佐證官網「API 規格書」是硬體採購規格，與物流無關",
+  "ignore": [
+   "\\d+ 年 \\d+ 月 \\d+ 日星期.",
+   "\\d+年\\d+月\\d+日星期.",
+   "累計瀏覽人次：[^\n]*"
+  ]
+ },
+ {
   "id": "shopline-api-event",
   "provider": "shopline",
   "skills": [
@@ -8775,7 +9083,7 @@
    "taiwan-payment/data/providers.csv",
    "taiwan-payment/references/sunpay-payment-api.md"
   ],
-  "notes": "新版手冊與 skill 由此頁連出，檔案放 storage.googleapis.com/joinchill-image/sunpay_techdoc/<年月>/；新版手冊、Skill、範例程式的下載連結都在這裡；物流 API 規格目前未公開"
+  "notes": "新版手冊與 skill 由此頁連出，檔案放 storage.googleapis.com/joinchill-image/sunpay_techdoc/<年月>/；新版手冊、Skill、範例程式的下載連結都在這裡；沒有獨立物流 API 手冊，超商物流參數（lgs_flag、store_type、接收物流狀態）在金流手冊內"
  },
  {
   "id": "sunpay-einvoice-manual-v2-3",
@@ -8801,8 +9109,8 @@
   "skills": [
    "invoice"
   ],
-  "title": "紅陽 電子發票 AI 串接指南（Claude Code Skill）v2.3-v1",
-  "url": "https://storage.googleapis.com/joinchill-image/sunpay_techdoc/202607/sunpay-einvoice-skill-v2.3-v1.zip",
+  "title": "紅陽 電子發票 AI 串接指南（AI Agent Skill）v2.3-v2",
+  "url": "https://storage.googleapis.com/joinchill-image/sunpay_techdoc/202609/sunpay-einvoice-skill-v2.3-v2.zip",
   "format": "zip",
   "fetch": "get",
   "access": "public",
@@ -8854,7 +9162,8 @@
   "id": "sunpay-payment-manual",
   "provider": "sunpay",
   "skills": [
-   "payment"
+   "payment",
+   "logistics"
   ],
   "title": "紅陽科技金流服務-金流技術串接手冊 V1.1.2（2026-11-09）",
   "url": "https://storage.googleapis.com/joinchill-image/sunpay_techdoc/202611/%E7%B4%85%E9%99%BD%E7%A7%91%E6%8A%80%E9%87%91%E6%B5%81%E6%9C%8D%E5%8B%99-%E9%87%91%E6%B5%81%E6%8A%80%E8%A1%93%E4%B8%B2%E6%8E%A5%E6%89%8B%E5%86%8AV1.1.2.pdf",
@@ -8868,7 +9177,9 @@
    "taiwan-payment/data/providers.csv",
    "taiwan-payment/data/troubleshooting.csv",
    "taiwan-payment/examples/sunpay-payment-example.py",
-   "tests/vectors/sunpay.json"
+   "tests/vectors/sunpay.json",
+   "taiwan-logistics/data/providers.csv",
+   "taiwan-logistics/references/carrier-direct-access.md"
   ],
   "notes": "tests/vectors/sunpay.json 來自 v1.1.0；V1.1.2 的 §4.2 加解密頁與 V1.1.1 相同，§4.2.3 文字與範例值矛盾（見 reference §3.2）"
  },
@@ -9261,7 +9572,7 @@
   "covers": [
    "taiwan-invoice/references/VAC_LANDSCAPE.md"
   ],
-  "notes": "原 neinv.tradevan.com.tw 於 2026-10 公告移轉至 E-HUB，舊網址 10 月底失效"
+  "notes": "原 neinv.tradevan.com.tw 已移轉至 E-HUB；舊網址 2026-11-17 回 404"
  },
  {
   "id": "twqr-fisc",
@@ -9405,12 +9716,44 @@
    "invoice"
   ],
   "title": "e首發票 方案價格",
-  "url": "https://www.youshop.com.tw/pricing.html",
+  "url": "https://serv.einv.tw/pricing.html",
   "format": "html",
   "fetch": "get",
   "access": "public",
   "covers": [
    "taiwan-invoice/references/VAC_LANDSCAPE.md"
   ]
+ },
+ {
+  "id": "einv-tw-api-docs",
+  "provider": "vac",
+  "skills": [
+   "invoice"
+  ],
+  "title": "e首發票 API 技術文件（矽聯科技）",
+  "url": "https://docs.einv.tw/developer/",
+  "format": "html",
+  "fetch": "get",
+  "access": "public",
+  "covers": [
+   "taiwan-invoice/references/VAC_LANDSCAPE.md"
+  ],
+  "notes": "e首發票原網址 youshop.com.tw 已轉到 serv.einv.tw"
+ },
+ {
+  "id": "uber-direct-tw-merchants",
+  "provider": "uber-direct",
+  "skills": [
+   "logistics"
+  ],
+  "title": "Uber Eats 台灣商家網站：Uber Direct 服務頁",
+  "url": "https://merchants.ubereats.com/tw/zh-tw/services/uber-direct/",
+  "format": "html",
+  "fetch": "get",
+  "access": "public",
+  "covers": [
+   "taiwan-logistics/references/ondemand-delivery.md"
+  ],
+  "notes": "追蹤 Uber Direct 是否明確列出台灣；curl 需帶瀏覽器的 Accept 標頭，否則回 406；目前為全球通用文案（24 國、未列國名）"
  }
 ]

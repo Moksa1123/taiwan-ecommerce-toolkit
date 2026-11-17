@@ -13,7 +13,7 @@
 
 - 涵蓋 7 家有物流 API 的聚合商（ECPay、NewebPay、PAYUNi、SmilePay、PChomePay、PayNow、ezShip）、新竹物流（HCT）直連 API，以及即時配送（Lalamove、pandago）。
 - 讓 Claude 知道每一家的簽章與加密規則（MD5 CheckMacValue、AES-256-CBC、AES-256-GCM、3DES），並附可執行的 Python 範例。
-- 用 `scripts/search.py` 離線查詢 1111 筆資料：服務商、API 操作、物流類型、欄位對照、物流狀態碼。
+- 用 `scripts/search.py` 離線查詢 1126 筆資料：服務商、API 操作、物流類型、欄位對照、物流狀態碼。
 - 產生某家的服務模組（`scripts/generate-logistics-service.py`），並依白話需求推薦物流（`scripts/recommend.py`）。
 - 涵蓋超商取貨（7-11、全家、萊爾富、OK）、宅配、冷凍冷藏、電子地圖選店、取貨付款與追蹤。
 
