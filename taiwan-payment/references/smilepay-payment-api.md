@@ -754,6 +754,12 @@ XML 回應的 `Status`：**只有 `1` 代表成功**（官方 WooCommerce 模組
 > 速買配未公開金流錯誤代碼表，官方模組也只判斷 `1`。
 > 收到非 `1` 時請以 `Desc` 文字判斷並完整記錄；需要代碼表請向速買配技術窗口索取。
 
+錯誤回應同樣是 XML，`Status` 為負數。例：不帶參數呼叫 `SPPayment.asp`（2026-11-17 實測）：
+
+```xml
+<?xml version="1.0" encoding="utf-8" ?><SmilePay><Status>-2003</Status><Desc>Pay_zg Error</Desc><Rvg2c></Rvg2c><Dcvc></Dcvc><SmilePayNO></SmilePayNO><PayEndDate></PayEndDate><Data_id></Data_id><Amount>0</Amount></SmilePay>
+```
+
 ### Roturl 自訂錯誤訊息 (商家回給 SmilePay)
 
 以下為官方模組 `class-smilepay-payment.php` 在 Roturl 驗證失敗時回給速買配的訊息：

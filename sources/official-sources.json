@@ -1617,7 +1617,8 @@
   "id": "ecpay-api-skill-error-guide",
   "provider": "ecpay",
   "skills": [
-   "invoice"
+   "invoice",
+   "payment"
   ],
   "title": "綠界官方 ecpay-api-skill guides/20-error-codes-reference.md",
   "url": "https://raw.githubusercontent.com/ECPay/ecpay-api-skill/master/guides/20-error-codes-reference.md",
@@ -1625,7 +1626,8 @@
   "fetch": "get",
   "access": "public",
   "covers": [
-   "taiwan-invoice/data/error-codes.csv"
+   "taiwan-invoice/data/error-codes.csv",
+   "taiwan-payment/data/error-codes.csv"
   ],
   "notes": "速查表為 2026-03 快照，與 developers 網站衝突時以網站為準"
  },
@@ -3340,6 +3342,106 @@
   "notes": "產生 MD5 CheckMacValue 標準答案用；版本見 https://api.wordpress.org/plugins/info/1.0/ecpay-ecommerce-for-woocommerce.json"
  },
  {
+  "id": "ecpay-aio-2856",
+  "provider": "ecpay",
+  "skills": [
+   "payment"
+  ],
+  "title": "綠界全方位金流API技術文件 /準備事項 / 測試介接資訊",
+  "url": "https://developers.ecpay.com.tw/2856.md",
+  "format": "md",
+  "fetch": "get",
+  "access": "public",
+  "covers": [
+   "taiwan-payment/references/ecpay-payment-api.md",
+   "taiwan-payment/data/providers.csv",
+   "taiwan-payment/data/troubleshooting.csv"
+  ],
+  "notes": "developers.ecpay.com.tw/{id}.md 直接回傳 Markdown；測試帳號、測試卡號"
+ },
+ {
+  "id": "ecpay-aio-35196",
+  "provider": "ecpay",
+  "skills": [
+   "payment"
+  ],
+  "title": "綠界全方位金流API技術文件 / 更新歷程",
+  "url": "https://developers.ecpay.com.tw/35196.md",
+  "format": "md",
+  "fetch": "get",
+  "access": "public",
+  "covers": [
+   "taiwan-payment/references/ecpay-payment-api.md",
+   "taiwan-payment/data/payment-methods.csv"
+  ],
+  "notes": "官方改版紀錄；有新條目時逐頁核對全方位金流文件"
+ },
+ {
+  "id": "ecpay-aio-2864",
+  "provider": "ecpay",
+  "skills": [
+   "payment"
+  ],
+  "title": "綠界全方位金流API技術文件 /付款方式 / 全方位金流付款（ChoosePayment=ALL）",
+  "url": "https://developers.ecpay.com.tw/2864.md",
+  "format": "md",
+  "fetch": "get",
+  "access": "public",
+  "covers": [
+   "taiwan-payment/references/ecpay-payment-api.md"
+  ],
+  "notes": "developers.ecpay.com.tw/{id}.md 直接回傳 Markdown"
+ },
+ {
+  "id": "ecpay-aio-11031",
+  "provider": "ecpay",
+  "skills": [
+   "payment"
+  ],
+  "title": "綠界全方位金流API技術文件 /付款方式 / WebATM",
+  "url": "https://developers.ecpay.com.tw/11031.md",
+  "format": "md",
+  "fetch": "get",
+  "access": "public",
+  "covers": [
+   "taiwan-payment/references/ecpay-payment-api.md"
+  ],
+  "notes": "developers.ecpay.com.tw/{id}.md 直接回傳 Markdown"
+ },
+ {
+  "id": "ecpay-ecpg-39086",
+  "provider": "ecpay",
+  "skills": [
+   "payment"
+  ],
+  "title": "綠界站內付 / 超商代碼CVS轉三段式條碼",
+  "url": "https://developers.ecpay.com.tw/39086.md",
+  "format": "md",
+  "fetch": "get",
+  "access": "public",
+  "covers": [
+   "taiwan-payment/references/ecpay-payment-api.md"
+  ],
+  "notes": "AIO 2874 引用的轉條碼 API；JSON 格式，屬站內付規格"
+ },
+ {
+  "id": "ecpay-api-skill-payment-aio-guide",
+  "provider": "ecpay",
+  "skills": [
+   "payment"
+  ],
+  "title": "綠界官方 ecpay-api-skill guides/01-payment-aio.md",
+  "url": "https://raw.githubusercontent.com/ECPay/ECPay-API-Skill/master/guides/01-payment-aio.md",
+  "format": "md",
+  "fetch": "get",
+  "access": "public",
+  "covers": [
+   "taiwan-payment/references/ecpay-payment-api.md",
+   "taiwan-payment/EXAMPLES.md"
+  ],
+  "notes": "綠界官方 AI skill 的 AIO 指南；2026-11-17 仍列永豐 30N，與 developers 網站衝突時以網站為準"
+ },
+ {
   "id": "ezpay-api-document",
   "provider": "ezpay",
   "skills": [
@@ -3752,14 +3854,49 @@
    "payment"
   ],
   "title": "《GoMyPay 發票串接技術文件》2.1",
-  "url": "https://n.gomypay.asia/MDocuments_downloads.aspx",
+  "url": "https://n.gomypay.asia/MDocuments_downloads.aspx?downloadId=53",
   "format": "pdf",
   "fetch": "manual",
   "access": "confidential",
   "covers": [
    "taiwan-payment/references/gomypay-payment-api.md"
   ],
-  "notes": "文件每頁標示機密、禁止傳播；需向 GoMyPay 申請；文件標示「機密文件，未經授權禁止任意形式傳播」，只放私有區"
+  "notes": "下載頁免登入可下載（2026-11-17 確認），但每頁標示「本文件屬機密文件，未經授權禁止任意形式傳播」；內容只放私有區，不進 repo，不自動下載"
+ },
+ {
+  "id": "gomypay-cashflow-page",
+  "provider": "gomypay",
+  "skills": [
+   "payment"
+  ],
+  "title": "GoMyPay 金流服務頁",
+  "url": "https://n.gomypay.asia/MCashFlow.aspx",
+  "format": "html",
+  "fetch": "get",
+  "access": "public",
+  "covers": [
+   "taiwan-payment/references/gomypay-payment-api.md",
+   "taiwan-payment/data/providers.csv"
+  ],
+  "notes": "收款方式總覽：信用卡、四大超商、Web ATM、虛擬帳號、LINE Pay、台灣 Pay、定期定額"
+ },
+ {
+  "id": "gomypay-rate-list",
+  "provider": "gomypay",
+  "skills": [
+   "payment"
+  ],
+  "title": "GoMyPay 金流服務費率表",
+  "url": "https://n.gomypay.asia/ServiceRateList.aspx",
+  "format": "html",
+  "fetch": "get",
+  "access": "public",
+  "covers": [
+   "taiwan-payment/references/gomypay-payment-api.md",
+   "taiwan-payment/data/providers.csv",
+   "taiwan-payment/data/reasoning.csv"
+  ],
+  "notes": "服務項目最完整的一頁：分期期數、銀聯、Apple/Google Pay 申請限制、支付寶／微信跨境、悠遊卡／悠遊付、一卡通、LINE Pay、台灣 Pay"
  },
  {
   "id": "hct-home",
@@ -3808,7 +3945,7 @@
   "covers": [
    "taiwan-payment/references/jkopay-payment-api.md"
   ],
-  "notes": "Docusaurus 網站（2026-10 改版，舊 ?docs= 網址一律回首頁），需瀏覽器渲染；selector 只取 article 內文，避免側欄新增頁面誤報"
+  "notes": "Docusaurus 網站（2026-10 改版，舊 ?docs= 網址一律回首頁），需瀏覽器渲染；selector 只取 article 內文，避免側欄新增頁面誤報。2026-11-17 網域 NXDOMAIN，文件站下線"
  },
  {
   "id": "jkopay-authorized-payment-codes",
@@ -3826,7 +3963,7 @@
    "taiwan-payment/data/error-codes.csv",
    "taiwan-payment/references/jkopay-payment-api.md"
   ],
-  "notes": "Docusaurus 網站（2026-10 改版，舊 ?docs= 網址一律回首頁），需瀏覽器渲染；selector 只取 article 內文，避免側欄新增頁面誤報"
+  "notes": "Docusaurus 網站（2026-10 改版，舊 ?docs= 網址一律回首頁），需瀏覽器渲染；selector 只取 article 內文，避免側欄新增頁面誤報。2026-11-17 網域 NXDOMAIN，文件站下線"
  },
  {
   "id": "jkopay-onlinepay",
@@ -3844,7 +3981,7 @@
    "taiwan-payment/references/jkopay-payment-api.md",
    "taiwan-payment/data/providers.csv"
   ],
-  "notes": "Docusaurus 網站（2026-10 改版，舊 ?docs= 網址一律回首頁），需瀏覽器渲染；selector 只取 article 內文，避免側欄新增頁面誤報"
+  "notes": "Docusaurus 網站（2026-10 改版，舊 ?docs= 網址一律回首頁），需瀏覽器渲染；selector 只取 article 內文，避免側欄新增頁面誤報。2026-11-17 網域 NXDOMAIN，文件站下線"
  },
  {
   "id": "jkopay-onlinepay-api-list",
@@ -3861,7 +3998,7 @@
   "covers": [
    "taiwan-payment/references/jkopay-payment-api.md"
   ],
-  "notes": "Docusaurus 網站（2026-10 改版，舊 ?docs= 網址一律回首頁），需瀏覽器渲染；selector 只取 article 內文，避免側欄新增頁面誤報"
+  "notes": "Docusaurus 網站（2026-10 改版，舊 ?docs= 網址一律回首頁），需瀏覽器渲染；selector 只取 article 內文，避免側欄新增頁面誤報。2026-11-17 網域 NXDOMAIN，文件站下線"
  },
  {
   "id": "jkopay-onlinepay-codes",
@@ -3879,7 +4016,7 @@
    "taiwan-payment/data/error-codes.csv",
    "taiwan-payment/references/jkopay-payment-api.md"
   ],
-  "notes": "Docusaurus 網站（2026-10 改版，舊 ?docs= 網址一律回首頁），需瀏覽器渲染；selector 只取 article 內文，避免側欄新增頁面誤報"
+  "notes": "Docusaurus 網站（2026-10 改版，舊 ?docs= 網址一律回首頁），需瀏覽器渲染；selector 只取 article 內文，避免側欄新增頁面誤報。2026-11-17 網域 NXDOMAIN，文件站下線"
  },
  {
   "id": "jkopay-onlinepay-entry",
@@ -3896,7 +4033,7 @@
   "covers": [
    "taiwan-payment/references/jkopay-payment-api.md"
   ],
-  "notes": "Docusaurus 網站（2026-10 改版，舊 ?docs= 網址一律回首頁），需瀏覽器渲染；selector 只取 article 內文，避免側欄新增頁面誤報"
+  "notes": "Docusaurus 網站（2026-10 改版，舊 ?docs= 網址一律回首頁），需瀏覽器渲染；selector 只取 article 內文，避免側欄新增頁面誤報。2026-11-17 網域 NXDOMAIN，文件站下線"
  },
  {
   "id": "jkopay-onlinepay-protocol",
@@ -3913,7 +4050,7 @@
   "covers": [
    "taiwan-payment/references/jkopay-payment-api.md"
   ],
-  "notes": "Docusaurus 網站（2026-10 改版，舊 ?docs= 網址一律回首頁），需瀏覽器渲染；selector 只取 article 內文，避免側欄新增頁面誤報"
+  "notes": "Docusaurus 網站（2026-10 改版，舊 ?docs= 網址一律回首頁），需瀏覽器渲染；selector 只取 article 內文，避免側欄新增頁面誤報。2026-11-17 網域 NXDOMAIN，文件站下線"
  },
  {
   "id": "jkopay-onlinepay-rfile",
@@ -3930,7 +4067,7 @@
   "covers": [
    "taiwan-payment/references/jkopay-payment-api.md"
   ],
-  "notes": "Docusaurus 網站（2026-10 改版，舊 ?docs= 網址一律回首頁），需瀏覽器渲染；selector 只取 article 內文，避免側欄新增頁面誤報"
+  "notes": "Docusaurus 網站（2026-10 改版，舊 ?docs= 網址一律回首頁），需瀏覽器渲染；selector 只取 article 內文，避免側欄新增頁面誤報。2026-11-17 網域 NXDOMAIN，文件站下線"
  },
  {
   "id": "jkopay-onlinepay-signing",
@@ -3948,7 +4085,7 @@
    "taiwan-payment/references/jkopay-payment-api.md",
    "taiwan-payment/examples/jkopay-payment-example.py"
   ],
-  "notes": "Docusaurus 網站（2026-10 改版，舊 ?docs= 網址一律回首頁），需瀏覽器渲染；selector 只取 article 內文，避免側欄新增頁面誤報"
+  "notes": "Docusaurus 網站（2026-10 改版，舊 ?docs= 網址一律回首頁），需瀏覽器渲染；selector 只取 article 內文，避免側欄新增頁面誤報。2026-11-17 網域 NXDOMAIN，文件站下線"
  },
  {
   "id": "jkopay-pos-rfile",
@@ -3965,7 +4102,7 @@
   "covers": [
    "taiwan-payment/references/jkopay-payment-api.md"
   ],
-  "notes": "Docusaurus 網站（2026-10 改版，舊 ?docs= 網址一律回首頁），需瀏覽器渲染；selector 只取 article 內文，避免側欄新增頁面誤報"
+  "notes": "Docusaurus 網站（2026-10 改版，舊 ?docs= 網址一律回首頁），需瀏覽器渲染；selector 只取 article 內文，避免側欄新增頁面誤報。2026-11-17 網域 NXDOMAIN，文件站下線"
  },
  {
   "id": "jkopay-sdk-recommendation",
@@ -4013,7 +4150,7 @@
   "covers": [
    "taiwan-payment/references/jkopay-payment-api.md"
   ],
-  "notes": "Docusaurus 網站（2026-10 改版，舊 ?docs= 網址一律回首頁），需瀏覽器渲染；selector 只取 article 內文，避免側欄新增頁面誤報"
+  "notes": "Docusaurus 網站（2026-10 改版，舊 ?docs= 網址一律回首頁），需瀏覽器渲染；selector 只取 article 內文，避免側欄新增頁面誤報。2026-11-17 網域 NXDOMAIN，文件站下線"
  },
  {
   "id": "jkopay-web-sdk-versions",
@@ -4030,7 +4167,7 @@
   "covers": [
    "taiwan-payment/references/jkopay-payment-api.md"
   ],
-  "notes": "Docusaurus 網站（2026-10 改版，舊 ?docs= 網址一律回首頁），需瀏覽器渲染；selector 只取 article 內文，避免側欄新增頁面誤報"
+  "notes": "Docusaurus 網站（2026-10 改版，舊 ?docs= 網址一律回首頁），需瀏覽器渲染；selector 只取 article 內文，避免側欄新增頁面誤報。2026-11-17 網域 NXDOMAIN，文件站下線"
  },
  {
   "id": "kerrytj-checking",
@@ -4156,7 +4293,8 @@
   "access": "public",
   "covers": [
    "taiwan-payment/references/linepay-payment-api.md",
-   "tests/vectors/linepay.json"
+   "tests/vectors/linepay.json",
+   "taiwan-payment/data/error-codes.csv"
   ]
  },
  {
@@ -4210,6 +4348,135 @@
    "taiwan-payment/references/linepay-payment-api.md",
    "taiwan-payment/data/providers.csv",
    "taiwan-payment/examples/linepay-payment-example.py"
+  ]
+ },
+ {
+  "id": "linepay-online-api-v4-request-payment",
+  "provider": "linepay",
+  "skills": [
+   "payment"
+  ],
+  "title": "LINE Pay Developers：Online API v4 Payment request",
+  "url": "https://developers-pay.line.me/online-api-v4/request-payment",
+  "format": "html",
+  "fetch": "get",
+  "access": "public",
+  "covers": [
+   "taiwan-payment/references/linepay-payment-api.md",
+   "taiwan-payment/data/operations.csv",
+   "taiwan-payment/data/field-mappings.csv",
+   "taiwan-payment/examples/linepay-payment-example.py"
+  ]
+ },
+ {
+  "id": "linepay-online-api-v4-confirm-payment",
+  "provider": "linepay",
+  "skills": [
+   "payment"
+  ],
+  "title": "LINE Pay Developers：Online API v4 Payment confirmation",
+  "url": "https://developers-pay.line.me/online-api-v4/confirm-payment",
+  "format": "html",
+  "fetch": "get",
+  "access": "public",
+  "covers": [
+   "taiwan-payment/references/linepay-payment-api.md",
+   "taiwan-payment/data/operations.csv",
+   "taiwan-payment/data/field-mappings.csv"
+  ]
+ },
+ {
+  "id": "linepay-online-api-v4-capture",
+  "provider": "linepay",
+  "skills": [
+   "payment"
+  ],
+  "title": "LINE Pay Developers：Online API v4 Capture",
+  "url": "https://developers-pay.line.me/online-api-v4/capture",
+  "format": "html",
+  "fetch": "get",
+  "access": "public",
+  "covers": [
+   "taiwan-payment/references/linepay-payment-api.md",
+   "taiwan-payment/data/operations.csv",
+   "taiwan-payment/EXAMPLES.md"
+  ]
+ },
+ {
+  "id": "linepay-online-api-v4-retrieve-payment-details",
+  "provider": "linepay",
+  "skills": [
+   "payment"
+  ],
+  "title": "LINE Pay Developers：Online API v4 Retrieve payment details",
+  "url": "https://developers-pay.line.me/online-api-v4/retrieve-payment-details",
+  "format": "html",
+  "fetch": "get",
+  "access": "public",
+  "covers": [
+   "taiwan-payment/references/linepay-payment-api.md"
+  ]
+ },
+ {
+  "id": "linepay-online-api-v4-request-preapproved-payment",
+  "provider": "linepay",
+  "skills": [
+   "payment"
+  ],
+  "title": "LINE Pay Developers：Online API v4 Pre-approved payment request",
+  "url": "https://developers-pay.line.me/online-api-v4/request-preapproved-payment",
+  "format": "html",
+  "fetch": "get",
+  "access": "public",
+  "covers": [
+   "taiwan-payment/references/linepay-payment-api.md",
+   "taiwan-payment/data/operations.csv"
+  ]
+ },
+ {
+  "id": "linepay-online-api-v4-redirection-pages",
+  "provider": "linepay",
+  "skills": [
+   "payment"
+  ],
+  "title": "LINE Pay Developers：Online API v4 導回頁面（confirmUrl／cancelUrl、SERVER 模式來源 IP）",
+  "url": "https://developers-pay.line.me/online-api-v4/merchant/redirection-pages",
+  "format": "html",
+  "fetch": "get",
+  "access": "public",
+  "covers": [
+   "taiwan-payment/references/linepay-payment-api.md"
+  ]
+ },
+ {
+  "id": "linepay-sandbox",
+  "provider": "linepay",
+  "skills": [
+   "payment"
+  ],
+  "title": "LINE Pay Developers：Sandbox",
+  "url": "https://developers-pay.line.me/sandbox",
+  "format": "html",
+  "fetch": "get",
+  "access": "public",
+  "covers": [
+   "taiwan-payment/references/linepay-payment-api.md"
+  ]
+ },
+ {
+  "id": "linepay-faq",
+  "provider": "linepay",
+  "skills": [
+   "payment"
+  ],
+  "title": "LINE Pay Developers：FAQ（1106 簽章錯誤、沙箱憑證）",
+  "url": "https://developers-pay.line.me/faq",
+  "format": "html",
+  "fetch": "get",
+  "access": "public",
+  "covers": [
+   "taiwan-payment/references/linepay-payment-api.md",
+   "taiwan-payment/data/error-codes.csv"
   ]
  },
  {
@@ -4301,8 +4568,8 @@
   "skills": [
    "payment"
   ],
-  "title": "線上交易─幕前支付技術串接手冊 NDNF-1.2.5（2026-09-01）",
-  "url": "https://www.newebpay.com/website/Page/download_file?name=%E7%B7%9A%E4%B8%8A%E4%BA%A4%E6%98%93%E2%94%80%E5%B9%95%E5%89%8D%E6%94%AF%E4%BB%98%E6%8A%80%E8%A1%93%E4%B8%B2%E6%8E%A5%E6%89%8B%E5%86%8A_NDNF-1.2.5.pdf",
+  "title": "線上交易─幕前支付技術串接手冊 NDNF-1.2.6（2026-10-01）",
+  "url": "https://www.newebpay.com/website/Page/download_file?name=%E7%B7%9A%E4%B8%8A%E4%BA%A4%E6%98%93%E2%94%80%E5%B9%95%E5%89%8D%E6%94%AF%E4%BB%98%E6%8A%80%E8%A1%93%E4%B8%B2%E6%8E%A5%E6%89%8B%E5%86%8A_NDNF-1.2.6.pdf",
   "format": "pdf",
   "fetch": "get",
   "access": "public",
@@ -4391,6 +4658,23 @@
   "notes": "向量取自 1.0.12 includes/nwpenc/encProcess.php（32 bytes padding 行為）"
  },
  {
+  "id": "newebpay-news",
+  "provider": "newebpay",
+  "skills": [
+   "payment"
+  ],
+  "title": "藍新金流 最新消息",
+  "url": "https://www.newebpay.com/website/Page/news",
+  "format": "html",
+  "fetch": "manual",
+  "access": "public",
+  "covers": [
+   "taiwan-payment/references/newebpay-payment-api.md",
+   "taiwan-payment/data/payment-methods.csv"
+  ],
+  "notes": "列表由 JavaScript 載入，無頭瀏覽器會被防火牆擋，需人工開啟；服務上線／下架公告（如 AFTEE、大哥付你分期、Passkey）在此"
+ },
+ {
   "id": "opay-backoffice-error-codes",
   "provider": "opay",
   "skills": [
@@ -4452,7 +4736,7 @@
   "skills": [
    "payment"
   ],
-  "title": "歐付寶：全方位金流 API 介接技術文件（O_Pay_011，56 頁）",
+  "title": "歐付寶：全方位金流 API 介接技術文件（O_Pay_011 V1.2.37，56 頁）",
   "url": "https://www.opay.tw/Content/files/O_Pay_011.pdf",
   "format": "pdf",
   "fetch": "get",
@@ -4726,6 +5010,48 @@
    "taiwan-invoice/references/OPAY_API_REFERENCE.md"
   ],
   "notes": "PDF 直連"
+ },
+ {
+  "id": "opay-o-pay-048",
+  "provider": "opay",
+  "skills": [
+   "payment"
+  ],
+  "title": "歐付寶：金流整合 SDK 技術文件（Java）（O_Pay_048）",
+  "url": "https://www.opay.tw/Content/files/O_Pay_048.pdf",
+  "format": "pdf",
+  "fetch": "get",
+  "access": "public",
+  "covers": []
+ },
+ {
+  "id": "opay-o-pay-049",
+  "provider": "opay",
+  "skills": [
+   "payment"
+  ],
+  "title": "歐付寶：金流整合 SDK 技術文件（.NET）（O_Pay_049）",
+  "url": "https://www.opay.tw/Content/files/O_Pay_049.pdf",
+  "format": "pdf",
+  "fetch": "get",
+  "access": "public",
+  "covers": []
+ },
+ {
+  "id": "opay-sdk-php-github",
+  "provider": "opay",
+  "skills": [
+   "payment"
+  ],
+  "title": "歐付寶官方 SDK：Payment_PHP（GitHub o-pay）",
+  "url": "https://github.com/o-pay/Payment_PHP",
+  "format": "html",
+  "fetch": "get",
+  "access": "public",
+  "covers": [
+   "taiwan-payment/references/opay-payment-api.md"
+  ],
+  "notes": "文件總覽連結；同組織另有 Payment_Java、Payment_Net、Payment_Node.js、Payment_RoR"
  },
  {
   "id": "pandago-odr-docs",
@@ -5184,7 +5510,7 @@
    "taiwan-payment/references/paynow-payment-api.md",
    "taiwan-payment/data/providers.csv"
   ],
-  "notes": "providers.csv doc_url 目前寫 owlting.github.io/paynow-guideline（舊網址），以此為準"
+  "notes": "paynow-co.github.io 與 owlting.github.io 兩個鏡像內容相同（2026-11-17 皆 200）；PDF 下載連結只在此頁"
  },
  {
   "id": "paynow-invoice-allowance",
@@ -5601,7 +5927,254 @@
    "taiwan-payment/references/paynow-payment-api.md",
    "taiwan-payment/examples/paynow-payment-example.py"
   ],
-  "notes": "本機存於 E:/moksa-plugins/mowp/reference/paynow-docs/；直連下載網址未記錄，需從 API Reference 頁取得"
+  "notes": "PDF 直連在 https://paynow-public.s3.ap-northeast-1.amazonaws.com/docs/（見 paynow-pdf-* 條目）"
+ },
+ {
+  "id": "paynow-understanding-url",
+  "provider": "paynow",
+  "skills": [
+   "payment"
+  ],
+  "title": "PayNow 背景資訊：API 網址（Sandbox／Production）",
+  "url": "https://docs.paynow.com.tw/developer/docs/understanding-paynow/url",
+  "format": "html",
+  "fetch": "browser",
+  "access": "public",
+  "covers": [
+   "taiwan-payment/references/paynow-payment-api.md",
+   "taiwan-payment/data/operations.csv",
+   "taiwan-payment/examples/paynow-payment-example.py"
+  ],
+  "notes": "Docusaurus SPA，需瀏覽器渲染後取 innerText；sandboxapi.paynow.com.tw／api.paynow.com.tw"
+ },
+ {
+  "id": "paynow-understanding-key",
+  "provider": "paynow",
+  "skills": [
+   "payment"
+  ],
+  "title": "PayNow 背景資訊：金鑰（PublicKey／PrivateKey）",
+  "url": "https://docs.paynow.com.tw/developer/docs/understanding-paynow/key",
+  "format": "html",
+  "fetch": "browser",
+  "access": "public",
+  "covers": [
+   "taiwan-payment/references/paynow-payment-api.md",
+   "taiwan-payment/data/providers.csv"
+  ],
+  "notes": "Docusaurus SPA，需瀏覽器渲染後取 innerText"
+ },
+ {
+  "id": "paynow-understanding-webhook",
+  "provider": "paynow",
+  "skills": [
+   "payment"
+  ],
+  "title": "PayNow 背景資訊：Webhooks（topic、payload、X-Payment-Center-Hmac-Sha256）",
+  "url": "https://docs.paynow.com.tw/developer/docs/understanding-paynow/webhook",
+  "format": "html",
+  "fetch": "browser",
+  "access": "public",
+  "covers": [
+   "taiwan-payment/references/paynow-payment-api.md",
+   "taiwan-payment/data/field-mappings.csv"
+  ],
+  "notes": "Docusaurus SPA，需瀏覽器渲染後取 innerText"
+ },
+ {
+  "id": "paynow-understanding-payment-intent",
+  "provider": "paynow",
+  "skills": [
+   "payment"
+  ],
+  "title": "PayNow 背景資訊：付款意圖類型與狀態",
+  "url": "https://docs.paynow.com.tw/developer/docs/understanding-paynow/payment-intent",
+  "format": "html",
+  "fetch": "browser",
+  "access": "public",
+  "covers": [
+   "taiwan-payment/references/paynow-payment-api.md"
+  ],
+  "notes": "Docusaurus SPA，需瀏覽器渲染後取 innerText"
+ },
+ {
+  "id": "paynow-understanding-refund-reject-reason",
+  "provider": "paynow",
+  "skills": [
+   "payment"
+  ],
+  "title": "PayNow 背景資訊：退款 Reject 代碼（R000–R037）",
+  "url": "https://docs.paynow.com.tw/developer/docs/understanding-paynow/refund/refund-reject-reason",
+  "format": "html",
+  "fetch": "browser",
+  "access": "public",
+  "covers": [
+   "taiwan-payment/references/paynow-payment-api.md",
+   "taiwan-payment/data/error-codes.csv"
+  ],
+  "notes": "Docusaurus SPA，需瀏覽器渲染後取 innerText"
+ },
+ {
+  "id": "paynow-getting-started",
+  "provider": "paynow",
+  "skills": [
+   "payment"
+  ],
+  "title": "PayNow Getting Started（建立 PaymentIntent 範例與 Component SDK 流程）",
+  "url": "https://docs.paynow.com.tw/developer/docs/getting-started",
+  "format": "html",
+  "fetch": "browser",
+  "access": "public",
+  "covers": [
+   "taiwan-payment/references/paynow-payment-api.md",
+   "taiwan-payment/examples/paynow-payment-example.py"
+  ],
+  "notes": "Docusaurus SPA，需瀏覽器渲染後取 innerText"
+ },
+ {
+  "id": "paynow-apidoc-fingerprint-session",
+  "provider": "paynow",
+  "skills": [
+   "payment"
+  ],
+  "title": "PayNow 技術文件：取得 fingerprint session",
+  "url": "https://docs.paynow.com.tw/developer/docs/apidoc/%E5%8F%96%E5%BE%97-fingerprint-session",
+  "format": "html",
+  "fetch": "browser",
+  "access": "public",
+  "covers": [
+   "taiwan-payment/references/paynow-payment-api.md"
+  ],
+  "notes": "Docusaurus SPA，需瀏覽器渲染後取 innerText；網址路徑為中文（已 percent-encode）"
+ },
+ {
+  "id": "paynow-apidoc-session-device-information",
+  "provider": "paynow",
+  "skills": [
+   "payment"
+  ],
+  "title": "PayNow 技術文件：裝置收集完成後的資料處理",
+  "url": "https://docs.paynow.com.tw/developer/docs/apidoc/%E8%A3%9D%E7%BD%AE%E6%94%B6%E9%9B%86%E5%AE%8C%E6%88%90%E5%BE%8C%E7%9A%84%E8%B3%87%E6%96%99%E8%99%95%E7%90%86",
+  "format": "html",
+  "fetch": "browser",
+  "access": "public",
+  "covers": [
+   "taiwan-payment/references/paynow-payment-api.md"
+  ],
+  "notes": "Docusaurus SPA，需瀏覽器渲染後取 innerText；網址路徑為中文（已 percent-encode）"
+ },
+ {
+  "id": "paynow-apidoc-session-otp-confirm",
+  "provider": "paynow",
+  "skills": [
+   "payment"
+  ],
+  "title": "PayNow 技術文件：OTP 回傳接收",
+  "url": "https://docs.paynow.com.tw/developer/docs/apidoc/otp-%E5%9B%9E%E5%82%B3%E6%8E%A5%E6%94%B6",
+  "format": "html",
+  "fetch": "browser",
+  "access": "public",
+  "covers": [
+   "taiwan-payment/references/paynow-payment-api.md"
+  ],
+  "notes": "Docusaurus SPA，需瀏覽器渲染後取 innerText；網址路徑為中文（已 percent-encode）"
+ },
+ {
+  "id": "paynow-partner-merchants",
+  "provider": "paynow",
+  "skills": [
+   "payment"
+  ],
+  "title": "PayNow 技術文件：取得特定 Partner 所屬的商戶資訊",
+  "url": "https://docs.paynow.com.tw/developer/docs/partner/%E5%8F%96%E5%BE%97%E7%89%B9%E5%AE%9A-partner-%E6%89%80%E5%B1%AC%E7%9A%84%E5%95%86%E6%88%B6%E8%B3%87%E8%A8%8A",
+  "format": "html",
+  "fetch": "browser",
+  "access": "public",
+  "covers": [
+   "taiwan-payment/references/paynow-payment-api.md"
+  ],
+  "notes": "Docusaurus SPA，需瀏覽器渲染後取 innerText；網址路徑為中文（已 percent-encode）"
+ },
+ {
+  "id": "paynow-component-getting-started",
+  "provider": "paynow",
+  "skills": [
+   "payment"
+  ],
+  "title": "PayNow Component SDK 文件：Getting Started",
+  "url": "https://docs.paynow.com.tw/component/guide/getting-started",
+  "format": "html",
+  "fetch": "browser",
+  "access": "public",
+  "covers": [
+   "taiwan-payment/references/paynow-payment-api.md"
+  ],
+  "notes": "需瀏覽器渲染後取 innerText；SDK script https://js.paynow.com.tw/sdk/v2/index.js"
+ },
+ {
+  "id": "paynow-pdf-techdoc-fv1711",
+  "provider": "paynow",
+  "skills": [
+   "payment"
+  ],
+  "title": "PayNow 串接技術文件 V1.7.1.1（網路商店購物車金流，PDF）",
+  "url": "https://paynow-public.s3.ap-northeast-1.amazonaws.com/docs/PayNow+%E6%8A%80%E8%A1%93%E6%96%87%E4%BB%B6+FV1.7.1.1.pdf",
+  "format": "pdf",
+  "fetch": "get",
+  "access": "public",
+  "covers": [
+   "taiwan-payment/references/paynow-payment-api.md",
+   "tests/vectors/paynow.json"
+  ],
+  "notes": "官方 S3 直連；版號在檔名，改版會換網址，需同時追蹤 paynow-guideline-api-reference 下載頁；pypdf 抽文字"
+ },
+ {
+  "id": "paynow-pdf-refundapi-fv16",
+  "provider": "paynow",
+  "skills": [
+   "payment"
+  ],
+  "title": "PayNow 退款 API FV1.6（PDF）",
+  "url": "https://paynow-public.s3.ap-northeast-1.amazonaws.com/docs/PayNowRefundAPI_G_FV1.6.pdf",
+  "format": "pdf",
+  "fetch": "get",
+  "access": "public",
+  "covers": [
+   "taiwan-payment/references/paynow-payment-api.md"
+  ],
+  "notes": "官方 S3 直連；版號在檔名"
+ },
+ {
+  "id": "paynow-pdf-doublecheck-fv11",
+  "provider": "paynow",
+  "skills": [
+   "payment"
+  ],
+  "title": "PayNow 交易狀態查詢 DoubleCheck FV1.1（PDF）",
+  "url": "https://paynow-public.s3.ap-northeast-1.amazonaws.com/docs/PayNowDoubleCheck_G_FV1.1.pdf",
+  "format": "pdf",
+  "fetch": "get",
+  "access": "public",
+  "covers": [
+   "taiwan-payment/references/paynow-payment-api.md"
+  ],
+  "notes": "官方 S3 直連；版號在檔名"
+ },
+ {
+  "id": "paynow-pdf-applepay-v105",
+  "provider": "paynow",
+  "skills": [
+   "payment"
+  ],
+  "title": "PayNow Apple Pay v1.0.5（PDF，2020-07-01）",
+  "url": "https://paynow-public.s3.ap-northeast-1.amazonaws.com/docs/PayNow_ApplePay_v1.0.5.pdf",
+  "format": "pdf",
+  "fetch": "get",
+  "access": "public",
+  "covers": [
+   "taiwan-payment/references/paynow-payment-api.md"
+  ],
+  "notes": "官方 S3 直連；版號在檔名"
  },
  {
   "id": "payuni-errors-156",
@@ -7435,7 +8008,8 @@
   "access": "public",
   "covers": [
    "tests/vectors/payuni.json",
-   "taiwan-payment/examples/payuni-payment-example.py"
+   "taiwan-payment/examples/payuni-payment-example.py",
+   "taiwan-payment/references/payuni-payment-api.md"
   ],
   "notes": "向量取自 1.2.8 class-payuni.php Encrypt/Decrypt/HashInfo；1.2.9（2026-09-18 commit 16c4160）只在超商貨態通知加 Odno，加解密未變",
   "ignore": [
@@ -7445,17 +8019,61 @@
   ]
  },
  {
+  "id": "payuni-page-511",
+  "provider": "payuni",
+  "skills": [
+   "payment"
+  ],
+  "title": "PAYUNi 官方文件：API/交易建立/信用卡免跳轉支付元件(UNi Embed)/版本差異說明",
+  "url": "https://docs.payuni.com.tw/server/index.php?s=/api/page/info",
+  "format": "json",
+  "fetch": {
+   "method": "POST",
+   "data": {
+    "page_id": "511"
+   }
+  },
+  "access": "public",
+  "covers": [
+   "taiwan-payment/references/payuni-payment-api.md"
+  ],
+  "json_path": "data.page_content",
+  "notes": "ShowDoc SPA：以 POST page_id 取回 JSON（data.page_content 為 Markdown）；網頁版 https://docs.payuni.com.tw/web/#/7/511"
+ },
+ {
+  "id": "payuni-page-514",
+  "provider": "payuni",
+  "skills": [
+   "payment"
+  ],
+  "title": "PAYUNi 官方文件：API/Notify/信用卡免跳轉支付元件Notify/Ver 1.0",
+  "url": "https://docs.payuni.com.tw/server/index.php?s=/api/page/info",
+  "format": "json",
+  "fetch": {
+   "method": "POST",
+   "data": {
+    "page_id": "514"
+   }
+  },
+  "access": "public",
+  "covers": [
+   "taiwan-payment/references/payuni-payment-api.md"
+  ],
+  "json_path": "data.page_content",
+  "notes": "ShowDoc SPA：以 POST page_id 取回 JSON（data.page_content 為 Markdown）；網頁版 https://docs.payuni.com.tw/web/#/7/514"
+ },
+ {
   "id": "pchomepay-api-doc",
   "provider": "pchomepay",
   "skills": [
    "payment",
    "logistics"
   ],
-  "title": "PChomePay API document（Google Docs，申請串接後提供）",
+  "title": "PChomePay API document（Google Docs）",
   "url": "https://docs.google.com/document/d/1dPIPJc4xfyjkJ1i2yxaja4OP0G-iGFRXM08NDMuttZE/",
   "format": "html",
   "fetch": "manual",
-  "access": "apply",
+  "access": "public",
   "covers": [
    "taiwan-payment/references/pchomepay-payment-api.md",
    "taiwan-payment/data/error-codes.csv"
@@ -7561,6 +8179,23 @@
   "covers": [
    "taiwan-payment/references/pchomepay-payment-api.md"
   ]
+ },
+ {
+  "id": "pchomepay-woo-plugin-repo",
+  "provider": "pchomepay",
+  "skills": [
+   "payment"
+  ],
+  "title": "PChomePay WooCommerce 外掛版本紀錄（GitHub PChomePayPlugin/PChomePay-Cart-for-WooCommerce releases）",
+  "url": "https://github.com/PChomePayPlugin/PChomePay-Cart-for-WooCommerce/releases",
+  "format": "html",
+  "fetch": "get",
+  "access": "public",
+  "covers": [
+   "taiwan-payment/references/pchomepay-payment-api.md",
+   "taiwan-payment/examples/pchomepay-payment-example.py"
+  ],
+  "notes": "組織首頁 pchomepay-plugins 只反映 GitHub 頁面雜訊；版本說明（如 2.0.5 信用卡下限 30→1）在 releases"
  },
  {
   "id": "pelican-home",
@@ -7755,12 +8390,183 @@
   "title": "SHOPLINE Payments 文件：文件首頁",
   "url": "https://docs.shoplinepayments.com/",
   "format": "html",
+  "fetch": "browser",
+  "access": "public",
+  "covers": [
+   "taiwan-payment/references/shopline-payment-api.md",
+   "taiwan-payment/data/providers.csv"
+  ],
+  "notes": "「環境資訊」網域表為前端渲染，需瀏覽器才看得到"
+ },
+ {
+  "id": "shopline-api-trade-query",
+  "provider": "shopline",
+  "skills": [
+   "payment"
+  ],
+  "title": "SHOPLINE Payments 文件：付款交易查詢",
+  "url": "https://docs.shoplinepayments.com/api/trade/query/",
+  "format": "html",
+  "fetch": "get",
+  "access": "public",
+  "covers": [
+   "taiwan-payment/references/shopline-payment-api.md",
+   "taiwan-payment/examples/shopline-payment-example.py"
+  ]
+ },
+ {
+  "id": "shopline-api-trade-capture",
+  "provider": "shopline",
+  "skills": [
+   "payment"
+  ],
+  "title": "SHOPLINE Payments 文件：交易請款",
+  "url": "https://docs.shoplinepayments.com/api/trade/capture/",
+  "format": "html",
+  "fetch": "get",
+  "access": "public",
+  "covers": [
+   "taiwan-payment/references/shopline-payment-api.md",
+   "taiwan-payment/examples/shopline-payment-example.py"
+  ]
+ },
+ {
+  "id": "shopline-api-trade-cancel",
+  "provider": "shopline",
+  "skills": [
+   "payment"
+  ],
+  "title": "SHOPLINE Payments 文件：交易取消",
+  "url": "https://docs.shoplinepayments.com/api/trade/cancel/",
+  "format": "html",
+  "fetch": "get",
+  "access": "public",
+  "covers": [
+   "taiwan-payment/references/shopline-payment-api.md",
+   "taiwan-payment/examples/shopline-payment-example.py"
+  ]
+ },
+ {
+  "id": "shopline-api-trade-refundquery",
+  "provider": "shopline",
+  "skills": [
+   "payment"
+  ],
+  "title": "SHOPLINE Payments 文件：退款交易查詢",
+  "url": "https://docs.shoplinepayments.com/api/trade/refundQuery/",
+  "format": "html",
+  "fetch": "get",
+  "access": "public",
+  "covers": [
+   "taiwan-payment/references/shopline-payment-api.md"
+  ]
+ },
+ {
+  "id": "shopline-api-event-query",
+  "provider": "shopline",
+  "skills": [
+   "payment"
+  ],
+  "title": "SHOPLINE Payments 文件：Event 查詢",
+  "url": "https://docs.shoplinepayments.com/api/event/query/",
+  "format": "html",
+  "fetch": "get",
+  "access": "public",
+  "covers": [
+   "taiwan-payment/references/shopline-payment-api.md"
+  ]
+ },
+ {
+  "id": "shopline-appendix-orderstatus",
+  "provider": "shopline",
+  "skills": [
+   "payment"
+  ],
+  "title": "SHOPLINE Payments 文件：付款狀態碼",
+  "url": "https://docs.shoplinepayments.com/appendix/orderStatus/",
+  "format": "html",
+  "fetch": "get",
+  "access": "public",
+  "covers": [
+   "taiwan-payment/references/shopline-payment-api.md"
+  ]
+ },
+ {
+  "id": "shopline-appendix-refundstatus",
+  "provider": "shopline",
+  "skills": [
+   "payment"
+  ],
+  "title": "SHOPLINE Payments 文件：退款狀態碼",
+  "url": "https://docs.shoplinepayments.com/appendix/refundStatus/",
+  "format": "html",
+  "fetch": "get",
+  "access": "public",
+  "covers": [
+   "taiwan-payment/references/shopline-payment-api.md"
+  ]
+ },
+ {
+  "id": "shopline-appendix-sdkerrorcode",
+  "provider": "shopline",
+  "skills": [
+   "payment"
+  ],
+  "title": "SHOPLINE Payments 文件：SDK 錯誤碼",
+  "url": "https://docs.shoplinepayments.com/appendix/sdkErrorCode/",
+  "format": "html",
+  "fetch": "get",
+  "access": "public",
+  "covers": [
+   "taiwan-payment/references/shopline-payment-api.md"
+  ]
+ },
+ {
+  "id": "shopline-sandbox-resource",
+  "provider": "shopline",
+  "skills": [
+   "payment"
+  ],
+  "title": "SHOPLINE Payments 文件：沙盒環境串接資源",
+  "url": "https://docs.shoplinepayments.com/overview/sandboxResource/",
+  "format": "html",
   "fetch": "get",
   "access": "public",
   "covers": [
    "taiwan-payment/references/shopline-payment-api.md",
    "taiwan-payment/data/providers.csv"
   ]
+ },
+ {
+  "id": "shopline-supported-creditcard",
+  "provider": "shopline",
+  "skills": [
+   "payment"
+  ],
+  "title": "SHOPLINE Payments 文件：信用卡（分期期數與銀行）",
+  "url": "https://docs.shoplinepayments.com/overview/supportedPaymentMethod/CreditCard/",
+  "format": "html",
+  "fetch": "get",
+  "access": "public",
+  "covers": [
+   "taiwan-payment/references/shopline-payment-api.md"
+  ]
+ },
+ {
+  "id": "shopline-sitemap",
+  "provider": "shopline",
+  "skills": [
+   "payment"
+  ],
+  "title": "SHOPLINE Payments 文件站 sitemap（偵測新增／移除頁面）",
+  "url": "https://docs.shoplinepayments.com/sitemap.xml",
+  "format": "html",
+  "fetch": "get",
+  "access": "public",
+  "covers": [
+   "taiwan-payment/references/shopline-payment-api.md"
+  ],
+  "notes": "無 lastmod，只在頁面增刪時變動；2026-11-17 共 102 頁"
  },
  {
   "id": "smilepay-api-background",
@@ -8050,18 +8856,21 @@
   "skills": [
    "payment"
   ],
-  "title": "紅陽科技金流服務-金流技術串接手冊 V1.1.1（2026-08-19）",
-  "url": "https://storage.googleapis.com/joinchill-image/sunpay_techdoc/202608/%E7%B4%85%E9%99%BD%E7%A7%91%E6%8A%80%E9%87%91%E6%B5%81%E6%9C%8D%E5%8B%99-%E9%87%91%E6%B5%81%E6%8A%80%E8%A1%93%E4%B8%B2%E6%8E%A5%E6%89%8B%E5%86%8AV1.1.1.pdf",
+  "title": "紅陽科技金流服務-金流技術串接手冊 V1.1.2（2026-11-09）",
+  "url": "https://storage.googleapis.com/joinchill-image/sunpay_techdoc/202611/%E7%B4%85%E9%99%BD%E7%A7%91%E6%8A%80%E9%87%91%E6%B5%81%E6%9C%8D%E5%8B%99-%E9%87%91%E6%B5%81%E6%8A%80%E8%A1%93%E4%B8%B2%E6%8E%A5%E6%89%8B%E5%86%8AV1.1.2.pdf",
   "format": "pdf",
   "fetch": "get",
   "access": "public",
   "covers": [
    "taiwan-payment/references/sunpay-payment-api.md",
    "taiwan-payment/data/error-codes.csv",
+   "taiwan-payment/data/payment-methods.csv",
+   "taiwan-payment/data/providers.csv",
+   "taiwan-payment/data/troubleshooting.csv",
    "taiwan-payment/examples/sunpay-payment-example.py",
    "tests/vectors/sunpay.json"
   ],
-  "notes": "tests/vectors/sunpay.json 來自 v1.1.0；V1.1.1 §4.2.3 文字與範例值矛盾（見 reference §3.2）"
+  "notes": "tests/vectors/sunpay.json 來自 v1.1.0；V1.1.2 的 §4.2 加解密頁與 V1.1.1 相同，§4.2.3 文字與範例值矛盾（見 reference §3.2）"
  },
  {
   "id": "sunpay-payment-skill",
@@ -8177,7 +8986,8 @@
   "fetch": "get",
   "access": "public",
   "covers": [
-   "taiwan-payment/references/tappay-payment-api.md"
+   "taiwan-payment/references/tappay-payment-api.md",
+   "taiwan-payment/data/providers.csv"
   ],
   "ignore": [
    "(?s)\\A.*?(?=Release list)",
@@ -8244,6 +9054,147 @@
   "access": "public",
   "covers": [
    "taiwan-payment/data/error-codes.csv",
+   "taiwan-payment/references/tappay-payment-api.md"
+  ]
+ },
+ {
+  "id": "tappay-tutorial-zh-back",
+  "provider": "tappay",
+  "skills": [
+   "payment"
+  ],
+  "title": "TapPay：Backend（Pay by Prime／Token、Refund、Record、Notify）",
+  "url": "https://docs.tappaysdk.com/tutorial/zh/back.html",
+  "format": "html",
+  "fetch": "get",
+  "access": "public",
+  "covers": [
+   "taiwan-payment/references/tappay-payment-api.md",
+   "taiwan-payment/data/operations.csv",
+   "taiwan-payment/data/providers.csv",
+   "taiwan-payment/data/field-mappings.csv",
+   "taiwan-payment/examples/tappay-payment-example.py"
+  ]
+ },
+ {
+  "id": "tappay-tutorial-zh-advanced",
+  "provider": "tappay",
+  "skills": [
+   "payment"
+  ],
+  "title": "TapPay：Advanced（Cap、Cap Cancel、Refund Cancel、Bind／Remove Card）",
+  "url": "https://docs.tappaysdk.com/tutorial/zh/advanced.html",
+  "format": "html",
+  "fetch": "get",
+  "access": "public",
+  "covers": [
+   "taiwan-payment/references/tappay-payment-api.md",
+   "taiwan-payment/examples/tappay-payment-example.py"
+  ]
+ },
+ {
+  "id": "tappay-tutorial-zh-reference",
+  "provider": "tappay",
+  "skills": [
+   "payment"
+  ],
+  "title": "TapPay：Reference（record_status、測試卡、測試 Prime、相容性）",
+  "url": "https://docs.tappaysdk.com/tutorial/zh/reference.html",
+  "format": "html",
+  "fetch": "get",
+  "access": "public",
+  "covers": [
+   "taiwan-payment/references/tappay-payment-api.md",
+   "taiwan-payment/data/operations.csv"
+  ]
+ },
+ {
+  "id": "tappay-tutorial-zh-web-front",
+  "provider": "tappay",
+  "skills": [
+   "payment"
+  ],
+  "title": "TapPay：Web Frontend（TapPay Fields、CCV／Cardholder Prime）",
+  "url": "https://docs.tappaysdk.com/tutorial/zh/web/front.html",
+  "format": "html",
+  "fetch": "get",
+  "access": "public",
+  "covers": [
+   "taiwan-payment/references/tappay-payment-api.md"
+  ]
+ },
+ {
+  "id": "tappay-google-pay-zh-front",
+  "provider": "tappay",
+  "skills": [
+   "payment"
+  ],
+  "title": "TapPay：Google Pay Frontend",
+  "url": "https://docs.tappaysdk.com/google-pay/zh/front.html",
+  "format": "html",
+  "fetch": "get",
+  "access": "public",
+  "covers": [
+   "taiwan-payment/references/tappay-payment-api.md"
+  ]
+ },
+ {
+  "id": "tappay-apple-pay-zh-front",
+  "provider": "tappay",
+  "skills": [
+   "payment"
+  ],
+  "title": "TapPay：Apple Pay Frontend",
+  "url": "https://docs.tappaysdk.com/apple-pay/zh/front.html",
+  "format": "html",
+  "fetch": "get",
+  "access": "public",
+  "covers": [
+   "taiwan-payment/references/tappay-payment-api.md"
+  ]
+ },
+ {
+  "id": "tappay-px-pay-plus-zh-web-front",
+  "provider": "tappay",
+  "skills": [
+   "payment"
+  ],
+  "title": "TapPay：全支付 Web Frontend",
+  "url": "https://docs.tappaysdk.com/px-pay-plus/zh/web/front.html",
+  "format": "html",
+  "fetch": "get",
+  "access": "public",
+  "covers": [
+   "taiwan-payment/references/tappay-payment-api.md"
+  ]
+ },
+ {
+  "id": "tappay-oppay-zh-web-front",
+  "provider": "tappay",
+  "skills": [
+   "payment"
+  ],
+  "title": "TapPay：大哥付你分期（OP Pay）Web Frontend",
+  "url": "https://docs.tappaysdk.com/oppay/zh/web/front.html",
+  "format": "html",
+  "fetch": "get",
+  "access": "public",
+  "covers": [
+   "taiwan-payment/references/tappay-payment-api.md"
+  ]
+ },
+ {
+  "id": "tappay-easy-wallet-zh-web-front",
+  "provider": "tappay",
+  "skills": [
+   "payment"
+  ],
+  "title": "TapPay：悠遊付 Web Frontend",
+  "url": "https://docs.tappaysdk.com/easy-wallet/zh/web/front.html",
+  "format": "html",
+  "fetch": "get",
+  "access": "public",
+  "covers": [
    "taiwan-payment/references/tappay-payment-api.md"
   ]
  },

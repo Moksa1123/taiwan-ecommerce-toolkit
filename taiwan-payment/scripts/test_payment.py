@@ -68,7 +68,7 @@ PLATFORMS = {
         'query_url': 'https://sandbox-api.payuni.com.tw/api/trade/query',
         'test_url': 'https://sandbox-api.payuni.com.tw/',
         'auth_method': 'AES-256-GCM',
-        'test_card': '4000-2211-1111-1111',
+        'test_card': '4147-6310-0000-0001',
     },
 }
 

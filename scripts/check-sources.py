@@ -22,6 +22,7 @@ import hashlib
 import html
 import json
 import re
+import socket
 import sys
 import threading
 import time
@@ -201,6 +202,12 @@ class BrowserFetcher:
         self._pw.stop()
 
     def __call__(self, e):
+        host = urllib.parse.urlsplit(e['url']).hostname
+        try:
+            socket.getaddrinfo(host, 443)
+        except socket.gaierror as exc:
+            # 網域消失時瀏覽器只會等 selector 逾時，看起來像改版
+            raise OSError(f'DNS 無法解析 {host}') from exc
         with _host_slot(e['url']):
             try:
                 self._page.goto(e['url'], wait_until='networkidle', timeout=45000)

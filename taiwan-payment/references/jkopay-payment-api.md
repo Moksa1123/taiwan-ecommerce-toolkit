@@ -2,7 +2,7 @@
 
 > 官方開放文件: https://open-doc.jkos.com/
 > 公司: 街口電子支付股份有限公司（專營電子支付機構）
-> 文件公開程度：public（文件站免登入）
+> 文件公開程度：public（文件站免登入）。**2026-11-17 起 `open-doc.jkos.com` 網域無法解析（權威 DNS 回 NXDOMAIN），本檔內容依 2026-10-24 最後取得的官方頁面**；文件站恢復前，最新規格請向街口業務窗口索取
 
 ## 0. 為什麼收錄
 
@@ -156,7 +156,7 @@ PHP 一行即可：`$sig = hash_hmac('sha256', $string, $secret);`
 | `message` | 結果訊息或失敗理由 |
 | `result_object.payment_url` | 付款導向網址。街口 Server 自動判斷裝置：**電腦／平板回 QRCode 網頁；行動裝置直接導向街口 App**。**長度可能超過 255** |
 | `result_object.qr_img` | QRCode 圖檔網址，可嵌入自家付款頁。**長度可能超過 255** |
-| `result_object.qr_timeout` | 失效時間戳 |
+| `result_object.qr_timeout` | 失效時間（欄位型態 timestamp；官方範例單位不一：Entry 頁為秒級 `1528447912`、代碼意義頁為 `600`、授權扣款為毫秒級 `1635297229729`，解析時先判斷位數）|
 
 > ⚠️ **`payment_url` / `qr_img` 欄位長度會超過 255**——資料庫欄位別開 `VARCHAR(255)`，這是實作時的具體地雷。
 > ⚠️ `payment_url` 與 QRCode **僅 20 分鐘有效**。只要還在 `valid_time` 期限內，可用同一 `platform_order_id` 再呼叫 Entry API **展延另一個 20 分鐘**。
@@ -255,13 +255,13 @@ Platform APIs 統一回應格式（**欄位皆小寫**，`result` 為**字串**�
 | status | 意義 |
 |---|---|
 | `0` | 交易成功 |
-| `100` | 付款失敗 |
 | `101` | 訂單尚未付款 |
 | `102` | 訂單編號不存在 |
 
+> 線上支付代碼頁只列 `0`／`101`／`102`；`100` 付款失敗只出現在授權扣款的查詢（§6.7）。仍建議把未知的 status 一律當作非成功處理。
 > ⚠️ **查詢 API 不會用 `result` 表達「查無此單」**——`result=000` 但 `status=102`。只判斷 `result` 會把不存在的訂單當成功。
 
-查詢回傳的 `transactions[]` 欄位與 `result_url` 的 `transaction` 相同但**沒有 `currency`**，另含 `refund_history[]`。
+查詢回傳的 `transactions[]` 欄位與 `result_url` 的 `transaction` 相同，另含 `refund_history[]`。`currency` 未列在 Inquiry 頁欄位表，但代碼意義頁的範例（TWD 與 JPY 訂單）都有回，解析時當作選填。
 
 ### 5.7 訂單退款 `POST /platform/refund`
 
@@ -485,7 +485,7 @@ Response 的 `result_object` 與 OnlinePay 的 `result_url` 同構（`tradeNo`�
 | `/platform/authpay/limited` | POST | 授權創建（不定期不定額）|
 | `/platform/authpay/transaction` | POST | 發動扣款 |
 | `/platform/authpay/refund` | POST | 退款 |
-| `/platform/authpay/inquiry` | GET | 訂單查詢（`transactions[]`，status 同 OnlinePay 0/100/101/102）|
+| `/platform/authpay/inquiry` | GET | 訂單查詢（`transactions[]`，status `0` 成功／`100` 付款失敗／`101` 未付款／`102` 不存在）|
 | `/platform/authpay/detail` | GET | **查授權狀態**，回 `{authpay:{type,auth_no,status,platform_authpay_id}}` |
 | `/platform/authpay/cancel` | POST | 終止授權 |
 
@@ -815,6 +815,7 @@ OAuth 專屬錯誤碼：`OA-001` 成功、`OA-205` Auth Code 已被使用、`OA-
 | 街口幣查詢 API | **官方尚未提供**，僅先公布簽章格式 |
 | Web SDK 建議採用版本 | v2.0.8 載入位址已由 UPKG 確認；官方未標示建議版本，需向街口窗口確認 |
 | R 檔 FTP 連線資訊 | 須提供來源 IP 給業務窗口審核後才提供 |
+| 文件站去向 | 2026-11-17 `open-doc.jkos.com` 網域已無法解析，未找到新網址；需向街口確認是否改為簽約後提供 |
 
 ## 13. 來源
 
@@ -833,7 +834,7 @@ OAuth 專屬錯誤碼：`OA-001` 成功、`OA-205` Auth Code 已被使用、`OA-
 - 授權綁定結果通知 CallBack — https://open-doc.jkos.com/authorized-payment/api/authorization-callback
 - 授權扣款發動 — https://open-doc.jkos.com/authorized-payment/api/deduction
 - 授權模組代碼意義 — https://open-doc.jkos.com/authorized-payment/api/response-code
-- 文件站為需 JavaScript 渲染的 Docusaurus 網站（2026-10 改版，舊 `?docs=` 網址一律導回首頁）
+- 文件站為需 JavaScript 渲染的 Docusaurus 網站（2026-10 改版，舊 `?docs=` 網址一律導回首頁；2026-11-17 起網域無法解析）
 - 街口店家收款 — https://www.jkopay.com/application/store
 - TapPay 街口 Backend 文件 — https://docs.tappaysdk.com/jko-pay/zh/back.html
 - TapPay 街口支付服務頁 — https://www.tappaysdk.com/taiwan-zhtw/service/payments/jko-pay

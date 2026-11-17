@@ -3,7 +3,7 @@
 > **依官方技術串接手冊撰寫，加解密已與手冊範例逐位元組比對**（`tests/vectors/ezpay-payment.json`，
 > CI 執行 `scripts/verify-examples.py`）。
 >
-> 官方 API 文件頁：<https://www.ezpay.com.tw/info/Service_intro/api_document/member>（2026-09 擷取）
+> 官方 API 文件頁：<https://www.ezpay.com.tw/info/Service_intro/api_document/member>（2026-11-17 核對，五份 PDF 與 2026-09-24 版逐位元組相同）
 >
 > | 手冊 | 版本 | 內容 |
 > |------|------|------|
@@ -200,6 +200,8 @@ EncryptData 解密後含 `TimeStamp`、`Status`、`Message`、`APIID`、`Version
 `MerchantOrderNo` 與 `TradeNo` **擇一**（同時帶入回 `SGTR0116`）。回應除交易欄位外另含 `TotalRefundAmt`、
 `RefundLimit`、`Mode`（查詢結果多一個 5=立牌模式）、`PaymentPageURL`、`TWQRCode` 等。
 
+查詢回應的他機構買方帳號欄位名稱是 `CardNumber`（通知 API 為 `BuyAccNo`），且沒有 `QrRefNo`（手冊「九、(二)」）。
+
 ### 7. 退款查詢 `SGetTWQRRefund`
 
 `Rtoken` 與 `MerchantRefundNo` 擇一。回應 `Result`：`RefundStatus`、`MerchantOrderNo`、`TradeNo`、
@@ -254,7 +256,7 @@ EncryptData 解密後含 `TimeStamp`、`Status`、`Message`、`APIID`、`Version
 | `ItemDesc` | V | 最長 50 |
 | `CrossMobile` | | 0=Web（預設）、1=Wap（手機 RWD） |
 | `TradeLimit` | | 交易限制秒數 60–900 |
-| `ClientBackURL` | | 取消時的返回網址 |
+| `ClientBackURL` | | 取消時的返回網址，最長 50 |
 
 NotifyURL / ReturnURL **在 ezPay 後台設定**（手冊「交易支付系統回傳參數說明」），不是交易參數。
 
@@ -272,7 +274,19 @@ NotifyURL / ReturnURL **在 ezPay 後台設定**（手冊「交易支付系統�
 
 外層 `MerchantID`、`Version`（`2.1`）、`RefundInfo`、`RefundSha`；RefundInfo 內 `TimeStamp`、`MerchantID`、
 `Version`、`TradeNo` 或 `MerchantOrderNo`、`RefundAmt`、`RefundType`（`1`）、`Currency`（`TWD`）。
-回應 JSON 的 `Result` 含 `OrderStatus`（3=部分退款、4=全額退款）、`RefundAmt`、`RefundLimit`、`RefundTime`、`RscNo`（退款單號）。
+回應 JSON 的 `Result` 含 `RefundType`、`MerchantID`、`OrderStatus`（3=部分退款、4=全額退款）、`RefundBarCode`（僅 O2O 交易有值）、
+`TradeNo`、`MerchantOrderNo`、`Currency`、`RefundAmt`、`RefundLimit`、`RefundTime`、`RscNo`（退款單號；參數表寫 `RscNO`，範例 JSON 為 `RscNo`）。
+
+退款規則（退款手冊 1.0.3「二、各支付方式退款機制說明」）：
+
+- 不限次數；可退款期間為交易當日起 **120 天內**；退款金額 ≤ 交易金額
+- 可退款餘額 = 未撥款之交易金額 − ezPay 收取的金流手續費，餘額不足時拒絕退款
+- 退款一經發動立即執行，無法取消
+- **每週日 23:50 至週一 00:05** 為 ezPay 與跨境機構清算時間，該時段無法退款
+
+查詢錯誤代碼 `MTQ…`（`MTQ01001`–`MTQ01005`，如 `MTQ01003` QuerySha 驗證不通過、`MTQ01005` 查無訂單資料）；
+退款錯誤代碼 `MTR…`（`MTR01001`–`MTR02001`，如 `MTR01012` 交易序號或商店自訂單號請擇一填寫、`MTR01015` 訂單狀態不為已付款狀態、
+`MTR01016` 退款金額超過可退款金額、`MTR01022` 訂單退款失敗（連線逾時））。
 
 ---
 
@@ -439,6 +453,7 @@ EncryptData 內 `TimeStamp`、`APIID`、`Version`（`2.0`）、`UID`，加上 `M
 | 跨境實體 五、異步通知 | 傳輸表寫「請求方 跨境實體商店、接收方 ezPay」 | 通知是 ezPay 發給商店；方向寫反 |
 | 跨境實體 二、(8) | 參考附錄的測試用 QR Code | 手冊沒有附錄 |
 | 跨境實體 付款請求 PaymentType | 可帶 `REROUTE`（自動分流） | 回應與通知的 `PaymentType` 只列 `ALIPAY`、`WECHATPAY` |
+| API 文件下載頁 | 技術串接手冊標「文件 W1.0.1、2026-07-29」；跨境實體標「程式 1.0、2026-07-29」 | PDF 本身為 W1.0.2（2026-04-20）；跨境實體 PDF 規定 Version `2.0`（退款 `3.0`），以 PDF 為準 |
 
 ---
 

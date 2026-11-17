@@ -319,7 +319,7 @@ HashIV:   請至後台申請
 HashKey:  請至後台申請
 HashIV:   請至後台申請
 測試網址: https://sandbox-api.payuni.com.tw/api/upp
-測試卡號: 4000-2211-1111-1111
+測試卡號: 4147631000000001（官方 page 374）
 ```
 
 ## Publishing Workflow

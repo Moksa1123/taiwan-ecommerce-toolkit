@@ -32,18 +32,19 @@ import requests
 
 @dataclass
 class SessionCreateData:
-    """Shopline 建立結帳會話（Redirect 模式）"""
-    reference_number: str  # 商家訂單編號 (唯一)
+    """Shopline 建立結帳交易（Redirect 模式）；Webhook URL 在後台設定，不在請求內"""
+    reference_id: str  # 特店訂單號 String(32)，唯一
     amount_cents: int  # 金額（分）— NT$1000 = 100000
+    return_url: str
+    products: List[Dict[str, any]]  # [{id, name, quantity, amount:{value,currency}}]
+    shipping: Dict[str, any]  # {shippingMethod, carrier, personalInfo, address}
+    customer: Dict[str, any]  # {referenceCustomerId, personalInfo:{lastName, email|phone}}
+    billing: Dict[str, any]  # {personalInfo, address:{countryCode, street}}
+    client_ip: str
+    allow_payment_methods: List[str] = field(default_factory=lambda: ['CreditCard'])  # CreditCard/ApplePay/LinePay/JKOPay/VirtualAccount/ChaileaseBNPL
     currency: str = 'TWD'
-    return_url: str = ''  # 完成後導回網址
-    cancel_url: str = ''  # 取消後導回網址
-    webhook_url: str = ''  # 通知 URL (HTTPS only)
-    description: str = ''
-    customer_email: str = ''
-    customer_phone: str = ''
-    items: List[Dict[str, any]] = field(default_factory=list)
-    payment_methods: Optional[List[str]] = None  # CARD/APPLEPAY/LINEPAY/JKOPAY/ATM/BNPL
+    language: str = 'zh-TW'
+    expire_minutes: Optional[int] = None  # 預設 360
 
 
 @dataclass
@@ -67,17 +68,18 @@ class ShoplinePaymentService:
     Shopline Payments 服務.
 
     認證: HTTP headers `merchantId` + `apiKey`.
-    端點:
-        - POST /sessions/create        — Redirect 模式建立會話
-        - GET  /sessions/{sessionId}   — 查詢會話
-        - POST /payment/create         — Embedded SDK 提交付款
-        - POST /refund/create          — 退款
-        - POST /capture                — 請款（auth + capture 模式）
-        - POST /void                   — 取消授權
+    端點（皆 POST + JSON）:
+        - /api/v1/trade/sessions/create  — Redirect 模式建立結帳交易
+        - /api/v1/trade/sessions/query   — 查詢結帳交易
+        - /api/v1/trade/payment/create   — Embedded SDK 建立付款交易
+        - /api/v1/trade/payment/get      — 查詢付款交易
+        - /api/v1/trade/refund/create    — 退款
+        - /api/v1/trade/payment/capture  — 請款（autoCapture=false 時）
+        - /api/v1/trade/payment/cancel   — 取消授權
     """
 
-    SANDBOX_BASE = 'https://sandbox-payments-api.shoplineapp.com'
-    PROD_BASE = 'https://payments-api.shoplineapp.com'
+    SANDBOX_BASE = 'https://api-sandbox.shoplinepayments.com'
+    PROD_BASE = 'https://api.shoplinepayments.com'
 
     def __init__(self, merchant_id: str, api_key: str, webhook_secret: str = '', is_test: bool = True):
         if not merchant_id or not api_key:
@@ -93,62 +95,63 @@ class ShoplinePaymentService:
         return {
             'merchantId': self.merchant_id,
             'apiKey': self.api_key,
+            'requestId': uuid.uuid4().hex,  # String(32)，每個請求唯一
             'Content-Type': 'application/json',
-            'Accept': 'application/json',
         }
 
     # -- Operations -----------------------------------------------------------
 
     def create_session(self, data: SessionCreateData) -> ShoplineResponse:
-        """Redirect 模式：建立結帳會話"""
+        """Redirect 模式：建立結帳交易"""
         body = {
-            'merchantId': self.merchant_id,
-            'referenceNumber': data.reference_number,
-            'amount': {
-                'value': data.amount_cents,  # 已是分
-                'currency': data.currency,
-            },
+            'referenceId': data.reference_id,
+            'amount': {'value': data.amount_cents, 'currency': data.currency},
+            'language': data.language,
             'returnUrl': data.return_url,
-            'cancelUrl': data.cancel_url,
-            'webhookUrl': data.webhook_url,
-            'description': data.description,
-            'customer': {
-                'email': data.customer_email,
-                'phone': data.customer_phone,
-            },
-            'items': data.items,
+            'mode': 'regular',
+            'allowPaymentMethodList': data.allow_payment_methods,
+            'order': {'products': data.products, 'shipping': data.shipping},
+            'customer': data.customer,
+            'billing': data.billing,
+            'client': {'ip': data.client_ip},
         }
-        if data.payment_methods:
-            body['paymentMethods'] = data.payment_methods
-        return self._submit('POST', '/sessions/create', body)
+        if data.expire_minutes:
+            body['expireTime'] = data.expire_minutes
+        return self._submit('/api/v1/trade/sessions/create', body)
 
     def query_session(self, session_id: str) -> ShoplineResponse:
-        """查詢結帳會話狀態"""
-        return self._submit('GET', f'/sessions/{session_id}', None)
+        """查詢結帳交易"""
+        return self._submit('/api/v1/trade/sessions/query', {'sessionId': session_id})
 
-    def refund(self, payment_id: str, amount_cents: int, reason: str = '') -> ShoplineResponse:
-        """退款"""
-        body = {
-            'paymentId': payment_id,
-            'amount': {
-                'value': amount_cents,
-                'currency': 'TWD',
-            },
-            'reason': reason,
-        }
-        return self._submit('POST', '/refund/create', body)
+    def query_payment(self, trade_order_id: str) -> ShoplineResponse:
+        """查詢付款交易；實付金額在 raw['payment']['paidAmount']"""
+        return self._submit('/api/v1/trade/payment/get', {'tradeOrderId': trade_order_id})
 
-    def capture(self, payment_id: str, amount_cents: int) -> ShoplineResponse:
-        """請款 (auth + capture 模式專用)"""
+    def refund(self, trade_order_id: str, refund_reference_id: str, amount_cents: int,
+               reason: str = '') -> ShoplineResponse:
+        """退款；refund_reference_id 為特店退款單號（唯一）"""
         body = {
-            'paymentId': payment_id,
+            'referenceOrderId': refund_reference_id,
+            'tradeOrderId': trade_order_id,
             'amount': {'value': amount_cents, 'currency': 'TWD'},
         }
-        return self._submit('POST', '/capture', body)
+        if reason:
+            body['reason'] = reason
+        return self._submit('/api/v1/trade/refund/create', body)
 
-    def void(self, payment_id: str) -> ShoplineResponse:
-        """取消授權"""
-        return self._submit('POST', '/void', {'paymentId': payment_id})
+    def capture(self, trade_order_id: str, reference_order_id: str, amount_cents: int) -> ShoplineResponse:
+        """請款（autoCapture=false 的信用卡交易）"""
+        body = {
+            'referenceOrderId': reference_order_id,
+            'tradeOrderId': trade_order_id,
+            'amount': {'value': amount_cents, 'currency': 'TWD'},
+        }
+        return self._submit('/api/v1/trade/payment/capture', body)
+
+    def cancel(self, trade_order_id: str, reference_order_id: str) -> ShoplineResponse:
+        """取消授權（請款前）；已請款回 6002，改用退款"""
+        return self._submit('/api/v1/trade/payment/cancel',
+                            {'referenceOrderId': reference_order_id, 'tradeOrderId': trade_order_id})
 
     # -- Webhook --------------------------------------------------------------
 
@@ -177,13 +180,10 @@ class ShoplinePaymentService:
 
     # -- HTTP submit ----------------------------------------------------------
 
-    def _submit(self, method: str, path: str, body: Optional[Dict[str, any]]) -> ShoplineResponse:
+    def _submit(self, path: str, body: Dict[str, any]) -> ShoplineResponse:
         url = self.base_url + path
         try:
-            if method == 'GET':
-                r = requests.get(url, headers=self.headers, timeout=30)
-            else:
-                r = requests.post(url, headers=self.headers, json=body, timeout=30)
+            r = requests.post(url, headers=self.headers, json=body, timeout=30)
         except requests.exceptions.RequestException as e:
             raise ConnectionError(f'Shopline API 連線失敗: {e}')
 
@@ -196,16 +196,16 @@ class ShoplinePaymentService:
                 error_message=f'回應非 JSON: {r.text[:200]}',
             )
 
-        is_success = 200 <= r.status_code < 300
-
+        # 400/429/500 回 {code, msg}；200 為成功
+        is_success = r.status_code == 200
         return ShoplineResponse(
             success=is_success,
             session_id=resp.get('sessionId', ''),
             session_url=resp.get('sessionUrl', ''),
-            payment_id=resp.get('paymentId', resp.get('id', '')),
+            payment_id=resp.get('tradeOrderId', ''),
             status=resp.get('status', ''),
-            error_code=str(r.status_code) if not is_success else '',
-            error_message=resp.get('message', resp.get('error', '')),
+            error_code='' if is_success else str(resp.get('code', r.status_code)),
+            error_message='' if is_success else resp.get('msg', ''),
             raw=resp,
         )
 
@@ -215,26 +215,21 @@ class ShoplinePaymentService:
 # ============================================================================
 
 def example_redirect_create():
-    print('=== Shopline Redirect 模式建立會話 ===\n')
-    svc = ShoplinePaymentService(
-        merchant_id='YOUR_MERCHANT_ID',
-        api_key='YOUR_API_KEY',
-        is_test=True,
-    )
+    print('=== Shopline Redirect 模式建立結帳交易 ===\n')
+    svc = ShoplinePaymentService(merchant_id='YOUR_MERCHANT_ID', api_key='YOUR_API_KEY', is_test=True)
+    person = {'lastName': '王', 'firstName': '小明', 'email': 'test@example.com', 'phone': '+886912345678'}
+    address = {'countryCode': 'TW', 'city': '台北市', 'street': '敦化北路 170 號'}
     data = SessionCreateData(
-        reference_number=f'ORD{int(time.time())}',
+        reference_id=f'ORD{int(time.time())}',
         amount_cents=105000,  # NT$1050 -> 105000 分
-        currency='TWD',
-        return_url='https://your-shop.com/order/success',
-        cancel_url='https://your-shop.com/order/cancel',
-        webhook_url='https://your-shop.com/api/shopline/webhook',
-        description='測試訂單',
-        customer_email='test@example.com',
-        customer_phone='0912345678',
-        items=[
-            {'name': '測試商品 A', 'quantity': 1, 'unitPrice': {'value': 105000, 'currency': 'TWD'}},
-        ],
-        payment_methods=['CARD', 'APPLEPAY', 'LINEPAY'],
+        return_url='https://your-shop.com/order/return',
+        products=[{'id': 'P001', 'name': '測試商品 A', 'quantity': 1,
+                   'amount': {'value': 105000, 'currency': 'TWD'}}],
+        shipping={'shippingMethod': '宅配', 'carrier': '黑貓宅配', 'personalInfo': person, 'address': address},
+        customer={'referenceCustomerId': 'CUST001', 'personalInfo': person},
+        billing={'personalInfo': person, 'address': address},
+        client_ip='203.0.113.1',
+        allow_payment_methods=['CreditCard', 'ApplePay', 'LinePay'],
     )
     resp = svc.create_session(data)
     if resp.success:
@@ -245,18 +240,19 @@ def example_redirect_create():
 
 
 def example_query_session():
-    print('\n=== Shopline 查詢會話 ===\n')
+    print('\n=== Shopline 查詢結帳交易 ===\n')
     svc = ShoplinePaymentService('YOUR_MERCHANT_ID', 'YOUR_API_KEY', is_test=True)
-    resp = svc.query_session('session_xxxxxxxx')
+    resp = svc.query_session('se_xxxxxxxx')
     print(json.dumps(resp.raw, ensure_ascii=False, indent=2))
 
 
 def example_refund():
     print('\n=== Shopline 退款 ===\n')
     svc = ShoplinePaymentService('YOUR_MERCHANT_ID', 'YOUR_API_KEY', is_test=True)
-    resp = svc.refund(payment_id='pay_xxxxxxxx', amount_cents=50000, reason='客戶要求退貨')
+    resp = svc.refund(trade_order_id='1001xxxxxxxx', refund_reference_id=f'RF{int(time.time())}',
+                      amount_cents=50000, reason='客戶要求退貨')
     if resp.success:
-        print(f'[OK] 退款 paymentId: {resp.payment_id}')
+        print(f'[OK] 退款狀態: {resp.status}（最終結果看 trade.refund.* 事件或 refund/get）')
     else:
         print(f'[FAIL] {resp.error_code}: {resp.error_message}')
 
@@ -267,7 +263,7 @@ def example_verify_webhook():
     svc = ShoplinePaymentService(
         merchant_id='YOUR_MERCHANT_ID',
         api_key='YOUR_API_KEY',
-        webhook_secret='YOUR_WEBHOOK_SECRET',  # signKey，申請後由 SLP 提供
+        webhook_secret='YOUR_WEBHOOK_SECRET',  # signKey：後台「設定-開發者管理」，每個 Webhook URL 一組
         is_test=True,
     )
     # 模擬收到的 Webhook（header: timestamp、sign；body 為原始位元組）

@@ -4,7 +4,7 @@ ecpay,2,ATM 取號成功,ATM number issued,success,info,不是錯誤；等消費
 ecpay,10100073,CVS／BARCODE 取號成功,CVS/Barcode number issued,success,info,不是錯誤；等消費者繳費後會再收到付款通知（/2881）,https://developers.ecpay.com.tw/,2026-08-08,官方文件
 ecpay,10100001,超商代碼已失效,CVS code expired,payment,error,重新取號（出處：綠界官方 skill guides/20，developers.ecpay.com.tw 未列，以後台「交易狀態代碼查詢」為準）,https://developers.ecpay.com.tw/,2026-08-08,官方文件
 ecpay,10100058,Pay fail（3D 驗證未完成）,Pay fail.,payment,error,請消費者更換瀏覽器或裝置、關閉 VPN、切換網路取得新 IP；定期定額時手機號碼須與銀行資料一致（/5740）,https://developers.ecpay.com.tw/,2026-08-08,官方文件
-ecpay,10100248,信用卡被銀行拒絕,Wrong merchant account,payment,error,資料錯誤、額度不足等，請消費者洽發卡行（/5740）,https://developers.ecpay.com.tw/,2026-08-08,官方文件
+ecpay,10100248,信用卡被銀行拒絕,Wrong merchant account,payment,error,資料錯誤、額度不足等，請消費者洽發卡行（/5740、/2878）,https://developers.ecpay.com.tw/,2026-08-08,官方文件
 ecpay,10200009,訂單已過期,Order expired,payment,error,檢查 ExpireDate 設定，重新建立訂單（出處：綠界官方 skill guides/20，developers.ecpay.com.tw 未列，以後台「交易狀態代碼查詢」為準）,https://developers.ecpay.com.tw/,2026-08-08,官方文件
 ecpay,10200043,3D 驗證失敗,3D Secure failed,payment,error,請消費者重新進行 3D 驗證（出處：綠界官方 skill guides/20，developers.ecpay.com.tw 未列，以後台「交易狀態代碼查詢」為準）,https://developers.ecpay.com.tw/,2026-08-08,官方文件
 ecpay,10200047,MerchantTradeNo 重複,Duplicate MerchantTradeNo,validation,error,使用不同的訂單編號（最長 20 字元，僅英數字）（出處：綠界官方 skill guides/20，developers.ecpay.com.tw 未列，以後台「交易狀態代碼查詢」為準）,https://developers.ecpay.com.tw/,2026-08-08,官方文件
@@ -12,7 +12,7 @@ ecpay,10200050,TotalAmount 超出範圍（金額不符）,TotalAmount out of ran
 ecpay,10200058,信用卡授權失敗,Card authorization failed,payment,error,請消費者確認卡片資訊或更換信用卡（出處：綠界官方 skill guides/20，developers.ecpay.com.tw 未列，以後台「交易狀態代碼查詢」為準）,https://developers.ecpay.com.tw/,2026-08-08,官方文件
 ecpay,10200073,CheckMacValue 驗證失敗,CheckMacValue verify fail,auth,error,不分大小寫排序、PHP urlencode 後轉小寫並還原 ( ) ! *、金流 SHA256 / 物流 MD5；確認 HashKey/HashIV（出處：綠界官方 skill guides/20，developers.ecpay.com.tw 未列，以後台「交易狀態代碼查詢」為準）,https://developers.ecpay.com.tw/,2026-08-08,官方文件
 ecpay,10200095,訂單未成立，消費者未完成付款,Transaction not completed (customer did not finish payment),payment,warning,查詢 API 的 TradeStatus；不是已付款或已退款（/2890）,https://developers.ecpay.com.tw/,2026-08-08,官方文件
-ecpay,10200105,BNPL 金額未達最低,BNPL amount below minimum,validation,error,"TotalAmount 需 >= 3,000 元（出處：綠界官方 skill guides/20，developers.ecpay.com.tw 未列，以後台「交易狀態代碼查詢」為準）",https://developers.ecpay.com.tw/,2026-08-08,官方文件
+ecpay,10200105,BNPL 金額未達最低,BNPL amount below minimum,validation,error,"開發者網站 /36659 的下限：裕富 URICH 1,000 元、中租 ZINGALA 50 元（上限皆 500,000）；綠界 skill guides/20 寫 3,000 元，兩者不一致，以後台「交易狀態代碼查詢」為準",https://developers.ecpay.com.tw/36659.md,2026-11-17,官方文件
 ecpay,10200115,信用卡授權逾時,Card authorization timeout,payment,error,請消費者重新付款（出處：綠界官方 skill guides/20，developers.ecpay.com.tw 未列，以後台「交易狀態代碼查詢」為準）,https://developers.ecpay.com.tw/,2026-08-08,官方文件
 ecpay,10300006,超商繳費期限已過（國內物流中為物流訂單已過期）,CVS payment expired,payment,error,重新建立訂單；同一代碼在物流服務含意不同（出處：綠界官方 skill guides/20，developers.ecpay.com.tw 未列，以後台「交易狀態代碼查詢」為準）,https://developers.ecpay.com.tw/,2026-08-08,官方文件
 ecpay,10400011,WAF 關鍵字攔截,Blocked by WAF keyword,validation,error,ItemName / TradeDesc 含 echo、python、curl 等系統指令關鍵字，移除即可（出處：綠界官方 skill guides/20，developers.ecpay.com.tw 未列，以後台「交易狀態代碼查詢」為準）,https://developers.ecpay.com.tw/,2026-08-08,官方文件
@@ -23,132 +23,141 @@ ecpay,10300023,本次交易未提供任何付款方式,,config,error,MerchantID 
 ecpay,10300024,資料驗證錯誤，請回到原廠商頁面重新操作,,payment,warning,消費者於簡訊驗證時返回上一頁再送出所致（/5740）,https://developers.ecpay.com.tw/,2026-08-08,官方文件
 ecpay,5100070,建立訂單失敗：金額超出上下限或無可用付款方式,,api,error,例：1 元訂單只開 ATM；測試環境請用 2 元以上（/5740）,https://developers.ecpay.com.tw/,2026-08-08,官方文件
 ecpay,5100071,建立訂單失敗：無權限使用,,config,error,服務未開通，請聯繫業務（/5740）,https://developers.ecpay.com.tw/,2026-08-08,官方文件
+ecpay,10300066,交易付款結果待確認中，請勿出貨,,payment,warning,不是付款成功；到廠商後台確認已付款再出貨（/2878）,https://developers.ecpay.com.tw/2878.md,2026-11-17,官方文件
+ecpay,10100251,卡片過期,,payment,error,請消費者檢查卡片後重新交易（/2878）,https://developers.ecpay.com.tw/2878.md,2026-11-17,官方文件
+ecpay,10100252,額度不足,,payment,error,請消費者檢查卡片額度或餘額（/2878）,https://developers.ecpay.com.tw/2878.md,2026-11-17,官方文件
+ecpay,10100254,交易失敗（發卡行交易限制）,,payment,error,請消費者聯繫發卡行確認交易限制（/2878）,https://developers.ecpay.com.tw/2878.md,2026-11-17,官方文件
+ecpay,10100255,報失卡,,payment,error,請消費者更換卡片重新交易（/2878）,https://developers.ecpay.com.tw/2878.md,2026-11-17,官方文件
+ecpay,10100256,被盜用卡,,payment,error,請消費者更換卡片重新交易（/2878）,https://developers.ecpay.com.tw/2878.md,2026-11-17,官方文件
+ecpay,10200163,BNPL 申請失敗,,payment,error,查詢訂單 API 的 TradeStatus；BNPL 另有 0＝申請已受理、1＝申請成功（/2890）,https://developers.ecpay.com.tw/2890.md,2026-11-17,官方文件
+ecpay,90100149,定期定額訂單已停用,,api,error,CreditCardPeriodAction 回傳；訂單已停用，補授權或終止作業失敗（/2900）,https://developers.ecpay.com.tw/2900.md,2026-11-17,官方文件
 newebpay,SUCCESS,成功,Success,success,info,,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,MPG01002,時間戳記不可空白,,validation,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,MPG01005,TokenTerm 不可空白/設定錯誤,,validation,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,MPG01008,分期參數設定錯誤,,validation,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,MPG01009,商店代號不可空白,,validation,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,MPG01010,程式版本設定錯誤,,validation,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,MPG01011,回傳規格設定錯誤,,validation,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,MPG01012,商店訂單編號不可空白/設定錯誤,,validation,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,MPG01013,付款人電子信箱設定錯誤,,validation,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,MPG01014,網址設定錯誤,,validation,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,MPG01015,訂單金額不可空白/設定錯誤,,validation,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,MPG01016,檢查碼不可空白,,validation,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,MPG01017,商品資訊不可空白,,validation,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,MPG01018,繳費有效期限設定錯誤,,validation,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,MPG01023,交易加密資料不可空白,,validation,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,MPG01024,交易加密SHA 資料不可空白,,validation,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,MPG01025,金融機構格式錯誤,,validation,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,MPG01026,金融機構格式錯誤，不接受XXX 參數,,validation,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,MPG01027,一銀維護中，請選擇其他金融機構,,validation,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,MPG01028,訂單細項格式錯誤,,validation,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,1000,退款申請完成,,success,info,電子錢包退款 [NPA-B06] 成功時 Status=1000（不是 SUCCESS）,https://www.newebpay.com/website/Page/content/download_api,2026-11-17,官方文件
+newebpay,MPG01002,時間戳記不可空白,,validation,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,MPG01005,TokenTerm 不可空白/設定錯誤,,validation,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,MPG01008,分期參數設定錯誤,,validation,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,MPG01009,商店代號不可空白,,validation,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,MPG01010,程式版本設定錯誤,,validation,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,MPG01011,回傳規格設定錯誤,,validation,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,MPG01012,商店訂單編號不可空白/設定錯誤,,validation,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,MPG01013,付款人電子信箱設定錯誤,,validation,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,MPG01014,網址設定錯誤,,validation,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,MPG01015,訂單金額不可空白/設定錯誤,,validation,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,MPG01016,檢查碼不可空白,,validation,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,MPG01017,商品資訊不可空白,,validation,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,MPG01018,繳費有效期限設定錯誤,,validation,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,MPG01023,交易加密資料不可空白,,validation,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,MPG01024,交易加密SHA 資料不可空白,,validation,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,MPG01025,金融機構格式錯誤,,validation,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,MPG01026,金融機構格式錯誤，不接受XXX 參數,,validation,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,MPG01027,一銀維護中，請選擇其他金融機構,,validation,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,MPG01028,訂單細項格式錯誤,,validation,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
 newebpay,MPG01029,訂單金額與訂單細項總金額不相符,,validation,error,Amt 須等於訂單細項總金額,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,MPG01030,訂單細項品項編號不可重複,,validation,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,MPG02001,檢查碼錯誤,,auth,error,"TradeSha 錯誤：SHA256(""HashKey={key}&{TradeInfo}&HashIV={iv}"") 轉大寫；確認 HashKey/HashIV",https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,MPG02002,查無商店開啟任何金流服務,,auth,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,MPG02003,支付方式未啟用，請洽客服中心,,auth,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,MPG02004,匯率時間戳記不存在，請確認,,auth,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,MPG02005,驗證資料錯誤(來源不合法),,auth,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,MPG02006,信用卡收單機構系統發生異常，請洽客服中心,,auth,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,MPG02007,本商店強制指定需檢核轉出行，請先啟用智慧,,auth,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,MPG02008,SourceType 參數錯誤，本商店強制指定需檢核,,auth,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,MPG02009,不可修改銀行代號與帳號時，須提供指定轉帳,,auth,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,MPG02010,此版本不支援，請升級至v2.3,,auth,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,MPG03001,FormPost 加密失敗,,system,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,MPG03002,拒絕交易 IP,,system,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,MPG03003,IP 交易次數限制,,system,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,MPG03004,商店狀態已被暫停或是關閉，無法進行交易,,system,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,MPG03005,回傳參數資料不存在/解密失敗,,system,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,MPG03006,回傳參數資料不存在/解密失敗,,system,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,MPG03007,該筆訂單交易資訊不存在，請重新交易,,system,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,MPG01030,訂單細項品項編號不可重複,,validation,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,MPG02001,檢查碼錯誤,,auth,error,規格書備註為 CheckValue；MPG 的 TradeSha 不符回 MPG03009（見藍新規格書 NDNF-1.2.6 錯誤代碼表）,https://www.newebpay.com/website/Page/content/download_api,2026-11-17,官方文件
+newebpay,MPG02002,查無商店開啟任何金流服務,,auth,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,MPG02003,支付方式未啟用，請洽客服中心,,auth,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,MPG02004,匯率時間戳記不存在，請確認,,auth,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,MPG02005,驗證資料錯誤(來源不合法),,auth,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,MPG02006,信用卡收單機構系統發生異常，請洽客服中心,,auth,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,MPG02007,本商店強制指定需檢核轉出行，請先啟用智慧,,auth,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,MPG02008,SourceType 參數錯誤，本商店強制指定需檢核,,auth,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,MPG02009,不可修改銀行代號與帳號時，須提供指定轉帳,,auth,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,MPG02010,此版本不支援，請升級至v2.3,,auth,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,MPG03001,FormPost 加密失敗,,system,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,MPG03002,拒絕交易 IP,,system,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,MPG03003,IP 交易次數限制,,system,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,MPG03004,商店狀態已被暫停或是關閉，無法進行交易,,system,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,MPG03005,回傳參數資料不存在/解密失敗,,system,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,MPG03006,回傳參數資料不存在/解密失敗,,system,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,MPG03007,該筆訂單交易資訊不存在，請重新交易,,system,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
 newebpay,MPG03008,已存在相同的商店訂單編號,,system,error,MerchantOrderNo 不可重複,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,MPG03009,交易失敗,,system,error,交易失敗，依 Message 判斷原因,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,MPG03010,驗證資料不存在或錯誤,,system,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,MPG03011,訂單資料已不存在，請重新交易,,system,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,MPG05001,未有信用卡驗證資料,,payment,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,MPG05002,信用卡卡號長度不足,,payment,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,MPG05003,此信用卡不支援一次付清，請改用可一次付清,,payment,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,MPG05004,發卡行暫時無法提供信用卡分期付款服務,,payment,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,MPG05005,警示交易,,payment,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,MPG05006,物流設定參數[LgsType]錯誤,,payment,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,MPG05007,請開啟其他支付方式,,payment,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,MPG05008,因金額限制關係，無法使用物流服務,,payment,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,TRA10001,商店資料取得失敗,,request,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,TRA10003,金額必須為數字,,request,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,TRA10008,資料加密錯誤,,request,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,TRA10009,商店代號不可空白,,request,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,TRA10012,商店代號停用,,request,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,TRA10013,商店信用卡資格停用,,request,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,TRA10015,網路連線失敗,,request,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,TRA10018,資料不足,,request,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,TRA10021,查無該筆交易或該筆交易不為信用卡交易,,request,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,TRA10026,此訂單非授權成功狀態，不可請款,,request,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,TRA10027,此訂單已申請過請款，不可重覆請款,,request,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,TRA10028,請退款金額超過授權金額，請確認,,request,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,TRA10029,請款超過授權日N 天，已不得請(退)款,,request,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,TRA10030,請款/退款資料新增失敗,,request,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,TRA10031,銀聯卡交易只接受全額請退款,,request,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,TRA10032,單號類型只能為數字1 或2,,request,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,TRA10033,選擇使用商店自訂單號不可空白,,request,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,TRA10035,該交易非授權成功或已請款完成狀態，請確認,,request,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,TRA10036,RespondType 欄位資料格式錯誤,,request,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,TRA10037,商家自訂單號錯誤，只允許英數字及_符號,,request,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,TRA10038,選擇使用系統單號格式錯誤,,request,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,TRA10039,退款金額已超過請款金額，請確認,,request,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,TRA10041,網址格式錯誤,,request,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,TRA10045,該筆交易正在退款中或退款失敗,,request,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,TRA10046,該筆交易撥款狀態異常，無法執行退款,,request,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,TRA10047,該交易不為授權成功狀態，不可放棄授權,,request,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,TRA10048,該交易正在請款狀態,,request,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,TRA10049,該交易正在退款狀態,,request,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,TRA10050,金額不符,,request,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,TRA10051,取消授權失敗,,request,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,MPG03009,交易失敗,,system,error,"交易資料 SHA256 檢查不符（TradeSha：SHA256(""HashKey={key}&{TradeInfo}&HashIV={iv}"") 轉大寫）、TradeInfo 解密失敗、EncryptType 錯誤或銀行拒絕授權；依 Message 判斷",https://www.newebpay.com/website/Page/content/download_api,2026-11-17,官方文件
+newebpay,MPG03010,驗證資料不存在或錯誤,,system,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,MPG03011,訂單資料已不存在，請重新交易,,system,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,MPG05001,未有信用卡驗證資料,,payment,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,MPG05002,信用卡卡號長度不足,,payment,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,MPG05003,此信用卡不支援一次付清，請改用可一次付清,,payment,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,MPG05004,發卡行暫時無法提供信用卡分期付款服務,,payment,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,MPG05005,警示交易,,payment,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,MPG05006,物流設定參數[LgsType]錯誤,,payment,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,MPG05007,請開啟其他支付方式,,payment,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,MPG05008,因金額限制關係，無法使用物流服務,,payment,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,TRA10001,商店資料取得失敗,,request,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,TRA10003,金額必須為數字,,request,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,TRA10008,資料加密錯誤,,request,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,TRA10009,商店代號不可空白,,request,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,TRA10012,商店代號停用,,request,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,TRA10013,商店信用卡資格停用,,request,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,TRA10015,網路連線失敗,,request,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,TRA10018,資料不足,,request,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,TRA10021,查無該筆交易或該筆交易不為信用卡交易,,request,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,TRA10026,此訂單非授權成功狀態，不可請款,,request,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,TRA10027,此訂單已申請過請款，不可重覆請款,,request,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,TRA10028,請退款金額超過授權金額，請確認,,request,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,TRA10029,請款超過授權日N 天，已不得請(退)款,,request,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,TRA10030,請款/退款資料新增失敗,,request,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,TRA10031,銀聯卡交易只接受全額請退款,,request,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,TRA10032,單號類型只能為數字1 或2,,request,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,TRA10033,選擇使用商店自訂單號不可空白,,request,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,TRA10035,該交易非授權成功或已請款完成狀態，請確認,,request,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,TRA10036,RespondType 欄位資料格式錯誤,,request,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,TRA10037,商家自訂單號錯誤，只允許英數字及_符號,,request,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,TRA10038,選擇使用系統單號格式錯誤,,request,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,TRA10039,退款金額已超過請款金額，請確認,,request,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,TRA10041,網址格式錯誤,,request,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,TRA10045,該筆交易正在退款中或退款失敗,,request,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,TRA10046,該筆交易撥款狀態異常，無法執行退款,,request,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,TRA10047,該交易不為授權成功狀態，不可放棄授權,,request,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,TRA10048,該交易正在請款狀態,,request,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,TRA10049,該交易正在退款狀態,,request,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,TRA10050,金額不符,,request,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,TRA10051,取消授權失敗,,request,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
 newebpay,TRA10054,檢查碼CheckValue 有錯誤,,request,error,"CheckValue 錯誤：SHA256(""IV={iv}&Amt=..&MerchantID=..&MerchantOrderNo=..&Key={key}"") 轉大寫",https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,TRA10058,動態貨幣轉換交易只接授全額請款,,request,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,TRA10070,銀聯卡交易無需請款,,request,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,TRA10071,因查無交易資料次數已達上限，已鎖定交易查,,request,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,TRA10077,只能退未撥金額,,request,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,TRA10094,資料取消失敗,,request,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,TRA10095,此筆交易已過關帳時間，不可取消,,request,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,TRA10678,銀聯卡退款失敗,,request,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,TRA10675,紅利交易只接授全額請退款,,request,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,TRA10702,因達到執行請退款筆數上限，您的商店暫時無,,request,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,TRA11002,因失敗過多您的商店暫時無法使用本功能,,request,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,TRA10058,動態貨幣轉換交易只接授全額請款,,request,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,TRA10070,銀聯卡交易無需請款,,request,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,TRA10071,因查無交易資料次數已達上限，已鎖定交易查,,request,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,TRA10077,只能退未撥金額,,request,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,TRA10094,資料取消失敗,,request,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,TRA10095,此筆交易已過關帳時間，不可取消,,request,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,TRA10678,銀聯卡退款失敗,,request,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,TRA10675,紅利交易只接授全額請退款,,request,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,TRA10702,因達到執行請退款筆數上限，您的商店暫時無,,request,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,TRA11002,因失敗過多您的商店暫時無法使用本功能,,request,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
 newebpay,TRA20001,金融機構取消授權批次處理中,,request,info,非錯誤：取消授權需由金融機構批次處理，稍後以查詢確認,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,TRA20002,查無交易資料,,request,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,TRA20004,商店訂單編號重覆,,request,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,TRA20011,該筆交易已請款,,request,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,TRA20027,此訂單已申請過退款，退款中,,request,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,TRA20028,可退款金額不足，請查看常見問題 https://,,request,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,TRA40014,TimeStamp 欄位錯誤,,request,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,MPG05009,超商取貨服務未啟用[服務型態]請洽客服中心,,payment,error,服務型態：取貨付款、取貨不付款；見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,ACC10005,會員已被暫時停權/永久停權，請洽藍新金流客服中心查詢,,auth,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,MEM40008,必填欄位資料不可空白,,validation,error,會提示空白欄位；見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,MEM40012,必填欄位資料傳遞錯誤,,validation,error,PostData_ 空白；見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,MEM40013,必填欄位資料不齊全,,validation,error,會提示空白欄位；見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,MEM40014,傳送時間錯誤,,request,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,NOR1001,連線異常,,system,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,1101,退款失敗,,request,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,1102,查無商店,,request,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,1103,查無訂單資料,,request,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,1104,訂單狀態不為可請/退款狀態,,request,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,1105,可退金額不足,,request,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,1106,錢包類型不符,,request,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,1107,尚未請款,,request,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,1108,僅支援全額退款,,request,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,1109,退款交易申請中，請稍後,,request,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,1110,商店支付方式未啟用,,request,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,1111,查詢商店閘道設定，查無資料,,request,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,1116,可退款金額不足,,request,error,見 https://www.newebpay.com/website/Page/content/faq；見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,2100,最低金額為 1,,validation,error,The Amount minimum is 1；見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,4101,EncryptData_ 不可為空白,,validation,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,4102,HashData_ 不可為空白,,validation,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,4103,HashData_ 資料檢查不符合,,auth,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,4104,加密資料有誤，請確認 Hash_Key 與 Hash_IV 是否正確,,auth,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,4105,TimeStamp 為空,,validation,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,4106,UID_ 不可為空白,,validation,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,9000,網路連線失敗,,system,error,見藍新規格書 NDNF-1.2.5 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,TRA20002,查無交易資料,,request,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,TRA20004,商店訂單編號重覆,,request,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,TRA20011,該筆交易已請款,,request,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,TRA20027,此訂單已申請過退款，退款中,,request,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,TRA20028,可退款金額不足，請查看常見問題 https://,,request,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,TRA40014,TimeStamp 欄位錯誤,,request,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,MPG05009,超商取貨服務未啟用[服務型態]請洽客服中心,,payment,error,服務型態：取貨付款、取貨不付款；見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,ACC10005,會員已被暫時停權/永久停權，請洽藍新金流客服中心查詢,,auth,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,MEM40008,必填欄位資料不可空白,,validation,error,會提示空白欄位；見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,MEM40012,必填欄位資料傳遞錯誤,,validation,error,PostData_ 空白；見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,MEM40013,必填欄位資料不齊全,,validation,error,會提示空白欄位；見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,MEM40014,傳送時間錯誤,,request,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,NOR1001,連線異常,,system,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,1101,退款失敗,,request,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,1102,查無商店,,request,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,1103,查無訂單資料,,request,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,1104,訂單狀態不為可請/退款狀態,,request,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,1105,可退金額不足,,request,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,1106,錢包類型不符,,request,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,1107,尚未請款,,request,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,1108,僅支援全額退款,,request,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,1109,退款交易申請中，請稍後,,request,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,1110,商店支付方式未啟用,,request,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,1111,查詢商店閘道設定，查無資料,,request,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,1116,可退款金額不足,,request,error,見 https://www.newebpay.com/website/Page/content/faq；見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,2100,最低金額為 1,,validation,error,The Amount minimum is 1；見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,4101,EncryptData_ 不可為空白,,validation,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,4102,HashData_ 不可為空白,,validation,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,4103,HashData_ 資料檢查不符合,,auth,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,4104,加密資料有誤，請確認 Hash_Key 與 Hash_IV 是否正確,,auth,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,4105,TimeStamp 為空,,validation,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,4106,UID_ 不可為空白,,validation,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,9000,網路連線失敗,,system,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
 newebpay,NOR10001,連線異常,,system,error,見藍新規格書 NDNP-1.0.8（信用卡定期定額）錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
 newebpay,PER10001,商店資料取得失敗,,request,error,見藍新規格書 NDNP-1.0.8（信用卡定期定額）錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
 newebpay,PER10002,資料解密錯誤,,validation,error,見藍新規格書 NDNP-1.0.8（信用卡定期定額）錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
@@ -230,6 +239,8 @@ pchomepay,20023,會員帳號暫時無法使用此收款功能,function lock.,val
 pchomepay,20025,移除記憶信用卡失敗,remove card info fail.,validation,error,見 PChomePay API 文件「7. 錯誤代碼」,https://docs.google.com/document/d/1dPIPJc4xfyjkJ1i2yxaja4OP0G-iGFRXM08NDMuttZE/,,官方文件
 pchomepay,20030,平台代碼錯誤,platform code not accept,validation,error,見 PChomePay API 文件「7. 錯誤代碼」,https://docs.google.com/document/d/1dPIPJc4xfyjkJ1i2yxaja4OP0G-iGFRXM08NDMuttZE/,,官方文件
 pchomepay,20031,暫時無法建立信用卡分期付款訂單,Currently unable to create installment payment orders.,validation,error,見 PChomePay API 文件「7. 錯誤代碼」,https://docs.google.com/document/d/1dPIPJc4xfyjkJ1i2yxaja4OP0G-iGFRXM08NDMuttZE/,,官方文件
+pchomepay,20032,因靜止戶須重新認證後才可恢復收款,Your account has been suspended for receiving payments due to prolonged inactivity.,validation,error,見 PChomePay API 文件「7. 錯誤代碼」,https://docs.google.com/document/d/1dPIPJc4xfyjkJ1i2yxaja4OP0G-iGFRXM08NDMuttZE/,2026-11-17,官方文件
+pchomepay,20037,認證未通過,member did not pass verify.,validation,error,見 PChomePay API 文件「7. 錯誤代碼」,https://docs.google.com/document/d/1dPIPJc4xfyjkJ1i2yxaja4OP0G-iGFRXM08NDMuttZE/,2026-11-17,官方文件
 pchomepay,40001,ATM 逾期錯誤,invalid atm expire date,payment,error,見 PChomePay API 文件「7. 錯誤代碼」,https://docs.google.com/document/d/1dPIPJc4xfyjkJ1i2yxaja4OP0G-iGFRXM08NDMuttZE/,,官方文件
 pchomepay,40003,會員帳號暫時無法此功使用,function lock.,payment,error,見 PChomePay API 文件「7. 錯誤代碼」,https://docs.google.com/document/d/1dPIPJc4xfyjkJ1i2yxaja4OP0G-iGFRXM08NDMuttZE/,,官方文件
 pchomepay,40005,餘額不足,member balance not enough.,payment,error,見 PChomePay API 文件「7. 錯誤代碼」,https://docs.google.com/document/d/1dPIPJc4xfyjkJ1i2yxaja4OP0G-iGFRXM08NDMuttZE/,,官方文件
@@ -237,7 +248,7 @@ pchomepay,50001,退款編號不可重複,Refund id is duplicate.,refund,error,�
 pchomepay,50002,該筆訂單並未成功付款，無法退款,"The order is not confirm yet, refund can't be execute",refund,error,見 PChomePay API 文件「7. 錯誤代碼」,https://docs.google.com/document/d/1dPIPJc4xfyjkJ1i2yxaja4OP0G-iGFRXM08NDMuttZE/,,官方文件
 pchomepay,50003,訂單編號不存在,"The order is not found, order id might invalid",refund,error,見 PChomePay API 文件「7. 錯誤代碼」,https://docs.google.com/document/d/1dPIPJc4xfyjkJ1i2yxaja4OP0G-iGFRXM08NDMuttZE/,,官方文件
 pchomepay,50004,退款金額需大於 0,Refund amount must bigger than 0,refund,error,見 PChomePay API 文件「7. 錯誤代碼」,https://docs.google.com/document/d/1dPIPJc4xfyjkJ1i2yxaja4OP0G-iGFRXM08NDMuttZE/,,官方文件
-pchomepay,50005,帳戶餘額不足以退款,Your balance is not enough to refund,refund,error,見 PChomePay API 文件「7. 錯誤代碼」,https://docs.google.com/document/d/1dPIPJc4xfyjkJ1i2yxaja4OP0G-iGFRXM08NDMuttZE/,,官方文件
+pchomepay,50005,退款金額超過訂單可退金額,Refund amount exceeds the remaining balance of the order.,refund,error,見 PChomePay API 文件「7. 錯誤代碼」,https://docs.google.com/document/d/1dPIPJc4xfyjkJ1i2yxaja4OP0G-iGFRXM08NDMuttZE/,2026-11-17,官方文件
 pchomepay,50006,查無此退款編號之資料,Can not find the information of the refund id,refund,error,見 PChomePay API 文件「7. 錯誤代碼」,https://docs.google.com/document/d/1dPIPJc4xfyjkJ1i2yxaja4OP0G-iGFRXM08NDMuttZE/,,官方文件
 pchomepay,50007,信用卡分期之退款只能全額退，不支援部分退款,Order payed by credit card with installment can only refund with full order amount only.,refund,error,見 PChomePay API 文件「7. 錯誤代碼」,https://docs.google.com/document/d/1dPIPJc4xfyjkJ1i2yxaja4OP0G-iGFRXM08NDMuttZE/,,官方文件
 pchomepay,50009,ATM 退款資訊未備齊，請隔日再試,The atm refund data is not ready. Please send the refund request later,refund,error,見 PChomePay API 文件「7. 錯誤代碼」,https://docs.google.com/document/d/1dPIPJc4xfyjkJ1i2yxaja4OP0G-iGFRXM08NDMuttZE/,,官方文件
@@ -248,7 +259,10 @@ pchomepay,50013,訂單目前不能退款,The order is not allow to refund,refund
 pchomepay,50014,訂單不支援此退款方式,The pay type is not allow to refund,refund,error,見 PChomePay API 文件「7. 錯誤代碼」,https://docs.google.com/document/d/1dPIPJc4xfyjkJ1i2yxaja4OP0G-iGFRXM08NDMuttZE/,,官方文件
 pchomepay,50015,建立拍錢包退款失敗,Call Pi refund API error.,refund,error,見 PChomePay API 文件「7. 錯誤代碼」,https://docs.google.com/document/d/1dPIPJc4xfyjkJ1i2yxaja4OP0G-iGFRXM08NDMuttZE/,,官方文件
 pchomepay,50016,原付款行不支援退回原帳戶,Bank code not support atm refund.,refund,error,見 PChomePay API 文件「7. 錯誤代碼」,https://docs.google.com/document/d/1dPIPJc4xfyjkJ1i2yxaja4OP0G-iGFRXM08NDMuttZE/,,官方文件
-pchomepay,70001,本行提領金額需 > 1元,withdraw must be bigger than 10 dollars,system,error,見 PChomePay API 文件「7. 錯誤代碼」,https://docs.google.com/document/d/1dPIPJc4xfyjkJ1i2yxaja4OP0G-iGFRXM08NDMuttZE/,,官方文件
+pchomepay,50017,退款金額超過訂單金額,Refund amount exceeds the original order amount.,refund,error,見 PChomePay API 文件「7. 錯誤代碼」,https://docs.google.com/document/d/1dPIPJc4xfyjkJ1i2yxaja4OP0G-iGFRXM08NDMuttZE/,2026-11-17,官方文件
+pchomepay,50018,可用餘額不足，無法退款,Your balance is not enough to refund,refund,error,帳戶需有退款金額 + 退款手續費；見 PChomePay API 文件「7. 錯誤代碼」,https://docs.google.com/document/d/1dPIPJc4xfyjkJ1i2yxaja4OP0G-iGFRXM08NDMuttZE/,2026-11-17,官方文件
+pchomepay,70001,本行提領金額需 > 1元；他行需 ≧ 11元,withdraw must be bigger than 10 dollars,system,error,見 PChomePay API 文件「7. 錯誤代碼」,https://docs.google.com/document/d/1dPIPJc4xfyjkJ1i2yxaja4OP0G-iGFRXM08NDMuttZE/,2026-11-17,官方文件
+pchomepay,70002,認證未通過,member did not pass verify.,system,error,見 PChomePay API 文件「7. 錯誤代碼」,https://docs.google.com/document/d/1dPIPJc4xfyjkJ1i2yxaja4OP0G-iGFRXM08NDMuttZE/,2026-11-17,官方文件
 pchomepay,70003,提領金額超過可提領餘額,withdraw amount is over than available balance,system,error,見 PChomePay API 文件「7. 錯誤代碼」,https://docs.google.com/document/d/1dPIPJc4xfyjkJ1i2yxaja4OP0G-iGFRXM08NDMuttZE/,,官方文件
 pchomepay,70004,提領金額超過本日提領額度上限,withdraw amount is over than withdraw daily limit,system,error,見 PChomePay API 文件「7. 錯誤代碼」,https://docs.google.com/document/d/1dPIPJc4xfyjkJ1i2yxaja4OP0G-iGFRXM08NDMuttZE/,,官方文件
 pchomepay,70005,提領銀行尚未設定,information of bank to withdraw is not set yet,system,error,見 PChomePay API 文件「7. 錯誤代碼」,https://docs.google.com/document/d/1dPIPJc4xfyjkJ1i2yxaja4OP0G-iGFRXM08NDMuttZE/,,官方文件
@@ -256,6 +270,7 @@ pchomepay,70006,會員帳號暫時無法使用提領功能,function lock.,system
 pchomepay,90001,物流狀態錯誤,invalid status,logistics,error,見 PChomePay API 文件「7. 錯誤代碼」,https://docs.google.com/document/d/1dPIPJc4xfyjkJ1i2yxaja4OP0G-iGFRXM08NDMuttZE/,,官方文件
 pchomepay,90002,物流狀態歷程不存在,logistic status history not found,logistics,error,見 PChomePay API 文件「7. 錯誤代碼」,https://docs.google.com/document/d/1dPIPJc4xfyjkJ1i2yxaja4OP0G-iGFRXM08NDMuttZE/,,官方文件
 pchomepay,90004,列印交寄單失敗,Print delivery note fail.,logistics,error,見 PChomePay API 文件「7. 錯誤代碼」,https://docs.google.com/document/d/1dPIPJc4xfyjkJ1i2yxaja4OP0G-iGFRXM08NDMuttZE/,,官方文件
+pchomepay,90008,待繳運費超過上限 200 元,Arrears is too much.,logistics,error,見 PChomePay API 文件「7. 錯誤代碼」,https://docs.google.com/document/d/1dPIPJc4xfyjkJ1i2yxaja4OP0G-iGFRXM08NDMuttZE/,2026-11-17,官方文件
 ezpay,SCTE0001,Version 不得為空,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單建立 API）,https://www.ezpay.com.tw/info/Service_intro/api_document/member,2026-09-24,官方文件
 ezpay,SCTE0002,Version 錯誤,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單建立 API）,https://www.ezpay.com.tw/info/Service_intro/api_document/member,2026-09-24,官方文件
 ezpay,SCTE0003,APIID 不得為空,,validation,error,ezPay 電子支付平台手冊 W1.0.2「十一、錯誤代碼」（訂單建立 API）,https://www.ezpay.com.tw/info/Service_intro/api_document/member,2026-09-24,官方文件
@@ -492,6 +507,31 @@ ezpay,MPG03004,商店狀態或屬性不符合，無法進行交易,,business,err
 ezpay,MPG03007,查無此商店代號,,business,error,ezPay 跨境網路交易串接手冊 1.0.1「九、錯誤代碼」（支付寶／微信 MPG）,https://www.ezpay.com.tw/info/Service_intro/api_document/member,2026-09-24,官方文件
 ezpay,MPG03008,已存在相同的商店訂單編號,,business,error,ezPay 跨境網路交易串接手冊 1.0.1「九、錯誤代碼」（支付寶／微信 MPG）,https://www.ezpay.com.tw/info/Service_intro/api_document/member,2026-09-24,官方文件
 ezpay,MPG03009,交易失敗,,business,error,ezPay 跨境網路交易串接手冊 1.0.1「九、錯誤代碼」（支付寶／微信 MPG）,https://www.ezpay.com.tw/info/Service_intro/api_document/member,2026-09-24,官方文件
+ezpay,MTQ01001,缺少串接必要參數,,validation,error,ezPay 跨境交易單筆查詢串接手冊 ezPay_1.0.1「八、錯誤代碼」p.19（MerchantID、Version、QueryInfo、QuerySha）,https://www.ezpay.com.tw/info/Service_intro/api_document/member,2026-11-17,官方文件
+ezpay,MTQ01002,查無符合商店資料,,business,error,ezPay 跨境交易單筆查詢串接手冊 ezPay_1.0.1「八、錯誤代碼」p.19（MerchantID）,https://www.ezpay.com.tw/info/Service_intro/api_document/member,2026-11-17,官方文件
+ezpay,MTQ01003,查詢驗證不通過,,auth,error,ezPay 跨境交易單筆查詢串接手冊 ezPay_1.0.1「八、錯誤代碼」p.19（QuerySha）,https://www.ezpay.com.tw/info/Service_intro/api_document/member,2026-11-17,官方文件
+ezpay,MTQ01004,QueryInfo 參數錯誤,,validation,error,ezPay 跨境交易單筆查詢串接手冊 ezPay_1.0.1「八、錯誤代碼」p.19（MerchantID、Version、TimeStamp、TradeNo、MerchantOrderNo）,https://www.ezpay.com.tw/info/Service_intro/api_document/member,2026-11-17,官方文件
+ezpay,MTQ01005,查無訂單資料,,business,error,ezPay 跨境交易單筆查詢串接手冊 ezPay_1.0.1「八、錯誤代碼」p.19（MerchantID、TradeNo、MerchantOrderNo）,https://www.ezpay.com.tw/info/Service_intro/api_document/member,2026-11-17,官方文件
+ezpay,MTR01001,缺少串接必要參數,,validation,error,ezPay 跨境交易退款串接手冊 ezPay_1.0.3「九、錯誤代碼」p.20（MerchantID、Version、RefundInfo、RefundSha）,https://www.ezpay.com.tw/info/Service_intro/api_document/member,2026-11-17,官方文件
+ezpay,MTR01002,查無符合商店資料,,business,error,ezPay 跨境交易退款串接手冊 ezPay_1.0.3「九、錯誤代碼」p.20（MerchantID）,https://www.ezpay.com.tw/info/Service_intro/api_document/member,2026-11-17,官方文件
+ezpay,MTR01003,查詢驗證不通過,,auth,error,ezPay 跨境交易退款串接手冊 ezPay_1.0.3「九、錯誤代碼」p.20（RefundSha）,https://www.ezpay.com.tw/info/Service_intro/api_document/member,2026-11-17,官方文件
+ezpay,MTR01004,RefundInfo 參數錯誤,,validation,error,ezPay 跨境交易退款串接手冊 ezPay_1.0.3「九、錯誤代碼」p.20（MerchantID、Version、TimeStamp、TradeNo、MerchantOrderNo、RefundAmt）,https://www.ezpay.com.tw/info/Service_intro/api_document/member,2026-11-17,官方文件
+ezpay,MTR01005,未有商店代號,,validation,error,ezPay 跨境交易退款串接手冊 ezPay_1.0.3「九、錯誤代碼」p.20,https://www.ezpay.com.tw/info/Service_intro/api_document/member,2026-11-17,官方文件
+ezpay,MTR01006,商店代號比對不符合,,validation,error,ezPay 跨境交易退款串接手冊 ezPay_1.0.3「九、錯誤代碼」p.20,https://www.ezpay.com.tw/info/Service_intro/api_document/member,2026-11-17,官方文件
+ezpay,MTR01007,版本比對不符合,,validation,error,ezPay 跨境交易退款串接手冊 ezPay_1.0.3「九、錯誤代碼」p.20,https://www.ezpay.com.tw/info/Service_intro/api_document/member,2026-11-17,官方文件
+ezpay,MTR01008,未有時間戳記,,validation,error,ezPay 跨境交易退款串接手冊 ezPay_1.0.3「九、錯誤代碼」p.20,https://www.ezpay.com.tw/info/Service_intro/api_document/member,2026-11-17,官方文件
+ezpay,MTR01009,退款類型不符合,,validation,error,ezPay 跨境交易退款串接手冊 ezPay_1.0.3「九、錯誤代碼」p.20,https://www.ezpay.com.tw/info/Service_intro/api_document/member,2026-11-17,官方文件
+ezpay,MTR01010,退款幣別不符合,,validation,error,ezPay 跨境交易退款串接手冊 ezPay_1.0.3「九、錯誤代碼」p.20,https://www.ezpay.com.tw/info/Service_intro/api_document/member,2026-11-17,官方文件
+ezpay,MTR01011,退款金額錯誤,,validation,error,ezPay 跨境交易退款串接手冊 ezPay_1.0.3「九、錯誤代碼」p.20,https://www.ezpay.com.tw/info/Service_intro/api_document/member,2026-11-17,官方文件
+ezpay,MTR01012,ezPay 交易序號或商店自訂單號請擇一填寫,,validation,error,ezPay 跨境交易退款串接手冊 ezPay_1.0.3「九、錯誤代碼」p.20,https://www.ezpay.com.tw/info/Service_intro/api_document/member,2026-11-17,官方文件
+ezpay,MTR01013,未有 ezPay 交易序號或商店自訂單號,,validation,error,ezPay 跨境交易退款串接手冊 ezPay_1.0.3「九、錯誤代碼」p.20,https://www.ezpay.com.tw/info/Service_intro/api_document/member,2026-11-17,官方文件
+ezpay,MTR01014,查無符合訂單資料,,business,error,ezPay 跨境交易退款串接手冊 ezPay_1.0.3「九、錯誤代碼」p.20,https://www.ezpay.com.tw/info/Service_intro/api_document/member,2026-11-17,官方文件
+ezpay,MTR01015,訂單狀態不為已付款狀態,,business,error,ezPay 跨境交易退款串接手冊 ezPay_1.0.3「九、錯誤代碼」p.20,https://www.ezpay.com.tw/info/Service_intro/api_document/member,2026-11-17,官方文件
+ezpay,MTR01016,退款金額超過可退款金額,,business,error,ezPay 跨境交易退款串接手冊 ezPay_1.0.3「九、錯誤代碼」p.20,https://www.ezpay.com.tw/info/Service_intro/api_document/member,2026-11-17,官方文件
+ezpay,MTR01020,退款註記失敗,,business,error,ezPay 跨境交易退款串接手冊 ezPay_1.0.3「九、錯誤代碼」p.20,https://www.ezpay.com.tw/info/Service_intro/api_document/member,2026-11-17,官方文件
+ezpay,MTR01021,訂單退款失敗,,business,error,ezPay 跨境交易退款串接手冊 ezPay_1.0.3「九、錯誤代碼」p.20,https://www.ezpay.com.tw/info/Service_intro/api_document/member,2026-11-17,官方文件
+ezpay,MTR01022,訂單退款失敗(連線逾時),,business,error,ezPay 跨境交易退款串接手冊 ezPay_1.0.3「九、錯誤代碼」p.20,https://www.ezpay.com.tw/info/Service_intro/api_document/member,2026-11-17,官方文件
+ezpay,MTR02001,系統錯誤，請聯絡 ezPay 簡單付客服,,system,error,ezPay 跨境交易退款串接手冊 ezPay_1.0.3「九、錯誤代碼」p.20,https://www.ezpay.com.tw/info/Service_intro/api_document/member,2026-11-17,官方文件
 ezpay,CTI01001,資料不齊全(缺少必要參數),,validation,error,ezPay 跨境實體商店串接手冊 ezPay_2.0.0「十、錯誤代碼」p.32（跨境交易付款）,https://www.ezpay.com.tw/info/Service_intro/api_document/member,2026-09-24,官方文件
 ezpay,CTI02001,查無符合商店資料,,validation,error,ezPay 跨境實體商店串接手冊 ezPay_2.0.0「十、錯誤代碼」p.32（跨境交易付款）,https://www.ezpay.com.tw/info/Service_intro/api_document/member,2026-09-24,官方文件
 ezpay,CTI02002,資料解密失敗,,validation,error,ezPay 跨境實體商店串接手冊 ezPay_2.0.0「十、錯誤代碼」p.32（跨境交易付款）,https://www.ezpay.com.tw/info/Service_intro/api_document/member,2026-09-24,官方文件
@@ -691,65 +731,68 @@ shopline,2113,此主體已經存在,entity not unique,onboarding,error,見 SHOPL
 shopline,2116,此負責人或最終受益人已經存在,person not unique,onboarding,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：Onboarding）,https://docs.shoplinepayments.com/appendix/errorCode/,2026-10-24,官方文件
 shopline,2121,此銀行帳戶已提交，請勿重複提交,"The bank has been submitted, please do not repeat",onboarding,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：Onboarding）,https://docs.shoplinepayments.com/appendix/errorCode/,2026-10-24,官方文件
 shopline,2131,此主體正在申請中,entity applying,onboarding,error,見 SHOPLINE Payments 錯誤碼附錄（docs.shoplinepayments.com/appendix/errorCode/，場景：Onboarding）,https://docs.shoplinepayments.com/appendix/errorCode/,2026-10-24,官方文件
-linepay,0000,,"Returned when the request is successful. If this is the result of a payment request status check, the code indicates that The customer has not yet completed LINE Pay authentication.",success,info,見 LINE Pay Online API v3 結果代碼（developers-pay.line.me/online-api-v3）,https://developers-pay.line.me/online-api-v3,2026-10-24,官方文件
-linepay,0110,,"The customer has completed LINE Pay authentication, and you can proceed with payment confirmation.",api,info,見 LINE Pay Online API v3 結果代碼（developers-pay.line.me/online-api-v3）,https://developers-pay.line.me/online-api-v3,2026-10-24,官方文件
-linepay,0121,,"The customer canceled the payment, or the LINE Pay authentication waiting time expired.",api,info,見 LINE Pay Online API v3 結果代碼（developers-pay.line.me/online-api-v3）,https://developers-pay.line.me/online-api-v3,2026-10-24,官方文件
-linepay,0122,,Payment failed.,api,info,見 LINE Pay Online API v3 結果代碼（developers-pay.line.me/online-api-v3）,https://developers-pay.line.me/online-api-v3,2026-10-24,官方文件
-linepay,0123,,Payment completed.,api,info,見 LINE Pay Online API v3 結果代碼（developers-pay.line.me/online-api-v3）,https://developers-pay.line.me/online-api-v3,2026-10-24,官方文件
-linepay,1101,,The customer isn't a LINE Pay user.,api,error,見 LINE Pay Online API v3 結果代碼（developers-pay.line.me/online-api-v3）,https://developers-pay.line.me/online-api-v3,2026-10-24,官方文件
-linepay,1102,,The customer is currently unable to make transactions with LINE Pay.,api,error,見 LINE Pay Online API v3 結果代碼（developers-pay.line.me/online-api-v3）,https://developers-pay.line.me/online-api-v3,2026-10-24,官方文件
-linepay,1104,,The merchant isn't registered on the merchant center. Check if the correct credentials are entered.,api,error,見 LINE Pay Online API v3 結果代碼（developers-pay.line.me/online-api-v3）,https://developers-pay.line.me/online-api-v3,2026-10-24,官方文件
-linepay,1105,,LINE Pay is currently unavailable for the merchant.,api,error,見 LINE Pay Online API v3 結果代碼（developers-pay.line.me/online-api-v3）,https://developers-pay.line.me/online-api-v3,2026-10-24,官方文件
-linepay,1106,,There is an error in the request header information.,api,error,見 LINE Pay Online API v3 結果代碼（developers-pay.line.me/online-api-v3）,https://developers-pay.line.me/online-api-v3,2026-10-24,官方文件
-linepay,1110,,The credit card cannot be used.,api,error,見 LINE Pay Online API v3 結果代碼（developers-pay.line.me/online-api-v3）,https://developers-pay.line.me/online-api-v3,2026-10-24,官方文件
-linepay,1124,,There is an error in the amount information.,api,error,見 LINE Pay Online API v3 結果代碼（developers-pay.line.me/online-api-v3）,https://developers-pay.line.me/online-api-v3,2026-10-24,官方文件
-linepay,1141,,"There is a problem with the account status. In case of EPI transaction, the merchant may not have enabled the EPI payment method, if pre-approved transaction, user might discarded pre-approved payment key and need to obtain a new key.",api,error,見 LINE Pay Online API v3 結果代碼（developers-pay.line.me/online-api-v3）,https://developers-pay.line.me/online-api-v3,2026-10-24,官方文件
-linepay,1142,,The balance is insufficient.,api,error,見 LINE Pay Online API v3 結果代碼（developers-pay.line.me/online-api-v3）,https://developers-pay.line.me/online-api-v3,2026-10-24,官方文件
-linepay,1145,,Payment is in progress.,api,error,見 LINE Pay Online API v3 結果代碼（developers-pay.line.me/online-api-v3）,https://developers-pay.line.me/online-api-v3,2026-10-24,官方文件
-linepay,1150,,There are no transaction details.,api,error,見 LINE Pay Online API v3 結果代碼（developers-pay.line.me/online-api-v3）,https://developers-pay.line.me/online-api-v3,2026-10-24,官方文件
-linepay,1152,,There is a duplicate transaction.,api,error,見 LINE Pay Online API v3 結果代碼（developers-pay.line.me/online-api-v3）,https://developers-pay.line.me/online-api-v3,2026-10-24,官方文件
-linepay,1153,,The payment request amount and the capture amount differ.,api,error,見 LINE Pay Online API v3 結果代碼（developers-pay.line.me/online-api-v3）,https://developers-pay.line.me/online-api-v3,2026-10-24,官方文件
-linepay,1154,,The selected payment method for pre-approved payment isn't available.,api,error,見 LINE Pay Online API v3 結果代碼（developers-pay.line.me/online-api-v3）,https://developers-pay.line.me/online-api-v3,2026-10-24,官方文件
-linepay,1155,,This is an invalid transaction ID.,api,error,見 LINE Pay Online API v3 結果代碼（developers-pay.line.me/online-api-v3）,https://developers-pay.line.me/online-api-v3,2026-10-24,官方文件
-linepay,1159,,There is no payment request information.,api,error,見 LINE Pay Online API v3 結果代碼（developers-pay.line.me/online-api-v3）,https://developers-pay.line.me/online-api-v3,2026-10-24,官方文件
-linepay,1163,,Refund isn't available (refund period has expired).,api,error,見 LINE Pay Online API v3 結果代碼（developers-pay.line.me/online-api-v3）,https://developers-pay.line.me/online-api-v3,2026-10-24,官方文件
-linepay,1164,,Exceeded the refundable amount.,api,error,見 LINE Pay Online API v3 結果代碼（developers-pay.line.me/online-api-v3）,https://developers-pay.line.me/online-api-v3,2026-10-24,官方文件
-linepay,1165,,The transaction has already been refunded.,api,error,見 LINE Pay Online API v3 結果代碼（developers-pay.line.me/online-api-v3）,https://developers-pay.line.me/online-api-v3,2026-10-24,官方文件
-linepay,1169,,LINE Pay requires payment method selection and password authentication.,api,error,見 LINE Pay Online API v3 結果代碼（developers-pay.line.me/online-api-v3）,https://developers-pay.line.me/online-api-v3,2026-10-24,官方文件
-linepay,1170,,The balance in the member's account has changed.,api,error,見 LINE Pay Online API v3 結果代碼（developers-pay.line.me/online-api-v3）,https://developers-pay.line.me/online-api-v3,2026-10-24,官方文件
-linepay,1172,,Transaction details with the same order ID already exist.,api,error,見 LINE Pay Online API v3 結果代碼（developers-pay.line.me/online-api-v3）,https://developers-pay.line.me/online-api-v3,2026-10-24,官方文件
-linepay,1177,,Exceeded the maximum number of transactions that can be retrieved. (100),api,error,見 LINE Pay Online API v3 結果代碼（developers-pay.line.me/online-api-v3）,https://developers-pay.line.me/online-api-v3,2026-10-24,官方文件
-linepay,1178,,The currency isn't supported by the merchant.,api,error,見 LINE Pay Online API v3 結果代碼（developers-pay.line.me/online-api-v3）,https://developers-pay.line.me/online-api-v3,2026-10-24,官方文件
-linepay,1179,,Cannot be processed at the moment.,api,error,見 LINE Pay Online API v3 結果代碼（developers-pay.line.me/online-api-v3）,https://developers-pay.line.me/online-api-v3,2026-10-24,官方文件
-linepay,1180,,Payment time expired.,api,error,見 LINE Pay Online API v3 結果代碼（developers-pay.line.me/online-api-v3）,https://developers-pay.line.me/online-api-v3,2026-10-24,官方文件
-linepay,1183,,Payment amount must exceed the minimum amount set.,api,error,見 LINE Pay Online API v3 結果代碼（developers-pay.line.me/online-api-v3）,https://developers-pay.line.me/online-api-v3,2026-10-24,官方文件
-linepay,1184,,Payment amount must not exceed the maximum amount set.,api,error,見 LINE Pay Online API v3 結果代碼（developers-pay.line.me/online-api-v3）,https://developers-pay.line.me/online-api-v3,2026-10-24,官方文件
-linepay,1190,,There is no pre-approved payment key.,api,error,見 LINE Pay Online API v3 結果代碼（developers-pay.line.me/online-api-v3）,https://developers-pay.line.me/online-api-v3,2026-10-24,官方文件
-linepay,1193,,Pre-approved payment key has expired.,api,error,見 LINE Pay Online API v3 結果代碼（developers-pay.line.me/online-api-v3）,https://developers-pay.line.me/online-api-v3,2026-10-24,官方文件
-linepay,1194,,Pre-approved payment isn't available for this merchant.,api,error,見 LINE Pay Online API v3 結果代碼（developers-pay.line.me/online-api-v3）,https://developers-pay.line.me/online-api-v3,2026-10-24,官方文件
-linepay,1198,,API request is duplicated.,api,error,見 LINE Pay Online API v3 結果代碼（developers-pay.line.me/online-api-v3）,https://developers-pay.line.me/online-api-v3,2026-10-24,官方文件
-linepay,1199,,Internal error occurred during the request.,api,error,見 LINE Pay Online API v3 結果代碼（developers-pay.line.me/online-api-v3）,https://developers-pay.line.me/online-api-v3,2026-10-24,官方文件
-linepay,1280,,Temporary error occurred during credit card payment.,api,error,見 LINE Pay Online API v3 結果代碼（developers-pay.line.me/online-api-v3）,https://developers-pay.line.me/online-api-v3,2026-10-24,官方文件
-linepay,1281,,Error occurred during credit card payment.,api,error,見 LINE Pay Online API v3 結果代碼（developers-pay.line.me/online-api-v3）,https://developers-pay.line.me/online-api-v3,2026-10-24,官方文件
-linepay,1282,,Error occurred during credit card authorization.,api,error,見 LINE Pay Online API v3 結果代碼（developers-pay.line.me/online-api-v3）,https://developers-pay.line.me/online-api-v3,2026-10-24,官方文件
-linepay,1283,,Payment was denied due to suspected fraudulent use.,api,error,見 LINE Pay Online API v3 結果代碼（developers-pay.line.me/online-api-v3）,https://developers-pay.line.me/online-api-v3,2026-10-24,官方文件
-linepay,1284,,Credit card payment is temporarily suspended.,api,error,見 LINE Pay Online API v3 結果代碼（developers-pay.line.me/online-api-v3）,https://developers-pay.line.me/online-api-v3,2026-10-24,官方文件
-linepay,1285,,Credit card payment information is missing.,api,error,見 LINE Pay Online API v3 結果代碼（developers-pay.line.me/online-api-v3）,https://developers-pay.line.me/online-api-v3,2026-10-24,官方文件
-linepay,1286,,Credit card payment information is incorrect.,api,error,見 LINE Pay Online API v3 結果代碼（developers-pay.line.me/online-api-v3）,https://developers-pay.line.me/online-api-v3,2026-10-24,官方文件
-linepay,1287,,Credit card expiration date has passed.,api,error,見 LINE Pay Online API v3 結果代碼（developers-pay.line.me/online-api-v3）,https://developers-pay.line.me/online-api-v3,2026-10-24,官方文件
-linepay,1288,,Insufficient balance in the credit card account,api,error,見 LINE Pay Online API v3 結果代碼（developers-pay.line.me/online-api-v3）,https://developers-pay.line.me/online-api-v3,2026-10-24,官方文件
-linepay,1289,,Exceeded the credit card limit.,api,error,見 LINE Pay Online API v3 結果代碼（developers-pay.line.me/online-api-v3）,https://developers-pay.line.me/online-api-v3,2026-10-24,官方文件
-linepay,1290,,Exceeded the per-transaction limit for credit card payments.,api,error,見 LINE Pay Online API v3 結果代碼（developers-pay.line.me/online-api-v3）,https://developers-pay.line.me/online-api-v3,2026-10-24,官方文件
-linepay,1291,,This card is reported stolen.,api,error,見 LINE Pay Online API v3 結果代碼（developers-pay.line.me/online-api-v3）,https://developers-pay.line.me/online-api-v3,2026-10-24,官方文件
-linepay,1292,,Card usage is suspended.,api,error,見 LINE Pay Online API v3 結果代碼（developers-pay.line.me/online-api-v3）,https://developers-pay.line.me/online-api-v3,2026-10-24,官方文件
-linepay,1293,,CVN input error occurred.,api,error,見 LINE Pay Online API v3 結果代碼（developers-pay.line.me/online-api-v3）,https://developers-pay.line.me/online-api-v3,2026-10-24,官方文件
-linepay,1294,,This card is on the blacklist.,api,error,見 LINE Pay Online API v3 結果代碼（developers-pay.line.me/online-api-v3）,https://developers-pay.line.me/online-api-v3,2026-10-24,官方文件
-linepay,1295,,The credit card number is incorrect.,api,error,見 LINE Pay Online API v3 結果代碼（developers-pay.line.me/online-api-v3）,https://developers-pay.line.me/online-api-v3,2026-10-24,官方文件
-linepay,1296,,This amount cannot be processed.,api,error,見 LINE Pay Online API v3 結果代碼（developers-pay.line.me/online-api-v3）,https://developers-pay.line.me/online-api-v3,2026-10-24,官方文件
-linepay,1298,,Card use was declined.,api,error,見 LINE Pay Online API v3 結果代碼（developers-pay.line.me/online-api-v3）,https://developers-pay.line.me/online-api-v3,2026-10-24,官方文件
-linepay,2101,,Parameter error occurred.,api,error,見 LINE Pay Online API v3 結果代碼（developers-pay.line.me/online-api-v3）,https://developers-pay.line.me/online-api-v3,2026-10-24,官方文件
-linepay,2102,,JSON data format error occurred.,api,error,見 LINE Pay Online API v3 結果代碼（developers-pay.line.me/online-api-v3）,https://developers-pay.line.me/online-api-v3,2026-10-24,官方文件
-linepay,9000,,Internal error occurred.,api,error,見 LINE Pay Online API v3 結果代碼（developers-pay.line.me/online-api-v3）,https://developers-pay.line.me/online-api-v3,2026-10-24,官方文件
+linepay,0000,,"Returned when the request is successful. If this is the result of a payment request status check, it indicates that the customer has not yet completed LINE Pay authentication.",success,info,見 LINE Pay Online API v4 結果代碼（developers-pay.line.me/online-api-v4#result-code）,https://developers-pay.line.me/online-api-v4#result-code,2026-11-17,官方文件
+linepay,0110,,"The customer has completed LINE Pay authentication, and you can proceed with payment confirmation.",api,info,見 LINE Pay Online API v4 結果代碼（developers-pay.line.me/online-api-v4#result-code）,https://developers-pay.line.me/online-api-v4#result-code,2026-11-17,官方文件
+linepay,0121,,"The customer canceled the payment, or the LINE Pay authentication waiting time expired.",api,info,見 LINE Pay Online API v4 結果代碼（developers-pay.line.me/online-api-v4#result-code）,https://developers-pay.line.me/online-api-v4#result-code,2026-11-17,官方文件
+linepay,0122,,Payment failed.,api,info,見 LINE Pay Online API v4 結果代碼（developers-pay.line.me/online-api-v4#result-code）,https://developers-pay.line.me/online-api-v4#result-code,2026-11-17,官方文件
+linepay,0123,,Payment completed.,api,info,見 LINE Pay Online API v4 結果代碼（developers-pay.line.me/online-api-v4#result-code）,https://developers-pay.line.me/online-api-v4#result-code,2026-11-17,官方文件
+linepay,1101,,The customer isn't a LINE Pay user.,api,error,見 LINE Pay Online API v4 結果代碼（developers-pay.line.me/online-api-v4#result-code）,https://developers-pay.line.me/online-api-v4#result-code,2026-11-17,官方文件
+linepay,1102,,The customer is currently unable to make transactions with LINE Pay.,api,error,見 LINE Pay Online API v4 結果代碼（developers-pay.line.me/online-api-v4#result-code）,https://developers-pay.line.me/online-api-v4#result-code,2026-11-17,官方文件
+linepay,1104,,The merchant isn't registered on the merchant center. Check if the correct credentials are entered.,api,error,見 LINE Pay Online API v4 結果代碼（developers-pay.line.me/online-api-v4#result-code）,https://developers-pay.line.me/online-api-v4#result-code,2026-11-17,官方文件
+linepay,1105,,LINE Pay is currently unavailable for the merchant.,api,error,見 LINE Pay Online API v4 結果代碼（developers-pay.line.me/online-api-v4#result-code）,https://developers-pay.line.me/online-api-v4#result-code,2026-11-17,官方文件
+linepay,1106,,There is an error in the request header information.,api,error,Online API 的 X-LINE-Authorization（MAC）不正確即回此碼：GET 簽 ChannelSecret+apiPath+queryString+nonce、POST 簽 ChannelSecret+apiPath+body+nonce；body 多空白或欄位順序不同都會不符（developers-pay.line.me/faq）,https://developers-pay.line.me/faq,2026-11-17,官方文件
+linepay,1110,,The credit card cannot be used.,api,error,見 LINE Pay Online API v4 結果代碼（developers-pay.line.me/online-api-v4#result-code）,https://developers-pay.line.me/online-api-v4#result-code,2026-11-17,官方文件
+linepay,1124,,There is an error in the amount information.,api,error,見 LINE Pay Online API v4 結果代碼（developers-pay.line.me/online-api-v4#result-code）,https://developers-pay.line.me/online-api-v4#result-code,2026-11-17,官方文件
+linepay,1141,,"There is a problem with the account status. In case of EPI transaction, the merchant may not have enabled the EPI payment method, if pre-approved transaction, user might discarded pre-approved payment key and need to obtain a new key.",api,error,見 LINE Pay Online API v4 結果代碼（developers-pay.line.me/online-api-v4#result-code）,https://developers-pay.line.me/online-api-v4#result-code,2026-11-17,官方文件
+linepay,1142,,The balance is insufficient.,api,error,見 LINE Pay Online API v4 結果代碼（developers-pay.line.me/online-api-v4#result-code）,https://developers-pay.line.me/online-api-v4#result-code,2026-11-17,官方文件
+linepay,1145,,Payment is in progress.,api,error,見 LINE Pay Online API v4 結果代碼（developers-pay.line.me/online-api-v4#result-code）,https://developers-pay.line.me/online-api-v4#result-code,2026-11-17,官方文件
+linepay,1150,,There are no transaction details.,api,error,見 LINE Pay Online API v4 結果代碼（developers-pay.line.me/online-api-v4#result-code）,https://developers-pay.line.me/online-api-v4#result-code,2026-11-17,官方文件
+linepay,1152,,There is a duplicate transaction.,api,error,見 LINE Pay Online API v4 結果代碼（developers-pay.line.me/online-api-v4#result-code）,https://developers-pay.line.me/online-api-v4#result-code,2026-11-17,官方文件
+linepay,1153,,The payment request amount and the capture amount differ.,api,error,見 LINE Pay Online API v4 結果代碼（developers-pay.line.me/online-api-v4#result-code）,https://developers-pay.line.me/online-api-v4#result-code,2026-11-17,官方文件
+linepay,1154,,The selected payment method for pre-approved payment isn't available.,api,error,見 LINE Pay Online API v4 結果代碼（developers-pay.line.me/online-api-v4#result-code）,https://developers-pay.line.me/online-api-v4#result-code,2026-11-17,官方文件
+linepay,1155,,This is an invalid transaction ID.,api,error,見 LINE Pay Online API v4 結果代碼（developers-pay.line.me/online-api-v4#result-code）,https://developers-pay.line.me/online-api-v4#result-code,2026-11-17,官方文件
+linepay,1159,,There is no payment request information.,api,error,見 LINE Pay Online API v4 結果代碼（developers-pay.line.me/online-api-v4#result-code）,https://developers-pay.line.me/online-api-v4#result-code,2026-11-17,官方文件
+linepay,1163,,Refund isn't available (refund period has expired).,api,error,見 LINE Pay Online API v4 結果代碼（developers-pay.line.me/online-api-v4#result-code）,https://developers-pay.line.me/online-api-v4#result-code,2026-11-17,官方文件
+linepay,1164,,Exceeded the refundable amount.,api,error,見 LINE Pay Online API v4 結果代碼（developers-pay.line.me/online-api-v4#result-code）,https://developers-pay.line.me/online-api-v4#result-code,2026-11-17,官方文件
+linepay,1165,,The transaction has already been refunded.,api,error,見 LINE Pay Online API v4 結果代碼（developers-pay.line.me/online-api-v4#result-code）,https://developers-pay.line.me/online-api-v4#result-code,2026-11-17,官方文件
+linepay,1169,,LINE Pay requires payment method selection and password authentication.,api,error,見 LINE Pay Online API v4 結果代碼（developers-pay.line.me/online-api-v4#result-code）,https://developers-pay.line.me/online-api-v4#result-code,2026-11-17,官方文件
+linepay,1170,,The balance in the member's account has changed.,api,error,見 LINE Pay Online API v4 結果代碼（developers-pay.line.me/online-api-v4#result-code）,https://developers-pay.line.me/online-api-v4#result-code,2026-11-17,官方文件
+linepay,1172,,Transaction details with the same order ID already exist.,api,error,見 LINE Pay Online API v4 結果代碼（developers-pay.line.me/online-api-v4#result-code）,https://developers-pay.line.me/online-api-v4#result-code,2026-11-17,官方文件
+linepay,1177,,Exceeded the maximum number of transactions that can be retrieved. (100),api,error,見 LINE Pay Online API v4 結果代碼（developers-pay.line.me/online-api-v4#result-code）,https://developers-pay.line.me/online-api-v4#result-code,2026-11-17,官方文件
+linepay,1178,,The currency isn't supported by the merchant.,api,error,見 LINE Pay Online API v4 結果代碼（developers-pay.line.me/online-api-v4#result-code）,https://developers-pay.line.me/online-api-v4#result-code,2026-11-17,官方文件
+linepay,1179,,Cannot be processed at the moment.,api,error,見 LINE Pay Online API v4 結果代碼（developers-pay.line.me/online-api-v4#result-code）,https://developers-pay.line.me/online-api-v4#result-code,2026-11-17,官方文件
+linepay,1180,,Payment time expired.,api,error,見 LINE Pay Online API v4 結果代碼（developers-pay.line.me/online-api-v4#result-code）,https://developers-pay.line.me/online-api-v4#result-code,2026-11-17,官方文件
+linepay,1183,,Payment amount must exceed the minimum amount set.,api,error,見 LINE Pay Online API v4 結果代碼（developers-pay.line.me/online-api-v4#result-code）,https://developers-pay.line.me/online-api-v4#result-code,2026-11-17,官方文件
+linepay,1184,,Payment amount must not exceed the maximum amount set.,api,error,見 LINE Pay Online API v4 結果代碼（developers-pay.line.me/online-api-v4#result-code）,https://developers-pay.line.me/online-api-v4#result-code,2026-11-17,官方文件
+linepay,1190,,There is no pre-approved payment key.,api,error,見 LINE Pay Online API v4 結果代碼（developers-pay.line.me/online-api-v4#result-code）,https://developers-pay.line.me/online-api-v4#result-code,2026-11-17,官方文件
+linepay,1193,,Pre-approved payment key has expired.,api,error,見 LINE Pay Online API v4 結果代碼（developers-pay.line.me/online-api-v4#result-code）,https://developers-pay.line.me/online-api-v4#result-code,2026-11-17,官方文件
+linepay,1194,,Pre-approved payment isn't available for this merchant.,api,error,見 LINE Pay Online API v4 結果代碼（developers-pay.line.me/online-api-v4#result-code）,https://developers-pay.line.me/online-api-v4#result-code,2026-11-17,官方文件
+linepay,1198,,API request is duplicated.,api,error,見 LINE Pay Online API v4 結果代碼（developers-pay.line.me/online-api-v4#result-code）,https://developers-pay.line.me/online-api-v4#result-code,2026-11-17,官方文件
+linepay,1199,,Internal error occurred during the request.,api,error,見 LINE Pay Online API v4 結果代碼（developers-pay.line.me/online-api-v4#result-code）,https://developers-pay.line.me/online-api-v4#result-code,2026-11-17,官方文件
+linepay,1280,,Temporary error occurred during credit card payment.,api,error,見 LINE Pay Online API v4 結果代碼（developers-pay.line.me/online-api-v4#result-code）,https://developers-pay.line.me/online-api-v4#result-code,2026-11-17,官方文件
+linepay,1281,,Error occurred during credit card payment.,api,error,見 LINE Pay Online API v4 結果代碼（developers-pay.line.me/online-api-v4#result-code）,https://developers-pay.line.me/online-api-v4#result-code,2026-11-17,官方文件
+linepay,1282,,Error occurred during credit card authorization.,api,error,見 LINE Pay Online API v4 結果代碼（developers-pay.line.me/online-api-v4#result-code）,https://developers-pay.line.me/online-api-v4#result-code,2026-11-17,官方文件
+linepay,1283,,Payment was denied due to suspected fraudulent use.,api,error,見 LINE Pay Online API v4 結果代碼（developers-pay.line.me/online-api-v4#result-code）,https://developers-pay.line.me/online-api-v4#result-code,2026-11-17,官方文件
+linepay,1284,,Credit card payment is temporarily suspended.,api,error,見 LINE Pay Online API v4 結果代碼（developers-pay.line.me/online-api-v4#result-code）,https://developers-pay.line.me/online-api-v4#result-code,2026-11-17,官方文件
+linepay,1285,,Credit card payment information is missing.,api,error,見 LINE Pay Online API v4 結果代碼（developers-pay.line.me/online-api-v4#result-code）,https://developers-pay.line.me/online-api-v4#result-code,2026-11-17,官方文件
+linepay,1286,,Credit card payment information is incorrect.,api,error,見 LINE Pay Online API v4 結果代碼（developers-pay.line.me/online-api-v4#result-code）,https://developers-pay.line.me/online-api-v4#result-code,2026-11-17,官方文件
+linepay,1287,,Credit card expiration date has passed.,api,error,見 LINE Pay Online API v4 結果代碼（developers-pay.line.me/online-api-v4#result-code）,https://developers-pay.line.me/online-api-v4#result-code,2026-11-17,官方文件
+linepay,1288,,Insufficient balance in the credit card account,api,error,見 LINE Pay Online API v4 結果代碼（developers-pay.line.me/online-api-v4#result-code）,https://developers-pay.line.me/online-api-v4#result-code,2026-11-17,官方文件
+linepay,1289,,Exceeded the credit card limit.,api,error,見 LINE Pay Online API v4 結果代碼（developers-pay.line.me/online-api-v4#result-code）,https://developers-pay.line.me/online-api-v4#result-code,2026-11-17,官方文件
+linepay,1290,,Exceeded the per-transaction limit for credit card payments.,api,error,見 LINE Pay Online API v4 結果代碼（developers-pay.line.me/online-api-v4#result-code）,https://developers-pay.line.me/online-api-v4#result-code,2026-11-17,官方文件
+linepay,1291,,This card is reported stolen.,api,error,見 LINE Pay Online API v4 結果代碼（developers-pay.line.me/online-api-v4#result-code）,https://developers-pay.line.me/online-api-v4#result-code,2026-11-17,官方文件
+linepay,1292,,Card usage is suspended.,api,error,見 LINE Pay Online API v4 結果代碼（developers-pay.line.me/online-api-v4#result-code）,https://developers-pay.line.me/online-api-v4#result-code,2026-11-17,官方文件
+linepay,1293,,CVN input error occurred.,api,error,見 LINE Pay Online API v4 結果代碼（developers-pay.line.me/online-api-v4#result-code）,https://developers-pay.line.me/online-api-v4#result-code,2026-11-17,官方文件
+linepay,1294,,This card is on the blacklist.,api,error,見 LINE Pay Online API v4 結果代碼（developers-pay.line.me/online-api-v4#result-code）,https://developers-pay.line.me/online-api-v4#result-code,2026-11-17,官方文件
+linepay,1295,,The credit card number is incorrect.,api,error,見 LINE Pay Online API v4 結果代碼（developers-pay.line.me/online-api-v4#result-code）,https://developers-pay.line.me/online-api-v4#result-code,2026-11-17,官方文件
+linepay,1296,,This amount cannot be processed.,api,error,見 LINE Pay Online API v4 結果代碼（developers-pay.line.me/online-api-v4#result-code）,https://developers-pay.line.me/online-api-v4#result-code,2026-11-17,官方文件
+linepay,1298,,Card use was declined.,api,error,見 LINE Pay Online API v4 結果代碼（developers-pay.line.me/online-api-v4#result-code）,https://developers-pay.line.me/online-api-v4#result-code,2026-11-17,官方文件
+linepay,190X,,Temporary error occurred. Please try again later.,api,error,見 LINE Pay Online API v4 結果代碼（developers-pay.line.me/online-api-v4#result-code）；void／refund 回 1900、1902、1999 可重試,https://developers-pay.line.me/online-api-v4#result-code,2026-11-17,官方文件
+linepay,2024,,"Exceeded the merchant's per-transaction, daily, or monthly limit for receiving payments.",api,error,見 LINE Pay Online API v4 結果代碼（developers-pay.line.me/online-api-v4#result-code）；中文版代碼表未列此碼,https://developers-pay.line.me/online-api-v4#result-code,2026-11-17,官方文件
+linepay,2042,由於商家的退款準備金不足，未能為該EPI交易進行退款。,,api,error,見 LINE Pay Online API v4 中文版結果代碼（developers-pay.line.me/zh/online-api-v4#result-code）；英文版代碼表未列，但英文版 refund 端點的 Related errors 有 2042,https://developers-pay.line.me/zh/online-api-v4#result-code,2026-11-17,官方文件
+linepay,2101,,Parameter error occurred.,api,error,見 LINE Pay Online API v4 結果代碼（developers-pay.line.me/online-api-v4#result-code）,https://developers-pay.line.me/online-api-v4#result-code,2026-11-17,官方文件
+linepay,2102,,JSON data format error occurred.,api,error,見 LINE Pay Online API v4 結果代碼（developers-pay.line.me/online-api-v4#result-code）,https://developers-pay.line.me/online-api-v4#result-code,2026-11-17,官方文件
+linepay,9000,,Internal error occurred.,api,error,見 LINE Pay Online API v4 結果代碼（developers-pay.line.me/online-api-v4#result-code）,https://developers-pay.line.me/online-api-v4#result-code,2026-11-17,官方文件
 jkopay,000,成功,Success,success,info,,https://open-doc.jkos.com/,2026-08-08,官方文件
 jkopay,101,訂單已付款,Order is paid,duplicate,warning,以 platform_order_id 查詢 Inquiry API 確認狀態後結案勿重複建單,https://open-doc.jkos.com/,2026-08-08,官方文件
 jkopay,200,參數錯誤,Bad request,validation,error,message 會動態指出錯誤欄位 依訊息修正,https://open-doc.jkos.com/,2026-08-08,官方文件
@@ -781,31 +824,31 @@ jkopay,303,超過用戶設定的最高額度,FinalPrice exceeded the max amount 
 jkopay,304,金額與授權帳單金額不一致,Order finalPrice is not consistent with authpay billing amount,validation,error,定期定額的 final_price 必須等於綁定時的 billing_amount,https://open-doc.jkos.com/,2026-08-08,官方文件
 jkopay,305,超過當前週期扣款次數,Authpay payment exceeds current billing cycle times,business,error,週期次數上限 week/month/quarter<=7 year<=12 檢查 billing_cycle.times,https://open-doc.jkos.com/,2026-08-08,官方文件
 jkopay,307,同一授權不可併發扣款,Payment with the same auth_no is allowed one at a time,business,error,同一 auth_no 同時僅允許一筆付款 扣款須序列化,https://open-doc.jkos.com/,2026-08-08,官方文件
-sunpay,10,交易成功,Transaction Success,success,info,交易通知 status / 查詢 result.status（紅陽金流技術串接手冊 v1.1.0 4.3、4.4.2）,https://storage.googleapis.com/joinchill-image/sunpay_techdoc/202608/%E7%B4%85%E9%99%BD%E7%A7%91%E6%8A%80%E9%87%91%E6%B5%81%E6%9C%8D%E5%8B%99-%E9%87%91%E6%B5%81%E6%8A%80%E8%A1%93%E4%B8%B2%E6%8E%A5%E6%89%8B%E5%86%8AV1.1.1.pdf,2026-10-24,官方文件
-sunpay,11,交易失敗,Transaction Failed,payment,error,交易通知 status / 查詢 result.status；查 msg 確認原因（紅陽金流技術串接手冊 v1.1.0 4.3、4.4.2）,https://storage.googleapis.com/joinchill-image/sunpay_techdoc/202608/%E7%B4%85%E9%99%BD%E7%A7%91%E6%8A%80%E9%87%91%E6%B5%81%E6%9C%8D%E5%8B%99-%E9%87%91%E6%B5%81%E6%8A%80%E8%A1%93%E4%B8%B2%E6%8E%A5%E6%89%8B%E5%86%8AV1.1.1.pdf,2026-10-24,官方文件
-sunpay,12-callback,已建立(交易通知),Order Created,payment,warning,交易通知的 12 代表已建立尚未付款，勿與查詢的 12（查無訂單）、退款的 12（無此訂單）混淆（紅陽金流技術串接手冊 v1.1.0 4.3）,https://storage.googleapis.com/joinchill-image/sunpay_techdoc/202608/%E7%B4%85%E9%99%BD%E7%A7%91%E6%8A%80%E9%87%91%E6%B5%81%E6%9C%8D%E5%8B%99-%E9%87%91%E6%B5%81%E6%8A%80%E8%A1%93%E4%B8%B2%E6%8E%A5%E6%89%8B%E5%86%8AV1.1.1.pdf,2026-10-24,官方文件
-sunpay,12-query,查無該筆訂單(查詢API),Order Not Found,query,error,查詢 API result.status（紅陽金流技術串接手冊 v1.1.0 4.4.2）,https://storage.googleapis.com/joinchill-image/sunpay_techdoc/202608/%E7%B4%85%E9%99%BD%E7%A7%91%E6%8A%80%E9%87%91%E6%B5%81%E6%9C%8D%E5%8B%99-%E9%87%91%E6%B5%81%E6%8A%80%E8%A1%93%E4%B8%B2%E6%8E%A5%E6%89%8B%E5%86%8AV1.1.1.pdf,2026-10-24,官方文件
-sunpay,06,紅陽交易編號或是特店訂單編號必須擇一,Trade No or Order No required,validation,error,查詢 API result.status；trade_no 與 td 必須擇一帶入（紅陽金流技術串接手冊 v1.1.0 4.4.2）,https://storage.googleapis.com/joinchill-image/sunpay_techdoc/202608/%E7%B4%85%E9%99%BD%E7%A7%91%E6%8A%80%E9%87%91%E6%B5%81%E6%9C%8D%E5%8B%99-%E9%87%91%E6%B5%81%E6%8A%80%E8%A1%93%E4%B8%B2%E6%8E%A5%E6%89%8B%E5%86%8AV1.1.1.pdf,2026-10-24,官方文件
-sunpay,13-query,交易未完成(查詢API),Transaction Incomplete,query,warning,查詢 API result.status；消費者尚未完成付款（紅陽金流技術串接手冊 v1.1.0 4.4.2）,https://storage.googleapis.com/joinchill-image/sunpay_techdoc/202608/%E7%B4%85%E9%99%BD%E7%A7%91%E6%8A%80%E9%87%91%E6%B5%81%E6%9C%8D%E5%8B%99-%E9%87%91%E6%B5%81%E6%8A%80%E8%A1%93%E4%B8%B2%E6%8E%A5%E6%89%8B%E5%86%8AV1.1.1.pdf,2026-10-24,官方文件
-sunpay,14,訂單退款,Order Refunded,refund,info,查詢 API result.status；另看 refund_status（紅陽金流技術串接手冊 v1.1.0 4.4.2）,https://storage.googleapis.com/joinchill-image/sunpay_techdoc/202608/%E7%B4%85%E9%99%BD%E7%A7%91%E6%8A%80%E9%87%91%E6%B5%81%E6%9C%8D%E5%8B%99-%E9%87%91%E6%B5%81%E6%8A%80%E8%A1%93%E4%B8%B2%E6%8E%A5%E6%89%8B%E5%86%8AV1.1.1.pdf,2026-10-24,官方文件
-sunpay,15,交易取消,Transaction Canceled,query,info,查詢 API result.status（紅陽金流技術串接手冊 v1.1.0 4.4.2）,https://storage.googleapis.com/joinchill-image/sunpay_techdoc/202608/%E7%B4%85%E9%99%BD%E7%A7%91%E6%8A%80%E9%87%91%E6%B5%81%E6%9C%8D%E5%8B%99-%E9%87%91%E6%B5%81%E6%8A%80%E8%A1%93%E4%B8%B2%E6%8E%A5%E6%89%8B%E5%86%8AV1.1.1.pdf,2026-10-24,官方文件
-sunpay,00,請求成功,Request Success,success,info,查詢 / 請款 API 外層 code（紅陽金流技術串接手冊 v1.1.0 4.4.2、4.5.2）；查詢時業務狀態看 result.status,https://storage.googleapis.com/joinchill-image/sunpay_techdoc/202608/%E7%B4%85%E9%99%BD%E7%A7%91%E6%8A%80%E9%87%91%E6%B5%81%E6%9C%8D%E5%8B%99-%E9%87%91%E6%B5%81%E6%8A%80%E8%A1%93%E4%B8%B2%E6%8E%A5%E6%89%8B%E5%86%8AV1.1.1.pdf,2026-10-24,官方文件
-sunpay,99-query,未知錯誤(查詢/請款API),Unknown Error,system,error,查詢 API 外層 code 99「未知錯誤」、請款 API 99「請求失敗」（紅陽金流技術串接手冊 v1.1.0 4.4.2、4.5.2）,https://storage.googleapis.com/joinchill-image/sunpay_techdoc/202608/%E7%B4%85%E9%99%BD%E7%A7%91%E6%8A%80%E9%87%91%E6%B5%81%E6%9C%8D%E5%8B%99-%E9%87%91%E6%B5%81%E6%8A%80%E8%A1%93%E4%B8%B2%E6%8E%A5%E6%89%8B%E5%86%8AV1.1.1.pdf,2026-10-24,官方文件
-sunpay,01,特店代碼不正確,Invalid Merchant,auth,error,退款 API code（紅陽金流技術串接手冊 v1.1.0 4.6.2）,https://storage.googleapis.com/joinchill-image/sunpay_techdoc/202608/%E7%B4%85%E9%99%BD%E7%A7%91%E6%8A%80%E9%87%91%E6%B5%81%E6%9C%8D%E5%8B%99-%E9%87%91%E6%B5%81%E6%8A%80%E8%A1%93%E4%B8%B2%E6%8E%A5%E6%89%8B%E5%86%8AV1.1.1.pdf,2026-10-24,官方文件
-sunpay,02,訂單編號重複,Duplicate Order No,validation,error,退款 API code（紅陽金流技術串接手冊 v1.1.0 4.6.2）,https://storage.googleapis.com/joinchill-image/sunpay_techdoc/202608/%E7%B4%85%E9%99%BD%E7%A7%91%E6%8A%80%E9%87%91%E6%B5%81%E6%9C%8D%E5%8B%99-%E9%87%91%E6%B5%81%E6%8A%80%E8%A1%93%E4%B8%B2%E6%8E%A5%E6%89%8B%E5%86%8AV1.1.1.pdf,2026-10-24,官方文件
-sunpay,03,參數不正確,Invalid Parameter,validation,error,退款 API code（紅陽金流技術串接手冊 v1.1.0 4.6.2）,https://storage.googleapis.com/joinchill-image/sunpay_techdoc/202608/%E7%B4%85%E9%99%BD%E7%A7%91%E6%8A%80%E9%87%91%E6%B5%81%E6%9C%8D%E5%8B%99-%E9%87%91%E6%B5%81%E6%8A%80%E8%A1%93%E4%B8%B2%E6%8E%A5%E6%89%8B%E5%86%8AV1.1.1.pdf,2026-10-24,官方文件
-sunpay,04,驗簽失敗,Signature Verification Failed,auth,error,退款 API code（紅陽金流技術串接手冊 v1.1.0 4.6.2）,https://storage.googleapis.com/joinchill-image/sunpay_techdoc/202608/%E7%B4%85%E9%99%BD%E7%A7%91%E6%8A%80%E9%87%91%E6%B5%81%E6%9C%8D%E5%8B%99-%E9%87%91%E6%B5%81%E6%8A%80%E8%A1%93%E4%B8%B2%E6%8E%A5%E6%89%8B%E5%86%8AV1.1.1.pdf,2026-10-24,官方文件
-sunpay,12-refund,無此訂單(退款API),Order Not Found,refund,error,退款 API code（紅陽金流技術串接手冊 v1.1.0 4.6.2）,https://storage.googleapis.com/joinchill-image/sunpay_techdoc/202608/%E7%B4%85%E9%99%BD%E7%A7%91%E6%8A%80%E9%87%91%E6%B5%81%E6%9C%8D%E5%8B%99-%E9%87%91%E6%B5%81%E6%8A%80%E8%A1%93%E4%B8%B2%E6%8E%A5%E6%89%8B%E5%86%8AV1.1.1.pdf,2026-10-24,官方文件
-sunpay,13-refund,訂單已申請退款(退款API),Refund Already Requested,refund,error,退款 API code（紅陽金流技術串接手冊 v1.1.0 4.6.2）,https://storage.googleapis.com/joinchill-image/sunpay_techdoc/202608/%E7%B4%85%E9%99%BD%E7%A7%91%E6%8A%80%E9%87%91%E6%B5%81%E6%9C%8D%E5%8B%99-%E9%87%91%E6%B5%81%E6%8A%80%E8%A1%93%E4%B8%B2%E6%8E%A5%E6%89%8B%E5%86%8AV1.1.1.pdf,2026-10-24,官方文件
-sunpay,20,申請退款成功,Refund Requested,refund,info,退款 API code（紅陽金流技術串接手冊 v1.1.0 4.6.2）,https://storage.googleapis.com/joinchill-image/sunpay_techdoc/202608/%E7%B4%85%E9%99%BD%E7%A7%91%E6%8A%80%E9%87%91%E6%B5%81%E6%9C%8D%E5%8B%99-%E9%87%91%E6%B5%81%E6%8A%80%E8%A1%93%E4%B8%B2%E6%8E%A5%E6%89%8B%E5%86%8AV1.1.1.pdf,2026-10-24,官方文件
-sunpay,21,申請退款失敗，非信用卡交易不接受退款,Refund Rejected (non-credit),refund,error,退款 API code（紅陽金流技術串接手冊 v1.1.0 4.6.2）,https://storage.googleapis.com/joinchill-image/sunpay_techdoc/202608/%E7%B4%85%E9%99%BD%E7%A7%91%E6%8A%80%E9%87%91%E6%B5%81%E6%9C%8D%E5%8B%99-%E9%87%91%E6%B5%81%E6%8A%80%E8%A1%93%E4%B8%B2%E6%8E%A5%E6%89%8B%E5%86%8AV1.1.1.pdf,2026-10-24,官方文件
-sunpay,22,超過退款申請期限,Refund Period Expired,refund,error,退款 API code（紅陽金流技術串接手冊 v1.1.0 4.6.2）,https://storage.googleapis.com/joinchill-image/sunpay_techdoc/202608/%E7%B4%85%E9%99%BD%E7%A7%91%E6%8A%80%E9%87%91%E6%B5%81%E6%9C%8D%E5%8B%99-%E9%87%91%E6%B5%81%E6%8A%80%E8%A1%93%E4%B8%B2%E6%8E%A5%E6%89%8B%E5%86%8AV1.1.1.pdf,2026-10-24,官方文件
-sunpay,23,已退款達兩次,Refund Limit Reached,refund,error,退款 API code（紅陽金流技術串接手冊 v1.1.0 4.6.2）,https://storage.googleapis.com/joinchill-image/sunpay_techdoc/202608/%E7%B4%85%E9%99%BD%E7%A7%91%E6%8A%80%E9%87%91%E6%B5%81%E6%9C%8D%E5%8B%99-%E9%87%91%E6%B5%81%E6%8A%80%E8%A1%93%E4%B8%B2%E6%8E%A5%E6%89%8B%E5%86%8AV1.1.1.pdf,2026-10-24,官方文件
-sunpay,24,已無餘額可退款,No Refundable Balance,refund,error,退款 API code（紅陽金流技術串接手冊 v1.1.0 4.6.2）,https://storage.googleapis.com/joinchill-image/sunpay_techdoc/202608/%E7%B4%85%E9%99%BD%E7%A7%91%E6%8A%80%E9%87%91%E6%B5%81%E6%9C%8D%E5%8B%99-%E9%87%91%E6%B5%81%E6%8A%80%E8%A1%93%E4%B8%B2%E6%8E%A5%E6%89%8B%E5%86%8AV1.1.1.pdf,2026-10-24,官方文件
-sunpay,25,當日訂單僅允許全額退款,Same-day Orders Allow Full Refund Only,refund,error,退款 API code（紅陽金流技術串接手冊 v1.1.0 4.6.2）,https://storage.googleapis.com/joinchill-image/sunpay_techdoc/202608/%E7%B4%85%E9%99%BD%E7%A7%91%E6%8A%80%E9%87%91%E6%B5%81%E6%9C%8D%E5%8B%99-%E9%87%91%E6%B5%81%E6%8A%80%E8%A1%93%E4%B8%B2%E6%8E%A5%E6%89%8B%E5%86%8AV1.1.1.pdf,2026-10-24,官方文件
-sunpay,26,本次退款金額需與可退款金額一致,Refund Amount Must Equal Refundable Amount,refund,error,退款 API code（紅陽金流技術串接手冊 v1.1.0 4.6.2）,https://storage.googleapis.com/joinchill-image/sunpay_techdoc/202608/%E7%B4%85%E9%99%BD%E7%A7%91%E6%8A%80%E9%87%91%E6%B5%81%E6%9C%8D%E5%8B%99-%E9%87%91%E6%B5%81%E6%8A%80%E8%A1%93%E4%B8%B2%E6%8E%A5%E6%89%8B%E5%86%8AV1.1.1.pdf,2026-10-24,官方文件
-sunpay,97,不接受此 IP 進行授權,IP Not Allowed,auth,error,退款 API code（紅陽金流技術串接手冊 v1.1.0 4.6.2）,https://storage.googleapis.com/joinchill-image/sunpay_techdoc/202608/%E7%B4%85%E9%99%BD%E7%A7%91%E6%8A%80%E9%87%91%E6%B5%81%E6%9C%8D%E5%8B%99-%E9%87%91%E6%B5%81%E6%8A%80%E8%A1%93%E4%B8%B2%E6%8E%A5%E6%89%8B%E5%86%8AV1.1.1.pdf,2026-10-24,官方文件
-sunpay,99-refund,未知錯誤(退款API),Unknown Error,system,error,退款 API code（紅陽金流技術串接手冊 v1.1.0 4.6.2）,https://storage.googleapis.com/joinchill-image/sunpay_techdoc/202608/%E7%B4%85%E9%99%BD%E7%A7%91%E6%8A%80%E9%87%91%E6%B5%81%E6%9C%8D%E5%8B%99-%E9%87%91%E6%B5%81%E6%8A%80%E8%A1%93%E4%B8%B2%E6%8E%A5%E6%89%8B%E5%86%8AV1.1.1.pdf,2026-10-24,官方文件
+sunpay,10,交易成功,Transaction Success,success,info,交易通知 pay_result / 查詢 result[].pay_result（紅陽金流技術串接手冊 v1.1.2 4.3、4.4.2）,https://storage.googleapis.com/joinchill-image/sunpay_techdoc/202611/%E7%B4%85%E9%99%BD%E7%A7%91%E6%8A%80%E9%87%91%E6%B5%81%E6%9C%8D%E5%8B%99-%E9%87%91%E6%B5%81%E6%8A%80%E8%A1%93%E4%B8%B2%E6%8E%A5%E6%89%8B%E5%86%8AV1.1.2.pdf,2026-11-17,官方文件
+sunpay,11,交易失敗,Transaction Failed,payment,error,交易通知 pay_result / 查詢 result[].pay_result；查 msg 確認原因（紅陽金流技術串接手冊 v1.1.2 4.3、4.4.2）,https://storage.googleapis.com/joinchill-image/sunpay_techdoc/202611/%E7%B4%85%E9%99%BD%E7%A7%91%E6%8A%80%E9%87%91%E6%B5%81%E6%9C%8D%E5%8B%99-%E9%87%91%E6%B5%81%E6%8A%80%E8%A1%93%E4%B8%B2%E6%8E%A5%E6%89%8B%E5%86%8AV1.1.2.pdf,2026-11-17,官方文件
+sunpay,12-callback,已建立(交易通知),Order Created,payment,warning,交易通知的 12 代表已建立尚未付款，勿與查詢的 12（查無訂單）、退款的 12（無此訂單）混淆（紅陽金流技術串接手冊 v1.1.2 4.3）,https://storage.googleapis.com/joinchill-image/sunpay_techdoc/202611/%E7%B4%85%E9%99%BD%E7%A7%91%E6%8A%80%E9%87%91%E6%B5%81%E6%9C%8D%E5%8B%99-%E9%87%91%E6%B5%81%E6%8A%80%E8%A1%93%E4%B8%B2%E6%8E%A5%E6%89%8B%E5%86%8AV1.1.2.pdf,2026-11-17,官方文件
+sunpay,12-query,查無該筆訂單(查詢API),Order Not Found,query,error,查詢 API result[].pay_result（紅陽金流技術串接手冊 v1.1.2 4.4.2）,https://storage.googleapis.com/joinchill-image/sunpay_techdoc/202611/%E7%B4%85%E9%99%BD%E7%A7%91%E6%8A%80%E9%87%91%E6%B5%81%E6%9C%8D%E5%8B%99-%E9%87%91%E6%B5%81%E6%8A%80%E8%A1%93%E4%B8%B2%E6%8E%A5%E6%89%8B%E5%86%8AV1.1.2.pdf,2026-11-17,官方文件
+sunpay,06,紅陽交易編號或是特店訂單編號必須擇一,Trade No or Order No required,validation,error,查詢 API result[].pay_result；trade_no 與 td 必須擇一帶入（紅陽金流技術串接手冊 v1.1.2 4.4.2）,https://storage.googleapis.com/joinchill-image/sunpay_techdoc/202611/%E7%B4%85%E9%99%BD%E7%A7%91%E6%8A%80%E9%87%91%E6%B5%81%E6%9C%8D%E5%8B%99-%E9%87%91%E6%B5%81%E6%8A%80%E8%A1%93%E4%B8%B2%E6%8E%A5%E6%89%8B%E5%86%8AV1.1.2.pdf,2026-11-17,官方文件
+sunpay,13-query,交易未完成(查詢API),Transaction Incomplete,query,warning,查詢 API result[].pay_result；消費者尚未完成付款（紅陽金流技術串接手冊 v1.1.2 4.4.2）,https://storage.googleapis.com/joinchill-image/sunpay_techdoc/202611/%E7%B4%85%E9%99%BD%E7%A7%91%E6%8A%80%E9%87%91%E6%B5%81%E6%9C%8D%E5%8B%99-%E9%87%91%E6%B5%81%E6%8A%80%E8%A1%93%E4%B8%B2%E6%8E%A5%E6%89%8B%E5%86%8AV1.1.2.pdf,2026-11-17,官方文件
+sunpay,14,訂單退款,Order Refunded,refund,info,查詢 API result[].pay_result；另看 refund_status（紅陽金流技術串接手冊 v1.1.2 4.4.2）,https://storage.googleapis.com/joinchill-image/sunpay_techdoc/202611/%E7%B4%85%E9%99%BD%E7%A7%91%E6%8A%80%E9%87%91%E6%B5%81%E6%9C%8D%E5%8B%99-%E9%87%91%E6%B5%81%E6%8A%80%E8%A1%93%E4%B8%B2%E6%8E%A5%E6%89%8B%E5%86%8AV1.1.2.pdf,2026-11-17,官方文件
+sunpay,15,交易取消,Transaction Canceled,query,info,查詢 API result[].pay_result（紅陽金流技術串接手冊 v1.1.2 4.4.2）,https://storage.googleapis.com/joinchill-image/sunpay_techdoc/202611/%E7%B4%85%E9%99%BD%E7%A7%91%E6%8A%80%E9%87%91%E6%B5%81%E6%9C%8D%E5%8B%99-%E9%87%91%E6%B5%81%E6%8A%80%E8%A1%93%E4%B8%B2%E6%8E%A5%E6%89%8B%E5%86%8AV1.1.2.pdf,2026-11-17,官方文件
+sunpay,00,請求成功,Request Success,success,info,查詢 / 請款 API 外層 code（紅陽金流技術串接手冊 v1.1.2 4.4.2、4.5.2）；查詢時業務狀態看 result[].pay_result,https://storage.googleapis.com/joinchill-image/sunpay_techdoc/202611/%E7%B4%85%E9%99%BD%E7%A7%91%E6%8A%80%E9%87%91%E6%B5%81%E6%9C%8D%E5%8B%99-%E9%87%91%E6%B5%81%E6%8A%80%E8%A1%93%E4%B8%B2%E6%8E%A5%E6%89%8B%E5%86%8AV1.1.2.pdf,2026-11-17,官方文件
+sunpay,99-query,未知錯誤(查詢/請款API),Unknown Error,system,error,查詢 API 外層 code 99「未知錯誤」、請款 API 99「請求失敗」（紅陽金流技術串接手冊 v1.1.2 4.4.2、4.5.2）,https://storage.googleapis.com/joinchill-image/sunpay_techdoc/202611/%E7%B4%85%E9%99%BD%E7%A7%91%E6%8A%80%E9%87%91%E6%B5%81%E6%9C%8D%E5%8B%99-%E9%87%91%E6%B5%81%E6%8A%80%E8%A1%93%E4%B8%B2%E6%8E%A5%E6%89%8B%E5%86%8AV1.1.2.pdf,2026-11-17,官方文件
+sunpay,01,特店代碼不正確,Invalid Merchant,auth,error,退款 API code（紅陽金流技術串接手冊 v1.1.2 4.6.2）,https://storage.googleapis.com/joinchill-image/sunpay_techdoc/202611/%E7%B4%85%E9%99%BD%E7%A7%91%E6%8A%80%E9%87%91%E6%B5%81%E6%9C%8D%E5%8B%99-%E9%87%91%E6%B5%81%E6%8A%80%E8%A1%93%E4%B8%B2%E6%8E%A5%E6%89%8B%E5%86%8AV1.1.2.pdf,2026-11-17,官方文件
+sunpay,02,訂單編號重複,Duplicate Order No,validation,error,退款 API code（紅陽金流技術串接手冊 v1.1.2 4.6.2）,https://storage.googleapis.com/joinchill-image/sunpay_techdoc/202611/%E7%B4%85%E9%99%BD%E7%A7%91%E6%8A%80%E9%87%91%E6%B5%81%E6%9C%8D%E5%8B%99-%E9%87%91%E6%B5%81%E6%8A%80%E8%A1%93%E4%B8%B2%E6%8E%A5%E6%89%8B%E5%86%8AV1.1.2.pdf,2026-11-17,官方文件
+sunpay,03,參數不正確,Invalid Parameter,validation,error,退款 API code（紅陽金流技術串接手冊 v1.1.2 4.6.2）,https://storage.googleapis.com/joinchill-image/sunpay_techdoc/202611/%E7%B4%85%E9%99%BD%E7%A7%91%E6%8A%80%E9%87%91%E6%B5%81%E6%9C%8D%E5%8B%99-%E9%87%91%E6%B5%81%E6%8A%80%E8%A1%93%E4%B8%B2%E6%8E%A5%E6%89%8B%E5%86%8AV1.1.2.pdf,2026-11-17,官方文件
+sunpay,04,驗簽失敗,Signature Verification Failed,auth,error,退款 API code（紅陽金流技術串接手冊 v1.1.2 4.6.2）,https://storage.googleapis.com/joinchill-image/sunpay_techdoc/202611/%E7%B4%85%E9%99%BD%E7%A7%91%E6%8A%80%E9%87%91%E6%B5%81%E6%9C%8D%E5%8B%99-%E9%87%91%E6%B5%81%E6%8A%80%E8%A1%93%E4%B8%B2%E6%8E%A5%E6%89%8B%E5%86%8AV1.1.2.pdf,2026-11-17,官方文件
+sunpay,12-refund,無此訂單(退款API),Order Not Found,refund,error,退款 API code（紅陽金流技術串接手冊 v1.1.2 4.6.2）,https://storage.googleapis.com/joinchill-image/sunpay_techdoc/202611/%E7%B4%85%E9%99%BD%E7%A7%91%E6%8A%80%E9%87%91%E6%B5%81%E6%9C%8D%E5%8B%99-%E9%87%91%E6%B5%81%E6%8A%80%E8%A1%93%E4%B8%B2%E6%8E%A5%E6%89%8B%E5%86%8AV1.1.2.pdf,2026-11-17,官方文件
+sunpay,13-refund,訂單已申請退款(退款API),Refund Already Requested,refund,error,退款 API code（紅陽金流技術串接手冊 v1.1.2 4.6.2）,https://storage.googleapis.com/joinchill-image/sunpay_techdoc/202611/%E7%B4%85%E9%99%BD%E7%A7%91%E6%8A%80%E9%87%91%E6%B5%81%E6%9C%8D%E5%8B%99-%E9%87%91%E6%B5%81%E6%8A%80%E8%A1%93%E4%B8%B2%E6%8E%A5%E6%89%8B%E5%86%8AV1.1.2.pdf,2026-11-17,官方文件
+sunpay,20,申請退款成功,Refund Requested,refund,info,退款 API code（紅陽金流技術串接手冊 v1.1.2 4.6.2）,https://storage.googleapis.com/joinchill-image/sunpay_techdoc/202611/%E7%B4%85%E9%99%BD%E7%A7%91%E6%8A%80%E9%87%91%E6%B5%81%E6%9C%8D%E5%8B%99-%E9%87%91%E6%B5%81%E6%8A%80%E8%A1%93%E4%B8%B2%E6%8E%A5%E6%89%8B%E5%86%8AV1.1.2.pdf,2026-11-17,官方文件
+sunpay,21,申請退款失敗，非信用卡交易不接受退款,Refund Rejected (non-credit),refund,error,退款 API code（紅陽金流技術串接手冊 v1.1.2 4.6.2）,https://storage.googleapis.com/joinchill-image/sunpay_techdoc/202611/%E7%B4%85%E9%99%BD%E7%A7%91%E6%8A%80%E9%87%91%E6%B5%81%E6%9C%8D%E5%8B%99-%E9%87%91%E6%B5%81%E6%8A%80%E8%A1%93%E4%B8%B2%E6%8E%A5%E6%89%8B%E5%86%8AV1.1.2.pdf,2026-11-17,官方文件
+sunpay,22,超過退款申請期限,Refund Period Expired,refund,error,退款 API code（紅陽金流技術串接手冊 v1.1.2 4.6.2）,https://storage.googleapis.com/joinchill-image/sunpay_techdoc/202611/%E7%B4%85%E9%99%BD%E7%A7%91%E6%8A%80%E9%87%91%E6%B5%81%E6%9C%8D%E5%8B%99-%E9%87%91%E6%B5%81%E6%8A%80%E8%A1%93%E4%B8%B2%E6%8E%A5%E6%89%8B%E5%86%8AV1.1.2.pdf,2026-11-17,官方文件
+sunpay,23,已退款達兩次,Refund Limit Reached,refund,error,退款 API code（紅陽金流技術串接手冊 v1.1.2 4.6.2）,https://storage.googleapis.com/joinchill-image/sunpay_techdoc/202611/%E7%B4%85%E9%99%BD%E7%A7%91%E6%8A%80%E9%87%91%E6%B5%81%E6%9C%8D%E5%8B%99-%E9%87%91%E6%B5%81%E6%8A%80%E8%A1%93%E4%B8%B2%E6%8E%A5%E6%89%8B%E5%86%8AV1.1.2.pdf,2026-11-17,官方文件
+sunpay,24,已無餘額可退款,No Refundable Balance,refund,error,退款 API code（紅陽金流技術串接手冊 v1.1.2 4.6.2）,https://storage.googleapis.com/joinchill-image/sunpay_techdoc/202611/%E7%B4%85%E9%99%BD%E7%A7%91%E6%8A%80%E9%87%91%E6%B5%81%E6%9C%8D%E5%8B%99-%E9%87%91%E6%B5%81%E6%8A%80%E8%A1%93%E4%B8%B2%E6%8E%A5%E6%89%8B%E5%86%8AV1.1.2.pdf,2026-11-17,官方文件
+sunpay,25,當日訂單僅允許全額退款,Same-day Orders Allow Full Refund Only,refund,error,退款 API code（紅陽金流技術串接手冊 v1.1.2 4.6.2）,https://storage.googleapis.com/joinchill-image/sunpay_techdoc/202611/%E7%B4%85%E9%99%BD%E7%A7%91%E6%8A%80%E9%87%91%E6%B5%81%E6%9C%8D%E5%8B%99-%E9%87%91%E6%B5%81%E6%8A%80%E8%A1%93%E4%B8%B2%E6%8E%A5%E6%89%8B%E5%86%8AV1.1.2.pdf,2026-11-17,官方文件
+sunpay,26,本次退款金額需與可退款金額一致,Refund Amount Must Equal Refundable Amount,refund,error,退款 API code（紅陽金流技術串接手冊 v1.1.2 4.6.2）,https://storage.googleapis.com/joinchill-image/sunpay_techdoc/202611/%E7%B4%85%E9%99%BD%E7%A7%91%E6%8A%80%E9%87%91%E6%B5%81%E6%9C%8D%E5%8B%99-%E9%87%91%E6%B5%81%E6%8A%80%E8%A1%93%E4%B8%B2%E6%8E%A5%E6%89%8B%E5%86%8AV1.1.2.pdf,2026-11-17,官方文件
+sunpay,97,不接受此 IP 進行授權,IP Not Allowed,auth,error,退款 API code（紅陽金流技術串接手冊 v1.1.2 4.6.2）,https://storage.googleapis.com/joinchill-image/sunpay_techdoc/202611/%E7%B4%85%E9%99%BD%E7%A7%91%E6%8A%80%E9%87%91%E6%B5%81%E6%9C%8D%E5%8B%99-%E9%87%91%E6%B5%81%E6%8A%80%E8%A1%93%E4%B8%B2%E6%8E%A5%E6%89%8B%E5%86%8AV1.1.2.pdf,2026-11-17,官方文件
+sunpay,99-refund,未知錯誤(退款API),Unknown Error,system,error,退款 API code（紅陽金流技術串接手冊 v1.1.2 4.6.2）,https://storage.googleapis.com/joinchill-image/sunpay_techdoc/202611/%E7%B4%85%E9%99%BD%E7%A7%91%E6%8A%80%E9%87%91%E6%B5%81%E6%9C%8D%E5%8B%99-%E9%87%91%E6%B5%81%E6%8A%80%E8%A1%93%E4%B8%B2%E6%8E%A5%E6%89%8B%E5%86%8AV1.1.2.pdf,2026-11-17,官方文件
 jkopay,POS-000,交易成功,Success,success,info,,https://open-doc.jkos.com/,2026-08-08,官方文件
 jkopay,POS-301,交易失敗(網路或系統異常),Transaction failed network or system error,server,error,稍後重試 注意此碼與 Platform API 的 301(Invalid auth_no) 意義不同,https://open-doc.jkos.com/,2026-08-08,官方文件
 jkopay,POS-601,查無綁定會員,Bound member not found,validation,error,消費者未完成綁定 請其於街口 App 完成設定,https://open-doc.jkos.com/,2026-08-08,官方文件

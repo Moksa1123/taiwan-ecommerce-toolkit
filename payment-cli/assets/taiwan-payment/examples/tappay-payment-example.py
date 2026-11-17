@@ -3,12 +3,12 @@
 TapPay Python 範例 (後端部分)
 
 TapPay 採兩段式架構:
-  1. 前端 SDK 取得 Prime (60 秒 TTL，single-use)
+  1. 前端 SDK 取得 Prime (90 秒效期，single-use)
   2. 後端用 Prime 呼叫 pay-by-prime
 
 支援:
 - pay-by-prime         一般付款
-- pay-by-card-token    重複扣款（訂閱、回購快速結帳）
+- pay-by-token         重複扣款（訂閱、回購快速結帳）
 - refund               退款
 - query                查詢交易
 
@@ -69,27 +69,28 @@ class TapPayService:
 
     端點:
         - POST /tpc/payment/pay-by-prime         Prime 付款
-        - POST /tpc/payment/pay-by-card-token    重複扣款
+        - POST /tpc/payment/pay-by-token         重複扣款
         - POST /tpc/transaction/refund           退款
-        - POST /tpc/transaction/query            查詢
-        - POST /tpc/transaction/cap-refund       延遲請款後退款
+        - POST /tpc/transaction/query            查詢（filters.time 必帶，最多 90 天）
+        - POST /tpc/transaction/cap              延遲請款的交易改當天請款
         - POST /tpc/card/remove                  解除綁卡
 
-    Status code 對照（部分）:
+    Status code 對照（部分，docs.tappaysdk.com/tutorial/zh/error.html）:
         0      成功
-        1      付款失敗
-        2      參數錯誤
-        3      Prime 錯誤（過期/已用）
-        4      卡片資訊錯誤
-        5      銀行風控
-        7      卡片過期
-        10003  Partner Key 錯誤
-        10005  Merchant ID 錯誤
-        88001  3DS 驗證失敗
+        2      查詢結束（Record API 無更多紀錄）
+        4      IP 不符
+        80     不合法的 x-api-key
+        91     Prime 過期
+        121    參數錯誤：prime
+        421    Gateway 操作逾時
+        2011   非法 card token
+        2013   卡片過期
+        10003  卡片錯誤，請洽詢發卡行
+        10005  銀行系統逾時
     """
 
     SANDBOX_BASE = 'https://sandbox.tappaysdk.com'
-    PROD_BASE = 'https://prod.tappayapis.com'
+    PROD_BASE = 'https://prod.tappaysdk.com'
 
     def __init__(self, partner_key: str, merchant_id: str, is_test: bool = True):
         if not partner_key or not merchant_id:
@@ -126,13 +127,13 @@ class TapPayService:
         Prime 付款（單次）.
 
         Args:
-            prime: 前端 SDK 取得的 prime token (60 秒過期)
+            prime: 前端 SDK 取得的 prime token (90 秒過期)
             amount: 金額（TWD 整數）
             order_number: 商家訂單號（唯一）
             cardholder: 持卡人資料
             remember: True 會在回應內帶 card_secret (card_key + card_token)，可用於 pay-by-token
             result_url: {'frontend_redirect_url': '', 'backend_notify_url': '', 'go_back_url': ''}
-            delay_capture_in_days: > 0 表示延遲請款（auth + capture）
+            delay_capture_in_days: 1–7 天後請款；-1 為不自動請款
             three_domain_secure: True 啟用 3DS
         """
         body = {
@@ -154,7 +155,7 @@ class TapPayService:
             'remember': remember,
             'three_domain_secure': three_domain_secure,
         }
-        if delay_capture_in_days > 0:
+        if delay_capture_in_days != 0:
             body['delay_capture_in_days'] = delay_capture_in_days
         if result_url:
             body['result_url'] = result_url
@@ -180,7 +181,7 @@ class TapPayService:
             'details': details or order_number,
             'order_number': order_number,
         }
-        return self._submit('/tpc/payment/pay-by-card-token', body)
+        return self._submit('/tpc/payment/pay-by-token', body)
 
     def refund(self, rec_trade_id: str, amount: Optional[int] = None) -> TapPayResponse:
         """退款（amount 為 None 表示全額退）"""
@@ -199,7 +200,9 @@ class TapPayService:
         bank_transaction_id: Optional[str] = None,
     ) -> TapPayResponse:
         """查詢交易"""
-        filters: Dict[str, any] = {}
+        now_ms = int(time.time() * 1000)
+        # time 為必帶，區間最多 90 天
+        filters: Dict[str, any] = {'time': {'start_time': now_ms - 89 * 86400 * 1000, 'end_time': now_ms}}
         if rec_trade_id:
             filters['rec_trade_id'] = rec_trade_id
         if order_number:
@@ -270,7 +273,7 @@ def example_pay_by_prime():
         is_test=True,
     )
     # prime 是前端 SDK (Direct Pay / TapPay Fields / Apple Pay 等) 取得的 token
-    prime = 'PRIME_FROM_FRONTEND_SDK'  # 60 秒過期
+    prime = 'PRIME_FROM_FRONTEND_SDK'  # 90 秒過期
     cardholder = CardholderInfo(
         phone_number='+886912345678',
         name='王小明',

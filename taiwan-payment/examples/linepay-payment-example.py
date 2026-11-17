@@ -6,7 +6,7 @@ LINE Pay 兩段式流程: Request -> Confirm。
 
 支援:
 - Request / Confirm
-- Capture / Void (autoCapture=false 模式)
+- Capture / Void (options.payment.capture=false 模式)
 - Refund
 - Preapproved Pay (自動扣款)
 
@@ -39,7 +39,7 @@ import requests
 class PaymentRequestData:
     """LINE Pay 建立交易資料"""
     amount: int  # 金額（整數，TWD 不含小數）
-    currency: str = 'TWD'  # TWD / JPY / USD / THB
+    currency: str = 'TWD'  # USD / TWD / THB
     order_id: str = ''  # 商家訂單編號（唯一）
     packages: List[Dict[str, any]] = field(default_factory=list)
     redirect_confirm_url: str = ''
@@ -74,19 +74,14 @@ class LinePayService:
         - HMAC-SHA256 簽章放在 X-LINE-Authorization header
         - X-LINE-ChannelId / X-LINE-Authorization-Nonce 也是必帶
 
-    端點:
-        - POST /v3/payments/request                              建立交易
-        - POST /v3/payments/{transactionId}/confirm              確認付款
-        - POST /v3/payments/authorizations/{transactionId}/capture  手動請款
-        - POST /v3/payments/authorizations/{transactionId}/void    取消授權
-        - POST /v3/payments/{transactionId}/refund                 退款
-        - GET  /v3/payments?transactionId=xxx                     查詢交易
-        - POST /v3/payments/preapprovedPay/{regKey}/payment       自動扣款
-
-    v4 路徑（LINE Pay Developers Online API v4）：/v4/payments/request、
-    /v4/payments/{transactionId}/confirm、/v4/payments/authorizations/{transactionId}/capture、
-    /v4/payments/authorizations/{transactionId}/void、/v4/payments/{transactionId}/refund、
-    GET /v4/payments、GET /v4/payments/requests/{transactionId}/check；簽章方式相同。
+    端點（v3 只差路徑前綴 /v3，簽章方式相同）:
+        - POST /v4/payments/request                              建立交易
+        - POST /v4/payments/{transactionId}/confirm              確認付款
+        - POST /v4/payments/authorizations/{transactionId}/capture  手動請款
+        - POST /v4/payments/authorizations/{transactionId}/void    取消授權
+        - POST /v4/payments/{transactionId}/refund                 退款
+        - GET  /v4/payments?transactionId=xxx                     查詢交易
+        - POST /v4/payments/preapprovedPay/{regKey}/payment       自動扣款
     """
 
     SANDBOX_BASE = 'https://sandbox-api-pay.line.me'
@@ -134,7 +129,7 @@ class LinePayService:
 
     def request_payment(self, data: PaymentRequestData) -> LinePayResponse:
         """建立 LINE Pay 交易"""
-        api_path = '/v3/payments/request'
+        api_path = '/v4/payments/request'
         body = {
             'amount': data.amount,
             'currency': data.currency,
@@ -162,24 +157,24 @@ class LinePayService:
 
     def confirm_payment(self, transaction_id: str, amount: int, currency: str = 'TWD') -> LinePayResponse:
         """確認付款 (Confirm) — amount/currency 必須與 Request 一致"""
-        api_path = f'/v3/payments/{transaction_id}/confirm'
+        api_path = f'/v4/payments/{transaction_id}/confirm'
         body = {'amount': amount, 'currency': currency}
         return self._post(api_path, body)
 
     def capture(self, transaction_id: str, amount: int, currency: str = 'TWD') -> LinePayResponse:
-        """手動請款 (autoCapture=false 模式)"""
-        api_path = f'/v3/payments/authorizations/{transaction_id}/capture'
+        """手動請款 (options.payment.capture=false 模式)"""
+        api_path = f'/v4/payments/authorizations/{transaction_id}/capture'
         body = {'amount': amount, 'currency': currency}
         return self._post(api_path, body)
 
     def void_auth(self, transaction_id: str) -> LinePayResponse:
         """取消授權"""
-        api_path = f'/v3/payments/authorizations/{transaction_id}/void'
+        api_path = f'/v4/payments/authorizations/{transaction_id}/void'
         return self._post(api_path, {})
 
     def refund(self, transaction_id: str, refund_amount: Optional[int] = None) -> LinePayResponse:
         """退款 (refund_amount 不填則全額退)"""
-        api_path = f'/v3/payments/{transaction_id}/refund'
+        api_path = f'/v4/payments/{transaction_id}/refund'
         body = {}
         if refund_amount is not None:
             body['refundAmount'] = refund_amount
@@ -187,13 +182,13 @@ class LinePayService:
 
     def query_transaction(self, transaction_id: str) -> LinePayResponse:
         """查詢交易狀態"""
-        api_path = '/v3/payments'
+        api_path = '/v4/payments'
         query_string = f'transactionId={transaction_id}'
         return self._get(api_path, query_string)
 
     def preapproved_pay(self, reg_key: str, product_name: str, amount: int, order_id: str = '') -> LinePayResponse:
         """自動扣款 (Preapproved Pay)"""
-        api_path = f'/v3/payments/preapprovedPay/{reg_key}/payment'
+        api_path = f'/v4/payments/preapprovedPay/{reg_key}/payment'
         body = {
             'amount': amount,
             'currency': 'TWD',
