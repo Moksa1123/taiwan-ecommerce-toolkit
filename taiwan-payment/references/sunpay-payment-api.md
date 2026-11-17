@@ -4,7 +4,7 @@
 > 教學手冊站: https://doc.esafe.com.tw/
 > 電子發票平台: https://inv.sunpay.com.tw/
 > 文件公開程度：public（手冊免登入公開下載）
-> Source: 金流技術串接手冊 v1.1.1（2026-08-19，51 頁）；文中頁碼依 v1.1.0，v1.1.1 因版本異動表多一行，自 §4.2 起頁碼 +1
+> Source: 金流技術串接手冊 v1.1.2（2026-11-09，51 頁；2026-11-17 查核）；文中頁碼依 v1.1.2
 
 ## 0. 為什麼收錄——含一個競品訊號
 
@@ -14,8 +14,8 @@
 
 | 項目 | 版本 | 更新日 |
 |---|---|---|
-| 金流 AI 串接指南（Claude Code Skill） | v1.1.1 | 2026-08 |
-| 電子發票 AI 串接指南（Claude Code Skill） | v2.3 | 2026-07-28 |
+| 金流 AI 串接指南（Claude Code Skill） | v1.1.1 | 2026-08-19 |
+| 電子發票 AI 串接指南（Claude Code Skill） | v2.3-v2 | 2026-09-29 |
 
 加上綠界官方已釋出 `ECPay/ecpay-api-skill`（見 `_studies/ecpay-skill-reference/`），這是第二家自己出 skill 的供應商。
 
@@ -54,18 +54,18 @@
 
 ## 2. 技術文件
 
-### 直連下載網址（2026-09-24 自開發者頁擷取）
+### 直連下載網址（2026-11-17 自開發者頁擷取）
 
 > ✅ **上一輪標記的 404 已解決**：紅陽把技術文件從 `www.sunpay.com.tw/wp-content/uploads/…` 搬到 **Google Cloud Storage**（`storage.googleapis.com/joinchill-image/sunpay_techdoc/…`）。舊連結全數失效，以下為現行網址。
 
 | 分類 | 文件 | 版本 | 更新 | 網址 |
 |---|---|---|---|---|
-| API 金流串接 | **金流技術串接手冊** | **v1.1.1** | 2026-08-19 | `…/202608/紅陽科技金流服務-金流技術串接手冊V1.1.1.pdf` |
-| API 金流串接 | AI 串接指南（Claude Code Skill）| v1.1.1 | — | `…/202608/sunpay-payment-skill-v1.1.1-v1.zip` |
+| API 金流串接 | **金流技術串接手冊** | **v1.1.2** | 2026-11-09 | `…/202611/紅陽科技金流服務-金流技術串接手冊V1.1.2.pdf` |
+| API 金流串接 | AI 串接指南（Claude Code Skill）| v1.1.1 | 2026-08-19 | `…/202608/sunpay-payment-skill-v1.1.1-v1.zip` |
 | API 金流串接 | 範例程式碼 PHP | — | — | `…/202603/金流範例程式SampleCode_PHP.zip` |
 | API 金流串接 | 範例程式碼 JAVA | — | — | `…/202603/金流範例程式SampleCode_JAVA.zip` |
 | 電子發票 | **電子發票技術串接手冊** | **v2.3** | — | `…/202603/紅陽科技電子發票技術串接手冊V2.3.pdf` |
-| 電子發票 | AI 串接指南（Claude Code Skill）| v2.3 | 2026-07-28 | `…/202607/sunpay-einvoice-skill-v2.3-v1.zip` |
+| 電子發票 | AI 串接指南（Claude Code Skill）| v2.3-v2 | 2026-09-29 | `…/202609/sunpay-einvoice-skill-v2.3-v2.zip` |
 | 購物車模組 | WooCommerce | 10.1.0 | 2026-01-30 | `…/202603/sunpay_WooCommerce_1.0.2.zip` |
 | 購物車模組 | Magento 2 | 2.4.7-p1 | 2025-12-30 | `…/202603/sunpay-Magento2.zip` |
 | 購物車模組 | OpenCart | 4.1.0.3 | 2025-12-30 | `…/202603/sunpay_OpenCart.zip` |
@@ -81,8 +81,6 @@
 | 金流測試環境 | https://testmerchant.sunpay.com.tw/#/login | 點選下方「立即申請」 |
 | 電子發票測試帳號 | https://testinv.sunpay.com.tw/ | 點選右上角「帳號申請」 |
 
-手冊 v1.1.1（2026-08-19）相對 v1.1.0 的異動：`store_type` 移除 `3`（OK，超商取貨付款不再支援 OK 超商）；§4.2.3 簽名 Step 2 改寫（見 §3.2）；刪除附錄 3（各語言 URL encode 對照表）。
-
 | 其他文件 | 取得 |
 |---|---|
 | 教學手冊站 | https://doc.esafe.com.tw/ |
@@ -91,7 +89,7 @@
 
 ## 3. 加解密機制 — RSA 分段加密 + SHA256 簽章
 
-> Source: 金流技術串接手冊 v1.1.1 §4.2；官方範例程式 PHP／JAVA
+> Source: 金流技術串接手冊 v1.1.2 §4.2（p.15–20）；官方範例程式 PHP／JAVA
 
 ⚠️ **紅陽是本 skill 收錄的 14 家中唯一使用 RSA 的**。其他家不是 SHA256 檢查碼（ECPay）就是 AES 對稱加密（NewebPay / PAYUNi / ezPay）。**既有的加解密函式一律不能沿用。**
 
@@ -149,7 +147,7 @@ rsamsg  →  Base64 decode（URL-safe：- _）  →  以「公鑰」分段解密
 > ⚠️ **ASCII 排序是強制的**，手冊在兩處重複警告「請務必將 head 與 body 參數進行 ASCII 排序，以免加密失敗」。
 > ⚠️ SHA2 密鑰是**直接串接在（URLEncode 後的）字串尾端**，不是 ECPay 那種 `HashKey=…&…&HashIV=…` 前後包夾。
 
-> 手冊 v1.1.1 同頁範例的 `check_value`（`3df3acb3…cad26`）是先 URLEncode 的結果；不做 URLEncode 會得到 `5ec973f1…e6ae`。
+> 手冊 §4.2.3 範例（p.17）的 `check_value`（`3df3acb3…cad26`）是先 URLEncode 的結果；不做 URLEncode 會得到 `5ec973f1…e6ae`。
 > 官方範例程式（`sunpayWeb.php` 的 `getCheck_value()`、JAVA `Payment`）與官方 skill v1.1.1 都先 URLEncode。
 > 本 skill 範例採 URLEncode 版本，可直接用官方範例值驗證。
 
@@ -178,11 +176,17 @@ Python `quote`（空白編為 `%20`）與 JS `encodeURIComponent` 不屬於官�
 | 貨態更新接收網址 | 物流狀態更新 |
 
 > **CallBack 補發機制**：30 分鐘內每 5 分鐘補發一次，**超過 30 分鐘不再補發**。
-> ⚠️ **回傳網址不可帶 port**（如 `https://example.com:8080/x.php`），紅陽基於資安風險控管會擋。
+> ⚠️ **回傳網址若帶 port，只允許 `80`、`443`、`8080`～`8085`**，其他連接埠基於資安風險控管會被擋（§4.3.3 第 7 點，p.32）。
 > 貨態通知為 **HTTP FORM POST key-value，非 JSON**。
-> 收到 CallBack 並驗簽後回純文字 `success`（不含 HTML 或 JavaScript），紅陽收到即停止補發；`success` 不改變訂單狀態（§4.3.3，p.31）。
+> 收到 CallBack 並驗簽後回純文字 `success`（不含 HTML 或 JavaScript），紅陽收到即停止補發；`success` 不改變訂單狀態（§4.3.3，p.32）。
 
-### 請款 Capture（手冊 §4.5，p.41–43）
+### 查詢 Check（手冊 §4.4，p.37–41）
+
+- 外層 POST 欄位同交易（§3）；`head` 只有 `web`。
+- `body` 為 **Array**，每個元素帶 `td` 或 `trade_no` 擇一（`{"body":[{"td":"…"}],"head":{"web":"…"}}`）。
+- 回應為明文 JSON：外層 `code`（`00`/`99`）、`msg`、`result[]`；`result` 每筆含 `pay_result`（§6）、`pay_date`、`pay_time`、`refund_status`、`refund_amt`（可退款金額／餘額），信用卡另有 `card_no`、`approve_code`，分期另有 `installment`、`first_amt`、`install_amt`，隨交易開票另有 `invoice_no`。
+
+### 請款 Capture（手冊 §4.5，p.42–44）
 
 - 申請制；只能對 **21 天內**的交易請款。
 - 外層 POST 欄位同交易：`web`、`send_time`、`rsamsg`、`check_value`（§3）。
@@ -197,7 +201,7 @@ Python `quote`（空白編為 `%20`）與 JS `encodeURIComponent` 不屬於官�
 
 回應為明文 JSON：`code`（`00` 請求成功 / `99` 請求失敗）、`msg`。
 
-### 退款 Refund（手冊 §4.6，p.44–47）
+### 退款 Refund（手冊 §4.6，p.45–48）
 
 - 申請制，且只接受事先登記白名單的 IP；只能對 **170 天內**的交易退款，逾期需另向紅陽申請。
 - 外層 POST 欄位同交易。
@@ -242,8 +246,8 @@ Python `quote`（空白編為 `%20`）與 JS `encodeURIComponent` 不屬於官�
 | `sna` | 消費者姓名 | 30 | | 不可有 `*'<>[]"` |
 | `sdt` | 消費者電話 | 20 | | 純數字如 `0911123123`；搭配超商取貨時到店會發簡訊 |
 | `note1` / `note2` | 備註 | 400 | | 交易完成時原樣回傳；不可有 `*'<>[]"` |
-| `lgs_flag` | 物流啟用 | 1 | 條件 | `0`/不帶=不啟用、`1`=啟用。**`card_type=09` 時必須為 1**；**訂單金額 > 2 萬元無法使用物流** |
-| `store_type` | 超商類型 | 1 | 條件 | `0`/不帶=全部、`1`=7-11、`2`=全家、`4`=萊爾富（超商取貨付款不再支援 OK，手冊 v1.1.1 移除 `3`；紅陽客服回覆 2026-09-29）|
+| `lgs_flag` | 物流啟用 | 1 | 條件 | `0`/不帶/空值=不啟用、`1`=啟用。**`card_type=09` 時自動為 1**；**訂單金額 > 2 萬元無法使用物流**（p.23–24）|
+| `store_type` | 超商類型 | 1 | 條件 | `0`/不帶/空值=三大超商、`1`=7-11、`2`=全家、`4`=萊爾富（無 `3` OK；紅陽客服回覆 2026-09-29）（p.24）|
 | `buyer_cid` | 買方統編 | 8 | | 隨交易開發票用 |
 | `carrier_type` | 載具類型 | 1 | | `1` 手機條碼、`2` 自然人憑證 |
 | `carrier_id` | 載具號碼 | 16 | 條件 | `carrier_type=1/2` 時必填 |
@@ -273,8 +277,11 @@ Python `quote`（空白編為 `%20`）與 JS `encodeURIComponent` 不屬於官�
 |---|---|---|---|
 | `save_card` | 快速付款 | 1 | `0` 不啟用（預設）／ `1` 啟用 |
 | `save_card_token` | 快速付款 token | 36 | **`save_card=1` 時必填**，綁定付款人與卡號，限英數 |
-| `term` | 分期期數 | 2 | `3`/`6`/`12`/`18`/`24`/`30`；不分期帶空值。**銀聯卡不支援分期** |
+| `term_status` | 分期啟用狀態 | 1 | `0` 不啟用／`1` 啟用；`term` 有帶值時自動為 `1` |
+| `term` | 分期期數 | 2 | `3`/`6`/`12`/`18`/`24`/`30`；**不帶或空值＝啟用全部支援期數**。**銀聯卡不支援分期** |
 | `bank_code_list` | 指定發卡銀行 | 3 | 銀行代碼，如台新 `812`。多組用 Array：`['812','822']`。**街口支付不支援此功能** |
+
+> ⚠️ `term` 空值不再代表「不分期」（手冊 v1.1.2 §4.3.1.2，p.25）。不要分期時明確帶 `term_status=0`；`term_status` 與 `term` 都不帶時的預設，手冊未寫明。
 
 **快速付款的實際行為**：首次交易時消費者在收銀台勾選「記住結帳資訊」，紅陽將 `save_card_token` 對應到該張卡。下次帶同一個 token，收銀台會自動帶出前六後四碼，消費者只需填背面末三碼。**紅陽只保留最近一次成功交易的卡號資料**；消費者取消勾選即清除。
 
@@ -376,6 +383,8 @@ Python `quote`（空白編為 `%20`）與 JS `encodeURIComponent` 不屬於官�
 **超商代碼／條碼**（取號完成時回傳）：`due_date`、`pay_code`（繳費代碼）、`barcodeA` / `barcodeB` / `barcodeC`（三段條碼）。
 付款完成時另回：`pay_agency`（門市代碼）、`pay_agency_name`（門市名稱）。
 
+**物流（`lgs_flag=1`，共同回應欄位，p.33）**：`delivery_type`（`1`=超商取貨不付款）、`store_id`、`store_name`、`store_type`（`1`/`2`/`4`）、`lgs_type`、`receiver_name`、`receiver_phone`。
+
 **超商取貨付款**（取號完成時回傳）：`delivery_type`（`2`=超商取貨付款）、`store_id`、`store_name`、`lgs_type`（`C2C`=超商店到店）、`receiver_name`（⚠️ **因個資法部分字元轉為隱碼，如「王○明」**）、`receiver_phone`。
 
 ### 物流狀態通知（`4.7`）
@@ -436,8 +445,10 @@ Python `quote`（空白編為 `%20`）與 JS `encodeURIComponent` 不屬於官�
 
 | 項目 | 官方 skill v1.1.1 | 手冊 |
 |---|---|---|
-| 對應手冊版本 | 標示依手冊 v1.1.0 校對 | 現行 v1.1.1（2026-08-19） |
-| `store_type` | 仍列 `3`=OK | v1.1.1 已移除 `3`；超商取貨付款不再支援 OK（紅陽客服回覆 2026-09-29） |
+| 對應手冊版本 | 標示依手冊 v1.1.0 校對 | 現行 v1.1.2（2026-11-09） |
+| `store_type` | 仍列 `3`=OK、`0`/未帶=四大 | 無 `3`；`0`/未帶/空值=三大超商（p.24） |
+| `lgs_flag` | `card_type=09` 須為 `1` | `card_type=09` 時自動為 `1`（p.24） |
+| `term_status` | 無 | 新增；`term` 空值＝啟用全部支援期數（p.25） |
 | `check_value` 的 URL encode | PHP `urlencode` 語意 | v1.1.1 可不做 URLEncode，做了也相容（紅陽客服回覆 2026-09-29；見 §3.2） |
 | CallBack 補發 | 30 分鐘內重送 5 次 | 30 分鐘內每 5 分鐘補發一次（§4.3.3） |
 
@@ -448,6 +459,7 @@ Python `quote`（空白編為 `%20`）與 JS `encodeURIComponent` 不屬於官�
 | 項目 | 備註 |
 |---|---|
 | 統一錯誤碼表 | 手冊無獨立錯誤碼章節，各 API 的 `pay_result`／`code` 已收錄於 §6 |
+| `term_status` 預設值 | 手冊 v1.1.2 只寫「`term` 有帶值時自動為 1」，兩者都不帶時是否開分期未寫明，需向紅陽確認 |
 
 已由紅陽確認、不再待補：`StoreType` 無代碼表（以 `StoreMsg` 為準）、目前無物流 API（紅陽客服回覆 2026-09-29）。
 
@@ -457,7 +469,7 @@ Python `quote`（空白編為 `%20`）與 JS `encodeURIComponent` 不屬於官�
 
 - 開發者專區 — https://www.sunpay.com.tw/developers/
 - 紅陽客服回覆 2026-09-29（service@esafe.com.tw 轉客服 mandy@esafe.com.tw）：簽章 URLEncode、OK 超商、StoreType、物流 API、測試帳號
-- 金流技術串接手冊 v1.1.1 — `https://storage.googleapis.com/joinchill-image/sunpay_techdoc/202608/紅陽科技金流服務-金流技術串接手冊V1.1.1.pdf`
+- 金流技術串接手冊 v1.1.2（2026-11-09；查核 2026-11-17）— `https://storage.googleapis.com/joinchill-image/sunpay_techdoc/202611/紅陽科技金流服務-金流技術串接手冊V1.1.2.pdf`
 - 金流 AI 串接指南（Claude Code Skill）v1.1.1 — `https://storage.googleapis.com/joinchill-image/sunpay_techdoc/202608/sunpay-payment-skill-v1.1.1-v1.zip`
 - 金流範例程式 PHP／JAVA — `https://storage.googleapis.com/joinchill-image/sunpay_techdoc/202603/金流範例程式SampleCode_PHP.zip`、`…/金流範例程式SampleCode_JAVA.zip`
 - 物流服務頁 — https://www.sunpay.com.tw/logistics

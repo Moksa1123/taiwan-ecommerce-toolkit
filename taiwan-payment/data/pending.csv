@@ -45,3 +45,7 @@ date,question,why_not_found,asked_by,status
 2026-11-17,examples/linepay-payment-example.py 的 void_auth() 送 {} 當 body；官方寫 void 沒有 body,要改成空 body 並一起簽章，需實測確認簽章字串,taiwan-toolkit（官方文件稽核 2026-11-17）,open
 2026-11-17,速買配 SPPayment.asp 的 Status 負數錯誤代碼表（例：-2003 Pay_zg Error）完整內容為何？,規格書（pay_help_paydc_api.ASP / Background_api.ASP）需商家登入；公開頁只能實測個別代碼,taiwan-toolkit（官方文件稽核 2026-11-17）,open
 2026-11-17,PChomePay 付款頁 ATM 可選的 3 家銀行是哪 3 家？文件範例只出現 011、013、812,API 文件只寫「3 家銀行」；/v1/payment/atm/banks 需 token 才能查,taiwan-toolkit（官方文件稽核 2026-11-17）,open
+2026-11-17,紅陽金流 term_status 與 term 都不帶時，信用卡交易是否開啟分期（term_status 預設值）,手冊 V1.1.2 §4.3.1.2 p.25 只寫「term 有帶值時 term_status 自動為 1」與「term 空值＝啟用全部支援期數」，未寫 term_status 的預設值；舊整合依 V1.1.1「不分期帶空值」可能因此出現分期選項,taiwan-toolkit（官方文件稽核 2026-11-17）,open
+2026-11-17,official-sources.json 的 sunpay-einvoice-skill-v2-3 仍指向 202607/sunpay-einvoice-skill-v2.3-v1.zip；開發者專區現列 v2.3-v2（202609/sunpay-einvoice-skill-v2.3-v2.zip，2026-09-29）,屬 taiwan-invoice 範圍；本次金流稽核不改 invoice 的來源與 SUNPAY_API_REFERENCE.md,taiwan-toolkit（官方文件稽核 2026-11-17）,open
+2026-11-17,GoMyPay 金流 API（ShuntClass／CallOrder 等）在官方 WooCommerce 外掛 v1.7.0 是否有端點或參數異動,公開的金流 API 規格書不存在；私有整理依外掛 v1.6.4，下載頁 2026-10-16 已改版 v1.7.0 尚未重新比對,taiwan-toolkit（官方文件稽核 2026-11-17）,open
+2026-11-17,GoMyPay 的 LINE Pay、一卡通、悠遊付、支付寶是否能經同一套金流 API 串接（或只能後台／另約）,官網費率頁只列服務與費率，未說明串接方式；金流 API 規格需申請,taiwan-toolkit（官方文件稽核 2026-11-17）,open

@@ -3854,14 +3854,49 @@
    "payment"
   ],
   "title": "《GoMyPay 發票串接技術文件》2.1",
-  "url": "https://n.gomypay.asia/MDocuments_downloads.aspx",
+  "url": "https://n.gomypay.asia/MDocuments_downloads.aspx?downloadId=53",
   "format": "pdf",
   "fetch": "manual",
   "access": "confidential",
   "covers": [
    "taiwan-payment/references/gomypay-payment-api.md"
   ],
-  "notes": "文件每頁標示機密、禁止傳播；需向 GoMyPay 申請；文件標示「機密文件，未經授權禁止任意形式傳播」，只放私有區"
+  "notes": "下載頁免登入可下載（2026-11-17 確認），但每頁標示「本文件屬機密文件，未經授權禁止任意形式傳播」；內容只放私有區，不進 repo，不自動下載"
+ },
+ {
+  "id": "gomypay-cashflow-page",
+  "provider": "gomypay",
+  "skills": [
+   "payment"
+  ],
+  "title": "GoMyPay 金流服務頁",
+  "url": "https://n.gomypay.asia/MCashFlow.aspx",
+  "format": "html",
+  "fetch": "get",
+  "access": "public",
+  "covers": [
+   "taiwan-payment/references/gomypay-payment-api.md",
+   "taiwan-payment/data/providers.csv"
+  ],
+  "notes": "收款方式總覽：信用卡、四大超商、Web ATM、虛擬帳號、LINE Pay、台灣 Pay、定期定額"
+ },
+ {
+  "id": "gomypay-rate-list",
+  "provider": "gomypay",
+  "skills": [
+   "payment"
+  ],
+  "title": "GoMyPay 金流服務費率表",
+  "url": "https://n.gomypay.asia/ServiceRateList.aspx",
+  "format": "html",
+  "fetch": "get",
+  "access": "public",
+  "covers": [
+   "taiwan-payment/references/gomypay-payment-api.md",
+   "taiwan-payment/data/providers.csv",
+   "taiwan-payment/data/reasoning.csv"
+  ],
+  "notes": "服務項目最完整的一頁：分期期數、銀聯、Apple/Google Pay 申請限制、支付寶／微信跨境、悠遊卡／悠遊付、一卡通、LINE Pay、台灣 Pay"
  },
  {
   "id": "hct-home",
@@ -8361,18 +8396,21 @@
   "skills": [
    "payment"
   ],
-  "title": "紅陽科技金流服務-金流技術串接手冊 V1.1.1（2026-08-19）",
-  "url": "https://storage.googleapis.com/joinchill-image/sunpay_techdoc/202608/%E7%B4%85%E9%99%BD%E7%A7%91%E6%8A%80%E9%87%91%E6%B5%81%E6%9C%8D%E5%8B%99-%E9%87%91%E6%B5%81%E6%8A%80%E8%A1%93%E4%B8%B2%E6%8E%A5%E6%89%8B%E5%86%8AV1.1.1.pdf",
+  "title": "紅陽科技金流服務-金流技術串接手冊 V1.1.2（2026-11-09）",
+  "url": "https://storage.googleapis.com/joinchill-image/sunpay_techdoc/202611/%E7%B4%85%E9%99%BD%E7%A7%91%E6%8A%80%E9%87%91%E6%B5%81%E6%9C%8D%E5%8B%99-%E9%87%91%E6%B5%81%E6%8A%80%E8%A1%93%E4%B8%B2%E6%8E%A5%E6%89%8B%E5%86%8AV1.1.2.pdf",
   "format": "pdf",
   "fetch": "get",
   "access": "public",
   "covers": [
    "taiwan-payment/references/sunpay-payment-api.md",
    "taiwan-payment/data/error-codes.csv",
+   "taiwan-payment/data/payment-methods.csv",
+   "taiwan-payment/data/providers.csv",
+   "taiwan-payment/data/troubleshooting.csv",
    "taiwan-payment/examples/sunpay-payment-example.py",
    "tests/vectors/sunpay.json"
   ],
-  "notes": "tests/vectors/sunpay.json 來自 v1.1.0；V1.1.1 §4.2.3 文字與範例值矛盾（見 reference §3.2）"
+  "notes": "tests/vectors/sunpay.json 來自 v1.1.0；V1.1.2 的 §4.2 加解密頁與 V1.1.1 相同，§4.2.3 文字與範例值矛盾（見 reference §3.2）"
  },
  {
   "id": "sunpay-payment-skill",

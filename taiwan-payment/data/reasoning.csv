@@ -35,7 +35,7 @@ API 文檔,ecpay,HIGH,官方文檔完整 | 中英文,不需文檔參考,學習�
 歐付寶多元支付,opay,HIGH,與 ECPay 同源架構可沿用 CheckMacValue 程式碼 | 獨有 AccountLink 銀行快付/TopUpUsed 儲值消費/WeiXinpay/TWQR | 文件全公開免登入,已深度綁定 ECPay 且無跨境或微信需求,微信支付 | 銀行快付 | 儲值消費 | 從 ECPay 遷移 | 金流+發票同一家,https://developers.opay.tw/download/document,2026-08-08,推論
 延遲撥款/擔保交易,opay,HIGH,HoldTradeAMT=1 延遲撥款 | 款項先留在歐付寶待確認出貨後再申請撥款 | 適合代收代付情境,信用卡付款不適用延遲撥款,平台型電商 | 代收代付 | 擔保交易 | C2C 市集,https://developers.opay.tw/download/document,2026-08-08,推論
 WooCommerce/Magento/OpenCart 官方模組,sunpay,MEDIUM,三大自架購物車皆有官方模組 | 金流+發票+超商代收+物流(超商取貨付款;官網物流頁另列全家大宗與C2C 7-11/全家/萊爾富)一家包辦,需要極高市佔與社群資源者請選 ECPay,自架購物車 | WooCommerce | Magento 2 | OpenCart,https://www.sunpay.com.tw/logistics,2026-10-24,推論
-金流+發票同一家且行動支付齊全,gomypay,MEDIUM,行動支付涵蓋台灣PAY/悠遊付/Apple Pay/Google Pay | 自營電子發票加值中心 | 有官方購物車模組,需要公開 API 文件自行串接者不適合(規格需申請);大型電商建議選市佔更高者,悠遊付 | 台灣PAY | 微信線上線下,https://n.gomypay.asia/MDocuments_downloads.aspx,2026-09-24,推論
+金流+發票同一家且行動支付齊全,gomypay,MEDIUM,行動支付涵蓋台灣Pay/LINE Pay/悠遊付/一卡通/Apple Pay/Google Pay | 自營電子發票加值中心 | 有官方購物車模組,需要公開 API 文件自行串接者不適合(規格需申請);大型電商建議選市佔更高者,悠遊付 | 台灣PAY | LINE Pay | 一卡通 | 微信線上線下,https://n.gomypay.asia/ServiceRateList.aspx,2026-11-17,推論
 電子支付錢包選型,ecpay,HIGH,DigitalPayment 收街口與一卡通 MONEY，其他電子支付走 TWQR（歐付寶 TWQR）| 最省事,需要指定特定錢包做行銷者請改用 PAYUNi 直送代碼或 TapPay,多錢包收款 | 不在意消費者選哪個錢包,https://developers.ecpay.com.tw/,2026-08-08,推論
 指定特定電子支付錢包,tappay,HIGH,每個錢包有獨立文件與 Prime 流程 | 可精確指定街口/全支付/全盈+PAY/悠遊付/一卡通,只想接一次就好者請用 ECPay（DigitalPayment 收街口／一卡通，其餘走 TWQR）,錢包別行銷 | 分錢包對帳 | 指定錢包,https://docs.tappaysdk.com/,2026-08-08,推論
 電子錢包訂閱制,jkopay,HIGH,街口授權扣款支援定期定額(regular)與不定期不定額(limited)兩種綁定 | 同一auth_no扣款不可併發 | 週期次數上限week/month/quarter各7次 year 12次,需要跨錢包一次涵蓋者請改用 TWQR 或聚合商 umbrella,電子錢包訂閱 | 街口定期定額 | 按用量計費 | 課金儲值,https://open-doc.jkos.com/,2026-08-08,推論

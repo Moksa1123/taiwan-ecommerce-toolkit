@@ -24,7 +24,7 @@ GCM tag 驗證失敗,解密失敗 | Tag verification failed,HashKey / HashIV 錯
 紅陽 check_value 驗證失敗,簽章不符被拒,head 與 body 未做 ASCII 升序排序 | null 值參數誤入簽名 | SHA2 密鑰位置錯誤,排序後 urlencode 再把 SHA2 密鑰接在字串尾端 最後 SHA256;null 值不參與簽名,sunpay,high,https://www.sunpay.com.tw/developers/,2026-09-29,推論
 紅陽 pay_result 12 判斷錯誤,訂單狀態誤判為已建立或誤判為不存在,交易 CallBack 的 12 是已建立 但查詢 API 的 12 是查無該筆訂單 同值不同義,兩支 API 的 pay_result 判斷邏輯必須分開寫 不可共用 mapping,sunpay,high,https://www.sunpay.com.tw/developers/,2026-09-29,推論
 紅陽超商取貨參數拼字,送出 receiver_name 被視為未帶必填欄位,請求端官方參數為 recevier_name 與 recevier_phone(i 與 e 顛倒) 但回應端是正確的 receiver_name,送出時用 recevier_* 接收時解析 receiver_*,sunpay,medium,https://www.sunpay.com.tw/developers/,2026-09-29,推論
-紅陽 CallBack 收不到,交易完成但系統未更新狀態,回傳網址含連接埠會被資安風控阻擋 | CallBack 僅在 30 分鐘內每 5 分鐘補發 超過即不再補發,移除網址中的 port;另實作查詢 API 定時對帳補回漏收的交易,sunpay,high,https://www.sunpay.com.tw/developers/,2026-09-29,推論
+紅陽 CallBack 收不到,交易完成但系統未更新狀態,回傳網址的連接埠不在 80/443/8080-8085 會被資安風控阻擋 | CallBack 僅在 30 分鐘內每 5 分鐘補發 超過即不再補發,改用 80/443/8080-8085 或不帶 port;另實作查詢 API 定時對帳補回漏收的交易,sunpay,high,https://www.sunpay.com.tw/developers/,2026-11-17,官方文件
 紅陽超商代碼商品金額不符,交易被拒不允許送出,product 陣列的單價乘數量總和與 mn 不一致,調整商品明細使總和等於 mn;商品過多或含負數金額時整合為單一商品名稱送出,sunpay,medium,https://www.sunpay.com.tw/developers/,2026-09-29,推論
 紅陽物流通知解析失敗,貨態通知內容為亂碼或無法解析 JSON,物流狀態通知是 HTTP FORM POST key-value 非 JSON 且全部欄位經過 URL Encode,先 URL Decode(UTF-8) 再處理;注意訂單編號欄位為大寫 Td 與請求端的 td 不同,sunpay,medium,https://www.sunpay.com.tw/developers/,2026-09-29,推論
 街口授權扣款併發失敗,回 307 Payment with the same auth_no is allowed one at a time,同一 auth_no 同時僅允許一筆付款,以授權編號為鍵序列化扣款請求 勿並行送出,jkopay,high,https://open-doc.jkos.com/,2026-08-08,推論
@@ -44,4 +44,4 @@ SunPay RSA 解密失敗,RSA Decryption Failed,RSA 解密失敗,回傳 rsamsg 是
 SunPay check_value 驗證失敗,Signature Mismatch,check_value 驗證失敗,送出：head 與 body 依 ASCII 排序、null 不參與、JSON urlencode 後尾接 SHA2 密鑰再 SHA256；回傳：對解密後「尚未 urldecode」的字串 + SHA2 密鑰計算，不可自行重新編碼,sunpay,high,https://www.sunpay.com.tw/developers/,2026-09-29,推論
 SunPay 交易發起時間逾時,Send Time Expired,交易發起時間逾時,send_time 格式為 fffssmmHHyyyyMMdd 且超過 120 秒視為無效 請校時,sunpay,high,https://www.sunpay.com.tw/developers/,2026-09-29,推論
 SunPay 物流金額超限,Logistics Amount Exceeded,物流金額超限,訂單金額大於 2 萬元無法使用物流服務,sunpay,high,https://www.sunpay.com.tw/developers/,2026-09-29,推論
-SunPay 回傳網址含連接埠被擋,Callback URL With Port Blocked,回傳網址含連接埠被擋,回傳網址不可帶 port 紅陽基於資安風控會阻擋,sunpay,high,https://www.sunpay.com.tw/developers/,2026-09-29,推論
+SunPay 回傳網址含連接埠被擋,Callback URL With Port Blocked,回傳網址含連接埠被擋,回傳網址帶 port 時只允許 80、443、8080~8085（手冊 v1.1.2 §4.3.3 第 7 點 p.32），其他連接埠基於資安風控會被阻擋,sunpay,high,https://www.sunpay.com.tw/developers/,2026-11-17,官方文件
