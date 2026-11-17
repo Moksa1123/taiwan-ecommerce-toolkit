@@ -4,7 +4,7 @@ PayNow 有兩套發票 API：
 
 | | REST（新版） | SOAP（舊版） |
 |---|---|---|
-| 來源 | <https://docs.paynow.com.tw/developer/docs/invoice/>（2026-09 擷取） | 《PayNow_EInvoice 串接文件 V1.5》（2022-04-06） |
+| 來源 | <https://docs.paynow.com.tw/developer/docs/invoice/>（2026-11-17 查核） | 《PayNow_EInvoice 串接文件 V1.5》（2022-04-06） |
 | 網址 | 測試 `https://invoiceapi-dev.paynow.com.tw`／正式 `https://invoiceapi-prod.paynow.com.tw` | 測試 `https://testinvoice.paynow.com.tw/PayNowEInvoice.asmx`／正式 `https://invoice.paynow.com.tw/PayNowEInvoice.asmx` |
 | 認證 | `Authorization: Bearer <商家 JWT-Token>` | `mem_cid` + `mem_password` |
 | 格式 | JSON（`application/json`） | SOAP 1.1／1.2 或 HTTP POST |
@@ -100,7 +100,7 @@ Query：`InvoiceNumber`、`OrderNo`、`Limit`（每頁筆數）、`Page`。回�
 
 1. `POST /api/invoices/pos/invoice-numbers`：`{ "quantity": 10, "uuid": "辨識用" }` 取得一批號碼。
    取得的號碼不進入一般開立流程，由商家自行管理；未使用的號碼於次期單數月 5 號上傳空白發票。
-2. `POST /api/invoices/pos/issue`：欄位同單張開立，另加 `invoice_number`、`invoice_date`、`random_number`（商家自行產生）、`is_printed`（消費者不印時為 `false`，仍可帶載具）。
+2. `POST /api/invoices/pos/issue`：欄位同單張開立，另加 `invoice_number`、`invoice_date`（date-time，範例 `2025-07-07T08:30:02.020Z`）、`random_number`（商家自行產生）、`is_printed`（消費者不印時為 `false`，仍可帶載具）。
 
 ---
 

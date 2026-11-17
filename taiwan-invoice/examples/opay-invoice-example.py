@@ -219,14 +219,14 @@ def check_b2c_constraints(print_flag: str, donation: str, carrier_type: str, ide
             raise ValueError('有統編且 CarrierType=1 或 2 時 Print 必須為 0')
     if print_flag == '0' and identifier and carrier_type == '':
         raise ValueError('Print=0 且有統編時 CarrierType 不可為空字串')
-    # CarrierType 1/2/3 時不可自行填 CarrierNum，否則會被系統阻擋
+    # CarrierType 1/2/3 時不可填 CarrierNum2，否則會被系統阻擋
 
 
 # 延遲開立有專屬回應碼，不能只判斷 RtnCode == 1
 RTN_SUCCESS = {
     1: '成功',
-    4000003: '延後開立成功',   # DelayIssue
-    4000004: '開立發票成功',   # TriggerIssue 觸發後
+    4000003: '延後開立成功',   # TriggerIssue，DelayDay > 0
+    4000004: '開立發票成功',   # TriggerIssue，DelayDay = 0
 }
 
 

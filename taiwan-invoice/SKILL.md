@@ -12,7 +12,7 @@ user-invocable: true
 |---|---|
 | 來源 | 各加值中心官方 API 文件與 PDF 規格書、官方 SDK、財政部電子發票整合服務平台規格；每個來源登記在 repo 的 `sources/official-sources.json` |
 | 服務商 | `data/providers.csv` 共 9 筆：可開立的加值中心 7 家都有 reference，另有財政部大平台（只查詢）與關貿（只登記，沒有 reference） |
-| 筆數 | 共 **408 筆**，分 7 個搜尋域；各域筆數用 `python scripts/search.py --stats` 看，不在這裡手寫 |
+| 筆數 | 共 **409 筆**，分 7 個搜尋域；各域筆數用 `python scripts/search.py --stats` 看，不在這裡手寫 |
 | 出處欄 | 每筆都有 `doc_url`（官方文件）與 `trust`（實測／官方文件／推論）；`retrieved_on` 是官方來源最近一次比對的日期 |
 | 加密實作 | 由官方 SDK 或規格書範例原封不動執行產生標準答案（`tests/vectors/`），範例逐位元組比對 |
 | 驗證 | 2026-11-15：自我測試全過、`verify-examples.py` 全過；已知落差記在 `data/pending.csv` |
@@ -98,6 +98,7 @@ python scripts/search.py --stats                    # 每個域有幾筆
 | 財政部大平台（只查詢） | `references/MOF_EINVOICE_API_REFERENCE.md` |
 | 加值中心生態與選型 | `references/VAC_LANDSCAPE.md` |
 | 工具用法、各家比較表、金額計算、加密、列印、常見問題、測試帳號 | `references/implementation-guide.md` |
+| 官方文件稽核紀錄（各家改了什麼、依據網址） | `references/audit-20261117.md` |
 
 ## 使用
 

@@ -3624,8 +3624,8 @@
   "skills": [
    "invoice"
   ],
-  "title": "《批次開立》ezPay_invoice_by_batch_file 1.0.3",
-  "url": "https://inv.ezpay.com.tw/dw_files/info_api/ezPay_invoice_by_batch_file_V1_0_3.pdf",
+  "title": "《批次開立》ezPay_invoice_by_batch_file 1.0.5",
+  "url": "https://inv.ezpay.com.tw/dw_files/info_api/ezPay_invoice_by_batch_file_V1_0_5_pdf_pdf.pdf",
   "format": "pdf",
   "fetch": "get",
   "access": "public",
@@ -3665,6 +3665,23 @@
    "tests/vectors/ezpay-invoice.json"
   ],
   "notes": "第三方付費外掛（RY，非 ezPay 官方，不在 wordpress.org）；只用來交叉比對加密結果，本機副本版本 2.1.5"
+ },
+ {
+  "id": "ezpay-allowance-void-search-1-0-1",
+  "provider": "ezpay",
+  "skills": [
+   "invoice"
+  ],
+  "title": "《折讓與作廢查詢手冊》標準版 V1.0.1",
+  "url": "https://inv.ezpay.com.tw/dw_files/info_api/ezpay_invoice_allowance_void_manual_standard_V1_0_1.pdf",
+  "format": "pdf",
+  "fetch": "get",
+  "access": "public",
+  "covers": [
+   "taiwan-invoice/references/EZPAY_API_REFERENCE.md",
+   "taiwan-invoice/data/error-codes.csv"
+  ],
+  "notes": "PDF 直連；新版會換檔名，需同時比對下載頁；allowance_search、invoice_invalid_search、allowance_invalid_search 三支查詢 API"
  },
  {
   "id": "ezship-about",
@@ -8846,8 +8863,8 @@
   "skills": [
    "invoice"
   ],
-  "title": "紅陽 電子發票 AI 串接指南（Claude Code Skill）v2.3-v1",
-  "url": "https://storage.googleapis.com/joinchill-image/sunpay_techdoc/202607/sunpay-einvoice-skill-v2.3-v1.zip",
+  "title": "紅陽 電子發票 AI 串接指南（AI Agent Skill）v2.3-v2",
+  "url": "https://storage.googleapis.com/joinchill-image/sunpay_techdoc/202609/sunpay-einvoice-skill-v2.3-v2.zip",
   "format": "zip",
   "fetch": "get",
   "access": "public",

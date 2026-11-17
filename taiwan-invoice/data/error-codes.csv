@@ -235,7 +235,7 @@ ezPay,KEY10010,商店代號空白,,發票,確認 `MerchantID_`（含底線）已
 ezPay,KEY10011,PostData_欄位空白,,發票,確認 `PostData_`（含底線）已填,https://inv.ezpay.com.tw/Invoice_index/download,2026-08-08,官方文件
 ezPay,KEY10012,資料傳遞錯誤,,發票,檢查 Form Post 格式、Content-Type,https://inv.ezpay.com.tw/Invoice_index/download,2026-08-08,官方文件
 ezPay,KEY10013,資料空白,,發票,檢查必填欄位,https://inv.ezpay.com.tw/Invoice_index/download,2026-08-08,官方文件
-ezPay,KEY10014,TimeOut,,發票,檢查 `TimeStamp` 是否在合理區間（建議 ±10 分鐘）,https://inv.ezpay.com.tw/Invoice_index/download,2026-08-08,官方文件
+ezPay,KEY10014,TimeOut,,發票,檢查主機校時與 `TimeStamp`（EZP_INVI 未寫容許範圍；折讓與作廢查詢手冊寫 10 分鐘內有效）,https://inv.ezpay.com.tw/Invoice_index/download,2026-11-17,官方文件
 ezPay,KEY10015,發票金額格式錯誤,,發票,`Amt`、`TaxAmt`、`TotalAmt` 必須為純數字,https://inv.ezpay.com.tw/Invoice_index/download,2026-08-08,官方文件
 ezPay,INV10003,商品資訊格式錯誤或缺少資料,,發票,檢查 `ItemName`/`ItemCount`/`ItemPrice`/`ItemAmt` 是否齊全且 `|` 分隔正確,https://inv.ezpay.com.tw/Invoice_index/download,2026-08-08,官方文件
 ezPay,INV10004,商品資訊的商品小計計算錯誤,,發票,確認 `ItemAmt = ItemCount × ItemPrice`,https://inv.ezpay.com.tw/Invoice_index/download,2026-08-08,官方文件
@@ -249,7 +249,7 @@ ezPay,INV10017,輸入的版本不支援混合稅率功能,,發票,`Version` 應�
 ezPay,INV10019,資料含有控制碼,,發票,移除特殊控制字元,https://inv.ezpay.com.tw/Invoice_index/download,2026-08-08,官方文件
 ezPay,INV10020,暫停使用,,發票,該服務／字軌已暫停,https://inv.ezpay.com.tw/Invoice_index/download,2026-08-08,官方文件
 ezPay,INV10021,異常終止,,發票,重試；若持續發生請聯繫客服,https://inv.ezpay.com.tw/Invoice_index/download,2026-08-08,官方文件
-ezPay,INV20006,查無發票資料,,發票,確認 `InvoiceNumber`+`RandomNum` 或 `MerchantOrderNo`+`TotalAmt` 組合,https://inv.ezpay.com.tw/Invoice_index/download,2026-08-08,官方文件
+ezPay,INV20006,查無發票資料,,發票,確認 `InvoiceNumber`+`RandomNum` 或 `MerchantOrderNo`+`TotalAmt` 組合；折讓與作廢查詢 API 回此碼表示折讓單號長度或格式錯誤,https://inv.ezpay.com.tw/Invoice_index/download,2026-08-08,官方文件
 ezPay,INV70001,欄位資料格式錯誤,,發票,對照型態長度檢查,https://inv.ezpay.com.tw/Invoice_index/download,2026-08-08,官方文件
 ezPay,INV70002,上傳失敗之發票不得作廢,,發票,該發票尚未成功上傳財政部，無法作廢；可聯繫客服協助,https://inv.ezpay.com.tw/Invoice_index/download,2026-08-08,官方文件
 ezPay,INV90005,未簽定合約或合約已到期,,發票,聯繫 ezPay 業務,https://inv.ezpay.com.tw/Invoice_index/download,2026-08-08,官方文件
@@ -263,7 +263,7 @@ ezPay,LIB10009,發票已開立，但未上傳至財政部，無法作廢,,發票
 ezPay,IAI10001,缺少參數,,作廢折讓,檢查必填欄位,https://inv.ezpay.com.tw/Invoice_index/download,2026-08-08,官方文件
 ezPay,IAI10002,查詢失敗,,作廢折讓,確認 `AllowanceNo` 正確,https://inv.ezpay.com.tw/Invoice_index/download,2026-08-08,官方文件
 ezPay,IAI10003,更新失敗,,作廢折讓,重試；若持續發生請聯繫客服,https://inv.ezpay.com.tw/Invoice_index/download,2026-08-08,官方文件
-ezPay,IAI10004,參數錯誤,,作廢折讓,對照欄位格式,https://inv.ezpay.com.tw/Invoice_index/download,2026-08-08,官方文件
+ezPay,IAI10004,參數錯誤,,作廢折讓,對照欄位格式；折讓與作廢查詢 API 回此碼表示查無資料（訊息帶欄位名）,https://inv.ezpay.com.tw/Invoice_index/download,2026-08-08,官方文件
 ezPay,IAI10005,新增失敗,,作廢折讓,重試,https://inv.ezpay.com.tw/Invoice_index/download,2026-08-08,官方文件
 ezPay,IAI10006,異常終止,,作廢折讓,聯繫客服,https://inv.ezpay.com.tw/Invoice_index/download,2026-08-08,官方文件
 ezPay,API10001,[手機條碼驗證] 缺少參數 / [捐贈碼] 缺少參數,,多個 API,見 ezPay 手機條碼／捐贈碼驗證手冊 BDV 1.0.0 第六章,https://inv.ezpay.com.tw/Invoice_index/download,2026-08-08,官方文件
@@ -277,3 +277,4 @@ ezPay,CLC10001,欄位資料空白,,捐贈碼,見 ezPay 手機條碼／捐贈碼�
 ezPay,CLC10002,欄位資料格式錯誤,,捐贈碼,見 ezPay 手機條碼／捐贈碼驗證手冊 BDV 1.0.0 第六章,https://inv.ezpay.com.tw/Invoice_index/download,2026-08-08,官方文件
 ezPay,CLC10003,異常終止,,捐贈碼,見 ezPay 手機條碼／捐贈碼驗證手冊 BDV 1.0.0 第六章,https://inv.ezpay.com.tw/Invoice_index/download,2026-08-08,官方文件
 ezPay,CLC10004,財政部大平台網路連線異常,,捐贈碼,見 ezPay 手機條碼／捐贈碼驗證手冊 BDV 1.0.0 第六章,https://inv.ezpay.com.tw/Invoice_index/download,2026-08-08,官方文件
+ezPay,INV10002,欄位資料格式錯誤,,查詢,折讓與作廢查詢 API：依訊息提示的欄位修正格式,https://inv.ezpay.com.tw/dw_files/info_api/ezpay_invoice_allowance_void_manual_standard_V1_0_1.pdf,2026-11-17,官方文件

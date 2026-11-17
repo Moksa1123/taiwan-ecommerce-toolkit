@@ -1,6 +1,6 @@
 # 歐付寶 O'Pay 電子發票 API 參考
 
-> Source:《歐付寶電子發票 B2C API》(opay_i100.pdf, 145 頁)、《B2B API》(opay_i200.pdf, 130 頁)、《離線電子發票 API》(opay_i301.pdf, 52 頁)
+> Source:《歐付寶電子發票 B2C API》V1.6.0（2026-01-06，opay_i100.pdf, 145 頁）、《B2B API》V1.2.0（2025-09-10，opay_i200.pdf, 130 頁）、《離線電子發票 API》V1.3.0（2025-09-10，opay_i301.pdf, 52 頁）
 > 文件總覽: https://developers.opay.tw/download/document
 > 文件公開程度：public（PDF 免登入直連下載）
 
@@ -51,14 +51,14 @@
 ```json
 {
   "MerchantID": "2000132",
-  "RqHeader": { "Timestamp": 1525169058 },
+  "RpHeader": { "Timestamp": 1525169058 },
   "TransCode": 1,
   "TransMsg": "",
   "Data": "…"
 }
 ```
 
-`TransCode = 1` 代表**傳輸資料（MerchantID, RqHeader, Data）接收成功**，其餘均為失敗。
+回應的標頭是 **`RpHeader`**（請求是 `RqHeader`），解析時別用同一個 key。`TransCode = 1` 代表**傳輸資料（MerchantID, RqHeader, Data）接收成功**，其餘均為失敗。
 
 > ⚠️ `TransCode=1` 只代表**信封收到了**，不代表發票開立成功。業務結果在解密後的 `Data` 裡（`RtnCode`）。這是兩層錯誤處理，常被漏掉。
 
@@ -113,7 +113,7 @@ Base: `https://einvoice.opay.tw/B2CInvoice/`（測試環境 `einvoice-stage`）
 | `CancelDelayIssue` | 取消延遲開立 |
 | `TriggerIssue` | 觸發開立（延遲開立的實際觸發） |
 | `Invalid` | 作廢發票 |
-| `VoidWithReIssue` | 作廢並重開 |
+| `VoidWithReIssue` | 註銷重開（僅能於單月 13 日前註銷前一期發票）|
 | `GetIssue` | 查詢開立結果 |
 | `GetInvalid` | 查詢作廢結果 |
 
@@ -123,11 +123,17 @@ Base: `https://einvoice.opay.tw/B2CInvoice/`（測試環境 `einvoice-stage`）
 
 | `RtnCode` | 意義 |
 |---|---|
-| `1` | 成功（一般開立、查詢等） |
-| `4000003` | **延後開立成功**（`DelayIssue`） |
-| `4000004` | **開立發票成功**（`TriggerIssue` 觸發後） |
+| `1` | 成功（一般開立、查詢；`DelayIssue` 暫存成功也回 `1`，並回 `OrderNumber`＝`Tsr`） |
+| `4000003` | `TriggerIssue` 且當初 `DelayDay` > 0：**延後開立成功**（到期才開） |
+| `4000004` | `TriggerIssue` 且 `DelayDay` = 0：**開立發票成功** |
 
-非上述值即為失敗。**不要只判斷 `RtnCode == 1`**，延遲開立流程會被誤判成錯誤。
+`TriggerIssue` 非上述值即為失敗。**不要只判斷 `RtnCode == 1`**，觸發流程會被誤判成錯誤。
+
+`DelayIssue` 另有欄位：`DelayFlag`（`1` 延遲開立 / `2` 觸發開立）、`*DelayDay`（延遲 1–15 天；觸發 0–15 天；開立當天 10 點後無法取消）、`*Tsr`（交易單號，唯一，觸發時用）、`*PayType` 固定 `3`、`*PayAct` 固定 `Opay`、`NotifyURL`（開立完成通知）。
+
+**`NotifyURL` 回呼**（測試環境不提供）：歐付寶以 `application/x-www-form-urlencoded` POST `inv_mer_id`、`od_sob`（自訂編號）、`tsr`、`invoicedate`、`invoicetime`、`invoicenumber`、`invoicecode`、`inv_error`；收到後要回 `1|OK`。防火牆需放行 `postgate.opay.com.tw`（測試 `postgate-stage.opay.com.tw`）TCP 443。（i100 p.33–34）
+
+`Issue` 回應 `Data`：`RtnCode`、`RtnMsg`、`InvoiceNo`（失敗為空）、`InvoiceDate`（`yyyy-MM-dd HH:mm:ss`）、`RandomNumber`。注意 B2C 用 `InvoiceNo`，B2B 用 `InvoiceNumber`。
 
 ### `Issue` 開立發票 — `Data` 欄位
 
@@ -194,7 +200,7 @@ Base: `https://einvoice.opay.tw/B2CInvoice/`（測試環境 `einvoice-stage`）
 
 另有 `CarrierNum2`（顯碼）：`CarrierType=4`–`7` 必填實體卡片顯碼；`=8` 必填刷卡日期（民國年月日 7 碼）。
 
-> ⚠️ `CarrierType=1/2/3` 時**請勿填 `CarrierNum`**，否則會被系統阻擋。
+> ⚠️ `CarrierType=1/2/3` 時**請勿填 `CarrierNum2`**，否則會被系統阻擋（`CarrierNum` 照上表填）。
 > ⚠️ 查詢發票 API 在 `CarrierType=4`–`8` 時**基於資安不回傳載具號碼**。
 
 #### Print / Donation / CarrierType / CustomerIdentifier 的交互約束
@@ -224,13 +230,13 @@ Base: `https://einvoice.opay.tw/B2CInvoice/`（測試環境 `einvoice-stage`）
 | 端點 | 功能 |
 |---|---|
 | `Allowance` | 開立折讓 |
-| `AllowanceByCollegiate` | 協議折讓 |
+| `AllowanceByCollegiate` | 線上開立折讓（通知開立）|
 | `AllowanceInvalid` | 作廢折讓 |
-| `AllowanceInvalidByCollegiate` | 作廢協議折讓 |
+| `AllowanceInvalidByCollegiate` | 取消線上折讓（`InvoiceNo`、`AllowanceNo`、`Reason`；返還可折讓額度）|
 | `GetAllowanceList` | 查詢折讓清單 |
 | `GetAllowanceInvalid` | 查詢作廢折讓 |
 
-> **一般折讓 vs 協議折讓**：一般折讓由賣方單方開立；協議折讓需買賣雙方確認。稅務效果不同，別混用。
+> **一般折讓 vs 線上折讓**：`Allowance` 為紙本開立，歐付寶暫存後隔日上傳；`AllowanceByCollegiate` 會寄折讓同意信給消費者，消費者點同意後才開立並隔日上傳。尚未同意的線上折讓用 `AllowanceInvalidByCollegiate` 取消（i100 第 8、11 章）。
 
 ### 字軌管理
 
@@ -651,7 +657,7 @@ Base: `https://einvoice.opay.tw/B2CInvoice/`（與 B2C 共用網域）
 
 > 因錯誤代碼一直在新增，詳細的錯誤代碼，請到廠商後台 → 電子發票後台 → 系統開發管理 → 錯誤代碼查詢。
 
-亦即**必須有商家帳號才拿得到完整錯誤碼**。B2B（opay_i200.pdf 附錄 1）與離線（opay_i301.pdf 附錄 1）同樣只指向廠商後台。本文件已收錄從各端點章節反推出的 `RtnCode`：`1`（成功）、`4000003`（延後開立成功）、`4000004`（開立成功）。
+亦即**必須有商家帳號才拿得到完整錯誤碼**。B2B（opay_i200.pdf 附錄 1）與離線（opay_i301.pdf 附錄 1）同樣只指向廠商後台。本文件已收錄從各端點章節反推出的 `RtnCode`：`1`（成功）、`4000003`（`TriggerIssue` 延後開立成功）、`4000004`（`TriggerIssue` 開立成功）。
 
 **沒有物流 API。** 官方文件總覽（修訂於 2026-09-21，2026-09-24 查核）只列金流、電子發票、Open ID、平台綁定、直播主收款網址。
 

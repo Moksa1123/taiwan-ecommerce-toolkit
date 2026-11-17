@@ -12,6 +12,7 @@
 3. [開立折讓單](#2-開立折讓單-issue-allowance)
 4. [作廢/註銷功能](#3-作廢註銷功能-voidcancel)
 5. [列印發票](#4-列印發票-print-invoice)
+6. [手機條碼／自然人憑證／愛心碼查驗](#5-手機條碼自然人憑證愛心碼查驗)
 
 ---
 
@@ -399,6 +400,22 @@ https://einvoice.smilepay.net/einvoice_test/SmilePayCarrier/InvoiceDetails.php?G
 
 ---
 
+## 5. 手機條碼／自然人憑證／愛心碼查驗
+
+> 來源：速買配官方 WooCommerce 外掛 SmilePay_Einvoice 1.0.1.2（作者 SmilePay，廠商提供，非公開下載）。公開版規格書未取得，欄位以外掛實作為準。
+
+`POST https://ssl.smse.com.tw/api/SPEinvoice_application.asp`（form-urlencoded，不帶 `Grvc`／`Verify_key`）
+
+| 查驗 | 參數 |
+| :--- | :--- |
+| 手機條碼（`3J0002`）| `types=biz`、`biz=<手機條碼>` |
+| 自然人憑證（`CQ0001`）| `types=Certificate`、`Certificate=<憑證條碼>` |
+| 愛心碼 | `types=LoveCodeList`、`LoveCodeList=<愛心碼>` |
+
+回應 XML `<SmilePayEinvoice><Status>…</Status><Desc>…</Desc></SmilePayEinvoice>`：`Status=0` 通過；外掛把 `-1003` 當「查無／格式錯誤」處理（例：`<Status>-1003</Status><Desc>biz Error</Desc>`）。
+
+---
+
 ## 開發筆記 (踩坑紀錄)
 
 > 以下是實際整合過程中遇到的問題與解決方案
@@ -407,7 +424,7 @@ https://einvoice.smilepay.net/einvoice_test/SmilePayCarrier/InvoiceDetails.php?G
 
 **問題**：使用正式環境 URL 時顯示「尚未開放B2C功能」(-10013)
 
-**原因**：需要在設定中啟用沙盒模式 (`isProd: false`)
+**原因**：測試帳號（`SEI1000034`）送到了正式路徑 `/api/`；測試要用 `/api_test/`
 
 **URL 對照**：
 | 環境 | 開立發票 | 列印發票 |
@@ -473,11 +490,6 @@ if (printData.method === 'GET' && printData.url) {
 - `SalesAmount` = 未稅金額
 - `TaxAmount` = 稅額
 - `UnitTAX` = 'N' (單價未稅)
-
-### 7. 實作檔案
-
-- **服務實作**：`lib/services/smilepay-invoice-service.ts`
-- **API 路由**：`app/api/v1/financials/[id]/issue-invoice/route.ts`
 
 ---
 
