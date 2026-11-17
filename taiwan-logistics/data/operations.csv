@@ -9,10 +9,10 @@ update_store,更新門市,/Express/UpdateStoreInfo,/API/Logistic/modifyShipment,
 get_shipment_no,取得託運單號,,/API/Logistic/getShipmentNo,,POST,"MerchantID,LogisticsID",,NewebPay專用,https://www.newebpay.com/,2026-08-08,官方文件
 trace,追蹤物流,,/API/Logistic/trace,,POST,"MerchantID,LogisticsID",,NewebPay專用,https://www.newebpay.com/,2026-08-08,官方文件
 cancel,取消物流訂單,,,,POST,"MerID,MerTradeNo",,PAYUNi專用,https://docs.payuni.com.tw/,2026-08-08,官方文件
-sp_cvs_get,SmilePay 超商取號,,,,POST,"Dcvc,Verify_key,Pay_zg,Pay_subzg,Data_id,Amount,Pur_name,Pur_telno,Roturl",,SmilePay /api/C2CPayment.asp 或 /api/B2CPayment.asp,https://www.smilepay.net/,2026-08-08,官方文件
-sp_tcat_get,SmilePay 黑貓取號,,,,POST,"Dcvc,Verify_key,Pay_zg=81/82/83,Data_id,Amount,Pur_name,Address",,"SmilePay /api/ezcatGetTrackNum.asp (Pay_zg=81 COD, =82 PICKUP, =83 逆物流)",https://www.smilepay.net/,2026-08-08,官方文件
-sp_emap,SmilePay 電子地圖選店,,,,GET,"Dcvc,TypesServer,TypesInterface,RtURL",,SmilePay /api/LogisticsEmap.asp; TypesServer=711C2C/FAMIC2C/711B2C/FAMIB2C × MOBILE/WEB,https://www.smilepay.net/,2026-08-08,官方文件
-sp_print_b2c,SmilePay B2C 列印託運單,,,,POST,PaymentNo[],,SmilePay /api/B2C_MultiplePrint.asp 多筆列印,https://www.smilepay.net/,2026-08-08,官方文件
+sp_cvs_get,SmilePay 超商取號,,,,POST,"Dcvc,Rvg2c,Verify_key,Pay_zg,Pay_subzg,Data_id,Amount,od_sob,Pur_name,Tel_number,Logistics_store,Logistics_Roturl",,SmilePay 先 /api/SPPayment.asp 取 SmilePayNO；再以 smseid 呼叫 /api/C2CPayment.asp（C2CPaymentU.asp 純取貨）或 /api/B2CPayment.asp,https://www.smilepay.net/,2026-11-17,官方文件
+sp_tcat_get,SmilePay 黑貓取號,,,,POST,"Dcvc,Rvg2c,Verify_key,Pay_zg=81/82/83,Pay_subzg=TCAT,Data_id,Amount,Pur_name,Tel_number,Address,Logistics_Roturl",,"SmilePay 先 /api/SPPayment.asp (Pay_zg=81 COD, =82 PICKUP, =83 逆物流) 取 SmilePayNO；再以 smseid + package_size 呼叫 /api/ezcatGetTrackNum.asp",https://www.smilepay.net/,2026-11-17,官方文件
+sp_emap,SmilePay 電子地圖選店,,,,GET,"method=GET,TypesServer,TypesInterface,tempvar,url",,SmilePay /api/LogisticsEmap.asp; TypesServer=711C2C/FAMIC2C/711B2C × MOBILE/WEB；回呼欄位 storeid/storename/storeaddress/typesserver,https://www.smilepay.net/,2026-11-17,官方文件
+sp_print_b2c,SmilePay B2C 列印託運單,,,,GET,"Dcvc,Rvg2c,Verify_key,PaperModel,smseid",,SmilePay /api/B2C_MultiplePrint.asp 多筆列印（smseid 以逗號串接）,https://www.smilepay.net/,2026-11-17,官方文件
 pcp_logistic_batch,PChomePay 取號列印交寄單,,,,POST,"order_id,store_id,return_store_id,name,address",,/v1/logistic/batch,https://www.pchomepay.com.tw/,2026-08-08,官方文件
 pcp_logistic_history,PChomePay 查詢物流歷程,,,,GET,order_id,,/v1/logistic/query/{order_id}/history,https://www.pchomepay.com.tw/,2026-08-08,官方文件
 pcp_logistic_yet,PChomePay 查詢未出貨,,,,GET,,,/v1/logistic/yet,https://www.pchomepay.com.tw/,2026-08-08,官方文件
@@ -25,11 +25,11 @@ pn_logistic_print,PayNow 列印託運單,,,,POST,LogisticTradeNo,,PayNow 列印�
 pn_logistic_status,PayNow 查詢貨況,,,,GET,"orderno,user_account,sno=1",,PayNow /api/Orderapi/Get_Order_Info_orderno,https://owlting.github.io/paynow-guideline/,2026-08-08,官方文件
 hct_query_url,HCT 查貨網頁串接,,,,GET,"加密字串,v",,HCT 直連 /phone/searchGoods_Main.aspx?no=加密字串&v=xx (URL 嵌入),https://www.hct.com.tw,2026-08-08,官方文件
 hct_query_xml,HCT 多筆貨號查詢,,,,POST,加密後XML,,HCT 直連 /phone/searchGoods_Main_Xml.ashx (XML POST),https://www.hct.com.tw,2026-08-08,官方文件
-hct_transdata,HCT 傳入託運資料,,,,POST,"esdate,epino,epdcl1,epdcl2,..",,HCT 直連 TransData (DataSet/JSON/XML 三種變體),https://www.hct.com.tw,2026-08-08,官方文件
-hct_upddata,HCT 修改重量,,,,POST,"esdate,epino,eqmny",,HCT UpdData,https://www.hct.com.tw,2026-08-08,官方文件
-hct_transreport,HCT 列印託運總表,,,,POST,"esdate,epino[]",,HCT TransReport (18:00 前 must call),https://www.hct.com.tw,2026-08-08,官方文件
-hct_query_edelno,HCT 查詢貨號,,,,POST,"esdate,epino",,HCT QueryEDELNO,https://www.hct.com.tw,2026-08-08,官方文件
-hct_r_transdata,HCT 逆物流託運,,,,POST,"esdate,epino,...",,HCT R_TransData (JSON-only),https://www.hct.com.tw,2026-08-08,官方文件
+hct_transdata,HCT 傳入託運資料,,,,SOAP,"epino,ercsig,ertel1,eraddr,ejamt,eqamt",,另帶帳號 company 與對應的密碼欄（欄名見 hct-logistics-api.md）；HCT 直連 TransData / TransData_Json / TransData_Xml（Service1.asmx；一批 ≤30 筆，含圖 ≤5 筆）,https://www.hct.com.tw,2026-11-17,官方文件
+hct_upddata,HCT 修改重量,,,,SOAP,"epino,edelno,eqamt",,另帶帳號 company 與對應的密碼欄（欄名見 hct-logistics-api.md）；HCT UpdData / UpdData_Json / UpdData_Xml,https://www.hct.com.tw,2026-11-17,官方文件
+hct_transreport,HCT 列印託運總表,,,,SOAP,"epino,edelno",,另帶帳號 sCompany 與對應的密碼欄（欄名見 hct-logistics-api.md）；HCT TransReport / TransReport_Json / TransReport_XML（18:00 前上傳）,https://www.hct.com.tw,2026-11-17,官方文件
+hct_query_edelno,HCT 查詢貨號,,,,SOAP,epino,,"另帶帳號 company 與對應的密碼欄（欄名見 hct-logistics-api.md）；HCT QueryEDELNO / _Json / _Xml（epino 可逗號分隔多筆；_Json 傳 [{""epino"":""...""}]）",https://www.hct.com.tw,2026-11-17,官方文件
+hct_r_transdata,HCT 逆物流託運,,,,SOAP,"epino,ercsig,ertel1,eraddr,ejamt",,另帶帳號 company 與對應的密碼欄（欄名見 hct-logistics-api.md）；HCT R_TransData_Json（JSON only；edelno2 原貨號）,https://www.hct.com.tw,2026-11-17,官方文件
 ez_map,ezShip 電子地圖選店,,,,GET/POST,"suID,processID,rtURL",webPara,https://map.ezship.com.tw/ezship_map_web.jsp 參數為 camelCase 與其餘兩支的 snake_case 不同;官方禁止嵌入 iframe,https://www.ezship.com.tw/service_doc/service_home_w18v1.jsp?vDocNo=1702,2026-08-08,官方文件
 ez_order_create,ezShip 建立訂單,,,,POST,"su_id,order_id,order_status,order_type,order_amount,rv_name,rv_mobile,rtn_url",",rv_email,st_code,rv_addr,rv_zip,web_para",https://www.ezship.com.tw/emap/ezship_request_order_api_ex.jsp 舊端點無_ex者已於2017年底停用;回傳 sn_id 八個零代表建單失敗,https://www.ezship.com.tw/service_doc/service_home_w18v1.jsp?vDocNo=1702,2026-08-08,官方文件
 ez_status_by_sn,ezShip 依店到店編號查貨況,,,,POST,"su_id,order_no,rtn_url",web_para,https://www.ezship.com.tw/emap/ezship_request_order_status_api.jsp 查詢須間隔3秒以上否則中斷串接權利,https://www.ezship.com.tw/service_doc/service_home_w18v1.jsp?vDocNo=1702,2026-08-08,官方文件

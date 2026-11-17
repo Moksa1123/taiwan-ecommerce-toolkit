@@ -47,7 +47,7 @@
 
 **現況**：無公開 API 規格。已列於 `providers.csv` 是因為它是**可用的配送通路**（部分聚合商支援），不是因為可直連。
 
-**已知**：紅陽科技（SunPay）舊文件站 doc.esafe.com.tw 列有「宅配通」，但官網物流頁（sunpay.com.tw/logistics，2026-09-24 查核）已未列，也沒有對應的 API 規格；可用的聚合路徑需向業者確認。紅陽也確認目前不支援物流 API 串接（紅陽客服回覆 2026-09-29）。
+**已知**：紅陽科技（SunPay）舊文件站 doc.esafe.com.tw 列有「宅配通」，但官網物流頁（sunpay.com.tw/logistics，2026-09-24 查核）已未列，也沒有對應的 API 規格；可用的聚合路徑需向業者確認。紅陽沒有獨立的物流 API；超商物流（7-11／全家／萊爾富，不含宅配通）是併在金流 API 用 `lgs_flag`／`store_type` 開啟（金流手冊 V1.1.2 p.23–24、p.49，詳見 taiwan-payment 的 sunpay-payment-api.md）。
 
 ## 4. 中華郵政（常見誤解）
 

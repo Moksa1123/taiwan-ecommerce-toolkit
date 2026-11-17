@@ -14,3 +14,10 @@ date,question,why_not_found,asked_by,status
 2026-11-17,綠界 OK 店到店終止後 /Express/Create 帶 OKMARTC2C 會回什麼錯誤；/8809 何時移除殘留的 OKMARTC2C 字樣,更新歷程只寫終止與移除文件；/8809 與 /7444 仍列 OK；需實測或洽綠界,taiwan-toolkit（官方文件稽核 2026-11-17）,open
 2026-11-17,萊爾富是否提供商家對外 API 或串接文件,官網 hilife.com.tw 對自動化存取回 403（Akamai WAF）；需人工用瀏覽器確認,taiwan-toolkit（官方文件稽核 2026-11-17）,open
 2026-11-17,綠界 OK 店到店終止後還有哪些聚合商提供 OK 超商取貨（藍新 ShipType=4、PayNow Logistic_service=10、ezShip TOK）,OK 終止公告只見於綠界；其他聚合商的文件不在本次範圍，需各家稽核確認,taiwan-toolkit（官方文件稽核 2026-11-17）,open
+2026-11-17,速買配物流 API（SPPayment.asp／C2CPayment.asp／B2CPayment.asp／ezcatGetTrackNum.asp）負數 Status 完整代碼表與各代碼意義為何？,規格書在商家後台需登入；公開端點只能實測個別代碼（-1001/-2001/-2002/-2003/-2006/-3003/-8002）,taiwan-toolkit（官方文件稽核 2026-11-17）,open
+2026-11-17,速買配 LogisticsEmap.asp 選店回呼是否原樣帶回 tempvar？,規格書需登入；官方外掛只讀 storeid/storename/storeaddress/typesserver,taiwan-toolkit（官方文件稽核 2026-11-17）,open
+2026-11-17,ezShip 貨況查詢回傳的識別欄位實際名稱是 webPara 還是 web_para？,官方文件站 170220/170222 寫 webPara、ezship_status_api.pdf 寫 web_para；無測試帳號可實測,taiwan-toolkit（官方文件稽核 2026-11-17）,open
+2026-11-17,新竹物流 WSDL 中規格書未說明的方法（TransDataCancel_Json／TransData2_Json／TransDispatchOrder_Json／GetImage_Json／FrightQuery 等）的參數與用途為何？,API 服務說明 ver 2.0 未收錄；WSDL 只有參數名稱,taiwan-toolkit（官方文件稽核 2026-11-17）,open
+2026-11-17,新竹物流 TransData 回應多出的 NewOutArea／CODE1–CODE7／AREAS／MDCODE1–3 欄位意義為何？,規格書未列；只能從實際回應看到欄位名,taiwan-toolkit（官方文件稽核 2026-11-17）,open
+2026-11-17,新竹物流 API 服務說明是否有比 2022/12/30 ver 2.0 更新的版本？,規格書需向站所申請，官網無公開下載,taiwan-toolkit（官方文件稽核 2026-11-17）,open
+2026-11-17,紅陽是否有（或規劃）獨立的物流 API（建單、取寄件代碼、列印、大宗寄倉）？,開發者專區只有金流與電子發票手冊；物流只在金流手冊以 lgs_flag 附掛,taiwan-toolkit（官方文件稽核 2026-11-17）,open

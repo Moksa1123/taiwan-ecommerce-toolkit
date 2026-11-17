@@ -2548,8 +2548,8 @@ SmilePay 透過 `Pay_zg` 矩陣編碼涵蓋 7-11/全家 + 黑貓三大配送：
 ### 三大要點
 
 1. **Pay_subzg**：`7NET` 對應 7-11、`FAMI` 對應全家。
-2. **回應是 XML**：用 `xml.etree.ElementTree` parse；常用欄位 `Status` / `PaymentNo` / `Smseid` / `Storeid`。
-3. **電子地圖選店**：先導轉到 `LogisticsEmap.asp`，客戶選完門市後 SmilePay 會 redirect 回 RtURL 並帶 storeid/storename。
+2. **回應是 XML**：用 `xml.etree.ElementTree` parse；取號回 `Status` / `Desc` / `SmilePayNO`，C2C 第二階段回 `paymentno` + `validationno`（根元素 `<SmilePayC2C>`），失敗時 `Status` 為負數。
+3. **電子地圖選店**：導轉到 `LogisticsEmap.asp?method=GET&TypesServer=…&TypesInterface=…&tempvar=…&url=…`，選完門市後 SmilePay 帶 `storeid`/`storename`/`storeaddress`/`typesserver`（全小寫）回到 `url`。
 
 ---
 

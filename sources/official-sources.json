@@ -3696,7 +3696,7 @@
    "taiwan-logistics/references/ezship-logistics-api.md",
    "taiwan-logistics/data/providers.csv"
   ],
-  "notes": "Big5 編碼；內容由 service_doc/1702NN_doc.jsp 載入（04–09 參數版、10–16 XML 版、17–18 簡易版、19–22 貨況）"
+  "notes": "UTF-8；內容由 service_doc/1702NN_doc.jsp 載入（04–09 參數版、10–16 XML 版、17–18 簡易版、19–22 貨況）"
  },
  {
   "id": "ezship-doc-170221",
@@ -3712,7 +3712,7 @@
   "covers": [
    "taiwan-logistics/references/ezship-logistics-api.md"
   ],
-  "notes": "Big5；status PDF 只從這頁連出"
+  "notes": "UTF-8；status PDF 只從這頁連出"
  },
  {
   "id": "ezship-doc-2501",
@@ -3729,7 +3729,7 @@
    "taiwan-logistics/references/ezship-logistics-api.md",
    "taiwan-logistics/data/logistics-types.csv"
   ],
-  "notes": "Big5；內容頁 service_doc/250101_doc.jsp–250123_doc.jsp"
+  "notes": "UTF-8；內容頁 service_doc/250101_doc.jsp–250123_doc.jsp"
  },
  {
   "id": "ezship-ezship-status-api",
@@ -3916,6 +3916,26 @@
   "covers": [
    "taiwan-logistics/data/providers.csv"
   ]
+ },
+ {
+  "id": "hct-edi-wsdl",
+  "provider": "hct",
+  "skills": [
+   "logistics"
+  ],
+  "title": "新竹物流 EDI Web Service WSDL（出貨／託運單 SOAP 方法與參數名）",
+  "url": "https://hctrt.hct.com.tw/EDI_WebService2/Service1.asmx?wsdl",
+  "format": "html",
+  "fetch": "get",
+  "access": "public",
+  "covers": [
+   "taiwan-logistics/references/hct-logistics-api.md",
+   "taiwan-logistics/examples/hct-logistics-example.py",
+   "taiwan-logistics/data/operations.csv",
+   "taiwan-logistics/data/field-mappings.csv",
+   "taiwan-logistics/data/providers.csv"
+  ],
+  "notes": "實為 WSDL（XML）；方法名與參數名大小寫以此為準（TransData_Xml、company、sCompany）；規格書 PDF 需向站所申請"
  },
  {
   "id": "hilife-home",
@@ -8800,7 +8820,7 @@
    "taiwan-payment/data/providers.csv",
    "taiwan-payment/references/sunpay-payment-api.md"
   ],
-  "notes": "新版手冊與 skill 由此頁連出，檔案放 storage.googleapis.com/joinchill-image/sunpay_techdoc/<年月>/；新版手冊、Skill、範例程式的下載連結都在這裡；物流 API 規格目前未公開"
+  "notes": "新版手冊與 skill 由此頁連出，檔案放 storage.googleapis.com/joinchill-image/sunpay_techdoc/<年月>/；新版手冊、Skill、範例程式的下載連結都在這裡；沒有獨立物流 API 手冊，超商物流參數（lgs_flag、store_type、接收物流狀態）在金流手冊內"
  },
  {
   "id": "sunpay-einvoice-manual-v2-3",
@@ -8879,7 +8899,8 @@
   "id": "sunpay-payment-manual",
   "provider": "sunpay",
   "skills": [
-   "payment"
+   "payment",
+   "logistics"
   ],
   "title": "紅陽科技金流服務-金流技術串接手冊 V1.1.2（2026-11-09）",
   "url": "https://storage.googleapis.com/joinchill-image/sunpay_techdoc/202611/%E7%B4%85%E9%99%BD%E7%A7%91%E6%8A%80%E9%87%91%E6%B5%81%E6%9C%8D%E5%8B%99-%E9%87%91%E6%B5%81%E6%8A%80%E8%A1%93%E4%B8%B2%E6%8E%A5%E6%89%8B%E5%86%8AV1.1.2.pdf",
@@ -8893,7 +8914,9 @@
    "taiwan-payment/data/providers.csv",
    "taiwan-payment/data/troubleshooting.csv",
    "taiwan-payment/examples/sunpay-payment-example.py",
-   "tests/vectors/sunpay.json"
+   "tests/vectors/sunpay.json",
+   "taiwan-logistics/data/providers.csv",
+   "taiwan-logistics/references/carrier-direct-access.md"
   ],
   "notes": "tests/vectors/sunpay.json 來自 v1.1.0；V1.1.2 的 §4.2 加解密頁與 V1.1.1 相同，§4.2.3 文字與範例值矛盾（見 reference §3.2）"
  },

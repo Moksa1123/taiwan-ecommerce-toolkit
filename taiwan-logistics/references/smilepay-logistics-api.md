@@ -369,13 +369,19 @@ POST https://ssl.smse.com.tw/api/SPPayment.asp
 </SmilePay>
 ```
 
-失敗：
+失敗（`Verify_key` 錯誤；失敗時其餘元素照樣回傳，內容為空，`Amount` 為 `0`）：
 
 ```xml
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="utf-8" ?>
 <SmilePay>
-    <Status>-2</Status>
-    <Desc>驗證失敗</Desc>
+    <Status>-2002</Status>
+    <Desc>Verify_key is Error</Desc>
+    <Rvg2c>1</Rvg2c>
+    <Dcvc>107</Dcvc>
+    <SmilePayNO></SmilePayNO>
+    <PayEndDate></PayEndDate>
+    <Data_id></Data_id>
+    <Amount>0</Amount>
 </SmilePay>
 ```
 
@@ -430,16 +436,16 @@ POST https://ssl.smse.com.tw/api/C2CPaymentU.asp    # 純取貨 (PICKUP)
 | `Pay_subzg` | ● | `7NET` 或 `FAMI` |
 | `types` | ● | `Xml` (取得 XML 回應) 或 `Web` (取得 HTML 列印頁網址) |
 
-回應（`types=Xml`）：
+回應（`types=Xml`；根元素是 `<SmilePayC2C>`，另含 `Desc`、`Dcvc`、`orderno`、`Amount`、`deadlinedate`、`Pur_name`、`Tel_number`、`Blacklist`）：
 
 ```xml
-<SmilePay>
+<SmilePayC2C>
     <Status>1</Status>
     <paymentno>AB12345</paymentno>
     <validationno>1234</validationno>
     <storeid>131386</storeid>
     <storename>雙子星門市</storename>
-</SmilePay>
+</SmilePayC2C>
 ```
 
 完整交貨便號碼 = `paymentno` + `validationno`（例：`AB123451234`）
@@ -456,15 +462,15 @@ POST https://ssl.smse.com.tw/api/B2CPayment.asp
 | `Verify_key` | ● | 共享密鑰 |
 | `smseid` | ● | 第一階段拿到的 `SmilePayNO` |
 
-回應：
+回應（根元素是 `<SmilePayB2C>`，另含 `Desc`、`Dcvc`、`Smseid`、`Note`、`Pur_name`、`Blacklist`、`Code`、`InDate`、`BackDate`、`Orderid`、`SenderName`、`SenderTel`）：
 
 ```xml
-<SmilePay>
+<SmilePayB2C>
     <Status>1</Status>
     <EshopOrderNo>0987654321</EshopOrderNo>
     <Storeid>131386</Storeid>
     <StoreName>雙子星門市</StoreName>
-</SmilePay>
+</SmilePayB2C>
 ```
 
 7-11 B2C 完整查詢碼：`766` + `EshopOrderNo`
@@ -651,15 +657,16 @@ https://ssl.smse.com.tw/api/LogisticsEmap.asp
 
 ### 選店回呼參數
 
-消費者選店完成後，SmilePay 會 POST/GET 以下欄位到 `url`：
+消費者選店完成後，SmilePay 帶以下欄位回到 `url`。欄位名稱全小寫，PHP `$_REQUEST` 區分大小寫，要照這個寫法讀：
 
 | 參數 | 說明 |
 |------|------|
-| `tempvar` | 你送過去的暫存識別碼 |
-| `Storeid` | 門市代號 |
-| `Storename` | 門市名稱 |
-| `StoreAddress` | 門市地址 |
-| `TypesServer` | 物流類型（同送出） |
+| `storeid` | 門市代號 |
+| `storename` | 門市名稱 |
+| `storeaddress` | 門市地址 |
+| `typesserver` | 物流類型（同送出） |
+
+走 `mtmk_utf.asp` 結帳頁的 B2C 回傳則是首字大寫的 `Storeid`、`Storename`、`Storeaddress`（4.3.3 `smilepayb2c.php`）。
 
 ### PHP 範例（產生選店連結）
 
@@ -1165,19 +1172,23 @@ $retcat_smseid = (string)$xml->SmilePayNO;
 | Status | 說明 | 處理方式 |
 |--------|------|---------|
 | `1` | 成功 | 正常處理 |
-| `非 1` | 失敗（具體原因見 `<Desc>`） | 依 `Desc` 處理；常見錯誤見下表 |
+| 負數 | 失敗（原因見 `<Desc>`，英文） | 依下表處理 |
 
-### 常見失敗訊息（出現在 `<Desc>` 中）
+完整代碼表在商家後台規格書（需登入）。以下是正式端點實際回傳的代碼：
 
-| Desc | 意思 | 處理 |
-|------|------|------|
-| 驗證失敗 | `Dcvc` 或 `Verify_key` 錯誤 | 檢查憑證；測試 / 正式不要混用 |
-| 必填欄位不完整 | 漏送必填欄位 | 比對請求參數表 |
-| Pay_zg 錯誤 | `Pay_zg` 數值與 `Pay_subzg` 不匹配 | 檢查編碼矩陣表 |
-| 訂單編號重複 | `Data_id` 已使用過 | 改用獨立的訂單號（建議 prefix + timestamp） |
-| 商品名稱過長 | `od_sob` 超過字數上限 | CVS 截 35 字 / TCAT 截 45 字 |
-| 金額異常 | `Amount` 超出商品金額限制 | 7-11 / 全家 C2C 最高 19,999；確認商家後台額度 |
-| 該物流業者拒收 | 例如 7-11 不收冷凍 | 改用合適的物流產品 |
+| 端點 | Status | Desc | 情境 |
+|------|--------|------|------|
+| `SPPayment.asp` | `-2001` | `Dcvc or Rvg2c Error` | 缺 `Dcvc`／`Rvg2c` |
+| `SPPayment.asp` | `-2002` | `Verify_key is Error` | `Verify_key` 錯誤 |
+| `SPPayment.asp` | `-2003` | `Pay_zg Error` | 缺 `Pay_zg`，或值不是此端點接受的（`57` C2B 退貨便走 `mtmk_utf.asp`，送到這裡也回此碼） |
+| `SPPayment.asp` | `-2006` | `711 C2C Item error` | 超商 C2C（`51`）只帶帳號與 `Pay_zg`／`Pay_subzg`、缺訂單欄位時回此碼；`FAMI` 也回同一字串 |
+| `SPPayment.asp` | `-3003` | `Can not use this Pay_zg service(Store)` | 帳號沒開這個 `Pay_zg`／`Pay_subzg` 組合（例：`51` + `TCAT`） |
+| `SPPayment.asp` | `-8002` | `Pur_Name Error` | 黑貓（`81`／`83`）缺取貨人姓名 |
+| `SPPayment_Modify.asp` | `-2001` | `缺少商家帳號參數` | 缺 `Dcvc` |
+| `C2CPayment.asp`、`C2CPaymentU.asp`、`ezcatPrintDelivery.asp` | `-1001` | `ID Error` | `smseid`／`Smseid` 或帳號不正確 |
+| `B2CPayment.asp`、`C2BPayment.asp` | `-1001` | `Input Data Error` | 參數不完整 |
+
+`ezcatGetTrackNum.asp`、`B2C_MultiplePrint.asp` 缺參數時回 HTTP 500 錯誤頁（Big5 HTML），不是 XML；呼叫端要先檢查 HTTP 狀態與內容是否為 XML。
 
 ### 連線錯誤
 
@@ -1257,16 +1268,16 @@ if (is_wp_error($response)) {
 
 ## 常見問題排解
 
-### Q1：取號時收到 `Status=-2`，但所有欄位都填了？
+### Q1：取號時收到 `Status=-2002`，但所有欄位都填了？
 
-A：通常是 `Verify_key` 錯誤，或測試 / 正式環境憑證混用。
+A：`Verify_key is Error`：`Verify_key` 錯誤，或測試 / 正式環境憑證混用。
 請確認 `Dcvc` 與 `Verify_key` 配對正確，以及 `testmode_enabled` 切換是否正確。
 
 ### Q2：`Pay_zg` 與 `Pay_subzg` 怎麼選錯了會怎樣？
 
-A：常見錯誤情境：
-- `Pay_zg=51` (C2C COD) + `Pay_subzg=TCAT` → 編碼矛盾，會回 `Pay_zg 錯誤` 或無聲失敗。
-- `Pay_zg=81` (TCAT) + `Pay_subzg=7NET` → 同樣矛盾。
+A：
+- `Pay_zg=51` (C2C COD) + `Pay_subzg=TCAT` → 回 `-3003 Can not use this Pay_zg service(Store)`。
+- `Pay_zg` 不是 `SPPayment.asp` 接受的值 → 回 `-2003 Pay_zg Error`。
 - 一律對著「Pay_zg / Pay_subzg 完整編碼對照表」核對，再送 API。
 
 ### Q3：超商取貨地圖選店後資料丟了？
@@ -1364,7 +1375,7 @@ A：可以打 API 取號（會回正常的 `<SmilePay>` XML），
 ## 官方資源
 
 - **官方網站**：https://www.smilepay.net/
-- **物流文件**：請向 SmilePay 業務窗口索取最新版 PDF（不公開於官網）
+- **物流文件**：規格書在商家後台「H 程式串接說明」，需登入（https://www.smilepay.net/em/FAQ-A-api.asp）
 - **技術客服**：customerservice@smilepay.net
 - **服務電話**：(07)559-1828
 
