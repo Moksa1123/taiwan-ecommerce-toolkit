@@ -1,122 +1,139 @@
-<h1 align="center">taiwan-invoice-skill</h1>
+# taiwan-invoice
 
-<h3 align="center">台灣電子發票 AI 開發技能包</h3>
+A Claude skill for integrating Taiwan e-invoice (電子發票) APIs: issuing, voiding, allowances, printing, and carrier and donation code checks, based on each provider's official documentation.
 
-<p align="center">
-  <strong>支援 ECPay 綠界 · SmilePay 速買配 · Amego 光貿 · ezPay 簡單付 · PayNow 立吉富 · O'Pay 歐付寶 · SunPay 紅陽 · 財政部大平台</strong>
-</p>
+[![npm version](https://img.shields.io/npm/v/taiwan-invoice-skill)](https://www.npmjs.com/package/taiwan-invoice-skill)
+[![License: MIT](https://img.shields.io/github/license/Moksa1123/taiwan-ecommerce-toolkit)](https://github.com/Moksa1123/taiwan-ecommerce-toolkit/blob/main/LICENSE)
 
-<p align="center">
-  <a href="https://www.npmjs.com/package/taiwan-invoice-skill"><img src="https://img.shields.io/npm/v/taiwan-invoice-skill?style=flat-square&logo=npm" alt="npm version"></a>
-  <a href="https://www.npmjs.com/package/taiwan-invoice-skill"><img src="https://img.shields.io/npm/dm/taiwan-invoice-skill?style=flat-square&label=downloads" alt="npm downloads"></a>
-  <img src="https://img.shields.io/badge/providers-9-success?style=flat-square" alt="9 Providers">
-  <img src="https://img.shields.io/badge/AI%20platforms-14-blue?style=flat-square" alt="14 AI Platforms">
-  <a href="https://github.com/Moksa1123/taiwan-ecommerce-toolkit/blob/main/LICENSE"><img src="https://img.shields.io/github/license/Moksa1123/taiwan-ecommerce-toolkit?style=flat-square" alt="License"></a>
-</p>
+English | [繁體中文](https://github.com/Moksa1123/taiwan-ecommerce-toolkit/blob/main/taiwan-invoice/README.zh-TW.md)
 
-<p align="center">
-  <a href="https://paypal.me/cccsubcom"><img src="https://img.shields.io/badge/PayPal-支持開發-00457C?style=for-the-badge&logo=paypal&logoColor=white" alt="PayPal"></a>
-</p>
+This is an unofficial project. It is not affiliated with or endorsed by ECPay, SmilePay, Amego, ezPay, PayNow, O'Pay, SunPay, the Ministry of Finance or any other organization named here. Brand names are written the way each company writes them and belong to their owners.
 
----
+## What it does
 
-## 安裝
+- Covers 7 e-invoice value-added service providers that can issue invoices (ECPay, SmilePay, Amego, ezPay, PayNow, O'Pay, SunPay), plus the Ministry of Finance (MOF) E-Invoice platform for queries.
+- Gives Claude each provider's request format and encryption (AES-128-CBC, AES-256-CBC, MD5, JWT) with runnable Python examples.
+- Searches 408 rows of data offline with `scripts/search.py`: error codes, API operations, field mappings, tax rules, troubleshooting notes and selection advice.
+- Generates a service skeleton for a provider (`scripts/generate-invoice-service.py`) and suggests a provider from plain-language requirements (`scripts/recommend.py`).
+- Covers B2C and B2B invoices, void, allowance, printing, mobile barcode carriers, donation codes and POS batch number allocation.
+
+## When to use
+
+Use it when you are:
+
+- issuing B2C or B2B e-invoices through one of the providers above;
+- voiding an invoice or issuing an allowance;
+- validating a mobile barcode, citizen certificate carrier or donation code;
+- looking up what a provider's error code means, or choosing a provider.
+
+Use something else for:
+
+- collecting payment (credit card, ATM, CVS code, LINE Pay): use [taiwan-payment](https://github.com/Moksa1123/taiwan-ecommerce-toolkit/tree/main/taiwan-payment);
+- shipping, convenience-store pickup or tracking: use [taiwan-logistics](https://github.com/Moksa1123/taiwan-ecommerce-toolkit/tree/main/taiwan-logistics);
+- invoices outside Taiwan, or uploading directly to the MOF platform as your own value-added center: not covered.
+
+## Install
+
+Requirements: Python 3 for the scripts, which use only the standard library. The files in `examples/` also need `pycryptodome` (AES) and `requests`; install them with `pip install -r requirements.txt`. Node.js 18 or later is needed only for the npx installer. Works on Windows, macOS and Linux.
+
+Claude Code plugin (installs all three Taiwan skills: invoice, payment, logistics):
+
+```text
+/plugin marketplace add Moksa1123/taiwan-ecommerce-toolkit
+/plugin install taiwan-ecommerce@taiwan-ecommerce-toolkit
+```
+
+npx (copies the skill into the current project; `--ai` also accepts other agents such as `cursor` or `codex`, `--global` installs into your home directory):
 
 ```bash
-npm install -g taiwan-invoice-skill
+npx taiwan-invoice-skill@2.9.11 init --ai claude
 ```
 
-## 快速開始
+Manual copy:
 
 ```bash
-cd /path/to/your/project
-
-taiwan-invoice init                    # 互動式選擇 AI 助手
-taiwan-invoice init --ai claude        # Claude Code
-taiwan-invoice init --ai cursor        # Cursor
-taiwan-invoice init --ai windsurf      # Windsurf
-taiwan-invoice init --ai all           # 全部安裝
+git clone https://github.com/Moksa1123/taiwan-ecommerce-toolkit.git
+cp -r taiwan-ecommerce-toolkit/taiwan-invoice ~/.claude/skills/
 ```
 
-安裝完後，直接在 AI 助手用自然語言：
+## Quick start
 
+Ask Claude, for example:
+
+- "Issue a B2C invoice with a mobile barcode carrier through the ECPay sandbox, in Python."
+- "Create a B2B invoice on ezPay with a buyer tax ID and tax-exclusive amounts."
+- "What does Amego error code 3050131 mean?"
+
+Or search the data yourself from the skill folder:
+
+```bash
+python3 scripts/search.py "4000004" --domain error -n 1 -f simple
 ```
-使用 ECPay 測試環境開立 B2C 發票，金額 1050 元
-建立 ezPay B2B 發票，買方統編 12345678，未稅 1000、稅 50
-為 PayNow POS 機批次取 100 個發票號碼
+
+Expected output (shortened):
+
+```text
+[1] Score: 7.1404
+  provider: ECPay
+  code: 4000004
+  message_zh: 開立發票成功（觸發開立，DelayDay=0）
+  category: 延後開立
+  solution: 觸發開立 API 的成功碼不是 1：DelayDay>0 回 4000003、DelayDay=0 回 4000004，...
+  doc_url: https://developers.ecpay.com.tw/
+  trust: 官方文件
 ```
 
----
+## Trigger phrases
 
-## 發票服務商
+English: Taiwan e-invoice, ECPay invoice, B2C invoice, B2B invoice, issue invoice, void invoice, allowance, mobile barcode carrier, donation code, buyer tax ID, MOF e-invoice platform, invoice printing.
 
-| 服務商 | 加密 / 認證 | 適用場景 |
-|---|---|---|
-| **ECPay 綠界** | AES-128-CBC + HashKey/HashIV | 市佔率最高、SDK 完整、傳統電商首選 |
-| **SmilePay 速買配** | Grvc + Verify_key | 老牌穩定、整合最簡單、無 AES 門檻 |
-| **Amego 光貿** | MD5 簽章 + App Key | MIG 4.0 標準、現代 RESTful |
-| **ezPay 簡單付** | AES-256-CBC + 32 碼 HashKey + SHA256 | 藍新金流集團小型品牌、字軌管理、批次開立 |
-| **PayNow 立吉富** | JWT Bearer Token | 金物流發票一站式、POS 機批次取號流程 |
-| **O'Pay 歐付寶** | MerchantID + RqHeader + AES 加密 Data | 與綠界發票 API 同源架構 |
-| **SunPay 紅陽** | Token 欄位 AES-128-CBC | 可與紅陽金流搭配隨交易自動開立 |
-| **財政部大平台** | AppID + APIKey（HMAC-SHA256 加簽）| 只做查詢／驗證（手機條碼、捐贈碼、中獎號碼），不能開立 |
+中文：電子發票串接、開立發票、作廢、折讓、載具、手機條碼、捐贈碼、統編、B2B 三聯式、B2C 二聯式、加值中心、財政部大平台、發票列印。
 
-另列關貿（TradeVAN）於 `data/providers.csv`，尚未收錄 reference。
+## What it runs and connects to
 
-ECPay、ezPay、O'Pay、PayNow、SunPay 附可執行 Python 範例，加解密以官方測試向量驗證；SmilePay、Amego 見 EXAMPLES.md 與 references。
+The skill is Markdown documentation, CSV data and local Python scripts. It never sends data anywhere on its own. Network calls happen only when you run an example file.
 
-## 技能包內容
+| Script | What it does | Network | Files written |
+|---|---|---|---|
+| `scripts/search.py` | Searches `data/*.csv` | None | None |
+| `scripts/recommend.py` | Suggests a provider from `data/*.csv` | None | None |
+| `scripts/generate-invoice-service.py` | Writes a TypeScript or Python service skeleton for a provider | None | One source file in the `--output` folder (default: current folder) |
+| `scripts/persist.py` | Saves the project's invoice settings for later sessions | None | `invoice-config/MASTER.md` under `--dir` (default: current folder) |
+| `scripts/error_handler.py` | Retry and error-classification helpers to import in your code | None | None |
+| `scripts/check_numbers.py` | Checks that every number in `SKILL.md` and these READMEs matches the data | None | With `--fix`, those three files |
+| `scripts/test_skill.py` and other `test_*.py` | Self-tests, offline | None | None |
+| `examples/*.py` | Reference clients for each provider | When run directly, calls the sandbox or production host defined at the top of that file | None |
 
-```
+Credentials (merchant ID, HashKey and HashIV, App Key, API tokens, MOF AppID and API key) are supplied by you in your own code or configuration, for example environment variables. The repository stores no real credentials. Test values that appear in the docs and scripts are the providers' published sandbox values.
+
+## How it's verified
+
+- Data source: official provider API documentation, PDF specifications, official SDKs and the MOF E-Invoice platform specification. Every source is registered in [`sources/official-sources.json`](https://github.com/Moksa1123/taiwan-ecommerce-toolkit/blob/main/sources/official-sources.json), and each data row carries `doc_url` and `trust`.
+- Self-test: `python3 scripts/test_skill.py` runs 51 checks, 0 failures (run on 2026-11-17).
+- Evals: on the 12 scored questions, Claude answered 12 correctly with the skill and 0 without it. See [`evals/RESULTS.md`](https://github.com/Moksa1123/taiwan-ecommerce-toolkit/blob/main/taiwan-invoice/evals/RESULTS.md).
+- CI runs `scripts/verify-examples.py`, which compares the example code byte for byte with expected values produced by the providers' own SDKs and spec samples ([`tests/vectors/`](https://github.com/Moksa1123/taiwan-ecommerce-toolkit/tree/main/tests/vectors)).
+
+## Limits
+
+- SmilePay and Amego have no runnable example; see `EXAMPLES.md` and their reference files.
+- The MOF platform is query-only (carriers, donation codes, winning numbers). It cannot issue invoices.
+- TradeVAN is listed in `data/providers.csv` but has no reference file yet.
+- Tax formulas in `data/tax-rules.csv` and the general troubleshooting rules are inferred (`trust=推論`), not yet tied to an official clause. Treat them as advice.
+- Known gaps are tracked in [`data/pending.csv`](https://github.com/Moksa1123/taiwan-ecommerce-toolkit/blob/main/taiwan-invoice/data/pending.csv).
+
+## Repo layout
+
+```text
 taiwan-invoice/
-├── SKILL.md                          # AI 技能主文檔
-├── EXAMPLES.md                       # 完整範例集
-├── references/                       # 各服務商 API 規格
-│   ├── ECPAY_API_REFERENCE.md
-│   ├── SMILEPAY_API_REFERENCE.md
-│   ├── AMEGO_API_REFERENCE.md
-│   ├── EZPAY_API_REFERENCE.md
-│   ├── PAYNOW_API_REFERENCE.md
-│   ├── OPAY_API_REFERENCE.md
-│   ├── SUNPAY_API_REFERENCE.md
-│   ├── MOF_EINVOICE_API_REFERENCE.md # 財政部大平台（查詢）
-│   └── VAC_LANDSCAPE.md             # 加值中心生態
-├── examples/                         # 可執行 Python 範例
-└── data/                             # search / recommend 使用的 CSV
-    ├── providers.csv
-    ├── operations.csv
-    ├── error-codes.csv              # 各家官方錯誤碼
-    └── ...
+├── SKILL.md         # instructions Claude reads
+├── EXAMPLES.md      # longer code examples
+├── references/      # one API reference per provider, MOF platform, landscape
+├── examples/        # runnable Python clients
+├── data/            # CSV data for search.py and recommend.py; pending.csv
+├── scripts/         # search, recommend, generators, tests, number check
+└── evals/           # eval questions, grader and results
 ```
 
-## CLI 指令
+## License & author
 
-```bash
-taiwan-invoice list                # 列出 AI 平台
-taiwan-invoice info                # 技能資訊
-taiwan-invoice update              # 檢查更新
-taiwan-invoice init --force        # 覆蓋安裝
-taiwan-invoice init --global       # 全域安裝
-```
-
-## 14 個 AI 平台支援
-
-Claude Code · Cursor · Windsurf · Antigravity · GitHub Copilot · Kiro · Codex · Qoder · Cline · Gemini · Trae · OpenCode · Continue · CodeBuddy
-
-## 相關套件
-
-本套件是 **[Taiwan E-Commerce Toolkit](https://github.com/Moksa1123/taiwan-ecommerce-toolkit)** 的一部分：
-
-- [taiwan-payment-skill](https://www.npmjs.com/package/taiwan-payment-skill) — 14 家金流
-- [taiwan-logistics-skill](https://www.npmjs.com/package/taiwan-logistics-skill) — 7 家物流 aggregator + HCT 直連 + 2 家即時配送
-
-## 授權
-
-[MIT License](https://github.com/Moksa1123/taiwan-ecommerce-toolkit/blob/main/LICENSE)
-
----
-
-<p align="center">
-  <sub>Made by <strong>Moksa</strong></sub><br>
-  <sub>service@moksaweb.com</sub>
-</p>
+MIT License. Made by Moksa ([moksaweb.com](https://moksaweb.com)). Part of [Taiwan E-commerce Toolkit](https://github.com/Moksa1123/taiwan-ecommerce-toolkit).

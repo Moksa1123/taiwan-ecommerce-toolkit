@@ -1,142 +1,139 @@
-<h1 align="center">taiwan-logistics-skill</h1>
+# taiwan-logistics
 
-<h3 align="center">台灣物流 AI 開發技能包</h3>
+A Claude skill for integrating Taiwan logistics APIs: convenience-store pickup, home delivery, store-map selection, cash on delivery and shipment tracking, based on each provider's official documentation.
 
-<p align="center">
-  <strong>7 家物流 aggregator + HCT 新竹物流直連 + 2 家即時配送</strong>
-</p>
+[![npm version](https://img.shields.io/npm/v/taiwan-logistics-skill)](https://www.npmjs.com/package/taiwan-logistics-skill)
+[![License: MIT](https://img.shields.io/github/license/Moksa1123/taiwan-ecommerce-toolkit)](https://github.com/Moksa1123/taiwan-ecommerce-toolkit/blob/main/LICENSE)
 
-<p align="center">
-  ECPay · NewebPay · PAYUNi · SmilePay · PChomePay · PayNow · ezShip · HCT 直連 · Lalamove · pandago
-</p>
+English | [繁體中文](https://github.com/Moksa1123/taiwan-ecommerce-toolkit/blob/main/taiwan-logistics/README.zh-TW.md)
 
-<p align="center">
-  <a href="https://www.npmjs.com/package/taiwan-logistics-skill"><img src="https://img.shields.io/npm/v/taiwan-logistics-skill?style=flat-square&logo=npm" alt="npm version"></a>
-  <a href="https://www.npmjs.com/package/taiwan-logistics-skill"><img src="https://img.shields.io/npm/dm/taiwan-logistics-skill?style=flat-square&label=downloads" alt="npm downloads"></a>
-  <img src="https://img.shields.io/badge/providers-10-success?style=flat-square" alt="10 Providers">
-  <img src="https://img.shields.io/badge/AI%20platforms-14-blue?style=flat-square" alt="14 AI Platforms">
-  <a href="https://github.com/Moksa1123/taiwan-ecommerce-toolkit/blob/main/LICENSE"><img src="https://img.shields.io/github/license/Moksa1123/taiwan-ecommerce-toolkit?style=flat-square" alt="License"></a>
-</p>
+This is an unofficial project. It is not affiliated with or endorsed by ECPay, NewebPay, PAYUNi, SmilePay, PChomePay, PayNow, ezShip, HCT, Lalamove, pandago, the convenience-store chains or any other company named here. Brand names are written the way each company writes them and belong to their owners.
 
-<p align="center">
-  <a href="https://paypal.me/cccsubcom"><img src="https://img.shields.io/badge/PayPal-支持開發-00457C?style=for-the-badge&logo=paypal&logoColor=white" alt="PayPal"></a>
-</p>
+## What it does
 
----
+- Covers 7 aggregators with a logistics API (ECPay, NewebPay, PAYUNi, SmilePay, PChomePay, PayNow, ezShip), the HCT direct carrier API, and on-demand delivery (Lalamove, pandago).
+- Gives Claude each provider's signing and encryption rules (MD5 CheckMacValue, AES-256-CBC, AES-256-GCM, 3DES) with runnable Python examples.
+- Searches 1111 rows of data offline with `scripts/search.py`: providers, API operations, logistics types, field mappings and shipment status codes.
+- Generates a service module for a provider (`scripts/generate-logistics-service.py`) and suggests a provider from plain-language requirements (`scripts/recommend.py`).
+- Covers convenience-store pickup (7-ELEVEN, FamilyMart, Hi-Life, OK mart), home delivery, cold chain, store-map selectors, cash on delivery and tracking.
 
-## 安裝
+## When to use
+
+Use it when you are:
+
+- building a shipping flow with convenience-store pickup or home delivery;
+- adding a store-map selector to a checkout;
+- creating shipments, printing labels or reading status callbacks;
+- looking up what a logistics status code means, or choosing a provider.
+
+Use something else for:
+
+- collecting payment, including the payment side of ECPay, NewebPay or PAYUNi: use [taiwan-payment](https://github.com/Moksa1123/taiwan-ecommerce-toolkit/tree/main/taiwan-payment);
+- issuing e-invoices: use [taiwan-invoice](https://github.com/Moksa1123/taiwan-ecommerce-toolkit/tree/main/taiwan-invoice);
+- shipping outside Taiwan, or a carrier contract that has no public API: not covered (the skill says so instead of guessing).
+
+## Install
+
+Requirements: Python 3 for the scripts, which use only the standard library. The files in `examples/` and the network options of `scripts/test_logistics.py` also need `pycryptodome` (AES, 3DES) and `requests`; install them with `pip install -r requirements.txt`. Node.js 18 or later is needed only for the npx installer. Works on Windows, macOS and Linux.
+
+Claude Code plugin (installs all three Taiwan skills: invoice, payment, logistics):
+
+```text
+/plugin marketplace add Moksa1123/taiwan-ecommerce-toolkit
+/plugin install taiwan-ecommerce@taiwan-ecommerce-toolkit
+```
+
+npx (copies the skill into the current project; `--ai` also accepts other agents such as `cursor` or `codex`, `--global` installs into your home directory):
 
 ```bash
-npm install -g taiwan-logistics-skill
+npx taiwan-logistics-skill@1.4.11 init --ai claude
 ```
 
-## 快速開始
+Manual copy:
 
 ```bash
-cd /path/to/your/project
-
-taiwan-logistics init                    # 互動式
-taiwan-logistics init --ai claude        # Claude Code
-taiwan-logistics init --ai all           # 全部安裝
+git clone https://github.com/Moksa1123/taiwan-ecommerce-toolkit.git
+cp -r taiwan-ecommerce-toolkit/taiwan-logistics ~/.claude/skills/
 ```
 
-安裝完後，在 AI 助手用自然語言：
+## Quick start
 
+Ask Claude, for example:
+
+- "Add ECPay convenience-store pickup with a store map to my checkout, in Python."
+- "Create a PAYUNi home-delivery shipment and download the label."
+- "What does ECPay logistics status 2073 mean?"
+
+Or search the data yourself from the skill folder:
+
+```bash
+python3 scripts/search.py "2073" --domain status --max 1
 ```
-查詢台北市信義區的 7-11 取貨點，整合 ECPay 物流
-建立 SmilePay 黑貓宅急便冷凍 C2C 訂單，COD 1000 元
-PChomePay 7-11 取貨付款，金額 1500 元，notify URL 設好
-PayNow 7-11 大宗寄倉，使用 3DES 加密
-HCT 直連 API 傳入託運資料，逆物流單獨處理
+
+Expected output (shortened):
+
+```text
+搜索查詢: '2073' (域: status)
+[1] 分數: 7.62 | 域: status
+  provider: ecpay
+  code: 2073
+  status_zh: 包裹配達取件門市
+  category: at_store
+  description: 物流商：UNIMART、UNIMARTC2C、HILIFE、HILIFEC2C
+  doc_url: https://developers.ecpay.com.tw/7380/
+  trust: 官方文件
 ```
 
----
+## Trigger phrases
 
-## 物流服務商
+English: Taiwan logistics, CVS pickup, convenience-store pickup, store-to-store shipping, store map, home delivery, cold chain, cash on delivery, shipment tracking, logistics status code, HCT, Lalamove, on-demand delivery.
 
-| 服務商 | 類型 | 加密 / 認證 | 特色 |
+中文：物流串接、超商取貨、店到店、大宗寄倉、取貨付款、電子地圖選店、宅配、冷凍、物流狀態碼、托運單、新竹物流、即時配送。
+
+## What it runs and connects to
+
+The skill is Markdown documentation, CSV data and local Python scripts. It never sends data anywhere on its own. Network calls happen only when you run a connectivity option of the test script or run an example file.
+
+| Script | What it does | Network | Files written |
 |---|---|---|---|
-| **ECPay 綠界** | aggregator | MD5 CheckMacValue | B2C 7-11（含冷凍）/全家/萊爾富；C2C 四大超商；宅配黑貓/中華郵政 |
-| **NewebPay 藍新** | aggregator | AES-256-CBC + SHA256 | B2C 僅 7-11；C2C 四大超商；無宅配 |
-| **PAYUNi 統一** | aggregator | AES-256-GCM + SHA256 | 7-11 常溫/冷凍 + T-Cat 常溫/冷藏/冷凍（溫控配送最完整） |
-| **SmilePay 速買配** | aggregator | Verify_key + 加權檢核碼 | Pay_zg 矩陣 51/52/55/56/81/82/83，含逆物流 |
-| **PChomePay 拍錢包** | aggregator | HTTP Basic Auth → token | 金物流二合一、7-11／全家／萊爾富取貨付款 |
-| **PayNow 立吉富** | aggregator | **3DES/ECB/Zero-Padding** | 11 條產品線（含海外配送）；不同於金流端 AES |
-| **ezShip 台灣便利配** | aggregator | 無簽章（`su_id` 帳號綁定） | 全家/萊爾富/OK、宅配、店港澳；不含 7-11 |
-| **HCT 新竹物流** | **direct carrier API** | 申請後提供金鑰 | 收錄的聚合商都沒有新竹物流選項，只能直連 |
-| **Lalamove** | 即時配送 | HMAC-SHA256 自簽 | 先報價後下單（報價 5 分鐘效期） |
-| **pandago** | 即時配送 | OAuth 2.0 + RSA 簽 JWT assertion | 同城即時配送 |
+| `scripts/search.py` | Searches `data/*.csv` | None | None |
+| `scripts/recommend.py` | Suggests a provider from `data/*.csv` | None | None |
+| `scripts/generate-logistics-service.py` | Prints a Python or TypeScript module for a provider | None | None (writes to standard output) |
+| `scripts/test_logistics.py` | Known-answer test of ECPay signing; offline by default | `--live`: HEAD request to the sandbox of ECPay (`logistics-stage.ecpay.com.tw`), NewebPay (`ccore.newebpay.com`) and PAYUNi (`sandbox-api.payuni.com.tw`). `--create` and `--query`: POST to the ECPay logistics sandbox | None |
+| `scripts/check_numbers.py` | Checks that every number in `SKILL.md` and these READMEs matches the data | None | With `--fix`, those three files |
+| `scripts/test_skill.py` | Self-test; runs the checks above offline | None | None |
+| `examples/*.py` | Reference clients for each provider | When run directly, calls the sandbox or production host defined at the top of that file | None |
+| `examples/store-map-integration-example.html` | Store-map sample page and server code | None by itself; callback URLs are placeholders | None |
 
-## 技能包內容
+Credentials (merchant ID, HashKey and HashIV, API keys and secrets, carrier account numbers) are supplied by you in your own code or configuration, for example environment variables. The repository stores no real credentials. Test values that appear in the docs and scripts are the providers' published sandbox values.
 
-```
+## How it's verified
+
+- Data source: official provider API documentation, PDF specifications and SDKs. Every source is registered in [`sources/official-sources.json`](https://github.com/Moksa1123/taiwan-ecommerce-toolkit/blob/main/sources/official-sources.json), and each data row carries `doc_url` and `trust`.
+- Self-test: `python3 scripts/test_skill.py` runs 42 checks, 0 failures (run on 2026-11-17).
+- Evals: on the 11 scored questions, Claude answered 11 correctly with the skill and 0 without it. See [`evals/RESULTS.md`](https://github.com/Moksa1123/taiwan-ecommerce-toolkit/blob/main/taiwan-logistics/evals/RESULTS.md).
+- CI runs `scripts/verify-examples.py`, which compares the example code byte for byte with expected values produced by the providers' own SDKs and spec samples ([`tests/vectors/`](https://github.com/Moksa1123/taiwan-ecommerce-toolkit/tree/main/tests/vectors)).
+
+## Limits
+
+- Convenience-store chains, T-cat, Chunghwa Post and other carriers without a public API are listed only so Claude can say so; reach them through an aggregator.
+- Lalamove and pandago have references but no runnable example. HCT documentation is available only after applying to HCT.
+- `test_logistics.py --create` and `--query` work with ECPay only; NewebPay and PAYUNi need your own merchant account.
+- Known gaps are tracked in [`data/pending.csv`](https://github.com/Moksa1123/taiwan-ecommerce-toolkit/blob/main/taiwan-logistics/data/pending.csv).
+
+## Repo layout
+
+```text
 taiwan-logistics/
-├── SKILL.md                              # AI 技能主文檔
-├── EXAMPLES.md                           # 實戰範例集
-├── references/                           # 各服務商 API 規格
-│   ├── ecpay-logistics-api.md
-│   ├── NEWEBPAY_LOGISTICS_REFERENCE.md
-│   ├── payuni-logistics-api.md
-│   ├── smilepay-logistics-api.md         # Pay_zg 矩陣
-│   ├── pchomepay-logistics-api.md        # NDJSON 對帳 parser
-│   ├── paynow-logistics-api.md           # Logistic_service 產品線
-│   ├── ezship-logistics-api.md
-│   ├── hct-logistics-api.md              # 直連 HCT
-│   ├── lalamove-logistics-api.md
-│   ├── ondemand-delivery.md              # Lalamove / pandago
-│   └── carrier-direct-access.md          # 無公開 API 的物流業者與替代路徑
-├── examples/                             # Python 範例
-└── data/                                 # search / recommend 使用的 CSV
-    ├── providers.csv                    # 可串接 + 僅供查詢
-    ├── operations.csv
-    ├── logistics-types.csv              # 各家實際參數值（子類型／溫層／代收上限）
-    ├── status-codes.csv                 # 跨服務商狀態碼
-    └── field-mappings.csv               # 欄位對照
+├── SKILL.md         # instructions Claude reads
+├── EXAMPLES.md      # longer code examples
+├── references/      # one API reference per provider, on-demand overview
+├── examples/        # runnable Python clients and a store-map page
+├── data/            # CSV data for search.py and recommend.py; pending.csv
+├── scripts/         # search, recommend, generator, tests, number check
+└── evals/           # eval questions, grader and results
 ```
 
-## CLI 指令
+## License & author
 
-```bash
-taiwan-logistics list                  # 列出 AI 平台
-taiwan-logistics info                  # 技能資訊
-taiwan-logistics update                # 檢查更新
-taiwan-logistics init --force          # 覆蓋安裝
-taiwan-logistics init --global         # 全域安裝
-```
-
-## 14 個 AI 平台支援
-
-Claude Code · Cursor · Windsurf · Antigravity · GitHub Copilot · Kiro · Codex · Qoder · Cline · Gemini · Trae · OpenCode · Continue · CodeBuddy
-
-## 物流類型支援矩陣
-
-依各家官方規格整理，實際參數值見 `data/logistics-types.csv`。
-
-| 服務商 | 7-11 | 全家 | 萊爾富 | OK | 黑貓 | 其他 |
-|---|---|---|---|---|---|---|
-| ECPay | B2C（含冷凍）+ C2C | B2C + C2C | B2C + C2C | C2C | 常溫／冷藏／冷凍 | 中華郵政 |
-| NewebPay | B2C + C2C | C2C | C2C | C2C | — | — |
-| PAYUNi | B2C + C2C（常溫／冷凍） | — | — | — | 常溫／冷凍／冷藏 | — |
-| SmilePay | B2C + C2C | C2C | — | — | 含逆物流 | — |
-| PChomePay | 取貨付款 | 取貨付款 | 取貨付款 | — | — | — |
-| PayNow | B2C + C2C（含冷凍） | B2C + C2C（含冷凍） | C2C | C2C | 宅配、到店 | 7-11 海外 |
-| ezShip | — | C2C | C2C | C2C | — | 宅配、店港澳 |
-| HCT 直連 | — | — | — | — | — | 新竹物流 |
-
-## 相關套件
-
-本套件是 **[Taiwan E-Commerce Toolkit](https://github.com/Moksa1123/taiwan-ecommerce-toolkit)** 的一部分：
-
-- [taiwan-invoice-skill](https://www.npmjs.com/package/taiwan-invoice-skill) — 7 家電子發票加值中心 + 財政部大平台查詢
-- [taiwan-payment-skill](https://www.npmjs.com/package/taiwan-payment-skill) — 14 家金流
-
-## 授權
-
-[MIT License](https://github.com/Moksa1123/taiwan-ecommerce-toolkit/blob/main/LICENSE)
-
----
-
-<p align="center">
-  <sub>Made by <strong>Moksa</strong></sub><br>
-  <sub>service@moksaweb.com</sub>
-</p>
+MIT License. Made by Moksa ([moksaweb.com](https://moksaweb.com)). Part of [Taiwan E-commerce Toolkit](https://github.com/Moksa1123/taiwan-ecommerce-toolkit).
