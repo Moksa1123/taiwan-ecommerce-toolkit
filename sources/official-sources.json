@@ -4666,13 +4666,13 @@
   "title": "藍新金流 最新消息",
   "url": "https://www.newebpay.com/website/Page/news",
   "format": "html",
-  "fetch": "browser",
+  "fetch": "manual",
   "access": "public",
   "covers": [
    "taiwan-payment/references/newebpay-payment-api.md",
    "taiwan-payment/data/payment-methods.csv"
   ],
-  "notes": "列表由 JavaScript 載入，需瀏覽器渲染；服務上線／下架公告（如 AFTEE、大哥付你分期、Passkey）在此"
+  "notes": "列表由 JavaScript 載入，無頭瀏覽器會被防火牆擋，需人工開啟；服務上線／下架公告（如 AFTEE、大哥付你分期、Passkey）在此"
  },
  {
   "id": "opay-backoffice-error-codes",
