@@ -90,7 +90,7 @@ def parse_frontmatter(text: str) -> dict[str, str]:
 
 
 # 只給開發者看的檔案，不隨 skill 安裝
-NOT_INSTALLED = {"CLAUDE.md", "README.md"}
+NOT_INSTALLED = {"CLAUDE.md", "README.md", "README.zh-TW.md"}
 # 作答紀錄只供維護者評分，sync-assets.mjs 不打包
 NOT_PACKAGED = ("evals", "runs")
 

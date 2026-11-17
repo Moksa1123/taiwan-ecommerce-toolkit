@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 """
-check_numbers.py — SKILL.md 裡的每一個數字都要有來由，而且要對得上資料（SOP 6-1）。
+check_numbers.py — SKILL.md、README.md、README.zh-TW.md 裡的每一個數字都要有來由，而且要對得上資料（SOP 6-1）。
 
-做法是白名單：把 SKILL.md 的數字全部找出來（程式碼區塊、行內 `code`、網址除外），
-每一個都必須被 RULES 的某一條認領，否則失敗。新增數字時要同時登記規則。
+做法是白名單：把三個檔的數字全部找出來（程式碼區塊、行內 `code`、網址除外），
+每一個都必須被該檔規則的某一條認領，否則失敗。新增數字時要同時登記規則。
+SKILL.md 用 RULES，README.md 用 README_RULES，README.zh-TW.md 用 README_ZH_RULES。
 
 規則四種：
     stat   搜尋域的筆數，跟 core.dataset_stats() 比          （--fix 可自動改）
@@ -15,7 +16,7 @@ check_numbers.py — SKILL.md 裡的每一個數字都要有來由，而且要�
 
 用法：
     python scripts/check_numbers.py            # 有問題 exit 1
-    python scripts/check_numbers.py --fix      # stat / fact 不一致時直接改 SKILL.md
+    python scripts/check_numbers.py --fix      # stat / fact 不一致時直接改三個檔
 """
 from __future__ import annotations
 
@@ -26,6 +27,8 @@ from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
 SKILL_MD = HERE.parent / "SKILL.md"
+README_MD = HERE.parent / "README.md"
+README_ZH_MD = HERE.parent / "README.zh-TW.md"
 sys.path.insert(0, str(HERE))
 
 import core  # noqa: E402
@@ -34,7 +37,18 @@ import core  # noqa: E402
 # ---------------------------------------------------------------------------
 # 這個 skill 自己的事實與規則
 # ---------------------------------------------------------------------------
+
+def _evals(i: int) -> int:
+    """evals/RESULTS.md 最新一輪：0＝計分題數、1＝有 skill 答對、2＝沒有 skill 答對。"""
+    path = HERE.parent / "evals" / "RESULTS.md"
+    m = re.search(r"計分題答對率（(\d+) 題） \| \*\*(\d+)/\d+[^|]*\| (\d+)/\d+",
+                  path.read_text(encoding="utf-8")) if path.exists() else None
+    return int(m.group(i + 1)) if m else -1
+
 FACTS = {
+    "evals_n": lambda: _evals(0),
+    "evals_with": lambda: _evals(1),
+    "evals_without": lambda: _evals(2),
     "rows": lambda: sum(core.dataset_stats().values()),
     "domains": lambda: len(core.CSV_CONFIG),
     "providers": lambda: core.dataset_stats()["provider"],
@@ -58,9 +72,40 @@ RULES: list[tuple[str, str, str]] = [
 ]
 
 
+# README.md（英文，也是 npm 套件頁）
+README_RULES: list[tuple[str, str, str]] = [
+    (r"Covers (\d+) Taiwan payment providers", "fact", "providers"),
+    (r"Searches (\d+) rows", "fact", "rows"),
+    (r"on the (\d+) scored questions", "fact", "evals_n"),
+    (r"answered (\d+) correctly with the skill", "fact", "evals_with"),
+    (r"and (\d+) without it", "fact", "evals_without"),
+    (r"AES-256-(?:CBC|GCM)|HMAC-SHA256|LINE Pay v4", "fixed", "演算法與產品版本名稱"),
+    (r"Python 3\b", "fixed", "腳本的最低需求"),
+    (r"Node\.js 18 or later", "fixed", "payment-cli/package.json 的 engines.node"),
+    (r"runs \d+ checks, 0 failures", "fixed", "test_skill.py 在 2026-11-17 的檢查數；test_skill 增減檢查時要重跑並更新"),
+    (r"2026-11-17", "fixed", "最近一次官方文件稽核與自我測試的日期"),
+]
+
+# README.zh-TW.md（段落與 README.md 一一對應）
+README_ZH_RULES: list[tuple[str, str, str]] = [
+    (r"涵蓋 (\d+) 家台灣金流", "fact", "providers"),
+    (r"離線查詢 (\d+) 筆", "fact", "rows"),
+    (r"計分的 (\d+) 題", "fact", "evals_n"),
+    (r"有 skill 時 Claude 答對 (\d+) 題", "fact", "evals_with"),
+    (r"沒有 skill 時答對 (\d+) 題", "fact", "evals_without"),
+    (r"AES-256-(?:CBC|GCM)|HMAC-SHA256|LINE Pay v4", "fixed", "演算法與產品版本名稱"),
+    (r"Python 3\b", "fixed", "腳本的最低需求"),
+    (r"Node\.js 18 以上", "fixed", "payment-cli/package.json 的 engines.node"),
+    (r"共 \d+ 項檢查，失敗 0", "fixed", "test_skill.py 在 2026-11-17 的檢查數；test_skill 增減檢查時要重跑並更新"),
+    (r"2026-11-17", "fixed", "最近一次官方文件稽核與自我測試的日期"),
+]
+
+
 # ---------------------------------------------------------------------------
 # 引擎（照抄即可）
 # ---------------------------------------------------------------------------
+TARGETS = [(SKILL_MD, RULES), (README_MD, README_RULES), (README_ZH_MD, README_ZH_RULES)]
+
 NUM = re.compile(r"\d+(?:[.,]\d+)*")
 _MASKS = [
     re.compile(r"^```.*?^```", re.S | re.M),   # 程式碼區塊
@@ -84,8 +129,11 @@ def _search_blob(query: str, domain: str) -> str:
     return " | ".join(" ".join(str(v) for k, v in h.items() if not k.startswith("_")) for h in hits)
 
 
-def check(path: Path = SKILL_MD, fix: bool = False) -> tuple[list[str], int]:
-    """回傳 (問題清單, 檢查過的數字個數)。fix=True 時就地改 stat / fact。"""
+def check(path: Path = SKILL_MD, rules: list[tuple[str, str, str]] | None = None,
+          fix: bool = False) -> tuple[list[str], int]:
+    """回傳 (問題清單, 檢查過的數字個數)。rules 預設 RULES；fix=True 時就地改 stat / fact。"""
+    rules = RULES if rules is None else rules
+    name = path.name
     text = path.read_text(encoding="utf-8")
     scan = _masked(text)
     match_view = _masked(text, keep_inline=True)
@@ -94,10 +142,10 @@ def check(path: Path = SKILL_MD, fix: bool = False) -> tuple[list[str], int]:
     edits: list[tuple[int, int, str]] = []
     stats = core.dataset_stats()
 
-    for pattern, kind, arg in RULES:
+    for pattern, kind, arg in rules:
         found = list(re.finditer(pattern, match_view, re.M))
         if not found:
-            problems.append(f"規則沒用到（SKILL.md 改過寫法？）：{pattern}")
+            problems.append(f"規則沒用到（{name} 改過寫法？）：{pattern}")
             continue
         for m in found:
             span = m.span(1) if m.re.groups else m.span()
@@ -106,7 +154,7 @@ def check(path: Path = SKILL_MD, fix: bool = False) -> tuple[list[str], int]:
             if kind in ("stat", "fact"):
                 want = str(stats.get(arg, -1) if kind == "stat" else FACTS[arg]())
                 if got != want:
-                    problems.append(f"{kind} {arg}：SKILL.md 寫 {got}，實際 {want}")
+                    problems.append(f"{kind} {arg}：{name} 寫 {got}，實際 {want}")
                     edits.append((span[0], span[1], want))
             elif kind == "data":
                 query, domain, needle = arg.split("|")
@@ -116,7 +164,7 @@ def check(path: Path = SKILL_MD, fix: bool = False) -> tuple[list[str], int]:
     line_of = lambda pos: text.count("\n", 0, pos) + 1  # noqa: E731
     for m in NUM.finditer(scan):
         if not any(i in covered for i in range(*m.span())):
-            problems.append(f"第 {line_of(m.start())} 行的 {m.group(0)} 沒有登記在 RULES")
+            problems.append(f"{name} 第 {line_of(m.start())} 行的 {m.group(0)} 沒有登記在規則裡")
 
     if fix and edits:
         for start, end, want in sorted(edits, reverse=True):
@@ -126,21 +174,31 @@ def check(path: Path = SKILL_MD, fix: bool = False) -> tuple[list[str], int]:
     return problems, n
 
 
+def check_all(fix: bool = False) -> list[tuple[Path, list[str], int]]:
+    """檢查 TARGETS 裡存在的檔（安裝版可能沒有 README）。"""
+    return [(p, *check(p, r, fix=fix)) for p, r in TARGETS if p.exists()]
+
+
 def main() -> int:
     core.use_utf8_stdout()
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[1])
-    ap.add_argument("--fix", action="store_true", help="stat / fact 不一致時直接改 SKILL.md")
+    ap.add_argument("--fix", action="store_true", help="stat / fact 不一致時直接改檔")
     args = ap.parse_args()
-    problems, n = check(fix=args.fix)
-    if not problems:
-        print(f"SKILL.md 的 {n} 個數字全部登記且與資料一致。")
-        return 0
-    print(f"SKILL.md 有 {len(problems)} 個數字問題：")
-    for p in problems:
-        print("  ✗", p)
-    if args.fix:
+    bad = 0
+    for path, problems, n in check_all(fix=args.fix):
+        if not problems:
+            print(f"{path.name} 的 {n} 個數字全部登記且與資料一致。")
+            continue
+        bad += 1
+        print(f"{path.name} 有 {len(problems)} 個數字問題：")
+        for p in problems:
+            print("  ✗", p)
+    for path, _ in TARGETS:
+        if not path.exists():
+            print(f"{path.name} 不存在，略過。")
+    if bad and args.fix:
         print("（stat / fact 已改；其餘要人工處理）")
-    return 1
+    return 1 if bad else 0
 
 
 if __name__ == "__main__":

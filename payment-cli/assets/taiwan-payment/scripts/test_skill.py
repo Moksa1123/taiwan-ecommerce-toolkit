@@ -4,7 +4,7 @@ test_skill.py — skill 自我測試（離線、只用標準函式庫）。
 
 檢查：
   1. SKILL.md：六個固定段落、鐵則在路由段第一行、大小 ≤ 20KB、每個 references/*.md 都有連到
-  2. SKILL.md 每個數字都登記且與資料一致（check_numbers.py）
+  2. SKILL.md、README.md、README.zh-TW.md 每個數字都登記且與資料一致（check_numbers.py）
   3. data/*.csv 每列都有 trust，官方文件的列要有 doc_url；pending.csv 欄位正確
   4. 路由表與驗證段裡的 search.py 指令都查得到結果
   5. 使用者路徑的腳本只 import 標準函式庫（第三方只能放在 try 區塊裡當選用）
@@ -86,9 +86,9 @@ def test_structure() -> None:
 
 
 def test_numbers() -> None:
-    print('2. SKILL.md 數字（check_numbers.py）')
-    problems, n = check_numbers.check()
-    check(f'{n} 個數字全部登記且一致', not problems, '；'.join(problems[:5]))
+    print('2. SKILL.md、README 數字（check_numbers.py）')
+    for path, problems, n in check_numbers.check_all():
+        check(f'{path.name}：{n} 個數字全部登記且一致', not problems, '；'.join(problems[:5]))
 
 
 def test_data() -> None:
