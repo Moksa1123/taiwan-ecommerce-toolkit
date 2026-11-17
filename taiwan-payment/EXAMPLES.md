@@ -1316,16 +1316,16 @@ LINE Pay 採 **兩段式流程**：`Request → Confirm`。每次請求需產生
 
 ## TapPay 範例
 
-TapPay 是 **PCI 隔離設計**：前端 SDK 取 Prime（60 秒 TTL）→ 後端用 Prime 呼叫 pay-by-prime。商家從不接觸卡號。
+TapPay 是 **PCI 隔離設計**：前端 SDK 取 Prime（90 秒效期）→ 後端用 Prime 呼叫 pay-by-prime。商家從不接觸卡號。
 
 ### 完整 Python 範例
-請見 [`examples/tappay-payment-example.py`](examples/tappay-payment-example.py) — 涵蓋 pay-by-prime / pay-by-card-token (重複扣款) / refund / query / remove-card。
+請見 [`examples/tappay-payment-example.py`](examples/tappay-payment-example.py) — 涵蓋 pay-by-prime / pay-by-token (重複扣款) / refund / query / remove-card。
 
 ### 四大要點
 
 1. **三段式金鑰**：`Partner Key` (後端密鑰) / `App Key` (前端 SDK 公鑰) / `Merchant ID`。**Partner Key 絕對不可放前端**。
-2. **Prime 是 60 秒一次性 token**：前端取 Prime 後要立刻送後端付款；過期或重用會 status=3。
-3. **重複扣款**：`pay-by-prime` 帶 `remember=true` 後，回應內 `card_secret` 含 `card_key + card_token`，存起來下次直接 `pay-by-card-token`，免再過 SDK。適合訂閱與快速結帳。
+2. **Prime 是 90 秒一次性 token**：前端取 Prime 後要立刻送後端付款；過期回 status=91。
+3. **重複扣款**：`pay-by-prime` 帶 `remember=true` 後，回應內 `card_secret` 含 `card_key + card_token`，存起來下次直接 `pay-by-token`，免再過 SDK。適合訂閱與快速結帳。
 4. **status=0 才是成功**：別只看 HTTP 200；TapPay HTTP 200 但 status≠0 是業務失敗。
 
 ## O'Pay 歐付寶範例

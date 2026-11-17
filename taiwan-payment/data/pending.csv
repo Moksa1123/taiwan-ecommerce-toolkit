@@ -27,3 +27,8 @@ date,question,why_not_found,asked_by,status
 2026-11-17,PAYUNi 分期測試卡第二張：page 34 寫 3560512000000001，page 374 寫 4741502000000001，哪個正確,兩頁官方文件不一致；reference 採 page 374（交易測試資料說明專頁）,taiwan-toolkit（官方文件稽核 2026-11-17）,open
 2026-11-17,PAYUNi UPP Version 1.0 與 2.0 除了優惠券參數外是否還有其他差異,修改記錄只寫「新增優惠券請求與返回參數，1.0 版本仍可正常使用」，官方未保留 1.0 頁面可比對,taiwan-toolkit（官方文件稽核 2026-11-17）,open
 2026-11-17,examples/payuni-payment-example.py 第 41 行 TradeStatus 註解仍引用第三方外掛 wpbr-payuni-payment；代碼 0 的「信用審查正常」在官方 page 164 找不到對應字樣,要先確認 AFTEE 的官方用語才能改成官方出處,taiwan-toolkit（官方文件稽核 2026-11-17）,open
+2026-11-17,TapPay Virtual Account（ATM）pay-by-prime 回應中虛擬帳號、銀行代碼、繳費期限的欄位名稱為何,docs.tappaysdk.com 無 Virtual Account 專頁，GitHub 範例只示範請求、未列回應欄位,taiwan-toolkit（官方文件稽核 2026-11-17）,open
+2026-11-17,TapPay Pay Later 的 pl_ Prime 是否只能用於 Bind Card、後續扣款流程為何,GitHub 範例連到 docs.tappaysdk.com/pay-later/zh/advanced.html#bind-card-api，但該頁目前導回首頁（不存在）,taiwan-toolkit（官方文件稽核 2026-11-17）,open
+2026-11-17,TapPay 超商取貨付款（Cash On Delivery）pay-by-prime 的 merchant_id、回應與門市欄位規格,docs.tappaysdk.com 無專頁，只有 GitHub 範例,taiwan-toolkit（官方文件稽核 2026-11-17）,open
+2026-11-17,TapPay Web SDK 是否依 Portal 網域白名單拒絕 setupSDK、沙箱是否強制,官方 Frontend 與 Portal 文件未提網域白名單行為,taiwan-toolkit（官方文件稽核 2026-11-17）,open
+2026-11-17,TapPay Record API filters.time 是否必帶,Backend 頁寫 time*、time(filter) 寫必填，但 filters 頁又寫「每個皆非必帶」，官方自相矛盾；reference 依兩處必填寫法,taiwan-toolkit（官方文件稽核 2026-11-17）,open

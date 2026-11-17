@@ -159,7 +159,7 @@ python scripts/recommend.py "會員制 定期扣款" --format simple
 
 ### TapPay 特性
 - **優勢**: PCI 隔離設計（前端 SDK 取 Prime → 後端付款）、支援多元電子錢包（Apple Pay / Google Pay / LINE Pay / 街口）、適合自製結帳頁
-- **認證**: Partner Key（後端）+ App Key（前端）+ Merchant ID 三段式金鑰；Prime 60 秒過期
+- **認證**: Partner Key（後端）+ App Key（前端）+ Merchant ID 三段式金鑰；Prime 90 秒過期
 - **傳輸**: RESTful JSON
 - **特色**: 兩段式架構 (Prime → pay-by-prime)；`card_secret` 機制可記憶卡片做重複扣款 (pay-by-token)；`result_url` 雙網址回調；無自家結帳頁，UI 完全在商家自管
 

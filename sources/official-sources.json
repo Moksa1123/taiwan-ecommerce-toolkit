@@ -8341,7 +8341,8 @@
   "fetch": "get",
   "access": "public",
   "covers": [
-   "taiwan-payment/references/tappay-payment-api.md"
+   "taiwan-payment/references/tappay-payment-api.md",
+   "taiwan-payment/data/providers.csv"
   ],
   "ignore": [
    "(?s)\\A.*?(?=Release list)",
@@ -8408,6 +8409,147 @@
   "access": "public",
   "covers": [
    "taiwan-payment/data/error-codes.csv",
+   "taiwan-payment/references/tappay-payment-api.md"
+  ]
+ },
+ {
+  "id": "tappay-tutorial-zh-back",
+  "provider": "tappay",
+  "skills": [
+   "payment"
+  ],
+  "title": "TapPay：Backend（Pay by Prime／Token、Refund、Record、Notify）",
+  "url": "https://docs.tappaysdk.com/tutorial/zh/back.html",
+  "format": "html",
+  "fetch": "get",
+  "access": "public",
+  "covers": [
+   "taiwan-payment/references/tappay-payment-api.md",
+   "taiwan-payment/data/operations.csv",
+   "taiwan-payment/data/providers.csv",
+   "taiwan-payment/data/field-mappings.csv",
+   "taiwan-payment/examples/tappay-payment-example.py"
+  ]
+ },
+ {
+  "id": "tappay-tutorial-zh-advanced",
+  "provider": "tappay",
+  "skills": [
+   "payment"
+  ],
+  "title": "TapPay：Advanced（Cap、Cap Cancel、Refund Cancel、Bind／Remove Card）",
+  "url": "https://docs.tappaysdk.com/tutorial/zh/advanced.html",
+  "format": "html",
+  "fetch": "get",
+  "access": "public",
+  "covers": [
+   "taiwan-payment/references/tappay-payment-api.md",
+   "taiwan-payment/examples/tappay-payment-example.py"
+  ]
+ },
+ {
+  "id": "tappay-tutorial-zh-reference",
+  "provider": "tappay",
+  "skills": [
+   "payment"
+  ],
+  "title": "TapPay：Reference（record_status、測試卡、測試 Prime、相容性）",
+  "url": "https://docs.tappaysdk.com/tutorial/zh/reference.html",
+  "format": "html",
+  "fetch": "get",
+  "access": "public",
+  "covers": [
+   "taiwan-payment/references/tappay-payment-api.md",
+   "taiwan-payment/data/operations.csv"
+  ]
+ },
+ {
+  "id": "tappay-tutorial-zh-web-front",
+  "provider": "tappay",
+  "skills": [
+   "payment"
+  ],
+  "title": "TapPay：Web Frontend（TapPay Fields、CCV／Cardholder Prime）",
+  "url": "https://docs.tappaysdk.com/tutorial/zh/web/front.html",
+  "format": "html",
+  "fetch": "get",
+  "access": "public",
+  "covers": [
+   "taiwan-payment/references/tappay-payment-api.md"
+  ]
+ },
+ {
+  "id": "tappay-google-pay-zh-front",
+  "provider": "tappay",
+  "skills": [
+   "payment"
+  ],
+  "title": "TapPay：Google Pay Frontend",
+  "url": "https://docs.tappaysdk.com/google-pay/zh/front.html",
+  "format": "html",
+  "fetch": "get",
+  "access": "public",
+  "covers": [
+   "taiwan-payment/references/tappay-payment-api.md"
+  ]
+ },
+ {
+  "id": "tappay-apple-pay-zh-front",
+  "provider": "tappay",
+  "skills": [
+   "payment"
+  ],
+  "title": "TapPay：Apple Pay Frontend",
+  "url": "https://docs.tappaysdk.com/apple-pay/zh/front.html",
+  "format": "html",
+  "fetch": "get",
+  "access": "public",
+  "covers": [
+   "taiwan-payment/references/tappay-payment-api.md"
+  ]
+ },
+ {
+  "id": "tappay-px-pay-plus-zh-web-front",
+  "provider": "tappay",
+  "skills": [
+   "payment"
+  ],
+  "title": "TapPay：全支付 Web Frontend",
+  "url": "https://docs.tappaysdk.com/px-pay-plus/zh/web/front.html",
+  "format": "html",
+  "fetch": "get",
+  "access": "public",
+  "covers": [
+   "taiwan-payment/references/tappay-payment-api.md"
+  ]
+ },
+ {
+  "id": "tappay-oppay-zh-web-front",
+  "provider": "tappay",
+  "skills": [
+   "payment"
+  ],
+  "title": "TapPay：大哥付你分期（OP Pay）Web Frontend",
+  "url": "https://docs.tappaysdk.com/oppay/zh/web/front.html",
+  "format": "html",
+  "fetch": "get",
+  "access": "public",
+  "covers": [
+   "taiwan-payment/references/tappay-payment-api.md"
+  ]
+ },
+ {
+  "id": "tappay-easy-wallet-zh-web-front",
+  "provider": "tappay",
+  "skills": [
+   "payment"
+  ],
+  "title": "TapPay：悠遊付 Web Frontend",
+  "url": "https://docs.tappaysdk.com/easy-wallet/zh/web/front.html",
+  "format": "html",
+  "fetch": "get",
+  "access": "public",
+  "covers": [
    "taiwan-payment/references/tappay-payment-api.md"
   ]
  },
