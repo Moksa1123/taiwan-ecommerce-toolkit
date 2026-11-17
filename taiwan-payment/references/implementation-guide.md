@@ -19,7 +19,7 @@ python scripts/recommend.py "多元支付 LINE Pay Apple Pay"
 
 # API 設計優先
 python scripts/recommend.py "API RESTful JSON"
-# → 推薦 PAYUNi (RESTful JSON API)
+# → 推薦 PAYUNi (JSON 回應、AES-GCM)
 
 # JSON 輸出
 python scripts/recommend.py "新創公司 快速整合" --format json
@@ -113,10 +113,10 @@ python scripts/recommend.py "會員制 定期扣款" --format simple
 - **特色**: LINE Pay、Apple Pay、Google Pay 原生支援
 
 ### PAYUNi 特性
-- **優勢**: RESTful JSON API、統一集團背景、AES-GCM 現代加密
+- **優勢**: 統一集團背景、AES-GCM 加密、回應為 JSON
 - **加密**: AES-256-GCM 加密 + SHA256 簽章
-- **傳輸**: RESTful JSON，application/json
-- **特色**: AFTEE 先享後付、iCash 愛金卡（獨家）
+- **傳輸**: UPP 為瀏覽器表單 POST；其他 API 為 HTTP POST 表單欄位（MerID、Version、EncryptInfo、HashInfo），回應 JSON
+- **特色**: AFTEE 先享後付、icash Pay、街口支付、LINE Pay 幕後
 
 ### SmilePay 特性
 - **優勢**: 老牌穩定、整合簡單、無 AES 加密門檻、ibon / FamiPort 直接打單
@@ -551,8 +551,10 @@ CVV: 任意 3 碼
 有效期: 任意未來月年
 CVV: 任意 3 碼
 
-# PAYUNi 測試卡
-請至後台查詢官方測試卡號
+# PAYUNi 測試卡（官方 page 374）
+卡號: 4147631000000001
+有效期: 任意
+CVV: 任意 3 碼
 ```
 
 ### 問題 6: AES 加密 / 解密失敗

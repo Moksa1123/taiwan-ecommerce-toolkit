@@ -21,3 +21,9 @@ date,question,why_not_found,asked_by,status
 2026-11-17,綠界 Apple Pay 在非 Safari 瀏覽器是否顯示（QR Code 流程是否已上線）,/7328 寫第三方瀏覽器顯示 QR Code（2025-11-04 上線、iOS 18 以上），/2862 仍寫非 Safari 不顯示 Apple Pay；需實測或洽綠界,taiwan-toolkit（官方文件稽核 2026-11-17）,open
 2026-11-17,綠界 AIO 是否仍接受 InvoiceMark 參數（examples/ecpay-payment-example.py 預設送 InvoiceMark=N）,現行 /2862 參數表沒有 InvoiceMark，也沒有說明多送未列參數的行為；需測試環境實測,taiwan-toolkit（官方文件稽核 2026-11-17）,open
 2026-11-17,payment-methods.csv 綠界 ATM 1-49999、CVS 30-20000、BARCODE 20-40000 的金額上下限出處,全方位金流 API 文件未列固定上下限（/5740 指向依特店申請的費率方案），只有收費頁可能有；未找到可引用的官方頁,taiwan-toolkit（官方文件稽核 2026-11-17）,open
+2026-11-17,PAYUNi Notify 商店端應回應什麼內容、失敗是否重送與重送次數,官方 Notify 頁（page 73/74/75/80）與修改記錄都沒寫；官方外掛處理完直接 exit 不輸出，無法推得 PAYUNi 是否檢查回應,taiwan-toolkit（官方文件稽核 2026-11-17）,open
+2026-11-17,PAYUNi 幕後 API 請求應使用的 Content-Type（urlencoded 或 multipart）,官方文件只寫「Http Post」；官方 PHP SDK 以 cURL 陣列送出（multipart/form-data），沒有官方說明兩者都接受,taiwan-toolkit（官方文件稽核 2026-11-17）,open
+2026-11-17,PAYUNi 信用卡幕後 Token 交易請求 Version 固定 1.3 但返回參數表寫固定 1.2，實際回應 Version 為何,page 522 本身前後不一致，需實測或詢問 PAYUNi,taiwan-toolkit（官方文件稽核 2026-11-17）,open
+2026-11-17,PAYUNi 分期測試卡第二張：page 34 寫 3560512000000001，page 374 寫 4741502000000001，哪個正確,兩頁官方文件不一致；reference 採 page 374（交易測試資料說明專頁）,taiwan-toolkit（官方文件稽核 2026-11-17）,open
+2026-11-17,PAYUNi UPP Version 1.0 與 2.0 除了優惠券參數外是否還有其他差異,修改記錄只寫「新增優惠券請求與返回參數，1.0 版本仍可正常使用」，官方未保留 1.0 頁面可比對,taiwan-toolkit（官方文件稽核 2026-11-17）,open
+2026-11-17,examples/payuni-payment-example.py 第 41 行 TradeStatus 註解仍引用第三方外掛 wpbr-payuni-payment；代碼 0 的「信用審查正常」在官方 page 164 找不到對應字樣,要先確認 AFTEE 的官方用語才能改成官方出處,taiwan-toolkit（官方文件稽核 2026-11-17）,open

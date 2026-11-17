@@ -317,7 +317,7 @@ class PAYUNiService {
             method: 'POST',
             fields: {
                 MerID: this.merID,
-                Version: '1.0',
+                Version: '2.0',
                 EncryptInfo: encryptInfo,
                 HashInfo: this.hashInfo(encryptInfo),
             },

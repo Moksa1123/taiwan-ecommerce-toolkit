@@ -3,7 +3,7 @@ scenario,recommended_provider,confidence,reason,anti_patterns,use_cases,doc_url,
 快速整合,ecpay,HIGH,文檔完整 | 範例豐富 | 測試帳號可用,複雜加密需求,MVP 快速驗證 | 新創項目,https://developers.ecpay.com.tw/,2026-08-08,推論
 多元支付,newebpay,HIGH,支援 13 種付款方式 | MPG 整合 | 電子錢包,基礎需求過度,需要多種支付方式 | 電商平台,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,推論
 信用卡記憶,newebpay,HIGH,信用卡記憶功能 | 快速結帳,隱私考量需評估,會員制電商 | 訂閱服務,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,推論
-簡潔 API,payuni,MEDIUM,JSON RESTful | 統一集團背景 | AES-GCM 加密,大型專案社群資源少,新項目 | API 優先設計,https://docs.payuni.com.tw/,2026-08-08,推論
+簡潔 API,payuni,MEDIUM,JSON 回應 | 統一集團背景 | AES-GCM 加密,大型專案社群資源少,新項目 | API 優先設計,https://docs.payuni.com.tw/,2026-08-08,推論
 LINE Pay 整合,newebpay,HIGH,原生支援 LINE Pay | 整合簡單,單一支付方式不需要,LINE 生態系 | 年輕族群,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,推論
 Apple Pay / Google Pay,newebpay,HIGH,完整支援行動支付 | 多種電子錢包,桌面為主不需要,行動優先 | App 支付,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,推論
 ATM 轉帳,ecpay,HIGH,虛擬帳號配發 | 自動對帳,即時性要求高,大額交易 | B2B 付款,https://developers.ecpay.com.tw/,2026-08-08,推論
@@ -13,9 +13,9 @@ BNPL 先買後付,ecpay,MEDIUM,BNPL 無卡分期,風險控管需評估,年輕族
 跨境支付,newebpay,MEDIUM,支援國際卡 | 多元貨幣,國內為主不需要,跨境電商 | 國際客戶,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,推論
 測試開發,ecpay,HIGH,測試帳號完整 | 測試卡可用,正式環境,開發階段 | 測試驗證,https://developers.ecpay.com.tw/,2026-08-08,推論
 傳統產業,ecpay,HIGH,市佔率高 | 社群支援好 | 整合商多,技術能力強的團隊,傳統轉型 | 中小企業,https://developers.ecpay.com.tw/,2026-08-08,推論
-新創公司,payuni,MEDIUM,RESTful 設計 | 統一集團,需要完整文檔參考,新創 API 設計 | 現代架構,https://docs.payuni.com.tw/,2026-08-08,推論
+新創公司,payuni,MEDIUM,JSON 回應 | 統一集團,需要完整文檔參考,新創 API 設計 | 現代架構,https://docs.payuni.com.tw/,2026-08-08,推論
 PHP 開發,ecpay,HIGH,PHP SDK 完整 | 範例豐富,非 PHP 技術棧,PHP 電商系統 | WordPress,https://developers.ecpay.com.tw/,2026-08-08,推論
-Node.js 開發,payuni,MEDIUM,JSON API 友好 | RESTful,無特定框架需求,Node.js 後端 | Express,https://docs.payuni.com.tw/,2026-08-08,推論
+Node.js 開發,payuni,MEDIUM,JSON 回應 | AES-GCM 可用 Node 內建 crypto,無特定框架需求,Node.js 後端 | Express,https://docs.payuni.com.tw/,2026-08-08,推論
 Python 開發,ecpay,HIGH,Python 範例完整 | 加密庫支援,無特定框架需求,Django | Flask,https://developers.ecpay.com.tw/,2026-08-08,推論
 行動 App,newebpay,HIGH,行動支付完整 | Apple/Google Pay,網頁為主,iOS | Android App,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,推論
 小額付款,ecpay,HIGH,支援超商條碼 | 代碼繳費,大額交易,小額商品 | 虛擬商品,https://developers.ecpay.com.tw/,2026-08-08,推論

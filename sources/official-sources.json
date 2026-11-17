@@ -7554,7 +7554,8 @@
   "access": "public",
   "covers": [
    "tests/vectors/payuni.json",
-   "taiwan-payment/examples/payuni-payment-example.py"
+   "taiwan-payment/examples/payuni-payment-example.py",
+   "taiwan-payment/references/payuni-payment-api.md"
   ],
   "notes": "向量取自 1.2.8 class-payuni.php Encrypt/Decrypt/HashInfo；1.2.9（2026-09-18 commit 16c4160）只在超商貨態通知加 Odno，加解密未變",
   "ignore": [
@@ -7562,6 +7563,50 @@
    "(?s)Footer.*\\Z",
    "(?m)^\\s*\\d+\\s+(stars?|watching|forks?)\\s*$"
   ]
+ },
+ {
+  "id": "payuni-page-511",
+  "provider": "payuni",
+  "skills": [
+   "payment"
+  ],
+  "title": "PAYUNi 官方文件：API/交易建立/信用卡免跳轉支付元件(UNi Embed)/版本差異說明",
+  "url": "https://docs.payuni.com.tw/server/index.php?s=/api/page/info",
+  "format": "json",
+  "fetch": {
+   "method": "POST",
+   "data": {
+    "page_id": "511"
+   }
+  },
+  "access": "public",
+  "covers": [
+   "taiwan-payment/references/payuni-payment-api.md"
+  ],
+  "json_path": "data.page_content",
+  "notes": "ShowDoc SPA：以 POST page_id 取回 JSON（data.page_content 為 Markdown）；網頁版 https://docs.payuni.com.tw/web/#/7/511"
+ },
+ {
+  "id": "payuni-page-514",
+  "provider": "payuni",
+  "skills": [
+   "payment"
+  ],
+  "title": "PAYUNi 官方文件：API/Notify/信用卡免跳轉支付元件Notify/Ver 1.0",
+  "url": "https://docs.payuni.com.tw/server/index.php?s=/api/page/info",
+  "format": "json",
+  "fetch": {
+   "method": "POST",
+   "data": {
+    "page_id": "514"
+   }
+  },
+  "access": "public",
+  "covers": [
+   "taiwan-payment/references/payuni-payment-api.md"
+  ],
+  "json_path": "data.page_content",
+  "notes": "ShowDoc SPA：以 POST page_id 取回 JSON（data.page_content 為 Markdown）；網頁版 https://docs.payuni.com.tw/web/#/7/514"
  },
  {
   "id": "pchomepay-api-doc",
