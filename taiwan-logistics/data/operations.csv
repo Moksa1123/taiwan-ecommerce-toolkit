@@ -34,18 +34,20 @@ ez_map,ezShip 電子地圖選店,,,,GET/POST,"suID,processID,rtURL",webPara,http
 ez_order_create,ezShip 建立訂單,,,,POST,"su_id,order_id,order_status,order_type,order_amount,rv_name,rv_mobile,rtn_url",",rv_email,st_code,rv_addr,rv_zip,web_para",https://www.ezship.com.tw/emap/ezship_request_order_api_ex.jsp 舊端點無_ex者已於2017年底停用;回傳 sn_id 八個零代表建單失敗,https://www.ezship.com.tw/service_doc/service_home_w18v1.jsp?vDocNo=1702,2026-08-08,官方文件
 ez_status_by_sn,ezShip 依店到店編號查貨況,,,,POST,"su_id,order_no,rtn_url",web_para,https://www.ezship.com.tw/emap/ezship_request_order_status_api.jsp 查詢須間隔3秒以上否則中斷串接權利,https://www.ezship.com.tw/service_doc/service_home_w18v1.jsp?vDocNo=1702,2026-08-08,官方文件
 ez_status_by_order,ezShip 依訂單編號查貨況,,,,POST,"su_id,order_no,rtn_url",web_para,https://www.ezship.com.tw/emap/ezship_request_order_status_api_byorder.jsp 不適用簡易版串接的訂單,https://www.ezship.com.tw/service_doc/service_home_w18v1.jsp?vDocNo=1702,2026-08-08,官方文件
-llm_quotation,Lalamove 報價,,,,POST,"serviceType,stops,language",scheduleAt,/v3/quotations 報價效期5分鐘;須先報價才能下單,https://developers.lalamove.com/,2026-08-08,官方文件
-llm_place_order,Lalamove 下單,,,,POST,"quotationId,sender,recipients",isPODEnabled,/v3/orders 以報價 ID 下單,https://developers.lalamove.com/,2026-08-08,官方文件
+llm_quotation,Lalamove 報價,,,,POST,"serviceType,stops,language","scheduleAt,specialRequests,isRouteOptimized,item,pricingTierCode",/v3/quotations 報價效期5分鐘;stops 2-16個;台灣 language=zh_TW;body 包在 data 內,https://developers.lalamove.com/,2026-11-17,官方文件
+llm_place_order,Lalamove 下單,,,,POST,"quotationId,sender,recipients","isPODEnabled,metadata,partner",/v3/orders 以報價 ID 下單;recipients[] 需 stopId/name/phone;訂單編號19位要存字串,https://developers.lalamove.com/,2026-11-17,官方文件
 llm_order_detail,Lalamove 查詢訂單,,,,GET,orderId,,/v3/orders/{id},https://developers.lalamove.com/,2026-08-08,官方文件
-llm_order_edit,Lalamove 修改訂單,,,,PATCH,orderId,,/v3/orders/{id},https://developers.lalamove.com/,2026-08-08,官方文件
-llm_cancel,Lalamove 取消訂單,,,,DELETE,orderId,,/v3/orders/{id} 司機接單後取消多半收費,https://developers.lalamove.com/,2026-08-08,官方文件
+llm_order_edit,Lalamove 修改訂單,,,,PATCH,"orderId,stops",,/v3/orders/{id} 僅一次;ON_GOING 且未取件;只能改送件點,https://developers.lalamove.com/,2026-11-17,官方文件
+llm_cancel,Lalamove 取消訂單,,,,DELETE,orderId,,/v3/orders/{id} 僅 ASSIGNING_DRIVER 或轉 ON_GOING 未滿5分鐘可取消;否則 409 ERR_CANCELLATION_FORBIDDEN,https://developers.lalamove.com/,2026-11-17,官方文件
 llm_driver,Lalamove 查詢司機,,,,GET,"orderId,driverId",,/v3/orders/{id}/drivers/{driverId} 可取得司機資訊與座標,https://developers.lalamove.com/,2026-08-08,官方文件
-llm_change_driver,Lalamove 更換司機,,,,DELETE,"orderId,driverId",,/v3/orders/{id}/drivers/{driverId},https://developers.lalamove.com/,2026-08-08,官方文件
-llm_priority,Lalamove 加價優先,,,,POST,orderId,priorityFee,/v3/orders/{id}/priority,https://developers.lalamove.com/,2026-08-08,官方文件
+llm_change_driver,Lalamove 更換司機,,,,DELETE,"orderId,driverId",reason,/v3/orders/{id}/drivers/{driverId} 媒合15分鐘後且取件前;reason=DRIVER_LATE/DRIVER_ASKED_CHANGE/DRIVER_UNRESPONSIVE/DRIVER_RUDE,https://developers.lalamove.com/,2026-11-17,官方文件
+llm_priority,Lalamove 加價優先,,,,POST,"orderId,priorityFee",,/v3/orders/{id}/priority-fee 僅司機接單前;金額須大於前次並取代前次,https://developers.lalamove.com/,2026-11-17,官方文件
 llm_cities,Lalamove 查詢服務城市,,,,GET,,,/v3/cities,https://developers.lalamove.com/,2026-08-08,官方文件
-pdg_order_create,pandago 建立訂單,,,,POST,"client_order_id,sender,recipient,payment_method",description,/orders 台灣正式端點 https://pandago-api-apse.deliveryhero.io/tw,https://on-demand-rider-docs.deliveryhero.io/,2026-08-08,官方文件
+pdg_order_create,pandago 建立訂單,,,,POST,"recipient,payment_method,description","client_order_id,sender,amount,packaging,preordered_for,products,delivery_tasks,pickup_tasks",/orders 台灣正式端點 https://pandago-api-apse.deliveryhero.io/tw/api/v1;sender 建議帶 client_vendor_id;收件人座標必填,https://on-demand-rider-docs.deliveryhero.io/,2026-11-17,官方文件
 pdg_order_get,pandago 查詢訂單,,,,GET,order_id,,/orders/{order_id},https://on-demand-rider-docs.deliveryhero.io/,2026-08-08,官方文件
-pdg_order_cancel,pandago 取消訂單,,,,DELETE,order_id,reason,/orders/{order_id},https://on-demand-rider-docs.deliveryhero.io/,2026-08-08,官方文件
-pdg_fee,pandago 費用估算,,,,POST,"sender,recipient",,/orders/fee 與時間估算為兩支獨立端點,https://on-demand-rider-docs.deliveryhero.io/,2026-08-08,官方文件
-pdg_time,pandago 時間估算,,,,POST,"sender,recipient",,/orders/time,https://on-demand-rider-docs.deliveryhero.io/,2026-08-08,官方文件
+pdg_order_cancel,pandago 取消訂單,,,,DELETE,"order_id,reason",,/orders/{order_id} 外送夥伴接單後回 409;reason=DELIVERY_ETA_TOO_LONG/MISTAKE_ERROR/REASON_UNKNOWN,https://on-demand-rider-docs.deliveryhero.io/,2026-11-17,官方文件
+pdg_fee,pandago 費用估算,,,,POST,"recipient,amount,description",sender,/orders/fee 與時間估算為兩支獨立端點;要一次取得費用與時間並成單改用 /quotes,https://on-demand-rider-docs.deliveryhero.io/,2026-11-17,官方文件
+pdg_time,pandago 時間估算,,,,POST,"recipient,amount,description",sender,/orders/time,https://on-demand-rider-docs.deliveryhero.io/,2026-11-17,官方文件
 pdg_coordinates,pandago 司機座標,,,,GET,order_id,,/orders/{order_id}/coordinates,https://on-demand-rider-docs.deliveryhero.io/,2026-08-08,官方文件
+pdg_quote,pandago 建立報價,,,,POST,recipient,"sender,preordered_for",/quotes 回 quote_id/estimated_delivery_fee/estimated_pickup_time/estimated_delivery_time/expired_at;效期10分鐘;sender 帶 client_vendor_id 或 location,https://on-demand-rider-docs.deliveryhero.io/,2026-11-17,官方文件
+pdg_quote_confirm,pandago 確認報價成單,,,,POST,"quoteId,recipient,payment_method,amount,description","client_order_id,sender,packaging,products,delivery_tasks,pickup_tasks",/quotes/{quoteId} 報價須未過期且未使用;成功回 201 訂單,https://on-demand-rider-docs.deliveryhero.io/,2026-11-17,官方文件

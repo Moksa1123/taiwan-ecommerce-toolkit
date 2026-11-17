@@ -4,3 +4,9 @@ date,question,why_not_found,asked_by,status
 2026-11-15,npm 套件的平台樣板（<cli>/assets/templates/base/skill-content.md）仍是舊內容，payment、logistics 樣板還寫「七家」「3 on-demand」等舊數字,這些是 npm 使用者 init 後拿到的產出，改了等於改對外介面，要使用者決定；skill 本體 SKILL.md 已改成指令產生的數字,taiwan-toolkit（6-1 補齊時）,已解決 2026-11-16
 2026-11-15,下次 npm run build 時 sync-assets 會把 evals/（含 runs/ 答案檔）一起打包進 npm,sync-assets.mjs 沒有排除 evals/；要不要排除是發版決定，這次沒有動 CLI assets,taiwan-toolkit（同步時發現）,已解決 2026-11-16
 2026-11-15,安裝版獨有的 evals/basic（只有 TODO 樣板 prompt.md）要不要刪,規則是不刪安裝版獨有的檔；原始碼的 evals/ 已有真題，這份樣板沒有用處,taiwan-toolkit（同步安裝版時）,等使用者
+2026-11-17,Lalamove 台灣 GET /v3/cities 實際回傳的 serviceType 與 specialRequests 清單,官方文件只示範泰國回應並要求以 API 實測 需要台灣 sandbox 金鑰,taiwan-toolkit（官方文件稽核 2026-11-17）,open
+2026-11-17,Lalamove 台灣是否支援 pricingTierCode=2 與 isRouteOptimized,開發者文件未列適用市場 而台灣 API 方案頁 FAQ 寫路線最佳化尚未提供 兩者矛盾,taiwan-toolkit（官方文件稽核 2026-11-17）,open
+2026-11-17,Lalamove webhook 各事件的 payload 結構與是否有簽章,開發者文件只列事件名稱 細節在外連簡報（非公開頁面）,taiwan-toolkit（官方文件稽核 2026-11-17）,open
+2026-11-17,Uber Direct 是否在台灣提供商家 API 服務,Uber 台灣商家網站有 Uber Direct 中文頁但內容為全球通用文案 未列出 24 個國家 目前排除依據只有 2026-10-03 客服信件,taiwan-toolkit（官方文件稽核 2026-11-17）,open
+2026-11-17,pandago 台灣是否提供 CARD_ON_DELIVERY 與 handover_confirmation PIN,ODR spec 只說部分國家提供 未列國家清單 需洽 ODR 窗口,taiwan-toolkit（官方文件稽核 2026-11-17）,open
+2026-11-17,pandago PUT /orders/{order_id} 停用後是否有替代的改單方式,ODR spec 只標 temporarily disabled 回 405 未說明替代方案或恢復時間,taiwan-toolkit（官方文件稽核 2026-11-17）,open

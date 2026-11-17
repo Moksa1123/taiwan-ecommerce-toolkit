@@ -5070,7 +5070,7 @@
    "taiwan-logistics/data/logistics-types.csv",
    "taiwan-logistics/data/field-mappings.csv"
   ],
-  "notes": "redoc；OpenAPI spec 內嵌在頁面 __redoc_state，比對時取 spec 部分"
+  "notes": "redoc；OpenAPI spec 內嵌在頁面 __redoc_state，比對時取 spec 部分；token 端點在 sts.deliveryhero.io／sts-st.deliveryhero.io（path 層級 servers）"
  },
  {
   "id": "pandago-tw",
@@ -5086,7 +5086,7 @@
   "covers": [
    "taiwan-logistics/references/ondemand-delivery.md"
   ],
-  "notes": "2026-09-24 程式與 curl 皆無法連線（Cloudflare 520／連線失敗）；主要內容以 pandago-odr-docs、pandago-vendor-tw 為準"
+  "notes": "2026-11-17 curl 可連線但只回 SPA 外殼（無實質內容），需瀏覽器渲染；主要內容以 pandago-odr-docs、pandago-vendor-tw 為準"
  },
  {
   "id": "pandago-vendor-tw",
@@ -9412,5 +9412,21 @@
   "covers": [
    "taiwan-invoice/references/VAC_LANDSCAPE.md"
   ]
+ },
+ {
+  "id": "uber-direct-tw-merchants",
+  "provider": "uber-direct",
+  "skills": [
+   "logistics"
+  ],
+  "title": "Uber Eats 台灣商家網站：Uber Direct 服務頁",
+  "url": "https://merchants.ubereats.com/tw/zh-tw/services/uber-direct/",
+  "format": "html",
+  "fetch": "get",
+  "access": "public",
+  "covers": [
+   "taiwan-logistics/references/ondemand-delivery.md"
+  ],
+  "notes": "追蹤 Uber Direct 是否明確列出台灣；curl 需帶瀏覽器的 Accept 標頭，否則回 406；目前為全球通用文案（24 國、未列國名）"
  }
 ]
