@@ -46,7 +46,7 @@ Claude Code plugin（一次裝好發票、金流、物流三個台灣 skill）�
 npx（把 skill 複製到目前的專案；`--ai` 也可以填 `cursor`、`codex` 等其他 AI 工具，`--global` 裝到家目錄）：
 
 ```bash
-npx taiwan-payment-skill@1.5.14 init --ai claude
+npx taiwan-payment-skill@1.5.15 init --ai claude
 ```
 
 手動複製：

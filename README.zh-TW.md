@@ -38,7 +38,7 @@ Claude plugin（Claude Code；通過審核後也可從 Claude 目錄加入）：
 npx，用於其他 AI 編碼工具或只裝單一 skill（請指定版本，版本見上方 npm 徽章）：
 
 ```bash
-npx taiwan-payment-skill@1.5.14 init
+npx taiwan-payment-skill@1.5.15 init
 ```
 
 手動複製：把需要的 skill 資料夾放到 AI 助手讀取 skill 的位置，例如：

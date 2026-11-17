@@ -46,7 +46,7 @@ Claude Code plugin (installs all three Taiwan skills: invoice, payment, logistic
 npx (copies the skill into the current project; `--ai` also accepts other agents such as `cursor` or `codex`, `--global` installs into your home directory):
 
 ```bash
-npx taiwan-invoice-skill@2.9.11 init --ai claude
+npx taiwan-invoice-skill@2.9.12 init --ai claude
 ```
 
 Manual copy:

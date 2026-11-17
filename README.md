@@ -38,7 +38,7 @@ Claude plugin (Claude Code; also listed in the Claude directory once approved):
 npx, for other AI coding tools or a single skill (pin the version you want; see the npm badges above):
 
 ```bash
-npx taiwan-payment-skill@1.5.14 init
+npx taiwan-payment-skill@1.5.15 init
 ```
 
 Manual copy: put one or more skill folders where your assistant loads skills, for example:
