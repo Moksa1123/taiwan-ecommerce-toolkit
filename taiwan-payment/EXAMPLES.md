@@ -1243,11 +1243,12 @@ PChomePay 採用 **HTTP Basic Auth → pcpay-token** 兩階段認證：先用 AP
 
 ## ezPay 簡單付範例
 
-ezPay 簡單付是**電子支付機構**，官方提供兩組 API（演算法相同、欄位與網址不同）：
+ezPay 簡單付是**電子支付機構**，官方提供三類 API（演算法相同、欄位與網址不同；範例涵蓋前兩類）：
 
 - **電子支付平台（境內）**：`https://(c)payment.ezpay.com.tw/API/Twqr/{APIID}`，外層 `APIID` + `Version=1.0` + `UID` + `EncryptData` + `HashData`；
   收 ezPay 帳戶、約定連結存款帳戶、ezPay 約定信用卡與 **TWQR**（台灣 Pay、街口、全支付…掃碼）。
 - **跨境（支付寶 / 微信）**：`https://(c)payment.ezpay.com.tw/MPG/mpg_gateway`，`TradeInfo` / `TradeSha`，Version 1.0。
+- **跨境實體商店**：`https://(c)o2o.ezpay.com.tw/APIS/Trade`、`/APIS/Query`，外層同電子支付平台，Version 2.0（退款 3.0），門市掃消費者支付寶／微信條碼；見 reference。
 
 ### 完整 Python 範例
 請見 [`examples/ezpay-payment-example.py`](examples/ezpay-payment-example.py)：`EzPayWalletService`（7 支境內 API）與
@@ -1265,7 +1266,7 @@ ezPay 簡單付是**電子支付機構**，官方提供兩組 API（演算法相
 
 PayNow 有**兩代 API 並行**：
 - **傳統版（cashflow）**：form-post，動態 AES-256（每次以 GP/GK 檢核碼即時取得 Key/IV）
-- **現代版（apidoc）**：JWT Bearer + RESTful JSON + PaymentIntent / Customer / Card Token（接近 Stripe）
+- **現代版（apidoc）**：Bearer 私鑰 + RESTful JSON + PaymentIntent / Customer / Card Token（接近 Stripe）；API 主機 `api.paynow.com.tw`（測試 `sandboxapi.paynow.com.tw`）
 
 新專案應優先採用現代版。
 
@@ -1275,9 +1276,9 @@ PayNow 有**兩代 API 並行**：
 ### 五大要點
 
 1. **新專案走現代版**：傳統版的 GP/GK 動態金鑰機制學習成本高、易出錯；只有舊系統相容才需要。
-2. **Apple Pay 完整支援**：含 v1 / v2 一般流程 + Deferred 延遲扣款（PayNow 獨家）。
+2. **Apple Pay 完整支援**：session 請求（v2）與確認（v1）兩支端點 + Deferred 延遲扣款。
 3. **Card Token 可跨訂單記憶**：透過 Customer + Card Token 機制做訂閱、回購快速結帳。
-4. **`webhookUrl` 是現代版的 callback 機制**：不同於傳統版的 `Roturl`。
+4. **`webhookUrl` 是現代版的 callback 機制**：以私鑰 HMAC-SHA256 驗證 `X-Payment-Center-Hmac-Sha256`；傳統版的回傳網址在商家專區設定、以 SHA-1 PassCode 驗證。
 5. **`channelId` 對 LINE Pay 必須額外設定**：`paymentMethodType=LINEPayOnline` 時需提供 PayNow 簽發的 channelId。
 
 ---

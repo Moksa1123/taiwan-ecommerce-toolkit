@@ -51,3 +51,9 @@ date,question,why_not_found,asked_by,status
 2026-11-17,GoMyPay 的 LINE Pay、一卡通、悠遊付、支付寶是否能經同一套金流 API 串接（或只能後台／另約）,官網費率頁只列服務與費率，未說明串接方式；金流 API 規格需申請,taiwan-toolkit（官方文件稽核 2026-11-17）,open
 2026-11-17,SHOPLINE Payments Event 查詢 API（GET {URI}/v1/api/events/query/{eventId}）的 {URI} 網域與 Header appKey、appId 從哪裡取得、是否等同 apiKey／merchantId,官方 /api/event/query/ 只列路徑與 Header 名稱，未定義 {URI}，也未說明 appKey／appId 來源；其他 API 都用 {DOMAIN_NAME} 與 apiKey／merchantId,taiwan-toolkit（官方文件稽核 2026-11-17）,open
 2026-11-17,SHOPLINE Payments 信用卡授權後可請款的期限，以及是否支援部分請款（請款金額小於授權金額）,官方 /api/trade/capture/ 只有欄位表；錯誤碼 7001／7402「請款金額大於可請款金額」暗示有上限但沒寫期限與是否可部分請款；reference 原有「授權有效期 7～30 天」「可部分請款」無出處,taiwan-toolkit（官方文件稽核 2026-11-17）,open
+2026-11-17,ezPay API 文件下載頁標示技術串接手冊為「文件 W1.0.1、2026-07-29」、跨境實體「程式 1.0、2026-07-29」，但可下載的 PDF 是 W1.0.2（2026-04-20）與 ezPay_2.0.0（2019-11-05，Version 2.0）；是下載頁表格沒更新，還是有 2026-07-29 新版尚未上架？,官方只公開下載頁與 PDF，兩者互相矛盾；沒有更新說明或公告,taiwan-toolkit（官方文件稽核 2026-11-17）,open
+2026-11-17,ezPay 跨境實體商店 API 加密是否和電子支付平台一樣用 32 bytes PKCS#7 補齊？,跨境實體手冊 ezPay_2.0.0 只寫 PKCS#7，沒有提供範例值，無法以官方範例驗證,taiwan-toolkit（官方文件稽核 2026-11-17）,open
+2026-11-17,PayNow 有沒有官方測試卡號與 3D 驗證密碼？reference 現列的 4311-9522-2222-2222／4000-2211-1111-1111／12345 是綠界、藍新的測試卡,docs.paynow.com.tw 全站與技術文件 FV1.7.1.1、RefundAPI FV1.6、DoubleCheck FV1.1、ApplePay v1.0.5 都沒有列測試卡號；Checkout 範例的 4242424242424242 只是欄位示意,taiwan-toolkit（官方文件稽核 2026-11-17）,open
+2026-11-17,PayNow 現代版 webhook 的 X-Payment-Center-Hmac-Sha256 是對原始 request body 位元組計算，還是對重新序列化的 JSON？輸出是否固定大寫十六進位？,官方 webhook 頁只寫「使用用戶端 PrivateKey 以及請求中發送的 payload 產生」，範例 header 為大寫 hex，但沒有給 payload 與私鑰對應的驗算範例,taiwan-toolkit（官方文件稽核 2026-11-17）,open
+2026-11-17,PayNow 現代版 API 回 401／404／500 時的回應格式為何？,apidoc 各頁只列 200（退款另列 400、422），沒有認證失敗與找不到資源的範例,taiwan-toolkit（官方文件稽核 2026-11-17）,open
+2026-11-17,PayNow 現代版 Checkout API（需業務開通）與 Component SDK 的適用條件差異？自建表單直送卡號是否需 PCI 認證,Checkout 頁只寫「如需使用此 API，請聯繫業務人員開通」，沒有說明開通條件,taiwan-toolkit（官方文件稽核 2026-11-17）,open

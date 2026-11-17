@@ -35,7 +35,7 @@ python scripts/recommend.py "會員制 定期扣款" --format simple
 - **SmilePay**: 速買配、簡單、便宜、台灣老牌、PHP、ibon、FamiPort、銀聯卡
 - **PChomePay**: 拍錢包、PChome、P 幣、Basic Auth、Token、虛擬帳號、超商代碼條碼、物流二合一
 - **ezPay**: 簡單付、電子支付、ezPay 錢包、約定連結帳戶、TWQR、跨機構、跨境、支付寶、微信
-- **PayNow**: 立吉富、Apple Pay、PaymentIntent、Stripe-like、JWT、票券、mPOS、現代+傳統雙 API
+- **PayNow**: 立吉富、Apple Pay、PaymentIntent、Stripe-like、Bearer 私鑰、票券、mPOS、現代+傳統雙 API
 - **Shopline**: SHOPLINE 商店、Redirect、Embedded SDK、街口、中租 BNPL、cents、HMAC-SHA256
 - **LINE Pay**: LINE、自動扣款、Preapproved、Capture、Void、跨國、Channel Secret、Nonce
 - **TapPay**: PCI 隔離、Prime、自製結帳頁、card_secret、CherryTech、Apple Pay、Google Pay
@@ -92,7 +92,7 @@ python scripts/recommend.py "會員制 定期扣款" --format simple
 
 | 特性 | ECPay | NewebPay | PAYUNi | SmilePay | PChomePay | ezPay | PayNow |
 |------|-------|----------|--------|----------|-----------|-------|--------|
-| 加密方式 | SHA256 | AES-256-CBC + SHA256 | AES-256-GCM + SHA256 | Verify_key + Mid_smilepay 加權 | HTTP Basic Auth → pcpay-token | AES-256-CBC（32-byte padding）+ SHA256 HashData | 傳統: 動態 AES-256 (GP/GK 鑰); 現代: JWT Bearer |
+| 加密方式 | SHA256 | AES-256-CBC + SHA256 | AES-256-GCM + SHA256 | Verify_key + Mid_smilepay 加權 | HTTP Basic Auth → pcpay-token | AES-256-CBC（32-byte padding）+ SHA256 HashData | 傳統: 動態 AES-256 (GP/GK 鑰); 現代: Bearer 私鑰 + webhook HMAC-SHA256 |
 | API 風格 | Form POST | Form POST + AES | RESTful JSON | Form POST (回 XML) | RESTful JSON | Server POST（APIID + UID + EncryptData + HashData）；跨境為 MPG Form POST | 傳統: Form POST; 現代: RESTful JSON |
 | 測試/正式 URL | 不同 URL | 不同 URL | 不同 URL | 同 URL | 不同 URL | 不同 URL | 不同 URL |
 | 市佔率 | 最高 | 高 | 中等 | 中（老牌） | 中（PChome 生態） | 電子支付機構 | 中小（多角化） |
@@ -134,6 +134,7 @@ python scripts/recommend.py "會員制 定期扣款" --format simple
 - **定位**: 電子支付機構（簡單行動支付，藍新金融科技集團）；收款方須為 ezPay 會員並開啟商店
 - **境內 API**: 電子支付平台 7 支 API（`/API/Twqr/SCreateTWQR` 等），外層 `APIID` + `UID` + `EncryptData` + `HashData`，回應解密後為 urlencoded（`Result[...]`）
 - **跨境 API**: 支付寶 / 微信走 MPG（`payment.ezpay.com.tw/MPG/mpg_gateway`，TradeInfo / TradeSha，Version 1.0）
+- **跨境實體**: 門市掃碼走 `o2o.ezpay.com.tw/APIS/Trade`（Version 2.0，退款 3.0）
 - **加密**: AES-256-CBC，**PKCS#7 以 32 bytes 補齊**（16 bytes 會與官方範例不符）＋ SHA256（`HashKey=..&密文&HashIV=..`）
 - **注意**: 與藍新 NewebPay **不是同一套 API**（網域、欄位、Version、支付工具都不同）；要 ATM、超商代碼、分期請用 NewebPay
 
@@ -141,9 +142,9 @@ python scripts/recommend.py "會員制 定期扣款" --format simple
 - **優勢**: 雙 API 並行（傳統 + 現代）、現代版 PaymentIntent 設計接近 Stripe、Apple Pay 完整支援（含延遲扣款）、自帶票券系統
 - **加密**:
   - **傳統版（cashflow）**: 動態 AES-256（每次以 GP/GK 檢核碼即時取得 Key/IV）+ 自訂 10 位 TimeStr + Bootstrap key `paynowencryptpaynowcomtw28229955` + SHA-1 PassCode
-  - **現代版（apidoc）**: JWT Bearer Token + RESTful JSON
+  - **現代版（apidoc）**: Bearer 私鑰（PrivateKey）+ RESTful JSON；webhook 以 HMAC-SHA256 驗章
 - **傳輸**: 傳統用 Form POST；現代用 application/json
-- **特色**: 13 種付款方式（含 LINE Pay 線上線下、Apple Pay v1/v2、Apple Pay Deferred 延遲扣款）、Customer / Card Token 會員記憶、`webhookUrl` 推送回呼。**新專案應優先採用現代版 PaymentIntent**
+- **特色**: 傳統版 PayType 8 種、現代版 paymentMethodType 8 種（含 LINE Pay 線上線下、Apple Pay、Apple Pay Deferred 延遲扣款）、Customer / Card Token 會員記憶、`webhookUrl` 推送回呼。**新專案應優先採用現代版 PaymentIntent**
 
 ### Shopline Payments 特性
 - **優勢**: SHOPLINE 集團官方金流、RESTful JSON 設計、Redirect + Embedded SDK 雙模式

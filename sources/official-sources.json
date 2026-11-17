@@ -5510,7 +5510,7 @@
    "taiwan-payment/references/paynow-payment-api.md",
    "taiwan-payment/data/providers.csv"
   ],
-  "notes": "providers.csv doc_url 目前寫 owlting.github.io/paynow-guideline（舊網址），以此為準"
+  "notes": "paynow-co.github.io 與 owlting.github.io 兩個鏡像內容相同（2026-11-17 皆 200）；PDF 下載連結只在此頁"
  },
  {
   "id": "paynow-invoice-allowance",
@@ -5927,7 +5927,254 @@
    "taiwan-payment/references/paynow-payment-api.md",
    "taiwan-payment/examples/paynow-payment-example.py"
   ],
-  "notes": "本機存於 E:/moksa-plugins/mowp/reference/paynow-docs/；直連下載網址未記錄，需從 API Reference 頁取得"
+  "notes": "PDF 直連在 https://paynow-public.s3.ap-northeast-1.amazonaws.com/docs/（見 paynow-pdf-* 條目）"
+ },
+ {
+  "id": "paynow-understanding-url",
+  "provider": "paynow",
+  "skills": [
+   "payment"
+  ],
+  "title": "PayNow 背景資訊：API 網址（Sandbox／Production）",
+  "url": "https://docs.paynow.com.tw/developer/docs/understanding-paynow/url",
+  "format": "html",
+  "fetch": "browser",
+  "access": "public",
+  "covers": [
+   "taiwan-payment/references/paynow-payment-api.md",
+   "taiwan-payment/data/operations.csv",
+   "taiwan-payment/examples/paynow-payment-example.py"
+  ],
+  "notes": "Docusaurus SPA，需瀏覽器渲染後取 innerText；sandboxapi.paynow.com.tw／api.paynow.com.tw"
+ },
+ {
+  "id": "paynow-understanding-key",
+  "provider": "paynow",
+  "skills": [
+   "payment"
+  ],
+  "title": "PayNow 背景資訊：金鑰（PublicKey／PrivateKey）",
+  "url": "https://docs.paynow.com.tw/developer/docs/understanding-paynow/key",
+  "format": "html",
+  "fetch": "browser",
+  "access": "public",
+  "covers": [
+   "taiwan-payment/references/paynow-payment-api.md",
+   "taiwan-payment/data/providers.csv"
+  ],
+  "notes": "Docusaurus SPA，需瀏覽器渲染後取 innerText"
+ },
+ {
+  "id": "paynow-understanding-webhook",
+  "provider": "paynow",
+  "skills": [
+   "payment"
+  ],
+  "title": "PayNow 背景資訊：Webhooks（topic、payload、X-Payment-Center-Hmac-Sha256）",
+  "url": "https://docs.paynow.com.tw/developer/docs/understanding-paynow/webhook",
+  "format": "html",
+  "fetch": "browser",
+  "access": "public",
+  "covers": [
+   "taiwan-payment/references/paynow-payment-api.md",
+   "taiwan-payment/data/field-mappings.csv"
+  ],
+  "notes": "Docusaurus SPA，需瀏覽器渲染後取 innerText"
+ },
+ {
+  "id": "paynow-understanding-payment-intent",
+  "provider": "paynow",
+  "skills": [
+   "payment"
+  ],
+  "title": "PayNow 背景資訊：付款意圖類型與狀態",
+  "url": "https://docs.paynow.com.tw/developer/docs/understanding-paynow/payment-intent",
+  "format": "html",
+  "fetch": "browser",
+  "access": "public",
+  "covers": [
+   "taiwan-payment/references/paynow-payment-api.md"
+  ],
+  "notes": "Docusaurus SPA，需瀏覽器渲染後取 innerText"
+ },
+ {
+  "id": "paynow-understanding-refund-reject-reason",
+  "provider": "paynow",
+  "skills": [
+   "payment"
+  ],
+  "title": "PayNow 背景資訊：退款 Reject 代碼（R000–R037）",
+  "url": "https://docs.paynow.com.tw/developer/docs/understanding-paynow/refund/refund-reject-reason",
+  "format": "html",
+  "fetch": "browser",
+  "access": "public",
+  "covers": [
+   "taiwan-payment/references/paynow-payment-api.md",
+   "taiwan-payment/data/error-codes.csv"
+  ],
+  "notes": "Docusaurus SPA，需瀏覽器渲染後取 innerText"
+ },
+ {
+  "id": "paynow-getting-started",
+  "provider": "paynow",
+  "skills": [
+   "payment"
+  ],
+  "title": "PayNow Getting Started（建立 PaymentIntent 範例與 Component SDK 流程）",
+  "url": "https://docs.paynow.com.tw/developer/docs/getting-started",
+  "format": "html",
+  "fetch": "browser",
+  "access": "public",
+  "covers": [
+   "taiwan-payment/references/paynow-payment-api.md",
+   "taiwan-payment/examples/paynow-payment-example.py"
+  ],
+  "notes": "Docusaurus SPA，需瀏覽器渲染後取 innerText"
+ },
+ {
+  "id": "paynow-apidoc-fingerprint-session",
+  "provider": "paynow",
+  "skills": [
+   "payment"
+  ],
+  "title": "PayNow 技術文件：取得 fingerprint session",
+  "url": "https://docs.paynow.com.tw/developer/docs/apidoc/%E5%8F%96%E5%BE%97-fingerprint-session",
+  "format": "html",
+  "fetch": "browser",
+  "access": "public",
+  "covers": [
+   "taiwan-payment/references/paynow-payment-api.md"
+  ],
+  "notes": "Docusaurus SPA，需瀏覽器渲染後取 innerText；網址路徑為中文（已 percent-encode）"
+ },
+ {
+  "id": "paynow-apidoc-session-device-information",
+  "provider": "paynow",
+  "skills": [
+   "payment"
+  ],
+  "title": "PayNow 技術文件：裝置收集完成後的資料處理",
+  "url": "https://docs.paynow.com.tw/developer/docs/apidoc/%E8%A3%9D%E7%BD%AE%E6%94%B6%E9%9B%86%E5%AE%8C%E6%88%90%E5%BE%8C%E7%9A%84%E8%B3%87%E6%96%99%E8%99%95%E7%90%86",
+  "format": "html",
+  "fetch": "browser",
+  "access": "public",
+  "covers": [
+   "taiwan-payment/references/paynow-payment-api.md"
+  ],
+  "notes": "Docusaurus SPA，需瀏覽器渲染後取 innerText；網址路徑為中文（已 percent-encode）"
+ },
+ {
+  "id": "paynow-apidoc-session-otp-confirm",
+  "provider": "paynow",
+  "skills": [
+   "payment"
+  ],
+  "title": "PayNow 技術文件：OTP 回傳接收",
+  "url": "https://docs.paynow.com.tw/developer/docs/apidoc/otp-%E5%9B%9E%E5%82%B3%E6%8E%A5%E6%94%B6",
+  "format": "html",
+  "fetch": "browser",
+  "access": "public",
+  "covers": [
+   "taiwan-payment/references/paynow-payment-api.md"
+  ],
+  "notes": "Docusaurus SPA，需瀏覽器渲染後取 innerText；網址路徑為中文（已 percent-encode）"
+ },
+ {
+  "id": "paynow-partner-merchants",
+  "provider": "paynow",
+  "skills": [
+   "payment"
+  ],
+  "title": "PayNow 技術文件：取得特定 Partner 所屬的商戶資訊",
+  "url": "https://docs.paynow.com.tw/developer/docs/partner/%E5%8F%96%E5%BE%97%E7%89%B9%E5%AE%9A-partner-%E6%89%80%E5%B1%AC%E7%9A%84%E5%95%86%E6%88%B6%E8%B3%87%E8%A8%8A",
+  "format": "html",
+  "fetch": "browser",
+  "access": "public",
+  "covers": [
+   "taiwan-payment/references/paynow-payment-api.md"
+  ],
+  "notes": "Docusaurus SPA，需瀏覽器渲染後取 innerText；網址路徑為中文（已 percent-encode）"
+ },
+ {
+  "id": "paynow-component-getting-started",
+  "provider": "paynow",
+  "skills": [
+   "payment"
+  ],
+  "title": "PayNow Component SDK 文件：Getting Started",
+  "url": "https://docs.paynow.com.tw/component/guide/getting-started",
+  "format": "html",
+  "fetch": "browser",
+  "access": "public",
+  "covers": [
+   "taiwan-payment/references/paynow-payment-api.md"
+  ],
+  "notes": "需瀏覽器渲染後取 innerText；SDK script https://js.paynow.com.tw/sdk/v2/index.js"
+ },
+ {
+  "id": "paynow-pdf-techdoc-fv1711",
+  "provider": "paynow",
+  "skills": [
+   "payment"
+  ],
+  "title": "PayNow 串接技術文件 V1.7.1.1（網路商店購物車金流，PDF）",
+  "url": "https://paynow-public.s3.ap-northeast-1.amazonaws.com/docs/PayNow+%E6%8A%80%E8%A1%93%E6%96%87%E4%BB%B6+FV1.7.1.1.pdf",
+  "format": "pdf",
+  "fetch": "get",
+  "access": "public",
+  "covers": [
+   "taiwan-payment/references/paynow-payment-api.md",
+   "tests/vectors/paynow.json"
+  ],
+  "notes": "官方 S3 直連；版號在檔名，改版會換網址，需同時追蹤 paynow-guideline-api-reference 下載頁；pypdf 抽文字"
+ },
+ {
+  "id": "paynow-pdf-refundapi-fv16",
+  "provider": "paynow",
+  "skills": [
+   "payment"
+  ],
+  "title": "PayNow 退款 API FV1.6（PDF）",
+  "url": "https://paynow-public.s3.ap-northeast-1.amazonaws.com/docs/PayNowRefundAPI_G_FV1.6.pdf",
+  "format": "pdf",
+  "fetch": "get",
+  "access": "public",
+  "covers": [
+   "taiwan-payment/references/paynow-payment-api.md"
+  ],
+  "notes": "官方 S3 直連；版號在檔名"
+ },
+ {
+  "id": "paynow-pdf-doublecheck-fv11",
+  "provider": "paynow",
+  "skills": [
+   "payment"
+  ],
+  "title": "PayNow 交易狀態查詢 DoubleCheck FV1.1（PDF）",
+  "url": "https://paynow-public.s3.ap-northeast-1.amazonaws.com/docs/PayNowDoubleCheck_G_FV1.1.pdf",
+  "format": "pdf",
+  "fetch": "get",
+  "access": "public",
+  "covers": [
+   "taiwan-payment/references/paynow-payment-api.md"
+  ],
+  "notes": "官方 S3 直連；版號在檔名"
+ },
+ {
+  "id": "paynow-pdf-applepay-v105",
+  "provider": "paynow",
+  "skills": [
+   "payment"
+  ],
+  "title": "PayNow Apple Pay v1.0.5（PDF，2020-07-01）",
+  "url": "https://paynow-public.s3.ap-northeast-1.amazonaws.com/docs/PayNow_ApplePay_v1.0.5.pdf",
+  "format": "pdf",
+  "fetch": "get",
+  "access": "public",
+  "covers": [
+   "taiwan-payment/references/paynow-payment-api.md"
+  ],
+  "notes": "官方 S3 直連；版號在檔名"
  },
  {
   "id": "payuni-errors-156",
