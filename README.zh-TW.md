@@ -104,9 +104,9 @@ Claude plugin（Claude Code；通過審核後也可從 Claude 目錄加入）：
 其他 AI 編碼工具，或只裝單一 skill（npx 指定版本）：
 
 ```bash
-npx taiwan-invoice-skill@2.9.12 init     # 電子發票
-npx taiwan-payment-skill@1.5.15 init     # 金流串接
-npx taiwan-logistics-skill@1.4.12 init   # 物流整合
+npx taiwan-invoice-skill@2.9.13 init     # 電子發票
+npx taiwan-payment-skill@1.5.16 init     # 金流串接
+npx taiwan-logistics-skill@1.4.13 init   # 物流整合
 ```
 
 手動複製：把 skill 資料夾放到 AI 助手讀取 skill 的位置，例如 `cp -r taiwan-payment ~/.claude/skills/`。
@@ -117,7 +117,7 @@ npx taiwan-logistics-skill@1.4.12 init   # 物流整合
 
 ```bash
 cd /path/to/your/project
-npx taiwan-payment-skill@1.5.15 init --ai claude    # 或 cursor、windsurf、copilot、codex、gemini、all…
+npx taiwan-payment-skill@1.5.16 init --ai claude    # 或 cursor、windsurf、copilot、codex、gemini、all…
 ```
 
 支援的 AI 工具與 skill 目錄：[docs/guide.zh-TW.md](docs/guide.zh-TW.md)。
