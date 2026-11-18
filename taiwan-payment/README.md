@@ -41,7 +41,7 @@ This is an unofficial project. It is not affiliated with or endorsed by ECPay, N
 |---|---|
 | Providers | Covers 14 Taiwan payment providers (table below) |
 | Signing and encryption | CheckMacValue, TradeSha, AES-256-CBC, AES-256-GCM, RSA, JWT, HMAC-SHA256, with runnable Python examples |
-| Offline data | `scripts/search.py` searches 3212 rows of official data: error codes, API operations, field mappings, payment methods, troubleshooting notes |
+| Offline data | `scripts/search.py` searches 3213 rows of official data: error codes, API operations, field mappings, payment methods, troubleshooting notes |
 | Provider choice | `scripts/recommend.py` suggests a provider from plain-language requirements |
 | Payment flows | Credit card, ATM, CVS code, e-wallet, Apple Pay, Google Pay, TWQR, BNPL, recurring billing and refunds, each linked to the right file in `references/` |
 
@@ -165,7 +165,7 @@ Trust               : 官方文件
 
 ## Trigger phrases
 
-English: Taiwan payment gateway, ECPay, NewebPay, PAYUNi, LINE Pay, TapPay, JKOPAY, credit card payment, ATM virtual account, CVS payment code, Apple Pay, Google Pay, TWQR, BNPL, CheckMacValue, payment notification, refund, recurring payment.
+English: Taiwan payment gateway, ECPay, NewebPay, PAYUNi, LINE Pay, TapPay, JKOPAY, credit card payment, ATM virtual account, CVS payment code, Apple Pay, Google Pay, Click to Pay, TWQR, BNPL, CheckMacValue, payment notification, refund, recurring payment.
 
 中文：金流串接、綠界、藍新、統一金流、信用卡付款、ATM 虛擬帳號、超商代碼、LINE Pay、Apple Pay、街口、CheckMacValue、TradeSha、付款通知、退款、定期定額。
 

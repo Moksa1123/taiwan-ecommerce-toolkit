@@ -1,6 +1,6 @@
 ---
 name: taiwan-payment
-description: Taiwan Payment API integration specialist for ECPay, NewebPay, PAYUNi, SmilePay, PChomePay, ezPay, PayNow, Shopline Payments, LINE Pay v4, TapPay, O'Pay, JKOPAY, SunPay and GoMyPay. Use when developing payment systems, implementing credit card, ATM, CVS, e-wallet, LINE Pay, Apple Pay, Google Pay, TWQR or BNPL payments, or working with Taiwan payment gateway APIs. Handles encryption (SHA256, AES-256-CBC, AES-256-GCM, dynamic AES-256, RSA, JWT, HMAC-SHA256, Basic Auth → token, Prime token), API requests, and service provider differences. 中文觸發：金流串接、綠界、藍新、統一金流、信用卡付款、ATM 虛擬帳號、超商代碼、LINE Pay、Apple Pay、街口、CheckMacValue、TradeSha、付款通知、退款、定期定額。
+description: Taiwan Payment API integration specialist for ECPay, NewebPay, PAYUNi, SmilePay, PChomePay, ezPay, PayNow, Shopline Payments, LINE Pay v4, TapPay, O'Pay, JKOPAY, SunPay and GoMyPay. Use when developing payment systems, implementing credit card, ATM, CVS, e-wallet, LINE Pay, Apple Pay, Google Pay, Click to Pay, TWQR or BNPL payments, or working with Taiwan payment gateway APIs. Handles encryption (SHA256, AES-256-CBC, AES-256-GCM, dynamic AES-256, RSA, JWT, HMAC-SHA256, Basic Auth → token, Prime token), API requests, and service provider differences. 中文觸發：金流串接、綠界、藍新、統一金流、信用卡付款、ATM 虛擬帳號、超商代碼、LINE Pay、Apple Pay、街口、CheckMacValue、TradeSha、付款通知、退款、定期定額。
 user-invocable: true
 ---
 
@@ -12,7 +12,7 @@ user-invocable: true
 |---|---|
 | 來源 | 各服務商官方文件、官方 PDF 規格書、官方 SDK／外掛原始碼；每個來源登記在 repo 的 `sources/official-sources.json`（網址、取得方式、影響哪些檔） |
 | 服務商 | 共 14 家（`data/providers.csv`，每家附 `doc_url` 與 `doc_verified`） |
-| 筆數 | 共 **3212 筆**，分 7 個搜尋域；各域筆數用 `python scripts/search.py --stats` 看，不在這裡手寫 |
+| 筆數 | 共 **3213 筆**，分 7 個搜尋域；各域筆數用 `python scripts/search.py --stats` 看，不在這裡手寫 |
 | 出處欄 | 每筆都有 `doc_url`（官方文件）與 `trust`（實測／官方文件／推論）；`retrieved_on` 是官方來源最近一次比對的日期 |
 | 加密實作 | 由官方 SDK、外掛或規格書範例原封不動執行產生標準答案（`tests/vectors/`），範例與文件程式碼逐位元組比對 |
 | 驗證 | 2026-11-15：自我測試全過、`verify-examples.py` 全過；已知落差記在 `data/pending.csv` |

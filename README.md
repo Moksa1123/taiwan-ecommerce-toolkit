@@ -163,7 +163,7 @@ python3 taiwan-logistics/scripts/recommend.py "超商取貨 溫控配送 冷凍�
 |---|---|---|---|
 | **ECPay** | SHA256 CheckMacValue | Card, ATM, CVS code/barcode, Apple Pay, TWQR, BNPL, digital wallets | Most complete docs |
 | **NewebPay** | AES-256-CBC + SHA256 | Card, instalments, ATM, CVS, LINE Pay, Apple/Google/Samsung Pay, TWQR, BitoPro | MPG spec NDNF-1.2.6 |
-| **PAYUNi** | AES-256-GCM + SHA256 | Card token, ATM, CVS, JKOPAY, icash Pay, AFTEE, LINE Pay | UPP Version 2.0 |
+| **PAYUNi** | AES-256-GCM + SHA256 | Card token, Click to Pay, ATM, CVS, JKOPAY, icash Pay, AFTEE, LINE Pay | UPP Version 2.0 |
 | **SmilePay** | Verify_key + check code | ATM, barcode, ibon, FamiPort, card, UnionPay | XML responses |
 | **PChomePay** | HTTP Basic → token | Card, ATM, CVS code, CVS pickup | API doc 1.7.4 |
 | **ezPay** | AES-256-CBC + SHA256 | ezPay account, linked bank/card, TWQR, cross-border | E-payment institution |

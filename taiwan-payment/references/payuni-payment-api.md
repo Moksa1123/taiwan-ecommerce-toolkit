@@ -76,6 +76,8 @@
 
 官方 PHP SDK 的 `UniversalTrade()` 以操作名（如 `trade_query`）對應路徑（`trade/query`）；SDK 對照表未收錄 `jkopay`、`trade/common/refund/jkopay`、`trade/finite_query` 與 UNi Embed。
 
+UNi Embed 幕後授權 `iframe/merchant_trade` 的必填欄位：`MerID`、`MerTradeNo`（25 字內，10 分鐘內不可重複）、`Token`（`token_get` 取得）、`TradeAmt`、`Timestamp`、`UsrMail`、`ProdDesc`（page 512，2026-11-18 起 `UsrMail` 改為必填）。
+
 ---
 
 ## 測試環境
@@ -337,7 +339,7 @@ POST https://api.payuni.com.tw/api/upp           # 正式
 | `TradeStatus` | `0` 取號成功、`1` 已付款、`2` 付款失敗、`3` 付款取消、`8` 訂單待確認 |
 | `PaymentType` | `1` 信用卡、`2` ATM、`3` 超商代碼、`5` 超商取貨付款、`6` 愛金卡、`7` AFTEE、`9` LINE Pay、`10` 宅配到付、`11` 街口支付 |
 | `Gateway` | 固定 `2`（UPP） |
-| 信用卡 | `Card6No`、`Card4No`、`CardInst`、`FirstAmt`、`EachAmt`、`ResCode`、`AuthCode`、`AuthBank`、`AuthType`（`1` 一次、`2` 分期、`4` Apple Pay、`5` Google Pay、`6` Samsung Pay、`7` 銀聯）、`AuthDay`、`AuthTime`、`CreditHash`、`CreditLife`、`CardBank`、`CoBrandCode` |
+| 信用卡 | `Card6No`、`Card4No`、`CardInst`、`FirstAmt`、`EachAmt`、`ResCode`、`AuthCode`、`AuthBank`、`AuthType`（`1` 一次、`2` 分期、`4` Apple Pay、`5` Google Pay、`6` Samsung Pay、`7` 銀聯、`8` Click to Pay）、`AuthDay`、`AuthTime`、`CreditHash`、`CreditLife`、`CardBank`、`CoBrandCode` |
 | ATM | `BankType`、`PayNo`、`PaySet`、`ExpireDate`（`YYYY-MM-DD HH:II:SS`） |
 | 超商代碼 | `Store`、`PayNo`、`ExpireDate` |
 
@@ -345,7 +347,7 @@ POST https://api.payuni.com.tw/api/upp           # 正式
 
 ### 支援的付款方式
 
-信用卡（一次付清、分期 3/6/9/12/18/24/30 期、銀聯）、Apple Pay、Google Pay、Samsung Pay、ATM 虛擬帳號（僅一次性帳號）、超商代碼、icash Pay、AFTEE、LINE Pay、街口支付、超商取貨付款、黑貓宅配到付。
+信用卡（一次付清、分期 3/6/9/12/18/24/30 期、銀聯）、Apple Pay、Google Pay、Samsung Pay、Click to Pay、ATM 虛擬帳號（僅一次性帳號）、超商代碼、icash Pay、AFTEE、LINE Pay、街口支付、超商取貨付款、黑貓宅配到付。
 信用卡紅利折抵已於 2025-09-01 下架。
 
 ### PHP 範例
@@ -589,7 +591,7 @@ POST /api/trade/query     # Version 2.0（1.0 仍可用）
 | `7` | 請款處理中 |
 | `9` | 未申請 |
 
-`AuthType`：`1` 一次、`2` 分期、`3` 紅利（2025-09-01 起不支援）、`4` Apple Pay、`5` Google Pay、`6` Samsung Pay、`7` 銀聯。
+`AuthType`：`1` 一次、`2` 分期、`3` 紅利（2025-09-01 起不支援）、`4` Apple Pay、`5` Google Pay、`6` Samsung Pay、`7` 銀聯、`8` Click to Pay。
 `RefundStatus`（信用卡）：`1` 退款申請中、`2` 退款成功、`3` 退款取消、`8` 退款處理中；只提供最後一筆退款紀錄。
 
 ### PHP 範例
@@ -872,6 +874,7 @@ UPP 以「付款方式名稱 = 1」的旗標啟用付款方式（例如 `Credit=
 | `CreditInst` | 信用卡分期，值為期數字串（如 `3,6,9,12`），不是 `1` |
 | `CreditUnionPay` | 銀聯卡 |
 | `ApplePay` / `GooglePay` / `SamsungPay` | 行動支付 |
+| `ClickToPay` | Click to Pay（見下方說明） |
 | `ATM` | ATM 虛擬帳號（不是 `VACC`） |
 | `CVS` | 超商代碼 |
 | `ICash` | 愛金卡 |
@@ -881,3 +884,12 @@ UPP 以「付款方式名稱 = 1」的旗標啟用付款方式（例如 `Credit=
 | `Ship` | 超商取貨付款（搭配物流參數） |
 
 信用卡紅利（`CreditRed`）已於 2025-09-01 下架，官方 page 34 已不列此欄（官方外掛 1.2.9 的 `$paymentArr` 仍保留）。
+
+#### Click to Pay（2026-11-18 起）
+
+- 只在整合式支付頁（UPP）：帶 `ClickToPay=1` 指定開啟；未帶任何指定支付工具參數時依商店後台預設（page 34）。
+- 卡別：國內卡、國外卡，不支援銀聯與 JCB（page 34）；官網說明目前支援 Mastercard 與 Visa。
+- 回傳與查詢：`AuthType=8`（UPP 回應、單筆／多筆交易查詢 page 164、172、一頁收款 UOP Notify page 53）。
+- 幕後信用卡 Token 交易（page 522）與 UNi Embed 免跳轉元件（page 512、513）的文件沒有 Click to Pay。
+
+來源：https://docs.payuni.com.tw/web/#/7/34 、https://docs.payuni.com.tw/web/#/7/25 （修改記錄 2026-11-18）、https://www.payuni.com.tw/click-to-pay （查證 2026-11-18）

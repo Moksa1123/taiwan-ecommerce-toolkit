@@ -41,7 +41,7 @@
 |---|---|
 | 服務商 | 涵蓋 14 家台灣金流（見下表） |
 | 簽章與加密 | CheckMacValue、TradeSha、AES-256-CBC、AES-256-GCM、RSA、JWT、HMAC-SHA256，附可執行的 Python 範例 |
-| 離線資料 | `scripts/search.py` 離線查詢 3212 筆官方資料：錯誤碼、API 操作、欄位對照、付款方式、疑難排解 |
+| 離線資料 | `scripts/search.py` 離線查詢 3213 筆官方資料：錯誤碼、API 操作、欄位對照、付款方式、疑難排解 |
 | 選型 | `scripts/recommend.py` 依白話需求推薦金流 |
 | 付款流程 | 信用卡、ATM、超商代碼、電子支付、Apple Pay、Google Pay、TWQR、BNPL、定期定額、退款，各自對應到 `references/` 的檔案 |
 
@@ -165,7 +165,7 @@ Trust               : 官方文件
 
 ## 觸發詞
 
-English: Taiwan payment gateway, ECPay, NewebPay, PAYUNi, LINE Pay, TapPay, JKOPAY, credit card payment, ATM virtual account, CVS payment code, Apple Pay, Google Pay, TWQR, BNPL, CheckMacValue, payment notification, refund, recurring payment.
+English: Taiwan payment gateway, ECPay, NewebPay, PAYUNi, LINE Pay, TapPay, JKOPAY, credit card payment, ATM virtual account, CVS payment code, Apple Pay, Google Pay, Click to Pay, TWQR, BNPL, CheckMacValue, payment notification, refund, recurring payment.
 
 中文：金流串接、綠界、藍新、統一金流、信用卡付款、ATM 虛擬帳號、超商代碼、LINE Pay、Apple Pay、街口、CheckMacValue、TradeSha、付款通知、退款、定期定額。
 
