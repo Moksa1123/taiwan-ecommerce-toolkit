@@ -1,49 +1,99 @@
-# taiwan-payment
+<h1 align="center">taiwan-payment-skill</h1>
 
-A Claude skill for integrating Taiwan payment gateways: request signing, encryption, payment callbacks, refunds and error codes, based on each provider's official documentation.
+<h3 align="center">Taiwan Payment Gateway Skill for AI Coding Agents</h3>
 
-[![npm version](https://img.shields.io/npm/v/taiwan-payment-skill)](https://www.npmjs.com/package/taiwan-payment-skill)
-[![License: MIT](https://img.shields.io/github/license/Moksa1123/taiwan-ecommerce-toolkit)](https://github.com/Moksa1123/taiwan-ecommerce-toolkit/blob/main/LICENSE)
+<p align="center">
+  <strong>Request signing, encryption, payment callbacks, refunds and error codes for Taiwan payment gateways, based on each provider's official documentation</strong>
+</p>
 
-English | [繁體中文](https://github.com/Moksa1123/taiwan-ecommerce-toolkit/blob/main/taiwan-payment/README.zh-TW.md)
+<p align="center">
+  ECPay · NewebPay · PAYUNi · SmilePay · PChomePay · ezPay · PayNow · Shopline Payments · LINE Pay · TapPay · O'Pay · JKOPAY · SunPay · GoMyPay
+</p>
+
+<p align="center">
+  <a href="https://www.npmjs.com/package/taiwan-payment-skill"><img src="https://img.shields.io/npm/v/taiwan-payment-skill?style=flat-square&logo=npm" alt="npm version"></a>
+  <a href="https://www.npmjs.com/package/taiwan-payment-skill"><img src="https://img.shields.io/npm/dm/taiwan-payment-skill?style=flat-square&label=downloads" alt="npm downloads"></a>
+  <img src="https://img.shields.io/node/v/taiwan-payment-skill?style=flat-square&logo=node.js" alt="Node.js version">
+  <img src="https://img.shields.io/badge/python-3-blue?style=flat-square&logo=python&logoColor=white" alt="Python version">
+</p>
+
+<p align="center">
+  <img src="https://img.shields.io/badge/providers-14-success?style=flat-square" alt="providers">
+  <img src="https://img.shields.io/badge/AI_platforms-14-blue?style=flat-square" alt="AI platforms">
+  <a href="https://github.com/Moksa1123/taiwan-ecommerce-toolkit/blob/main/LICENSE"><img src="https://img.shields.io/github/license/Moksa1123/taiwan-ecommerce-toolkit?style=flat-square" alt="License"></a>
+</p>
+
+<p align="center">
+  <a href="https://paypal.me/cccsubcom"><img src="https://img.shields.io/badge/PayPal-Support_development-00457C?style=for-the-badge&logo=paypal&logoColor=white" alt="PayPal"></a>
+</p>
+
+<p align="center">
+  English | <a href="https://github.com/Moksa1123/taiwan-ecommerce-toolkit/blob/main/taiwan-payment/README.zh-TW.md">繁體中文</a>
+</p>
 
 This is an unofficial project. It is not affiliated with or endorsed by ECPay, NewebPay, PAYUNi, LINE, TapPay, JKOPAY or any other company named here. Brand names are written the way each company writes them and belong to their owners.
 
+---
+
 ## What it does
 
-- Covers 14 Taiwan payment providers: ECPay, NewebPay, PAYUNi, SmilePay, PChomePay, ezPay, PayNow, Shopline Payments, LINE Pay v4, TapPay, O'Pay, JKOPAY, SunPay and GoMyPay.
-- Gives Claude each provider's signing and encryption rules (CheckMacValue, TradeSha, AES-256-CBC, AES-256-GCM, RSA, JWT, HMAC-SHA256) with runnable Python examples.
-- Searches 3212 rows of official data offline with `scripts/search.py`: error codes, API operations, field mappings, payment methods and troubleshooting notes.
-- Suggests a provider from plain-language requirements with `scripts/recommend.py`.
-- Links each task (credit card, ATM, CVS code, e-wallet, Apple Pay, Google Pay, TWQR, BNPL, recurring billing, refunds) to the right reference file in `references/`.
+| Area | What you get |
+|---|---|
+| Providers | Covers 14 Taiwan payment providers (table below) |
+| Signing and encryption | CheckMacValue, TradeSha, AES-256-CBC, AES-256-GCM, RSA, JWT, HMAC-SHA256, with runnable Python examples |
+| Offline data | `scripts/search.py` searches 3212 rows of official data: error codes, API operations, field mappings, payment methods, troubleshooting notes |
+| Provider choice | `scripts/recommend.py` suggests a provider from plain-language requirements |
+| Payment flows | Credit card, ATM, CVS code, e-wallet, Apple Pay, Google Pay, TWQR, BNPL, recurring billing and refunds, each linked to the right file in `references/` |
+
+### Supported providers
+
+| Provider | Signing / auth | Runnable example | Notes |
+|---|---|---|---|
+| **ECPay** | SHA256 CheckMacValue | Python | Most complete documentation |
+| **NewebPay** | AES-256-CBC + SHA256 | Python | MPG checkout, card memory |
+| **PAYUNi** | AES-256-GCM + SHA256 | Python | JSON responses; background APIs need a bound IP |
+| **SmilePay** | Verify_key + Mid_smilepay check code | Python | No AES; ibon / FamiPort payment slips |
+| **PChomePay 支付連** | Basic Auth → pcpay-token | Python | Payment and logistics in one; 拍錢包 is one of its payment methods |
+| **ezPay** | AES-256-CBC + SHA256 HashData | Python | Electronic payment institution; TWQR and ezPay wallet, Alipay / WeChat Pay cross-border |
+| **PayNow** | Bearer private key (current API) / SHA-1 PassCode + dynamic AES-256 (legacy API) | Python | Two API generations in parallel; Apple Pay |
+| **Shopline Payments** | merchantId + apiKey headers, HMAC-SHA256 webhooks | Python | Amounts in cents; redirect and embedded modes |
+| **LINE Pay v4** | Channel ID/Secret + HMAC-SHA256 + nonce | Python | Request → Confirm; Preapproved Pay |
+| **TapPay** | Partner Key header, Prime token | Python | PCI isolation; card token for repeat charges |
+| **O'Pay** | SHA256 CheckMacValue (same design as ECPay) | — | AccountLink bank payment, delayed payout |
+| **JKOPAY** | api-key header + HMAC-SHA256 digest | Python | Online payment, POS, authorized (recurring) payment |
+| **SunPay** | RSA segmented encryption + SHA256 check_value | Python | Payment, e-invoice and CVS collection |
+| **GoMyPay** | Specification on request from GoMyPay | — | Full API specification is not public |
+
+Encryption in the runnable examples is checked against the providers' official test vectors. Error codes are in `data/error-codes*.csv`.
 
 ## When to use
 
-Use it when you are:
-
-- building or debugging a checkout that talks to one of the providers above;
-- verifying a payment notification (CheckMacValue, TradeSha, HashInfo, webhook signatures);
-- looking up what a provider's error or status code means;
-- choosing between providers for a project.
-
-Use something else for:
-
-- issuing, voiding or adjusting e-invoices: use [taiwan-invoice](https://github.com/Moksa1123/taiwan-ecommerce-toolkit/tree/main/taiwan-invoice);
-- shipping, convenience-store pickup, store maps or tracking, even with ECPay, NewebPay or PAYUNi: use [taiwan-logistics](https://github.com/Moksa1123/taiwan-ecommerce-toolkit/tree/main/taiwan-logistics);
-- payment providers outside Taiwan, or direct bank and card-network integrations: not covered.
+| Task | Use |
+|---|---|
+| Build or debug a checkout that talks to one of the providers above | this skill |
+| Verify a payment notification (CheckMacValue, TradeSha, HashInfo, webhook signatures) | this skill |
+| Look up a provider's error or status code | this skill |
+| Choose between providers for a project | this skill |
+| Issue, void or adjust e-invoices | [taiwan-invoice](https://github.com/Moksa1123/taiwan-ecommerce-toolkit/tree/main/taiwan-invoice) |
+| Shipping, convenience-store pickup, store maps or tracking, even with ECPay, NewebPay or PAYUNi | [taiwan-logistics](https://github.com/Moksa1123/taiwan-ecommerce-toolkit/tree/main/taiwan-logistics) |
+| Payment providers outside Taiwan, or direct bank and card-network integrations | not covered |
 
 ## Install
 
-Requirements: Python 3 for the scripts, which use only the standard library. The files in `examples/` and the network options of `scripts/test_payment.py` also need `pycryptodome` (AES) and `requests`; install them with `pip install -r requirements.txt`. Node.js 18 or later is needed only for the npx installer. Works on Windows, macOS and Linux.
+| Method | Command | Notes |
+|---|---|---|
+| Claude Code plugin | `/plugin install taiwan-ecommerce@taiwan-ecommerce-toolkit` | Installs all three Taiwan skills: invoice, payment, logistics |
+| npx | `npx taiwan-payment-skill@1.5.15 init --ai claude` | Copies the skill into the current project |
+| Manual copy | `cp -r taiwan-payment ~/.claude/skills/` | From a clone of this repository |
 
-Claude Code plugin (installs all three Taiwan skills: invoice, payment, logistics):
+Claude Code plugin:
 
 ```text
 /plugin marketplace add Moksa1123/taiwan-ecommerce-toolkit
 /plugin install taiwan-ecommerce@taiwan-ecommerce-toolkit
 ```
 
-npx (copies the skill into the current project; `--ai` also accepts other agents such as `cursor` or `codex`, `--global` installs into your home directory):
+npx (`--ai` also accepts other agents such as `cursor` or `codex`; `--global` installs into your home directory):
 
 ```bash
 npx taiwan-payment-skill@1.5.15 init --ai claude
@@ -56,15 +106,44 @@ git clone https://github.com/Moksa1123/taiwan-ecommerce-toolkit.git
 cp -r taiwan-ecommerce-toolkit/taiwan-payment ~/.claude/skills/
 ```
 
+| Requirement | Needed for |
+|---|---|
+| Python 3, standard library only | `scripts/` |
+| `pycryptodome`, `requests` (`pip install -r requirements.txt`) | `examples/` and the network options of `scripts/test_payment.py` |
+| Node.js 18 or later | the npx installer only |
+| Windows, macOS or Linux | all |
+
+### CLI commands
+
+| Command | What it does |
+|---|---|
+| `taiwan-payment init` | Install into the current project; asks which AI agent if `--ai` is omitted |
+| `taiwan-payment init --force` | Overwrite an existing install |
+| `taiwan-payment init --global` | Install into your home directory |
+| `taiwan-payment list` | List supported AI platforms |
+| `taiwan-payment info` | Show skill information |
+| `taiwan-payment versions` | List available versions |
+| `taiwan-payment update` | Update to the latest version |
+
+The installer supports 14 AI coding agents: Claude Code · Cursor · Windsurf · Antigravity · GitHub Copilot · Kiro · Codex · Qoder · Cline · Gemini CLI · Trae · OpenCode · Continue · CodeBuddy.
+
 ## Quick start
 
-Ask Claude, for example:
+**Step 1.** Install into your project:
 
-- "Create an ECPay credit-card order in Python and verify the payment notification."
-- "My NewebPay TradeInfo fails to decrypt. What is wrong with my padding?"
-- "Which provider should I use for LINE Pay plus recurring card payments?"
+```bash
+npx taiwan-payment-skill@1.5.15 init --ai claude
+```
 
-Or search the data yourself from the skill folder:
+**Step 2.** Ask Claude, for example:
+
+```text
+Create an ECPay credit-card order in Python and verify the payment notification.
+My NewebPay TradeInfo fails to decrypt. What is wrong with my padding?
+Which provider should I use for LINE Pay plus recurring card payments?
+```
+
+**Step 3.** Or search the data yourself from the skill folder:
 
 ```bash
 python3 scripts/search.py "10100058" --domain error --max 1
@@ -107,18 +186,23 @@ Credentials (merchant ID, HashKey and HashIV, LINE Pay Channel ID and Channel Se
 
 ## How it's verified
 
-- Data source: official provider documentation, PDF specifications and official SDKs or plugins. Every source is registered in [`sources/official-sources.json`](https://github.com/Moksa1123/taiwan-ecommerce-toolkit/blob/main/sources/official-sources.json), and each data row carries `doc_url` and `trust`.
-- Last audit against the official docs: 2026-11-17, recorded in [`references/audit-20261117.md`](https://github.com/Moksa1123/taiwan-ecommerce-toolkit/blob/main/taiwan-payment/references/audit-20261117.md).
-- Self-test: `python3 scripts/test_skill.py` runs 50 checks, 0 failures (run on 2026-11-17).
-- Evals: on the 10 scored questions, Claude answered 10 correctly with the skill and 0 without it. See [`evals/RESULTS.md`](https://github.com/Moksa1123/taiwan-ecommerce-toolkit/blob/main/taiwan-payment/evals/RESULTS.md).
-- CI runs `scripts/verify-examples.py`, which compares the example code byte for byte with expected values produced by the providers' own SDKs and spec samples ([`tests/vectors/`](https://github.com/Moksa1123/taiwan-ecommerce-toolkit/tree/main/tests/vectors)).
+| Check | Result |
+|---|---|
+| Data source | Official provider documentation, PDF specifications and official SDKs or plugins. Every source is registered in [`sources/official-sources.json`](https://github.com/Moksa1123/taiwan-ecommerce-toolkit/blob/main/sources/official-sources.json); each data row carries `doc_url` and `trust` |
+| Official-docs audit | Last run 2026-11-17, recorded in [`references/audit-20261117.md`](https://github.com/Moksa1123/taiwan-ecommerce-toolkit/blob/main/taiwan-payment/references/audit-20261117.md) |
+| Self-test | `python3 scripts/test_skill.py` runs 50 checks, 0 failures (run on 2026-11-17) |
+| Evals | On the 10 scored questions, Claude answered 10 correctly with the skill and 0 without it. See [`evals/RESULTS.md`](https://github.com/Moksa1123/taiwan-ecommerce-toolkit/blob/main/taiwan-payment/evals/RESULTS.md) |
+| Example code | CI runs `scripts/verify-examples.py`, which compares the examples byte for byte with expected values from the providers' own SDKs and spec samples ([`tests/vectors/`](https://github.com/Moksa1123/taiwan-ecommerce-toolkit/tree/main/tests/vectors)) |
 
 ## Limits
 
-- O'Pay and GoMyPay have no runnable example. The full GoMyPay API specification is not public; you have to request it from GoMyPay.
-- The JKOPAY documentation site did not resolve during the latest audit, so the JKOPAY reference is based on the last saved copy of the official pages.
-- Known gaps and unanswered questions are tracked in [`data/pending.csv`](https://github.com/Moksa1123/taiwan-ecommerce-toolkit/blob/main/taiwan-payment/data/pending.csv).
-- Rows marked `trust=推論` (recommendations, troubleshooting) are inferred from the official docs. Treat them as advice, not as provider rules.
+| Limit | Details |
+|---|---|
+| No runnable example | O'Pay and GoMyPay |
+| GoMyPay | The full API specification is not public; you have to request it from GoMyPay |
+| JKOPAY | The documentation site did not resolve during the latest audit, so the reference is based on the last saved copy of the official pages |
+| Inferred rows | Rows marked `trust=推論` (recommendations, troubleshooting) are inferred from the official docs; treat them as advice, not as provider rules |
+| Known gaps | Tracked in [`data/pending.csv`](https://github.com/Moksa1123/taiwan-ecommerce-toolkit/blob/main/taiwan-payment/data/pending.csv) |
 
 ## Repo layout
 
@@ -133,6 +217,22 @@ taiwan-payment/
 └── evals/           # eval questions, grader and results
 ```
 
+| Reference file | Covers |
+|---|---|
+| `ecpay-`, `newebpay-`, `payuni-`, `smilepay-`, `pchomepay-payment-api.md` | ECPay, NewebPay, PAYUNi, SmilePay, PChomePay |
+| `ezpay-`, `paynow-`, `shopline-`, `linepay-`, `tappay-payment-api.md` | ezPay, PayNow, Shopline Payments, LINE Pay, TapPay |
+| `opay-`, `jkopay-`, `sunpay-`, `gomypay-payment-api.md` | O'Pay, JKOPAY, SunPay, GoMyPay |
+| `twqr-ewallet-landscape.md` | Electronic payment and TWQR landscape |
+| `implementation-guide.md` | Cross-provider implementation notes |
+| `audit-20261117.md` | Latest official-docs audit |
+
 ## License & author
 
-MIT License. Made by Moksa ([moksaweb.com](https://moksaweb.com)). Part of [Taiwan E-commerce Toolkit](https://github.com/Moksa1123/taiwan-ecommerce-toolkit).
+MIT License ([LICENSE](https://github.com/Moksa1123/taiwan-ecommerce-toolkit/blob/main/LICENSE)). Made by Moksa ([moksaweb.com](https://moksaweb.com)).
+
+This package is part of [Taiwan E-commerce Toolkit](https://github.com/Moksa1123/taiwan-ecommerce-toolkit):
+
+| Package | Covers |
+|---|---|
+| [taiwan-invoice-skill](https://www.npmjs.com/package/taiwan-invoice-skill) | Taiwan e-invoice providers and MOF platform queries |
+| [taiwan-logistics-skill](https://www.npmjs.com/package/taiwan-logistics-skill) | Taiwan logistics aggregators, HCT direct API, on-demand delivery |

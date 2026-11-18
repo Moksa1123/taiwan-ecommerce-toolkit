@@ -38,6 +38,11 @@ jobs:
       - name: 驗證資料檔完整性
         run: python scripts/validate-data.py
 
+      - name: 驗證根目錄 README 數字
+        env:
+          PYTHONIOENCODING: utf-8
+        run: python scripts/check-readme-numbers.py
+
       - name: 驗證官方來源清單
         run: python scripts/check-sources.py --validate
 

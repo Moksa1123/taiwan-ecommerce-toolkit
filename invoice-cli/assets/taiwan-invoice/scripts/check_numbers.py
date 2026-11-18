@@ -29,6 +29,7 @@ HERE = Path(__file__).resolve().parent
 SKILL_MD = HERE.parent / "SKILL.md"
 README_MD = HERE.parent / "README.md"
 README_ZH_MD = HERE.parent / "README.zh-TW.md"
+CLI = "invoice-cli"  # npm 安裝程式所在資料夾
 sys.path.insert(0, str(HERE))
 
 import core  # noqa: E402
@@ -45,6 +46,16 @@ def _evals(i: int) -> int:
                   path.read_text(encoding="utf-8")) if path.exists() else None
     return int(m.group(i + 1)) if m else -1
 
+
+def _ai_platforms() -> int:
+    """CLI 支援的 AI 平台數＝<cli>/assets/templates/platforms/*.json 的檔數。
+    repo 裡從 taiwan-<skill>/ 往上找 <cli>/assets/templates；在 assets 副本裡就是旁邊的 templates/。"""
+    for base in (HERE.parent.parent / CLI / "assets" / "templates", HERE.parent.parent / "templates"):
+        d = base / "platforms"
+        if d.is_dir():
+            return len(list(d.glob("*.json")))
+    return -1
+
 FACTS = {
     "evals_n": lambda: _evals(0),
     "evals_with": lambda: _evals(1),
@@ -53,6 +64,7 @@ FACTS = {
     "domains": lambda: len(core.CSV_CONFIG),
     "providers": lambda: core.dataset_stats()["provider"],
     "vac_with_ref": lambda: len([p for p in (HERE.parent / "references").glob("*_API_REFERENCE.md") if not p.name.startswith("MOF")]),
+    "ai_platforms": _ai_platforms,
 }
 
 # (正規式, 種類, 參數)。第 1 組是被認領的數字；沒有分組就認領整段。
@@ -74,33 +86,52 @@ RULES: list[tuple[str, str, str]] = [
 
 
 # README.md（英文，也是 npm 套件頁）
+# 徽章：shields.io /badge/ 網址不遮（見引擎 _MASKS），徽章數字由 badge 規則核對。
 README_RULES: list[tuple[str, str, str]] = [
-    (r"Covers (\d+) e-invoice value-added service providers", "fact", "vac_with_ref"),
-    (r"Searches (\d+) rows", "fact", "rows"),
-    (r"on the (\d+) scored questions", "fact", "evals_n"),
+    # ---- 徽章 ----
+    (r"/badge/providers-(\d+)-", "fact", "providers"),
+    (r"/badge/AI_platforms-(\d+)-", "fact", "ai_platforms"),
+    (r"/badge/python-3-", "fixed", "Python 徽章：腳本的最低需求"),
+    (r"00457C", "fixed", "PayPal 徽章的品牌色"),
+    # ---- 由資料算出來 ----
+    (r"(\d+) e-invoice value-added service providers", "fact", "vac_with_ref"),
+    (r"searches (\d+) rows", "fact", "rows"),
+    (r"supports (\d+) AI coding agents", "fact", "ai_platforms"),
+    (r"On the (\d+) scored questions", "fact", "evals_n"),
     (r"answered (\d+) correctly with the skill", "fact", "evals_with"),
     (r"and (\d+) without it", "fact", "evals_without"),
-    (r"error code (3050131)", "data", "3050131|error|3050131"),
-    (r"AES-(?:128|256)-CBC|MD5|B2[BC]", "fixed", "演算法與發票類型名稱"),
+    # ---- 不從資料來的數字 ----
+    (r"</?h[13]\b", "fixed", "置中標題的 HTML 標籤"),
+    (r"\*\*Step \d\.\*\*", "fixed", "快速開始的步驟編號"),
+    (r"(?:HMAC-)?SHA256|AES-(?:128|256)-CBC|MD5|B2[BC]|MIG 4\.0", "fixed", "演算法、發票類型與格式名稱"),
     (r"Python 3\b", "fixed", "腳本的最低需求"),
     (r"Node\.js 18 or later", "fixed", "invoice-cli/package.json 的 engines.node"),
     (r"runs \d+ checks, 0 failures", "fixed", "test_skill.py 在 2026-11-17 的檢查數；test_skill 增減檢查時要重跑並更新"),
-    (r"2026-11-17", "fixed", "最近一次自我測試的日期"),
+    (r"2026-11-17", "fixed", "最近一次官方文件稽核與自我測試的日期"),
 ]
 
 # README.zh-TW.md（段落與 README.md 一一對應）
 README_ZH_RULES: list[tuple[str, str, str]] = [
-    (r"涵蓋 (\d+) 家可開立發票的加值中心", "fact", "vac_with_ref"),
+    # ---- 徽章 ----
+    (r"/badge/providers-(\d+)-", "fact", "providers"),
+    (r"/badge/AI_platforms-(\d+)-", "fact", "ai_platforms"),
+    (r"/badge/python-3-", "fixed", "Python 徽章：腳本的最低需求"),
+    (r"00457C", "fixed", "PayPal 徽章的品牌色"),
+    # ---- 由資料算出來 ----
+    (r"(\d+) 家可開立發票的加值中心", "fact", "vac_with_ref"),
     (r"離線查詢 (\d+) 筆", "fact", "rows"),
+    (r"支援 (\d+) 個 AI 開發工具", "fact", "ai_platforms"),
     (r"計分的 (\d+) 題", "fact", "evals_n"),
     (r"有 skill 時 Claude 答對 (\d+) 題", "fact", "evals_with"),
     (r"沒有 skill 時答對 (\d+) 題", "fact", "evals_without"),
-    (r"錯誤碼 (3050131)", "data", "3050131|error|3050131"),
-    (r"AES-(?:128|256)-CBC|MD5|B2[BC]", "fixed", "演算法與發票類型名稱"),
+    # ---- 不從資料來的數字 ----
+    (r"</?h[13]\b", "fixed", "置中標題的 HTML 標籤"),
+    (r"\*\*Step \d\.\*\*", "fixed", "快速開始的步驟編號"),
+    (r"(?:HMAC-)?SHA256|AES-(?:128|256)-CBC|MD5|B2[BC]|MIG 4\.0", "fixed", "演算法、發票類型與格式名稱"),
     (r"Python 3\b", "fixed", "腳本的最低需求"),
     (r"Node\.js 18 以上", "fixed", "invoice-cli/package.json 的 engines.node"),
     (r"共 \d+ 項檢查，失敗 0", "fixed", "test_skill.py 在 2026-11-17 的檢查數；test_skill 增減檢查時要重跑並更新"),
-    (r"2026-11-17", "fixed", "最近一次自我測試的日期"),
+    (r"2026-11-17", "fixed", "最近一次官方文件稽核與自我測試的日期"),
 ]
 
 
@@ -114,7 +145,9 @@ _MASKS = [
     re.compile(r"^```.*?^```", re.S | re.M),   # 程式碼區塊
     re.compile(r"`[^`\n]+`"),                  # 行內 code
     re.compile(r"\]\([^)\n]*\)"),              # markdown 連結目標
-    re.compile(r"https?://[^\s)）（，、|]+"),    # 網址（遇到中文標點就停）
+    # 網址（遇到中文標點就停）。shields.io 靜態徽章 /badge/<標籤>-<數字>-<顏色> 不遮，
+    # 徽章上的數字照樣要被規則認領，不會因為寫在 <img src> 裡就被略過。
+    re.compile(r"https?://(?!img\.shields\.io/badge/)[^\s)）（，、|]+"),
 ]
 
 
