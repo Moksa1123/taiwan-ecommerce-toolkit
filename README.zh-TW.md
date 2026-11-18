@@ -105,7 +105,7 @@ Claude plugin（Claude Code；通過審核後也可從 Claude 目錄加入）：
 
 ```bash
 npx taiwan-invoice-skill@2.9.13 init     # 電子發票
-npx taiwan-payment-skill@1.5.16 init     # 金流串接
+npx taiwan-payment-skill@1.5.17 init     # 金流串接
 npx taiwan-logistics-skill@1.4.13 init   # 物流整合
 ```
 
@@ -117,7 +117,7 @@ npx taiwan-logistics-skill@1.4.13 init   # 物流整合
 
 ```bash
 cd /path/to/your/project
-npx taiwan-payment-skill@1.5.16 init --ai claude    # 或 cursor、windsurf、copilot、codex、gemini、all…
+npx taiwan-payment-skill@1.5.17 init --ai claude    # 或 cursor、windsurf、copilot、codex、gemini、all…
 ```
 
 支援的 AI 工具與 skill 目錄：[docs/guide.zh-TW.md](docs/guide.zh-TW.md)。
@@ -163,7 +163,7 @@ python3 taiwan-logistics/scripts/recommend.py "超商取貨 溫控配送 冷凍�
 |---|---|---|---|
 | **ECPay 綠界** | SHA256 CheckMacValue | 信用卡、ATM、超商代碼／條碼、Apple Pay、TWQR、無卡分期、電子支付 | 文件最完整 |
 | **NewebPay 藍新** | AES-256-CBC + SHA256 | 信用卡、分期、ATM、超商、LINE Pay、Apple／Google／Samsung Pay、TWQR、BitoPro | MPG 規格書 NDNF-1.2.6 |
-| **PAYUNi 統一金流** | AES-256-GCM + SHA256 | 信用卡 Token、ATM、超商、街口、icash Pay、AFTEE、LINE Pay | UPP Version 2.0 |
+| **PAYUNi 統一金流** | AES-256-GCM + SHA256 | 信用卡 Token、Click to Pay、ATM、超商、街口、icash Pay、AFTEE、LINE Pay | UPP Version 2.0 |
 | **SmilePay 速買配** | Verify_key + 檢核碼 | ATM、超商條碼、ibon、FamiPort、信用卡、銀聯卡 | XML 回應 |
 | **PChomePay 支付連** | HTTP Basic → token | 信用卡、ATM、超商代碼、超商取貨 | API 文件 1.7.4 |
 | **ezPay 簡單付** | AES-256-CBC + SHA256 | ezPay 帳戶、約定帳戶／信用卡、TWQR、跨境 | 電子支付機構 |

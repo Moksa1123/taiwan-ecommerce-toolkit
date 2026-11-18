@@ -1909,420 +1909,430 @@
   "size": 2742,
   "checked": "2026-11-17"
  },
+ "payuni-click-to-pay": {
+  "sha256": "4f79f9d68ea33652df0e4b9f57d41e1a54213b265520ea683f8af45a77b94a3b",
+  "size": 2570,
+  "checked": "2026-11-18"
+ },
  "payuni-errors-156": {
   "sha256": "1f03dd606bdc3c5938965b07408f8d4a08c0f73935784621a5d292617215f26e",
   "size": 1959,
-  "checked": "2026-11-17"
+  "checked": "2026-11-18"
  },
  "payuni-errors-220": {
   "sha256": "d7992ee4b0c4c2df1e3bd994914e7a66dea148ae3e275cf5205d8fcc6bbc1374",
   "size": 1598,
-  "checked": "2026-11-17"
+  "checked": "2026-11-18"
  },
  "payuni-errors-30": {
   "sha256": "03348bf3d8b12c00300eec3977f97832f7f46f90cb8e72906dc44aea8aad8b93",
   "size": 2510,
-  "checked": "2026-11-17"
+  "checked": "2026-11-18"
  },
  "payuni-errors-307": {
   "sha256": "c465292c58af39da7f8d16bea97cff74c5ca64ebf70662fd83b3f2a5fe7b1964",
   "size": 6060,
-  "checked": "2026-11-17"
+  "checked": "2026-11-18"
  },
  "payuni-errors-310": {
   "sha256": "1a58b708c33927bf197cd9185f1d68c9bf1d711a0cdb60d5f60a7d02ba82eb51",
   "size": 3525,
-  "checked": "2026-11-17"
+  "checked": "2026-11-18"
  },
  "payuni-errors-315": {
   "sha256": "4347536230e93a0a657277d31f298b2e2e5d9f2dcfbd210004770b5619a0f6d0",
   "size": 4564,
-  "checked": "2026-11-17"
+  "checked": "2026-11-18"
  },
  "payuni-errors-317": {
   "sha256": "f80763f2367065d01bcad59536dd67e368b610ed6cc9fb400a9117e7db8ec724",
   "size": 3909,
-  "checked": "2026-11-17"
+  "checked": "2026-11-18"
  },
  "payuni-errors-318": {
   "sha256": "a718cf7759f6637ac3e016433e5b8c255b6c373b40bae60eafcb22eecea35870",
   "size": 2371,
-  "checked": "2026-11-17"
+  "checked": "2026-11-18"
  },
  "payuni-errors-325": {
   "sha256": "a8f041904cff19699b78b29dced0d9a0084077ccd74d933c56c1488d709714cb",
   "size": 9365,
-  "checked": "2026-11-17"
+  "checked": "2026-11-18"
  },
  "payuni-errors-328": {
   "sha256": "4b14830f499304741f2fdd95acb35d116df46eb5f7925d37c1062ba0ead075ec",
   "size": 3522,
-  "checked": "2026-11-17"
+  "checked": "2026-11-18"
  },
  "payuni-errors-334": {
   "sha256": "56fd712e6a61afba5af2a9284c96983b623b987d640669bffbf33643c451b921",
   "size": 1502,
-  "checked": "2026-11-17"
+  "checked": "2026-11-18"
  },
  "payuni-errors-347": {
   "sha256": "684614a079db5e8988ac8da2675425fcdbc39bc06432fc835e46f62b058810df",
   "size": 3056,
-  "checked": "2026-11-17"
+  "checked": "2026-11-18"
  },
  "payuni-errors-378": {
   "sha256": "da3adf60af75c7161b545913dcc219a0922ec0dfdead0a86d961aadb97f5ef76",
   "size": 3310,
-  "checked": "2026-11-17"
+  "checked": "2026-11-18"
  },
  "payuni-errors-387": {
   "sha256": "9e462f962d3ffe1a0b52b52fd50f6294eeec165c9de088021db52069da22e973",
   "size": 9595,
-  "checked": "2026-11-17"
+  "checked": "2026-11-18"
  },
  "payuni-errors-393": {
   "sha256": "b4ec093882922fc46090ee0478401e0bfca5481bca98ffe926dcb202d2db0069",
   "size": 2326,
-  "checked": "2026-11-17"
+  "checked": "2026-11-18"
  },
  "payuni-errors-394": {
   "sha256": "360678baa8dc116547f3f8bf73c982d03c98b075291aedfcee356da338d81274",
   "size": 8149,
-  "checked": "2026-11-17"
+  "checked": "2026-11-18"
  },
  "payuni-errors-42": {
   "sha256": "bf61bc2a28c1ccbc107c15ca9aa9ea68806ee4bf516a6f821845cca538302be5",
   "size": 1882,
-  "checked": "2026-11-17"
+  "checked": "2026-11-18"
  },
  "payuni-errors-43": {
   "sha256": "2e64f6a554b9f63686ff7872e9a6ca5d99e73427cb1ae9555cf6999ae01ae955",
   "size": 2434,
-  "checked": "2026-11-17"
+  "checked": "2026-11-18"
  },
  "payuni-errors-44": {
   "sha256": "7c082cb52af09607a7b2c144bfd32246c5eb0f74c915385f95651f3e12ab3d08",
   "size": 22879,
-  "checked": "2026-11-17"
+  "checked": "2026-11-18"
  },
  "payuni-errors-45": {
   "sha256": "29f767b4e5f1af6c744b2ee0cd2389aedae0af250a9dd2f7b81158f6374a9d78",
   "size": 15621,
-  "checked": "2026-11-17"
+  "checked": "2026-11-18"
  },
  "payuni-errors-46": {
   "sha256": "7d3bb01dc645d8192654d7d8dbf85b0faa1a94f1be392d864b0de68f08d4ccd2",
   "size": 12528,
-  "checked": "2026-11-17"
+  "checked": "2026-11-18"
  },
  "payuni-errors-47": {
   "sha256": "f9d561098ce9cfb265bbac254392c773fe218ea56f86eb47cc4f6506412f4d23",
   "size": 7765,
-  "checked": "2026-11-17"
+  "checked": "2026-11-18"
  },
  "payuni-errors-48": {
   "sha256": "a2716d7769e25bf10b5856b7b144f15951a59c9a1910b21b528ce9b58d869817",
   "size": 1990,
-  "checked": "2026-11-17"
+  "checked": "2026-11-18"
  },
  "payuni-errors-49": {
   "sha256": "a418f1003106da2fc6cf244d815a0a7e46a5c7ce67b51abc96789e6be60783ac",
   "size": 1887,
-  "checked": "2026-11-17"
+  "checked": "2026-11-18"
  },
  "payuni-errors-515": {
   "sha256": "a68e923401d9f0a37fc795149771e5bc1908cde0298b092e0409c37030f24792",
   "size": 14268,
-  "checked": "2026-11-17"
+  "checked": "2026-11-18"
  },
  "payuni-errors-70": {
   "sha256": "3d0505750cdb13075a35611c4f9bf6f8188606a9e47f74f2138fd1c2d1208c89",
   "size": 3887,
-  "checked": "2026-11-17"
+  "checked": "2026-11-18"
  },
  "payuni-errors-71": {
   "sha256": "7e2f9684be2d61cca2d46038ed9a34a29c83490b34181890693f743ce8bdec91",
   "size": 3699,
-  "checked": "2026-11-17"
+  "checked": "2026-11-18"
  },
  "payuni-errors-78": {
   "sha256": "446ca3a552c3ed810645160425b0fd6b642535b028782ea8aa4a77d9f7ef051d",
   "size": 7117,
-  "checked": "2026-11-17"
+  "checked": "2026-11-18"
  },
  "payuni-errors-81": {
   "sha256": "e2f2981ae0c30241570a02cacb84c4ebd797bdbe0ee5e4900d201682765e46e1",
   "size": 13164,
-  "checked": "2026-11-17"
+  "checked": "2026-11-18"
  },
  "payuni-errors-82": {
   "sha256": "da8ef56c2af81654774b4701c759e46ca65087bab410da76b5b364449e6b732a",
   "size": 2596,
-  "checked": "2026-11-17"
+  "checked": "2026-11-18"
  },
  "payuni-errors-83": {
   "sha256": "2a56acf9dbfe05d219f318c46b3fbd6d22e9d59d793171f2089b15947c5de89f",
   "size": 3507,
-  "checked": "2026-11-17"
+  "checked": "2026-11-18"
  },
  "payuni-net-sdk": {
   "sha256": "5d3d866c2597c7965208d8531618e0fb9f352d8b15f8addbbefafa5340fabe9e",
-  "size": 232101,
-  "checked": "2026-11-17"
+  "size": 232095,
+  "checked": "2026-11-18"
  },
  "payuni-page-103": {
   "sha256": "83f50cb843e3040718003e10a3392ef9d23c9d57833cded411a16547c39cc147",
   "size": 9460,
-  "checked": "2026-11-17"
+  "checked": "2026-11-18"
  },
  "payuni-page-119": {
   "sha256": "14b4a9861f4f6eb96646ca3de8162e35208d9e0279b5237363c50d557efab286",
   "size": 44741,
-  "checked": "2026-11-17"
+  "checked": "2026-11-18"
  },
  "payuni-page-120": {
   "sha256": "250f23a2ae53e333c8df1e1a700b4004498197733eb74501a3f1443695bda60c",
   "size": 4751,
-  "checked": "2026-11-17"
+  "checked": "2026-11-18"
  },
  "payuni-page-123": {
   "sha256": "197947fa17daecd8281662a374b6975a80db2d00356eab83a66564dff3e72611",
   "size": 6042,
-  "checked": "2026-11-17"
+  "checked": "2026-11-18"
  },
  "payuni-page-124": {
   "sha256": "50eb562cc3d5575a5383f87e02664edb8829a0f6032c824a9c977deee22410b0",
   "size": 11873,
-  "checked": "2026-11-17"
+  "checked": "2026-11-18"
  },
  "payuni-page-153": {
   "sha256": "d1162e8afb4c53c738a61976fe8e97cb8e542b49f2d65dcf48028092b6b7c10c",
   "size": 576,
-  "checked": "2026-11-17"
+  "checked": "2026-11-18"
  },
  "payuni-page-156": {
   "sha256": "1f03dd606bdc3c5938965b07408f8d4a08c0f73935784621a5d292617215f26e",
   "size": 1959,
-  "checked": "2026-11-17"
+  "checked": "2026-11-18"
  },
  "payuni-page-164": {
-  "sha256": "88b93c853d12148a94841e3812231ca97b8663773b5d9ecd525d1db012eb6bbd",
-  "size": 16382,
-  "checked": "2026-11-17"
+  "sha256": "67d3fd19c84984d31e88c6d2de13b40f5b6e7c9346669ca6dcc8ca50663a1f3c",
+  "size": 16400,
+  "checked": "2026-11-18"
  },
  "payuni-page-170": {
   "sha256": "b9356603e18c0bbb064178b1edffeb9a7e94719bfa05281d66bbfb179ca1d197",
   "size": 1058,
-  "checked": "2026-11-17"
+  "checked": "2026-11-18"
  },
  "payuni-page-172": {
-  "sha256": "8d2f79dde5bb77f267ca36eaa30d5070bdafbbe43a7ff76b32b3d71685e7975a",
-  "size": 16204,
-  "checked": "2026-11-17"
+  "sha256": "f463fe49cb9d3ba1b4bd184ff556c332bed00b60a0af003b37d36e6279390ab9",
+  "size": 16222,
+  "checked": "2026-11-18"
  },
  "payuni-page-25": {
-  "sha256": "e47cf39c326f26060cc9f4f4144ee02e10081db2617f6389a4c7cc8bdfd73dec",
-  "size": 24400,
-  "checked": "2026-11-17"
+  "sha256": "e9cde2225e342761b532c24d19fe05cd2b6c37872a46cbd3e0d1d72e18ee3dd0",
+  "size": 24801,
+  "checked": "2026-11-18"
  },
  "payuni-page-269": {
   "sha256": "4f93fabf1364b69626b61dc87541379d97b4768e89f73c002953e0509097465e",
   "size": 4809,
-  "checked": "2026-11-17"
+  "checked": "2026-11-18"
  },
  "payuni-page-270": {
   "sha256": "43e7b1f087592ab637220ebef9a2ddeb783a2523e90a5ad317a499dfe9405882",
   "size": 4492,
-  "checked": "2026-11-17"
+  "checked": "2026-11-18"
  },
  "payuni-page-274": {
   "sha256": "7a7c6216152b9be76a96c5e3c7449c548ac8e5d4bb51fbf7da9f86346d76b706",
   "size": 2925,
-  "checked": "2026-11-17"
+  "checked": "2026-11-18"
  },
  "payuni-page-29": {
   "sha256": "730da48b30a55fc4d4a637a04f484629f56ba26ed77960504dfbfe8518ee33c6",
   "size": 2528,
-  "checked": "2026-11-17"
+  "checked": "2026-11-18"
  },
  "payuni-page-291": {
   "sha256": "58e7456c480383b1118f9a72668d3efd80c80293d868a262ab107834ed440c3f",
   "size": 5290,
-  "checked": "2026-11-17"
+  "checked": "2026-11-18"
  },
  "payuni-page-300": {
   "sha256": "20afba05b7272ecc8deb057cbe99290f2c11fc8e069fb268b248af76341824a1",
   "size": 4313,
-  "checked": "2026-11-17"
+  "checked": "2026-11-18"
  },
  "payuni-page-305": {
   "sha256": "aa04cb58462cc69b62f9767d144ffef45bba8009d83399958ac369b144ba3175",
   "size": 13518,
-  "checked": "2026-11-17"
+  "checked": "2026-11-18"
  },
  "payuni-page-326": {
   "sha256": "7ac101cdd71c1c0929040dbc415c4b301f05d5bc6e0cdf643118c8d4cfb3cbc6",
   "size": 15585,
-  "checked": "2026-11-17"
+  "checked": "2026-11-18"
  },
  "payuni-page-329": {
   "sha256": "10fd71b34c6315f2a9910d0a37687f851f023f73fa9e39162bcea48b5733446f",
   "size": 13441,
-  "checked": "2026-11-17"
+  "checked": "2026-11-18"
  },
  "payuni-page-333": {
   "sha256": "07cea111147844b51ad1f8d6708a270ba32adbc1d2151cb09f0964f80c807732",
   "size": 5923,
-  "checked": "2026-11-17"
+  "checked": "2026-11-18"
  },
  "payuni-page-34": {
-  "sha256": "1d3be43b01734c1abd02db25d636e580b036e703ac72c017c4a4815bc3c38b2d",
-  "size": 44369,
-  "checked": "2026-11-17"
+  "sha256": "927dba929f41635211e1675a063c3b4611c0bf8e6f8891162b8c298901978d13",
+  "size": 44720,
+  "checked": "2026-11-18"
  },
  "payuni-page-350": {
   "sha256": "7e23468d2a55eea8904516e3414d751e642bd41a9312e1ad8f28b28a256b948a",
   "size": 17959,
-  "checked": "2026-11-17"
+  "checked": "2026-11-18"
  },
  "payuni-page-36": {
   "sha256": "5700080dc89d35a682baded8e820abde165e978c1bda18b2bb6c24b6a4989f1e",
   "size": 17134,
-  "checked": "2026-11-17"
+  "checked": "2026-11-18"
  },
  "payuni-page-37": {
   "sha256": "4650493445c09caba80d8bf2b3b1c494bdba144785a2283619543bb179473791",
   "size": 15816,
-  "checked": "2026-11-17"
+  "checked": "2026-11-18"
  },
  "payuni-page-374": {
   "sha256": "dfe1ec80e2939b16f5be38c34d6f3d2aec6756b1b6875f9f39034922a4dca1ea",
   "size": 2134,
-  "checked": "2026-11-17"
+  "checked": "2026-11-18"
  },
  "payuni-page-377": {
   "sha256": "c4ef14ef58cecdbfa7804081c5e31e75bc4166d631e85fc7e67fd3b8a7b00f7f",
   "size": 4325,
-  "checked": "2026-11-17"
+  "checked": "2026-11-18"
  },
  "payuni-page-38": {
   "sha256": "2809d9ecc69627cd5f92796a6e46713351ecfcbd704f4042adf0abe0a7d1c200",
   "size": 6200,
-  "checked": "2026-11-17"
+  "checked": "2026-11-18"
  },
  "payuni-page-386": {
   "sha256": "0fbf2c533e8cc8fad6e9cfded6558c9c39dd9d6c1bb04dd7f95fc2fe119ec023",
   "size": 14315,
-  "checked": "2026-11-17"
+  "checked": "2026-11-18"
  },
  "payuni-page-39": {
   "sha256": "6ce20314982a033e7cf271761334aa976e7fc0bd494013aa2b00af6d0b9124fa",
   "size": 5072,
-  "checked": "2026-11-17"
+  "checked": "2026-11-18"
  },
  "payuni-page-40": {
   "sha256": "126e75cbf21f9822882f08d0e6560c725476d3f2be19e8e9ec5822b48f687ca0",
   "size": 6012,
-  "checked": "2026-11-17"
+  "checked": "2026-11-18"
  },
  "payuni-page-41": {
   "sha256": "5ebab90c6cd665069e74cd993ff892ea6a20d90b66d9f3b6e3024e83c85283c1",
   "size": 4384,
-  "checked": "2026-11-17"
+  "checked": "2026-11-18"
  },
  "payuni-page-50": {
   "sha256": "e320ffb747dad2d3341b20c481d61566d8cb48d24f06771b7528f2f014aa40d1",
   "size": 506,
-  "checked": "2026-11-17"
+  "checked": "2026-11-18"
  },
  "payuni-page-51": {
   "sha256": "7172da5c5616e0fcb2cbaa6b414631ede3598a4fb890c7ddb2b3e9b4c0e442d9",
   "size": 445,
-  "checked": "2026-11-17"
+  "checked": "2026-11-18"
  },
  "payuni-page-511": {
   "sha256": "c615bf34bb6f3aee7127c5f0543c32493804d5878ff6d73725b4614d60a409e5",
   "size": 2539,
-  "checked": "2026-11-17"
+  "checked": "2026-11-18"
  },
  "payuni-page-512": {
-  "sha256": "27c4a25f079219352f57c6ce4d3e0fbc5c726f476025bcbc74bc883e266d7ec8",
-  "size": 46931,
-  "checked": "2026-11-17"
+  "sha256": "2d3620d4b0c1823e4b604c1e2d00fe5d5f88df20183801246ef92dd2a32980a2",
+  "size": 46814,
+  "checked": "2026-11-18"
  },
  "payuni-page-514": {
   "sha256": "e9c0bd32b01f7a51f13570766a4aaeb3865b1b1c7f56082394a712db9b0f73d3",
   "size": 953,
-  "checked": "2026-11-17"
+  "checked": "2026-11-18"
  },
  "payuni-page-520": {
   "sha256": "f36cbb12e05a91ad96e49d35b42973bbf8611b0972ba9b86b1d4bacc3686e363",
   "size": 5157,
-  "checked": "2026-11-17"
+  "checked": "2026-11-18"
  },
  "payuni-page-521": {
   "sha256": "65ec4648c128ce2109fce41fda293582787b92ff82681a081ab128a71efceb92",
   "size": 5324,
-  "checked": "2026-11-17"
+  "checked": "2026-11-18"
  },
  "payuni-page-522": {
   "sha256": "e8f971287c1bb7fe6409d55febbbedabeaa3f32a21a4867a535d256ada1fb344",
   "size": 20304,
-  "checked": "2026-11-17"
+  "checked": "2026-11-18"
+ },
+ "payuni-page-53": {
+  "sha256": "90ae5b56cdcb60ca7201ecd877c6ef3bf871b63b1a557f043647a3b72afe6db4",
+  "size": 9937,
+  "checked": "2026-11-18"
  },
  "payuni-page-56": {
   "sha256": "8d2f80eab714dd62ce13c2e748be7710a82e70be2a1a6f87353751f7ff6464d9",
   "size": 336,
-  "checked": "2026-11-17"
+  "checked": "2026-11-18"
  },
  "payuni-page-72": {
   "sha256": "11612d01e215fea1ecf9841ba2f52b8fab5d349465be2b4d503eb1b6a3d91122",
   "size": 4309,
-  "checked": "2026-11-17"
+  "checked": "2026-11-18"
  },
  "payuni-page-73": {
   "sha256": "72ca5360f511aeb3230ff50207a9c4e696a48b39b30b1b6805a8c63aad7bcf7a",
   "size": 2745,
-  "checked": "2026-11-17"
+  "checked": "2026-11-18"
  },
  "payuni-page-74": {
   "sha256": "8817578b143b598ca297efe7aa9e259db0ce2f6782b0a16e33248c42908acad5",
   "size": 2547,
-  "checked": "2026-11-17"
+  "checked": "2026-11-18"
  },
  "payuni-page-75": {
   "sha256": "d75f76092dc9a9f95ab1d4486cdc4b8bda3df37792a317cb82d561d5c8f69d95",
   "size": 2073,
-  "checked": "2026-11-17"
+  "checked": "2026-11-18"
  },
  "payuni-page-80": {
   "sha256": "d3a86994b24394daf1a6adeefce3a39f584943b25505c72579a2447dc862266c",
   "size": 2672,
-  "checked": "2026-11-17"
+  "checked": "2026-11-18"
  },
  "payuni-page-84": {
   "sha256": "942a338c39f9074b1cd149e96f93c5b583be20decabbe3331f48d009a03d37f7",
   "size": 4308,
-  "checked": "2026-11-17"
+  "checked": "2026-11-18"
  },
  "payuni-page-85": {
   "sha256": "a42544d1bc3441154411e48f03dba346ed7f1496226086b43aa961e033e57700",
   "size": 4211,
-  "checked": "2026-11-17"
+  "checked": "2026-11-18"
  },
  "payuni-php-sdk": {
   "sha256": "3c96375fadf194536ecd0809f819ff04d28b4a173a6b515980a10075438a7e9d",
-  "size": 232387,
-  "checked": "2026-11-17"
+  "size": 232381,
+  "checked": "2026-11-18"
  },
  "payuni-showdoc-index": {
   "sha256": "06afced39114b0b8f688a4019f145212043a0f609ba40fc16aff6614a691a4a0",
   "size": 23594,
-  "checked": "2026-11-17"
+  "checked": "2026-11-18"
  },
  "payuni-woocommerce-plugin": {
   "sha256": "c0a96b1ad608e76049dece70b8f656ae42745eff1250066d6d245b27c614abeb",
-  "size": 232471,
-  "checked": "2026-11-17"
+  "size": 232465,
+  "checked": "2026-11-18"
  },
  "pchomepay-api-doc-logistics": {
   "sha256": "402db2f9162b880b14fc8e28cacd605173b2c8aa6dc2b679b7d8bee1a053cf05",

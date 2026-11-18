@@ -105,7 +105,7 @@ Other AI coding tools, or one skill only (npx with a pinned version):
 
 ```bash
 npx taiwan-invoice-skill@2.9.13 init     # e-invoice
-npx taiwan-payment-skill@1.5.16 init     # payment
+npx taiwan-payment-skill@1.5.17 init     # payment
 npx taiwan-logistics-skill@1.4.13 init   # logistics
 ```
 
@@ -117,7 +117,7 @@ Requirements: Python 3 for the bundled scripts (standard library only; the AES e
 
 ```bash
 cd /path/to/your/project
-npx taiwan-payment-skill@1.5.16 init --ai claude    # or cursor, windsurf, copilot, codex, gemini, all ...
+npx taiwan-payment-skill@1.5.17 init --ai claude    # or cursor, windsurf, copilot, codex, gemini, all ...
 ```
 
 Supported tools and their skill folders: [docs/guide.zh-TW.md](docs/guide.zh-TW.md).
@@ -163,7 +163,7 @@ python3 taiwan-logistics/scripts/recommend.py "超商取貨 溫控配送 冷凍�
 |---|---|---|---|
 | **ECPay** | SHA256 CheckMacValue | Card, ATM, CVS code/barcode, Apple Pay, TWQR, BNPL, digital wallets | Most complete docs |
 | **NewebPay** | AES-256-CBC + SHA256 | Card, instalments, ATM, CVS, LINE Pay, Apple/Google/Samsung Pay, TWQR, BitoPro | MPG spec NDNF-1.2.6 |
-| **PAYUNi** | AES-256-GCM + SHA256 | Card token, ATM, CVS, JKOPAY, icash Pay, AFTEE, LINE Pay | UPP Version 2.0 |
+| **PAYUNi** | AES-256-GCM + SHA256 | Card token, Click to Pay, ATM, CVS, JKOPAY, icash Pay, AFTEE, LINE Pay | UPP Version 2.0 |
 | **SmilePay** | Verify_key + check code | ATM, barcode, ibon, FamiPort, card, UnionPay | XML responses |
 | **PChomePay** | HTTP Basic → token | Card, ATM, CVS code, CVS pickup | API doc 1.7.4 |
 | **ezPay** | AES-256-CBC + SHA256 | ezPay account, linked bank/card, TWQR, cross-border | E-payment institution |

@@ -41,7 +41,7 @@
 |---|---|
 | 服務商 | 涵蓋 14 家台灣金流（見下表） |
 | 簽章與加密 | CheckMacValue、TradeSha、AES-256-CBC、AES-256-GCM、RSA、JWT、HMAC-SHA256，附可執行的 Python 範例 |
-| 離線資料 | `scripts/search.py` 離線查詢 3212 筆官方資料：錯誤碼、API 操作、欄位對照、付款方式、疑難排解 |
+| 離線資料 | `scripts/search.py` 離線查詢 3213 筆官方資料：錯誤碼、API 操作、欄位對照、付款方式、疑難排解 |
 | 選型 | `scripts/recommend.py` 依白話需求推薦金流 |
 | 付款流程 | 信用卡、ATM、超商代碼、電子支付、Apple Pay、Google Pay、TWQR、BNPL、定期定額、退款，各自對應到 `references/` 的檔案 |
 
@@ -83,7 +83,7 @@
 | 方式 | 指令 | 說明 |
 |---|---|---|
 | Claude Code plugin | `/plugin install taiwan-ecommerce@taiwan-ecommerce-toolkit` | 一次裝好發票、金流、物流三個台灣 skill |
-| npx | `npx taiwan-payment-skill@1.5.16 init --ai claude` | 把 skill 複製到目前的專案 |
+| npx | `npx taiwan-payment-skill@1.5.17 init --ai claude` | 把 skill 複製到目前的專案 |
 | 手動複製 | `cp -r taiwan-payment ~/.claude/skills/` | 先 clone 本 repo |
 
 Claude Code plugin：
@@ -96,7 +96,7 @@ Claude Code plugin：
 npx（`--ai` 也可以填 `cursor`、`codex` 等其他 AI 工具，`--global` 裝到家目錄）：
 
 ```bash
-npx taiwan-payment-skill@1.5.16 init --ai claude
+npx taiwan-payment-skill@1.5.17 init --ai claude
 ```
 
 手動複製：
@@ -132,7 +132,7 @@ cp -r taiwan-ecommerce-toolkit/taiwan-payment ~/.claude/skills/
 **Step 1.** 安裝到專案：
 
 ```bash
-npx taiwan-payment-skill@1.5.16 init --ai claude
+npx taiwan-payment-skill@1.5.17 init --ai claude
 ```
 
 **Step 2.** 直接問 Claude，例如：
@@ -165,7 +165,7 @@ Trust               : 官方文件
 
 ## 觸發詞
 
-English: Taiwan payment gateway, ECPay, NewebPay, PAYUNi, LINE Pay, TapPay, JKOPAY, credit card payment, ATM virtual account, CVS payment code, Apple Pay, Google Pay, TWQR, BNPL, CheckMacValue, payment notification, refund, recurring payment.
+English: Taiwan payment gateway, ECPay, NewebPay, PAYUNi, LINE Pay, TapPay, JKOPAY, credit card payment, ATM virtual account, CVS payment code, Apple Pay, Google Pay, Click to Pay, TWQR, BNPL, CheckMacValue, payment notification, refund, recurring payment.
 
 中文：金流串接、綠界、藍新、統一金流、信用卡付款、ATM 虛擬帳號、超商代碼、LINE Pay、Apple Pay、街口、CheckMacValue、TradeSha、付款通知、退款、定期定額。
 

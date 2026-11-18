@@ -7686,7 +7686,8 @@
    "taiwan-logistics/data/logistics-types.csv",
    "taiwan-logistics/examples/payuni-logistics-cvs-example.py",
    "taiwan-logistics/references/payuni-logistics-api.md",
-   "taiwan-payment/references/payuni-payment-api.md"
+   "taiwan-payment/references/payuni-payment-api.md",
+   "taiwan-payment/data/payment-methods.csv"
   ],
   "json_path": "data.page_content",
   "notes": "ShowDoc SPA：以 POST page_id 取回 JSON（data.page_content 為 Markdown）；網頁版 https://docs.payuni.com.tw/web/#/7/{page_id}；網頁版 https://docs.payuni.com.tw/web/#/7/34（SPA）；比對 data.page_content"
@@ -8348,6 +8349,46 @@
   ],
   "json_path": "data.page_content",
   "notes": "ShowDoc SPA：以 POST page_id 取回 JSON（data.page_content 為 Markdown）；網頁版 https://docs.payuni.com.tw/web/#/7/514"
+ },
+ {
+  "id": "payuni-page-53",
+  "provider": "payuni",
+  "skills": [
+   "payment"
+  ],
+  "title": "PAYUNi 官方文件：API/Notify/一頁式支付 (UNiOnepage)/Ver 1.0",
+  "url": "https://docs.payuni.com.tw/server/index.php?s=/api/page/info",
+  "format": "json",
+  "fetch": {
+   "method": "POST",
+   "data": {
+    "page_id": "53"
+   }
+  },
+  "access": "public",
+  "covers": [
+   "taiwan-payment/references/payuni-payment-api.md"
+  ],
+  "json_path": "data.page_content",
+  "notes": "ShowDoc SPA，以 POST page_id 取回 JSON（data.page_content 為 Markdown）；人看的網址 https://docs.payuni.com.tw/web/#/7/53；AuthType 8 = Click to Pay（2026-11-18 新增）"
+ },
+ {
+  "id": "payuni-click-to-pay",
+  "provider": "payuni",
+  "skills": [
+   "payment"
+  ],
+  "title": "PAYUNi 一鍵支付 (Click to Pay) 介紹頁",
+  "url": "https://www.payuni.com.tw/click-to-pay",
+  "format": "html",
+  "fetch": "browser",
+  "access": "public",
+  "covers": [
+   "taiwan-payment/references/payuni-payment-api.md",
+   "taiwan-payment/data/payment-methods.csv"
+  ],
+  "notes": "官網為 JavaScript 渲染，需瀏覽器；支援卡別（目前 Mastercard、Visa）與消費者流程",
+  "min_line_length": 4
  },
  {
   "id": "pchomepay-api-doc",
