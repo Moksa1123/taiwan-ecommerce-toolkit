@@ -78,7 +78,7 @@ Encryption in the runnable examples is checked against the providers' official t
 | Method | Command | Notes |
 |---|---|---|
 | Claude Code plugin | `/plugin install taiwan-ecommerce@taiwan-ecommerce-toolkit` | Installs all three Taiwan skills: invoice, payment, logistics |
-| npx | `npx taiwan-invoice-skill@2.9.12 init --ai claude` | Copies the skill into the current project |
+| npx | `npx taiwan-invoice-skill@2.9.13 init --ai claude` | Copies the skill into the current project |
 | Manual copy | `cp -r taiwan-invoice ~/.claude/skills/` | From a clone of this repository |
 
 Claude Code plugin:
@@ -91,7 +91,7 @@ Claude Code plugin:
 npx (`--ai` also accepts other agents such as `cursor` or `codex`; `--global` installs into your home directory):
 
 ```bash
-npx taiwan-invoice-skill@2.9.12 init --ai claude
+npx taiwan-invoice-skill@2.9.13 init --ai claude
 ```
 
 Manual copy:
@@ -127,7 +127,7 @@ The installer supports 14 AI coding agents: Claude Code · Cursor · Windsurf ·
 **Step 1.** Install into your project:
 
 ```bash
-npx taiwan-invoice-skill@2.9.12 init --ai claude
+npx taiwan-invoice-skill@2.9.13 init --ai claude
 ```
 
 **Step 2.** Ask Claude, for example:

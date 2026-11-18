@@ -92,7 +92,7 @@
 | 方式 | 指令 | 說明 |
 |---|---|---|
 | Claude Code plugin | `/plugin install taiwan-ecommerce@taiwan-ecommerce-toolkit` | 一次裝好發票、金流、物流三個台灣 skill |
-| npx | `npx taiwan-logistics-skill@1.4.12 init --ai claude` | 把 skill 複製到目前的專案 |
+| npx | `npx taiwan-logistics-skill@1.4.13 init --ai claude` | 把 skill 複製到目前的專案 |
 | 手動複製 | `cp -r taiwan-logistics ~/.claude/skills/` | 先 clone 本 repo |
 
 Claude Code plugin：
@@ -105,7 +105,7 @@ Claude Code plugin：
 npx（`--ai` 也可以填 `cursor`、`codex` 等其他 AI 工具，`--global` 裝到家目錄）：
 
 ```bash
-npx taiwan-logistics-skill@1.4.12 init --ai claude
+npx taiwan-logistics-skill@1.4.13 init --ai claude
 ```
 
 手動複製：
@@ -141,7 +141,7 @@ cp -r taiwan-ecommerce-toolkit/taiwan-logistics ~/.claude/skills/
 **Step 1.** 安裝到專案：
 
 ```bash
-npx taiwan-logistics-skill@1.4.12 init --ai claude
+npx taiwan-logistics-skill@1.4.13 init --ai claude
 ```
 
 **Step 2.** 直接問 Claude，例如：
