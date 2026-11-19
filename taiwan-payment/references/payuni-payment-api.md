@@ -586,7 +586,7 @@ POST /api/trade/query     # Version 2.0（1.0 仍可用）
 | 狀態 | 說明 |
 |------|------|
 | `1` | 請款申請中 |
-| `2` | 請款成功（此時才能以 trade/close + `CloseType=2` 退款） |
+| `2` | 請款成功（以 trade/close + `CloseType=2` 退款；其他狀態怎麼退見「交易請退款 (信用卡)」的決策表） |
 | `3` | 請款取消 |
 | `7` | 請款處理中 |
 | `9` | 未申請 |
@@ -660,7 +660,26 @@ POST /api/trade/close     # Version 1.0
 - 一次付清、國外卡可全額或部分請退款；分期付款、銀聯卡僅全額
 - 授權成功後需於 3 天內請款
 - 請款完成後需於 180 天內退款
-- 同一筆尚有請款或退款處理中時，新的退款先記為「預計退款」（查詢的 `RefundType=3`）
+- 同一筆尚有請款或退款處理中時，新的退款先記為「預計退款」（查詢的 `RefundType=3`），前一次請款或退款完成後才轉為退款申請中（page 164、172）
+
+### 依請款狀態怎麼退（信用卡）
+
+先用交易查詢（page 164）取得 `CloseStatus`，再依下表處理。不要寫成「請款成功前不能退」：請款申請中、請款處理中都有官方路徑。
+
+| `CloseStatus` | 全額退 | 部分退 | 依據 |
+|---|---|---|---|
+| `9` 未申請（手動請款的商店） | `trade/cancel` 取消授權 | `trade/close` `CloseType=1`，`TradeAmt` 帶扣掉退款後的金額 | page 39、38、153 |
+| `1` 請款申請中 | `trade/close` `CloseType=-1` 取消請款 → 回到未請款 → `trade/cancel` 取消授權 | `CloseType=-1` 取消請款 → `CloseType=1` 以扣掉退款後的金額重新請款 | page 153 流程圖、38、39 |
+| `3` 請款取消 | `trade/cancel` 取消授權 | `CloseType=1` 以扣掉退款後的金額請款 | page 153（取消請款後回到未請款） |
+| `7` 請款處理中（已進每日請款包檔） | `CloseType=2` 帶全額 → 記為預計退款（`RefundType=3`），請款完成後自動轉退款申請中 | `CloseType=2` 帶退款金額，同樣先記為預計退款 | page 164、172 |
+| `2` 請款成功 | `CloseType=2`（請款完成後 180 天內） | `CloseType=2` 帶退款金額 | page 38 |
+
+- 部分請款、部分退款只限一次付清與國外卡；分期付款、銀聯卡只能全額（page 38）。
+- 授權後 3 天內要請款（page 38）；取消請款後若要改成部分請款，也要在這個期限內。
+- 請款申請中要等每日請款包檔才會轉請款處理中（page 153），不保證隔天就請款成功；實測（em925，2026-11-19）Click to Pay 交易停在 `CloseStatus=1` 超過 12 小時。
+- 處理完要再查一次交易確認 `CloseStatus`／`RefundStatus`，不要只看 API 回 `SUCCESS`。
+
+來源：https://docs.payuni.com.tw/web/#/7/38 、https://docs.payuni.com.tw/web/#/7/39 、https://docs.payuni.com.tw/web/#/7/153 、https://docs.payuni.com.tw/web/#/7/164 （查證 2026-11-19）
 
 ---
 

@@ -41,7 +41,7 @@ This is an unofficial project. It is not affiliated with or endorsed by ECPay, N
 |---|---|
 | Providers | Covers 14 Taiwan payment providers (table below) |
 | Signing and encryption | CheckMacValue, TradeSha, AES-256-CBC, AES-256-GCM, RSA, JWT, HMAC-SHA256, with runnable Python examples |
-| Offline data | `scripts/search.py` searches 3213 rows of official data: error codes, API operations, field mappings, payment methods, troubleshooting notes |
+| Offline data | `scripts/search.py` searches 3214 rows of official data: error codes, API operations, field mappings, payment methods, troubleshooting notes |
 | Provider choice | `scripts/recommend.py` suggests a provider from plain-language requirements |
 | Payment flows | Credit card, ATM, CVS code, e-wallet, Apple Pay, Google Pay, TWQR, BNPL, recurring billing and refunds, each linked to the right file in `references/` |
 

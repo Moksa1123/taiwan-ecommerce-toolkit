@@ -41,7 +41,7 @@
 |---|---|
 | 服務商 | 涵蓋 14 家台灣金流（見下表） |
 | 簽章與加密 | CheckMacValue、TradeSha、AES-256-CBC、AES-256-GCM、RSA、JWT、HMAC-SHA256，附可執行的 Python 範例 |
-| 離線資料 | `scripts/search.py` 離線查詢 3213 筆官方資料：錯誤碼、API 操作、欄位對照、付款方式、疑難排解 |
+| 離線資料 | `scripts/search.py` 離線查詢 3214 筆官方資料：錯誤碼、API 操作、欄位對照、付款方式、疑難排解 |
 | 選型 | `scripts/recommend.py` 依白話需求推薦金流 |
 | 付款流程 | 信用卡、ATM、超商代碼、電子支付、Apple Pay、Google Pay、TWQR、BNPL、定期定額、退款，各自對應到 `references/` 的檔案 |
 

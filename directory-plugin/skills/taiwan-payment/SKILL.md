@@ -64,10 +64,10 @@ key column (code, field name, operation), and cite `doc_url` in the answer.
 | `data/field-mappings.json` | 19 | field | `field_name`, `field_zh`, `ecpay_name`, `newebpay_name`, `payuni_name`, `smilepay_name` |
 | `data/operations.json` | 25 | operation | `operation`, `operation_zh`, `ecpay_endpoint`, `newebpay_endpoint`, `payuni_endpoint`, `smilepay_endpoint` |
 | `data/payment-methods.json` | 42 | payment_method | `method_code`, `method_zh`, `method_en`, `ecpay_code`, `newebpay_code`, `payuni_code` |
-| `data/pending.json` | 62 | — | `date`, `question`, `why_not_found`, `asked_by`, `status` |
+| `data/pending.json` | 66 | — | `date`, `question`, `why_not_found`, `asked_by`, `status` |
 | `data/providers.json` | 14 | provider | `provider`, `display_name`, `auth_method`, `encryption`, `test_url`, `prod_url` |
 | `data/reasoning.json` | 45 | reasoning | `scenario`, `recommended_provider`, `confidence`, `reason`, `anti_patterns`, `use_cases` |
-| `data/troubleshooting.json` | 46 | troubleshoot | `issue`, `symptom`, `cause`, `solution`, `provider`, `severity` |
+| `data/troubleshooting.json` | 47 | troubleshoot | `issue`, `symptom`, `cause`, `solution`, `provider`, `severity` |
 
 Files with a number suffix (`error-codes-1.json`, …) are one data set split by provider to stay
 under the directory's file-size limit; look through all of them.
