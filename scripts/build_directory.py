@@ -36,13 +36,15 @@ SPLIT_BYTES = 200 * 1024        # JSON 超過就依 provider 拆檔
 ALLOWED = {'.md', '.json', '.png', ''}   # '' = LICENSE
 
 # 目錄版不能叫 Claude 登入主機、讀使用者電腦上的帳密。這些寫法不得出現在產出裡。
-# 官方目錄 2026-11-19 實測：config.X、$X、寫死的測試金鑰也會被判成「從使用者電腦讀帳密」。
+# 官方目錄 2026-11-19 實測：檔內同時有遠端主機與 key／secret／token 類變數（${X}、$X、config.X、
+# <X_KEY> 佔位字、寫死的測試金鑰）就判成「把安裝者的金鑰送到該主機」；官方建議改成 YOUR_API_KEY 這種假值。
 FORBIDDEN = re.compile(
     r'\bssh\b|\bscp\b|wp-config|\.env\b|id_rsa|id_ed25519|\.pem\b|password|passwd|'
-    r'process\.env|os\.environ|getenv|\$_ENV|SSH_KEY|YOUR_[A-Z_]{3,}|\bconfig\[|\bcredentials\s*=',
+    r'process\.env|os\.environ|getenv|\$_ENV|SSH_KEY|\bconfig\[|\bcredentials\s*=|'
+    r'<[A-Z0-9_]*(?:KEY|SECRET|TOKEN|HASH_IV)[A-Z0-9_]*>|\$secret\b',
     re.I)
 # 全大寫的環境變數式寫法；用 re.I 會誤殺 $merchantId，所以分開比
-FORBIDDEN_CS = re.compile(r'\bconfig\.[A-Z][A-Z0-9_]+\b|\$\{?[A-Z][A-Z0-9_]{2,}\b')
+FORBIDDEN_CS = re.compile(r'\bconfig\.[A-Z][A-Z0-9_]+\b|\$\{?[A-Z][A-Z0-9_]{2,}\b|\$\{TradeToken\}')
 
 # 官方公開的測試金鑰：目錄版一律換成佔位字（完整版保留，並有已知答案測試）
 EXTRA_SECRETS = [
@@ -54,18 +56,18 @@ EXTRA_SECRETS = [
     'sk_test_abc123def456',                     # SHOPLINE 文件範例 key
 ]
 # PayNow 傳統版的 Bootstrap Key/IV 是協定常數（實作必需），不是帳號金鑰，保留
-SECRET_PLACEHOLDER = '<官方公開測試值，見該服務商官方文件>'
+SECRET_PLACEHOLDER = 'YOUR_TEST_KEY'
 
 NOTE = {
     'zh': ('> 目錄精簡版：只含參考文件與 JSON 資料，不含腳本。文中提到 `scripts/`、`examples/`、`tests/` '
            '的工具在完整版（npm 套件 `{pkg}`）。\n'
-           '> 金鑰與商店代號由使用者在自己的系統設定後，以參數傳入程式；文中以 `<HASH_KEY>` 這類佔位字表示。'
-           '服務商公開的測試金鑰也以佔位字表示，請到該服務商官方文件取得。帳密類欄位以 `<帳密欄位>` 表示。\n'),
+           '> 金鑰與商店代號由使用者在自己的系統設定後，以參數傳入程式；文中以 `YOUR_HASH_KEY` 這類假值表示。'
+           '服務商公開的測試金鑰以 `YOUR_TEST_KEY` 表示，請到該服務商官方文件取得。帳密類欄位以 `<帳密欄位>` 表示。\n'),
     'en': ('> Directory edition: reference files and JSON data only, no scripts. Tools under `scripts/`, '
            '`examples/` and `tests/` ship in the full edition (npm package `{pkg}`).\n'
            '> Keys and merchant IDs are set up by the user and passed into the code as parameters; they '
-           'appear as placeholders such as `<HASH_KEY>`. Published sandbox keys are also shown as '
-           "placeholders; get them from the provider's official docs. Credential-type field names are "
+           'appear as fake values such as `YOUR_HASH_KEY`. Published sandbox keys are shown as '
+           "`YOUR_TEST_KEY`; get them from the provider's official docs. Credential-type field names are "
            'shown as `<帳密欄位>`.\n'),
 }
 
@@ -100,24 +102,36 @@ def pkg_version(skill: str) -> str:
 
 
 def credential_free(text: str) -> str:
-    """不寫「從哪裡讀金鑰」：環境變數、設定物件、shell 變數都改成明顯的佔位字；
-    官方測試金鑰與測試密碼改佔位字；帳密欄名改佔位字；.env 改設定檔。"""
+    """不寫「從哪裡讀金鑰」：環境變數、設定物件、shell 變數都改成 YOUR_X 假值（官方建議的寫法），
+    網址類改 https://example.com；官方測試金鑰改 YOUR_TEST_KEY；帳密欄名改佔位字；.env 改設定檔。"""
     if not SECRETS:
         SECRETS.extend(test_secrets())
+
+    def fake(name: str, quote: str = "'") -> str:
+        if name.endswith('_URL') or name.startswith('NEXT_PUBLIC_BASE'):
+            return f'{quote}https://example.com{quote}' if quote else 'https://example.com'
+        return f'{quote}YOUR_{name}{quote}'
+
     # 先處理 process.env 的特殊用法，再處理一般情形
     text = re.sub(r'process\.env\.NODE_ENV\s*===\s*[\'"]production[\'"]', 'isProduction', text)
-    text = re.sub(r'\$\{process\.env\.([A-Z][A-Z0-9_]*)\}', r'<\1>', text)
-    text = re.sub(r'process\.env\.([A-Z][A-Z0-9_]*)!?', r"'<\1>'", text)
-    text = re.sub(r"os\.environ(?:\.get)?[\[(]['\"]([A-Z0-9_]+)['\"](?:,[^)\]]*)?[\])]", r"'<\1>'", text)
-    text = re.sub(r"getenv\(['\"]([A-Z0-9_]+)['\"]\)", r"'<\1>'", text)
-    text = re.sub(r"\$_ENV\[['\"]([A-Z0-9_]+)['\"]\]", r"'<\1>'", text)
-    text = re.sub(r'\$\{?([A-Z][A-Z0-9_]{2,})\}?\b', r'<\1>', text)         # shell：$SHOPLINE_API_KEY
-    text = re.sub(r'\bcredentials(\s*=|\})', r'basic_auth\1', text)
+    text = re.sub(r'\$\{process\.env\.([A-Z][A-Z0-9_]*)\}', lambda m: fake(m.group(1), ''), text)
+    text = re.sub(r'process\.env\.([A-Z][A-Z0-9_]*)!?', lambda m: fake(m.group(1)), text)
+    text = re.sub(r"os\.environ(?:\.get)?[\[(]['\"]([A-Z0-9_]+)['\"](?:,[^)\]]*)?[\])]",
+                  lambda m: fake(m.group(1)), text)
+    text = re.sub(r"getenv\(['\"]([A-Z0-9_]+)['\"]\)", lambda m: fake(m.group(1)), text)
+    text = re.sub(r"\$_ENV\[['\"]([A-Z0-9_]+)['\"]\]", lambda m: fake(m.group(1)), text)
+    text = re.sub(r'\$\{?([A-Z][A-Z0-9_]{2,})\}?\b', lambda m: fake(m.group(1), ''), text)  # shell：$SHOPLINE_API_KEY
+    # 原文的 <PARTNER_KEY>、<SECRET> 這類佔位字也會被當成帳密變數
+    text = re.sub(r'(?i)<([A-Z0-9_]*(?:KEY|SECRET|TOKEN|HASH_IV)[A-Z0-9_]*)>',
+                  lambda m: 'YOUR_' + m.group(1).upper(), text)
+    text = re.sub(r'\bcredentials(\s*=|\})', r'encoded\1', text)
+    text = re.sub(r'\bbasic_auth\b', 'encoded', text)
+    text = re.sub(r'\$secret\b', "'YOUR_SECRET_KEY'", text)          # 街口 PHP 一行範例
+    text = re.sub(r'\$\{TradeToken\}', 'TRADE_TOKEN_FROM_API', text)  # 歐付寶 URL Scheme 範例
     text = re.sub(r'`?\.env`? ?檔', '設定檔', text)
     text = re.sub(r'\b\.env\b', '設定檔', text)
     text = re.sub(r'(?i)\b\w*pass(?:word|wd)\w*\b', '<帳密欄位>', text)
-    text = re.sub(r'(?i)\bYOUR_([A-Z][A-Z0-9_]+)', r'<\1>', text)
-    text = re.sub(r'(密碼\s*)`[^`\n]+`', r'\1`<官方公開測試值>`', text)
+    text = re.sub(r'(密碼\s*)`[^`\n]+`', r'\1`YOUR_TEST_LOGIN`', text)
     for s in SECRETS:
         # 簽章範例裡會出現 URL encode 後轉小寫的版本，所以不分大小寫
         text = re.sub(re.escape(s), SECRET_PLACEHOLDER, text, flags=re.I)

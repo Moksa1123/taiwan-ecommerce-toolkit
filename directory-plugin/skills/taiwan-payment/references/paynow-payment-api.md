@@ -1,7 +1,7 @@
 # PayNow Payment API Reference
 
 > 目錄精簡版：只含參考文件與 JSON 資料，不含腳本。文中提到 `scripts/`、`examples/`、`tests/` 的工具在完整版（npm 套件 `taiwan-payment-skill`）。
-> 金鑰與商店代號由使用者在自己的系統設定後，以參數傳入程式；文中以 `<HASH_KEY>` 這類佔位字表示。服務商公開的測試金鑰也以佔位字表示，請到該服務商官方文件取得。帳密類欄位以 `<帳密欄位>` 表示。
+> 金鑰與商店代號由使用者在自己的系統設定後，以參數傳入程式；文中以 `YOUR_HASH_KEY` 這類假值表示。服務商公開的測試金鑰以 `YOUR_TEST_KEY` 表示，請到該服務商官方文件取得。帳密類欄位以 `<帳密欄位>` 表示。
 
 立吉富線上金流（PayNow）金流 API 完整參考文件。
 
@@ -80,7 +80,7 @@ PayNow 並存兩個技術世代的金流 API，且短期內兩者皆會繼續運
 |------|-------------------|------------------------|
 | 主要端點 | `POST https://www.paynow.com.tw/service/etopm.aspx` | `POST https://api.paynow.com.tw/api/v1/payment-intents` |
 | 通訊方式 | HTTP Form POST + URL Encode | HTTP JSON REST |
-| 認證 | 商家代號 (`WebNo`) + 賣場交易密碼 + SHA-1 PassCode | `Authorization: Bearer <PrivateKey>` |
+| 認證 | 商家代號 (`WebNo`) + 賣場交易密碼 + SHA-1 PassCode | `Authorization: Bearer YOUR_PRIVATEKEY` |
 | 資料加密 | 動態 AES-256-CBC（Key/IV 每次呼叫 GP/GK 取得）+ Zeros padding | TLS 即可，欄位明文 |
 | 訂單編號 | `OrderNo` (商家自訂) + `BuysafeNo` (PayNow 19 碼) | `paymentNo` (商家自訂) + `id`（PayNow 編號，如 `pp_…`） |
 | 卡片代碼化 | 透過 `CIFID` / `CIFPW` 的「預存授權」 | Checkout 時 `card.cardMode=build_token`；之後 `cardMode=token` + `cardToken` |
@@ -286,7 +286,7 @@ def aes256_encrypt(plain_text, key, iv):
 ```
 POST /api/v1/payment-intents HTTP/1.1
 Host: sandboxapi.paynow.com.tw
-Authorization: Bearer <PrivateKey>
+Authorization: Bearer YOUR_PRIVATEKEY
 Content-Type: application/json
 Accept: application/json
 ```
@@ -327,7 +327,7 @@ Accept: application/json
 
 ```
 POST /api/v1/payment-intents
-Authorization: Bearer <PrivateKey>
+Authorization: Bearer YOUR_PRIVATEKEY
 Content-Type: application/json
 ```
 
@@ -466,7 +466,7 @@ PaymentIntent `status`（<https://docs.paynow.com.tw/developer/docs/understandin
 
 ```bash
 curl -X POST 'https://sandboxapi.paynow.com.tw/api/v1/payment-intents' \
-  -H 'Authorization: Bearer <PrivateKey>' \
+  -H 'Authorization: Bearer YOUR_PRIVATEKEY' \
   -H 'Content-Type: application/json' \
   --data-raw '{
     "paymentNo": "ORD20260507001",
@@ -484,7 +484,7 @@ curl -X POST 'https://sandboxapi.paynow.com.tw/api/v1/payment-intents' \
 
 ```bash
 curl -X POST 'https://sandboxapi.paynow.com.tw/api/v1/payment-intents' \
-  -H 'Authorization: Bearer <PrivateKey>' \
+  -H 'Authorization: Bearer YOUR_PRIVATEKEY' \
   -H 'Content-Type: application/json' \
   --data-raw '{
     "paymentNo": "ORD20260507002",
@@ -506,7 +506,7 @@ curl -X POST 'https://sandboxapi.paynow.com.tw/api/v1/payment-intents' \
 
 ```
 POST /api/v1/payment-intents/{id}/checkout
-Authorization: Bearer <PrivateKey>
+Authorization: Bearer YOUR_PRIVATEKEY
 Content-Type: application/json
 ```
 
@@ -557,12 +557,12 @@ Content-Type: application/json
 
 ```bash
 curl -X POST 'https://sandboxapi.paynow.com.tw/api/v1/payment-intents/{id}/checkout' \
-  -H 'Authorization: Bearer <PrivateKey>' \
+  -H 'Authorization: Bearer YOUR_PRIVATEKEY' \
   -H 'Content-Type: application/json' \
   --data-raw '{
     "paymentNo": "ORD20260507001",
     "usePayNowSdk": false,
-    "key": "<PublicKey>",
+    "key": "YOUR_PUBLICKEY",
     "secret": "pp_ad38783beb30483bba3e60cf1457e478_st_3ee0fafe3d554c1fba2ee882204b721b",
     "paymentMethodType": "CreditCard",
     "paymentMethodData": {
@@ -601,7 +601,7 @@ curl -X POST 'https://sandboxapi.paynow.com.tw/api/v1/payment-intents/{id}/check
 
 ```
 GET /api/v1/payment-intents/{id}
-Authorization: Bearer <PrivateKey>
+Authorization: Bearer YOUR_PRIVATEKEY
 ```
 
 | Path Parameter | 說明 |
@@ -615,7 +615,7 @@ Authorization: Bearer <PrivateKey>
 
 ```bash
 curl -X GET 'https://sandboxapi.paynow.com.tw/api/v1/payment-intents/pp_1a304818ced44e5cbeab6107400da3c4' \
-  -H 'Authorization: Bearer <PrivateKey>'
+  -H 'Authorization: Bearer YOUR_PRIVATEKEY'
 ```
 
 ### 其他現代版端點
@@ -639,7 +639,7 @@ PayNow 現代版以「Customer」物件管理可重複扣款的消費者實體�
 
 ```
 POST /api/v1/customers
-Authorization: Bearer <PrivateKey>
+Authorization: Bearer YOUR_PRIVATEKEY
 ```
 
 | 參數 | 類型 | 必填 | 說明 |
@@ -672,14 +672,14 @@ Authorization: Bearer <PrivateKey>
 
 ```
 GET /api/v1/customers/{customer_uuid}
-Authorization: Bearer <PrivateKey>
+Authorization: Bearer YOUR_PRIVATEKEY
 ```
 
 #### Customer Card Token Retrieve
 
 ```
 GET /api/v1/customers/{customer_uuid}/card-tokens
-Authorization: Bearer <PrivateKey>
+Authorization: Bearer YOUR_PRIVATEKEY
 ```
 
 回傳該 Customer 名下已存的卡片；`result` 為陣列，每個元素含：
@@ -704,7 +704,7 @@ Authorization: Bearer <PrivateKey>
 
 ```
 POST /api/v2/apple-pay-session
-Authorization: Bearer <PrivateKey>
+Authorization: Bearer YOUR_PRIVATEKEY
 Content-Type: application/json
 ```
 
@@ -719,7 +719,7 @@ Content-Type: application/json
 
 ```
 POST /api/v1/apple-pay-session
-Authorization: Bearer <PrivateKey>
+Authorization: Bearer YOUR_PRIVATEKEY
 Content-Type: application/json
 ```
 
@@ -734,7 +734,7 @@ Content-Type: application/json
 
 ```
 POST /api/v1/payment-intents/apple-pay-deferreds/{uuid}/cancel
-Authorization: Bearer <PrivateKey>
+Authorization: Bearer YOUR_PRIVATEKEY
 ```
 
 | 參數 | 必填 | 說明 |
@@ -746,7 +746,7 @@ Authorization: Bearer <PrivateKey>
 
 ```
 GET /api/v1/payment-intents/apple-pay-deferreds?Status=<status>&Page=<n>&Limit=<n>
-Authorization: Bearer <PrivateKey>
+Authorization: Bearer YOUR_PRIVATEKEY
 ```
 
 | Query | 必填 | 說明 |
@@ -770,7 +770,7 @@ Authorization: Bearer <PrivateKey>
 
 ```
 POST /api/v1/payment-intents/{id}/refunds
-Authorization: Bearer <PrivateKey>
+Authorization: Bearer YOUR_PRIVATEKEY
 Content-Type: application/json
 ```
 
@@ -802,7 +802,7 @@ HTTP `422` `type=parameter_validation_error`，`result` 為欄位錯誤（如 `{
 
 ```bash
 curl -X POST 'https://sandboxapi.paynow.com.tw/api/v1/payment-intents/pp_1a304818ced44e5cbeab6107400da3c4/refunds' \
-  -H 'Authorization: Bearer <PrivateKey>' \
+  -H 'Authorization: Bearer YOUR_PRIVATEKEY' \
   -H 'Content-Type: application/json' \
   --data-raw '{
     "amount": 500,
@@ -814,7 +814,7 @@ curl -X POST 'https://sandboxapi.paynow.com.tw/api/v1/payment-intents/pp_1a30481
 
 ```bash
 curl -X POST 'https://sandboxapi.paynow.com.tw/api/v1/payment-intents/pp_1a304818ced44e5cbeab6107400da3c4/refunds' \
-  -H 'Authorization: Bearer <PrivateKey>' \
+  -H 'Authorization: Bearer YOUR_PRIVATEKEY' \
   -H 'Content-Type: application/json' \
   --data-raw '{
     "amount": 1500,
@@ -829,14 +829,14 @@ curl -X POST 'https://sandboxapi.paynow.com.tw/api/v1/payment-intents/pp_1a30481
 
 ```
 GET /api/v1/refunds?Page=<n>&Limit=<n>
-Authorization: Bearer <PrivateKey>
+Authorization: Bearer YOUR_PRIVATEKEY
 ```
 
 #### Refund Retrieve
 
 ```
 GET /api/v1/refunds/{uuid}
-Authorization: Bearer <PrivateKey>
+Authorization: Bearer YOUR_PRIVATEKEY
 ```
 
 回傳指定 Refund 物件（欄位同上）；狀態為 `success`／`failed`／`rejected`／`processing`。
@@ -1229,7 +1229,7 @@ Content-Type: application/x-www-form-urlencoded
 4. 加密後字串再轉成全部小寫，放入 Signature 參數
 ```
 
-官方範例（交易密碼 `<官方公開測試值>`）：送出 `613b0106b509b252c3d9468723fc7a75dd69101624353646e608f3e3c44e3a31`；
+官方範例（交易密碼 `YOUR_TEST_LOGIN`）：送出 `613b0106b509b252c3d9468723fc7a75dd69101624353646e608f3e3c44e3a31`；
 回傳（`errmsgmemcid28229955merchantidentifiermerchant.tw.com.paynow.paytradestatuss`）`184ea4be92c23ff2b5fea71929616098e22e651fa26d6aa1bd0fb57aa16c82f0`。
 簽章錯誤時 PayNow 直接回 HTTP 400；回傳失敗時 `Signature` 原值退回。
 

@@ -1,7 +1,7 @@
 # ECPay Logistics API Reference
 
 > Directory edition: reference files and JSON data only, no scripts. Tools under `scripts/`, `examples/` and `tests/` ship in the full edition (npm package `taiwan-logistics-skill`).
-> Keys and merchant IDs are set up by the user and passed into the code as parameters; they appear as placeholders such as `<HASH_KEY>`. Published sandbox keys are also shown as placeholders; get them from the provider's official docs. Credential-type field names are shown as `<帳密欄位>`.
+> Keys and merchant IDs are set up by the user and passed into the code as parameters; they appear as fake values such as `YOUR_HASH_KEY`. Published sandbox keys are shown as `YOUR_TEST_KEY`; get them from the provider's official docs. Credential-type field names are shown as `<帳密欄位>`.
 
 綠界科技 (ECPay) 物流 API 完整參考文件。
 
@@ -65,8 +65,8 @@
 
 | 用途 | MerchantID | HashKey | HashIV |
 |------|-----------|---------|--------|
-| B2C 及宅配 | `2000132` | `<官方公開測試值，見該服務商官方文件>` | `<官方公開測試值，見該服務商官方文件>` |
-| C2C | `2000933` | `<官方公開測試值，見該服務商官方文件>` | `<官方公開測試值，見該服務商官方文件>` |
+| B2C 及宅配 | `2000132` | `YOUR_TEST_KEY` | `YOUR_TEST_KEY` |
+| C2C | `2000933` | `YOUR_TEST_KEY` | `YOUR_TEST_KEY` |
 
 用錯特店建單會回 `0|找不到加密金鑰，請確認是否有申請開通此物流方式!`。
 

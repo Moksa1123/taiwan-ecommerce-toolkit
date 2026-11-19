@@ -1,7 +1,7 @@
 # 台灣電子發票實作指南
 
 > 目錄精簡版：只含參考文件與 JSON 資料，不含腳本。文中提到 `scripts/`、`examples/`、`tests/` 的工具在完整版（npm 套件 `taiwan-invoice-skill`）。
-> 金鑰與商店代號由使用者在自己的系統設定後，以參數傳入程式；文中以 `<HASH_KEY>` 這類佔位字表示。服務商公開的測試金鑰也以佔位字表示，請到該服務商官方文件取得。帳密類欄位以 `<帳密欄位>` 表示。
+> 金鑰與商店代號由使用者在自己的系統設定後，以參數傳入程式；文中以 `YOUR_HASH_KEY` 這類假值表示。服務商公開的測試金鑰以 `YOUR_TEST_KEY` 表示，請到該服務商官方文件取得。帳密類欄位以 `<帳密欄位>` 表示。
 
 > 從 SKILL.md 搬出的細節：工具用法、發票類型、加值中心比較、金額計算、加密、列印、常見問題、測試帳號、檢查清單。
 > 標了 `<!-- verify: ... -->` 的程式碼由 repo 根目錄 `scripts/verify-examples.py` 以官方標準答案比對；改動前先跑它。
@@ -370,15 +370,15 @@ const time = Math.floor(Date.now() / 1000)
 ### 綠界測試環境
 ```
 MerchantID: 2000132
-HashKey: <官方公開測試值，見該服務商官方文件>
-HashIV: <官方公開測試值，見該服務商官方文件>
+HashKey: YOUR_TEST_KEY
+HashIV: YOUR_TEST_KEY
 URL: https://einvoice-stage.ecpay.com.tw
 ```
 
 ### 速買配測試環境
 ```
 Grvc: SEI1000034
-Verify_key: <官方公開測試值，見該服務商官方文件>
+Verify_key: YOUR_TEST_KEY
 測試統編: 80129529
 URL: https://ssl.smse.com.tw/api_test/SPEinvoice_Storage.asp
 ```
@@ -386,7 +386,7 @@ URL: https://ssl.smse.com.tw/api_test/SPEinvoice_Storage.asp
 ### 光貿測試環境
 ```
 統編: 12345678
-App Key: <官方公開測試值，見該服務商官方文件>
+App Key: YOUR_TEST_KEY
 後台: https://invoice.amego.tw/
 測試帳號: test@amego.tw
 測試密碼: 12345678
@@ -396,8 +396,8 @@ App Key: <官方公開測試值，見該服務商官方文件>
 ```
 測試後台: https://cinv.ezpay.com.tw/
 申請流程: 自行註冊測試會員 → 取得 MerchantID + HashKey + HashIV
-官方範例 HashKey: <官方公開測試值，見該服務商官方文件> (32 碼)
-官方範例 HashIV: <官方公開測試值，見該服務商官方文件> (16 碼)
+官方範例 HashKey: YOUR_TEST_KEY (32 碼)
+官方範例 HashIV: YOUR_TEST_KEY (16 碼)
 正式環境: https://inv.ezpay.com.tw/
 ```
 

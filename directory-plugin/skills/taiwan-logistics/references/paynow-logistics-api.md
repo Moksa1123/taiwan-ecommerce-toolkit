@@ -1,7 +1,7 @@
 # PayNow Logistics API Reference
 
 > Directory edition: reference files and JSON data only, no scripts. Tools under `scripts/`, `examples/` and `tests/` ship in the full edition (npm package `taiwan-logistics-skill`).
-> Keys and merchant IDs are set up by the user and passed into the code as parameters; they appear as placeholders such as `<HASH_KEY>`. Published sandbox keys are also shown as placeholders; get them from the provider's official docs. Credential-type field names are shown as `<帳密欄位>`.
+> Keys and merchant IDs are set up by the user and passed into the code as parameters; they appear as fake values such as `YOUR_HASH_KEY`. Published sandbox keys are shown as `YOUR_TEST_KEY`; get them from the provider's official docs. Credential-type field names are shown as `<帳密欄位>`.
 
 立吉富 PayNow 物流 API 完整參考文件，涵蓋 7-11、全家、黑貓、海外配送等 11 條產品線。
 
@@ -115,7 +115,7 @@ PayNow 物流 API 使用「商家主帳號 (`user_account`) + API 密碼 (`apico
 POST /api/Orderapi/Add_Order HTTP/1.1
 Host: logistic.paynow.com.tw
 Content-Type: application/x-www-form-urlencoded
-partner_token: <PARTNER_TOKEN>
+partner_token: YOUR_PARTNER_TOKEN
 ```
 
 注意事項：
@@ -649,7 +649,7 @@ curl_setopt_array($ch, [
     CURLOPT_URL => 'https://testlogistic.paynow.com.tw/api/Orderapi/Add_Order',
     CURLOPT_POST => true,
     CURLOPT_POSTFIELDS => http_build_query(['JsonOrder' => $encJson]),
-    CURLOPT_HTTPHEADER => ['partner_token: <PARTNER_TOKEN>'],
+    CURLOPT_HTTPHEADER => ['partner_token: YOUR_PARTNER_TOKEN'],
     CURLOPT_RETURNTRANSFER => true,
 ]);
 $response = json_decode(curl_exec($ch), true);

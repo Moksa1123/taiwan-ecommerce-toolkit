@@ -1,7 +1,7 @@
 # 綠界科技電子發票 API 完整技術規格 (ECPay Invoice API)
 
 > 目錄精簡版：只含參考文件與 JSON 資料，不含腳本。文中提到 `scripts/`、`examples/`、`tests/` 的工具在完整版（npm 套件 `taiwan-invoice-skill`）。
-> 金鑰與商店代號由使用者在自己的系統設定後，以參數傳入程式；文中以 `<HASH_KEY>` 這類佔位字表示。服務商公開的測試金鑰也以佔位字表示，請到該服務商官方文件取得。帳密類欄位以 `<帳密欄位>` 表示。
+> 金鑰與商店代號由使用者在自己的系統設定後，以參數傳入程式；文中以 `YOUR_HASH_KEY` 這類假值表示。服務商公開的測試金鑰以 `YOUR_TEST_KEY` 表示，請到該服務商官方文件取得。帳密類欄位以 `<帳密欄位>` 表示。
 
 > 官方文檔來源：https://developers.ecpay.com.tw/
 > GitHub SDK：https://github.com/ECPay/SDK_PHP
@@ -31,10 +31,10 @@
 | 項目 | 測試值 |
 |------|--------|
 | **特店編號 (MerchantID)** | `2000132` |
-| **HashKey** | `<官方公開測試值，見該服務商官方文件>` |
-| **HashIV** | `<官方公開測試值，見該服務商官方文件>` |
-| **廠商後台** | `https://vendor-stage.ecpay.com.tw`（帳號 `Stagetest1234`／密碼 `<官方公開測試值>`／統編 `53538851`） |
-| **平台商 PlatformID** | `3085340`（HashKey `<官方公開測試值，見該服務商官方文件>`、HashIV `<官方公開測試值，見該服務商官方文件>`；已綁定子廠商 `2000132`） |
+| **HashKey** | `YOUR_TEST_KEY` |
+| **HashIV** | `YOUR_TEST_KEY` |
+| **廠商後台** | `https://vendor-stage.ecpay.com.tw`（帳號 `Stagetest1234`／密碼 `YOUR_TEST_LOGIN`／統編 `53538851`） |
+| **平台商 PlatformID** | `3085340`（HashKey `YOUR_TEST_KEY`、HashIV `YOUR_TEST_KEY`；已綁定子廠商 `2000132`） |
 
 測試環境開立並經綠界檢核成功後，發票狀態直接壓為「已上傳」，不實際上傳財政部（/7849）。
 正式環境金鑰在正式廠商後台「系統設定 → 系統介接設定 → 介接資訊」取得。
@@ -87,8 +87,8 @@ B2C 的 `SalesAmount`、`ItemAmount` 一律含稅，沒有 `TotalAmount`、`Item
 #### 3. AES 加密
 **加密設定：**
 - **演算法**：AES-128-CBC
-- **金鑰**：HashKey (`<官方公開測試值，見該服務商官方文件>`)
-- **IV**：HashIV (`<官方公開測試值，見該服務商官方文件>`)
+- **金鑰**：HashKey (`YOUR_TEST_KEY`)
+- **IV**：HashIV (`YOUR_TEST_KEY`)
 - **Padding**：PKCS7
 
 **加密範例（Node.js）：**
@@ -109,8 +109,8 @@ function encryptData(data, hashKey, hashIV) {
 }
 
 // 範例
-const hashKey = '<官方公開測試值，見該服務商官方文件>'
-const hashIV = '<官方公開測試值，見該服務商官方文件>'
+const hashKey = 'YOUR_TEST_KEY'
+const hashIV = 'YOUR_TEST_KEY'
 const data = { MerchantID: '2000132', RelateNumber: 'TEST001' }
 const encryptedData = encryptData(data, hashKey, hashIV)
 ```

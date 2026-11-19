@@ -1,7 +1,7 @@
 # Shopline Payments API Reference
 
 > 目錄精簡版：只含參考文件與 JSON 資料，不含腳本。文中提到 `scripts/`、`examples/`、`tests/` 的工具在完整版（npm 套件 `taiwan-payment-skill`）。
-> 金鑰與商店代號由使用者在自己的系統設定後，以參數傳入程式；文中以 `<HASH_KEY>` 這類佔位字表示。服務商公開的測試金鑰也以佔位字表示，請到該服務商官方文件取得。帳密類欄位以 `<帳密欄位>` 表示。
+> 金鑰與商店代號由使用者在自己的系統設定後，以參數傳入程式；文中以 `YOUR_HASH_KEY` 這類假值表示。服務商公開的測試金鑰以 `YOUR_TEST_KEY` 表示，請到該服務商官方文件取得。帳密類欄位以 `<帳密欄位>` 表示。
 
 SHOPLINE Payments（SLP）金流 API 完整參考文件，涵蓋導轉式（Redirect）與內嵌式（Embedded SDK）兩種串接模式。
 
@@ -118,7 +118,7 @@ POST /api/v1/trade/sessions/create HTTP/1.1
 Host: api-sandbox.shoplinepayments.com
 Content-Type: application/json
 merchantId: 12345678
-apiKey: <官方公開測試值，見該服務商官方文件>
+apiKey: YOUR_TEST_KEY
 requestId: req_20260507120000_abc
 idempotentKey: idem_ORDER-2026050701
 ```
@@ -785,7 +785,7 @@ app.post(
     const rawBody   = req.body.toString('utf8');
 
     // 1. 驗證簽章
-    if (!verifyShoplineSignature(timestamp, rawBody, sign, '<SHOPLINE_SIGN_KEY>')) {
+    if (!verifyShoplineSignature(timestamp, rawBody, sign, 'YOUR_SHOPLINE_SIGN_KEY')) {
       return res.status(401).send('Invalid signature');
     }
 
@@ -831,7 +831,7 @@ $timestamp = $_SERVER['HTTP_TIMESTAMP'] ?? '';
 $sign      = $_SERVER['HTTP_SIGN']      ?? '';
 $body      = file_get_contents('php://input');
 
-if (!verifyShoplineSignature($timestamp, $body, $sign, '<SHOPLINE_SIGN_KEY>')) {
+if (!verifyShoplineSignature($timestamp, $body, $sign, 'YOUR_SHOPLINE_SIGN_KEY')) {
     http_response_code(401); exit('Invalid signature');
 }
 http_response_code(200); echo 'OK';
@@ -1459,11 +1459,11 @@ const orderId = `ORDER-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
 
 ```bash
 # 檢查環境
-echo <SHOPLINE_BASE_URL>
+echo https://example.com
 # 沙盒：https://api-sandbox.shoplinepayments.com
 # 正式：https://api.shoplinepayments.com
 
-echo <SHOPLINE_API_KEY>  # 不能用沙盒 key 打正式環境
+echo YOUR_SHOPLINE_API_KEY  # 不能用沙盒 key 打正式環境
 ```
 
 ### 4. Webhook 沒收到通知

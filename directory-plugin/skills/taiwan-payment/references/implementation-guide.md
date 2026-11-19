@@ -1,7 +1,7 @@
 # 台灣金流實作指南
 
 > 目錄精簡版：只含參考文件與 JSON 資料，不含腳本。文中提到 `scripts/`、`examples/`、`tests/` 的工具在完整版（npm 套件 `taiwan-payment-skill`）。
-> 金鑰與商店代號由使用者在自己的系統設定後，以參數傳入程式；文中以 `<HASH_KEY>` 這類佔位字表示。服務商公開的測試金鑰也以佔位字表示，請到該服務商官方文件取得。帳密類欄位以 `<帳密欄位>` 表示。
+> 金鑰與商店代號由使用者在自己的系統設定後，以參數傳入程式；文中以 `YOUR_HASH_KEY` 這類假值表示。服務商公開的測試金鑰以 `YOUR_TEST_KEY` 表示，請到該服務商官方文件取得。帳密類欄位以 `<帳密欄位>` 表示。
 
 > 從 SKILL.md 搬出的細節：推薦關鍵字、付款方式、服務商特性、加密實作、訂單流程、常見問題、測試帳號、檢查清單。
 > 標了 `<!-- verify: ... -->` 的程式碼由 repo 根目錄 `scripts/verify-examples.py` 以官方標準答案比對；改動前先跑它。
@@ -672,8 +672,8 @@ function submitPaymentForm(action: string, params: Record<string, string>) {
 // * 使用環境變數區分
 const config = {
     merchantID: isProduction
-        ? '<ECPAY_MERCHANT_ID_PROD>'
-        : '<ECPAY_MERCHANT_ID_TEST>',
+        ? 'YOUR_ECPAY_MERCHANT_ID_PROD'
+        : 'YOUR_ECPAY_MERCHANT_ID_TEST',
     apiUrl: isProduction
         ? 'https://payment.ecpay.com.tw/Cashier/AioCheckOut/V5'
         : 'https://payment-stage.ecpay.com.tw/Cashier/AioCheckOut/V5'
@@ -685,8 +685,8 @@ const config = {
 ### 綠界測試環境
 ```
 MerchantID: 3002607
-HashKey: <官方公開測試值，見該服務商官方文件>
-HashIV: <官方公開測試值，見該服務商官方文件>
+HashKey: YOUR_TEST_KEY
+HashIV: YOUR_TEST_KEY
 測試 URL: https://payment-stage.ecpay.com.tw/Cashier/AioCheckOut/V5
 測試卡號: 4311-9522-2222-2222
 後台: https://vendor-stage.ecpay.com.tw/

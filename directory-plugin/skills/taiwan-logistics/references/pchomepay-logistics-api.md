@@ -1,7 +1,7 @@
 # PChomePay Logistics API Reference
 
 > Directory edition: reference files and JSON data only, no scripts. Tools under `scripts/`, `examples/` and `tests/` ship in the full edition (npm package `taiwan-logistics-skill`).
-> Keys and merchant IDs are set up by the user and passed into the code as parameters; they appear as placeholders such as `<HASH_KEY>`. Published sandbox keys are also shown as placeholders; get them from the provider's official docs. Credential-type field names are shown as `<帳密欄位>`.
+> Keys and merchant IDs are set up by the user and passed into the code as parameters; they appear as fake values such as `YOUR_HASH_KEY`. Published sandbox keys are shown as `YOUR_TEST_KEY`; get them from the provider's official docs. Credential-type field names are shown as `<帳密欄位>`.
 
 PChomePay支付連（PChomePay）超商取貨物流 API 參考。依 PChomePay B2C API documentation 1.7.4（2026-09-01）：
 https://docs.google.com/document/d/1dPIPJc4xfyjkJ1i2yxaja4OP0G-iGFRXM08NDMuttZE/ （查證 2026-11-17）。
@@ -162,9 +162,9 @@ curl --location --request POST 'https://api.pchomepay.com.tw/v1/token' \
 ```php
 <?php
 
-function getPcpayToken(string $appId, string $secret): array
+function getPcpayToken(string $appId, string 'YOUR_SECRET_KEY'): array
 {
-    $auth = base64_encode("{$appId}:{$secret}");
+    $auth = base64_encode("{$appId}:{'YOUR_SECRET_KEY'}");
 
     $ch = curl_init();
     curl_setopt_array($ch, [
@@ -186,7 +186,7 @@ function getPcpayToken(string $appId, string $secret): array
 
 // 範例回應
 // {
-//   "token": "<PCPAY_TOKEN>",
+//   "token": "YOUR_PCPAY_TOKEN",
 //   "expired_in": 28800,
 //   "expired_timestamp": 1474470110
 // }
@@ -199,9 +199,9 @@ import base64
 import requests
 
 def get_pcpay_token(app_id: str, secret: str) -> dict:
-    basic_auth = base64.b64encode(f"{app_id}:{secret}".encode()).decode()
+    encoded = base64.b64encode(f"{app_id}:{secret}".encode()).decode()
     headers = {
-        "Authorization": f"Basic {basic_auth}",
+        "Authorization": f"Basic {encoded}",
         "Content-Type": "application/json",
     }
     response = requests.post(
@@ -320,7 +320,7 @@ POST https://api.pchomepay.com.tw/v1/logistic/batch
 ```bash
 curl --location 'https://api.pchomepay.com.tw/v1/logistic/batch' \
   --header 'Content-Type: application/json' \
-  --header 'pcpay-token: <PCPAY_TOKEN>' \
+  --header 'pcpay-token: YOUR_PCPAY_TOKEN' \
   --data '{
     "order_id": ["B2C1702640091"]
   }'
@@ -443,7 +443,7 @@ GET https://api.pchomepay.com.tw/v1/logistic/query/{order_id}/history
 ```bash
 curl --location 'https://api.pchomepay.com.tw/v1/logistic/query/B2C1723815435/history' \
   --header 'Content-Type: application/json' \
-  --header 'pcpay-token: <PCPAY_TOKEN>'
+  --header 'pcpay-token: YOUR_PCPAY_TOKEN'
 ```
 
 ### 回應欄位
@@ -541,7 +541,7 @@ GET https://api.pchomepay.com.tw/v1/logistic/query/{order_id}/history-page
 ```bash
 curl --location 'https://api.pchomepay.com.tw/v1/logistic/query/B2C1723815435/history-page' \
   --header 'Content-Type: application/json' \
-  --header 'pcpay-token: <PCPAY_TOKEN>'
+  --header 'pcpay-token: YOUR_PCPAY_TOKEN'
 ```
 
 ### 回應欄位
@@ -589,7 +589,7 @@ GET https://api.pchomepay.com.tw/v1/logistic/yet
 ```bash
 curl --location 'https://api.pchomepay.com.tw/v1/logistic/yet' \
   --header 'Content-Type: application/json' \
-  --header 'pcpay-token: <PCPAY_TOKEN>'
+  --header 'pcpay-token: YOUR_PCPAY_TOKEN'
 ```
 
 #### 回應欄位 (Array)
@@ -648,7 +648,7 @@ GET https://api.pchomepay.com.tw/v1/logistic/store_return/{date}
 
 ```bash
 curl --location 'https://api.pchomepay.com.tw/v1/logistic/store_return/20250409' \
-  --header 'pcpay-token: <PCPAY_TOKEN>'
+  --header 'pcpay-token: YOUR_PCPAY_TOKEN'
 ```
 
 #### 回應欄位 (Array)
@@ -700,7 +700,7 @@ GET https://api.pchomepay.com.tw/v1/logistic/accounting/{date}
 
 ```bash
 curl --location 'https://api.pchomepay.com.tw/v1/logistic/accounting/20240816' \
-  --header 'pcpay-token: <PCPAY_TOKEN>'
+  --header 'pcpay-token: YOUR_PCPAY_TOKEN'
 ```
 
 ### 回應格式
@@ -782,7 +782,7 @@ GET https://api.pchomepay.com.tw/v1/logistic/compensation/{date}
 
 ```bash
 curl --location 'https://api.pchomepay.com.tw/v1/logistic/compensation/202408' \
-  --header 'pcpay-token: <PCPAY_TOKEN>'
+  --header 'pcpay-token: YOUR_PCPAY_TOKEN'
 ```
 
 ### 回應格式

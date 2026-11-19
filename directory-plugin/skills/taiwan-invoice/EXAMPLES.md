@@ -1,7 +1,7 @@
 # 台灣電子發票 Skill - 完整範例集
 
 > 目錄精簡版：只含參考文件與 JSON 資料，不含腳本。文中提到 `scripts/`、`examples/`、`tests/` 的工具在完整版（npm 套件 `taiwan-invoice-skill`）。
-> 金鑰與商店代號由使用者在自己的系統設定後，以參數傳入程式；文中以 `<HASH_KEY>` 這類佔位字表示。服務商公開的測試金鑰也以佔位字表示，請到該服務商官方文件取得。帳密類欄位以 `<帳密欄位>` 表示。
+> 金鑰與商店代號由使用者在自己的系統設定後，以參數傳入程式；文中以 `YOUR_HASH_KEY` 這類假值表示。服務商公開的測試金鑰以 `YOUR_TEST_KEY` 表示，請到該服務商官方文件取得。帳密類欄位以 `<帳密欄位>` 表示。
 
 這份文件包含使用 `taiwan-invoice` skill 的完整實作範例。
 
@@ -654,9 +654,9 @@ ezPay 是藍新金流集團旗下發票服務，與藍新 Newebpay 金流共用�
 from ezpay_invoice_example import EzpayInvoiceService, InvoiceIssueData
 
 svc = EzpayInvoiceService(
-    merchant_id='<MERCHANT_ID>',
-    hash_key='<HASH_KEY_32_CHARS>',
-    hash_iv='<HASH_IV_16C>',
+    merchant_id='YOUR_MERCHANT_ID',
+    hash_key='YOUR_HASH_KEY_32_CHARS',
+    hash_iv='YOUR_HASH_IV_16C',
     is_test=True,
 )
 
@@ -690,7 +690,7 @@ print(resp.invoice_number, resp.random_num)
 ```python
 from paynow_invoice_example import PayNowInvoiceService, item
 
-svc = PayNowInvoiceService(jwt_token='<JWT>', is_test=True)
+svc = PayNowInvoiceService(jwt_token='YOUR_JWT', is_test=True)
 resp = svc.issue(
     order_no='ORD20260924001',
     items=[item('測試商品', 1, 1050)],
@@ -707,7 +707,7 @@ print(resp['status'], resp['message'], resp['result'])
 
 ### 四大要點
 
-1. **與 ECPay 發票同源**：同樣的三層信封、同樣的 AES 資料層、同樣的路徑命名。**測試金鑰甚至完全相同**（`<官方公開測試值，見該服務商官方文件>` / `<官方公開測試值，見該服務商官方文件>`）。已有 ECPay 實作者遷移成本很低。
+1. **與 ECPay 發票同源**：同樣的三層信封、同樣的 AES 資料層、同樣的路徑命名。**測試金鑰甚至完全相同**（`YOUR_TEST_KEY` / `YOUR_TEST_KEY`）。已有 ECPay 實作者遷移成本很低。
 2. **先 URLEncode 再 AES**：順序做反是最常見的錯。強度固定 **128 bit 不是 256**。
 3. **兩層錯誤處理**：`TransCode=1` 只代表「信封收到了」，**不代表發票開立成功**——業務結果在解密後的 `Data` 裡（`RtnCode`）。
 4. **`Timestamp` 有效期 10 分鐘**：自架環境「參數都對但一直失敗」多半是主機沒做 NTP 校時。

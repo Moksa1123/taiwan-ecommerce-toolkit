@@ -1,7 +1,7 @@
 # Lalamove API v3 參考（即時／同城配送）
 
 > Directory edition: reference files and JSON data only, no scripts. Tools under `scripts/`, `examples/` and `tests/` ship in the full edition (npm package `taiwan-logistics-skill`).
-> Keys and merchant IDs are set up by the user and passed into the code as parameters; they appear as placeholders such as `<HASH_KEY>`. Published sandbox keys are also shown as placeholders; get them from the provider's official docs. Credential-type field names are shown as `<帳密欄位>`.
+> Keys and merchant IDs are set up by the user and passed into the code as parameters; they appear as fake values such as `YOUR_HASH_KEY`. Published sandbox keys are shown as `YOUR_TEST_KEY`; get them from the provider's official docs. Credential-type field names are shown as `<帳密欄位>`.
 
 > Source: https://developers.lalamove.com/ (v3)
 > 範例程式: https://github.com/lalamove/api-examples
@@ -40,14 +40,14 @@ HMAC-SHA256。每個請求需三個 header：
 
 | Header | 值 |
 |---|---|
-| `Authorization` | `hmac <KEY>:<TIMESTAMP>:<SIGNATURE>` |
+| `Authorization` | `hmac YOUR_KEY:<TIMESTAMP>:<SIGNATURE>` |
 | `Market` | UN/LOCODE 市場代碼（台灣為 `TW`） |
 | `Request-ID` | Nonce（每次請求唯一） |
 
 ### 簽章字串
 
 ```
-HmacSHA256(<TIMESTAMP>\r\n<METHOD>\r\n<PATH>\r\n\r\n<BODY>, <SECRET>)
+HmacSHA256(<TIMESTAMP>\r\n<METHOD>\r\n<PATH>\r\n\r\n<BODY>, YOUR_SECRET)
 ```
 
 ⚠️ 注意是 `\r\n`（CRLF）不是 `\n`，且 PATH 與 BODY 之間是**兩個** CRLF（空行）。這是最常見的簽章對不上原因。
