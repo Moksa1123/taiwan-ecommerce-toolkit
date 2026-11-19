@@ -9,7 +9,7 @@ user-invocable: true
 This is the reference-only edition built for the Claude plugin directory: official-source
 references, code examples in Markdown and the data set as JSON, with no scripts. The full
 edition adds the search and recommendation tools, runnable examples and known-answer tests:
-`npx taiwan-payment-skill@1.5.17 init`, or <https://github.com/Moksa1123/taiwan-ecommerce-toolkit>.
+`npx taiwan-payment-skill@1.5.18 init`, or <https://github.com/Moksa1123/taiwan-ecommerce-toolkit>.
 
 Keys, HashKey/HashIV and merchant IDs are set and provided by the user. Never ask the user to
 paste a production key into the chat; use placeholders in code.

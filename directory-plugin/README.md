@@ -34,7 +34,7 @@ Each skill ships its `SKILL.md`, provider references, code examples in Markdown 
 | References, examples in Markdown, data | Yes (data as JSON) | Yes (data as CSV) |
 | Search and recommendation tools | No: Claude reads the JSON directly | `scripts/search.py`, `scripts/recommend.py` |
 | Runnable examples, known-answer tests | No | `examples/`, `scripts/test_*.py` |
-| Install | Claude plugin directory | `npx taiwan-invoice-skill@2.9.13 init`, `npx taiwan-payment-skill@1.5.17 init`, `npx taiwan-logistics-skill@1.4.13 init` |
+| Install | Claude plugin directory | `npx taiwan-invoice-skill@2.9.13 init`, `npx taiwan-payment-skill@1.5.18 init`, `npx taiwan-logistics-skill@1.4.13 init` |
 
 ## What it runs and connects to
 
