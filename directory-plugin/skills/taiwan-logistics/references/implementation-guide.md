@@ -1,7 +1,7 @@
 # Taiwan Logistics Implementation Guide
 
 > Directory edition: reference files and JSON data only, no scripts. Tools under `scripts/`, `examples/` and `tests/` ship in the full edition (npm package `taiwan-logistics-skill`).
-> You set and provide your own keys and merchant IDs; test accounts in this file are the providers' published sandbox values, not real credentials. Credential-type field names are shown as `<帳密欄位>`; see the official docs for the exact name.
+> Keys and merchant IDs are set up by the user and passed into the code as parameters; they appear as placeholders such as `<HASH_KEY>`. Published sandbox keys are also shown as placeholders; get them from the provider's official docs. Credential-type field names are shown as `<帳密欄位>`.
 
 > Moved out of SKILL.md: core concepts, NewebPay logistics API walkthrough, encryption, status/error code excerpts, PAYUNi operations, best practices.
 > Code blocks marked `<!-- verify: ... -->` are checked against official test vectors by `scripts/verify-examples.py` (repo root).
@@ -111,8 +111,8 @@
 - `03` - Outlying islands
 
 **Test Credentials:**
-- B2C 及宅配：MerchantID `2000132`、HashKey `5294y06JbISpM5x9`、HashIV `v77hoKGq4kWxNNIS`
-- C2C：MerchantID `2000933`、HashKey `XBERn1YOvpM9nfZc`、HashIV `h1ONHk4P4yqbl5LK`
+- B2C 及宅配：MerchantID `2000132`、HashKey `<官方公開測試值，見該服務商官方文件>`、HashIV `<官方公開測試值，見該服務商官方文件>`
+- C2C：MerchantID `2000933`、HashKey `<官方公開測試值，見該服務商官方文件>`、HashIV `<官方公開測試值，見該服務商官方文件>`
 
 ---
 

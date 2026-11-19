@@ -1,7 +1,7 @@
 # PChomePay Logistics API Reference
 
 > Directory edition: reference files and JSON data only, no scripts. Tools under `scripts/`, `examples/` and `tests/` ship in the full edition (npm package `taiwan-logistics-skill`).
-> You set and provide your own keys and merchant IDs; test accounts in this file are the providers' published sandbox values, not real credentials. Credential-type field names are shown as `<帳密欄位>`; see the official docs for the exact name.
+> Keys and merchant IDs are set up by the user and passed into the code as parameters; they appear as placeholders such as `<HASH_KEY>`. Published sandbox keys are also shown as placeholders; get them from the provider's official docs. Credential-type field names are shown as `<帳密欄位>`.
 
 PChomePay支付連（PChomePay）超商取貨物流 API 參考。依 PChomePay B2C API documentation 1.7.4（2026-09-01）：
 https://docs.google.com/document/d/1dPIPJc4xfyjkJ1i2yxaja4OP0G-iGFRXM08NDMuttZE/ （查證 2026-11-17）。
@@ -199,9 +199,9 @@ import base64
 import requests
 
 def get_pcpay_token(app_id: str, secret: str) -> dict:
-    credentials = base64.b64encode(f"{app_id}:{secret}".encode()).decode()
+    basic_auth = base64.b64encode(f"{app_id}:{secret}".encode()).decode()
     headers = {
-        "Authorization": f"Basic {credentials}",
+        "Authorization": f"Basic {basic_auth}",
         "Content-Type": "application/json",
     }
     response = requests.post(

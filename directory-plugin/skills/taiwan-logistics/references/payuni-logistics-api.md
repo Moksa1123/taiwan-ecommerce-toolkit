@@ -1,7 +1,7 @@
 # PAYUNi 物流 API
 
 > Directory edition: reference files and JSON data only, no scripts. Tools under `scripts/`, `examples/` and `tests/` ship in the full edition (npm package `taiwan-logistics-skill`).
-> You set and provide your own keys and merchant IDs; test accounts in this file are the providers' published sandbox values, not real credentials. Credential-type field names are shown as `<帳密欄位>`; see the official docs for the exact name.
+> Keys and merchant IDs are set up by the user and passed into the code as parameters; they appear as placeholders such as `<HASH_KEY>`. Published sandbox keys are also shown as placeholders; get them from the provider's official docs. Credential-type field names are shown as `<帳密欄位>`.
 
 統一金流 (PAYUNi) 物流：7-ELEVEN 大宗寄倉 (B2C)／店到店 (C2C)、黑貓宅配 (HOME)；退貨便 (C2B) 僅能查詢與接收貨態，要號 API 已移除。
 

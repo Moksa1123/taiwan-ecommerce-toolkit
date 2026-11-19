@@ -1,6 +1,6 @@
 ---
 name: taiwan-invoice
-description: Taiwan E-Invoice API integration specialist for ECPay, SmilePay, Amego, ezPay, PayNow, O'Pay and SunPay, plus MOF E-Invoice platform queries. Use when developing invoice systems, implementing B2C/B2B invoice issuance, void, allowance, invoice printing, carrier/donation code validation, or working with Taiwan E-Invoice APIs. Handles encryption (AES-128-CBC, AES-256-CBC, MD5, JWT), API requests, and service provider differences. Directory edition: reference files and JSON data only; the search tools and runnable examples ship in the npm package taiwan-invoice-skill. 中文觸發：電子發票串接、開立發票、作廢、折讓、載具、手機條碼、捐贈碼、統編、B2B 三聯式、B2C 二聯式、加值中心、財政部大平台、發票列印。
+description: "Taiwan E-Invoice API integration specialist for ECPay, SmilePay, Amego, ezPay, PayNow, O'Pay and SunPay, plus MOF E-Invoice platform queries. Use when developing invoice systems, implementing B2C/B2B invoice issuance, void, allowance, invoice printing, carrier/donation code validation, or working with Taiwan E-Invoice APIs. Handles encryption (AES-128-CBC, AES-256-CBC, MD5, JWT), API requests, and service provider differences. Directory edition: reference files and JSON data only; the search tools and runnable examples ship in the npm package taiwan-invoice-skill. 中文觸發：電子發票串接、開立發票、作廢、折讓、載具、手機條碼、捐贈碼、統編、B2B 三聯式、B2C 二聯式、加值中心、財政部大平台、發票列印。"
 user-invocable: true
 ---
 

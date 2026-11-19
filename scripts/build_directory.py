@@ -35,23 +35,55 @@ MAX_BYTES = 256 * 1024          # 官方目錄：非圖檔超過就轉人工審
 SPLIT_BYTES = 200 * 1024        # JSON 超過就依 provider 拆檔
 ALLOWED = {'.md', '.json', '.png', ''}   # '' = LICENSE
 
-# 目錄版不能叫 Claude 登入主機、讀使用者電腦上的帳密。這些字不得出現在產出裡。
+# 目錄版不能叫 Claude 登入主機、讀使用者電腦上的帳密。這些寫法不得出現在產出裡。
+# 官方目錄 2026-11-19 實測：config.X、$X、寫死的測試金鑰也會被判成「從使用者電腦讀帳密」。
 FORBIDDEN = re.compile(
     r'\bssh\b|\bscp\b|wp-config|\.env\b|id_rsa|id_ed25519|\.pem\b|password|passwd|'
-    r'process\.env|os\.environ|getenv|\$_ENV|SSH_KEY|YOUR_[A-Z_]{3,}',
+    r'process\.env|os\.environ|getenv|\$_ENV|SSH_KEY|YOUR_[A-Z_]{3,}|\bconfig\[|\bcredentials\s*=',
     re.I)
+# 全大寫的環境變數式寫法；用 re.I 會誤殺 $merchantId，所以分開比
+FORBIDDEN_CS = re.compile(r'\bconfig\.[A-Z][A-Z0-9_]+\b|\$\{?[A-Z][A-Z0-9_]{2,}\b')
+
+# 官方公開的測試金鑰：目錄版一律換成佔位字（完整版保留，並有已知答案測試）
+EXTRA_SECRETS = [
+    # 街口官方文件的共用測試 Secret Key
+    'r0odDC1e9LHXDmxuvmOv9bgaWLf2CXB2c4gMheoFucVKNMi1K0Id9zwRHJF1r-kdtAKriKgb11VDlo7Kb8R-FQ',
+    'XBERn1YOvpM9nfZc', 'h1ONHk4P4yqbl5LK',     # 綠界物流 C2C 測試特店
+    'HwiqPsywG1hLQNuN', 'YqITWD4TyKacYXpn',     # 綠界發票平台商測試
+    'bkuAEQufy2bpEng1', 'B0lzARI9ZSdhW9jg',     # 歐付寶平台商測試
+    'sk_test_abc123def456',                     # SHOPLINE 文件範例 key
+]
+# PayNow 傳統版的 Bootstrap Key/IV 是協定常數（實作必需），不是帳號金鑰，保留
+SECRET_PLACEHOLDER = '<官方公開測試值，見該服務商官方文件>'
 
 NOTE = {
     'zh': ('> 目錄精簡版：只含參考文件與 JSON 資料，不含腳本。文中提到 `scripts/`、`examples/`、`tests/` '
            '的工具在完整版（npm 套件 `{pkg}`）。\n'
-           '> 金鑰與商店代號由使用者自行設定、自行提供；文中的測試帳號是服務商官方公開的測試值，不是真實憑證。'
-           '帳密類欄位以 `<帳密欄位>` 表示，實際欄名見官方文件。\n'),
+           '> 金鑰與商店代號由使用者在自己的系統設定後，以參數傳入程式；文中以 `<HASH_KEY>` 這類佔位字表示。'
+           '服務商公開的測試金鑰也以佔位字表示，請到該服務商官方文件取得。帳密類欄位以 `<帳密欄位>` 表示。\n'),
     'en': ('> Directory edition: reference files and JSON data only, no scripts. Tools under `scripts/`, '
            '`examples/` and `tests/` ship in the full edition (npm package `{pkg}`).\n'
-           '> You set and provide your own keys and merchant IDs; test accounts in this file are the '
-           "providers' published sandbox values, not real credentials. Credential-type field names are "
-           'shown as `<帳密欄位>`; see the official docs for the exact name.\n'),
+           '> Keys and merchant IDs are set up by the user and passed into the code as parameters; they '
+           'appear as placeholders such as `<HASH_KEY>`. Published sandbox keys are also shown as '
+           "placeholders; get them from the provider's official docs. Credential-type field names are "
+           'shown as `<帳密欄位>`.\n'),
 }
+
+
+def test_secrets() -> list[str]:
+    """providers.csv 的測試金鑰欄裡看起來像金鑰的值（英數、8 碼以上）。"""
+    out = set(EXTRA_SECRETS)
+    for skill in SKILLS:
+        with open(ROOT / f'taiwan-{skill}' / 'data' / 'providers.csv', encoding='utf-8', newline='') as f:
+            for row in csv.DictReader(f):
+                for col in ('test_hash_key', 'test_hash_iv'):
+                    v = (row.get(col) or '').strip()
+                    if re.fullmatch(r'[A-Za-z0-9_-]{8,}', v):
+                        out.add(v)
+    return sorted(out, key=len, reverse=True)
+
+
+SECRETS: list[str] = []
 
 
 def load_core(skill: str):
@@ -68,15 +100,27 @@ def pkg_version(skill: str) -> str:
 
 
 def credential_free(text: str) -> str:
-    """環境變數讀取改成使用者提供的 config；帳密欄名改佔位字；.env 改設定檔。"""
-    text = re.sub(r'process\.env\.([A-Z][A-Z0-9_]*)!?', r'config.\1', text)
-    text = re.sub(r"os\.environ(?:\.get)?[\[(]['\"]([A-Z0-9_]+)['\"](?:,[^)\]]*)?[\])]", r"config['\1']", text)
-    text = re.sub(r"getenv\(['\"]([A-Z0-9_]+)['\"]\)", r"$config['\1']", text)
-    text = re.sub(r"\$_ENV\[['\"]([A-Z0-9_]+)['\"]\]", r"$config['\1']", text)
+    """不寫「從哪裡讀金鑰」：環境變數、設定物件、shell 變數都改成明顯的佔位字；
+    官方測試金鑰與測試密碼改佔位字；帳密欄名改佔位字；.env 改設定檔。"""
+    if not SECRETS:
+        SECRETS.extend(test_secrets())
+    # 先處理 process.env 的特殊用法，再處理一般情形
+    text = re.sub(r'process\.env\.NODE_ENV\s*===\s*[\'"]production[\'"]', 'isProduction', text)
+    text = re.sub(r'\$\{process\.env\.([A-Z][A-Z0-9_]*)\}', r'<\1>', text)
+    text = re.sub(r'process\.env\.([A-Z][A-Z0-9_]*)!?', r"'<\1>'", text)
+    text = re.sub(r"os\.environ(?:\.get)?[\[(]['\"]([A-Z0-9_]+)['\"](?:,[^)\]]*)?[\])]", r"'<\1>'", text)
+    text = re.sub(r"getenv\(['\"]([A-Z0-9_]+)['\"]\)", r"'<\1>'", text)
+    text = re.sub(r"\$_ENV\[['\"]([A-Z0-9_]+)['\"]\]", r"'<\1>'", text)
+    text = re.sub(r'\$\{?([A-Z][A-Z0-9_]{2,})\}?\b', r'<\1>', text)         # shell：$SHOPLINE_API_KEY
+    text = re.sub(r'\bcredentials(\s*=|\})', r'basic_auth\1', text)
     text = re.sub(r'`?\.env`? ?檔', '設定檔', text)
     text = re.sub(r'\b\.env\b', '設定檔', text)
     text = re.sub(r'(?i)\b\w*pass(?:word|wd)\w*\b', '<帳密欄位>', text)
     text = re.sub(r'(?i)\bYOUR_([A-Z][A-Z0-9_]+)', r'<\1>', text)
+    text = re.sub(r'(密碼\s*)`[^`\n]+`', r'\1`<官方公開測試值>`', text)
+    for s in SECRETS:
+        # 簽章範例裡會出現 URL encode 後轉小寫的版本，所以不分大小寫
+        text = re.sub(re.escape(s), SECRET_PLACEHOLDER, text, flags=re.I)
     return text
 
 
@@ -198,11 +242,15 @@ def fill(template: str, values: dict) -> str:
 
 def frontmatter(skill: str, fm: str) -> str:
     pkg = f'taiwan-{skill}-skill'
-    fm = re.sub(r'^(description: .*?)(\s*中文觸發：|$)',
-                lambda m: m.group(1).rstrip() + f' Directory edition: reference files and JSON data only; '
-                f'the search tools and runnable examples ship in the npm package {pkg}.'
-                + (' ' + m.group(2).strip() if m.group(2).strip() else ''),
-                fm, count=1, flags=re.M)
+    m = re.search(r'^description: (.*)$', fm, re.M)
+    desc = m.group(1).strip()
+    if desc[:1] in '"\'|>':
+        raise SystemExit(f'{skill} SKILL.md 的 description 格式變了，請更新 frontmatter()')
+    head, sep, tail = desc.partition('中文觸發：')
+    desc = (head.rstrip() + f' Directory edition: reference files and JSON data only; the search tools and '
+            f'runnable examples ship in the npm package {pkg}.' + (f' {sep}{tail}' if sep else ''))
+    # 官方目錄提醒：沒加引號的值可能被誤讀（# 被當註解）；用 JSON 字串格式（YAML 相容）加雙引號
+    fm = fm[:m.start()] + 'description: ' + json.dumps(desc, ensure_ascii=False) + fm[m.end():]
     return '---' + fm + '---'
 
 
@@ -270,7 +318,8 @@ def build() -> dict[str, bytes]:
         if rel.endswith('.png'):
             continue
         for i, line in enumerate(data.decode('utf-8').splitlines(), 1):
-            if FORBIDDEN.search(line):
+            low = line.lower()
+            if FORBIDDEN.search(line) or FORBIDDEN_CS.search(line) or any(s.lower() in low for s in SECRETS):
                 problems.append(f'{rel}:{i}: {line.strip()[:100]}')
     if problems:
         raise SystemExit('目錄版不符合規則：\n  ' + '\n  '.join(problems))

@@ -1,7 +1,7 @@
 # PChomePay 支付連 Payment API Reference
 
 > 目錄精簡版：只含參考文件與 JSON 資料，不含腳本。文中提到 `scripts/`、`examples/`、`tests/` 的工具在完整版（npm 套件 `taiwan-payment-skill`）。
-> 金鑰與商店代號由使用者自行設定、自行提供；文中的測試帳號是服務商官方公開的測試值，不是真實憑證。帳密類欄位以 `<帳密欄位>` 表示，實際欄名見官方文件。
+> 金鑰與商店代號由使用者在自己的系統設定後，以參數傳入程式；文中以 `<HASH_KEY>` 這類佔位字表示。服務商公開的測試金鑰也以佔位字表示，請到該服務商官方文件取得。帳密類欄位以 `<帳密欄位>` 表示。
 
 PChomePay 支付連金流 API 完整參考文件（依官方 [PChomePay API document](https://docs.google.com/document/d/1dPIPJc4xfyjkJ1i2yxaja4OP0G-iGFRXM08NDMuttZE/) 1.7.4，2026-09-01；2026-11-17 查核）。「拍錢包」是其中一種付款方式（`PI`）。本文件僅涵蓋金流 (建立訂單、付款通知、退款、餘額、提領、對帳)；超商取貨物流 (`/v1/logistic/*`) 屬於物流範疇，請參閱 taiwan-logistics 對應文件。
 
