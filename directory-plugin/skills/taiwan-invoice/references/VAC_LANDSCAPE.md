@@ -1,0 +1,116 @@
+# 電子發票加值中心生態地圖與選型
+
+> 目錄精簡版：只含參考文件與 JSON 資料，不含腳本。文中提到 `scripts/`、`examples/`、`tests/` 的工具在完整版（npm 套件 `taiwan-invoice-skill`）。
+> 金鑰與商店代號由使用者自行設定、自行提供；文中的測試帳號是服務商官方公開的測試值，不是真實憑證。帳密類欄位以 `<帳密欄位>` 表示，實際欄名見官方文件。
+
+> 經稽徵機關核准的電子發票系統及加值服務業者共 **135 家**（財政部加值服務中心頁，每日更新，2026-11-17 查）。
+> 本文件說明這個生態怎麼分層、我們收錄哪些、以及沒收錄的怎麼辦。
+
+## 0. 三層架構
+
+```
+┌──────────────────────────────────────────┐
+│ 財政部電子發票整合服務平台（大平台）        │  ← 唯一的上游
+│ api.einvoice.nat.gov.tw                  │     MOF_EINVOICE_API_REFERENCE.md
+└──────────────────────────────────────────┘
+              ▲                    ▲
+      批次上傳 │              自建 │ Turnkey
+              │                    │
+┌─────────────┴────────────┐  ┌────┴─────────┐
+│ 加值中心（135 家）         │  │ 大型企業自建   │
+│ ECPay / O'Pay / ezPay /  │  │ 直接對接大平台 │
+│ Amego / SmilePay / …     │  │              │
+└─────────────┬────────────┘  └──────────────┘
+              │ 自家 API
+       ┌──────┴──────┐
+       │  你的系統     │
+       └─────────────┘
+```
+
+**關鍵理解**：加值中心不是「發票的來源」，它是**幫你和財政部之間做批次上傳與格式轉換的中介**。發票號碼（字軌）是財政部配給你的，加值中心只是代管。
+
+這也解釋了幾件事：
+- 為什麼作廢有期限（財政部規定當期內）
+- 為什麼「已開立但未上傳」的發票不能作廢（ezPay `LIB10009`）
+- 為什麼各家的上傳時間都是凌晨批次（ezPay 每日 01:00 上傳、06:00 更新狀態）
+
+## 1. 本 skill 已收錄（7 家）
+
+| 加值中心 | 加密 | 特色 | doc_access | Reference |
+|---|---|---|---|---|
+| **ECPay 綠界** | AES-128-CBC + 三層信封 | 市佔最高、文件最完整、官方有 AI skill | public | [ECPAY_API_REFERENCE.md](ECPAY_API_REFERENCE.md) |
+| **O'Pay 歐付寶** | AES + 三層信封 | **B2B 完整存證流程 + 離線 POS** | public | [OPAY_API_REFERENCE.md](OPAY_API_REFERENCE.md) |
+| **ezPay 簡單付** | AES-256-CBC + Hex + CheckCode | 藍新集團、字軌管理、批次開立 | apply | [EZPAY_API_REFERENCE.md](EZPAY_API_REFERENCE.md) |
+| **Amego 光貿** | MD5 簽章 | **MIG 4.0**、統編查詢、PDF 下載、測試正式共用 URL | public | [AMEGO_API_REFERENCE.md](AMEGO_API_REFERENCE.md) |
+| **SmilePay 速買配** | Verify_key | 雙協定 GET/POST、簡單整合、XML 回應 | public | [SMILEPAY_API_REFERENCE.md](SMILEPAY_API_REFERENCE.md) |
+| **PayNow 立吉富** | JWT Bearer | 金物流發票一站式、**POS 批次取號** | apply | [PAYNOW_API_REFERENCE.md](PAYNOW_API_REFERENCE.md) |
+| **紅陽科技 SunPay** | Token 欄位 AES-128-CBC | 相同 PostData 回原發票（內建冪等）、離線字軌、註銷重開 | public | [SUNPAY_API_REFERENCE.md](SUNPAY_API_REFERENCE.md) |
+
+## 2. 已知但未收錄的主要加值中心
+
+| 加值中心 | 說明 | doc_access | 為何未收錄 |
+|---|---|---|---|
+| **關貿網路 TradeVAN** | 最大加值中心之一，115 年度財政部評比優良加值中心。蝦皮供應商電子發票平台走它。另有 EzSign 數位簽章平台 | apply/contract | 產品頁寫「完整串接文件、專人技術支援」但文件不公開；市佔重要，**列為後續優先** |
+| **精誠 Systex 金融科技** | 大型系統整合商體系（精誠金融科技、精誠資訊兩個統編都在名單） | contract | 無公開文件 |
+| **中華電信** | invoice.cht.com.tw（導向登入頁）、einvoice.hisales.hinet.net | contract | 無公開文件 |
+| **GoMyPay（均鼎科技）** | einvoice.gomypay.asia，加值中心本體是均鼎科技（統編 80013554） | public（下載頁免登入，內文標「機密文件」） | 已在金流端建檔；《電子發票系統串接文件 API v2.1》見 n.gomypay.asia 下載頁，因標機密不收錄內容 |
+| **e首發票（矽聯科技）** | 網址已改 serv.einv.tw（youshop.com.tw 轉址過去），支援多電商平台 API 串接、Email/SMS/LINE 通知 | public（docs.einv.tw/developer，線上申請 API 測試帳號） | 小型，尚未收錄 |
+| 其餘 ~125 家 | 長尾，多為區域性或垂直產業 | contract | — |
+
+**訊航科技**（einvoice.net.tw，統編 80129529）就是速買配 SmilePay 的加值中心，已由 [SMILEPAY_API_REFERENCE.md](SMILEPAY_API_REFERENCE.md) 涵蓋。
+
+完整名單查詢：https://www.einvoice.nat.gov.tw/ptl008w
+
+## 3. 選型決策
+
+### 依需求分流
+
+| 你的情況 | 建議 |
+|---|---|
+| 已在用某家金流（ECPay/藍新/PAYUNi…） | **用同一家的發票**。金流與發票同源可省掉對帳串接 |
+| 純發票需求、要 MIG 4.0 且要統編查詢 | Amego 光貿 |
+| 要 **B2B 存證**（開給營業人、需對方確認） | O'Pay 歐付寶（流程最完整）或 Amego |
+| 有**實體門市 POS**、需離線開立 | O'Pay（離線 API）或 PayNow（POS 批次取號） |
+| 要最完整文件與社群資源 | ECPay 綠界 |
+| 要最簡單（不想處理 AES） | SmilePay（Verify_key）或 Amego（MD5） |
+| 蝦皮供應商 | 大機率被指定走 TradeVAN |
+| 開立量極大（日均萬張以上）、有 IT 團隊 | 評估自建 Turnkey 直連財政部 |
+
+### 加值中心 vs 自建 Turnkey
+
+| 面向 | 加值中心 | 自建 Turnkey |
+|---|---|---|
+| 開發成本 | 低（串一組 API） | 高（要處理 MIG XML、憑證、上傳排程、錯誤重送） |
+| 月費/單價 | 有 | 無（但有系統維運成本） |
+| 字軌管理 | 代管 | 自管 |
+| 上傳時效 | 依該中心批次時間（多為隔日凌晨） | 自行掌控 |
+| 出錯責任 | 中心協助 | 自負 |
+| 適用 | 絕大多數電商 | 大型零售、連鎖、日開立量極大者 |
+
+**判斷點**：加值中心的費用通常按張計價。若你的月開立量乘上單價，已經超過一個工程師維護 Turnkey 的成本，才值得自建。多數電商永遠不會到這個點。
+
+## 4. 跨加值中心共通的坑
+
+這些是本 skill `data/troubleshooting.csv` 已收錄的模式，換哪一家都會遇到：
+
+1. **開立 ≠ 上傳**。多數中心是隔日批次上傳財政部。未上傳的發票不能作廢（只能等），跨期就只能開折讓。
+2. **暫存狀態**。ezPay 的 `Status=0`、O'Pay 的 `DelayIssue` 都是「先建資料不開立」。若沒呼叫觸發 API，發票**永遠不會存在**。
+3. **手機條碼／捐贈碼驗證**。各家都提供 `CheckBarcode` / `CheckLoveCode`；財政部端的對應 API 是《營業人應用 API 規格》的 `bcv`／`preserveCodeCheck`（見 MOF reference 6A 節）。**別自己寫格式檢查就當驗證過**——手機條碼格式對不代表存在。
+4. **字軌用罄**。要設餘量通知（O'Pay、ECPay 都有 `RemainNotifySetting`，綠界 2026-06-23 起，其他家有對應機制），不然月底開不出來。
+5. **MIG 版本**。財政部 MIG 3.2.1 自 115 年 1 月 1 日停止使用，全面走 **MIG 4.0**（光貿 API 文件）。舊系統若還在 3.2.1 會被退件。
+
+## 5. 相關文件
+
+- 財政部大平台 API（手機條碼、載具、捐贈碼、中獎號碼）：[MOF_EINVOICE_API_REFERENCE.md](MOF_EINVOICE_API_REFERENCE.md)
+- 加值中心名單查詢：https://www.einvoice.nat.gov.tw/ptl008w
+- 已完成代境外電商上傳雲端發票之加值中心名單：https://www.einvoice.nat.gov.tw/static/ptl/ein_upload/attachments/1570498596353_0.pdf
+
+## 6. 來源
+
+- 財政部加值中心查詢 — https://www.einvoice.nat.gov.tw/ptl008w
+- 關貿網路電子發票 — https://services.tradevan.com.tw/e-commerce/e-invoice/ ／ 平台登入 E-HUB https://lgc.tradevan.com.tw/tln-bin/APTLN/welcome.do（舊網址 neinv.tradevan.com.tw 已失效，2026-11-17 回 404）
+- 中華電信電子發票 — https://invoice.cht.com.tw/
+- 訊航科技（速買配加值中心） — https://einvoice.net.tw/
+- e首發票 — https://serv.einv.tw/pricing.html ／ API 文件 https://docs.einv.tw/developer/
+- GoMyPay 發票加值中心（均鼎科技） — https://einvoice.gomypay.asia/ ／ 文件下載 https://n.gomypay.asia/MDocuments_downloads.aspx
+- 紅陽電子發票 — https://inv.sunpay.com.tw/

@@ -1,0 +1,49 @@
+{{FRONTMATTER}}
+
+# {{TITLE}}（directory edition）
+
+This is the reference-only edition built for the Claude plugin directory: official-source
+references, code examples in Markdown and the data set as JSON, with no scripts. The full
+edition adds the search and recommendation tools, runnable examples and known-answer tests:
+`npx {{PKG}}@{{VERSION}} init`, or <https://github.com/Moksa1123/taiwan-ecommerce-toolkit>.
+
+Keys, HashKey/HashIV and merchant IDs are set and provided by the user. Never ask the user to
+paste a production key into the chat; use placeholders in code.
+
+{{SOURCES}}
+
+## When to use
+
+{{WHEN}}
+
+## How to look things up
+
+{{RULE}}
+
+There is no search script in this edition. Read the JSON files directly: every file has
+`rows`, and every row has `doc_url` (official source) and `trust`. Filter by `provider` and the
+key column (code, field name, operation), and cite `doc_url` in the answer.
+
+| File | Rows | Search domain (full edition) | First columns |
+|---|---|---|---|
+{{DATA_TABLE}}
+
+Files with a number suffix (`error-codes-1.json`, …) are one data set split by provider to stay
+under the directory's file-size limit; look through all of them.
+
+After the data, read the provider's reference for flows, encryption and field details:
+
+| Topic | Reference |
+|---|---|
+{{REFS}}
+
+`EXAMPLES.md` holds the code examples (TypeScript / Python) in Markdown.
+
+## Writing code
+
+{{CODE_RULES}}
+
+## What it runs and connects to
+
+Nothing. This edition has no scripts, hooks or MCP servers and makes no network requests.
+API calls happen only in the user's own code, with keys the user provides.

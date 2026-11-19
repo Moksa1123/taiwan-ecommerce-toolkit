@@ -1,0 +1,239 @@
+{
+ "source_files": [
+  "data/pending.csv"
+ ],
+ "domain": "",
+ "rows": [
+  {
+   "date": "2026-11-15",
+   "question": "providers.csv 的 okmart（OK 超商）、shopee_store（蝦皮店到店）沒有官方文件網址",
+   "why_not_found": "兩者沒有公開的串接文件；只能透過聚合商使用；標推論",
+   "asked_by": "taiwan-toolkit（SOP 第 5 項補出處）",
+   "status": "open"
+  },
+  {
+   "date": "2026-11-15",
+   "question": "status-codes.csv 等多來源檔的 doc_url 只到服務商文件入口，不是逐碼所在的頁",
+   "why_not_found": "官方來源登記到「檔」而不是「列」；要逐碼對頁得改 _studies/harness/import_logistics_status.py",
+   "asked_by": "taiwan-toolkit（SOP 第 5 項補出處）",
+   "status": "open"
+  },
+  {
+   "date": "2026-11-15",
+   "question": "npm 套件的平台樣板（<cli>/assets/templates/base/skill-content.md）仍是舊內容，payment、logistics 樣板還寫「七家」「3 on-demand」等舊數字",
+   "why_not_found": "這些是 npm 使用者 init 後拿到的產出，改了等於改對外介面，要使用者決定；skill 本體 SKILL.md 已改成指令產生的數字",
+   "asked_by": "taiwan-toolkit（6-1 補齊時）",
+   "status": "已解決 2026-11-16"
+  },
+  {
+   "date": "2026-11-15",
+   "question": "下次 npm run build 時 sync-assets 會把 evals/（含 runs/ 答案檔）一起打包進 npm",
+   "why_not_found": "sync-assets.mjs 沒有排除 evals/；要不要排除是發版決定，這次沒有動 CLI assets",
+   "asked_by": "taiwan-toolkit（同步時發現）",
+   "status": "已解決 2026-11-16"
+  },
+  {
+   "date": "2026-11-15",
+   "question": "安裝版獨有的 evals/basic（只有 TODO 樣板 prompt.md）要不要刪",
+   "why_not_found": "規則是不刪安裝版獨有的檔；原始碼的 evals/ 已有真題，這份樣板沒有用處",
+   "asked_by": "taiwan-toolkit（同步安裝版時）",
+   "status": "等使用者"
+  },
+  {
+   "date": "2026-11-17",
+   "question": "Lalamove 台灣 GET /v3/cities 實際回傳的 serviceType 與 specialRequests 清單",
+   "why_not_found": "官方文件只示範泰國回應並要求以 API 實測 需要台灣 sandbox 金鑰",
+   "asked_by": "taiwan-toolkit（官方文件稽核 2026-11-17）",
+   "status": "open"
+  },
+  {
+   "date": "2026-11-17",
+   "question": "Lalamove 台灣是否支援 pricingTierCode=2 與 isRouteOptimized",
+   "why_not_found": "開發者文件未列適用市場 而台灣 API 方案頁 FAQ 寫路線最佳化尚未提供 兩者矛盾",
+   "asked_by": "taiwan-toolkit（官方文件稽核 2026-11-17）",
+   "status": "open"
+  },
+  {
+   "date": "2026-11-17",
+   "question": "Lalamove webhook 各事件的 payload 結構與是否有簽章",
+   "why_not_found": "開發者文件只列事件名稱 細節在外連簡報（非公開頁面）",
+   "asked_by": "taiwan-toolkit（官方文件稽核 2026-11-17）",
+   "status": "open"
+  },
+  {
+   "date": "2026-11-17",
+   "question": "Uber Direct 是否在台灣提供商家 API 服務",
+   "why_not_found": "Uber 台灣商家網站有 Uber Direct 中文頁但內容為全球通用文案 未列出 24 個國家 目前排除依據只有 2026-10-03 客服信件",
+   "asked_by": "taiwan-toolkit（官方文件稽核 2026-11-17）",
+   "status": "open"
+  },
+  {
+   "date": "2026-11-17",
+   "question": "pandago 台灣是否提供 CARD_ON_DELIVERY 與 handover_confirmation PIN",
+   "why_not_found": "ODR spec 只說部分國家提供 未列國家清單 需洽 ODR 窗口",
+   "asked_by": "taiwan-toolkit（官方文件稽核 2026-11-17）",
+   "status": "open"
+  },
+  {
+   "date": "2026-11-17",
+   "question": "pandago PUT /orders/{order_id} 停用後是否有替代的改單方式",
+   "why_not_found": "ODR spec 只標 temporarily disabled 回 405 未說明替代方案或恢復時間",
+   "asked_by": "taiwan-toolkit（官方文件稽核 2026-11-17）",
+   "status": "open"
+  },
+  {
+   "date": "2026-11-17",
+   "question": "綠界萊爾富 B2C／C2C 測試環境的測試門市代號是什麼（skill 原寫 2001）",
+   "why_not_found": "/8809 只列 7-ELEVEN 131386、冷凍店取 896539、全家 006598、OK 1328；萊爾富沒有列；需洽綠界或在測試環境電子地圖確認",
+   "asked_by": "taiwan-toolkit（官方文件稽核 2026-11-17）",
+   "status": "open"
+  },
+  {
+   "date": "2026-11-17",
+   "question": "綠界 OK 店到店終止後 /Express/Create 帶 OKMARTC2C 會回什麼錯誤；/8809 何時移除殘留的 OKMARTC2C 字樣",
+   "why_not_found": "更新歷程只寫終止與移除文件；/8809 與 /7444 仍列 OK；需實測或洽綠界",
+   "asked_by": "taiwan-toolkit（官方文件稽核 2026-11-17）",
+   "status": "open"
+  },
+  {
+   "date": "2026-11-17",
+   "question": "萊爾富是否提供商家對外 API 或串接文件",
+   "why_not_found": "官網 hilife.com.tw 對自動化存取回 403（Akamai WAF）；需人工用瀏覽器確認",
+   "asked_by": "taiwan-toolkit（官方文件稽核 2026-11-17）",
+   "status": "open"
+  },
+  {
+   "date": "2026-11-17",
+   "question": "綠界 OK 店到店終止後還有哪些聚合商提供 OK 超商取貨（藍新 ShipType=4、PayNow Logistic_service=10、ezShip TOK）",
+   "why_not_found": "OK 終止公告只見於綠界；其他聚合商的文件不在本次範圍，需各家稽核確認",
+   "asked_by": "taiwan-toolkit（官方文件稽核 2026-11-17）",
+   "status": "open"
+  },
+  {
+   "date": "2026-11-17",
+   "question": "速買配物流 API（SPPayment.asp／C2CPayment.asp／B2CPayment.asp／ezcatGetTrackNum.asp）負數 Status 完整代碼表與各代碼意義為何？",
+   "why_not_found": "規格書在商家後台需登入；公開端點只能實測個別代碼（-1001/-2001/-2002/-2003/-2006/-3003/-8002）",
+   "asked_by": "taiwan-toolkit（官方文件稽核 2026-11-17）",
+   "status": "open"
+  },
+  {
+   "date": "2026-11-17",
+   "question": "速買配 LogisticsEmap.asp 選店回呼是否原樣帶回 tempvar？",
+   "why_not_found": "規格書需登入；官方外掛只讀 storeid/storename/storeaddress/typesserver",
+   "asked_by": "taiwan-toolkit（官方文件稽核 2026-11-17）",
+   "status": "open"
+  },
+  {
+   "date": "2026-11-17",
+   "question": "ezShip 貨況查詢回傳的識別欄位實際名稱是 webPara 還是 web_para？",
+   "why_not_found": "官方文件站 170220/170222 寫 webPara、ezship_status_api.pdf 寫 web_para；無測試帳號可實測",
+   "asked_by": "taiwan-toolkit（官方文件稽核 2026-11-17）",
+   "status": "open"
+  },
+  {
+   "date": "2026-11-17",
+   "question": "新竹物流 WSDL 中規格書未說明的方法（TransDataCancel_Json／TransData2_Json／TransDispatchOrder_Json／GetImage_Json／FrightQuery 等）的參數與用途為何？",
+   "why_not_found": "API 服務說明 ver 2.0 未收錄；WSDL 只有參數名稱",
+   "asked_by": "taiwan-toolkit（官方文件稽核 2026-11-17）",
+   "status": "open"
+  },
+  {
+   "date": "2026-11-17",
+   "question": "新竹物流 TransData 回應多出的 NewOutArea／CODE1–CODE7／AREAS／MDCODE1–3 欄位意義為何？",
+   "why_not_found": "規格書未列；只能從實際回應看到欄位名",
+   "asked_by": "taiwan-toolkit（官方文件稽核 2026-11-17）",
+   "status": "open"
+  },
+  {
+   "date": "2026-11-17",
+   "question": "新竹物流 API 服務說明是否有比 2022/12/30 ver 2.0 更新的版本？",
+   "why_not_found": "規格書需向站所申請，官網無公開下載",
+   "asked_by": "taiwan-toolkit（官方文件稽核 2026-11-17）",
+   "status": "open"
+  },
+  {
+   "date": "2026-11-17",
+   "question": "紅陽是否有（或規劃）獨立的物流 API（建單、取寄件代碼、列印、大宗寄倉）？",
+   "why_not_found": "開發者專區只有金流與電子發票手冊；物流只在金流手冊以 lgs_flag 附掛",
+   "asked_by": "taiwan-toolkit（官方文件稽核 2026-11-17）",
+   "status": "open"
+  },
+  {
+   "date": "2026-11-17",
+   "question": "藍新物流 NotifyURL（NPA-B58）商店應回應什麼內容？未回 200 時是否重送、重送幾次？",
+   "why_not_found": "NDNS 1.0.0 p.29 未規定；官方範例 notify_url.php 不輸出任何內容",
+   "asked_by": "taiwan-toolkit（官方文件稽核 2026-11-17）",
+   "status": "open"
+  },
+  {
+   "date": "2026-11-17",
+   "question": "藍新物流貨態通知與門市地圖回傳的欄位名是 EncryptData_／HashData_（規格書表格）還是 EncryptData／HashData（官方範例 notify_url.php、return_url.php）？",
+   "why_not_found": "規格書與官方範例不一致；無正式環境回傳樣本",
+   "asked_by": "taiwan-toolkit（官方文件稽核 2026-11-17）",
+   "status": "open"
+  },
+  {
+   "date": "2026-11-17",
+   "question": "藍新物流解密後貨態欄位實際鍵名是 Retld（小寫 L）還是 RetId？",
+   "why_not_found": "NDNS 參數表寫 Retld、附錄標題寫 RetId；PDF 無法判斷；官方範例只 print_r 不讀欄位",
+   "asked_by": "taiwan-toolkit（官方文件稽核 2026-11-17）",
+   "status": "open"
+  },
+  {
+   "date": "2026-11-17",
+   "question": "PAYUNi 超商出貨單列印成功 Notify（ApiType=Print）的 NotifyURL 從哪裡設定？",
+   "why_not_found": "page 123 寫「建立超商物流單請求時有填寫 NotifyURL」但該 API 已於 2026-09-09 移除；未說明改用後台物流設定的 Notify URL",
+   "asked_by": "taiwan-toolkit（官方文件稽核 2026-11-17）",
+   "status": "open"
+  },
+  {
+   "date": "2026-11-17",
+   "question": "PAYUNi 黑貓貨態 Notify 的 ShipStatus 代碼表是否就是 page 120？",
+   "why_not_found": "page 274 連結到 #/23/218（另一個文件專案），非 item 7 的 page 120",
+   "asked_by": "taiwan-toolkit（官方文件稽核 2026-11-17）",
+   "status": "open"
+  },
+  {
+   "date": "2026-11-17",
+   "question": "PChomePay /v1/logistic/accounting/{date}「此日期僅能查詢 30 天前的對帳資料」是指只能查 30 天以前（不含近 30 天）還是只能查近 30 天內？",
+   "why_not_found": "文件原文語意不明；/v1/checking 也用「僅能查詢 120 天前（不含當日）」同樣寫法",
+   "asked_by": "taiwan-toolkit（官方文件稽核 2026-11-17）",
+   "status": "open"
+  },
+  {
+   "date": "2026-11-17",
+   "question": "PChomePay 同一訂單重複呼叫 /v1/logistic/batch 是否回同一 print_no、是否重複收取物流費？",
+   "why_not_found": "API 文件 1.7.4 未說明",
+   "asked_by": "taiwan-toolkit（官方文件稽核 2026-11-17）",
+   "status": "open"
+  },
+  {
+   "date": "2026-11-17",
+   "question": "PChomePay 超商取貨訂單到店後保留幾天才退件？逾 T+X 交寄期限未交寄的訂單如何處理？",
+   "why_not_found": "API 文件 1.7.4 只列交寄期限（7-11 T+10、全家 T+6、萊爾富 T+7），未寫保留期與逾期處理",
+   "asked_by": "taiwan-toolkit（官方文件稽核 2026-11-17）",
+   "status": "open"
+  },
+  {
+   "date": "2026-11-17",
+   "question": "PayNow 7-11 冷凍 C2C 的電子地圖 Logistic_serviceID 與建單 Logistic_service 實際該帶 21 還是 22？",
+   "why_not_found": "711FreezingC2C V2.0 地圖表寫 22、回傳 service=21、建單表寫固定 21 但範例帶 22；文件自相矛盾",
+   "asked_by": "taiwan-toolkit（官方文件稽核 2026-11-17）",
+   "status": "open"
+  },
+  {
+   "date": "2026-11-17",
+   "question": "PayNow /api/Orderapi/ReturnPaymentno 應用 PUT 還是 POST？",
+   "why_not_found": "711Bulk V2.4 寫 PUT、FamilyBulk V2.4 寫 POST",
+   "asked_by": "taiwan-toolkit（官方文件稽核 2026-11-17）",
+   "status": "open"
+  },
+  {
+   "date": "2026-11-17",
+   "question": "PayNow 物流測試帳號（testlogistic）如何申請？",
+   "why_not_found": "物流 API 文件未寫；reference 的 service@paynow.com.tw 無物流文件出處",
+   "asked_by": "taiwan-toolkit（官方文件稽核 2026-11-17）",
+   "status": "open"
+  }
+ ]
+}

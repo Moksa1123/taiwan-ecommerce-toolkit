@@ -1,0 +1,32 @@
+{
+  "name": "taiwan-ecommerce",
+  "displayName": "Taiwan E-commerce Toolkit (unofficial)",
+  "version": "1.1.0",
+  "description": "Taiwan e-commerce API integration skills: e-invoice (ECPay, SmilePay, Amego, ezPay, PayNow, O'Pay, SunPay, MOF platform), payment gateways (ECPay, NewebPay, PAYUNi, LINE Pay, TapPay, JKOPAY and more), and logistics (CVS pickup, home delivery, cold-chain, on-demand delivery). Directory edition: reference files and JSON data only, no scripts. Unofficial: not made by or affiliated with any provider named here.",
+  "author": {
+    "name": "Moksa",
+    "url": "https://moksaweb.com"
+  },
+  "homepage": "https://github.com/Moksa1123/taiwan-ecommerce-toolkit/tree/main/directory-plugin#readme",
+  "repository": "https://github.com/Moksa1123/taiwan-ecommerce-toolkit",
+  "documentationUrl": "https://github.com/Moksa1123/taiwan-ecommerce-toolkit/tree/main/directory-plugin#readme",
+  "supportUrl": "https://github.com/Moksa1123/taiwan-ecommerce-toolkit/issues",
+  "privacyPolicyUrl": "https://github.com/Moksa1123/taiwan-ecommerce-toolkit/tree/main/directory-plugin#what-it-runs-and-connects-to",
+  "license": "MIT",
+  "icon": "./.claude-plugin/icon.png",
+  "keywords": [
+    "taiwan",
+    "e-invoice",
+    "payment",
+    "logistics",
+    "ecpay",
+    "newebpay",
+    "linepay",
+    "ecommerce"
+  ],
+  "skills": [
+    "./skills/taiwan-invoice",
+    "./skills/taiwan-payment",
+    "./skills/taiwan-logistics"
+  ]
+}

@@ -1,0 +1,162 @@
+{
+ "source_files": [
+  "data/pending.csv"
+ ],
+ "domain": "",
+ "rows": [
+  {
+   "date": "2026-11-15",
+   "question": "tax-rules.csv 8 列（B2C／B2B 應稅、零稅率、免稅的金額公式）沒有登記官方來源",
+   "why_not_found": "公式由 test-invoice-amounts.py 驗算過但沒對到財政部或廠商文件的條文；標推論",
+   "asked_by": "taiwan-toolkit（SOP 第 5 項補出處）",
+   "status": "open"
+  },
+  {
+   "date": "2026-11-15",
+   "question": "troubleshooting.csv 6 列通用規則（載具與捐贈衝突、B2B 不可用載具或捐贈、已作廢、折讓超額、列印錯誤服務商）沒有服務商與出處",
+   "why_not_found": "這些是跨廠商的共通規則，還沒對到財政部電子發票規格的條文；標推論",
+   "asked_by": "taiwan-toolkit（SOP 第 5 項補出處）",
+   "status": "open"
+  },
+  {
+   "date": "2026-11-15",
+   "question": "npm 套件的平台樣板（<cli>/assets/templates/base/skill-content.md）仍是舊內容，樣板還寫「七家」「3 on-demand」等舊數字",
+   "why_not_found": "這些是 npm 使用者 init 後拿到的產出，改了等於改對外介面，要使用者決定；skill 本體 SKILL.md 已改成指令產生的數字",
+   "asked_by": "taiwan-toolkit（6-1 補齊時）",
+   "status": "已解決 2026-11-16"
+  },
+  {
+   "date": "2026-11-15",
+   "question": "下次 npm run build 時 sync-assets 會把 evals/（含 runs/ 答案檔）一起打包進 npm",
+   "why_not_found": "sync-assets.mjs 沒有排除 evals/；要不要排除是發版決定，這次沒有動 CLI assets",
+   "asked_by": "taiwan-toolkit（同步時發現）",
+   "status": "已解決 2026-11-16"
+  },
+  {
+   "date": "2026-11-15",
+   "question": "安裝版獨有的 evals/basic（只有 TODO 樣板 prompt.md）要不要刪",
+   "why_not_found": "規則是不刪安裝版獨有的檔；原始碼的 evals/ 已有真題，這份樣板沒有用處",
+   "asked_by": "taiwan-toolkit（同步安裝版時）",
+   "status": "等使用者"
+  },
+  {
+   "date": "2026-11-17",
+   "question": "ezPay 字軌資料管理（manageNumber）PostData_ 是否需要 Term（手冊 p.17–18 參數表換頁處只列 ManagementNo、Year、Flag）",
+   "why_not_found": "EZP_Track 1.0.0 參數表跨頁且無範例明文",
+   "asked_by": "taiwan-toolkit（官方文件稽核 2026-11-17）",
+   "status": "open"
+  },
+  {
+   "date": "2026-11-17",
+   "question": "ezPay 開立折讓、作廢、作廢折讓回應的 CheckCode 用哪些欄位（附件二只寫開立的 5 個欄位：這些回應沒有 RandomNum 或 InvoiceTransNo）",
+   "why_not_found": "EZP_INVI 1.2.2 附件二只示範開立發票",
+   "asked_by": "taiwan-toolkit（官方文件稽核 2026-11-17）",
+   "status": "open"
+  },
+  {
+   "date": "2026-11-17",
+   "question": "速買配電子發票 API 文件（pay_help_paydc_einvoice_api.asp）現行版本與 reference 是否一致",
+   "why_not_found": "未登入導向 INDEX_LOGIN.ASP；需商家帳號登入取得",
+   "asked_by": "taiwan-toolkit（官方文件稽核 2026-11-17）",
+   "status": "open"
+  },
+  {
+   "date": "2026-11-17",
+   "question": "速買配 SPEinvoice_application.asp 查驗 API 的正式規格（參數、測試路徑、Status 代碼表；外掛同時設 types=LoveCode 與 LoveCodeList）",
+   "why_not_found": "只在官方外掛程式碼出現；公開版規格書需登入",
+   "asked_by": "taiwan-toolkit（官方文件稽核 2026-11-17）",
+   "status": "open"
+  },
+  {
+   "date": "2026-11-17",
+   "question": "歐付寶完整錯誤代碼表（B2C／B2B／離線）",
+   "why_not_found": "三份規格書附錄 1 都只指向廠商後台「系統開發管理 → 錯誤代碼查詢」需商家帳號",
+   "asked_by": "taiwan-toolkit（官方文件稽核 2026-11-17）",
+   "status": "open"
+  },
+  {
+   "date": "2026-11-17",
+   "question": "PayNow SOAP 發票 API（PayNow_EInvoice V1.5）是否有新版或已停用",
+   "why_not_found": "文件需向 PayNow 申請、無公開下載網址",
+   "asked_by": "taiwan-toolkit（官方文件稽核 2026-11-17）",
+   "status": "open"
+  },
+  {
+   "date": "2026-11-17",
+   "question": "PayNow 發票 REST API 的 status／type 代碼意義與錯誤代碼表",
+   "why_not_found": "官方 REST 文件只列 status int32、type、message 欄位，沒有代碼表",
+   "asked_by": "taiwan-toolkit（官方文件稽核 2026-11-17）",
+   "status": "open"
+  },
+  {
+   "date": "2026-11-17",
+   "question": "紅陽 B2B 開立（CreateInvoiceb2b）與 B2B 註銷重開是否接受 isprint 參數（參數表未列但回應表寫 isprint=1 才回 barcode 與 QRCode）",
+   "why_not_found": "手冊 V2.3 p.15–21 與 p.59–65 參數表與回應表不一致",
+   "asked_by": "taiwan-toolkit（官方文件稽核 2026-11-17）",
+   "status": "open"
+  },
+  {
+   "date": "2026-11-17",
+   "question": "綠界空白發票 3 支 API（QueryBlankInvoiceList／BlankInvAutoUploadSetting／DownLoadBlankInvList）正式網址是否有 /B2CInvoice/ 前綴",
+   "why_not_found": "官方頁 /64106 /64122 /64133 測試網址有前綴、正式網址沒有；開發者網站與 ecpay-api-skill 無其他出處",
+   "asked_by": "taiwan-toolkit（官方文件稽核 2026-11-17）",
+   "status": "open"
+  },
+  {
+   "date": "2026-11-17",
+   "question": "綠界 B2B 發票 RqHeader 的 RqID 與 Revision 1.0.0 是否必填",
+   "why_not_found": "開發者網站 B2B 參數頁只列 Timestamp；只有 SDK_PHP 範例與 ecpay-api-skill guides/05 帶這兩個欄位",
+   "asked_by": "taiwan-toolkit（官方文件稽核 2026-11-17）",
+   "status": "open"
+  },
+  {
+   "date": "2026-11-17",
+   "question": "光貿 reference「載具與捐贈互斥規則」（有統編不可用載具或捐贈等 4 條）的出處",
+   "why_not_found": "光貿 API bundle 與補充說明頁 mid=70/73/74 都沒有；綠界 /7896 允許有統編時存載具",
+   "asked_by": "taiwan-toolkit（官方文件稽核 2026-11-17）",
+   "status": "open"
+  },
+  {
+   "date": "2026-11-17",
+   "question": "光貿 MIG 3.2.1 舊路徑（/json/c0401 等）在 115/1/1 之後是否仍可呼叫",
+   "why_not_found": "官方 bundle 仍寫「舊版 API 目前尚可繼續使用」但同段寫 MIG 3.2.1 於 115/1/1 停用",
+   "asked_by": "taiwan-toolkit（官方文件稽核 2026-11-17）",
+   "status": "open"
+  },
+  {
+   "date": "2026-11-17",
+   "question": "財政部載具發票表頭查詢 startDate／endDate 是否必須同月份",
+   "why_not_found": "reference 寫「起訖須同月份」但 v1.9 與 V2.1 規格都沒有這句；只寫單月 9 個月、雙月 8 個月的可查區間",
+   "asked_by": "taiwan-toolkit（官方文件稽核 2026-11-17）",
+   "status": "open"
+  },
+  {
+   "date": "2026-11-17",
+   "question": "財政部「查詢手機條碼」getBarcode 是否需要 serial／signature",
+   "why_not_found": "V2.1 p.41–42 需求參數表沒有 signature，但同類需帶驗證碼的 API（qryCarrierAgg）要簽章；規格未明示",
+   "asked_by": "taiwan-toolkit（官方文件稽核 2026-11-17）",
+   "status": "open"
+  },
+  {
+   "date": "2026-11-17",
+   "question": "財政部電子發票應用程式介面(API)流量管制作業注意事項的具體門檻",
+   "why_not_found": "V2.1 p.14 只指向平台〔相關法規注意事項〕頁，本次未取得該文件",
+   "asked_by": "taiwan-toolkit（官方文件稽核 2026-11-17）",
+   "status": "open"
+  },
+  {
+   "date": "2026-11-17",
+   "question": "關貿 TradeVAN 電子發票 API 規格",
+   "why_not_found": "產品頁只寫提供完整串接文件與專人支援，未公開；需洽關貿",
+   "asked_by": "taiwan-toolkit（官方文件稽核 2026-11-17）",
+   "status": "open"
+  },
+  {
+   "date": "2026-11-17",
+   "question": "e首發票（矽聯科技）是否收錄為第 8 家加值中心 reference",
+   "why_not_found": "docs.einv.tw/developer 為公開 API 文件，本次只確認可取得，未逐項比對",
+   "asked_by": "taiwan-toolkit（官方文件稽核 2026-11-17）",
+   "status": "open"
+  }
+ ]
+}

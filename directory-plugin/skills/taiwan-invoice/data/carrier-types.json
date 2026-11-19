@@ -1,0 +1,56 @@
+{
+ "source_files": [
+  "data/carrier-types.csv"
+ ],
+ "domain": "",
+ "rows": [
+  {
+   "carrier_type": "none",
+   "carrier_type_zh": "無載具",
+   "code": "/",
+   "format": "/",
+   "example": "/",
+   "validation_regex": "^/$",
+   "notes": "列印紙本發票",
+   "doc_url": "https://www.einvoice.nat.gov.tw/download/ptl003w/AC20000002",
+   "retrieved_on": "2026-10-24",
+   "trust": "官方文件"
+  },
+  {
+   "carrier_type": "mobile",
+   "carrier_type_zh": "手機條碼",
+   "code": "3",
+   "format": "/+7碼英數",
+   "example": "/ABC1234",
+   "validation_regex": "^\\/[A-Z0-9+-.]{7}$",
+   "notes": "最常用載具",
+   "doc_url": "https://www.einvoice.nat.gov.tw/download/ptl003w/AC20000002",
+   "retrieved_on": "2026-10-24",
+   "trust": "官方文件"
+  },
+  {
+   "carrier_type": "citizen",
+   "carrier_type_zh": "自然人憑證",
+   "code": "2",
+   "format": "2碼英文+14碼數字",
+   "example": "AB12345678901234",
+   "validation_regex": "^[A-Z]{2}\\d{14}$",
+   "notes": "需讀卡機",
+   "doc_url": "https://www.einvoice.nat.gov.tw/download/ptl003w/AC20000002",
+   "retrieved_on": "2026-10-24",
+   "trust": "官方文件"
+  },
+  {
+   "carrier_type": "donate",
+   "carrier_type_zh": "捐贈碼",
+   "code": "1",
+   "format": "3-7碼數字",
+   "example": "12345",
+   "validation_regex": "^\\d{3,7}$",
+   "notes": "愛心捐贈",
+   "doc_url": "https://www.einvoice.nat.gov.tw/download/ptl003w/AC20000002",
+   "retrieved_on": "2026-10-24",
+   "trust": "官方文件"
+  }
+ ]
+}

@@ -1,0 +1,198 @@
+# 即時／同城配送（On-demand Delivery）在台灣
+
+> Directory edition: reference files and JSON data only, no scripts. Tools under `scripts/`, `examples/` and `tests/` ship in the full edition (npm package `taiwan-logistics-skill`).
+> You set and provide your own keys and merchant IDs; test accounts in this file are the providers' published sandbox values, not real credentials. Credential-type field names are shown as `<帳密欄位>`; see the official docs for the exact name.
+
+> 涵蓋: Lalamove、pandago（foodpanda）
+> Uber Direct 台灣未提供（Uber Direct 台灣客服 2026-10-03 確認），不收錄。
+> Lalamove 詳細規格見 [lalamove-logistics-api.md](lalamove-logistics-api.md)
+
+## 0. 這個分類跟其他物流不同在哪
+
+本 skill 收錄的其他物流（超取、宅配）都是**批次型**：建單 → 出貨 → 數日後送達，以「單」為單位。即時配送是**派遣型**：報價 → 立即派車 → 數十分鐘內送達，以「趟」為單位。
+
+差異直接影響串接設計：
+
+| 面向 | 批次物流（超取／宅配）| 即時配送 |
+|---|---|---|
+| 報價 | 費率表固定，可預先算 | **必須先呼叫 API 取得即時報價**，且報價有效期短 |
+| 建單時機 | 出貨當下 | 消費者下單當下或稍後派遣 |
+| 取消 | 出貨前可取消 | **司機接單後取消多半要付費**（見 §3） |
+| 追蹤 | 貨態代碼（數小時～數日更新）| **司機即時座標** |
+| 失敗處理 | 退回寄件人 | 需重新派遣或人工介入 |
+| 服務範圍 | 全台 | **限同城／特定半徑** |
+
+> ⚠️ 把即時配送套用批次物流的資料模型（先建單再出貨）會不合用——報價會過期、司機座標無處可放。
+
+## 1. 兩家對照
+
+| | Lalamove | pandago |
+|---|---|---|
+| 母公司 | Lalamove | Delivery Hero（foodpanda）|
+| 台灣可用 | ✅ 官方文件列台灣 | ✅ **官方 API 文件列 `tw`** |
+| 文件公開 | ✅ 免登入 | ✅ 免登入（Delivery Hero ODR）|
+| 認證 | HMAC-SHA256 自簽 | **OAuth 2.0 + RSA 簽的 JWT assertion** |
+| 取得憑證 | Partner Portal（正式金鑰須先儲值錢包） | **須洽 ODR 窗口申請** |
+| 報價 | 先報價後下單，效期 5 分鐘 | `POST /quotes` 一次回費用與時間、效期 10 分鐘，再 `POST /quotes/{quoteId}` 成單；或只估算 `/orders/fee`、`/orders/time` |
+| 司機座標 | ✅ | ✅ `GET /orders/{id}/coordinates` |
+| 尺寸限制 | 依車型 | **保溫箱 34×34×36 cm、前踏板 30×20×27 cm，合計 ≤ 20 kg** |
+| 貨到收款 | — | `CASH_ON_DELIVERY`／`CARD_ON_DELIVERY` |
+| 取消 | API：未媒合或媒合後 5 分鐘內 | **外送夥伴接單後不能用 API 取消** |
+
+## 2. pandago（foodpanda）
+
+pandago 屬 Delivery Hero 的 **On Demand Rider（ODR）API**，同一套 API 也服務 Glovo、Talabat 等品牌。
+
+### 環境
+
+| 環境 | Base URL |
+|---|---|
+| 台灣正式 | **`https://pandago-api-apse.deliveryhero.io/tw/api/v1`** |
+| 台灣 Stage | `https://api-infra-ap-southeast-1.stg.ondemandrider.net/tw/api/v1` |
+| 公開 Sandbox | `https://pandago-api-sandbox.deliveryhero.io/sg/api/v1`（新加坡） |
+
+> 公開 Sandbox 只有新加坡，地址、費率、涵蓋範圍都是新加坡的；台灣的服務範圍與計價要在台灣 Stage 或正式環境驗證。
+
+### 認證
+
+1. 自行產生 RSA 2048 金鑰對，公鑰交給 ODR 窗口
+2. ODR 窗口提供 `ClientID`、`KeyID`、`Scope`（格式 `pandago.api.{國碼}.*`，台灣為 `pandago.api.tw.*`）
+3. 以私鑰簽 JWT（RS256）：header `kid` = KeyID；payload `iss`、`sub` = ClientID，`jti` 隨機 UUID，`exp` 未來時間，`aud` **固定 `https://sts.deliveryhero.io`**（測試與正式皆同）
+4. 向 STS 取 token（主機與 API 不同）：正式 `POST https://sts.deliveryhero.io/oauth2/token`，Stage／Sandbox `POST https://sts-st.deliveryhero.io/oauth2/token`。`application/x-www-form-urlencoded`，五個欄位皆必填：`grant_type=client_credentials`、`client_id=<ClientID>`、`client_assertion_type=urn:ietf:params:oauth:client-assertion-type:jwt-bearer`、`client_assertion=<JWT>`、`scope=pandago.api.tw.*`
+
+> ⚠️ 這是本 skill 物流商中**唯一使用 JWT assertion（private_key_jwt）**的。既有的 HMAC 或 API Key 程式碼完全不能沿用。
+
+### 端點
+
+| 操作 | Method | 路徑 |
+|---|---|---|
+| 建立／更新門市（Outlet） | PUT／PATCH | `/outlets/{client_vendor_id}` |
+| 查詢門市 | GET | `/outlets/{client_vendor_id}`、`/outletList` |
+| 費用估算 | POST | `/orders/fee` |
+| 時間估算 | POST | `/orders/time` |
+| 建立訂單 | POST | `/orders` |
+| 查詢訂單 | GET | `/orders/{order_id}` |
+| 更新訂單 | PUT | `/orders/{order_id}`（**已停用**，呼叫回 `405 Method Not Allowed`） |
+| 取消訂單 | DELETE | `/orders/{order_id}` |
+| 司機座標 | GET | `/orders/{order_id}/coordinates`（訂單到終態後回 `410`） |
+| 取件／送達／退回證明 | GET | `/orders/proof_of_pickup/{order_id}`、`proof_of_delivery`、`proof_of_return` |
+| 建立報價 | POST | `/quotes` |
+| 確認報價並成單 | POST | `/quotes/{quoteId}` |
+
+> `/orders/fee`、`/orders/time` 是兩支獨立的估算端點，必填 `recipient`（至少 `location`）、`amount`、`description`。要先報價、再以報價成單，用 `POST /quotes`：一次回 `quote_id`、`estimated_delivery_fee`、`estimated_pickup_time`、`estimated_delivery_time`、`expired_at`，**效期 10 分鐘**；`sender` 帶 `client_vendor_id`（建議）或 `location`。確認時 body 必填 `recipient`、`payment_method`、`amount`、`description`（其餘同建立訂單），報價須未過期、未被使用過、屬於同一商家。
+> 所有訂單都應從 Outlet 發出：`sender.client_vendor_id` 帶 Outlet ID 為建議做法；同時提供 Outlet 與寄件人明細時以 Outlet 為準。
+
+### 建立訂單 `POST /orders`
+
+| 欄位 | 必填 | 說明 |
+|---|:---:|---|
+| `client_order_id` | | 商家訂單編號 |
+| `sender.client_vendor_id` | | Outlet ID（建議）；或改帶 `sender.name`／`phone_number`／`location`。台灣寄件人 `location` 可只用座標或只用地址，地址依郵政格式、不含樓層與店名，例如 `5 Lane 80 Taiyuen Road, Datong District, Taipei City 10349` |
+| `recipient.name`、`recipient.phone_number` | ● | 電話為 E.164（`+886…`） |
+| `recipient.location.address`／`latitude`／`longitude` | ● | 三者皆必填，**座標必填**（「只用座標或地址」的例外僅適用寄件人）；地址依郵政格式、不含樓層與店名 |
+| `recipient.notes`、`sender.notes` | | 給外送夥伴的說明；樓層、門號要寫在這裡 |
+| `payment_method` | ● | `PAID` 已付款／`CASH_ON_DELIVERY` 外送夥伴收現金／`CARD_ON_DELIVERY` 送達刷卡 |
+| `amount` | | 訂單金額 |
+| `description` | ● | 商品描述（≤ 1000 字） |
+| `coldbag_needed` | | 是否需要保冷袋 |
+| `preordered_for` | | 預約**送達**時間（unix timestamp），45 分鐘～7 天後；立即派送請給 `null`，不要給 `0` |
+| `packaging.size`／`weight` | | `small` 鞋盒／`medium` 背包／`large` 汽車；重量公斤 |
+| `pickup_tasks.pickup_code` | | 取件時外送夥伴需報出的代碼（≤ 30 字） |
+| `delivery_tasks.age_validation_required` | | 送達時驗年齡；pandago 目前只在菲律賓提供，台灣不適用 |
+| `delivery_tasks.handover_confirmation.drop_off` | | `PIN`／`NONE`（Beta，部分國家） |
+| `products[]` | | `name`、`external_id`、`price_amount`（三者必填，貨幣最小單位）；`attributes[]` 為加料等子項，結構相同；可用於部分退款 |
+| `currency_code` | | ISO 4217；省略時用母帳號設定的幣別 |
+| `external_details` | | `customer_id`、`device_id`、`customer_delivery_fee`（貨幣最小單位），供風控使用 |
+| `integrator` | | 串接平台名稱（≤ 255 字） |
+
+回應 `201`：`order_id`、`status`、`delivery_fee`、`distance`（公尺）、`timeline.estimated_pickup_time`／`estimated_delivery_time`、`driver`。`GET /orders/{id}` 另有 `tracking_link`、`status_history`、`proof_of_*_url`，取消時有 `cancellation.source`／`reason`。
+
+> `raw_tracking_link`（完整追蹤連結）只在建立訂單與確認報價的回應出現，且需商家開通；查詢訂單時改用 `tracking_link`。連結內含 token，要當機密處理。
+
+> 送出時 `handover_confirmation.drop_off` 是字串（`"PIN"`），回應裡則是物件：`201` 為 `{"type": "PIN"}`，`GET /orders/{id}` 另帶 `code`（給收件人的 PIN 碼），解析回應時不要當字串處理。
+
+錯誤：`400` 參數錯誤、`401` 未授權、`404` Outlet 不存在、`422` 違反業務規則。
+
+> 母帳號（parent vendor）可能關閉以 API 建立門市：此時**建立新 Outlet** 回 `403 Forbidden`（Outlet creation via API is disabled for this vendor），**更新既有 Outlet** 不受影響。
+
+### 訂單狀態
+
+`NEW` → `RECEIVED` → `WAITING_FOR_TRANSPORT` → `ASSIGNED_TO_TRANSPORT` → `COURIER_ACCEPTED_DELIVERY` → `NEAR_VENDOR` → `PICKED_UP` → `COURIER_LEFT_VENDOR` → `NEAR_CUSTOMER` → `DELIVERED`；另有 `DELAYED`（預計送達時間已更新）、`CANCELLED`、`RETURNED_TO_VENDOR`。
+
+### 取消 `DELETE /orders/{order_id}`
+
+- **外送夥伴接單後就不能取消**，會回 `409 Uncancellable`；成功回 `204`（舊的 `203` 已標示 deprecated：表示 `reason` 被改成 `REASON_UNKNOWN`）
+- body `reason`（必填）：`DELIVERY_ETA_TOO_LONG`、`MISTAKE_ERROR`、`REASON_UNKNOWN`
+
+### 回呼
+
+| 回呼 | 內容 |
+|---|---|
+| 訂單狀態 | 含 `order_id`、`status`、`timeline`、`driver`（有外送夥伴時含座標）、取消時的 `cancellation` |
+| 外送夥伴位置 | 另設 `location_update_callback` 時，進行中訂單**每 15 秒**推一次座標，body 與狀態回呼相同；可與狀態回呼共用 URL |
+| 退款 | 向營運窗口登記 URL 後啟用；`FULL_REFUND`／`PARTIAL_REFUND`／`COMPENSATION`，金額為貨幣最小單位，`products[].external_id` 對應建單時的商品；非 2xx 最多重送 3 次 |
+
+三種回呼都可向營運窗口申請簽章：header `X-Signature-SHA256` = hex(HMAC-SHA256(secret, 原始 body))。
+
+## 3. 取消規則與費用
+
+### Lalamove（台灣官方 FAQ）
+
+| 情境 | 規則 |
+|---|---|
+| 尚未媒合司機 | 可直接取消 |
+| 即時訂單 | 媒合後 **6 分鐘**內可取消 |
+| 預約訂單 | 預定取貨時間前 **45 分鐘**內可取消 |
+| 司機已接單並前往、或已抵達 | 收取該訂單**起始價 50%** 作為取消費 |
+| 超過寬限期 | 須聯繫客服，可能收取取消費 |
+
+> 以上為 Lalamove 台灣 FAQ 對 App／網頁下單的說明。**API 的規則不同**（開發者文件 User Cancellation）：只有 `ASSIGNING_DRIVER`，或從 `ASSIGNING_DRIVER` 轉為 `ON_GOING` 未滿 **5 分鐘**的訂單可以 `DELETE`，預約單也一樣（不看 `scheduleAt`）；其餘回 `409 ERR_CANCELLATION_FORBIDDEN`，要改走客服。
+
+### pandago（foodpanda 商家專區「責任規範與費用收取／補償」）
+
+API 層面：外送夥伴接單後不能取消（`409`）。依原因的費用：
+
+| 取消原因 | 說明 | 運費收取 | 返送運費收取 | 訂單補償 |
+|---|---|:---:|:---:|:---:|
+| 商家失誤 | 媒合前商家取消，原因「錯誤的訂單資訊」 | 否 | 否 | 否 |
+| 其他原因 | 媒合前商家取消，原因「顧客取消訂單」 | 否 | 否 | 否 |
+| 商家認為媒合時間過長 | 媒合前商家取消，原因「有其他交貨方式可用」 | 否 | 否 | 否 |
+| 商家已打烊或因任何原因需求取消 | **媒合到外送夥伴後**商家取消 | 是 | 是 | 否 |
+| 錯誤收件地址 | 商家輸入地址錯誤或實際地址在範圍外 | 是 | 是 | 否 |
+| 聯繫不到客戶 | 抵達後聯繫不到客戶超過 10 分鐘 | 是 | 是 | 否 |
+| 客戶問題 | 客戶聯絡商家取消 | 是 | 是 | 否 |
+| 客戶無法付款 | 客戶現金不足 | 是 | 是 | 否 |
+| 送件錯誤訂單 | 交給外送夥伴的訂單錯誤，客戶拒收 | 是 | 是 | 否 |
+| 商家已閉店 | 外送夥伴提供證明 | 是 | 是 | 否 |
+| 訂單延遲交付 | 比承諾時間晚 30 分鐘以上，客戶拒收 | 否 | 否 | 否 |
+| 外送夥伴失聯 | 接單後失聯，客戶不願等待 | 否 | 否 | 是 |
+| 灑餐 | 客戶因溢漏拒收 | 否 | 否 | 是 |
+| 遭遇事故 | 外送夥伴途中事故，客戶不願等待 | 否 | 否 | 是 |
+| 超出運送範圍 | 外送夥伴接單後拒單 | 否 | 否 | 否 |
+| 技術問題／超出營業時間／天氣問題／無法媒合外送夥伴 | | 否 | 否 | 否 |
+
+## 4. 選型
+
+| 情境 | 建議 |
+|---|---|
+| 需要明確的台灣官方端點與文件 | **pandago**（`/tw` 正式與 Stage 端點有官方文件背書）|
+| 已有 HMAC 簽章經驗、想快速上線 | **Lalamove**（自簽 HMAC，Partner Portal 自助取得憑證；正式金鑰須先儲值）|
+| 需要多車型／路線最佳化／換司機 | **Lalamove** |
+| 小件、標準箱體、需要貨到收款 | **pandago**（≤ 20 kg，`CASH_ON_DELIVERY`）|
+
+> 兩家都**不是批次物流的替代品**。單日出貨量大、跨縣市、需要超取的情境，仍應走 ECPay／ezShip 等聚合商。即時配送適合的是同城、急件、生鮮這類批次物流做不到的需求。
+
+## 5. 待補
+
+| 項目 | 說明 |
+|---|---|
+| pandago 台灣運費表 | 官方 API 文件與商家專區皆未列，運費以 `/orders/fee` 即時估算 |
+
+## 6. 來源
+
+- Delivery Hero On Demand Rider API（端點、欄位、狀態、取消、回呼簽章）— https://on-demand-rider-docs.deliveryhero.io/
+- foodpanda 商家專區 pandago（尺寸重量、責任規範與費用收取／補償）— https://vendor.foodpanda.com.tw/pandago
+- pandago 台灣 — https://pandago.tw/
+- Lalamove 台灣 FAQ（App／網頁下單的取消規則）— https://www.lalamove.com/zh-tw/faq
+- Lalamove API Reference（User Cancellation：API 取消規則）— https://developers.lalamove.com/
+- Lalamove API — [lalamove-logistics-api.md](lalamove-logistics-api.md)
