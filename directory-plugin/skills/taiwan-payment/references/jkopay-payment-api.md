@@ -1,7 +1,7 @@
 # 街口支付 JKOPAY 商家 API 參考
 
 > 目錄精簡版：只含參考文件與 JSON 資料，不含腳本。文中提到 `scripts/`、`examples/`、`tests/` 的工具在完整版（npm 套件 `taiwan-payment-skill`）。
-> 金鑰與商店代號由使用者自行設定、自行提供；文中的測試帳號是服務商官方公開的測試值，不是真實憑證。帳密類欄位以 `<帳密欄位>` 表示，實際欄名見官方文件。
+> 金鑰與商店代號由使用者在自己的系統設定後，以參數傳入程式；文中以 `<HASH_KEY>` 這類佔位字表示。服務商公開的測試金鑰也以佔位字表示，請到該服務商官方文件取得。帳密類欄位以 `<帳密欄位>` 表示。
 
 > 官方開放文件: https://open-doc.jkos.com/
 > 公司: 街口電子支付股份有限公司（專營電子支付機構）
@@ -102,7 +102,7 @@ digest = HMAC-SHA256( request_payload_utf8, secret_key_utf8 ).hexdigest()
 共用測試 Secret Key：
 
 ```
-r0odDC1e9LHXDmxuvmOv9bgaWLf2CXB2c4gMheoFucVKNMi1K0Id9zwRHJF1r-kdtAKriKgb11VDlo7Kb8R-FQ
+<官方公開測試值，見該服務商官方文件>
 ```
 
 **POST（Entry API）**

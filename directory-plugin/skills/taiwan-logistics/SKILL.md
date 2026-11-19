@@ -1,6 +1,6 @@
 ---
 name: taiwan-logistics
-description: Taiwan Logistics API integration specialist for ECPay, NewebPay, PAYUNi, SmilePay, PChomePay, PayNow and ezShip aggregators, HCT direct carrier API, and on-demand delivery (Lalamove, pandago). Use when developing shipping flows, implementing CVS pickup (7-11/全家/萊爾富/OK), home delivery (黑貓/中華郵政), cold-chain, store-map selectors, COD orders, or shipment tracking. Handles encryption (MD5, AES-256-CBC, AES-256-GCM, 3DES), store maps, and provider field mappings. Directory edition: reference files and JSON data only; the search tools and runnable examples ship in the npm package taiwan-logistics-skill. 中文觸發：物流串接、超商取貨、店到店、大宗寄倉、取貨付款、電子地圖選店、宅配、冷凍、物流狀態碼、托運單、新竹物流、即時配送。
+description: "Taiwan Logistics API integration specialist for ECPay, NewebPay, PAYUNi, SmilePay, PChomePay, PayNow and ezShip aggregators, HCT direct carrier API, and on-demand delivery (Lalamove, pandago). Use when developing shipping flows, implementing CVS pickup (7-11/全家/萊爾富/OK), home delivery (黑貓/中華郵政), cold-chain, store-map selectors, COD orders, or shipment tracking. Handles encryption (MD5, AES-256-CBC, AES-256-GCM, 3DES), store maps, and provider field mappings. Directory edition: reference files and JSON data only; the search tools and runnable examples ship in the npm package taiwan-logistics-skill. 中文觸發：物流串接、超商取貨、店到店、大宗寄倉、取貨付款、電子地圖選店、宅配、冷凍、物流狀態碼、托運單、新竹物流、即時配送。"
 user-invocable: true
 ---
 

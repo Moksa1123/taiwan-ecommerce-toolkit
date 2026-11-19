@@ -43,30 +43,58 @@ class DirectoryPlugin(unittest.TestCase):
         for name in ('package.json', '.npmignore', 'requirements.txt'):
             self.assertFalse(any(Path(k).name == name for k in self.want), name)
 
+    @staticmethod
+    def bad(text):
+        low = text.lower()
+        return (bd.FORBIDDEN.search(text) or bd.FORBIDDEN_CS.search(text)
+                or any(s.lower() in low for s in bd.SECRETS))
+
     def test_no_forbidden_words(self):
         for rel, data in self.want.items():
             if rel.endswith('.png'):
                 continue
-            self.assertIsNone(bd.FORBIDDEN.search(data.decode('utf-8')), rel)
+            for i, line in enumerate(data.decode('utf-8').splitlines(), 1):
+                self.assertFalse(self.bad(line), f'{rel}:{i}')
 
     def test_forbidden_pattern_catches(self):
         for bad in ('ssh user@host', 'cat .env', 'process.env.ECPAY_HASH_KEY', "os.environ['KEY']",
-                    "getenv('KEY')", 'password', 'id_rsa', 'key.pem', 'YOUR_HASH_KEY', 'wp-config.php'):
-            self.assertIsNotNone(bd.FORBIDDEN.search(bad), bad)
+                    "getenv('KEY')", 'password', 'id_rsa', 'key.pem', 'YOUR_HASH_KEY', 'wp-config.php',
+                    'config.ECPAY_HASH_KEY', "config['KEY']", 'echo $SHOPLINE_API_KEY', '${ECPAY_HASH_KEY}',
+                    'credentials = base64', 'HashKey pwFHCqoQZGmho4w6', 'hashkey%3dpwfhcqoqzgmho4w6'):
+            self.assertTrue(self.bad(bad), bad)
+        for ok in ('$merchantId', 'this.config.hashKey', '${MerchantID}', 'not real credentials'):
+            self.assertFalse(self.bad(ok), ok)
 
     def test_rewrites(self):
+        ph = bd.SECRET_PLACEHOLDER
         cases = {
-            'hashKey: process.env.NEWEBPAY_HASH_KEY!,': 'hashKey: config.NEWEBPAY_HASH_KEY,',
-            "key = os.environ['ECPAY_HASH_KEY']": "key = config['ECPAY_HASH_KEY']",
-            "key = os.environ.get('ECPAY_HASH_KEY', '')": "key = config['ECPAY_HASH_KEY']",
-            "$k = getenv('SHOPLINE_SIGN_KEY');": "$k = $config['SHOPLINE_SIGN_KEY'];",
+            'hashKey: process.env.NEWEBPAY_HASH_KEY!,': "hashKey: '<NEWEBPAY_HASH_KEY>',",
+            "apiUrl: process.env.NODE_ENV === 'production'": 'apiUrl: isProduction',
+            'url: `${process.env.NEXT_PUBLIC_BASE_URL}/api/cb`': 'url: `<NEXT_PUBLIC_BASE_URL>/api/cb`',
+            "key = os.environ['ECPAY_HASH_KEY']": "key = '<ECPAY_HASH_KEY>'",
+            "key = os.environ.get('ECPAY_HASH_KEY', '')": "key = '<ECPAY_HASH_KEY>'",
+            "$k = getenv('SHOPLINE_SIGN_KEY');": "$k = '<SHOPLINE_SIGN_KEY>';",
+            'echo $SHOPLINE_API_KEY': 'echo <SHOPLINE_API_KEY>',
+            'credentials = b64(x)': 'basic_auth = b64(x)',
             '`.env` 檔': '設定檔',
             "hashKey: 'YOUR_HASH_KEY',": "hashKey: '<HASH_KEY>',",
             'TransData(string company, string password)': 'TransData(string company, string <帳密欄位>)',
+            '密碼 `test1234`': '密碼 `<官方公開測試值>`',
+            "hashKey: 'pwFHCqoQZGmho4w6',": f"hashKey: '{ph}',",
+            'HashKey%3dpwfhcqoqzgmho4w6': f'HashKey%3d{ph}',
+            "$merchantId = $row['id'];": "$merchantId = $row['id'];",
         }
         for src, want in cases.items():
             self.assertEqual(bd.credential_free(src), want, src)
-            self.assertIsNone(bd.FORBIDDEN.search(bd.credential_free(src)), src)
+            self.assertFalse(self.bad(bd.credential_free(src)), src)
+
+    def test_frontmatter_quoted(self):
+        for s in bd.SKILLS:
+            text = self.want[f'skills/taiwan-{s}/SKILL.md'].decode('utf-8')
+            line = next(l for l in text.splitlines() if l.startswith('description: '))
+            value = line[len('description: '):]
+            self.assertTrue(value.startswith('"') and value.endswith('"'), s)
+            self.assertIn('Directory edition', json.loads(value))
 
     def test_plugin_json(self):
         pj = json.loads(self.want['.claude-plugin/plugin.json'])

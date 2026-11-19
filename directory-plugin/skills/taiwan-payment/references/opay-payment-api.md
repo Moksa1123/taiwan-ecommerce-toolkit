@@ -1,7 +1,7 @@
 # 歐付寶 O'Pay 全方位金流 API 參考
 
 > 目錄精簡版：只含參考文件與 JSON 資料，不含腳本。文中提到 `scripts/`、`examples/`、`tests/` 的工具在完整版（npm 套件 `taiwan-payment-skill`）。
-> 金鑰與商店代號由使用者自行設定、自行提供；文中的測試帳號是服務商官方公開的測試值，不是真實憑證。帳密類欄位以 `<帳密欄位>` 表示，實際欄名見官方文件。
+> 金鑰與商店代號由使用者在自己的系統設定後，以參數傳入程式；文中以 `<HASH_KEY>` 這類佔位字表示。服務商公開的測試金鑰也以佔位字表示，請到該服務商官方文件取得。帳密類欄位以 `<帳密欄位>` 表示。
 
 > Source:《歐付寶全方位金流介接技術文件》V1.2.37（O_Pay_011.pdf，2026-08-04，56 頁；以下頁碼為 PDF 頁尾的頁碼）
 > 文件總覽: https://developers.opay.tw/download/document
@@ -23,7 +23,7 @@
 
 > 💡 遷移提示：既有 ECPay 串接改接歐付寶，主要工作是換網域、換金鑰、調整 `ChoosePayment` 白名單。CheckMacValue 程式碼可原封不動沿用。
 >
-> ⚠️ 但**測試金鑰是共用的**——歐付寶測試環境 HashKey `5294y06JbISpM5x9` / HashIV `v77hoKGq4kWxNNIS` 與本 skill `taiwan-logistics/data/providers.csv` 中 ECPay 物流的測試金鑰完全相同。別因為看起來眼熟就以為串錯了。
+> ⚠️ 但**測試金鑰是共用的**——歐付寶測試環境 HashKey `<官方公開測試值，見該服務商官方文件>` / HashIV `<官方公開測試值，見該服務商官方文件>` 與本 skill `taiwan-logistics/data/providers.csv` 中 ECPay 物流的測試金鑰完全相同。別因為看起來眼熟就以為串錯了。
 
 ## 1. 環境與測試資訊
 
@@ -45,13 +45,13 @@
 | | 一般商家 | 平台商（帶 `PlatformID`） |
 |---|---|---|
 | `MerchantID` | `2000132` | `2012441` |
-| HashKey | `5294y06JbISpM5x9` | `bkuAEQufy2bpEng1` |
-| HashIV | `v77hoKGq4kWxNNIS` | `B0lzARI9ZSdhW9jg` |
+| HashKey | `<官方公開測試值，見該服務商官方文件>` | `<官方公開測試值，見該服務商官方文件>` |
+| HashIV | `<官方公開測試值，見該服務商官方文件>` | `<官方公開測試值，見該服務商官方文件>` |
 | 廠商後台帳號／密碼 | `StageTest` / `test1234` | `stagetest2` / `test1234` |
 
 測試卡 `4311-9522-2222-2222`、安全碼 `222`，有效月年須晚於當月（p.10）。
 
-測試買家帳號（商務會員）：`stageuser002` / 統編 `04792433` / 密碼 `test1234` / 支付密碼 `121212`
+測試買家帳號（商務會員）：`stageuser002` / 統編 `04792433` / 密碼 `<官方公開測試值>` / 支付密碼 `<官方公開測試值>`
 個人會員需以測試環境 App 掃碼登入（Android/iOS 下載連結見文件 §測試資訊）。
 
 > 廠商後台提供「模擬付款並通知會員系統」功能，可在不實際扣款下驗證 `ReturnURL` 流程。
@@ -169,12 +169,12 @@ MerchantID=2000132&MerchantTradeNo=TEST8477&PayAmt=300&PaymentDate=2016/11/02 11
 
 待加密字串（步驟 1、2 後）：
 ```
-HashKey=5294y06JbISpM5x9&ChoosePayment=ALL&EncryptType=1&ItemName=Apple iphone 7 手機殼&MerchantID=2000132&MerchantTradeDate=2013/03/12 15:30:23&MerchantTradeNo=allpay20130312153023&PaymentType=aio&ReturnURL=https://www.allpay.com.tw/receive.php&TotalAmount=1000&TradeDesc=促銷方案&HashIV=v77hoKGq4kWxNNIS
+HashKey=<官方公開測試值，見該服務商官方文件>&ChoosePayment=ALL&EncryptType=1&ItemName=Apple iphone 7 手機殼&MerchantID=2000132&MerchantTradeDate=2013/03/12 15:30:23&MerchantTradeNo=allpay20130312153023&PaymentType=aio&ReturnURL=https://www.allpay.com.tw/receive.php&TotalAmount=1000&TradeDesc=促銷方案&HashIV=<官方公開測試值，見該服務商官方文件>
 ```
 
 步驟 4 後（小寫）：
 ```
-hashkey%3d5294y06jbispm5x9%26choosepayment%3dall%26encrypttype%3d1%26itemname%3dapple+iphone+7+%e6%89%8b%e6%a9%9f%e6%ae%bc%26merchantid%3d2000132%26merchanttradedate%3d2013%2f03%2f12+15%3a30%3a23%26merchanttradeno%3dallpay20130312153023%26paymenttype%3daio%26returnurl%3dhttps%3a%2f%2fwww.allpay.com.tw%2freceive.php%26totalamount%3d1000%26tradedesc%3d%e4%bf%83%e9%8a%b7%e6%96%b9%e6%a1%88%26hashiv%3dv77hokgq4kwxnnis
+hashkey%3d<官方公開測試值，見該服務商官方文件>%26choosepayment%3dall%26encrypttype%3d1%26itemname%3dapple+iphone+7+%e6%89%8b%e6%a9%9f%e6%ae%bc%26merchantid%3d2000132%26merchanttradedate%3d2013%2f03%2f12+15%3a30%3a23%26merchanttradeno%3dallpay20130312153023%26paymenttype%3daio%26returnurl%3dhttps%3a%2f%2fwww.allpay.com.tw%2freceive.php%26totalamount%3d1000%26tradedesc%3d%e4%bf%83%e9%8a%b7%e6%96%b9%e6%a1%88%26hashiv%3d<官方公開測試值，見該服務商官方文件>
 ```
 
 ### ⚠️ .NET vs PHP 的 URL encode 差異
@@ -413,7 +413,7 @@ Server POST 到 `ReturnURL`：`MerchantID`、`MerchantTradeNo`、`StoreID`、`Rt
 
 - QRCode 預設 10 分鐘有效，可用 `TradeEffectiveTime` 設 90～600 秒；逾時需重新建單並換新 `MerchantTradeNo`（p.9、p.15）
 - 顯示 QRCode 後，可在有效期內每 5 秒輪詢一次查詢 API（p.10）
-- 測試：`MerchantID` `2000132`，HashKey／HashIV 同全方位金流測試金鑰；測試版 APP 登入：手機 `0920123456`、身分證後 4 碼 `3123`、安全密碼 `121212`（p.6）
+- 測試：`MerchantID` `2000132`，HashKey／HashIV 同全方位金流測試金鑰；測試版 APP 登入：手機 `0920123456`、身分證後 4 碼 `3123`、安全密碼 `<官方公開測試值>`（p.6）
 
 ### 建立訂單（p.14–16）
 
@@ -509,8 +509,8 @@ Server POST 到 `ReturnURL`：`MerchantID`、`MerchantTradeNo`、`StoreID`、`Rt
 |---|---|---|
 | `MerchantID` | `2000132` | `2012441` |
 | 廠商後台帳號／密碼 | `StageTest` / `test1234` | `stagetest2` / `test1234` |
-| HashKey | `5294y06JbISpM5x9` | `bkuAEQufy2bpEng1` |
-| HashIV | `v77hoKGq4kWxNNIS` | `B0lzARI9ZSdhW9jg` |
+| HashKey | `<官方公開測試值，見該服務商官方文件>` | `<官方公開測試值，見該服務商官方文件>` |
+| HashIV | `<官方公開測試值，見該服務商官方文件>` | `<官方公開測試值，見該服務商官方文件>` |
 
 測試卡 `4311-9522-2222-2222`、安全碼 `222`；廠商後台 `https://vendor-stage.opay.tw` 可模擬付款。防火牆請綁定 `postgate.opay.tw`，不要綁 IP。
 
@@ -554,7 +554,7 @@ JSON：
 
 ### 解密與檢查碼（p.11–13）
 
-- `Data`：明文先 URL Encode 再以 AES-128-CBC／PKCS7 加密、Base64 輸出；解密後需再 URL Decode。文件範例（Key `ejCk326UnaZWKisg`、IV `q9jcZX8Ib9LM8wYk`）與電子發票 API 相同，已由 `taiwan-invoice/examples/opay-invoice-example.py` 的自測涵蓋。文件未說明通知使用哪組 Key／IV。
+- `Data`：明文先 URL Encode 再以 AES-128-CBC／PKCS7 加密、Base64 輸出；解密後需再 URL Decode。文件範例（Key `<官方公開測試值，見該服務商官方文件>`、IV `<官方公開測試值，見該服務商官方文件>`）與電子發票 API 相同，已由 `taiwan-invoice/examples/opay-invoice-example.py` 的自測涵蓋。文件未說明通知使用哪組 Key／IV。
 - CheckMacValue：附錄 1 沿用第 4 節的全方位金流算法（SHA256、.NET URL encode 還原），但範例是 `AioCheckOut` 表單參數；JSON 通知要以哪些欄位計算，文件未說明。
 
 ---

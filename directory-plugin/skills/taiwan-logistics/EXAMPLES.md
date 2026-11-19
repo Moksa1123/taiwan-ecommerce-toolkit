@@ -1,7 +1,7 @@
 # Taiwan Logistics Code Examples
 
 > Directory edition: reference files and JSON data only, no scripts. Tools under `scripts/`, `examples/` and `tests/` ship in the full edition (npm package `taiwan-logistics-skill`).
-> You set and provide your own keys and merchant IDs; test accounts in this file are the providers' published sandbox values, not real credentials. Credential-type field names are shown as `<帳密欄位>`; see the official docs for the exact name.
+> Keys and merchant IDs are set up by the user and passed into the code as parameters; they appear as placeholders such as `<HASH_KEY>`. Published sandbox keys are also shown as placeholders; get them from the provider's official docs. Credential-type field names are shown as `<帳密欄位>`.
 
 **Production-ready code examples for Taiwan Logistics integration**
 
@@ -1309,7 +1309,7 @@ const BASE = 'https://sandbox-api.payuni.com.tw/api';
 
 async function payuniPost(path: string, info: Record<string, any>, version: string) {
   const { EncryptInfo, HashInfo } = encryptPAYUNi(info, HASH_KEY, HASH_IV);
-  const res = await fetch(`${BASE}${path}`, {
+  const res = await fetch(`<BASE>}${path}`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/x-www-form-urlencoded', 'User-Agent': 'payuni' },
     body: new URLSearchParams({ MerID: MER_ID, Version: version, EncryptInfo, HashInfo }),
@@ -1600,8 +1600,8 @@ class ECPayCVSLogistics extends ECPayLogistics {
 // Usage Example
 const logistics = new ECPayCVSLogistics({
   merchantId: '2000933',  // C2C 測試特店（B2C／宅配為 2000132）
-  hashKey: 'XBERn1YOvpM9nfZc',
-  hashIV: 'h1ONHk4P4yqbl5LK',
+  hashKey: '<官方公開測試值，見該服務商官方文件>',
+  hashIV: '<官方公開測試值，見該服務商官方文件>',
   isProduction: false,
 });
 
@@ -1790,8 +1790,8 @@ if __name__ == '__main__':
     # 初始化物流服務 (使用測試環境)
     logistics = ECPayCVSLogistics(
         merchant_id='2000933',  # ECPay C2C 測試特店（B2C／宅配為 2000132）
-        hash_key='XBERn1YOvpM9nfZc',
-        hash_iv='h1ONHk4P4yqbl5LK',
+        hash_key='<官方公開測試值，見該服務商官方文件>',
+        hash_iv='<官方公開測試值，見該服務商官方文件>',
         is_production=False,  # 使用測試環境
     )
 
@@ -1928,8 +1928,8 @@ class ECPayHomeLogistics extends ECPayLogistics {
 // Usage Example
 const home = new ECPayHomeLogistics({
   merchantId: '2000132',
-  hashKey: '5294y06JbISpM5x9',
-  hashIV: 'v77hoKGq4kWxNNIS',
+  hashKey: '<官方公開測試值，見該服務商官方文件>',
+  hashIV: '<官方公開測試值，見該服務商官方文件>',
 });
 
 const result = await home.createHomeShipment({
@@ -2011,8 +2011,8 @@ class ECPayQueryLogistics extends ECPayLogistics {
 // Usage Example
 const query = new ECPayQueryLogistics({
   merchantId: '2000132',
-  hashKey: '5294y06JbISpM5x9',
-  hashIV: 'v77hoKGq4kWxNNIS',
+  hashKey: '<官方公開測試值，見該服務商官方文件>',
+  hashIV: '<官方公開測試值，見該服務商官方文件>',
 });
 
 const status = await query.queryShipment('1718546');
@@ -2038,10 +2038,10 @@ class EcommerceLogistics {
 
   constructor() {
     this.logistics = new (class extends NewebPayStoreMap {})({
-      merchantId: config.NEWEBPAY_MERCHANT_ID,
-      hashKey: config.NEWEBPAY_HASH_KEY,
-      hashIV: config.NEWEBPAY_HASH_IV,
-      isProduction: config.NODE_ENV === 'production',
+      merchantId: '<NEWEBPAY_MERCHANT_ID>',
+      hashKey: '<NEWEBPAY_HASH_KEY>',
+      hashIV: '<NEWEBPAY_HASH_IV>',
+      isProduction: isProduction,
     }) as any;
   }
 
@@ -2281,9 +2281,9 @@ class OrderModificationWorkflow {
 
   constructor() {
     const config = {
-      merchantId: config.NEWEBPAY_MERCHANT_ID,
-      hashKey: config.NEWEBPAY_HASH_KEY,
-      hashIV: config.NEWEBPAY_HASH_IV,
+      merchantId: '<NEWEBPAY_MERCHANT_ID>',
+      hashKey: '<NEWEBPAY_HASH_KEY>',
+      hashIV: '<NEWEBPAY_HASH_IV>',
     };
 
     this.query = new NewebPayQueryShipment(config);
