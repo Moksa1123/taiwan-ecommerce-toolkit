@@ -21,7 +21,7 @@ each provider's official documentation:
 | Skill | Covers | Data rows (JSON) |
 |---|---|---|
 | `taiwan-invoice` | Issue, void and allowance flows for Taiwan e-invoices; MOF platform queries | 450 |
-| `taiwan-payment` | Checkout, notifications, refunds and signatures for Taiwan payment gateways and wallets | 3275 |
+| `taiwan-payment` | Checkout, notifications, refunds and signatures for Taiwan payment gateways and wallets | 3280 |
 | `taiwan-logistics` | Convenience-store pickup, home delivery, cold chain, store maps, on-demand delivery | 1159 |
 
 Each skill ships its `SKILL.md`, provider references, code examples in Markdown and the data set as JSON
@@ -34,7 +34,7 @@ Each skill ships its `SKILL.md`, provider references, code examples in Markdown 
 | References, examples in Markdown, data | Yes (data as JSON) | Yes (data as CSV) |
 | Search and recommendation tools | No: Claude reads the JSON directly | `scripts/search.py`, `scripts/recommend.py` |
 | Runnable examples, known-answer tests | No | `examples/`, `scripts/test_*.py` |
-| Install | Claude plugin directory | `npx taiwan-invoice-skill@2.9.13 init`, `npx taiwan-payment-skill@1.5.17 init`, `npx taiwan-logistics-skill@1.4.13 init` |
+| Install | Claude plugin directory | `npx taiwan-invoice-skill@2.9.13 init`, `npx taiwan-payment-skill@1.5.18 init`, `npx taiwan-logistics-skill@1.4.13 init` |
 
 ## What it runs and connects to
 

@@ -105,7 +105,7 @@ Other AI coding tools, or one skill only (npx with a pinned version):
 
 ```bash
 npx taiwan-invoice-skill@2.9.13 init     # e-invoice
-npx taiwan-payment-skill@1.5.17 init     # payment
+npx taiwan-payment-skill@1.5.18 init     # payment
 npx taiwan-logistics-skill@1.4.13 init   # logistics
 ```
 
@@ -117,7 +117,7 @@ Requirements: Python 3 for the bundled scripts (standard library only; the AES e
 
 ```bash
 cd /path/to/your/project
-npx taiwan-payment-skill@1.5.17 init --ai claude    # or cursor, windsurf, copilot, codex, gemini, all ...
+npx taiwan-payment-skill@1.5.18 init --ai claude    # or cursor, windsurf, copilot, codex, gemini, all ...
 ```
 
 Supported tools and their skill folders: [docs/guide.zh-TW.md](docs/guide.zh-TW.md).

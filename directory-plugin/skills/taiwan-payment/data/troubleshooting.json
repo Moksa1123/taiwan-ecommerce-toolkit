@@ -509,6 +509,17 @@
    "doc_url": "https://www.sunpay.com.tw/developers/",
    "retrieved_on": "2026-11-17",
    "trust": "官方文件"
+  },
+  {
+   "issue": "PAYUNi 退款時交易還在請款中",
+   "symptom": "信用卡（含 Click to Pay）退款時 CloseStatus 還不是 2 請款成功；程式只在請款成功才退，導致無法退款",
+   "cause": "把「請款成功才能退款」當成唯一路徑；請款申請中（1）、請款處理中（7）其實都有官方處理方式",
+   "solution": "先查交易取得 CloseStatus | 1 請款申請中：trade/close CloseType=-1 取消請款，全額退再 trade/cancel 取消授權，部分退改用 CloseType=1 以扣掉退款後的金額重新請款 | 7 請款處理中：CloseType=2 會記為預計退款（RefundType=3），請款完成後自動轉退款申請中 | 9／3 未請款：trade/cancel 或 CloseType=1 部分請款 | 2 請款成功：CloseType=2 | 部分請退款只限一次付清與國外卡 | 處理後再查一次確認狀態",
+   "provider": "payuni",
+   "severity": "high",
+   "doc_url": "https://docs.payuni.com.tw/web/#/7/38 https://docs.payuni.com.tw/web/#/7/39 https://docs.payuni.com.tw/web/#/7/153 https://docs.payuni.com.tw/web/#/7/164",
+   "retrieved_on": "2026-11-19",
+   "trust": "官方文件"
   }
  ]
 }
