@@ -1,7 +1,7 @@
 # TapPay Payment API Reference
 
 > 目錄精簡版：只含參考文件與 JSON 資料，不含腳本。文中提到 `scripts/`、`examples/`、`tests/` 的工具在完整版（npm 套件 `taiwan-payment-skill`）。
-> 金鑰與商店代號由使用者在自己的系統設定後，以參數傳入程式；文中以 `<HASH_KEY>` 這類佔位字表示。服務商公開的測試金鑰也以佔位字表示，請到該服務商官方文件取得。帳密類欄位以 `<帳密欄位>` 表示。
+> 金鑰與商店代號由使用者在自己的系統設定後，以參數傳入程式；文中以 `YOUR_HASH_KEY` 這類假值表示。服務商公開的測試金鑰以 `YOUR_TEST_KEY` 表示，請到該服務商官方文件取得。帳密類欄位以 `<帳密欄位>` 表示。
 
 TapPay（拍付國際）金流 API 完整參考文件（繁體中文）。
 
@@ -129,7 +129,7 @@ TapPay 為「拍付國際資訊股份有限公司」旗下支付處理服務，�
 | 編碼 | UTF-8 |
 | Content-Type | `application/json` |
 | HTTP Method | POST（所有後端 API） |
-| 認證 Header | `x-api-key: <PARTNER_KEY>` |
+| 認證 Header | `x-api-key: YOUR_PARTNER_KEY` |
 | 正式環境 | 後端呼叫的伺服器 IP 須在 Portal 正式環境登錄（否則 `status: 4` IP 不符） |
 
 ### 測試卡號（[Test Card](https://docs.tappaysdk.com/tutorial/zh/reference.html#test-card)）
@@ -666,9 +666,9 @@ TPDirect.virtualAccount.getPrime(function (error, result) {
 ```bash
 curl -X POST https://sandbox.tappaysdk.com/tpc/payment/pay-by-prime \
   -H 'content-type: application/json' \
-  -H 'x-api-key: <PARTNER_KEY>' \
+  -H 'x-api-key: YOUR_PARTNER_KEY' \
   -d '{
-    "partner_key": "<PARTNER_KEY>",
+    "partner_key": "YOUR_PARTNER_KEY",
     "prime":       "va_xxxxxxxxxxxxxxx",
     "amount":      16,
     "merchant_id": "GlobalTesting_VIRTUAL_ACCOUNT",
@@ -709,7 +709,7 @@ curl -X POST https://sandbox.tappaysdk.com/tpc/payment/pay-by-prime \
 POST {base_url}/tpc/payment/pay-by-prime
 Headers:
   Content-Type: application/json
-  x-api-key:    <PARTNER_KEY>
+  x-api-key:    YOUR_PARTNER_KEY
 ```
 
 ### 請求參數
@@ -776,9 +776,9 @@ Headers:
 ```bash
 curl -X POST https://sandbox.tappaysdk.com/tpc/payment/pay-by-prime \
   -H 'content-type: application/json' \
-  -H 'x-api-key: <PARTNER_KEY>' \
+  -H 'x-api-key: YOUR_PARTNER_KEY' \
   -d '{
-    "partner_key": "<PARTNER_KEY>",
+    "partner_key": "YOUR_PARTNER_KEY",
     "prime":       "test_prime_xxxxxxxxxxxxxxxxxxx",
     "amount":      1500,
     "merchant_id": "GlobalTesting_CTBC",
@@ -885,11 +885,11 @@ POST {base_url}/tpc/payment/pay-by-token
 ```bash
 curl -X POST https://sandbox.tappaysdk.com/tpc/payment/pay-by-token \
   -H 'content-type: application/json' \
-  -H 'x-api-key: <PARTNER_KEY>' \
+  -H 'x-api-key: YOUR_PARTNER_KEY' \
   -d '{
-    "partner_key": "<PARTNER_KEY>",
-    "card_key":    "<CARD_KEY>",
-    "card_token":  "<CARD_TOKEN>",
+    "partner_key": "YOUR_PARTNER_KEY",
+    "card_key":    "YOUR_CARD_KEY",
+    "card_token":  "YOUR_CARD_TOKEN",
     "merchant_id": "GlobalTesting_CTBC",
     "amount":      299,
     "currency":    "TWD",
@@ -1015,9 +1015,9 @@ POST {base_url}/tpc/transaction/refund
 ```bash
 curl -X POST https://sandbox.tappaysdk.com/tpc/transaction/refund \
   -H 'content-type: application/json' \
-  -H 'x-api-key: <PARTNER_KEY>' \
+  -H 'x-api-key: YOUR_PARTNER_KEY' \
   -d '{
-    "partner_key":  "<PARTNER_KEY>",
+    "partner_key":  "YOUR_PARTNER_KEY",
     "rec_trade_id": "D20260507abcdefg123",
     "amount":       500
   }'
@@ -1098,9 +1098,9 @@ POST {base_url}/tpc/transaction/query
 ```bash
 curl -X POST https://sandbox.tappaysdk.com/tpc/transaction/query \
   -H 'content-type: application/json' \
-  -H 'x-api-key: <PARTNER_KEY>' \
+  -H 'x-api-key: YOUR_PARTNER_KEY' \
   -d '{
-    "partner_key": "<PARTNER_KEY>",
+    "partner_key": "YOUR_PARTNER_KEY",
     "filters": {
       "time": { "start_time": 1777564800000, "end_time": 1778169600000 },
       "order_number": "ORD20260507001"

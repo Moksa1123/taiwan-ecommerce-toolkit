@@ -1,7 +1,7 @@
 # SmilePay Logistics API Reference
 
 > Directory edition: reference files and JSON data only, no scripts. Tools under `scripts/`, `examples/` and `tests/` ship in the full edition (npm package `taiwan-logistics-skill`).
-> Keys and merchant IDs are set up by the user and passed into the code as parameters; they appear as placeholders such as `<HASH_KEY>`. Published sandbox keys are also shown as placeholders; get them from the provider's official docs. Credential-type field names are shown as `<帳密欄位>`.
+> Keys and merchant IDs are set up by the user and passed into the code as parameters; they appear as fake values such as `YOUR_HASH_KEY`. Published sandbox keys are shown as `YOUR_TEST_KEY`; get them from the provider's official docs. Credential-type field names are shown as `<帳密欄位>`.
 
 速買配 (SmilePay) 物流 API 完整參考文件。
 
@@ -77,7 +77,7 @@ SmilePay 提供官方測試帳號，可直接用來打通流程：
 ```
 Dcvc:        107
 Rvg2c:       1
-Verify_key:  <官方公開測試值，見該服務商官方文件>
+Verify_key:  YOUR_TEST_KEY
 Mid:         1111
 ```
 
@@ -103,7 +103,7 @@ Mid:         1111
 | 電子地圖 (mtmk) | `ssl.smse.com.tw/ezpos/` |
 
 所有端點皆為 HTTPS，唯一例外：`ezcatGetTrackNum.asp` 與 `C2BPayment.asp`
-在原始程式碼中是 `http://`，但 `https://` 也可正常運作（建議統一用 HTTPS）。
+原始程式碼用 HTTP 協定，改用 HTTPS 也可正常運作（建議統一用 HTTPS）。
 
 ---
 
@@ -126,7 +126,7 @@ SmilePay 物流 API **沒有計算 CheckMacValue 之類的簽章**，而是透�
 <?php
 $post_data = [
     'Dcvc'       => '107',
-    'Verify_key' => '<官方公開測試值，見該服務商官方文件>',
+    'Verify_key' => 'YOUR_TEST_KEY',
     'Rvg2c'      => '1',
     // ... 其他物流參數
 ];
@@ -146,7 +146,7 @@ import xml.etree.ElementTree as ET
 
 post_data = {
     'Dcvc':       '107',
-    'Verify_key': '<官方公開測試值，見該服務商官方文件>',
+    'Verify_key': 'YOUR_TEST_KEY',
     'Rvg2c':      '1',
     # ... 其他物流參數
 }
@@ -517,7 +517,7 @@ POST https://ssl.smse.com.tw/api/ezcatGetTrackNum.asp
 $post_data = [
     'Dcvc'             => '107',
     'Rvg2c'            => '1',
-    'Verify_key'       => '<官方公開測試值，見該服務商官方文件>',
+    'Verify_key'       => 'YOUR_TEST_KEY',
     'Pay_zg'           => 51,           // C2C COD
     'Pay_subzg'        => '7NET',       // 7-11
     'Pur_name'         => '王小明',
@@ -548,7 +548,7 @@ $smilepay_no = (string)$xml->SmilePayNO;
 // === 第二階段：取得交貨便號碼 ===
 $post_data2 = [
     'Dcvc'       => '107',
-    'Verify_key' => '<官方公開測試值，見該服務商官方文件>',
+    'Verify_key' => 'YOUR_TEST_KEY',
     'smseid'     => $smilepay_no,
     'Pay_subzg'  => '7NET',
     'types'      => 'Xml',
@@ -573,7 +573,7 @@ import xml.etree.ElementTree as ET
 post_data = {
     'Dcvc':             '107',
     'Rvg2c':            '1',
-    'Verify_key':       '<官方公開測試值，見該服務商官方文件>',
+    'Verify_key':       'YOUR_TEST_KEY',
     'Pay_zg':           81,        # TCAT COD
     'Pay_subzg':        'TCAT',
     'Pur_name':         '王小明',
@@ -596,7 +596,7 @@ smilepay_no = xml.findtext('SmilePayNO')
 # === 第二階段：取得 TCAT 託運單號 ===
 post_data2 = {
     'Dcvc':              '107',
-    'Verify_key':        '<官方公開測試值，見該服務商官方文件>',
+    'Verify_key':        'YOUR_TEST_KEY',
     'smseid':            smilepay_no,
     'package_size':      '60',
     'temperature':       '0001',     # 0001=常溫

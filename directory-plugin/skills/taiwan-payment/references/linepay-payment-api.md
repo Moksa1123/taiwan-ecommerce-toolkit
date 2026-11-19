@@ -1,7 +1,7 @@
 # LINE Pay Online API v4 Reference
 
 > 目錄精簡版：只含參考文件與 JSON 資料，不含腳本。文中提到 `scripts/`、`examples/`、`tests/` 的工具在完整版（npm 套件 `taiwan-payment-skill`）。
-> 金鑰與商店代號由使用者在自己的系統設定後，以參數傳入程式；文中以 `<HASH_KEY>` 這類佔位字表示。服務商公開的測試金鑰也以佔位字表示，請到該服務商官方文件取得。帳密類欄位以 `<帳密欄位>` 表示。
+> 金鑰與商店代號由使用者在自己的系統設定後，以參數傳入程式；文中以 `YOUR_HASH_KEY` 這類假值表示。服務商公開的測試金鑰以 `YOUR_TEST_KEY` 表示，請到該服務商官方文件取得。帳密類欄位以 `<帳密欄位>` 表示。
 
 LINE Pay 線上 API v4 完整參考文件（繁體中文）。
 
@@ -188,7 +188,7 @@ import uuid
 import requests
 
 CHANNEL_ID = "1234567890"
-CHANNEL_SECRET = "<channel_secret>"
+CHANNEL_SECRET = "your_channel_secret"
 BASE_URL = "https://sandbox-api-pay.line.me"
 
 

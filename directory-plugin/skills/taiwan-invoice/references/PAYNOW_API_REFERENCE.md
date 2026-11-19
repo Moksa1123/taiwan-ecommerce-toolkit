@@ -1,7 +1,7 @@
 # 立吉富 PayNow 電子發票 API
 
 > 目錄精簡版：只含參考文件與 JSON 資料，不含腳本。文中提到 `scripts/`、`examples/`、`tests/` 的工具在完整版（npm 套件 `taiwan-invoice-skill`）。
-> 金鑰與商店代號由使用者在自己的系統設定後，以參數傳入程式；文中以 `<HASH_KEY>` 這類佔位字表示。服務商公開的測試金鑰也以佔位字表示，請到該服務商官方文件取得。帳密類欄位以 `<帳密欄位>` 表示。
+> 金鑰與商店代號由使用者在自己的系統設定後，以參數傳入程式；文中以 `YOUR_HASH_KEY` 這類假值表示。服務商公開的測試金鑰以 `YOUR_TEST_KEY` 表示，請到該服務商官方文件取得。帳密類欄位以 `<帳密欄位>` 表示。
 
 PayNow 有兩套發票 API：
 
@@ -153,7 +153,7 @@ LoveCode, Description, Quantity, UnitPrice, Amount, Remark, ItemTaxtype, IsPassC
 
 3DES／ECB／Zero-Padding → Base64（空白以 `+` 取代）；Key = `1234567890` + <帳密欄位> + `123456`（共 24 碼），
 <帳密欄位> 為交易密碼不足 8 碼右補 `0`、超過取前 8 碼。文件未指明套用於哪個欄位。
-例：交易密碼 `<官方公開測試值>` → `12340000`，`402595001111222299912/12` → `PTKLMe29fUC33H8drlRUJhYkLRp9vXy6`
+例：交易密碼 `YOUR_TEST_LOGIN` → `12340000`，`402595001111222299912/12` → `PTKLMe29fUC33H8drlRUJhYkLRp9vXy6`
 （`tests/vectors/paynow.json` 驗證；與 PayNow 物流 API 規則相同）。
 
 ---

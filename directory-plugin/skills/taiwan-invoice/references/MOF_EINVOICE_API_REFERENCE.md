@@ -1,7 +1,7 @@
 # 財政部電子發票整合服務平台 應用 API 參考
 
 > 目錄精簡版：只含參考文件與 JSON 資料，不含腳本。文中提到 `scripts/`、`examples/`、`tests/` 的工具在完整版（npm 套件 `taiwan-invoice-skill`）。
-> 金鑰與商店代號由使用者在自己的系統設定後，以參數傳入程式；文中以 `<HASH_KEY>` 這類佔位字表示。服務商公開的測試金鑰也以佔位字表示，請到該服務商官方文件取得。帳密類欄位以 `<帳密欄位>` 表示。
+> 金鑰與商店代號由使用者在自己的系統設定後，以參數傳入程式；文中以 `YOUR_HASH_KEY` 這類假值表示。服務商公開的測試金鑰以 `YOUR_TEST_KEY` 表示，請到該服務商官方文件取得。帳密類欄位以 `<帳密欄位>` 表示。
 
 > Source: 《電子發票應用 API 規格》V2.1（財政部財政資訊中心，中華民國 114 年 4 月 23 日）
 > Spec PDF: 平台〔快速上手〕→〔文件下載〕→〔營業人〕第 4 項 https://www.einvoice.nat.gov.tw/download/ptl003w/AC20000002 （檔案本體：`POST https://service-mc.einvoice.nat.gov.tw/ptl/portal/api/ptl003w/ptl003wDownloadFile?fileId=5160&fileExtension=PDF&fileName=`）

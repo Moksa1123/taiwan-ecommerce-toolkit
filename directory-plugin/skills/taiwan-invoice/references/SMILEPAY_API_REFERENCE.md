@@ -1,7 +1,7 @@
 # SmilePay 電子發票 API 完整技術規格
 
 > 目錄精簡版：只含參考文件與 JSON 資料，不含腳本。文中提到 `scripts/`、`examples/`、`tests/` 的工具在完整版（npm 套件 `taiwan-invoice-skill`）。
-> 金鑰與商店代號由使用者在自己的系統設定後，以參數傳入程式；文中以 `<HASH_KEY>` 這類佔位字表示。服務商公開的測試金鑰也以佔位字表示，請到該服務商官方文件取得。帳密類欄位以 `<帳密欄位>` 表示。
+> 金鑰與商店代號由使用者在自己的系統設定後，以參數傳入程式；文中以 `YOUR_HASH_KEY` 這類假值表示。服務商公開的測試金鑰以 `YOUR_TEST_KEY` 表示，請到該服務商官方文件取得。帳密類欄位以 `<帳密欄位>` 表示。
 
 > 來源：SmilePay 官方電子發票 API 文件（`ssl.smse.com.tw/pay_gr/pay_help_paydc_einvoice_api.asp`，速買配客服 2026-09-30 回覆列為可公開整理的文件；未登入會導向商家登入頁）
 > 注意：本 API 可接受 **POST** 與 **GET** 兩種傳輸方式
@@ -21,7 +21,7 @@
 
 ## 測試環境資料
 - **電子發票帳號 (Grvc)**：`SEI1000034`
-- **驗證碼 (Verify_key)**：`<官方公開測試值，見該服務商官方文件>`
+- **驗證碼 (Verify_key)**：`YOUR_TEST_KEY`
 - **測試統編**：`80129529`
 
 ---
@@ -41,7 +41,7 @@
 | 參數名稱 | 名稱 | B2C | B2B | 格式 | 說明 |
 | :--- | :--- | :--- | :--- | :--- | :--- |
 | `Grvc` | 電子發票帳號 | Ｏ | Ｏ | 由速買配提供 | SEI1000034 |
-| `Verify_key` | 驗證碼 | Ｏ | Ｏ | 由速買配提供 | <官方公開測試值，見該服務商官方文件> |
+| `Verify_key` | 驗證碼 | Ｏ | Ｏ | 由速買配提供 | YOUR_TEST_KEY |
 
 #### B. 發票資訊
 | 參數名稱 | 名稱 | B2C | B2B | 格式 | 說明 |
@@ -115,17 +115,17 @@
 
 **B2C發票**：
 ```
-https://ssl.smse.com.tw/api_test/SPEinvoice_Storage.asp?Grvc=SEI1000034&Verify_key=<官方公開測試值，見該服務商官方文件>&Name=速買配&Phone=0900000000&Email=Test@testmailserver.net&Intype=07&TaxType=1&LoveKey=&DonateMark=0&Description=商品1|商品2&Quantity=5|8&UnitPrice=10|15&Unit=顆|條&Amount=50|120&ALLAmount=170&InvoiceDate=2026/1/26&InvoiceTime=15:33:33
+https://ssl.smse.com.tw/api_test/SPEinvoice_Storage.asp?Grvc=SEI1000034&Verify_key=YOUR_TEST_KEY&Name=速買配&Phone=0900000000&Email=Test@testmailserver.net&Intype=07&TaxType=1&LoveKey=&DonateMark=0&Description=商品1|商品2&Quantity=5|8&UnitPrice=10|15&Unit=顆|條&Amount=50|120&ALLAmount=170&InvoiceDate=2026/1/26&InvoiceTime=15:33:33
 ```
 
 **B2B發票**：
 ```
-https://ssl.smse.com.tw/api_test/SPEinvoice_Storage.asp?Grvc=SEI1000034&Verify_key=<官方公開測試值，見該服務商官方文件>&CompanyName=速買配&Phone=0900000000&Email=Test@testmailserver.net&Intype=07&TaxType=1&LoveKey=&DonateMark=0&Description=商品1|商品2&Quantity=5|8&UnitPrice=10|15&Unit=顆|條&Amount=50|120&ALLAmount=170&InvoiceDate=2026/1/26&InvoiceTime=15:33:33&Buyer_id=80129529
+https://ssl.smse.com.tw/api_test/SPEinvoice_Storage.asp?Grvc=SEI1000034&Verify_key=YOUR_TEST_KEY&CompanyName=速買配&Phone=0900000000&Email=Test@testmailserver.net&Intype=07&TaxType=1&LoveKey=&DonateMark=0&Description=商品1|商品2&Quantity=5|8&UnitPrice=10|15&Unit=顆|條&Amount=50|120&ALLAmount=170&InvoiceDate=2026/1/26&InvoiceTime=15:33:33&Buyer_id=80129529
 ```
 
 **B2G發票** (統編不可空白，商品金額必須含稅 UnitTAX=Y，發票類型必須帶入 B2B Einvoice_Type=B2B)：
 ```
-https://ssl.smse.com.tw/api_test/SPEinvoice_Storage.asp?Grvc=SEI1000034&Verify_key=<官方公開測試值，見該服務商官方文件>&CompanyName=速買配&Phone=0900000000&Email=Test@testmailserver.net&Intype=07&TaxType=1&LoveKey=&DonateMark=0&Description=商品&Quantity=1&UnitPrice=100&Unit=顆&Amount=100&ALLAmount=100&InvoiceDate=2026/1/26&InvoiceTime=15:33:33&Buyer_id=80129529&UnitTAX=Y&Einvoice_Type=B2B
+https://ssl.smse.com.tw/api_test/SPEinvoice_Storage.asp?Grvc=SEI1000034&Verify_key=YOUR_TEST_KEY&CompanyName=速買配&Phone=0900000000&Email=Test@testmailserver.net&Intype=07&TaxType=1&LoveKey=&DonateMark=0&Description=商品&Quantity=1&UnitPrice=100&Unit=顆&Amount=100&ALLAmount=100&InvoiceDate=2026/1/26&InvoiceTime=15:33:33&Buyer_id=80129529&UnitTAX=Y&Einvoice_Type=B2B
 ```
 
 ### 回應值
@@ -382,7 +382,7 @@ https://ssl.smse.com.tw/api_test/SPEinvoice_Storage.asp?Grvc=SEI1000034&Verify_k
 | 參數 | 名稱 | 格式 | 說明 |
 | :--- | :--- | :--- | :--- |
 | `Grvc` | 電子發票帳號 | 由速買配提供 | SEI1000034 |
-| `Verify_key` | 驗證碼 | 由速買配提供 | <官方公開測試值，見該服務商官方文件> |
+| `Verify_key` | 驗證碼 | 由速買配提供 | YOUR_TEST_KEY |
 | `InNumber` | 發票號碼 | 英文(2)+數字(8)共10碼 | |
 | `InvoiceDate` | 發票日期 | YYYY/MM/DD | |
 | `RaNumber` | 發票認證碼 | 數字 | **B2C發票**：隨機碼<br>**B2B發票**：買受人統編 |
@@ -393,12 +393,12 @@ https://ssl.smse.com.tw/api_test/SPEinvoice_Storage.asp?Grvc=SEI1000034&Verify_k
 
 **B2C發票**：
 ```
-https://einvoice.smilepay.net/einvoice_test/SmilePayCarrier/InvoiceDetails.php?Grvc=SEI1000034&Verify_key=<官方公開測試值，見該服務商官方文件>&InNumber=HG00631928&InvoiceDate=2024/11/06&RaNumber=7572
+https://einvoice.smilepay.net/einvoice_test/SmilePayCarrier/InvoiceDetails.php?Grvc=SEI1000034&Verify_key=YOUR_TEST_KEY&InNumber=HG00631928&InvoiceDate=2024/11/06&RaNumber=7572
 ```
 
 **B2B發票**：
 ```
-https://einvoice.smilepay.net/einvoice_test/SmilePayCarrier/InvoiceDetails.php?Grvc=SEI1000034&Verify_key=<官方公開測試值，見該服務商官方文件>&InNumber=HG00631929&InvoiceDate=2024/11/06&RaNumber=80129529
+https://einvoice.smilepay.net/einvoice_test/SmilePayCarrier/InvoiceDetails.php?Grvc=SEI1000034&Verify_key=YOUR_TEST_KEY&InNumber=HG00631929&InvoiceDate=2024/11/06&RaNumber=80129529
 ```
 
 ---

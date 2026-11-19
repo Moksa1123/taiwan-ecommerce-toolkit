@@ -100,7 +100,7 @@ Mid:         1111
 | 電子地圖 (mtmk) | `ssl.smse.com.tw/ezpos/` |
 
 所有端點皆為 HTTPS，唯一例外：`ezcatGetTrackNum.asp` 與 `C2BPayment.asp`
-在原始程式碼中是 `http://`，但 `https://` 也可正常運作（建議統一用 HTTPS）。
+原始程式碼用 HTTP 協定，改用 HTTPS 也可正常運作（建議統一用 HTTPS）。
 
 ---
 

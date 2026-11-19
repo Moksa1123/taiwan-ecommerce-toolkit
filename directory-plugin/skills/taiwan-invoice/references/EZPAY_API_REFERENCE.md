@@ -1,7 +1,7 @@
 # ezPay 簡單付電子發票 API 完整技術規格 (ezPay Invoice API)
 
 > 目錄精簡版：只含參考文件與 JSON 資料，不含腳本。文中提到 `scripts/`、`examples/`、`tests/` 的工具在完整版（npm 套件 `taiwan-invoice-skill`）。
-> 金鑰與商店代號由使用者在自己的系統設定後，以參數傳入程式；文中以 `<HASH_KEY>` 這類佔位字表示。服務商公開的測試金鑰也以佔位字表示，請到該服務商官方文件取得。帳密類欄位以 `<帳密欄位>` 表示。
+> 金鑰與商店代號由使用者在自己的系統設定後，以參數傳入程式；文中以 `YOUR_HASH_KEY` 這類假值表示。服務商公開的測試金鑰以 `YOUR_TEST_KEY` 表示，請到該服務商官方文件取得。帳密類欄位以 `<帳密欄位>` 表示。
 
 > 官方文檔：https://inv.ezpay.com.tw/Invoice_index/download
 > 技術手冊版本：EZP_INVI v1.2.2（標準版）、EZP_Track v1.0.0（字軌管理）、EZP_BDV v1.0.0（手機條碼／捐贈碼驗證）、ezPay_invoice_by_batch_file v1.0.5（批次開立）、折讓與作廢查詢手冊（標準版）v1.0.1（2026-11-05）、EZP_CES v1.0.0（境外電商）
@@ -42,8 +42,8 @@ ezPay 電子發票加值服務平台（簡稱「本平台」）由簡單行動�
 | **商店代號 (MerchantID_)** | 須於 `cinv.ezpay.com.tw` 申請會員後取得（範例：`3622183`） |
 | **HashKey** | 商店申請後於後台「會員管理／基本資料設定／基本資料」取得 |
 | **HashIV** | 同上 |
-| **官方範例 HashKey** | `<官方公開測試值，見該服務商官方文件>`（32 碼） |
-| **官方範例 HashIV** | `<官方公開測試值，見該服務商官方文件>`（16 碼） |
+| **官方範例 HashKey** | `YOUR_TEST_KEY`（32 碼） |
+| **官方範例 HashIV** | `YOUR_TEST_KEY`（16 碼） |
 
 > **重要**：HashKey 為 **32 碼**、HashIV 為 **16 碼**，與綠界（16/16）不同。正式環境的金鑰需向 ezPay 申請取得，且每商店獨立。
 
@@ -173,8 +173,8 @@ const params = {
 
 const postData = encryptPostData(
     params,
-    '<官方公開測試值，見該服務商官方文件>',  // 32 bytes
-    '<官方公開測試值，見該服務商官方文件>'                    // 16 bytes
+    'YOUR_TEST_KEY',  // 32 bytes
+    'YOUR_TEST_KEY'                    // 16 bytes
 )
 ```
 
@@ -226,9 +226,9 @@ InvoiceTransNo=14061313541640927&MerchantID=3622183
 &MerchantOrderNo=201409170000001&RandomNum=0142&TotalAmt=500
 
 串接 IV/Key：
-HashIV=<官方公開測試值，見該服務商官方文件>&InvoiceTransNo=14061313541640927&MerchantID=3622183
+HashIV=YOUR_TEST_KEY&InvoiceTransNo=14061313541640927&MerchantID=3622183
 &MerchantOrderNo=201409170000001&RandomNum=0142&TotalAmt=500
-&HashKey=<官方公開測試值，見該服務商官方文件>
+&HashKey=YOUR_TEST_KEY
 
 SHA256 大寫：
 303AB800650B724733B5D91CBCE075D9EA09E4CDE9CD33461D45F07D5EC7EECB

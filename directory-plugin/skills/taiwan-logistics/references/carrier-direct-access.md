@@ -1,7 +1,7 @@
 # 物流業者直連可行性說明——哪些「沒有公開 API」
 
 > Directory edition: reference files and JSON data only, no scripts. Tools under `scripts/`, `examples/` and `tests/` ship in the full edition (npm package `taiwan-logistics-skill`).
-> Keys and merchant IDs are set up by the user and passed into the code as parameters; they appear as placeholders such as `<HASH_KEY>`. Published sandbox keys are also shown as placeholders; get them from the provider's official docs. Credential-type field names are shown as `<帳密欄位>`.
+> Keys and merchant IDs are set up by the user and passed into the code as parameters; they appear as fake values such as `YOUR_HASH_KEY`. Published sandbox keys are shown as `YOUR_TEST_KEY`; get them from the provider's official docs. Credential-type field names are shown as `<帳密欄位>`.
 
 > 這份文件的目的是**防止誤判**。`data/providers.csv` 裡列了 7-11、全家、萊爾富、OK、黑貓、宅配通、中華郵政等業者，那代表「**這個通路收得到貨**」，不代表「**你可以直接串它的 API**」。
 > 兩者差很多，本文件逐一釐清。

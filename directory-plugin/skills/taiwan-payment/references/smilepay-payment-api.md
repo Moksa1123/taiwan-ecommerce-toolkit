@@ -1,7 +1,7 @@
 # SmilePay Payment API Reference
 
 > 目錄精簡版：只含參考文件與 JSON 資料，不含腳本。文中提到 `scripts/`、`examples/`、`tests/` 的工具在完整版（npm 套件 `taiwan-payment-skill`）。
-> 金鑰與商店代號由使用者在自己的系統設定後，以參數傳入程式；文中以 `<HASH_KEY>` 這類佔位字表示。服務商公開的測試金鑰也以佔位字表示，請到該服務商官方文件取得。帳密類欄位以 `<帳密欄位>` 表示。
+> 金鑰與商店代號由使用者在自己的系統設定後，以參數傳入程式；文中以 `YOUR_HASH_KEY` 這類假值表示。服務商公開的測試金鑰以 `YOUR_TEST_KEY` 表示，請到該服務商官方文件取得。帳密類欄位以 `<帳密欄位>` 表示。
 
 速買配 (SmilePay) 金流 API 完整參考文件。
 
@@ -86,7 +86,7 @@
 ```
 Dcvc        : 107
 Rvg2c       : 1
-Verify_key  : <官方公開測試值，見該服務商官方文件>
+Verify_key  : YOUR_TEST_KEY
 mid         : 1111
 ```
 
@@ -289,7 +289,7 @@ POST /api/SPPayment.asp HTTP/1.1
 Host: ssl.smse.com.tw
 Content-Type: application/x-www-form-urlencoded
 
-Dcvc=107&Rvg2c=1&Verify_key=<官方公開測試值，見該服務商官方文件>
+Dcvc=107&Rvg2c=1&Verify_key=YOUR_TEST_KEY
 &Pay_zg=2&Pur_name=%E7%8E%8B%E5%B0%8F%E6%98%8E
 &Mobile_number=0912345678&Email=test%40example.com
 &Data_id=ORD20260507001&od_sob=%E5%95%86%E5%93%81A*1
@@ -479,7 +479,7 @@ base = "https://ssl.smse.com.tw/ezpos/mtmk_utf.asp"
 params = {
     "Dcvc": "107",
     "Rvg2c": "1",
-    "Verify_key": "<官方公開測試值，見該服務商官方文件>",
+    "Verify_key": "YOUR_TEST_KEY",
     "Pay_zg": "1",
     "Pur_name": "王小明",
     "Mobile_number": "0912345678",

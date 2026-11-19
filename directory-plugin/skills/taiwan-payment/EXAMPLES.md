@@ -1,7 +1,7 @@
 # 台灣金流 Skill - 完整範例集
 
 > 目錄精簡版：只含參考文件與 JSON 資料，不含腳本。文中提到 `scripts/`、`examples/`、`tests/` 的工具在完整版（npm 套件 `taiwan-payment-skill`）。
-> 金鑰與商店代號由使用者在自己的系統設定後，以參數傳入程式；文中以 `<HASH_KEY>` 這類佔位字表示。服務商公開的測試金鑰也以佔位字表示，請到該服務商官方文件取得。帳密類欄位以 `<帳密欄位>` 表示。
+> 金鑰與商店代號由使用者在自己的系統設定後，以參數傳入程式；文中以 `YOUR_HASH_KEY` 這類假值表示。服務商公開的測試金鑰以 `YOUR_TEST_KEY` 表示，請到該服務商官方文件取得。帳密類欄位以 `<帳密欄位>` 表示。
 
 這份文件包含使用 `taiwan-payment` skill 的完整實作範例。
 
@@ -143,14 +143,14 @@ class NewebPayService {
 
     constructor(isProd: boolean = false) {
         this.merchantID = isProd
-            ? '<NEWEBPAY_MERCHANT_ID_PROD>'
-            : '<NEWEBPAY_MERCHANT_ID_TEST>'
+            ? 'YOUR_NEWEBPAY_MERCHANT_ID_PROD'
+            : 'YOUR_NEWEBPAY_MERCHANT_ID_TEST'
         this.hashKey = isProd
-            ? '<NEWEBPAY_HASH_KEY_PROD>'
-            : '<NEWEBPAY_HASH_KEY_TEST>'
+            ? 'YOUR_NEWEBPAY_HASH_KEY_PROD'
+            : 'YOUR_NEWEBPAY_HASH_KEY_TEST'
         this.hashIV = isProd
-            ? '<NEWEBPAY_HASH_IV_PROD>'
-            : '<NEWEBPAY_HASH_IV_TEST>'
+            ? 'YOUR_NEWEBPAY_HASH_IV_PROD'
+            : 'YOUR_NEWEBPAY_HASH_IV_TEST'
         this.apiUrl = isProd
             ? 'https://core.newebpay.com/MPG/mpg_gateway'
             : 'https://ccore.newebpay.com/MPG/mpg_gateway'
@@ -276,9 +276,9 @@ class PAYUNiService {
     private uppUrl: string
 
     constructor(isProd: boolean = false) {
-        this.merID = '<PAYUNI_MER_ID>'
-        this.hashKey = '<PAYUNI_HASH_KEY>'
-        this.hashIV = '<PAYUNI_HASH_IV>'
+        this.merID = 'YOUR_PAYUNI_MER_ID'
+        this.hashKey = 'YOUR_PAYUNI_HASH_KEY'
+        this.hashIV = 'YOUR_PAYUNI_HASH_IV'
         this.uppUrl = isProd
             ? 'https://api.payuni.com.tw/api/upp'
             : 'https://sandbox-api.payuni.com.tw/api/upp'
@@ -634,8 +634,8 @@ const ecpayParams = {
 }
 const checkMacValue = generateECPayCheckMacValue(
     ecpayParams,
-    '<官方公開測試值，見該服務商官方文件>',
-    '<官方公開測試值，見該服務商官方文件>'
+    'YOUR_TEST_KEY',
+    'YOUR_TEST_KEY'
 )
 console.log('ECPay CheckMacValue:', checkMacValue)
 
@@ -728,8 +728,8 @@ export async function POST(request: Request) {
         merchantTradeNo: merchantTradeNo,
         totalAmount: totalAmount,
         itemName: itemNames.substring(0, 200), // 限制長度
-        returnURL: `<NEXT_PUBLIC_BASE_URL>/payment/return`,
-        notifyURL: `<NEXT_PUBLIC_BASE_URL>/api/payment/callback`,
+        returnURL: `https://example.com/payment/return`,
+        notifyURL: `https://example.com/api/payment/callback`,
         email: shippingInfo.email,
     })
 
@@ -1006,12 +1006,12 @@ export async function POST(request: Request) {
         TotalAmount: plan.price,
         TradeDesc: `訂閱方案：${plan.name}`,
         ItemName: plan.name,
-        ReturnURL: `<NEXT_PUBLIC_BASE_URL>/api/subscription/callback`,
+        ReturnURL: `https://example.com/api/subscription/callback`,
         PeriodAmount: plan.price,       // 每期金額
         PeriodType: plan.frequency,     // 'M' = 月, 'Y' = 年
         Frequency: 1,                   // 每 1 個週期
         ExecTimes: plan.totalTimes,     // 執行次數
-        PeriodReturnURL: `<NEXT_PUBLIC_BASE_URL>/api/subscription/periodic-callback`,
+        PeriodReturnURL: `https://example.com/api/subscription/periodic-callback`,
     }
 
     const result = await service.createPeriodicOrder(userId, periodicData)
@@ -1169,7 +1169,7 @@ const params = {
     ChoosePayment: 'ALL',
     EncryptType: '1',
 }
-const got = generateECPayCheckMacValue(params, '<官方公開測試值，見該服務商官方文件>', '<官方公開測試值，見該服務商官方文件>')
+const got = generateECPayCheckMacValue(params, 'YOUR_TEST_KEY', 'YOUR_TEST_KEY')
 console.assert(got === 'D5499ADD6F1D331B09D196D56C672A3A6E0D4FE31C1B19E10378B67AD1249DC8', got)
 ```
 

@@ -1,7 +1,7 @@
 # PChomePay 支付連 Payment API Reference
 
 > 目錄精簡版：只含參考文件與 JSON 資料，不含腳本。文中提到 `scripts/`、`examples/`、`tests/` 的工具在完整版（npm 套件 `taiwan-payment-skill`）。
-> 金鑰與商店代號由使用者在自己的系統設定後，以參數傳入程式；文中以 `<HASH_KEY>` 這類佔位字表示。服務商公開的測試金鑰也以佔位字表示，請到該服務商官方文件取得。帳密類欄位以 `<帳密欄位>` 表示。
+> 金鑰與商店代號由使用者在自己的系統設定後，以參數傳入程式；文中以 `YOUR_HASH_KEY` 這類假值表示。服務商公開的測試金鑰以 `YOUR_TEST_KEY` 表示，請到該服務商官方文件取得。帳密類欄位以 `<帳密欄位>` 表示。
 
 PChomePay 支付連金流 API 完整參考文件（依官方 [PChomePay API document](https://docs.google.com/document/d/1dPIPJc4xfyjkJ1i2yxaja4OP0G-iGFRXM08NDMuttZE/) 1.7.4，2026-09-01；2026-11-17 查核）。「拍錢包」是其中一種付款方式（`PI`）。本文件僅涵蓋金流 (建立訂單、付款通知、退款、餘額、提領、對帳)；超商取貨物流 (`/v1/logistic/*`) 屬於物流範疇，請參閱 taiwan-logistics 對應文件。
 
@@ -100,7 +100,7 @@ PChomePay 後台會以下列 IP 發送 Notify 通知至合作方：
 | 請求格式 | JSON (`Content-Type: application/json`) |
 | 回應格式 | JSON (對帳 API 為特規多筆 JSON) |
 | 字元編碼 | UTF-8 |
-| 認證 Header | `pcpay-token: <token>` (取得 token 後使用) |
+| 認證 Header | `pcpay-token: YOUR_TOKEN` (取得 token 後使用) |
 
 ---
 
@@ -120,8 +120,8 @@ PChomePay 採 **兩階段認證**：
 ```python
 import base64
 
-app_id = "<APP_ID>"
-secret = "<SECRET>"
+app_id = "YOUR_APP_ID"
+secret = "YOUR_SECRET"
 
 raw = f"{app_id}:{secret}"
 auth = "Basic " + base64.b64encode(raw.encode()).decode()
@@ -140,7 +140,7 @@ curl -X POST "https://api.pchomepay.com.tw/v1/token" \
 
 ```json
 {
-  "token": "<PCPAY_TOKEN>",
+  "token": "YOUR_PCPAY_TOKEN",
   "expired_in": 28800,
   "expired_timestamp": 1474470110
 }
@@ -152,7 +152,7 @@ curl -X POST "https://api.pchomepay.com.tw/v1/token" \
 
 ```bash
 curl -X POST "https://api.pchomepay.com.tw/v1/payment" \
-  -H "pcpay-token: <PCPAY_TOKEN>" \
+  -H "pcpay-token: YOUR_PCPAY_TOKEN" \
   -H "Content-Type: application/json" \
   -d '{...}'
 ```
@@ -212,7 +212,7 @@ Authorization: Basic <base64(APP_ID:SECRET)>
 
 ```json
 {
-  "token": "<PCPAY_TOKEN>",
+  "token": "YOUR_PCPAY_TOKEN",
   "expired_in": 28800,
   "expired_timestamp": 1474470110
 }
@@ -229,7 +229,7 @@ Authorization: Basic <base64(APP_ID:SECRET)>
 ```
 POST /v1/payment
 Content-Type: application/json
-pcpay-token: <token>
+pcpay-token: YOUR_TOKEN
 ```
 
 ### 請求參數
@@ -287,7 +287,7 @@ pcpay-token: <token>
 ```bash
 curl -X POST "https://api.pchomepay.com.tw/v1/payment" \
   -H "Content-Type: application/json" \
-  -H "pcpay-token: <PCPAY_TOKEN>" \
+  -H "pcpay-token: YOUR_PCPAY_TOKEN" \
   -d '{
     "order_id": "B2C1703247199",
     "pay_type": ["CARD"],
@@ -341,7 +341,7 @@ curl -X POST "https://api.pchomepay.com.tw/v1/payment" \
 ```
 POST /v1/payment/atmva
 Content-Type: application/json
-pcpay-token: <token>
+pcpay-token: YOUR_TOKEN
 ```
 
 ### 請求參數
@@ -365,7 +365,7 @@ pcpay-token: <token>
 ```bash
 curl -X POST "https://api.pchomepay.com.tw/v1/payment/atmva" \
   -H "Content-Type: application/json" \
-  -H "pcpay-token: <token>" \
+  -H "pcpay-token: YOUR_TOKEN" \
   -d '{
     "order_id": "B2CATM1735808899",
     "amount": 500,
@@ -411,7 +411,7 @@ curl -X POST "https://api.pchomepay.com.tw/v1/payment/atmva" \
 ```
 POST /v1/payment/barcode
 Content-Type: application/json
-pcpay-token: <token>
+pcpay-token: YOUR_TOKEN
 ```
 
 ### 請求參數
@@ -433,7 +433,7 @@ pcpay-token: <token>
 ```bash
 curl -X POST "https://api.pchomepay.com.tw/v1/payment/barcode" \
   -H "Content-Type: application/json" \
-  -H "pcpay-token: <token>" \
+  -H "pcpay-token: YOUR_TOKEN" \
   -d '{
     "order_id": "B2CBARCODE1732620171",
     "amount": 500,
@@ -495,7 +495,7 @@ curl -X POST "https://api.pchomepay.com.tw/v1/payment/barcode" \
 
 ```
 GET /v1/payment/atm/banks
-pcpay-token: <token>
+pcpay-token: YOUR_TOKEN
 ```
 
 #### 回應範例
@@ -513,7 +513,7 @@ pcpay-token: <token>
 
 ```
 GET /v1/payment/card/banks
-pcpay-token: <token>
+pcpay-token: YOUR_TOKEN
 ```
 
 #### 回應範例
@@ -545,7 +545,7 @@ pcpay-token: <token>
 
 ```
 GET /v1/payment/{order_id}
-pcpay-token: <token>
+pcpay-token: YOUR_TOKEN
 ```
 
 ### 請求路徑參數
@@ -832,7 +832,7 @@ success
 ```
 POST /v1/refund
 Content-Type: application/json
-pcpay-token: <token>
+pcpay-token: YOUR_TOKEN
 ```
 
 ### 請求參數
@@ -848,7 +848,7 @@ pcpay-token: <token>
 ```bash
 curl -X POST "https://api.pchomepay.com.tw/v1/refund" \
   -H "Content-Type: application/json" \
-  -H "pcpay-token: <token>" \
+  -H "pcpay-token: YOUR_TOKEN" \
   -d '{
     "order_id": "B2C1695210352",
     "refund_id": "B2C1695210352-Refund",
@@ -890,7 +890,7 @@ curl -X POST "https://api.pchomepay.com.tw/v1/refund" \
 
 ```
 GET /v1/refund/{refund_id}
-pcpay-token: <token>
+pcpay-token: YOUR_TOKEN
 ```
 
 ### 請求路徑參數
@@ -935,7 +935,7 @@ pcpay-token: <token>
 
 ```
 GET /v1/balance
-pcpay-token: <token>
+pcpay-token: YOUR_TOKEN
 ```
 
 ### 回應參數
@@ -967,7 +967,7 @@ pcpay-token: <token>
 ```
 POST /v1/withdraw
 Content-Type: application/json
-pcpay-token: <token>
+pcpay-token: YOUR_TOKEN
 ```
 
 ### 請求參數
@@ -1006,7 +1006,7 @@ pcpay-token: <token>
 
 ```
 GET /v1/checking/{date}/{type}
-pcpay-token: <token>
+pcpay-token: YOUR_TOKEN
 ```
 
 ### 請求路徑參數
@@ -1057,7 +1057,7 @@ def parse_checking_response(text: str):
 
 ```
 GET /v1/payment/card/cardinfo/{member_key}
-pcpay-token: <token>
+pcpay-token: YOUR_TOKEN
 ```
 
 #### 請求路徑參數
@@ -1103,7 +1103,7 @@ pcpay-token: <token>
 ```
 POST /v1/payment/card/cardinfo/delete
 Content-Type: application/json
-pcpay-token: <token>
+pcpay-token: YOUR_TOKEN
 ```
 
 #### 請求參數
