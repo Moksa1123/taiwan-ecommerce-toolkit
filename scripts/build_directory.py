@@ -280,7 +280,9 @@ def build() -> dict[str, bytes]:
 def existing() -> dict[str, bytes]:
     if not OUT.exists():
         return {}
-    return {p.relative_to(OUT).as_posix(): p.read_bytes() for p in OUT.rglob('*') if p.is_file()}
+    # Windows 的 core.autocrlf 會在 checkout 時改成 CRLF；比對時一律看 LF
+    return {p.relative_to(OUT).as_posix(): p.read_bytes() if p.suffix == '.png'
+            else p.read_bytes().replace(b'\r\n', b'\n') for p in OUT.rglob('*') if p.is_file()}
 
 
 def differences(want: dict[str, bytes], have: dict[str, bytes]) -> list[str]:
