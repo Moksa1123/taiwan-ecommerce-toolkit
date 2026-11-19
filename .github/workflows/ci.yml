@@ -43,6 +43,14 @@ jobs:
           PYTHONIOENCODING: utf-8
         run: python scripts/check-readme-numbers.py
 
+      # directory-plugin/ 由 scripts/build_directory.py 產生，不能手改；改了原始檔要重新產生
+      - name: 驗證官方目錄精簡版（directory-plugin/）
+        env:
+          PYTHONIOENCODING: utf-8
+        run: |
+          python scripts/build_directory.py --check
+          python scripts/test_build_directory.py
+
       - name: 驗證官方來源清單
         run: python scripts/check-sources.py --validate
 
