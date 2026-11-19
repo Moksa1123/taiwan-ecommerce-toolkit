@@ -455,16 +455,16 @@
   {
    "date": "2026-11-19",
    "question": "PAYUNi 每日請款包檔的時間（請款申請中多久會轉請款處理中）",
-   "why_not_found": "page 153 流程圖只寫「每日請款包檔完成」；實測（em925 2026-11-19）Click to Pay 停在 CloseStatus=1 超過 12 小時，可信度中",
+   "why_not_found": "page 153 流程圖只寫「每日請款包檔完成」；實測（em925 2026-11-19）Click to Pay 一次付清 11-18 20:25 付款、11-19 14:35 仍是 CloseStatus=1（約 18 小時），可信度中",
    "asked_by": "taiwan-toolkit（em925-App 回報 2026-11-19）",
    "status": "open"
   },
   {
    "date": "2026-11-19",
-   "question": "PAYUNi 取消請款（CloseType=-1）→ 取消授權 → 重新部分請款這條新流程在正式環境的實測結果",
-   "why_not_found": "官方流程圖有這條路徑，但 em925-App 尚未在正式環境實測；結果出來後補報",
+   "question": "PAYUNi 依請款狀態退款的新流程在正式環境的實測結果",
+   "why_not_found": "已實測：CloseStatus=1 全額退（CloseType=-1 → trade/cancel）成功，查詢 TradeStatus 3、CloseStatus 3、CloseAmt 0、RefundStatus/RefundType 空（em925 2026-11-19）；未實測：狀態 7 送 CloseType=2 是否回 RefundType 3、部分退款用 CloseType=1、Click to Pay 部分請退款、狀態 1 直接送 CloseType=2",
    "asked_by": "taiwan-toolkit（em925-App 回報 2026-11-19）",
-   "status": "open"
+   "status": "部分完成 2026-11-19"
   }
  ]
 }

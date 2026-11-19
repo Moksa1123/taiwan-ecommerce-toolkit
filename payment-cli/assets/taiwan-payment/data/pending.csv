@@ -63,5 +63,5 @@ date,question,why_not_found,asked_by,status
 2026-11-18,綠界、藍新、TapPay 是否提供 Click to Pay,綠界官方 ecpay-api-skill、藍新 NDNF-1.2.6、TapPay 文件頁都沒有 Click to Pay，未列入 skill,taiwan-toolkit（Click to Pay 研究 2026-11-18）,open
 2026-11-19,PAYUNi 信用卡在 CloseStatus=1（請款申請中）時直接送 CloseType=2 退款會被接受（記為預計退款）還是要先取消請款,page 164 只說「尚有請款或退款處理中」時記為預計退款，沒說請款申請中是否算在內,taiwan-toolkit（em925-App 回報 2026-11-19）,open
 2026-11-19,PAYUNi Click to Pay（AuthType 8）是否支援部分請款與部分退款,page 38 只列一次付清、分期、銀聯、國外卡，沒有提到 Click to Pay,taiwan-toolkit（em925-App 回報 2026-11-19）,open
-2026-11-19,PAYUNi 每日請款包檔的時間（請款申請中多久會轉請款處理中）,page 153 流程圖只寫「每日請款包檔完成」；實測（em925 2026-11-19）Click to Pay 停在 CloseStatus=1 超過 12 小時，可信度中,taiwan-toolkit（em925-App 回報 2026-11-19）,open
-2026-11-19,PAYUNi 取消請款（CloseType=-1）→ 取消授權 → 重新部分請款這條新流程在正式環境的實測結果,官方流程圖有這條路徑，但 em925-App 尚未在正式環境實測；結果出來後補報,taiwan-toolkit（em925-App 回報 2026-11-19）,open
+2026-11-19,PAYUNi 每日請款包檔的時間（請款申請中多久會轉請款處理中）,page 153 流程圖只寫「每日請款包檔完成」；實測（em925 2026-11-19）Click to Pay 一次付清 11-18 20:25 付款、11-19 14:35 仍是 CloseStatus=1（約 18 小時），可信度中,taiwan-toolkit（em925-App 回報 2026-11-19）,open
+2026-11-19,PAYUNi 依請款狀態退款的新流程在正式環境的實測結果,已實測：CloseStatus=1 全額退（CloseType=-1 → trade/cancel）成功，查詢 TradeStatus 3、CloseStatus 3、CloseAmt 0、RefundStatus/RefundType 空（em925 2026-11-19）；未實測：狀態 7 送 CloseType=2 是否回 RefundType 3、部分退款用 CloseType=1、Click to Pay 部分請退款、狀態 1 直接送 CloseType=2,taiwan-toolkit（em925-App 回報 2026-11-19）,部分完成 2026-11-19
