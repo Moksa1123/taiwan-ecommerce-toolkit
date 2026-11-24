@@ -907,6 +907,8 @@ UPP 以「付款方式名稱 = 1」的旗標啟用付款方式（例如 `Credit=
 
 - 官網介紹頁仍提供 Click to Pay，目前支援 Mastercard 與 Visa。
 - API 文件 2026-11-18 曾加入 UPP 參數 `ClickToPay=1` 與 `AuthType=8`（page 34、164、172、53），2026-11-24 全部移除，修改記錄（page 25）的該筆也刪除。
-- 文件恢復前不要依賴 `ClickToPay` 參數；處理回傳時對未列出的 `AuthType` 值要能容錯，不要當成錯誤。串接前向 PAYUNi 確認參數與回傳值。
+- 實測（測試環境，2026-11-24，只開到付款頁未付款）：文件撤下後 UPP 仍接受 `ClickToPay=1`。與 `Credit=1` 併用時付款頁多一個「Click to Pay（Mastercard、VISA）」選項；只帶 `ClickToPay=1` 也不會被擋，付款頁只剩 Click to Pay。em925 正式環境 2026-11-19 也有成功交易。
+- 未驗證：付款完成後回傳是否為 `AuthType=8`（測試環境的測試卡回「此卡片不支援此ClickToPay交易」，手動輸入卡號回「模擬環境不提供此功能服務」）；商店需先由 PAYUNi 開通。
+- 參數目前可用但已不在官方文件，PAYUNi 可能再調整；處理回傳時對未列出的 `AuthType` 值要能容錯，不要當成錯誤。上線前向 PAYUNi 確認。
 
 來源：https://www.payuni.com.tw/click-to-pay 、https://docs.payuni.com.tw/web/#/7/34 、https://docs.payuni.com.tw/web/#/7/25 （查證 2026-11-24）
