@@ -1,28 +1,28 @@
 {
  "ai-agentskills-clients": {
-  "sha256": "c6a2d4574e6fff4573d8c4b4004325e2dd964af0fa0c25f3c0da60deeef8026b",
-  "size": 130345,
-  "checked": "2026-11-17"
+  "sha256": "3a3150a30df766c6873535927054334ffbd45270e0fca530a1734c7dbf415100",
+  "size": 129487,
+  "checked": "2026-11-24"
  },
  "ai-agentskills-spec": {
-  "sha256": "743ef8b6b9e85e3ffff84b64c8a785e04c3f4de6ea6f42d5f3c6a385d17f4ba4",
-  "size": 249460,
-  "checked": "2026-11-17"
+  "sha256": "80e96c537317f3c1f1a81dd2c0565af44a4c547ff4da7c04f7e574734470d7a9",
+  "size": 248377,
+  "checked": "2026-11-24"
  },
  "ai-antigravity": {
-  "sha256": "295690055e625e5c58a1fc8b92d0823b82453dfc1549c2697e02b24818762ec0",
-  "size": 159588,
-  "checked": "2026-11-17"
+  "sha256": "3ba2c2178c373fd596e515acdd3410716cbb5a655e297f88fd48697332febebf",
+  "size": 169907,
+  "checked": "2026-11-24"
  },
  "ai-claude": {
-  "sha256": "23d864821f65cb2b211aeb4a76c5feb22f58303e254537beaedf4b64d50abb0e",
-  "size": 906023,
-  "checked": "2026-11-17"
+  "sha256": "6b489747f6cc62ad976b8d4424b2b1def8d868e8bea76196ee7bb2ceb3e25165",
+  "size": 904020,
+  "checked": "2026-11-24"
  },
  "ai-cline": {
-  "sha256": "239989239aea6b7641353ba0e0977e4acb4c77a7ded2f896a674ec05bb9bf0c3",
-  "size": 218378,
-  "checked": "2026-11-17"
+  "sha256": "4ce986bccc10bed46ebf33c7081d29015486edcb81afdc78502da16931b6ddcd",
+  "size": 231426,
+  "checked": "2026-11-24"
  },
  "ai-codebuddy": {
   "sha256": "14051fa1d305a11c4d8e1f330f02caa8ad70132781eeeeba42820e47414e7bd4",
@@ -30,9 +30,9 @@
   "checked": "2026-11-17"
  },
  "ai-codex": {
-  "sha256": "a24572b97c915fa262a6c7daa1012add06a4f24edfbfb6af24aa39d7d19d02e0",
-  "size": 440467,
-  "checked": "2026-11-17"
+  "sha256": "8c27626b40c88d4659eb5b5e39050c314aa07ea673d3c31be2fcbcee8ece84fe",
+  "size": 441592,
+  "checked": "2026-11-24"
  },
  "ai-continue-cli": {
   "sha256": "8e798e650f2f8c4f164fefc569fc15517706364fe22926898dde939748d18c8b",
@@ -50,9 +50,9 @@
   "checked": "2026-11-17"
  },
  "ai-copilot-vscode": {
-  "sha256": "425a640ced49edbe09629d092f28468556a0e435e6be03af7f4fa3efb57e095b",
-  "size": 178303,
-  "checked": "2026-11-17"
+  "sha256": "066ddccfb3ddf80e1b63f00e3cd5710014fa700ad8befaf3e9cb425fd20184e4",
+  "size": 178841,
+  "checked": "2026-11-24"
  },
  "ai-cursor": {
   "sha256": "d34a41e6eacfd7aa9dc8797f13e6d6ed5ac5d44ae309bcdffd322a0a8f315e9a",
@@ -65,9 +65,9 @@
   "checked": "2026-11-17"
  },
  "ai-kiro": {
-  "sha256": "032d8eb904e7b298f07bf9124abf28c3072487835ca47d1b8d99fe877e7a1906",
-  "size": 325297,
-  "checked": "2026-11-17"
+  "sha256": "be933203b68e0173d6cc215be380e55cc4eb921d85659485d2b75a2314b2eef2",
+  "size": 331190,
+  "checked": "2026-11-24"
  },
  "ai-opencode": {
   "sha256": "c5923e50b0bfd12d4fae0ac69105e336e38f8ef5fce4623c42406a2fd8b89e3f",
@@ -75,9 +75,9 @@
   "checked": "2026-11-17"
  },
  "ai-qoder": {
-  "sha256": "9681bc00aea3608466b892731d53affafe37cf8acda9c2cff21b6e9b39e49f3d",
-  "size": 799172,
-  "checked": "2026-11-17"
+  "sha256": "32a1a7f5d14c4241bb532743b3b58b4efe851561030461e29b0fd991b0a6dc73",
+  "size": 829466,
+  "checked": "2026-11-24"
  },
  "ai-trae": {
   "sha256": "27dfca5487544b16579810ddd2be1399404e322462fe428fa101b7a6b54a422f",
@@ -85,9 +85,9 @@
   "checked": "2026-11-17"
  },
  "ai-windsurf": {
-  "sha256": "364fcb6a78a4a68407a67946c45eda81547809c9121ff0d65c3cbe0bb9926377",
-  "size": 514879,
-  "checked": "2026-11-17"
+  "sha256": "b629c446f7c99f23339b04bcaf41b601c40c33b6e2e910abf495bb78d5b0fbc8",
+  "size": 516013,
+  "checked": "2026-11-24"
  },
  "amego-api-doc": {
   "sha256": "860ddd3a645e34701da917c84b1d02a73553387de096dc4503916c89ac2434b6",
@@ -680,9 +680,9 @@
   "checked": "2026-11-17"
  },
  "ecpay-invoice-15369": {
-  "sha256": "c5235b25b0ec79cbc66a5d60ce2340109a691419f52b7b2a0d0f11efa7fce35e",
-  "size": 30597,
-  "checked": "2026-11-17"
+  "sha256": "20b7401069ca1b7d01862b775cf0afd7acb483b5bb81c78ff630fb2697f58923",
+  "size": 30371,
+  "checked": "2026-11-24"
  },
  "ecpay-invoice-15371": {
   "sha256": "5665200b993b8be865b2afc85e1dfbab07ce7aa9ad2d5d92fb3a80c9761b3011",
@@ -855,9 +855,9 @@
   "checked": "2026-11-17"
  },
  "ecpay-invoice-47979": {
-  "sha256": "ef0af5b83191c71a1827b7c5b8a37092cdce140988151486bdf7d6c4a0881505",
-  "size": 22101,
-  "checked": "2026-11-17"
+  "sha256": "11719ba3f67da484702d09d9722637a8366718e8bf46dc8891fdf7261f91b93e",
+  "size": 21936,
+  "checked": "2026-11-24"
  },
  "ecpay-invoice-49927": {
   "sha256": "49b0e4b1f20e8b5210f99eac0d49e769978c3e6619a5f1d3027dbd0a36738139",
@@ -955,9 +955,9 @@
   "checked": "2026-11-17"
  },
  "ecpay-invoice-7870": {
-  "sha256": "e9909701314f46a771ef42a9ccfa26bcb84dedc3943884d446d08522070241aa",
-  "size": 9393,
-  "checked": "2026-11-17"
+  "sha256": "2df9413c0c5c5b237ff4bced7e96708bad3acc40023ff93f4b82b59b485ed67f",
+  "size": 9228,
+  "checked": "2026-11-24"
  },
  "ecpay-invoice-7875": {
   "sha256": "09ff5f659256c7385772cdc8b4f44feec3571016e925a651334c2b31a7f9f842",
@@ -965,9 +965,9 @@
   "checked": "2026-11-17"
  },
  "ecpay-invoice-7881": {
-  "sha256": "a36f09d8861daa74dcd8a8a8bd89d411b4b525d990c77971f8ee62b2474521a1",
-  "size": 9578,
-  "checked": "2026-11-17"
+  "sha256": "82dcbdf4d7c36dc733342cd9c549d46de6209e223b3d15939237c3bc36e75d24",
+  "size": 9413,
+  "checked": "2026-11-24"
  },
  "ecpay-invoice-7886": {
   "sha256": "2dc05072dd8e321090ae08908fdf9505b0eecfa80f9ef8416fe371ec4bd4bdc9",
@@ -980,9 +980,9 @@
   "checked": "2026-11-17"
  },
  "ecpay-invoice-7896": {
-  "sha256": "b7dbf5ddefcd2709813770b801951a9721c5c829ccf1ddb309ed33e9978b62de",
-  "size": 26171,
-  "checked": "2026-11-17"
+  "sha256": "2dd3a4c2b0ab9e7dc4de638950ffc7d58ab7e77a06eaa3ec6dfe9653c90c57d9",
+  "size": 25945,
+  "checked": "2026-11-24"
  },
  "ecpay-invoice-7901": {
   "sha256": "8f7bed17ff9148e901c71600d5434c1d7a2b1f8c766c16b57601fbf21a7d5bd6",
@@ -1075,9 +1075,9 @@
   "checked": "2026-11-17"
  },
  "ecpay-woocommerce-plugin": {
-  "sha256": "69b04f7c75336429aae564c8265d3244bd801cb9c0b724e5ffe174a97226ef29",
-  "size": 183152,
-  "checked": "2026-11-17"
+  "sha256": "5b99f60f218a3e88a2f3af68da46055fc45dc69f34e36c7ed976102710ae1515",
+  "size": 183021,
+  "checked": "2026-11-24"
  },
  "ecpay-woocommerce-plugin-logistics": {
   "sha256": "643de8c4ad98df477a0a4800a1cfb45616b80238f711718d5275fb4d44219075",
@@ -1310,9 +1310,9 @@
   "checked": "2026-11-17"
  },
  "lalamove-api-reference": {
-  "sha256": "d2cadc89940a7d32b5d3ce4e2c1cc71f5d6e1b1033d1a79120ee42fc3771abf4",
-  "size": 173814,
-  "checked": "2026-11-17"
+  "sha256": "c9d3491687217a81939b587db482afd0f94b4e9d5f93b6dc416161816f0e5b20",
+  "size": 174108,
+  "checked": "2026-11-24"
  },
  "lalamove-tw-api-solutions": {
   "sha256": "e86090ba16e4220c70c6f82bacd06221410605d5c52d2157273e8502da4228ad",
@@ -1445,9 +1445,9 @@
   "checked": "2026-11-17"
  },
  "newebpay-ndnp": {
-  "sha256": "09612186c73b07bd52daad3594def0088a3675c648bd19adb0c2cf2bf7df0256",
-  "size": 2010044,
-  "checked": "2026-11-17"
+  "sha256": "444c10dacf783708aaa09c6c050c86ad242e2bc5910a5e753b02485c2208c881",
+  "size": 1955122,
+  "checked": "2026-11-24"
  },
  "newebpay-ndns": {
   "sha256": "7a3d781b48f75638e9eab2231427775af7ca28fa383240623fe906839e44bd6a",
@@ -1460,9 +1460,9 @@
   "checked": "2026-11-17"
  },
  "newebpay-woocommerce-plugin": {
-  "sha256": "33555972ca2394fbd7898cf8e4768322db8e8ab10dc2ce0f4c677894fc13f435",
-  "size": 167144,
-  "checked": "2026-11-17"
+  "sha256": "9afdbbc04bde1abb810d117e154f7c551d2e4b37d048cb0b0654e664f5cc2bfd",
+  "size": 167238,
+  "checked": "2026-11-24"
  },
  "opay-document-index": {
   "sha256": "3152b4dfb0432c80d7172afe7432e6571ee8750e60429e3c738c4a7b2de91fc8",
@@ -2345,9 +2345,9 @@
   "checked": "2026-11-17"
  },
  "pchomepay-plugins": {
-  "sha256": "d9a69af91a9ffb9289019fd99c59b5a0f8f7989e45fb7c0369a82b5a6b609301",
-  "size": 156933,
-  "checked": "2026-11-17"
+  "sha256": "bfc93f494a23a266bc45f79a3fbf3e5ee29ef6a3507b2d5ef4b310deae491e14",
+  "size": 155815,
+  "checked": "2026-11-24"
  },
  "pchomepay-refund-faq": {
   "sha256": "89c46cb9dd1e7844ad49d6ef6dd3589ae02ddafde78fa067213193618ddf70dc",
@@ -2375,9 +2375,9 @@
   "checked": "2026-11-17"
  },
  "post-api-spec-hardware": {
-  "sha256": "179867e4cb113c5d57ca20b77b02315c67b620ba9800905118ac3f7b2fe0b45f",
-  "size": 189016,
-  "checked": "2026-11-17"
+  "sha256": "a5cbc312ba6c3081304647b053369566dabc7252eb870538bbbdffd25332131d",
+  "size": 189015,
+  "checked": "2026-11-24"
  },
  "post-open-api-notice": {
   "sha256": "e6c03e8d8481a2d9d86d5c9ba44793abe2d42a201e79e70e1c3202aad6154b2b",
@@ -2575,14 +2575,14 @@
   "checked": "2026-11-17"
  },
  "tappay-home": {
-  "sha256": "d613b6821e6eee94de3909f97841b70df6feca313dfa269a3e432179d11b4d94",
-  "size": 14565,
-  "checked": "2026-11-17"
+  "sha256": "1195fbcb19eb8e53f5dc91a515cbadc51fd45172c7e28501595f6442b0350174",
+  "size": 16942,
+  "checked": "2026-11-24"
  },
  "tappay-jko-pay-zh-back": {
-  "sha256": "08d00190c069bf162dc3004d750b1daf5e0cce49c592afa57e8caafe1841eb53",
-  "size": 60048,
-  "checked": "2026-11-17"
+  "sha256": "ffc8113840d0c81ea0d86ffbcb260c434bdfa11df67ac12b2e90212994c12fb3",
+  "size": 64418,
+  "checked": "2026-11-24"
  },
  "tappay-oppay-zh-web-front": {
   "sha256": "0e8e2cd0e95a496796297b150750a3e4a45702f65fd028e39482c22b375ce5f0",
@@ -2600,9 +2600,9 @@
   "checked": "2026-11-17"
  },
  "tappay-tutorial-en-error": {
-  "sha256": "72c25a4bfdaaf8c96af2241b09a20a4c41045dc27933c6f97eddae80fe0eda48",
-  "size": 59297,
-  "checked": "2026-11-17"
+  "sha256": "8ad68825dc6ec4f168d9d42f11eadbdb67663a64dab979c0eafe4fefe0542f89",
+  "size": 59673,
+  "checked": "2026-11-24"
  },
  "tappay-tutorial-zh-advanced": {
   "sha256": "5764abff5d4294a8d137b91d72060864aa992d575b1459c2a6e2bf3edc7ffe69",
@@ -2610,14 +2610,14 @@
   "checked": "2026-11-17"
  },
  "tappay-tutorial-zh-back": {
-  "sha256": "86480f5a3573afbe215049ed29279601fafc0b34fbf7745670d7570141cdeaa0",
-  "size": 83524,
-  "checked": "2026-11-17"
+  "sha256": "70a2144d6220b309608fb0aa20144ed17e9f45a05d195bb5c84f68828873e37f",
+  "size": 91597,
+  "checked": "2026-11-24"
  },
  "tappay-tutorial-zh-reference": {
-  "sha256": "fdbed00872f99916d00286a8b329ac47c8b1f394d9b4fe1bff4d883863d1f136",
-  "size": 148196,
-  "checked": "2026-11-17"
+  "sha256": "81207637f54edfaabfb717aa5c64b62dfb8690a9ed1229392517fa51fd6bb8e4",
+  "size": 151338,
+  "checked": "2026-11-24"
  },
  "tappay-tutorial-zh-web-front": {
   "sha256": "2a846f2aeb68d5dfdd00d32589b168398f958f752a0bc6412c7752f163561945",
@@ -2665,8 +2665,8 @@
   "checked": "2026-11-17"
  },
  "youshop-pricing": {
-  "sha256": "eabf903cc0da586031bbe1912f16b2fd014eb23251cb3a5064ba18e6eaa82311",
-  "size": 191967,
-  "checked": "2026-11-17"
+  "sha256": "2f2dfca434750dedb92cbd32a4186f1e993e9a12fdf8128cec261dc25ba52d20",
+  "size": 193339,
+  "checked": "2026-11-24"
  }
 }

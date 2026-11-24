@@ -34,6 +34,8 @@
 | Sandbox | `https://rest.sandbox.lalamove.com/v3` |
 | Production | `https://rest.lalamove.com/v3` |
 
+Sandbox 報價是測試用假值，不代表正式費率。
+
 ## 2. 認證與簽章
 
 HMAC-SHA256。每個請求需三個 header：
@@ -140,7 +142,7 @@ def build_headers(method, path, body_dict, key, secret, market="TW"):
 | `isRouteOptimized` | `true` 啟用多點路線最佳化（開發者文件有此欄位，但台灣 API 方案頁 FAQ 寫路線最佳化尚未提供，台灣需實測） |
 | `isPODEnabled` | `true` 啟用 Proof of Delivery（送達證明） |
 | `metadata` | 自訂 key-value，可掛你自己的訂單編號 |
-| `pricingTierCode` | 報價時選填（字串）：`"1"` 一般（預設）、`"2"` Priority Tier（加速媒合、較快送達），回傳價格依所選等級計算。官方文件未列適用市場，台灣是否開放需以報價實測或向 Lalamove 確認 |
+| `pricingTierCode` | 報價時選填（字串）：`"1"` 一般（預設）、`"2"` Priority Tier（加速媒合、較快送達）、`"3"` Pooling Tier（併單價），回傳價格依所選等級計算。官方文件未列適用市場，台灣是否開放需以報價實測或向 Lalamove 確認 |
 
 `metadata` 是把 Lalamove 訂單對回自家系統的建議做法——不要依賴 Lalamove 的 order ID 當主鍵。
 
@@ -166,7 +168,7 @@ v3 支援 13 個市場，**含台灣**：日本 `JP`、巴西 `BR`、香港 `HK`
 
 - 台灣市場實際可用的 `serviceType` 清單與費率結構（需以 `GET /v3/cities` 實測）
 - Webhook payload 結構（官方只列事件名稱，細節在另附的簡報）
-- 台灣是否可用 `pricingTierCode: "2"`（Priority Tier）與 `isRouteOptimized`
+- 台灣是否可用 `pricingTierCode: "2"`（Priority Tier）、`"3"`（Pooling Tier）與 `isRouteOptimized`
 - pandago（foodpanda）見 [ondemand-delivery.md](ondemand-delivery.md)
 
 ## 9. 取得憑證

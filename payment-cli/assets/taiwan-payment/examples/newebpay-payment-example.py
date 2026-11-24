@@ -343,7 +343,7 @@ class NewebPayMPGService:
     def bnpl_url(self, action: Literal['refund', 'settle']) -> str:
         return self.api_url.split('/MPG/')[0] + self.BNPL_PATHS[action]
 
-    # 信用卡定期定額，規格書 NDNP-1.0.8。Post 參數為 MerchantID_ + PostData_（加密同 TradeInfo，無 SHA 欄位）
+    # 信用卡定期定額，規格書 NDNP-1.0.9。Post 參數為 MerchantID_ + PostData_（加密同 TradeInfo，無 SHA 欄位）
     PERIOD_PATHS = {
         'create': '/MPG/period',                # 建立委託 NPA-B05，Version 1.5
         'alter_status': '/MPG/period/AlterStatus',  # 修改委託狀態 NPA-B051，Version 1.0
@@ -365,11 +365,14 @@ class NewebPayMPGService:
         """
         解密回傳的 Period（建立完成、每期授權 NPA-N050、修改、查詢皆同）。
         委託單查詢的明文鍵名是小寫 status／message／result，這裡統一成 Status／Message／Result。
+        RespondType=String 時明文是 Result[欄位]=值（NDNP-1.0.9），收成 Result 字典。
         """
         data = self.decrypt_trade_info(period)
         for low, key in (('status', 'Status'), ('message', 'Message'), ('result', 'Result')):
             if low in data and key not in data:
                 data[key] = data.pop(low)
+        for k in [k for k in data if k.lower().startswith('result[') and k.endswith(']')]:
+            data.setdefault('Result', {})[k[7:-1]] = data.pop(k)
         return data
 
     def parse_bnpl_response(self, response: Dict[str, str]) -> Dict:

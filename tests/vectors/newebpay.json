@@ -454,6 +454,93 @@
                     "AlreadyTimes": "12"
                 }
             }
-        ]
+        ],
+        "string_responses": [
+            {
+                "name": "create",
+                "page": 33,
+                "plain": "Status=SUCCESS&Message=%E5%A7%94%E8%A8%97%E5%96%AE%E6%88%90%E7%AB%8B%EF%BC%8C%E4%B8%94%E9%A6%96%E6%AC%A1%E6%8E%88%E6%AC%8A%E6%88%90%E5%8A%9F&Result%5BMerchantID%5D=TEK1682407426&Result%5BMerchantOrderNo%5D=myorder1700033460&Result%5BPeriodType%5D=M&Result%5BPeriodAmt%5D=10&Result%5BAuthTimes%5D=12&Result%5BDateArray%5D=2023-11-15%2C2023-12-05%2C2024-01-05%2C2024-02-05%2C2024-03-05%2C2024-04-05%2C2024-05-05%2C2024-06-05%2C2024-07-05%2C2024-08-05%2C2024-09-05%2C2024-10-05&Result%5BTradeNo%5D=23111515321368339&Result%5BAuthCode%5D=230297&Result%5BRespondCode%5D=00&Result%5BAuthTime%5D=20231115153213&Result%5BCardNo%5D=400022%2A%2A%2A%2A%2A%2A1111&Result%5BEscrowBank%5D=HNCB&Result%5BAuthBank%5D=KGI&Result%5BPeriodNo%5D=P231115153213aMDNWZ&Result%5BPaymentMethod%5D=CREDIT",
+                "result": {
+                    "MerchantID": "TEK1682407426",
+                    "MerchantOrderNo": "myorder1700033460",
+                    "PeriodType": "M",
+                    "PeriodAmt": "10",
+                    "AuthTimes": "12",
+                    "DateArray": "2023-11-15,2023-12-05,2024-01-05,2024-02-05,2024-03-05,2024-04-05,2024-05-05,2024-06-05,2024-07-05,2024-08-05,2024-09-05,2024-10-05",
+                    "TradeNo": "23111515321368339",
+                    "AuthCode": "230297",
+                    "RespondCode": "00",
+                    "AuthTime": "20231115153213",
+                    "CardNo": "400022******1111",
+                    "EscrowBank": "HNCB",
+                    "AuthBank": "KGI",
+                    "PeriodNo": "P231115153213aMDNWZ",
+                    "PaymentMethod": "CREDIT"
+                }
+            },
+            {
+                "name": "notify_n050",
+                "page": 36,
+                "plain": "Status=SUCCESS&Message=%E6%8E%88%E6%AC%8A%E6%88%90%E5%8A%9F&Result%5BRespondCode%5D=00&Result%5BMerchantID%5D=MS12345678&Result%5BMerchantOrderNo%5D=periodi1655708272&Result%5BOrderNo%5D=periodi1655708272_2&Result%5BTradeNo%5D=22062407181613548&Result%5BAuthDate%5D=2022-06-24+07%3A18%3A17&Result%5BTotalTimes%5D=12&Result%5BAlreadyTimes%5D=2&Result%5BAuthAmt%5D=20&Result%5BNextAuthDate%5D=2022-06-26&Result%5BAuthCode%5D=681234&Result%5BPeriodNo%5D=P220620145859us4Rlj",
+                "result": {
+                    "RespondCode": "00",
+                    "MerchantID": "MS12345678",
+                    "MerchantOrderNo": "periodi1655708272",
+                    "OrderNo": "periodi1655708272_2",
+                    "TradeNo": "22062407181613548",
+                    "AuthDate": "2022-06-24 07:18:17",
+                    "TotalTimes": "12",
+                    "AlreadyTimes": "2",
+                    "AuthAmt": "20",
+                    "NextAuthDate": "2022-06-26",
+                    "AuthCode": "681234",
+                    "PeriodNo": "P220620145859us4Rlj"
+                }
+            },
+            {
+                "name": "alter_status",
+                "page": 43,
+                "plain": "Status=SUCCESS&Message=%E8%A9%B2%E5%AE%9A%E6%9C%9F%E5%AE%9A%E9%A1%8D%E5%A7%94%E8%A8%97%E5%96%AE%E6%9A%AB%E5%81%9C%E6%88%90%E5%8A%9F&Result%5BMerOrderNo%5D=myorder1700033460&Result%5BPeriodNo%5D=P231115153213aMDNWZ&Result%5BAlterType%5D=suspend",
+                "result": {
+                    "MerOrderNo": "myorder1700033460",
+                    "PeriodNo": "P231115153213aMDNWZ",
+                    "AlterType": "suspend"
+                }
+            },
+            {
+                "name": "alter_amt",
+                "page": 49,
+                "plain": "Status=SUCCESS&Message=%E5%AE%9A%E6%9C%9F%E5%AE%9A%E9%A1%8D%E5%A7%94%E8%A8%97%E5%96%AE%E4%BF%AE%E6%94%B9%E6%88%90%E5%8A%9F%EF%BC%81&Result%5BMerOrderNo%5D=myorder1700033460&Result%5BPeriodNo%5D=P231115153213aMDNWZ&Result%5BAlterAmt%5D=15&Result%5BNewNextAmt%5D=15&Result%5BNewNextTime%5D=2023-12-05&Result%5BPeriodTimes%5D=12&Result%5BExtDay%5D=2908&Result%5BNotifyURL%5D=-",
+                "result": {
+                    "MerOrderNo": "myorder1700033460",
+                    "PeriodNo": "P231115153213aMDNWZ",
+                    "AlterAmt": "15",
+                    "NewNextAmt": "15",
+                    "NewNextTime": "2023-12-05",
+                    "PeriodTimes": "12",
+                    "ExtDay": "2908",
+                    "NotifyURL": "-"
+                }
+            },
+            {
+                "name": "query",
+                "page": 54,
+                "plain": "status=SUCCESS&message=%E6%9F%A5%E8%A9%A2%E6%88%90%E5%8A%9F&result%5BMerchantID%5D=TEK1682407426&result%5BMerchantOrderNo%5D=myorder1700033460&result%5BPeriodNo%5D=P231115153213aMDNWZ&result%5BPeriodType%5D=M&result%5BPeriodPoint%5D=05&result%5BPeriodAmt%5D=15&result%5BTotalTimes%5D=12&result%5BAlreadyTimes%5D=12&result%5BCreateDate%5D=2023-11-15&result%5BStatus%5D=4&result%5BNextAuthDate%5D=2024-10-05",
+                "result": {
+                    "MerchantID": "TEK1682407426",
+                    "MerchantOrderNo": "myorder1700033460",
+                    "PeriodNo": "P231115153213aMDNWZ",
+                    "PeriodType": "M",
+                    "PeriodPoint": "05",
+                    "PeriodAmt": "15",
+                    "TotalTimes": "12",
+                    "AlreadyTimes": "12",
+                    "CreateDate": "2023-11-15",
+                    "Status": "4",
+                    "NextAuthDate": "2024-10-05"
+                }
+            }
+        ],
+        "string_note": "NDNP-1.0.9 RespondType=String 的解密後明文範例（逐字取自規格書）；密文由測試以 32 bytes 區塊 PKCS7（規格書 4.2 Step5）自行加密"
     }
 }

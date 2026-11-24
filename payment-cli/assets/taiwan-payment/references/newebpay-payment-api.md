@@ -2,7 +2,7 @@
 
 藍新金流 (NewebPay) 金流 API 完整參考文件。
 
-依據：《線上交易─幕前支付技術串接手冊》NDNF-1.2.6（2026-10-01）、《信用卡定期定額串接技術手冊》NDNP-1.0.8（2026-08-19），官方下載頁 https://www.newebpay.com/website/Page/content/download_api
+依據：《線上交易─幕前支付技術串接手冊》NDNF-1.2.6（2026-10-01）、《信用卡定期定額串接技術手冊》NDNP-1.0.9（2026-11-09），官方下載頁 https://www.newebpay.com/website/Page/content/download_api
 
 ---
 
@@ -652,7 +652,7 @@ BNPL 轉人工審核時只有 ReturnURL 回 `Status=SUCCESS`（`Message` 表示�
 
 ## 信用卡定期定額
 
-規格書 NDNP-1.0.8。Post 參數為 `MerchantID_` + `PostData_`（AES 加密同 TradeInfo，**沒有** SHA 欄位）；回傳欄位 `Period`（AES 加密）。
+規格書 NDNP-1.0.9。Post 參數為 `MerchantID_` + `PostData_`（AES 加密同 TradeInfo，**沒有** SHA 欄位）；回傳欄位 `Period`（AES 加密）。
 
 | 功能 | 端點 | Version |
 |------|------|---------|
@@ -673,7 +673,7 @@ BNPL 轉人工審核時只有 ReturnURL 回 `Status=SUCCESS`（`Message` 表示�
 | `ProdDesc` | String(100) | ● | 僅中英數、空格、底線 |
 | `PeriodAmt` | Int(6) | ● | 每期金額，> 0 |
 | `PeriodType` | String(1) | ● | `D` 固定天期（2–999 天）`W` 每週 `M` 每月 `Y` 每年；每期只授權一次 |
-| `PeriodPoint` | String(4) | ● | `D`：2–999；`W`：1–7；`M`：`01`–`31`（無該日則月底）；`Y`：`MMDD` |
+| `PeriodPoint` | String(4) | ● | `D`：2–999；`W`：1–7；`M`：`01`–`31`（無該日則月底）；`Y`：`MMDD`（`0229` 只在當年有 2/29 時可建立，否則 `PER10019`；之後只在 2/29 扣款，平年不順延也不提前） |
 | `PeriodStartType` | Int(1) | ● | `1` 立即 10 元授權 `2` 立即委託金額授權 `3` 不檢查、不授權 |
 | `PeriodTimes` | String(2) | ● | 授權期數；超過卡片到期日時以到期日為最終期。啟用 CAU 且為 `NE` 時視為無限期 |
 | `PeriodFirstdate` | String(10) | | 首期授權日 `YYYY/mm/dd`，僅 `PeriodType=D` 且 `PeriodStartType=3`；首期執行後才可修改委託 |
@@ -690,9 +690,12 @@ BNPL 轉人工審核時只有 ReturnURL 回 `Status=SUCCESS`（`Message` 表示�
 
 ### 回傳
 
+`Period` 解密時 padding 為 32 bytes 區塊的 PKCS7（4.2 Step5），用 16 bytes 的 unpad 會失敗。`Result` 格式依 `RespondType`：
+`JSON` 為巢狀物件；`String` 為 URL 編碼的 `Status=…&Message=…&Result[欄位]=值`（委託單查詢為小寫 `status`／`message`／`result[欄位]`）。
+
 - **建立完成**（4.3.2）：`Result` 含 `MerchantID`、`MerchantOrderNo`、`PeriodType`、`AuthTimes`、`DateArray`（全部授權日期）、`PeriodAmt`、`PeriodNo`；
   `PeriodStartType` 為 `1`／`2` 時另有 `AuthTime`、`TradeNo`、`CardNo`、`AuthCode`、`RespondCode`（`00` 成功）、`EscrowBank`、`AuthBank`、`PaymentMethod`
-- **每期授權完成** [NPA-N050]（4.3.3，送到 `NotifyURL`）：`RespondCode`、`MerchantID`、`MerchantOrderNo`、`OrderNo`（`訂單編號_期數`）、`TradeNo`、`AuthDate`、
+- **每期授權完成** [NPA-N050]（4.3.3，送到 `NotifyURL`）：`RespondCode`（`00` 或 `0000` 成功，1.0.9）、`MerchantID`、`MerchantOrderNo`、`OrderNo`（`訂單編號_期數`）、`TradeNo`、`AuthDate`、
   `TotalTimes`、`AlreadyTimes`（含失敗期數）、`AuthAmt`、`AuthCode`、`EscrowBank`、`AuthBank`、`NextAuthDate`、`PeriodNo`
 - `AuthBank` 新增 `SinoPac`（1.0.5）；官方建立完成範例回傳 `KGI`，但不在代碼表內
 
@@ -798,7 +801,7 @@ echo 'OK';
 
 ### 常見錯誤碼
 
-> 依規格書 NDNF-1.2.6 與 NDNP-1.0.8 錯誤代碼表；完整清單見 `data/error-codes.csv`（`PER` 開頭為定期定額錯誤代碼表）。查詢 API 的 CheckValue 錯誤為 `TRA10054`。
+> 依規格書 NDNF-1.2.6 與 NDNP-1.0.9 錯誤代碼表；完整清單見 `data/error-codes.csv`（`PER` 開頭為定期定額錯誤代碼表）。查詢 API 的 CheckValue 錯誤為 `TRA10054`。
 
 | 錯誤碼 | 說明 | 備註 |
 |--------|------|------|

@@ -158,62 +158,62 @@ newebpay,4104,加密資料有誤，請確認 Hash_Key 與 Hash_IV 是否正確,,
 newebpay,4105,TimeStamp 為空,,validation,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
 newebpay,4106,UID_ 不可為空白,,validation,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
 newebpay,9000,網路連線失敗,,system,error,見藍新規格書 NDNF-1.2.6 錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,NOR10001,連線異常,,system,error,見藍新規格書 NDNP-1.0.8（信用卡定期定額）錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,PER10001,商店資料取得失敗,,request,error,見藍新規格書 NDNP-1.0.8（信用卡定期定額）錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,PER10002,資料解密錯誤,,validation,error,見藍新規格書 NDNP-1.0.8（信用卡定期定額）錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,PER10003,POST 資料傳遞錯誤,,validation,error,見藍新規格書 NDNP-1.0.8（信用卡定期定額）錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,PER10004,OOO 資料不齊全 (OOO 帶入缺少參數),,validation,error,見藍新規格書 NDNP-1.0.8（信用卡定期定額）錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,PER10005,資料不可空白,,validation,error,見藍新規格書 NDNP-1.0.8（信用卡定期定額）錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,PER10006,商品名稱不得含有 JavaScript 語法、CSS 語法,,validation,error,見藍新規格書 NDNP-1.0.8（信用卡定期定額）錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,PER10007,委託金額格式不對，金額必須為數字 委託金額超過單筆金額上限,,validation,error,見藍新規格書 NDNP-1.0.8（信用卡定期定額）錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,PER10008,委託金額不能為零。 本 API 限定為線上商店使用，如需使用請洽客服人員。,,validation,error,見藍新規格書 NDNP-1.0.8（信用卡定期定額）錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,PER10009,"週期設定錯誤! (W=週,M=月,Y=年)",,validation,error,見藍新規格書 NDNP-1.0.8（信用卡定期定額）錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,PER10010,商店訂單編號錯誤，只允許英數與底線,,validation,error,見藍新規格書 NDNP-1.0.8（信用卡定期定額）錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,PER10011,商店訂單編號長度限制為 30 字,,validation,error,見藍新規格書 NDNP-1.0.8（信用卡定期定額）錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,PER10012,回傳格式錯誤，只接受 JSON 或 String,,validation,error,見藍新規格書 NDNP-1.0.8（信用卡定期定額）錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,PER10013,日期授權時間資料不正確，日期格式為 2 到 364 週期授權時間資料不正確，日期格式為 1 到 7(長度不符),,validation,error,見藍新規格書 NDNP-1.0.8（信用卡定期定額）錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,PER10014,週期授權時間資料不正確，日期格式為 1 到 7(長度不符),,validation,error,見藍新規格書 NDNP-1.0.8（信用卡定期定額）錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,PER10015,月期授權時間資料不正確，日期格式為 01 到 31,,validation,error,見藍新規格書 NDNP-1.0.8（信用卡定期定額）錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,PER10016,月期授權時間資料不正確，日期格式為 01 到 31(長度不符),,validation,error,見藍新規格書 NDNP-1.0.8（信用卡定期定額）錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,PER10017,年期授權時間資料不正確，日期格式為 01 到 12,,validation,error,見藍新規格書 NDNP-1.0.8（信用卡定期定額）錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,PER10018,年期授權時間資料不正確，日期格式為 01 到 31,,validation,error,見藍新規格書 NDNP-1.0.8（信用卡定期定額）錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,PER10019,定期授權時間資料不正確，無該日期,,validation,error,見藍新規格書 NDNP-1.0.8（信用卡定期定額）錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,PER10020,首期授權模式設定錯誤(1-3)，請檢查,,validation,error,見藍新規格書 NDNP-1.0.8（信用卡定期定額）錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,PER10021,備註說明不得含有 JavaScript 語法、CSS 語法,,validation,error,見藍新規格書 NDNP-1.0.8（信用卡定期定額）錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,PER10022,授權期數格式不對，必須為數字,,validation,error,見藍新規格書 NDNP-1.0.8（信用卡定期定額）錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,PER10023,授權期數不能為零,,validation,error,見藍新規格書 NDNP-1.0.8（信用卡定期定額）錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,PER10024,授權期數不能多於 99 次,,validation,error,見藍新規格書 NDNP-1.0.8（信用卡定期定額）錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,PER10025,返回商店網址格式錯誤,,validation,error,見藍新規格書 NDNP-1.0.8（信用卡定期定額）錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,PER10026,每期授權通知網址格式錯誤,,validation,error,見藍新規格書 NDNP-1.0.8（信用卡定期定額）錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,PER10027,是否開啟付款人資訊設定錯誤,,validation,error,見藍新規格書 NDNP-1.0.8（信用卡定期定額）錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,PER10028,付款人電子信箱格式錯誤 商品名稱僅限制使用中文、英文、數字、空格及底線，請勿使用其他符 號字,,validation,error,見藍新規格書 NDNP-1.0.8（信用卡定期定額）錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,PER10029,商店代號停用,,request,error,見藍新規格書 NDNP-1.0.8（信用卡定期定額）錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,PER10030,商店信用卡資格停用,,request,error,見藍新規格書 NDNP-1.0.8（信用卡定期定額）錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,PER10031,商店定期定額資格停用,,request,error,見藍新規格書 NDNP-1.0.8（信用卡定期定額）錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,PER10032,該訂單編號已重覆,,request,error,見藍新規格書 NDNP-1.0.8（信用卡定期定額）錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,PER10033,寫入委託單失敗,,request,error,見藍新規格書 NDNP-1.0.8（信用卡定期定額）錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,PER10034,授權失敗，委託單建立失敗,,request,error,見藍新規格書 NDNP-1.0.8（信用卡定期定額）錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,PER10035,委託單更新授權結果失敗,,request,error,見藍新規格書 NDNP-1.0.8（信用卡定期定額）錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,PER10036,驗證資料錯誤(來源不合法),,validation,error,見藍新規格書 NDNP-1.0.8（信用卡定期定額）錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,PER10037,付款頁參數不足,,request,error,見藍新規格書 NDNP-1.0.8（信用卡定期定額）錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,PER10038,商品名稱僅限制使用中文、英文、數字、空格及底線，請勿使用其他符 號字元,,validation,error,見藍新規格書 NDNP-1.0.8（信用卡定期定額）錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,PER10041,第一期發動日日期不正確,,validation,error,見藍新規格書 NDNP-1.0.8（信用卡定期定額）錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,PER10061,該定期定額委託單為暫停狀態，無法重複暫停,,request,error,見藍新規格書 NDNP-1.0.8（信用卡定期定額）錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,PER10062,該定期定額委託單為終止狀態，無法暫停,,request,error,見藍新規格書 NDNP-1.0.8（信用卡定期定額）錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,PER10063,該定期定額委託單為啟用狀態，無法重複啟用,,request,error,見藍新規格書 NDNP-1.0.8（信用卡定期定額）錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,PER10064,該定期定額委託單為終止狀態，無法啟用,,request,error,見藍新規格書 NDNP-1.0.8（信用卡定期定額）錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,PER10065,該定期定額委託單為終止狀態，無法重複終止,,request,error,見藍新規格書 NDNP-1.0.8（信用卡定期定額）錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,PER10066,Version 參數錯誤,,validation,error,見藍新規格書 NDNP-1.0.8（信用卡定期定額）錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,PER10067,查無委託單資料,,request,error,見藍新規格書 NDNP-1.0.8（信用卡定期定額）錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,PER10068,委託單狀態更新失敗,,request,error,見藍新規格書 NDNP-1.0.8（信用卡定期定額）錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,PER10071,該定期定額委託單已暫停無法修改。,,request,error,見藍新規格書 NDNP-1.0.8（信用卡定期定額）錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,PER10072,定期定額委託單為終止狀態無法修改。,,request,error,見藍新規格書 NDNP-1.0.8（信用卡定期定額）錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,PER10073,此 IP 不允許執行變更該委託單狀態,,request,error,見藍新規格書 NDNP-1.0.8（信用卡定期定額）錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,PER10074,本 API 需由藍新金流審核通過後才得以使用 ， 若有串接需求請聯繫客戶 服務中心或商務經理。,,request,error,見藍新規格書 NDNP-1.0.8（信用卡定期定額）錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,PER10075,該委託單已到期,,request,error,見藍新規格書 NDNP-1.0.8（信用卡定期定額）錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,PER10076,信用卡到期日參數錯誤,,validation,error,見藍新規格書 NDNP-1.0.8（信用卡定期定額）錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,PER10078,警示交易,,request,error,見藍新規格書 NDNP-1.0.8（信用卡定期定額）錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
-newebpay,TRA10043,卡片到期日格式錯誤,,validation,error,見藍新規格書 NDNP-1.0.8（信用卡定期定額）錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-08-08,官方文件
+newebpay,NOR10001,連線異常,,system,error,見藍新規格書 NDNP-1.0.9（信用卡定期定額）錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-11-24,官方文件
+newebpay,PER10001,商店資料取得失敗,,request,error,見藍新規格書 NDNP-1.0.9（信用卡定期定額）錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-11-24,官方文件
+newebpay,PER10002,資料解密錯誤,,validation,error,見藍新規格書 NDNP-1.0.9（信用卡定期定額）錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-11-24,官方文件
+newebpay,PER10003,POST 資料傳遞錯誤,,validation,error,見藍新規格書 NDNP-1.0.9（信用卡定期定額）錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-11-24,官方文件
+newebpay,PER10004,OOO 資料不齊全 (OOO 帶入缺少參數),,validation,error,見藍新規格書 NDNP-1.0.9（信用卡定期定額）錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-11-24,官方文件
+newebpay,PER10005,資料不可空白,,validation,error,見藍新規格書 NDNP-1.0.9（信用卡定期定額）錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-11-24,官方文件
+newebpay,PER10006,商品名稱不得含有 JavaScript 語法、CSS 語法,,validation,error,見藍新規格書 NDNP-1.0.9（信用卡定期定額）錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-11-24,官方文件
+newebpay,PER10007,委託金額格式不對，金額必須為數字 委託金額超過單筆金額上限,,validation,error,見藍新規格書 NDNP-1.0.9（信用卡定期定額）錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-11-24,官方文件
+newebpay,PER10008,委託金額不能為零。 本 API 限定為線上商店使用，如需使用請洽客服人員。,,validation,error,見藍新規格書 NDNP-1.0.9（信用卡定期定額）錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-11-24,官方文件
+newebpay,PER10009,"週期設定錯誤! (W=週,M=月,Y=年)",,validation,error,見藍新規格書 NDNP-1.0.9（信用卡定期定額）錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-11-24,官方文件
+newebpay,PER10010,商店訂單編號錯誤，只允許英數與底線,,validation,error,見藍新規格書 NDNP-1.0.9（信用卡定期定額）錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-11-24,官方文件
+newebpay,PER10011,商店訂單編號長度限制為 30 字,,validation,error,見藍新規格書 NDNP-1.0.9（信用卡定期定額）錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-11-24,官方文件
+newebpay,PER10012,回傳格式錯誤，只接受 JSON 或 String,,validation,error,見藍新規格書 NDNP-1.0.9（信用卡定期定額）錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-11-24,官方文件
+newebpay,PER10013,日期授權時間資料不正確，日期格式為 2 到 364 週期授權時間資料不正確，日期格式為 1 到 7(長度不符),,validation,error,見藍新規格書 NDNP-1.0.9（信用卡定期定額）錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-11-24,官方文件
+newebpay,PER10014,週期授權時間資料不正確，日期格式為 1 到 7(長度不符),,validation,error,見藍新規格書 NDNP-1.0.9（信用卡定期定額）錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-11-24,官方文件
+newebpay,PER10015,月期授權時間資料不正確，日期格式為 01 到 31,,validation,error,見藍新規格書 NDNP-1.0.9（信用卡定期定額）錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-11-24,官方文件
+newebpay,PER10016,月期授權時間資料不正確，日期格式為 01 到 31(長度不符),,validation,error,見藍新規格書 NDNP-1.0.9（信用卡定期定額）錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-11-24,官方文件
+newebpay,PER10017,年期授權時間資料不正確，日期格式為 01 到 12,,validation,error,見藍新規格書 NDNP-1.0.9（信用卡定期定額）錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-11-24,官方文件
+newebpay,PER10018,年期授權時間資料不正確，日期格式為 01 到 31,,validation,error,見藍新規格書 NDNP-1.0.9（信用卡定期定額）錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-11-24,官方文件
+newebpay,PER10019,定期授權時間資料不正確，無該日期,,validation,error,見藍新規格書 NDNP-1.0.9（信用卡定期定額）錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-11-24,官方文件
+newebpay,PER10020,首期授權模式設定錯誤(1-3)，請檢查,,validation,error,見藍新規格書 NDNP-1.0.9（信用卡定期定額）錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-11-24,官方文件
+newebpay,PER10021,備註說明不得含有 JavaScript 語法、CSS 語法,,validation,error,見藍新規格書 NDNP-1.0.9（信用卡定期定額）錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-11-24,官方文件
+newebpay,PER10022,授權期數格式不對，必須為數字,,validation,error,見藍新規格書 NDNP-1.0.9（信用卡定期定額）錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-11-24,官方文件
+newebpay,PER10023,授權期數不能為零,,validation,error,見藍新規格書 NDNP-1.0.9（信用卡定期定額）錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-11-24,官方文件
+newebpay,PER10024,授權期數不能多於 99 次,,validation,error,見藍新規格書 NDNP-1.0.9（信用卡定期定額）錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-11-24,官方文件
+newebpay,PER10025,返回商店網址格式錯誤,,validation,error,見藍新規格書 NDNP-1.0.9（信用卡定期定額）錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-11-24,官方文件
+newebpay,PER10026,每期授權通知網址格式錯誤,,validation,error,見藍新規格書 NDNP-1.0.9（信用卡定期定額）錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-11-24,官方文件
+newebpay,PER10027,是否開啟付款人資訊設定錯誤,,validation,error,見藍新規格書 NDNP-1.0.9（信用卡定期定額）錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-11-24,官方文件
+newebpay,PER10028,付款人電子信箱格式錯誤 商品名稱僅限制使用中文、英文、數字、空格及底線，請勿使用其他符 號字,,validation,error,見藍新規格書 NDNP-1.0.9（信用卡定期定額）錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-11-24,官方文件
+newebpay,PER10029,商店代號停用,,request,error,見藍新規格書 NDNP-1.0.9（信用卡定期定額）錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-11-24,官方文件
+newebpay,PER10030,商店信用卡資格停用,,request,error,見藍新規格書 NDNP-1.0.9（信用卡定期定額）錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-11-24,官方文件
+newebpay,PER10031,商店定期定額資格停用,,request,error,見藍新規格書 NDNP-1.0.9（信用卡定期定額）錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-11-24,官方文件
+newebpay,PER10032,該訂單編號已重覆,,request,error,見藍新規格書 NDNP-1.0.9（信用卡定期定額）錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-11-24,官方文件
+newebpay,PER10033,寫入委託單失敗,,request,error,見藍新規格書 NDNP-1.0.9（信用卡定期定額）錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-11-24,官方文件
+newebpay,PER10034,授權失敗，委託單建立失敗,,request,error,見藍新規格書 NDNP-1.0.9（信用卡定期定額）錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-11-24,官方文件
+newebpay,PER10035,委託單更新授權結果失敗,,request,error,見藍新規格書 NDNP-1.0.9（信用卡定期定額）錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-11-24,官方文件
+newebpay,PER10036,驗證資料錯誤(來源不合法),,validation,error,見藍新規格書 NDNP-1.0.9（信用卡定期定額）錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-11-24,官方文件
+newebpay,PER10037,付款頁參數不足,,request,error,見藍新規格書 NDNP-1.0.9（信用卡定期定額）錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-11-24,官方文件
+newebpay,PER10038,商品名稱僅限制使用中文、英文、數字、空格及底線，請勿使用其他符 號字元,,validation,error,見藍新規格書 NDNP-1.0.9（信用卡定期定額）錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-11-24,官方文件
+newebpay,PER10041,第一期發動日日期不正確,,validation,error,見藍新規格書 NDNP-1.0.9（信用卡定期定額）錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-11-24,官方文件
+newebpay,PER10061,該定期定額委託單為暫停狀態，無法重複暫停,,request,error,見藍新規格書 NDNP-1.0.9（信用卡定期定額）錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-11-24,官方文件
+newebpay,PER10062,該定期定額委託單為終止狀態，無法暫停,,request,error,見藍新規格書 NDNP-1.0.9（信用卡定期定額）錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-11-24,官方文件
+newebpay,PER10063,該定期定額委託單為啟用狀態，無法重複啟用,,request,error,見藍新規格書 NDNP-1.0.9（信用卡定期定額）錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-11-24,官方文件
+newebpay,PER10064,該定期定額委託單為終止狀態，無法啟用,,request,error,見藍新規格書 NDNP-1.0.9（信用卡定期定額）錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-11-24,官方文件
+newebpay,PER10065,該定期定額委託單為終止狀態，無法重複終止,,request,error,見藍新規格書 NDNP-1.0.9（信用卡定期定額）錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-11-24,官方文件
+newebpay,PER10066,Version 參數錯誤,,validation,error,見藍新規格書 NDNP-1.0.9（信用卡定期定額）錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-11-24,官方文件
+newebpay,PER10067,查無委託單資料,,request,error,見藍新規格書 NDNP-1.0.9（信用卡定期定額）錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-11-24,官方文件
+newebpay,PER10068,委託單狀態更新失敗,,request,error,見藍新規格書 NDNP-1.0.9（信用卡定期定額）錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-11-24,官方文件
+newebpay,PER10071,該定期定額委託單已暫停無法修改。,,request,error,見藍新規格書 NDNP-1.0.9（信用卡定期定額）錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-11-24,官方文件
+newebpay,PER10072,定期定額委託單為終止狀態無法修改。,,request,error,見藍新規格書 NDNP-1.0.9（信用卡定期定額）錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-11-24,官方文件
+newebpay,PER10073,此 IP 不允許執行變更該委託單狀態,,request,error,見藍新規格書 NDNP-1.0.9（信用卡定期定額）錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-11-24,官方文件
+newebpay,PER10074,本 API 需由藍新金流審核通過後才得以使用 ， 若有串接需求請聯繫客戶 服務中心或商務經理。,,request,error,見藍新規格書 NDNP-1.0.9（信用卡定期定額）錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-11-24,官方文件
+newebpay,PER10075,該委託單已到期,,request,error,見藍新規格書 NDNP-1.0.9（信用卡定期定額）錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-11-24,官方文件
+newebpay,PER10076,信用卡到期日參數錯誤,,validation,error,見藍新規格書 NDNP-1.0.9（信用卡定期定額）錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-11-24,官方文件
+newebpay,PER10078,警示交易,,request,error,見藍新規格書 NDNP-1.0.9（信用卡定期定額）錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-11-24,官方文件
+newebpay,TRA10043,卡片到期日格式錯誤,,validation,error,見藍新規格書 NDNP-1.0.9（信用卡定期定額）錯誤代碼表,https://www.newebpay.com/website/Page/content/download_api,2026-11-24,官方文件
 smilepay,1,取號／建立成功,Success,success,info,只有 1 代表成功；其他值以 Desc 判讀（速買配未公開金流錯誤代碼表）,https://www.smilepay.net/,2026-08-08,官方文件
 pchomepay,10001,APPID 和 Secret 錯誤,invalid user password,auth,error,見 PChomePay API 文件「7. 錯誤代碼」,https://docs.google.com/document/d/1dPIPJc4xfyjkJ1i2yxaja4OP0G-iGFRXM08NDMuttZE/,,官方文件
 pchomepay,10002,不被允許的 IP 位址,Server IP not allow,auth,error,見 PChomePay API 文件「7. 錯誤代碼」,https://docs.google.com/document/d/1dPIPJc4xfyjkJ1i2yxaja4OP0G-iGFRXM08NDMuttZE/,,官方文件
