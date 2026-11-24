@@ -55,9 +55,9 @@
   "checked": "2026-11-24"
  },
  "ai-cursor": {
-  "sha256": "d34a41e6eacfd7aa9dc8797f13e6d6ed5ac5d44ae309bcdffd322a0a8f315e9a",
-  "size": 472506,
-  "checked": "2026-11-17"
+  "sha256": "f7a20b2347fdb265c4090f82c3101da9a84460afd1e5a3a61977b16d19567492",
+  "size": 477548,
+  "checked": "2026-11-24"
  },
  "ai-gemini": {
   "sha256": "432fabf3bb2a3ea98650e31f8c403a3162831beef9e9f47ba4c4b334fe5f1ae4",
@@ -1230,9 +1230,9 @@
   "checked": "2026-11-17"
  },
  "hct-home": {
-  "sha256": "b337d4490e82aaaeedfcae2f5763644598a938b2c137647ac82c49df02e782b6",
-  "size": 257083,
-  "checked": "2026-11-17"
+  "sha256": "002da9b6e5211da2263f6284cd948427c8ada3f78d229cba63a3aec01e6741fd",
+  "size": 256741,
+  "checked": "2026-11-24"
  },
  "jkopay-authorized-payment": {
   "sha256": "17d53bf245040aac8c595d0a67989012815afa621652d4a59912d9f52ee626ac",
@@ -2112,7 +2112,7 @@
  "payuni-page-164": {
   "sha256": "67d3fd19c84984d31e88c6d2de13b40f5b6e7c9346669ca6dcc8ca50663a1f3c",
   "size": 16400,
-  "checked": "2026-11-18"
+  "checked": "2026-11-24"
  },
  "payuni-page-170": {
   "sha256": "b9356603e18c0bbb064178b1edffeb9a7e94719bfa05281d66bbfb179ca1d197",
@@ -2122,12 +2122,12 @@
  "payuni-page-172": {
   "sha256": "f463fe49cb9d3ba1b4bd184ff556c332bed00b60a0af003b37d36e6279390ab9",
   "size": 16222,
-  "checked": "2026-11-18"
+  "checked": "2026-11-24"
  },
  "payuni-page-25": {
   "sha256": "e9cde2225e342761b532c24d19fe05cd2b6c37872a46cbd3e0d1d72e18ee3dd0",
   "size": 24801,
-  "checked": "2026-11-18"
+  "checked": "2026-11-24"
  },
  "payuni-page-269": {
   "sha256": "4f93fabf1364b69626b61dc87541379d97b4768e89f73c002953e0509097465e",
@@ -2182,7 +2182,7 @@
  "payuni-page-34": {
   "sha256": "927dba929f41635211e1675a063c3b4611c0bf8e6f8891162b8c298901978d13",
   "size": 44720,
-  "checked": "2026-11-18"
+  "checked": "2026-11-24"
  },
  "payuni-page-350": {
   "sha256": "7e23468d2a55eea8904516e3414d751e642bd41a9312e1ad8f28b28a256b948a",
@@ -2252,7 +2252,7 @@
  "payuni-page-512": {
   "sha256": "2d3620d4b0c1823e4b604c1e2d00fe5d5f88df20183801246ef92dd2a32980a2",
   "size": 46814,
-  "checked": "2026-11-18"
+  "checked": "2026-11-24"
  },
  "payuni-page-514": {
   "sha256": "e9c0bd32b01f7a51f13570766a4aaeb3865b1b1c7f56082394a712db9b0f73d3",
@@ -2272,12 +2272,12 @@
  "payuni-page-522": {
   "sha256": "e8f971287c1bb7fe6409d55febbbedabeaa3f32a21a4867a535d256ada1fb344",
   "size": 20304,
-  "checked": "2026-11-18"
+  "checked": "2026-11-24"
  },
  "payuni-page-53": {
   "sha256": "90ae5b56cdcb60ca7201ecd877c6ef3bf871b63b1a557f043647a3b72afe6db4",
   "size": 9937,
-  "checked": "2026-11-18"
+  "checked": "2026-11-24"
  },
  "payuni-page-56": {
   "sha256": "8d2f80eab714dd62ce13c2e748be7710a82e70be2a1a6f87353751f7ff6464d9",
@@ -2292,17 +2292,17 @@
  "payuni-page-73": {
   "sha256": "72ca5360f511aeb3230ff50207a9c4e696a48b39b30b1b6805a8c63aad7bcf7a",
   "size": 2745,
-  "checked": "2026-11-18"
+  "checked": "2026-11-24"
  },
  "payuni-page-74": {
   "sha256": "8817578b143b598ca297efe7aa9e259db0ce2f6782b0a16e33248c42908acad5",
   "size": 2547,
-  "checked": "2026-11-18"
+  "checked": "2026-11-24"
  },
  "payuni-page-75": {
   "sha256": "d75f76092dc9a9f95ab1d4486cdc4b8bda3df37792a317cb82d561d5c8f69d95",
   "size": 2073,
-  "checked": "2026-11-18"
+  "checked": "2026-11-24"
  },
  "payuni-page-80": {
   "sha256": "d3a86994b24394daf1a6adeefce3a39f584943b25505c72579a2447dc862266c",
@@ -2385,14 +2385,14 @@
   "checked": "2026-11-17"
  },
  "shopline-api-event": {
-  "sha256": "9c293cd6d4c4cf10a09d1665802afa3eb3e157f028fb62836226b5727eed5969",
-  "size": 13710,
-  "checked": "2026-11-17"
+  "sha256": "5b0ddbcdcab484a13e05d901f7e4e1264ba88d14d68a463c00657e6848c22484",
+  "size": 13885,
+  "checked": "2026-11-24"
  },
  "shopline-api-event-model": {
-  "sha256": "1b3c233031b9019918c0489620dd6ffa67f6fd1723259033416804ad1d78a594",
-  "size": 54282,
-  "checked": "2026-11-17"
+  "sha256": "d39ad36560ac03a0ae70d24e12c9c5a15654f95a7ffbf9a1b079dce34db1e0ba",
+  "size": 54457,
+  "checked": "2026-11-24"
  },
  "shopline-api-event-query": {
   "sha256": "07cd6f63c3e621441fcceebb78d898564b494bcd5b4296c31746f80c4d95274d",
@@ -2400,44 +2400,49 @@
   "checked": "2026-11-17"
  },
  "shopline-api-trade-cancel": {
-  "sha256": "9606f36800e5d60f2ca9d3ae65f1b789725db7adde59e8cc9af95bbc3cf1a9ba",
-  "size": 45806,
-  "checked": "2026-11-17"
+  "sha256": "2d96c3d40140c74d124d54db532af67a254ca1562d04a94717822a08d6ad6f97",
+  "size": 45981,
+  "checked": "2026-11-24"
  },
  "shopline-api-trade-capture": {
-  "sha256": "e152ce96047a195018d9d0d6206df845a7e6264004cfe23a469d4d7fa7093429",
-  "size": 47978,
-  "checked": "2026-11-17"
+  "sha256": "8e1dc8b25be8538682acafeee1756b682be98775052dee4dca5877a4f117748f",
+  "size": 48153,
+  "checked": "2026-11-24"
  },
  "shopline-api-trade-create": {
-  "sha256": "1b4437493d897866dc13b53e9c1175e8b288ff4e149afc182be2e9a62a8dda5b",
-  "size": 133259,
-  "checked": "2026-11-17"
+  "sha256": "497f6681ec0700fe3d0f7cea8568f895f8e0b967ab4f434486078678690f5371",
+  "size": 141751,
+  "checked": "2026-11-24"
+ },
+ "shopline-api-trade-invoice": {
+  "sha256": "50cd804fca1f0fd1fbd95db190f86e0b509ce78c01eed23181263c7abd4f320a",
+  "size": 48094,
+  "checked": "2026-11-24"
  },
  "shopline-api-trade-query": {
-  "sha256": "20c5f799fb1b08734a18d2f84773cd1427ac4c0e408ab996ccebbb07ce2a4e9b",
-  "size": 66913,
-  "checked": "2026-11-17"
+  "sha256": "8660b5980b382de5e201461d44ea3274be681cb6bf7651d9fc6870f030c3c0c0",
+  "size": 67088,
+  "checked": "2026-11-24"
  },
  "shopline-api-trade-refund": {
-  "sha256": "f6734e48d22924a465a9af9b93d2deae6a5b6e418f252c766554b746fc737b38",
-  "size": 52696,
-  "checked": "2026-11-17"
+  "sha256": "dd69b608b013adbe52856420bcff49e520e50b15f297222c42ffa9014be304b9",
+  "size": 52857,
+  "checked": "2026-11-24"
  },
  "shopline-api-trade-refundquery": {
-  "sha256": "09c49711ed5e42800561bd6fcf703ef26afb4284753bb150fed16dff5d4b3dfb",
-  "size": 48259,
-  "checked": "2026-11-17"
+  "sha256": "0bfc7db4065ddc0e2ed775403f2172b0e53aa48a0263d700002f46877a964ae7",
+  "size": 48434,
+  "checked": "2026-11-24"
  },
  "shopline-api-trade-session": {
-  "sha256": "cbadef8e4b38e292f872e7e9643e8a0e56ef760ccde75b3cbc50bc146e822ced",
-  "size": 122273,
-  "checked": "2026-11-17"
+  "sha256": "79c9e377475f25810fd1283aeefcbc50efa450eb957efdd4c9988303955f3651",
+  "size": 125216,
+  "checked": "2026-11-24"
  },
  "shopline-api-trade-sessionquery": {
-  "sha256": "e84e1566641a54dbf899085374c494ba224a844e929372ff49c8acad31481b6c",
-  "size": 47291,
-  "checked": "2026-11-17"
+  "sha256": "60488be746a12864da350e64db1c88ac42274849daf97f40d37a0a39c722dd7a",
+  "size": 47466,
+  "checked": "2026-11-24"
  },
  "shopline-appendix-errorcode": {
   "sha256": "afc510e8a69c239f98bf69c97719a50c5a18a584ae7cb28ce5a29a1de4ed0c1b",
@@ -2480,9 +2485,9 @@
   "checked": "2026-11-17"
  },
  "shopline-sitemap": {
-  "sha256": "09819366dd6378c9591311da71a3c233dafbb6f191caee248b3e0e7dd6833f4f",
-  "size": 14130,
-  "checked": "2026-11-17"
+  "sha256": "780489a4af2cf2af1252a319cb979f2438e054166591c024ec5baba6c5836b18",
+  "size": 14259,
+  "checked": "2026-11-24"
  },
  "shopline-supported-creditcard": {
   "sha256": "ebe6fe9b67599e0e2ebc1f8c0fb54a3dff4fee3dd16c31dbb26e27181ecf325f",

@@ -8764,6 +8764,21 @@
   ]
  },
  {
+  "id": "shopline-api-trade-invoice",
+  "provider": "shopline",
+  "skills": [
+   "payment"
+  ],
+  "title": "SHOPLINE Payments 文件：發票查詢",
+  "url": "https://docs.shoplinepayments.com/api/trade/invoice/",
+  "format": "html",
+  "fetch": "get",
+  "access": "public",
+  "covers": [
+   "taiwan-payment/references/shopline-payment-api.md"
+  ]
+ },
+ {
   "id": "shopline-api-trade-capture",
   "provider": "shopline",
   "skills": [

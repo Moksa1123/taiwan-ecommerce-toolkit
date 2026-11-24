@@ -50,7 +50,7 @@ RECOMMENDATION_RULES = {
     'unionpay': [('payuni', 3, '支援銀聯卡')],
     'apple pay': [('payuni', 3, '整合 Apple Pay 和 Google Pay')],
     'google pay': [('payuni', 3, '整合 Apple Pay 和 Google Pay')],
-    'click to pay': [('payuni', 3, 'UPP 支付頁支援 Click to Pay（Mastercard、Visa）')],
+    'click to pay': [('payuni', 3, '官網提供 Click to Pay（Mastercard、Visa）；API 文件已撤下參數，串接前向 PAYUNi 確認')],
     'icash': [('payuni', 3, '整合 icash Pay 電子支付')],
     '電子支付': [('payuni', 2, '支援 icash Pay')],
     'atm': [('ecpay', 2, 'ATM 虛擬帳號')],

@@ -318,7 +318,7 @@
    "method_en": "Click to Pay",
    "ecpay_code": "",
    "newebpay_code": "",
-   "payuni_code": "ClickToPay",
+   "payuni_code": "",
    "opay_code": "",
    "smilepay_code": "",
    "pchomepay_code": "",
@@ -329,9 +329,9 @@
    "max_amount": "",
    "settlement_days": "",
    "fee_type": "",
-   "notes": "EMVCo 線上快速結帳；PAYUNi 僅 UPP 支付頁（ClickToPay=1），回傳 AuthType=8；國內外卡，不支援銀聯與 JCB（官網：目前支援 Mastercard、Visa）；幕後 Token 與 UNi Embed 文件未列",
-   "doc_url": "https://docs.payuni.com.tw/web/#/7/34 https://www.payuni.com.tw/click-to-pay",
-   "retrieved_on": "2026-11-18",
+   "notes": "EMVCo 線上快速結帳；PAYUNi 官網提供（目前支援 Mastercard、Visa），但 API 文件 2026-11-24 已移除 ClickToPay 參數與 AuthType=8，串接前向 PAYUNi 確認",
+   "doc_url": "https://www.payuni.com.tw/click-to-pay https://docs.payuni.com.tw/web/#/7/34",
+   "retrieved_on": "2026-11-24",
    "trust": "官方文件"
   },
   {
