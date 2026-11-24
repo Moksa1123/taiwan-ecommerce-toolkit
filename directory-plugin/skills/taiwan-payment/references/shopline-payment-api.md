@@ -148,6 +148,7 @@ idempotentKey: idem_ORDER-2026050701
 | 請款（Capture） | `POST /api/v1/trade/payment/capture` |
 | 取消授權（Cancel） | `POST /api/v1/trade/payment/cancel` |
 | 結算（Settle，平台） | `POST /api/v1/trade/payment/settle` |
+| 發票查詢 | `POST /api/v1/trade/invoice/get` |
 
 ### 退款（Refund）
 
@@ -221,6 +222,7 @@ POST /api/v1/trade/sessions/create
 | `customer` | Object | ● | 顧客資訊 |
 | `billing` | Object | ● | 帳單資訊 |
 | `client` | Object | ● | 客戶端資訊（至少 `ip`） |
+| `invoice` | Object | 否 | 電子發票設定，僅已開通電子發票的特店：`enabled`（必填）、`delayDays`（0–15，付款成功後延遲開立天數，預設 0） |
 
 #### `paymentMethodOptions` 進階選項
 
@@ -444,6 +446,33 @@ POST /api/v1/trade/payment/create
 | `customer` | Object | ● | 顧客資訊 |
 | `billing` | Object | ● | 帳單資訊 |
 | `client` | Object | ● | 客戶端資訊（含螢幕、時區、UA、JS、語系等風控欄位） |
+| `invoice` | Object | 否 | 電子發票設定，見下方 |
+
+### `invoice` 電子發票（僅已開通電子發票的特店）
+
+| 參數 | 類型 | 必填 | 說明 |
+|------|------|------|------|
+| `enabled` | Boolean | ● | 是否開立 |
+| `delayDays` | Integer | 否 | 付款成功後延遲開立天數，0–15；`enabled=true` 未帶時為 0（即時開立） |
+| `buyer.name` | String(128) | 條件 | 買受人名稱；`destination.type=TW_BUSINESS` 時為發票抬頭且必填 |
+| `buyer.email` | String(128) | 條件 | `destination.type=TW_MEMBER` 時必填 |
+| `buyer.phone` | String(64) | 否 | E.164 格式，例 `+886912345678` |
+| `destination.type` | String | 條件 | `enabled=true` 時必填，見下表 |
+| `destination.value` | String(128) | 條件 | `enabled=true` 時必填，見下表 |
+
+| `destination.type` | `value` |
+|------|------|
+| `TW_MEMBER` | 會員電子郵件 |
+| `TW_MOBILE_BARCODE` | `/` 開頭 8 碼手機條碼 |
+| `TW_CITIZEN_CERT` | `TP` 開頭加 14 碼數字的自然人憑證 |
+| `TW_NPOBAN` | 捐贈碼 |
+| `TW_BUSINESS` | 8 碼統一編號 |
+
+結帳交易（Sessions）的 `invoice` 只有 `enabled`、`delayDays`。
+
+發票查詢 `POST /api/v1/trade/invoice/get`：body 帶 `tradeOrderId`；回 `enabled`、`buyer`、`destination`、`delayDays`、`channelId`（發票通道，例 `AMEGO`）、`result.status`（例 `SUCCEEDED`、`FAILED`）、`result.issuedAt`（成功時）、`result.error.code`／`message`（失敗時）。
+
+來源：https://docs.shoplinepayments.com/api/trade/create/ 、https://docs.shoplinepayments.com/api/trade/session/ 、https://docs.shoplinepayments.com/api/trade/invoice/ （查證 2026-11-24）
 
 ### `confirm` 設定
 

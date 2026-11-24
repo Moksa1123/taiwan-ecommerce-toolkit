@@ -90,7 +90,8 @@ def parse_frontmatter(text: str) -> dict[str, str]:
 
 
 # 只給開發者看的檔案，不隨 skill 安裝
-NOT_INSTALLED = {"CLAUDE.md", "README.md", "README.zh-TW.md"}
+NOT_INSTALLED = {"CLAUDE.md", "README.md", "README.zh-TW.md",
+                 "docs/encryption-and-test-accounts.md"}  # taiwan-payment/CLAUDE.md 的細節檔
 # 作答紀錄只供維護者評分，sync-assets.mjs 不打包
 NOT_PACKAGED = ("evals", "runs")
 
@@ -100,7 +101,7 @@ def missing_files(source: Path, installed: Path) -> list[str]:
     out = []
     for f in sorted(source.rglob("*")):
         rel = f.relative_to(source)
-        if f.is_file() and "__pycache__" not in rel.parts and str(rel) not in NOT_INSTALLED and rel.parts[:2] != NOT_PACKAGED:
+        if f.is_file() and "__pycache__" not in rel.parts and rel.as_posix() not in NOT_INSTALLED and rel.parts[:2] != NOT_PACKAGED:
             if not (installed / rel).exists():
                 out.append(rel.as_posix())
     return out

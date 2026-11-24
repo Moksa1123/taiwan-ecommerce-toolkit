@@ -21,7 +21,7 @@ each provider's official documentation:
 | Skill | Covers | Data rows (JSON) |
 |---|---|---|
 | `taiwan-invoice` | Issue, void and allowance flows for Taiwan e-invoices; MOF platform queries | 450 |
-| `taiwan-payment` | Checkout, notifications, refunds and signatures for Taiwan payment gateways and wallets | 3280 |
+| `taiwan-payment` | Checkout, notifications, refunds and signatures for Taiwan payment gateways and wallets | 3284 |
 | `taiwan-logistics` | Convenience-store pickup, home delivery, cold chain, store maps, on-demand delivery | 1159 |
 
 Each skill ships its `SKILL.md`, provider references, code examples in Markdown and the data set as JSON

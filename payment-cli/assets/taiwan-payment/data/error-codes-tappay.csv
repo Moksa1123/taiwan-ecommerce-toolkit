@@ -432,6 +432,10 @@ tappay,10052,,Confirm order timeout,bank,error,見 TapPay Docs「Error」頁（d
 tappay,10055,,Missing arguments : filters > time,bank,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同,https://docs.tappaysdk.com/,2026-08-08,官方文件
 tappay,10056,,Missing arguments : filters,bank,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同,https://docs.tappaysdk.com/,2026-08-08,官方文件
 tappay,10057,,Capture charge authorization expired,bank,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同,https://docs.tappaysdk.com/,2026-08-08,官方文件
+tappay,10062,,Invalid arguments : is_air_ticket_transaction,bank,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同,https://docs.tappaysdk.com/,2026-11-24,官方文件
+tappay,10063,,Out of range : departure_airport_code,bank,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同,https://docs.tappaysdk.com/,2026-11-24,官方文件
+tappay,10064,,Out of range : destination_airport_code,bank,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同,https://docs.tappaysdk.com/,2026-11-24,官方文件
+tappay,10065,,Out of range : flight_number,bank,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同,https://docs.tappaysdk.com/,2026-11-24,官方文件
 tappay,11000,,Invalid arguments : rec_trade_id,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同,https://docs.tappaysdk.com/,2026-08-08,官方文件
 tappay,12001,,Rba doesn’t support transaction with merchant_id,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同,https://docs.tappaysdk.com/,2026-08-08,官方文件
 tappay,12007,,Merchant Group Setting not match rba recommendation,api,error,見 TapPay Docs「Error」頁（docs.tappaysdk.com/tutorial/en/error.html）；同一代碼在不同 API 意義可能不同,https://docs.tappaysdk.com/,2026-08-08,官方文件

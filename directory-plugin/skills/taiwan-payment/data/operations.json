@@ -21,7 +21,7 @@
    "method": "POST",
    "required_fields": "MerchantID,MerchantTradeNo,TotalAmount,TradeDesc,ItemName,ReturnURL",
    "notes": "主要付款入口；PChomePay 另有 /v1/payment/atmva (ATM) 與 /v1/payment/barcode (CVS code) | 歐付寶 O'Pay 路徑與綠界相同僅換網域;街口 JKOPAY 為 /platform/entry 且同單號冪等;紅陽 SunPay 為 /v4/cash",
-   "doc_url": "https://developers.ecpay.com.tw/ https://www.newebpay.com/website/Page/download_file?name=%E4%BF%A1%E7%94%A8%E5%8D%A1%E5%AE%9A%E6%9C%9F%E5%AE%9A%E9%A1%8D%E4%B8%B2%E6%8E%A5%E6%8A%80%E8%A1%93%E6%89%8B%E5%86%8A_NDNP-1.0.8.pdf https://docs.payuni.com.tw/ https://www.smilepay.net/ https://www.pchomepay.com.tw/ https://www.ezpay.com.tw/info/Service_intro/api_document/member https://owlting.github.io/paynow-guideline/docs/api-reference/ https://developers.opay.tw/download/document https://open-doc.jkos.com/ https://www.sunpay.com.tw/developers/",
+   "doc_url": "https://developers.ecpay.com.tw/ https://www.newebpay.com/website/Page/download_file?name=%E4%BF%A1%E7%94%A8%E5%8D%A1%E5%AE%9A%E6%9C%9F%E5%AE%9A%E9%A1%8D%E4%B8%B2%E6%8E%A5%E6%8A%80%E8%A1%93%E6%89%8B%E5%86%8A_NDNP-1.0.9.pdf https://docs.payuni.com.tw/ https://www.smilepay.net/ https://www.pchomepay.com.tw/ https://www.ezpay.com.tw/info/Service_intro/api_document/member https://owlting.github.io/paynow-guideline/docs/api-reference/ https://developers.opay.tw/download/document https://open-doc.jkos.com/ https://www.sunpay.com.tw/developers/",
    "retrieved_on": "2026-10-24",
    "trust": "官方文件"
   },
@@ -42,7 +42,7 @@
    "method": "POST",
    "required_fields": "MerchantID,MerchantTradeNo,TimeStamp",
    "notes": "查詢交易狀態；SmilePay 無公開查詢 API，以付款結果通知與後台交易查詢為準 | 街口 JKOPAY 查詢為 GET 且一次最多 20 筆;紅陽 SunPay 查詢的 pay_result=12 意為查無訂單與交易通知不同義",
-   "doc_url": "https://developers.ecpay.com.tw/ https://www.newebpay.com/website/Page/download_file?name=%E4%BF%A1%E7%94%A8%E5%8D%A1%E5%AE%9A%E6%9C%9F%E5%AE%9A%E9%A1%8D%E4%B8%B2%E6%8E%A5%E6%8A%80%E8%A1%93%E6%89%8B%E5%86%8A_NDNP-1.0.8.pdf https://docs.payuni.com.tw/ https://www.smilepay.net/ https://www.pchomepay.com.tw/ https://www.ezpay.com.tw/info/Service_intro/api_document/member https://owlting.github.io/paynow-guideline/docs/api-reference/ https://developers.opay.tw/download/document https://open-doc.jkos.com/ https://www.sunpay.com.tw/developers/",
+   "doc_url": "https://developers.ecpay.com.tw/ https://www.newebpay.com/website/Page/download_file?name=%E4%BF%A1%E7%94%A8%E5%8D%A1%E5%AE%9A%E6%9C%9F%E5%AE%9A%E9%A1%8D%E4%B8%B2%E6%8E%A5%E6%8A%80%E8%A1%93%E6%89%8B%E5%86%8A_NDNP-1.0.9.pdf https://docs.payuni.com.tw/ https://www.smilepay.net/ https://www.pchomepay.com.tw/ https://www.ezpay.com.tw/info/Service_intro/api_document/member https://owlting.github.io/paynow-guideline/docs/api-reference/ https://developers.opay.tw/download/document https://open-doc.jkos.com/ https://www.sunpay.com.tw/developers/",
    "retrieved_on": "2026-10-24",
    "trust": "官方文件"
   },
@@ -63,7 +63,7 @@
    "method": "POST",
    "required_fields": "MerchantID,TradeNo,Action,TotalAmount",
    "notes": "請款/退款/取消；SmilePay 的 SPPayment_Modify.asp 為非公開 API（客服回覆 2026-09-30）；PayNow 現代版用 PaymentIntent refund | 街口 JKOPAY 退款單號一筆只能退一次;紅陽 SunPay 請款與退款仍在 /v3/ 與交易查詢的 /v4/ 不同",
-   "doc_url": "https://developers.ecpay.com.tw/ https://www.newebpay.com/website/Page/download_file?name=%E4%BF%A1%E7%94%A8%E5%8D%A1%E5%AE%9A%E6%9C%9F%E5%AE%9A%E9%A1%8D%E4%B8%B2%E6%8E%A5%E6%8A%80%E8%A1%93%E6%89%8B%E5%86%8A_NDNP-1.0.8.pdf https://docs.payuni.com.tw/ https://www.smilepay.net/ https://www.pchomepay.com.tw/ https://www.ezpay.com.tw/info/Service_intro/api_document/member https://owlting.github.io/paynow-guideline/docs/api-reference/ https://developers.opay.tw/download/document https://open-doc.jkos.com/ https://www.sunpay.com.tw/developers/",
+   "doc_url": "https://developers.ecpay.com.tw/ https://www.newebpay.com/website/Page/download_file?name=%E4%BF%A1%E7%94%A8%E5%8D%A1%E5%AE%9A%E6%9C%9F%E5%AE%9A%E9%A1%8D%E4%B8%B2%E6%8E%A5%E6%8A%80%E8%A1%93%E6%89%8B%E5%86%8A_NDNP-1.0.9.pdf https://docs.payuni.com.tw/ https://www.smilepay.net/ https://www.pchomepay.com.tw/ https://www.ezpay.com.tw/info/Service_intro/api_document/member https://owlting.github.io/paynow-guideline/docs/api-reference/ https://developers.opay.tw/download/document https://open-doc.jkos.com/ https://www.sunpay.com.tw/developers/",
    "retrieved_on": "2026-10-24",
    "trust": "官方文件"
   },
@@ -84,7 +84,7 @@
    "method": "POST",
    "required_fields": "MerchantID,CreditRefundId",
    "notes": "查詢信用卡交易",
-   "doc_url": "https://developers.ecpay.com.tw/ https://www.newebpay.com/website/Page/download_file?name=%E4%BF%A1%E7%94%A8%E5%8D%A1%E5%AE%9A%E6%9C%9F%E5%AE%9A%E9%A1%8D%E4%B8%B2%E6%8E%A5%E6%8A%80%E8%A1%93%E6%89%8B%E5%86%8A_NDNP-1.0.8.pdf https://docs.payuni.com.tw/ https://www.smilepay.net/ https://www.pchomepay.com.tw/ https://www.ezpay.com.tw/info/Service_intro/api_document/member https://owlting.github.io/paynow-guideline/docs/api-reference/ https://developers.opay.tw/download/document https://open-doc.jkos.com/ https://www.sunpay.com.tw/developers/",
+   "doc_url": "https://developers.ecpay.com.tw/ https://www.newebpay.com/website/Page/download_file?name=%E4%BF%A1%E7%94%A8%E5%8D%A1%E5%AE%9A%E6%9C%9F%E5%AE%9A%E9%A1%8D%E4%B8%B2%E6%8E%A5%E6%8A%80%E8%A1%93%E6%89%8B%E5%86%8A_NDNP-1.0.9.pdf https://docs.payuni.com.tw/ https://www.smilepay.net/ https://www.pchomepay.com.tw/ https://www.ezpay.com.tw/info/Service_intro/api_document/member https://owlting.github.io/paynow-guideline/docs/api-reference/ https://developers.opay.tw/download/document https://open-doc.jkos.com/ https://www.sunpay.com.tw/developers/",
    "retrieved_on": "2026-10-24",
    "trust": "官方文件"
   },
@@ -105,7 +105,7 @@
    "method": "POST",
    "required_fields": "PeriodAmount,PeriodType,Frequency,ExecTimes",
    "notes": "設定週期付款；PayNow 現代版用 Customer + Card Token 機制 | 街口 JKOPAY 授權扣款分定期定額 regular 與不定期不定額 limited 兩種;歐付寶 O'Pay 同綠界定期定額",
-   "doc_url": "https://developers.ecpay.com.tw/ https://www.newebpay.com/website/Page/download_file?name=%E4%BF%A1%E7%94%A8%E5%8D%A1%E5%AE%9A%E6%9C%9F%E5%AE%9A%E9%A1%8D%E4%B8%B2%E6%8E%A5%E6%8A%80%E8%A1%93%E6%89%8B%E5%86%8A_NDNP-1.0.8.pdf https://www.smilepay.net/ https://www.pchomepay.com.tw/ https://owlting.github.io/paynow-guideline/docs/api-reference/ https://developers.opay.tw/download/document https://open-doc.jkos.com/ https://www.sunpay.com.tw/developers/",
+   "doc_url": "https://developers.ecpay.com.tw/ https://www.newebpay.com/website/Page/download_file?name=%E4%BF%A1%E7%94%A8%E5%8D%A1%E5%AE%9A%E6%9C%9F%E5%AE%9A%E9%A1%8D%E4%B8%B2%E6%8E%A5%E6%8A%80%E8%A1%93%E6%89%8B%E5%86%8A_NDNP-1.0.9.pdf https://www.smilepay.net/ https://www.pchomepay.com.tw/ https://owlting.github.io/paynow-guideline/docs/api-reference/ https://developers.opay.tw/download/document https://open-doc.jkos.com/ https://www.sunpay.com.tw/developers/",
    "retrieved_on": "2026-10-24",
    "trust": "官方文件"
   },
@@ -126,7 +126,7 @@
    "method": "POST",
    "required_fields": "MerchantID,MerchantTradeNo",
    "notes": "查詢週期付款",
-   "doc_url": "https://developers.ecpay.com.tw/ https://www.newebpay.com/website/Page/download_file?name=%E4%BF%A1%E7%94%A8%E5%8D%A1%E5%AE%9A%E6%9C%9F%E5%AE%9A%E9%A1%8D%E4%B8%B2%E6%8E%A5%E6%8A%80%E8%A1%93%E6%89%8B%E5%86%8A_NDNP-1.0.8.pdf https://www.smilepay.net/ https://www.pchomepay.com.tw/ https://owlting.github.io/paynow-guideline/docs/api-reference/ https://developers.opay.tw/download/document https://open-doc.jkos.com/ https://www.sunpay.com.tw/developers/",
+   "doc_url": "https://developers.ecpay.com.tw/ https://www.newebpay.com/website/Page/download_file?name=%E4%BF%A1%E7%94%A8%E5%8D%A1%E5%AE%9A%E6%9C%9F%E5%AE%9A%E9%A1%8D%E4%B8%B2%E6%8E%A5%E6%8A%80%E8%A1%93%E6%89%8B%E5%86%8A_NDNP-1.0.9.pdf https://www.smilepay.net/ https://www.pchomepay.com.tw/ https://owlting.github.io/paynow-guideline/docs/api-reference/ https://developers.opay.tw/download/document https://open-doc.jkos.com/ https://www.sunpay.com.tw/developers/",
    "retrieved_on": "2026-10-24",
    "trust": "官方文件"
   },
@@ -147,7 +147,7 @@
    "method": "POST",
    "required_fields": "MerchantID,Action",
    "notes": "取消/修改週期 | 街口 JKOPAY 同一 auth_no 扣款不可併發",
-   "doc_url": "https://developers.ecpay.com.tw/ https://www.newebpay.com/website/Page/download_file?name=%E4%BF%A1%E7%94%A8%E5%8D%A1%E5%AE%9A%E6%9C%9F%E5%AE%9A%E9%A1%8D%E4%B8%B2%E6%8E%A5%E6%8A%80%E8%A1%93%E6%89%8B%E5%86%8A_NDNP-1.0.8.pdf https://www.smilepay.net/ https://www.pchomepay.com.tw/ https://owlting.github.io/paynow-guideline/docs/api-reference/ https://open-doc.jkos.com/ https://www.sunpay.com.tw/developers/",
+   "doc_url": "https://developers.ecpay.com.tw/ https://www.newebpay.com/website/Page/download_file?name=%E4%BF%A1%E7%94%A8%E5%8D%A1%E5%AE%9A%E6%9C%9F%E5%AE%9A%E9%A1%8D%E4%B8%B2%E6%8E%A5%E6%8A%80%E8%A1%93%E6%89%8B%E5%86%8A_NDNP-1.0.9.pdf https://www.smilepay.net/ https://www.pchomepay.com.tw/ https://owlting.github.io/paynow-guideline/docs/api-reference/ https://open-doc.jkos.com/ https://www.sunpay.com.tw/developers/",
    "retrieved_on": "2026-10-24",
    "trust": "官方文件"
   },
@@ -168,7 +168,7 @@
    "method": "POST",
    "required_fields": "BasicAuth(APP_ID,SECRET)",
    "notes": "PChomePay 兩階段認證；token 預設 28800 秒 (8h) 有效",
-   "doc_url": "https://developers.ecpay.com.tw/ https://www.newebpay.com/website/Page/download_file?name=%E4%BF%A1%E7%94%A8%E5%8D%A1%E5%AE%9A%E6%9C%9F%E5%AE%9A%E9%A1%8D%E4%B8%B2%E6%8E%A5%E6%8A%80%E8%A1%93%E6%89%8B%E5%86%8A_NDNP-1.0.8.pdf https://docs.payuni.com.tw/ https://www.smilepay.net/ https://www.pchomepay.com.tw/ https://www.ezpay.com.tw/info/Service_intro/api_document/member https://owlting.github.io/paynow-guideline/docs/api-reference/ https://developers.opay.tw/download/document https://open-doc.jkos.com/ https://www.sunpay.com.tw/developers/",
+   "doc_url": "https://developers.ecpay.com.tw/ https://www.newebpay.com/website/Page/download_file?name=%E4%BF%A1%E7%94%A8%E5%8D%A1%E5%AE%9A%E6%9C%9F%E5%AE%9A%E9%A1%8D%E4%B8%B2%E6%8E%A5%E6%8A%80%E8%A1%93%E6%89%8B%E5%86%8A_NDNP-1.0.9.pdf https://docs.payuni.com.tw/ https://www.smilepay.net/ https://www.pchomepay.com.tw/ https://www.ezpay.com.tw/info/Service_intro/api_document/member https://owlting.github.io/paynow-guideline/docs/api-reference/ https://developers.opay.tw/download/document https://open-doc.jkos.com/ https://www.sunpay.com.tw/developers/",
    "retrieved_on": "2026-10-24",
    "trust": "官方文件"
   },
@@ -189,7 +189,7 @@
    "method": "GET",
    "required_fields": "pcpay-token header",
    "notes": "PChomePay 商家後台帳戶餘額",
-   "doc_url": "https://developers.ecpay.com.tw/ https://www.newebpay.com/website/Page/download_file?name=%E4%BF%A1%E7%94%A8%E5%8D%A1%E5%AE%9A%E6%9C%9F%E5%AE%9A%E9%A1%8D%E4%B8%B2%E6%8E%A5%E6%8A%80%E8%A1%93%E6%89%8B%E5%86%8A_NDNP-1.0.8.pdf https://docs.payuni.com.tw/ https://www.smilepay.net/ https://www.pchomepay.com.tw/ https://www.ezpay.com.tw/info/Service_intro/api_document/member https://owlting.github.io/paynow-guideline/docs/api-reference/ https://developers.opay.tw/download/document https://open-doc.jkos.com/ https://www.sunpay.com.tw/developers/",
+   "doc_url": "https://developers.ecpay.com.tw/ https://www.newebpay.com/website/Page/download_file?name=%E4%BF%A1%E7%94%A8%E5%8D%A1%E5%AE%9A%E6%9C%9F%E5%AE%9A%E9%A1%8D%E4%B8%B2%E6%8E%A5%E6%8A%80%E8%A1%93%E6%89%8B%E5%86%8A_NDNP-1.0.9.pdf https://docs.payuni.com.tw/ https://www.smilepay.net/ https://www.pchomepay.com.tw/ https://www.ezpay.com.tw/info/Service_intro/api_document/member https://owlting.github.io/paynow-guideline/docs/api-reference/ https://developers.opay.tw/download/document https://open-doc.jkos.com/ https://www.sunpay.com.tw/developers/",
    "retrieved_on": "2026-10-24",
    "trust": "官方文件"
   },
@@ -210,7 +210,7 @@
    "method": "POST",
    "required_fields": "amount,bank,account",
    "notes": "PChomePay 提領至銀行",
-   "doc_url": "https://developers.ecpay.com.tw/ https://www.newebpay.com/website/Page/download_file?name=%E4%BF%A1%E7%94%A8%E5%8D%A1%E5%AE%9A%E6%9C%9F%E5%AE%9A%E9%A1%8D%E4%B8%B2%E6%8E%A5%E6%8A%80%E8%A1%93%E6%89%8B%E5%86%8A_NDNP-1.0.8.pdf https://docs.payuni.com.tw/ https://www.smilepay.net/ https://www.pchomepay.com.tw/ https://www.ezpay.com.tw/info/Service_intro/api_document/member https://owlting.github.io/paynow-guideline/docs/api-reference/ https://developers.opay.tw/download/document https://open-doc.jkos.com/ https://www.sunpay.com.tw/developers/",
+   "doc_url": "https://developers.ecpay.com.tw/ https://www.newebpay.com/website/Page/download_file?name=%E4%BF%A1%E7%94%A8%E5%8D%A1%E5%AE%9A%E6%9C%9F%E5%AE%9A%E9%A1%8D%E4%B8%B2%E6%8E%A5%E6%8A%80%E8%A1%93%E6%89%8B%E5%86%8A_NDNP-1.0.9.pdf https://docs.payuni.com.tw/ https://www.smilepay.net/ https://www.pchomepay.com.tw/ https://www.ezpay.com.tw/info/Service_intro/api_document/member https://owlting.github.io/paynow-guideline/docs/api-reference/ https://developers.opay.tw/download/document https://open-doc.jkos.com/ https://www.sunpay.com.tw/developers/",
    "retrieved_on": "2026-10-24",
    "trust": "官方文件"
   },
@@ -231,7 +231,7 @@
    "method": "POST",
    "required_fields": "paymentMethodType,paymentMethodData",
    "notes": "PayNow 現代版 Stripe-like checkout flow",
-   "doc_url": "https://developers.ecpay.com.tw/ https://www.newebpay.com/website/Page/download_file?name=%E4%BF%A1%E7%94%A8%E5%8D%A1%E5%AE%9A%E6%9C%9F%E5%AE%9A%E9%A1%8D%E4%B8%B2%E6%8E%A5%E6%8A%80%E8%A1%93%E6%89%8B%E5%86%8A_NDNP-1.0.8.pdf https://docs.payuni.com.tw/ https://www.smilepay.net/ https://www.pchomepay.com.tw/ https://www.ezpay.com.tw/info/Service_intro/api_document/member https://owlting.github.io/paynow-guideline/docs/api-reference/ https://developers.opay.tw/download/document https://open-doc.jkos.com/ https://www.sunpay.com.tw/developers/",
+   "doc_url": "https://developers.ecpay.com.tw/ https://www.newebpay.com/website/Page/download_file?name=%E4%BF%A1%E7%94%A8%E5%8D%A1%E5%AE%9A%E6%9C%9F%E5%AE%9A%E9%A1%8D%E4%B8%B2%E6%8E%A5%E6%8A%80%E8%A1%93%E6%89%8B%E5%86%8A_NDNP-1.0.9.pdf https://docs.payuni.com.tw/ https://www.smilepay.net/ https://www.pchomepay.com.tw/ https://www.ezpay.com.tw/info/Service_intro/api_document/member https://owlting.github.io/paynow-guideline/docs/api-reference/ https://developers.opay.tw/download/document https://open-doc.jkos.com/ https://www.sunpay.com.tw/developers/",
    "retrieved_on": "2026-10-24",
    "trust": "官方文件"
   },
@@ -252,7 +252,7 @@
    "method": "POST",
    "required_fields": "validationURL,domainName",
    "notes": "PayNow 現代版 Apple Pay 商家驗證",
-   "doc_url": "https://developers.ecpay.com.tw/ https://www.newebpay.com/website/Page/download_file?name=%E4%BF%A1%E7%94%A8%E5%8D%A1%E5%AE%9A%E6%9C%9F%E5%AE%9A%E9%A1%8D%E4%B8%B2%E6%8E%A5%E6%8A%80%E8%A1%93%E6%89%8B%E5%86%8A_NDNP-1.0.8.pdf https://docs.payuni.com.tw/ https://www.smilepay.net/ https://www.pchomepay.com.tw/ https://www.ezpay.com.tw/info/Service_intro/api_document/member https://owlting.github.io/paynow-guideline/docs/api-reference/ https://developers.opay.tw/download/document https://open-doc.jkos.com/ https://www.sunpay.com.tw/developers/",
+   "doc_url": "https://developers.ecpay.com.tw/ https://www.newebpay.com/website/Page/download_file?name=%E4%BF%A1%E7%94%A8%E5%8D%A1%E5%AE%9A%E6%9C%9F%E5%AE%9A%E9%A1%8D%E4%B8%B2%E6%8E%A5%E6%8A%80%E8%A1%93%E6%89%8B%E5%86%8A_NDNP-1.0.9.pdf https://docs.payuni.com.tw/ https://www.smilepay.net/ https://www.pchomepay.com.tw/ https://www.ezpay.com.tw/info/Service_intro/api_document/member https://owlting.github.io/paynow-guideline/docs/api-reference/ https://developers.opay.tw/download/document https://open-doc.jkos.com/ https://www.sunpay.com.tw/developers/",
    "retrieved_on": "2026-10-24",
    "trust": "官方文件"
   },
@@ -273,7 +273,7 @@
    "method": "POST",
    "required_fields": "applePayPayload",
    "notes": "PayNow 現代版 Apple Pay 付款確認",
-   "doc_url": "https://developers.ecpay.com.tw/ https://www.newebpay.com/website/Page/download_file?name=%E4%BF%A1%E7%94%A8%E5%8D%A1%E5%AE%9A%E6%9C%9F%E5%AE%9A%E9%A1%8D%E4%B8%B2%E6%8E%A5%E6%8A%80%E8%A1%93%E6%89%8B%E5%86%8A_NDNP-1.0.8.pdf https://docs.payuni.com.tw/ https://www.smilepay.net/ https://www.pchomepay.com.tw/ https://www.ezpay.com.tw/info/Service_intro/api_document/member https://owlting.github.io/paynow-guideline/docs/api-reference/ https://developers.opay.tw/download/document https://open-doc.jkos.com/ https://www.sunpay.com.tw/developers/",
+   "doc_url": "https://developers.ecpay.com.tw/ https://www.newebpay.com/website/Page/download_file?name=%E4%BF%A1%E7%94%A8%E5%8D%A1%E5%AE%9A%E6%9C%9F%E5%AE%9A%E9%A1%8D%E4%B8%B2%E6%8E%A5%E6%8A%80%E8%A1%93%E6%89%8B%E5%86%8A_NDNP-1.0.9.pdf https://docs.payuni.com.tw/ https://www.smilepay.net/ https://www.pchomepay.com.tw/ https://www.ezpay.com.tw/info/Service_intro/api_document/member https://owlting.github.io/paynow-guideline/docs/api-reference/ https://developers.opay.tw/download/document https://open-doc.jkos.com/ https://www.sunpay.com.tw/developers/",
    "retrieved_on": "2026-10-24",
    "trust": "官方文件"
   },

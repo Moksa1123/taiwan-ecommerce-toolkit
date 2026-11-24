@@ -191,7 +191,7 @@ def test_newebpay():
                                                      'HashData': c['HashData']}).get(k) for k in c['fields']}
               == c['fields'])
 
-    # 信用卡定期定額（NDNP-1.0.8）
+    # 信用卡定期定額（NDNP-1.0.8 回傳範例；String 範例取自 1.0.9）
     pv = v['period']
     svc_p = neweb.NewebPayMPGService(pv['merchant_id'], pv['hash_key'], pv['hash_iv'])
     check('[newebpay] 定期定額建立委託 PostData_ 與規格書 4.1 相同',
@@ -202,6 +202,20 @@ def test_newebpay():
               lambda: (lambda d: d.get('Status') == 'SUCCESS'
                        and all(d['Result'].get(k) == val for k, val in c['result'].items()))(
                   svc_p.parse_period_response(c['Period'])))
+
+    # RespondType=String（NDNP-1.0.9 範例）：明文為 Result[欄位]=值，密文以 32 bytes 區塊 PKCS7 補齊
+    from Crypto.Cipher import AES as _AES
+    def _enc32(plain):
+        b = plain.encode()
+        n = 32 - len(b) % 32
+        return _AES.new(pv['hash_key'].encode(), _AES.MODE_CBC, pv['hash_iv'].encode()).encrypt(
+            b + bytes([n]) * n).hex()
+    for c in pv['string_responses']:
+        check(f'[newebpay] 定期定額 {c["name"]}（String）收成 Result 字典',
+              lambda: (lambda d: d.get('Status') == 'SUCCESS' and d.get('Result') == c['result'])(
+                  svc_p.parse_period_response(_enc32(c['plain']))))
+    check('[newebpay] 定期定額 String 負向對照：只解密不收合時沒有 Result',
+          lambda: 'Result' not in svc_p.decrypt_trade_info(_enc32(pv['string_responses'][0]['plain'])))
 
     # 完整回呼流程：JSON 模式的 NotifyURL 必須解析出成功狀態
     svc = services['newebpay']

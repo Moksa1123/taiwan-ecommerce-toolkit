@@ -197,7 +197,7 @@ function decryptData(encryptedData, hashKey, hashIV) {
 | `RelateNumber` | String(50) | Y | 特店自訂編號，不可重複；勿用特殊符號；英文不分大小寫 |
 | `ChannelPartner` | String(1) | | 通路商編號：`1` 蝦皮 |
 | `CustomerID` | String(20) | | 客戶編號 |
-| `ProductServiceID` | String(10) | | 產品服務別代號；需先啟用「B2C 系統多組字軌」，否則忽略 |
+| `ProductServiceID` | String(10) | | 產品服務別代號（英數 1–10 字）；先在廠商後台「字軌分類管理」新增商品／服務別、「字軌與配號設定」新增字軌配號，再帶入該代號 |
 | `CustomerIdentifier` | String(8) | | 統一編號，8 碼數字；一般消費者放空字串（**不是** `0000000000`） |
 | `CustomerName` | String(60) | 條件 | `Print=1` 時必填；有統編時帶營業人名稱 |
 | `CustomerAddr` | String(100) | 條件 | `Print=1` 時必填 |

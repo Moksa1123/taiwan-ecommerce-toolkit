@@ -760,6 +760,7 @@ Headers:
 | `product_image_url` | String(500) | 付款頁顯示的商品／商家圖片 |
 | `store_id` / `store_name` | String(10) / String(50) | 特店門市店號／名稱（收單支援時轉送） |
 | `jko_pay_insurance_policy` | StringArray | 街口產壽險交易保單明細 |
+| `extra_info` | JSONObject | 額外交易資訊；航空業商戶帶 `airline_info`，見下方。僅 Direct Pay、Apple Pay、Google Pay、Samsung Pay |
 
 #### `result_url` 物件
 
@@ -770,6 +771,33 @@ Headers:
 | `go_back_url` | String(500)，3D 交易中消費者被導到 TapPay 錯誤頁時「Go back」按鈕的網址（玉山、國泰世華、台新），官方強烈建議 3D 交易時設定 |
 
 3D 交易建議：收到 frontend redirect 後、顯示結果頁前，以 `rec_trade_id` 呼叫 Record API 反查狀態。
+
+#### `extra_info.airline_info`（航空交易）
+
+航空業商戶授權時帶入機票交易資訊，TapPay 轉送收單機構；目前只支援聯合信用卡處理中心。Pay by Prime 支援 Direct Pay、Apple Pay、Google Pay、Samsung Pay；Pay by Card Token 只支援 Direct Pay。來源：[Backend](https://docs.tappaysdk.com/tutorial/zh/back.html)、[Reference](https://docs.tappaysdk.com/tutorial/zh/reference.html)。
+
+| 欄位 | 類型 | 說明 |
+|------|------|------|
+| `is_air_ticket_transaction` | Boolean | `true` 機票交易；`false` 非機票的航空相關交易（行李費、免稅品、升等）；不帶表示非航空業交易 |
+| `departure_airport_code` | String(5) | 出發地機場代碼，例 `TPE`；非旅遊類交易帶非旅遊代碼 |
+| `destination_airport_code` | String(5) | 目的地機場代碼，例 `NRT`；非旅遊類交易帶與出發地相同的非旅遊代碼 |
+| `flight_number` | String(5) | 只填數字、前面補 0 到 5 碼，例 JL96 帶 `00096` |
+
+非旅遊代碼：`XUP` 升等、`XAF` 貴賓室／會費、`XCA` 貨運、`XOT` 旅遊訂單、`XDF` 免稅品、`XAE` 行李費、`XAO` 預付票、`XAA` 雜項費用、`XTD` 遞送、`XPC` 寵物運送、`XPE` 重開票、`777` 周邊商品（`flight_number` 可不帶）。
+
+- TapPay 只檢查型態與長度（錯誤碼 `10062`–`10065`），不檢查代碼是否有效與欄位連動；空字串視為通過並原樣送出。
+- 收單機構依業務規則拒絕（例如 NCCC 回 963）時，TapPay 回 `status = 10023`，原始代碼與訊息在 `bank_result_code` / `bank_result_msg`。
+
+```json
+"extra_info": {
+  "airline_info": {
+    "is_air_ticket_transaction": true,
+    "departure_airport_code": "TPE",
+    "destination_airport_code": "NRT",
+    "flight_number": "00096"
+  }
+}
+```
 
 ### 請求範例（信用卡）
 
@@ -879,6 +907,7 @@ POST {base_url}/tpc/payment/pay-by-token
 | `is_merchant_initiated_transaction` | ○ | Boolean | `true` = 商店發起（訂閱、定期定額），預設 `false` |
 | `cardholderinfo_prime` | ○ | String | `TPDirect.cardholder.getPrime` 取得的持卡人資料 Prime |
 | `device_id` | ○ | String(64) | 使用 TapPay RBA 時帶入 `TPDirect.getDeviceId()` 的值 |
+| `extra_info` | ○ | JSONObject | 航空交易資訊 `airline_info`，規則同 pay-by-prime；僅 Direct Pay |
 
 ### 請求範例
 
